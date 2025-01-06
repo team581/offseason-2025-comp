@@ -18,8 +18,6 @@ public enum SubsystemPriority {
   // 0-9 is for manager subsystems
 
   // Robot manager runs last so that all sensor data is fresh before processing state transitions
-  ROBOT_MANAGER(1),
-  LIGHTS(0),
   AUTOS(0);
 
   final int value;

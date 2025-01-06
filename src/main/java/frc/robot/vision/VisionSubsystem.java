@@ -1,9 +1,6 @@
 package frc.robot.vision;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -22,17 +19,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private double pitchRate;
   private double roll;
   private double rollRate;
-
-  public static final Pose2d ORIGINAL_RED_SPEAKER =
-      new Pose2d(
-          Units.inchesToMeters(652.73), Units.inchesToMeters(218.42), Rotation2d.fromDegrees(180));
-  public static final Pose2d ORIGINAL_BLUE_SPEAKER =
-      new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(218.42), Rotation2d.fromDegrees(0));
-
-  public static final Pose2d RED_FEED_SPOT_AMP_AREA =
-      new Pose2d(15.9, 7.5, Rotation2d.fromDegrees(180));
-  public static final Pose2d BLUE_FEED_SPOT_AMP_AREA =
-      new Pose2d(0.6, 7.5, Rotation2d.fromDegrees(0));
 
   public VisionSubsystem(ImuSubsystem imu, Limelight leftLimelight, Limelight rightLimelight) {
     super(SubsystemPriority.VISION, VisionState.DEFAULT_STATE);
