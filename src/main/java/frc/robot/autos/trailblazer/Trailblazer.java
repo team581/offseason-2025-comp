@@ -12,7 +12,7 @@ import frc.robot.autos.trailblazer.constraints.AutoConstraintOptions;
 import frc.robot.autos.trailblazer.followers.PathFollower;
 import frc.robot.autos.trailblazer.followers.PidPathFollower;
 import frc.robot.autos.trailblazer.trackers.PathTracker;
-import frc.robot.autos.trailblazer.trackers.PurePursuitPathTracker;
+import frc.robot.autos.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 
