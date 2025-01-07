@@ -1,10 +1,9 @@
 package frc.robot.autos.trailblazer.trackers.pure_pursuit;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PurePursuitUtilsTest {
   @Test

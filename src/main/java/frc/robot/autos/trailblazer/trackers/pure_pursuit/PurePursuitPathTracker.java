@@ -1,7 +1,5 @@
 package frc.robot.autos.trailblazer.trackers.pure_pursuit;
 
-import java.util.List;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.autos.trailblazer.AutoPoint;
 import frc.robot.autos.trailblazer.trackers.PathTracker;
+import java.util.List;
 
 public class PurePursuitPathTracker implements PathTracker {
   private static final boolean USE_DYNAMIC_LOOKAHEAD = true;
