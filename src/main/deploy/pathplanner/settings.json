@@ -1,6 +1,11 @@
 {
-  "maxDriveSpeed": 5.45,
-  "defaultMaxAngAccel": 720,
+  "robotWidth": 0.9,
+  "robotLength": 0.9,
+  "holonomicMode": true,
+  "pathFolders": [
+    "Auto Intake Paths",
+    "Potential Routines"
+  ],
   "autoFolders": [],
   "robotFeatures": [],
   "bumperOffsetX": 0,
