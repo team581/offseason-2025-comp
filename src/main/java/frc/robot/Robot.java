@@ -13,6 +13,7 @@ import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
@@ -33,6 +34,8 @@ public class Robot extends TimedRobot {
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+
+  private final RobotManager robotManager = new RobotManager(vision, imu, localization, swerve);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
