@@ -16,9 +16,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final DigitalInput leftSensor;
   private final DigitalInput rightSensor;
 
-
-  private boolean leftSensorTrigger = false;
-  private boolean rightSensorTrigger = false;
+  private boolean leftSensorRaw = false;
+  private boolean rightSensorRaw = false;
+  private boolean leftSensorDebounced = false;
+  private boolean rightSensorDebounced = false;
   private boolean hasGP = false;
 
   public IntakeSubsystem(TalonFX motor, DigitalInput leftSensor, DigitalInput rightSensor) {
@@ -33,17 +34,19 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    leftSensorTrigger = leftSensor.get();
-    rightSensorTrigger = rightSensor.get();
-    hasGP = getLeftSensor() || getRightSensor();
-  }
-
-  public boolean getRightSensor() {
-    return RIGHT_DEBOUNCER.calculate(rightSensorTrigger);
+    leftSensorRaw = leftSensor.get();
+    rightSensorRaw = rightSensor.get();
+    leftSensorDebounced = LEFT_DEBOUNCER.calculate(leftSensorRaw);
+    rightSensorDebounced = RIGHT_DEBOUNCER.calculate(rightSensorRaw);
+    hasGP = leftSensorDebounced || rightSensorDebounced;
   }
 
   public boolean getLeftSensor() {
-    return LEFT_DEBOUNCER.calculate(leftSensorTrigger);
+    return leftSensorDebounced;
+  }
+
+  public boolean getRightSensor() {
+    return rightSensorDebounced;
   }
 
   public boolean getHasGP() {
@@ -93,8 +96,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Intake/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Intake/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/LeftSensor", leftSensorTrigger);
-    DogLog.log("Intake/RightSensor", rightSensorTrigger);
+    DogLog.log("Intake/LeftSensorRaw", leftSensorRaw);
+    DogLog.log("Intake/RightSensorRaw", rightSensorRaw);
+    DogLog.log("Intake/LeftSensorDebounced", leftSensorDebounced);
+    DogLog.log("Intake/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/HasGP", hasGP);
   }
 }
