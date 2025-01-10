@@ -4,7 +4,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
-public record RobotConfig(String robotName, SwerveConfig swerve, VisionConfig vision) {
+public record RobotConfig(String robotName, IntakeConfig intake, SwerveConfig swerve, VisionConfig vision) {
+
+  public record IntakeConfig(int motorID, TalonFXConfiguration motorConfig) {}
+  
   public record SwerveConfig(
       PhoenixPIDController snapController,
       boolean invertRotation,
