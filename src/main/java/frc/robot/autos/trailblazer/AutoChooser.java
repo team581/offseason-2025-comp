@@ -2,7 +2,6 @@ package frc.robot.autos.trailblazer;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 import java.util.EnumSet;
 

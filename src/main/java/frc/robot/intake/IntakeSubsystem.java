@@ -9,8 +9,8 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-    private static final Debouncer LEFT_DEBOUNCER = RobotConfig.get().intake().leftDebouncer();
-    private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
+  private static final Debouncer LEFT_DEBOUNCER = RobotConfig.get().intake().leftDebouncer();
+  private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
 
   private final TalonFX motor;
   private final DigitalInput leftSensor;

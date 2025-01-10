@@ -2,7 +2,6 @@ package frc.robot.autos.trailblazer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
