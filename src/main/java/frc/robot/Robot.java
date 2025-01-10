@@ -14,6 +14,7 @@ import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.purple.Purple;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
@@ -34,6 +35,8 @@ public class Robot extends TimedRobot {
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
+  private final Purple purple = new Purple();
+
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
 
   private final IntakeSubsystem intake =
@@ -70,7 +73,7 @@ public class Robot extends TimedRobot {
         break;
     }
 
-    // This must be run before any commands are scheduled
+   // This must be run before any commands are scheduled
     LifecycleSubsystemManager.getInstance().ready();
 
     SmartDashboard.putData(CommandScheduler.getInstance());
