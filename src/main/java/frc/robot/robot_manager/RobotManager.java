@@ -58,8 +58,14 @@ public class RobotManager extends StateMachine<RobotState> {
       case DISLODGE_ALGAE_L2_WAIT -> true ? RobotState.DISLODGE_ALGAE_L2_PUSHING : currentState;
       case DISLODGE_ALGAE_L3_WAIT -> true ? RobotState.DISLODGE_ALGAE_L3_PUSHING : currentState;
 
-      case DISLODGE_ALGAE_L2_PUSHING -> true ? (intake.getHasGP() ? RobotState.CORAL_L2_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP) : currentState;
-      case DISLODGE_ALGAE_L3_PUSHING -> true ? (intake.getHasGP() ? RobotState.CORAL_L3_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP) : currentState;
+      case DISLODGE_ALGAE_L2_PUSHING ->
+          true
+              ? (intake.getHasGP() ? RobotState.CORAL_L2_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
+              : currentState;
+      case DISLODGE_ALGAE_L3_PUSHING ->
+          true
+              ? (intake.getHasGP() ? RobotState.CORAL_L3_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
+              : currentState;
 
         // Scoring
       case CORAL_L1_SCORING,
@@ -70,9 +76,11 @@ public class RobotManager extends StateMachine<RobotState> {
               NET_SCORING ->
           !intake.getHasGP() ? RobotState.IDLE_NO_GP : currentState;
 
-       //Intaking
-      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
-      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION -> intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
+        // Intaking
+      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 ->
+          intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
+      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
+          intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
     };
   }
 
