@@ -2,9 +2,20 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
-public record RobotConfig(String robotName, SwerveConfig swerve, VisionConfig vision) {
+public record RobotConfig(
+    String robotName, IntakeConfig intake, SwerveConfig swerve, VisionConfig vision) {
+
+  public record IntakeConfig(
+      int motorID,
+      int leftSensorID,
+      int rightSensorID,
+      Debouncer leftDebouncer,
+      Debouncer rightDebouncer,
+      TalonFXConfiguration motorConfig) {}
+
   public record SwerveConfig(
       PhoenixPIDController snapController,
       boolean invertRotation,

@@ -14,6 +14,7 @@ public enum SubsystemPriority {
   FMS(20),
 
   // 10-19 is for actuator subsystems
+  INTAKE(10),
 
   // 0-9 is for manager subsystems
 
