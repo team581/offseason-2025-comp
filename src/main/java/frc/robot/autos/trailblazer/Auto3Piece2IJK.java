@@ -14,8 +14,8 @@ import frc.robot.autos.BaseAuto;
 import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class Level4Auto extends BaseAuto{
-    public Level4Auto(RobotManager robotManager, Trailblazer trailblazer) {
+public class Auto3Piece2IJK extends BaseAuto{
+    public Auto3Piece2IJK(RobotManager robotManager, Trailblazer trailblazer) {
         super(robotManager, trailblazer);
     }
 
