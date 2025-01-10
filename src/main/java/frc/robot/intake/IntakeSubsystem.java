@@ -1,48 +1,100 @@
 package frc.robot.intake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import dev.doglog.DogLog;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-    private final TalonFX motor;
-    
-    public IntakeSubsystem(TalonFX motor) {
-        super(SubsystemPriority.INTAKE, IntakeState.IDLE);
+    private static final Debouncer LEFT_DEBOUNCER = RobotConfig.get().intake().leftDebouncer();
+    private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
 
-        motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
+  private final TalonFX motor;
+  private final DigitalInput leftSensor;
+  private final DigitalInput rightSensor;
 
-        this.motor = motor;
+
+  private boolean leftSensorTrigger = false;
+  private boolean rightSensorTrigger = false;
+  private boolean hasGP = false;
+
+  public IntakeSubsystem(TalonFX motor, DigitalInput leftSensor, DigitalInput rightSensor) {
+    super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
+
+    motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
+
+    this.motor = motor;
+    this.leftSensor = leftSensor;
+    this.rightSensor = rightSensor;
+  }
+
+  @Override
+  protected void collectInputs() {
+    leftSensorTrigger = leftSensor.get();
+    rightSensorTrigger = rightSensor.get();
+    hasGP = getLeftSensor() || getRightSensor();
+  }
+
+  public boolean getRightSensor() {
+    return RIGHT_DEBOUNCER.calculate(rightSensorTrigger);
+  }
+
+  public boolean getLeftSensor() {
+    return LEFT_DEBOUNCER.calculate(leftSensorTrigger);
+  }
+
+  public boolean getHasGP() {
+    return hasGP;
+  }
+
+  public void setState(IntakeState newState) {
+    setStateFromRequest(newState);
+  }
+
+  @Override
+  protected void afterTransition(IntakeState newState) {
+    switch (newState) {
+      case IDLE_NO_GP -> {
+        motor.setVoltage(0.0);
+      }
+      case IDLE_W_ALGEA -> {
+        motor.setVoltage(1.0);
+      }
+      case IDLE_W_CORAL -> {
+        motor.setVoltage(0.0);
+      }
+      case INTAKING_ALGEA -> {
+        motor.setVoltage(6.0);
+      }
+      case INTAKING_CORAL -> {
+        motor.setVoltage(6.0);
+      }
+      case SCORE_ALGEA_NET -> {
+        motor.setVoltage(-4.0);
+      }
+      case SCORE_ALGEA_PROCESSOR -> {
+        motor.setVoltage(-8.0);
+      }
+      case SCORE_CORAL -> {
+        motor.setVoltage(-8.0);
+      }
+      case OUTTAKING -> {
+        motor.setVoltage(-6.0);
+      }
     }
+  }
 
-    public void setState(IntakeState newState) {
-        setStateFromRequest(newState);
-    }
-
-    @Override
-    protected IntakeState getNextState(IntakeState currentState) {
-        return currentState;
-    }
-
-    @Override
-    protected void afterTransition(IntakeState newState) {
-        switch (newState) {
-            case IDLE -> {
-                motor.setVoltage(0.0);
-            }
-            case INTAKING -> {
-                motor.setVoltage(6.0);
-            }
-            case OUTTAKING -> {
-                motor.setVoltage(-6.0);
-            }
-        }
-    }
-
-    @Override
-    public void robotPeriodic() {
-        super.robotPeriodic();
-    }
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DogLog.log("Intake/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Intake/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Intake/LeftSensor", leftSensorTrigger);
+    DogLog.log("Intake/RightSensor", rightSensorTrigger);
+    DogLog.log("Intake/HasGP", hasGP);
+  }
 }

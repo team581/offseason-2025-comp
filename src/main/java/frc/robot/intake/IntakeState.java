@@ -1,7 +1,13 @@
 package frc.robot.intake;
 
 public enum IntakeState {
-    IDLE,
-    INTAKING,
-    OUTTAKING;
+  IDLE_NO_GP,
+  IDLE_W_ALGEA,
+  IDLE_W_CORAL,
+  INTAKING_ALGEA,
+  INTAKING_CORAL,
+  SCORE_ALGEA_NET,
+  SCORE_ALGEA_PROCESSOR,
+  SCORE_CORAL,
+  OUTTAKING;
 }
