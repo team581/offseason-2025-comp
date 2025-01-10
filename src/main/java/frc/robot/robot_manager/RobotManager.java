@@ -1,10 +1,13 @@
 package frc.robot.robot_manager;
 
+import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class RobotManager extends StateMachine<RobotState> {
 
-  public RobotManager() {}
+  public RobotManager() {
+    super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
+  }
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -35,6 +38,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L3_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L3_SCORING : currentState;
 
       case CORAL_L4_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L4_SCORING : currentState;
+
+      default -> currentState;
     };
   }
 
@@ -80,31 +85,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 }
 
-  public void stowRequest() {
-    switch (getState()) {
-        // TODO: Intaking and unjam should not be IDLE_WITH_GP
-      case INTAKING,
-              INTAKE_ASSIST,
-              AMP_PREPARE_TO_SCORE,
-              SPEAKER_PREPARE_TO_SCORE,
-              FEEDING_PREPARE_TO_SHOOT,
-              PASS_PREPARE_TO_SHOOT,
-              AMP_WAITING,
-              SPEAKER_WAITING,
-              FEEDING_WAITING,
-              AMP_SCORING,
-              SPEAKER_SCORING,
-              FEEDING_SHOOTING,
-              PASS_SHOOTING,
-              IDLE_WITH_GP,
-              UNJAM
-          // INTAKING_BACK,
-          // INTAKING_FORWARD_PUSH
-          ->
-          setStateFromRequest(RobotState.IDLE_WITH_GP);
-      default -> setStateFromRequest(RobotState.IDLE_NO_GP);
-    }
-  }
+  public void stowRequest() {}
 
   public void nextClimbStateRequest() {
     switch (getState()) {
@@ -118,7 +99,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> {
-        setStateFromRequest(RobotState.IDLE_WITH_GP);
+        setStateFromRequest(RobotState.IDLE_NO_GP);
       }
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }

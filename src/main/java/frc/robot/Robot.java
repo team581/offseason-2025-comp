@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
 
-  private final RobotManager robotManager = new RobotManager(vision, imu, localization, swerve);
+  private final RobotManager robotManager = new RobotManager();
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
