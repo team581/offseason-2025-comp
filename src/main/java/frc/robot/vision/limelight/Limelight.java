@@ -1,7 +1,5 @@
 package frc.robot.vision.limelight;
 
-import java.util.Optional;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,8 +11,9 @@ import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
+import java.util.Optional;
 
-public class Limelight extends StateMachine<LimelightState>{
+public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
   private CameraDataset interpolationData;
@@ -78,8 +77,10 @@ public class Limelight extends StateMachine<LimelightState>{
   private Optional<CoralResult> getRawCoralResult() {
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
-    var latency = LimelightHelpers.getLatency_Capture(limelightTableName) + LimelightHelpers.getLatency_Pipeline(limelightTableName);
-    var latencySeconds = latency/1000.0;
+    var latency =
+        LimelightHelpers.getLatency_Capture(limelightTableName)
+            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+    var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
       return Optional.empty();
@@ -94,8 +95,10 @@ public class Limelight extends StateMachine<LimelightState>{
   private Optional<PurpleResult> getRawPurpleResult() {
     var purpleTX = LimelightHelpers.getTX(limelightTableName);
     var purpleTY = LimelightHelpers.getTY(limelightTableName);
-    var latency = LimelightHelpers.getLatency_Capture(limelightTableName) + LimelightHelpers.getLatency_Pipeline(limelightTableName);
-    var latencySeconds = latency/1000.0;
+    var latency =
+        LimelightHelpers.getLatency_Capture(limelightTableName)
+            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+    var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (purpleTX == 0.0 || purpleTY == 0.0) {
       return Optional.empty();
@@ -107,7 +110,10 @@ public class Limelight extends StateMachine<LimelightState>{
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
-  private void updateState(Optional<TagResult> tagResult, Optional<CoralResult> coralResult, Optional<PurpleResult> purpleResult) {
+  private void updateState(
+      Optional<TagResult> tagResult,
+      Optional<CoralResult> coralResult,
+      Optional<PurpleResult> purpleResult) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
 
     if (limelightHeartbeat != newHeartbeat) {
@@ -126,8 +132,6 @@ public class Limelight extends StateMachine<LimelightState>{
     }
     cameraStatus = CameraStatus.NO_TARGETS;
   }
-
-  
 
   private void updateState(Optional result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
@@ -152,6 +156,4 @@ public class Limelight extends StateMachine<LimelightState>{
   public CameraStatus getCameraStatus() {
     return cameraStatus;
   }
-
-
 }

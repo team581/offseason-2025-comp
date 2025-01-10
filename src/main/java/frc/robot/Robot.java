@@ -28,15 +28,12 @@ public class Robot extends TimedRobot {
   private final Hardware hardware = new Hardware();
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight leftLimelight =
-      new Limelight("left");
-  private final Limelight rightLimelight =
-      new Limelight("right");
-      private final Limelight backLimelight =
-      new Limelight("back");
+  private final Limelight leftLimelight = new Limelight("left");
+  private final Limelight rightLimelight = new Limelight("right");
+  private final Limelight backLimelight = new Limelight("back");
 
-
-  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightLimelight, backLimelight);
+  private final VisionSubsystem vision =
+      new VisionSubsystem(imu, leftLimelight, rightLimelight, backLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Purple purple = new Purple();
 

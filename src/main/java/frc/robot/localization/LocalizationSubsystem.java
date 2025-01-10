@@ -20,7 +20,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.DistanceAngle;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -121,7 +121,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void confirmScore() {
     switch (getState()) {
-
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
           INTAKE_ALGAE_FLOOR,
@@ -138,6 +137,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case PROCESSOR_WAITING, IDLE_ALGAE ->
           setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
       case NET_WAITING -> setStateFromRequest(RobotState.NET_PREPARE_TO_SCORE);
+      case PROCESSOR_WAITING, IDLE_ALGAE ->
+          setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
+      case NET_WAITING -> setStateFromRequest(RobotState.NET_PREPARE_TO_SCORE);
 
       case CORAL_L1_WAITING -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
       case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
@@ -146,7 +148,15 @@ public class RobotManager extends StateMachine<RobotState> {
 
         // change default coral score level or algea score if needed
       default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
+      case CORAL_L1_WAITING -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
+      case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
+      case CORAL_L3_WAITING -> setStateFromRequest(RobotState.CORAL_L3_PREPARE_TO_SCORE);
+      case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
+
+        // change default coral score level or algea score if needed
+      default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
     }
+  }
   }
 
   public void stowRequest() {}

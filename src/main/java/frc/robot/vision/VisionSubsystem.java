@@ -1,8 +1,5 @@
 package frc.robot.vision;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.doglog.DogLog;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -10,6 +7,8 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.TagResult;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
@@ -24,7 +23,11 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private double roll;
   private double rollRate;
 
-  public VisionSubsystem(ImuSubsystem imu, Limelight topLimelight, Limelight bottomLimelight, Limelight backLimelight) {
+  public VisionSubsystem(
+      ImuSubsystem imu,
+      Limelight topLimelight,
+      Limelight bottomLimelight,
+      Limelight backLimelight) {
     super(SubsystemPriority.VISION, VisionState.DEFAULT_STATE);
     this.imu = imu;
     this.topLimelight = topLimelight;
@@ -62,7 +65,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         interpolatedVisionResult.add(maybeResult.get());
       }
     }
-
   }
 
   public List<TagResult> getInterpolatedVisionResult() {
@@ -83,7 +85,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     DogLog.log("Vision/Left/VisionState", topLimelight.getCameraStatus());
     DogLog.log("Vision/Right/VisionState", bottomLimelight.getCameraStatus());
     DogLog.log("Vision/Back/VisionState", backLimelight.getCameraStatus());
-
   }
 
   public CameraStatus getVisionState() {
@@ -91,11 +92,15 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var bottomStatus = bottomLimelight.getCameraStatus();
     var backStatus = backLimelight.getCameraStatus();
 
-    if (topStatus == CameraStatus.OFFLINE && bottomStatus == CameraStatus.OFFLINE && backStatus == CameraStatus.OFFLINE) {
+    if (topStatus == CameraStatus.OFFLINE
+        && bottomStatus == CameraStatus.OFFLINE
+        && backStatus == CameraStatus.OFFLINE) {
       return CameraStatus.OFFLINE;
     }
 
-    if (topStatus == CameraStatus.GOOD || bottomStatus == CameraStatus.GOOD || backStatus == CameraStatus.GOOD) {
+    if (topStatus == CameraStatus.GOOD
+        || bottomStatus == CameraStatus.GOOD
+        || backStatus == CameraStatus.GOOD) {
       return CameraStatus.GOOD;
     }
 
@@ -108,11 +113,15 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var bottomStatus = bottomLimelight.getCameraStatus();
     var backStatus = backLimelight.getCameraStatus();
 
-    if (topStatus == CameraStatus.OFFLINE || bottomStatus == CameraStatus.OFFLINE || backStatus == CameraStatus.OFFLINE) {
+    if (topStatus == CameraStatus.OFFLINE
+        || bottomStatus == CameraStatus.OFFLINE
+        || backStatus == CameraStatus.OFFLINE) {
       return CameraStatus.OFFLINE;
     }
 
-    if (topStatus == CameraStatus.GOOD || bottomStatus == CameraStatus.GOOD || backStatus == CameraStatus.GOOD) {
+    if (topStatus == CameraStatus.GOOD
+        || bottomStatus == CameraStatus.GOOD
+        || backStatus == CameraStatus.GOOD) {
       return CameraStatus.GOOD;
     }
 
