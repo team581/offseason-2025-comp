@@ -12,6 +12,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.signals.InvertedValue;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.TunerConstants;
+import frc.robot.purple.Purple;
 import frc.robot.util.ControllerHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -195,6 +197,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
           DriverStation.isAutonomous()
               ? SwerveState.INTAKE_ASSIST_AUTO
               : SwerveState.INTAKE_ASSIST_TELEOP;
+      case PURPLE_ALIGN -> currentState;
+      case SCORE_ASSIST -> currentState;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
     };
@@ -310,6 +314,30 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withVelocityY(autoSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
+
+      case SCORE_ASSIST -> {
+        var scoreAssist =
+            Purple.getRobotRelativeScoreAssistSpeeds(
+                MathUtil.inputModulus(drivetrainPigeon.getYaw().getValue(), -180, 180),
+                teleopSpeeds);
+
+        drivetrain.setControl(
+            drive
+                .withVelocityX(scoreAssist.vxMetersPerSecond)
+                .withVelocityY(scoreAssist.vyMetersPerSecond)
+                .withRotationalRate(scoreAssist.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+      }
+      case PURPLE_ALIGN -> {
+        var purpleAlign = Purple.getPurpleAdjustmentRobotRelative();
+
+        drivetrain.setControl(
+            drive
+                .withVelocityX(purpleAlign.vxMetersPerSecond)
+                .withVelocityY(purpleAlign.vyMetersPerSecond)
+                .withRotationalRate(purpleAlign.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+      }
     }
   }
 
@@ -319,7 +347,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public void setSnapsEnabled(boolean newValue) {
     switch (getState()) {
-      case TELEOP, TELEOP_SNAPS, INTAKE_ASSIST_TELEOP ->
+      case TELEOP, TELEOP_SNAPS, INTAKE_ASSIST_TELEOP, PURPLE_ALIGN, SCORE_ASSIST ->
           setStateFromRequest(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
       case AUTO, AUTO_SNAPS, INTAKE_ASSIST_AUTO ->
           setStateFromRequest(newValue ? SwerveState.AUTO_SNAPS : SwerveState.AUTO);

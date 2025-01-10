@@ -1,7 +1,9 @@
 package frc.robot.robot_manager;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -10,6 +12,7 @@ import frc.robot.vision.VisionSubsystem;
 public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
   private final ImuSubsystem imu;
+
   private final SwerveSubsystem swerve;
   private final LocalizationSubsystem localization;
 
@@ -62,6 +65,22 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected void afterTransition(RobotState newState) {
     // TODO: Implement
+    switch (newState) {
+      case SCORE_ASSIST -> {
+        if (DriverStation.isTeleop()) {
+          swerve.setState(SwerveState.SCORE_ASSIST);
+        } else {
+          swerve.setState(SwerveState.SCORE_ASSIST);
+        }
+      }
+      case PURPLE_ALGIN -> {
+        if (DriverStation.isTeleop()) {
+          swerve.setState(SwerveState.PURPLE_ALIGN);
+        } else {
+          swerve.setState(SwerveState.PURPLE_ALIGN);
+        }
+      }
+    }
   }
 
   @Override
@@ -74,8 +93,10 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+
   public void confirmScore() {
     switch (getState()) {
+
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
           INTAKE_ALGAE_FLOOR,
@@ -115,6 +136,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> {
+
         setStateFromRequest(RobotState.IDLE_NO_GP);
       }
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
