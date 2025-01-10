@@ -1,6 +1,7 @@
 package frc.robot.robot_manager;
 
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -12,14 +13,16 @@ public class RobotManager extends StateMachine<RobotState> {
   private final ImuSubsystem imu;
   private final SwerveSubsystem swerve;
   private final LocalizationSubsystem localization;
+  private final IntakeSubsystem intake;
 
   public RobotManager(
+      IntakeSubsystem intake,
       VisionSubsystem vision,
       ImuSubsystem imu,
       SwerveSubsystem swerve,
       LocalizationSubsystem localization) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
-
+    this.intake = intake;
     this.vision = vision;
     this.imu = imu;
     this.swerve = swerve;
@@ -44,18 +47,32 @@ public class RobotManager extends StateMachine<RobotState> {
 
         //   TODO: add check for PREPARE_TO_SCORE transitions
       case PROCESSOR_PREPARE_TO_SCORE -> true ? RobotState.PROCESSOR_SCORING : currentState;
-
       case NET_PREPARE_TO_SCORE -> true ? RobotState.NET_SCORING : currentState;
 
       case CORAL_L1_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L1_SCORING : currentState;
-
       case CORAL_L2_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L2_SCORING : currentState;
-
       case CORAL_L3_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L3_SCORING : currentState;
-
       case CORAL_L4_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L4_SCORING : currentState;
 
-      default -> currentState;
+        // Dislodging
+      case DISLODGE_ALGAE_L2_WAIT -> true ? RobotState.DISLODGE_ALGAE_L2_PUSHING : currentState;
+      case DISLODGE_ALGAE_L3_WAIT -> true ? RobotState.DISLODGE_ALGAE_L3_PUSHING : currentState;
+
+      case DISLODGE_ALGAE_L2_PUSHING -> true ? (intake.getHasGP() ? RobotState.CORAL_L2_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP) : currentState;
+      case DISLODGE_ALGAE_L3_PUSHING -> true ? (intake.getHasGP() ? RobotState.CORAL_L3_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP) : currentState;
+
+        // Scoring
+      case CORAL_L1_SCORING,
+              CORAL_L2_SCORING,
+              CORAL_L3_SCORING,
+              CORAL_L4_SCORING,
+              PROCESSOR_SCORING,
+              NET_SCORING ->
+          !intake.getHasGP() ? RobotState.IDLE_NO_GP : currentState;
+
+       //Intaking
+      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
+      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION -> intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
     };
   }
 
@@ -81,8 +98,10 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_ALGAE_FLOOR,
           INTAKE_ALGAE_L2,
           INTAKE_ALGAE_L3,
-          DISLODGE_ALGAE_L2,
-          DISLODGE_ALGAE_L3,
+          DISLODGE_ALGAE_L2_WAIT,
+          DISLODGE_ALGAE_L3_WAIT,
+          DISLODGE_ALGAE_L2_PUSHING,
+          DISLODGE_ALGAE_L3_PUSHING,
           INTAKE_CORAL_FLOOR_HORIZONTAL,
           INTAKE_CORAL_FLOOR_UPRIGHT,
           INTAKE_CORAL_STATION -> {}
