@@ -1,0 +1,157 @@
+package frc.robot.vision.limelight;
+
+import java.util.Optional;
+
+import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.util.state_machines.StateMachine;
+import frc.robot.vision.CameraStatus;
+import frc.robot.vision.interpolation.CameraDataset;
+import frc.robot.vision.interpolation.InterpolatedVision;
+import frc.robot.vision.results.CoralResult;
+import frc.robot.vision.results.PurpleResult;
+import frc.robot.vision.results.TagResult;
+
+public class Limelight extends StateMachine<LimelightState>{
+  private final String limelightTableName;
+  private final String name;
+  private CameraDataset interpolationData;
+  private CameraStatus cameraStatus = CameraStatus.NO_TARGETS;
+  private double limelightHeartbeat = -1;
+
+  private final Timer limelightTimer = new Timer();
+
+  public Limelight(String name) {
+    super(SubsystemPriority.VISION, LimelightState.TAGS);
+    limelightTableName = "limelight-" + name;
+    this.name = name;
+    this.interpolationData = interpolationData;
+    limelightTimer.start();
+  }
+
+  public void sendImuData(
+      double robotHeading,
+      double angularVelocity,
+      double pitch,
+      double pitchRate,
+      double roll,
+      double rollRate) {
+    LimelightHelpers.SetRobotOrientation(
+        limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+  }
+
+  public Optional<TagResult> getInterpolatedVisionResult() {
+    var rawTagResult = getRawTagResult();
+
+    if (rawTagResult.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Pose2d interpolatedPose =
+        InterpolatedVision.interpolatePose(rawTagResult.get().pose(), interpolationData);
+    return Optional.of(new TagResult(interpolatedPose, rawTagResult.get().timestamp()));
+  }
+
+  private Optional<TagResult> getRawTagResult() {
+    var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+
+    if (estimatePose == null) {
+      return Optional.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/RawLimelightPose", estimatePose.pose);
+
+    if (estimatePose.tagCount == 0) {
+      return Optional.empty();
+    }
+
+    // This prevents pose estimator from having crazy poses if the Limelight loses power
+    if (estimatePose.pose.getX() == 0.0 && estimatePose.pose.getY() == 0.0) {
+      return Optional.empty();
+    }
+
+    return Optional.of(new TagResult(estimatePose.pose, estimatePose.timestampSeconds));
+  }
+
+  private Optional<CoralResult> getRawCoralResult() {
+    var coralTX = LimelightHelpers.getTX(limelightTableName);
+    var coralTY = LimelightHelpers.getTY(limelightTableName);
+    var latency = LimelightHelpers.getLatency_Capture(limelightTableName) + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+    var latencySeconds = latency/1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+    if (coralTX == 0.0 || coralTY == 0.0) {
+      return Optional.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
+
+    return Optional.of(new CoralResult(coralTX, coralTY, timestamp));
+  }
+
+  private Optional<PurpleResult> getRawPurpleResult() {
+    var purpleTX = LimelightHelpers.getTX(limelightTableName);
+    var purpleTY = LimelightHelpers.getTY(limelightTableName);
+    var latency = LimelightHelpers.getLatency_Capture(limelightTableName) + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+    var latencySeconds = latency/1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+    if (purpleTX == 0.0 || purpleTY == 0.0) {
+      return Optional.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Purple/tx", purpleTX);
+    DogLog.log("Vision/" + name + "/Purple/ty", purpleTY);
+
+    return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
+  }
+
+  private void updateState(Optional<TagResult> tagResult, Optional<CoralResult> coralResult, Optional<PurpleResult> purpleResult) {
+    var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
+
+    if (limelightHeartbeat != newHeartbeat) {
+      limelightTimer.restart();
+    }
+    limelightHeartbeat = newHeartbeat;
+
+    if (limelightTimer.hasElapsed(5)) {
+      cameraStatus = CameraStatus.OFFLINE;
+      return;
+    }
+
+    if (!tagResult.isEmpty()) {
+      cameraStatus = CameraStatus.GOOD;
+      return;
+    }
+    cameraStatus = CameraStatus.NO_TARGETS;
+  }
+
+  
+
+  private void updateState(Optional result) {
+    var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
+
+    if (limelightHeartbeat != newHeartbeat) {
+      limelightTimer.restart();
+    }
+    limelightHeartbeat = newHeartbeat;
+
+    if (limelightTimer.hasElapsed(5)) {
+      cameraStatus = CameraStatus.OFFLINE;
+      return;
+    }
+
+    if (!result.isEmpty()) {
+      cameraStatus = CameraStatus.GOOD;
+      return;
+    }
+    cameraStatus = CameraStatus.NO_TARGETS;
+  }
+
+  public CameraStatus getCameraStatus() {
+    return cameraStatus;
+  }
+
+
+}

@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
 public enum CameraStatus {
-  SEES_TAGS,
+  GOOD,
   OFFLINE,
-  ONLINE_NO_TAGS;
+  NO_TARGETS;
 }

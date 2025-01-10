@@ -19,8 +19,8 @@ import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
-import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.limelight.Limelight;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
@@ -29,11 +29,14 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight leftLimelight =
-      new Limelight("left", RobotConfig.get().vision().interpolatedVisionSet().leftSet);
+      new Limelight("left");
   private final Limelight rightLimelight =
-      new Limelight("right", RobotConfig.get().vision().interpolatedVisionSet().rightSet);
+      new Limelight("right");
+      private final Limelight backLimelight =
+      new Limelight("back");
 
-  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightLimelight);
+
+  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightLimelight, backLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Purple purple = new Purple();
 
