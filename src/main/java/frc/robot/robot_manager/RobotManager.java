@@ -73,7 +73,7 @@ public class RobotManager extends StateMachine<RobotState> {
           swerve.setState(SwerveState.SCORE_ASSIST);
         }
       }
-      case PURPLE_ALGIN -> {
+      case PURPLE_ALIGN -> {
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.PURPLE_ALIGN);
         } else {
