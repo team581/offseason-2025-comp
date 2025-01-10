@@ -32,7 +32,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case IDLE_NO_GP,
               IDLE_ALGAE,
               IDLE_CORAL,
-              IDLE_BOTH_GP,
               PROCESSOR_WAITING,
               NET_WAITING,
               CORAL_L1_WAITING,

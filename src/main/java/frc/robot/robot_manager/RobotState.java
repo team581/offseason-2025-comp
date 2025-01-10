@@ -4,7 +4,6 @@ public enum RobotState {
   IDLE_NO_GP,
   IDLE_ALGAE,
   IDLE_CORAL,
-  IDLE_BOTH_GP,
 
   INTAKE_ALGAE_FLOOR,
   INTAKE_ALGAE_L2,
