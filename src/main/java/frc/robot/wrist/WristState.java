@@ -21,11 +21,9 @@ public enum WristState {
   GROUND_ALGAE_INTAKE(0.0);
 
   public final double angle;
+
   WristState(double angle) {
     this.angle = angle;
 
-  }
-  public double getAngle() {
-      return angle;
   }
 }
