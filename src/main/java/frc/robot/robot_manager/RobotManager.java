@@ -366,7 +366,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -376,7 +376,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -386,7 +386,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -396,7 +396,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
