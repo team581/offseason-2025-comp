@@ -1,5 +1,7 @@
 package frc.robot.vision.limelight;
 
+import java.util.Optional;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +13,6 @@ import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
-import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
@@ -54,6 +55,9 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<TagResult> getRawTagResult() {
+    if (getState() != LimelightState.TAGS) {
+      return Optional.empty();
+    }
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
@@ -75,6 +79,9 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<CoralResult> getRawCoralResult() {
+    if (getState() != LimelightState.CORAL) {
+      return Optional.empty();
+    }
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -93,6 +100,9 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<PurpleResult> getRawPurpleResult() {
+    if (getState() != LimelightState.PURPLE) {
+      return Optional.empty();
+    }
     var purpleTX = LimelightHelpers.getTX(limelightTableName);
     var purpleTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
