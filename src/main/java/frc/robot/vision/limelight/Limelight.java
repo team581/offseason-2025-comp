@@ -38,9 +38,9 @@ public class Limelight extends StateMachine<LimelightState> {
       double pitchRate,
       double roll,
       double rollRate) {
-        if (getState() == LimelightState.TAGS) {
-          return;
-        }
+    if (getState() == LimelightState.TAGS) {
+      return;
+    }
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
@@ -63,7 +63,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.TAGS) {
       return Optional.empty();
     }
-        
+
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
@@ -132,16 +132,15 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<CoralResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
 
-
   @Override
   protected void collectInputs() {
-        tagResult = getRawTagResult();
-        coralResult = getRawCoralResult();
-        purpleResult = getRawPurpleResult();
-        if (getState() == LimelightState.TAGS) {
-          interpolatedPose =
+    tagResult = getRawTagResult();
+    coralResult = getRawCoralResult();
+    purpleResult = getRawPurpleResult();
+    if (getState() == LimelightState.TAGS) {
+      interpolatedPose =
           InterpolatedVision.interpolatePose(getRawTagResult().get().pose(), cameraDataset);
-        }
+    }
   }
 
   @Override

@@ -1,8 +1,7 @@
 package frc.robot.vision.interpolation;
 
-import java.util.List;
-
 import edu.wpi.first.math.geometry.Translation2d;
+import java.util.List;
 
 /** A interpolated vision data set for each field, for all cameras. */
 public enum InterpolatedVisionDataset {
@@ -24,7 +23,8 @@ public enum InterpolatedVisionDataset {
                   new Translation2d(12.9895, 5.522),
                   new Translation2d(12.87, 5.581),
                   "PODIUM_SPEAKER_INTERSECTION")),
-          List.of()), new CameraDataset(List.of(), List.of())),
+          List.of()),
+      new CameraDataset(List.of(), List.of())),
   // bellarmine is not tested
   BELLARMINE(
       new CameraDataset(
@@ -60,7 +60,8 @@ public enum InterpolatedVisionDataset {
                   new Translation2d(13.799, 4.202),
                   new Translation2d(13.67, 4.106),
                   "FRONT_PODIUM_MIDDLE")),
-          List.of()), new CameraDataset(List.of(), List.of())),
+          List.of()),
+      new CameraDataset(List.of(), List.of())),
   MADTOWN(
       new CameraDataset(
           List.of(
@@ -95,7 +96,8 @@ public enum InterpolatedVisionDataset {
               new VisionInterpolationData(
                   new Translation2d(3.144, 5.522),
                   new Translation2d(3.24, 5.47),
-                  "BLUE_PODIUM_SPEAKER_INTERSECTION"))), new CameraDataset(List.of(), List.of()));
+                  "BLUE_PODIUM_SPEAKER_INTERSECTION"))),
+      new CameraDataset(List.of(), List.of()));
 
   public final CameraDataset topSet;
   public final CameraDataset bottomSet;
