@@ -1,8 +1,7 @@
 package frc.robot.vision.interpolation;
 
-import java.util.List;
-
 import edu.wpi.first.math.geometry.Translation2d;
+import java.util.List;
 
 /** A interpolated vision data set for each field, for all cameras. */
 public enum InterpolatedVisionDataset {
@@ -104,7 +103,8 @@ public enum InterpolatedVisionDataset {
   public final CameraDataset bottomCoralSet;
   public final CameraDataset backwardsTagSet;
 
-  InterpolatedVisionDataset(CameraDataset topPurpleSet, CameraDataset bottomCoralSet, CameraDataset backwardsTagSet) {
+  InterpolatedVisionDataset(
+      CameraDataset topPurpleSet, CameraDataset bottomCoralSet, CameraDataset backwardsTagSet) {
     this.topPurpleSet = topPurpleSet;
     this.bottomCoralSet = bottomCoralSet;
     this.backwardsTagSet = backwardsTagSet;
