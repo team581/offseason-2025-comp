@@ -35,13 +35,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   // Homing
   private double lowestSeenHeight = 0.0;
-  private double height;
+  private double averageMeasuredHeight;
+  private double collisionAvoidanceGoal;
 
   public ElevatorSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.topMotor = topMotor;
     this.bottomMotor = bottomMotor;
-    //Motor Configs
+    // Motor Configs
     topMotor.getConfigurator().apply(RobotConfig.get().elevator().topMotorConfig());
     bottomMotor.getConfigurator().apply(RobotConfig.get().elevator().bottomMotorConfig());
   }
@@ -53,10 +54,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     }
   }
 
+  public void setCollisionAvoidanceGoal(double height) {
+    collisionAvoidanceGoal = height;
+  }
+
   @Override
   protected void collectInputs() {
     // Calculate average height of the two motors
-    height =
+    averageMeasuredHeight =
         (rotationsToInches(Units.rotationsToDegrees(topMotor.getPosition().getValueAsDouble()))
                 + rotationsToInches(
                     Units.rotationsToDegrees(bottomMotor.getPosition().getValueAsDouble())))
@@ -65,7 +70,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   @Override
   public void disabledPeriodic() {
-    double currentHeight = height;
+    double currentHeight = averageMeasuredHeight;
 
     if (currentHeight < lowestSeenHeight) {
       lowestSeenHeight = currentHeight;
@@ -211,23 +216,39 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    if (DriverStation.isEnabled() && getState() == ElevatorState.PRE_MATCH_HOMING) {
-      // We are enabled and still in pre match homing
-      // Reset the motor positions, and then transition to idle state
-      double homingEndPosition = RobotConfig.get().elevator().homingEndPosition();
-      double homedPosition = homingEndPosition + (height - lowestSeenHeight);
-      topMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
-      bottomMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
+    switch (getState()) {
+      case PRE_MATCH_HOMING -> {
+        if (DriverStation.isEnabled()) {
+          // We are enabled and still in pre match homing
+          // Reset the motor positions, and then transition to idle state
+          double homingEndPosition = RobotConfig.get().elevator().homingEndPosition();
+          double homedPosition = homingEndPosition + (averageMeasuredHeight - lowestSeenHeight);
+          topMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
+          bottomMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
 
-      setStateFromRequest(ElevatorState.STOWED);
+          setStateFromRequest(ElevatorState.STOWED);
+        }
+      }
+
+      case COLLISION_AVOIDANCE -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(inchesToRotations(clampHeight(collisionAvoidanceGoal)))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(inchesToRotations(clampHeight(collisionAvoidanceGoal)))));
+      }
+
+      default -> {}
     }
-    DogLog.log("Elevator/Height", height);
+
+    DogLog.log("Elevator/Height", averageMeasuredHeight);
   }
 
   public boolean atGoal(ElevatorState elevatorState) {
     return switch (getState()) {
       case PRE_MATCH_HOMING, UNJAM -> true;
-      default -> MathUtil.isNear(height, elevatorState.value, TOLERANCE);
+      default -> MathUtil.isNear(averageMeasuredHeight, elevatorState.value, TOLERANCE);
     };
   }
 }
