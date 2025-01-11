@@ -26,7 +26,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private static final int CORAL_PIPELINE = 2;
   private static final int PURPLE_PIPELINE = 3;
 
-
   public Limelight(String name) {
     super(SubsystemPriority.VISION, LimelightState.TAGS);
     limelightTableName = "limelight-" + name;
@@ -46,7 +45,11 @@ public class Limelight extends StateMachine<LimelightState> {
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
 
-  public Optional<TagResult> getInterpolatedVisionResult() {
+  public void setState(LimelightState state) {
+    setStateFromRequest(state);
+  }
+
+  public Optional<TagResult> getInterpolatedTagResult() {
     var rawTagResult = getRawTagResult();
 
     if (rawTagResult.isEmpty()) {
@@ -84,7 +87,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
     return Optional.of(new TagResult(estimatePose.pose, estimatePose.timestampSeconds));
   }
-  
+
   private Optional<CoralResult> getRawCoralResult() {
     if (getState() != LimelightState.CORAL) {
       return Optional.empty();
@@ -95,20 +98,20 @@ public class Limelight extends StateMachine<LimelightState> {
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
-    LimelightHelpers.getLatency_Capture(limelightTableName)
-    + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+        LimelightHelpers.getLatency_Capture(limelightTableName)
+            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
       return Optional.empty();
     }
-    
+
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
-    
+
     return Optional.of(new CoralResult(coralTX, coralTY, timestamp));
   }
-  
+
   private Optional<PurpleResult> getRawPurpleResult() {
     if (getState() != LimelightState.PURPLE) {
       return Optional.empty();
@@ -119,31 +122,30 @@ public class Limelight extends StateMachine<LimelightState> {
     var purpleTX = LimelightHelpers.getTX(limelightTableName);
     var purpleTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
-    LimelightHelpers.getLatency_Capture(limelightTableName)
-    + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+        LimelightHelpers.getLatency_Capture(limelightTableName)
+            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (purpleTX == 0.0 || purpleTY == 0.0) {
       return Optional.empty();
     }
-    
+
     DogLog.log("Vision/" + name + "/Purple/tx", purpleTX);
     DogLog.log("Vision/" + name + "/Purple/ty", purpleTY);
-    
+
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
-  
-  
-    @Override
-    public void robotPeriodic() {
-      super.robotPeriodic();
-      switch (getState()) {
-        case TAGS -> updateState(getRawTagResult());
-        case CORAL -> updateState(getRawCoralResult());
-        case PURPLE -> updateState(getRawPurpleResult());
-        default -> {}
-      }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    switch (getState()) {
+      case TAGS -> updateState(getRawTagResult());
+      case CORAL -> updateState(getRawCoralResult());
+      case PURPLE -> updateState(getRawPurpleResult());
+      default -> {}
     }
+  }
 
   private void updateState(Optional result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");

@@ -29,12 +29,12 @@ public class Robot extends TimedRobot {
   private final Hardware hardware = new Hardware();
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight leftLimelight = new Limelight("left");
-  private final Limelight rightLimelight = new Limelight("right");
+  private final Limelight topLimelight = new Limelight("top");
+  private final Limelight bottomLimelight = new Limelight("bottom");
   private final Limelight backLimelight = new Limelight("back");
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, leftLimelight, rightLimelight, backLimelight);
+      new VisionSubsystem(imu, topLimelight, bottomLimelight, backLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Purple purple = new Purple(localization);
 
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
           hardware.intakeMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RobotManager robotManager =
-      new RobotManager(intake, wrist, vision, imu, swerve, localization);
+      new RobotManager(intake, wrist, vision, imu, swerve, localization, topLimelight, bottomLimelight, backLimelight);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);

@@ -12,6 +12,8 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.wrist.WristState;
 import frc.robot.wrist.WristSubsystem;
+import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightState;
 
 public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
@@ -22,13 +24,17 @@ public class RobotManager extends StateMachine<RobotState> {
   private final IntakeSubsystem intake;
   private final WristSubsystem wrist;
 
+  private final Limelight topLimelight;
+  private final Limelight bottomLimelight;
+  private final Limelight backLimelight;
+
   public RobotManager(
       IntakeSubsystem intake,
       WristSubsystem wrist,
       VisionSubsystem vision,
       ImuSubsystem imu,
       SwerveSubsystem swerve,
-      LocalizationSubsystem localization) {
+      LocalizationSubsystem localization, Limelight topLimelight, Limelight bottomLimelight, Limelight backLimelight) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.wrist = wrist;
@@ -36,6 +42,9 @@ public class RobotManager extends StateMachine<RobotState> {
     this.imu = imu;
     this.swerve = swerve;
     this.localization = localization;
+    this.topLimelight = topLimelight;
+    this.bottomLimelight = bottomLimelight;
+    this.backLimelight = backLimelight;
   }
 
   @Override
@@ -104,6 +113,8 @@ public class RobotManager extends StateMachine<RobotState> {
     // TODO: Implement
     switch (newState) {
       case SCORE_ASSIST -> {
+        // Demo of how to set the state of limelight to coral detection
+        bottomLimelight.setState(LimelightState.CORAL);
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.SCORE_ASSIST);
         } else {
@@ -246,7 +257,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
     }
   }
-  
 
   public void stowRequest() {}
 
