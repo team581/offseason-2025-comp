@@ -76,56 +76,48 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L3_WAITING,
               CORAL_L4_WAITING,
               CLIMBING_1_LINEUP,
-              CLIMBING_2_HANGING ->
+              CLIMBING_2_HANGING,
+              DISLODGE_ALGAE_L2_WAIT,
+              DISLODGE_ALGAE_L3_WAIT ->
           currentState;
 
-        //   TODO: add check for PREPARE_TO_SCORE transitions
       case PROCESSOR_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.PROCESSOR) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.PROCESSOR_SCORING
               : currentState;
       case NET_BACK_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.NET) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.NET_BACK_SCORING
               : currentState;
       case NET_FORWARD_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.NET) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.NET_FORWARD_SCORING
               : currentState;
 
       case CORAL_L1_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L1) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.CORAL_L1_SCORING
               : currentState;
       case CORAL_L2_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L2) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.CORAL_L2_SCORING
               : currentState;
       case CORAL_L3_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L3) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.CORAL_L3_SCORING
               : currentState;
       case CORAL_L4_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L4) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? RobotState.CORAL_L4_SCORING
               : currentState;
 
         // Dislodging
-      case DISLODGE_ALGAE_L2_WAIT ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2) && pivot.atGoal()
-              ? RobotState.DISLODGE_ALGAE_L2_PUSHING
-              : currentState;
-      case DISLODGE_ALGAE_L3_WAIT ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L3) && pivot.atGoal()
-              ? RobotState.DISLODGE_ALGAE_L3_PUSHING
-              : currentState;
-
       case DISLODGE_ALGAE_L2_PUSHING ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? (intake.getHasGP() ? RobotState.CORAL_L2_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
               : currentState;
       case DISLODGE_ALGAE_L3_PUSHING ->
-          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2) && pivot.atGoal()
+          wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? (intake.getHasGP() ? RobotState.CORAL_L3_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
               : currentState;
 
@@ -137,7 +129,7 @@ public class RobotManager extends StateMachine<RobotState> {
               PROCESSOR_SCORING,
               NET_BACK_SCORING,
               NET_FORWARD_SCORING ->
-          !intake.getHasGP() ? RobotState.IDLE_NO_GP : currentState;
+          intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
 
         // Intaking
       case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 ->
@@ -152,7 +144,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
   @Override
   protected void afterTransition(RobotState newState) {
-    // TODO: Implement
     switch (newState) {
       case SCORE_ASSIST -> {
         if (DriverStation.isTeleop()) {
@@ -178,7 +169,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case IDLE_ALGAE -> {
         wrist.setState(WristState.IDLE);
-        intake.setState(IntakeState.IDLE_W_ALGEA);
+        intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.STOWED);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -190,45 +181,54 @@ public class RobotManager extends StateMachine<RobotState> {
         elevator.setState(ElevatorState.STOWED);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
-        topPurpleLimelight.setState(LimelightState.PURPLE);
+        topPurpleLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_ALGAE_FLOOR -> {
         wrist.setState(WristState.GROUND_ALGAE_INTAKE);
-        intake.setState(IntakeState.INTAKING_ALGEA);
+        intake.setState(IntakeState.INTAKING_ALGAE);
         elevator.setState(ElevatorState.GROUND_ALGAE_INTAKE);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
+
         topPurpleLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_ALGAE_L2 -> {
-        wrist.setState(WristState.CORAL_SCORE_LV2);
-        intake.setState(IntakeState.INTAKING_ALGEA);
+        wrist.setState(WristState.ALGAE_INTAKE_LV2);
+        intake.setState(IntakeState.INTAKING_ALGAE);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_ALGAE_L3 -> {
-        wrist.setState(WristState.CORAL_SCORE_LV3);
-        intake.setState(IntakeState.INTAKING_ALGEA);
+        wrist.setState(WristState.ALGAE_INTAKE_LV3);
+        intake.setState(IntakeState.INTAKING_ALGAE);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_CORAL_STATION -> {
-        wrist.setState(WristState.SOURCE_INTAKE);
+        wrist.setState(WristState.INTAKING_CORAL_STATION);
         intake.setState(IntakeState.INTAKING_CORAL);
-        elevator.setState(ElevatorState.INTAKE_CORAL_STATION);
+        elevator.setState(ElevatorState.INTAKING_CORAL_STATION);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
       }
-      case INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_FLOOR_HORIZONTAL -> {
+      case INTAKE_CORAL_FLOOR_UPRIGHT -> {
         wrist.setState(WristState.GROUND_CORAL_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
         elevator.setState(ElevatorState.GROUND_CORAL_INTAKE);
         pivot.setState(PivotState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+      }
+      case INTAKE_CORAL_FLOOR_HORIZONTAL -> {
+        wrist.setState(WristState.GROUND_CORAL_INTAKE);
+        intake.setState(IntakeState.INTAKING_CORAL);
+        elevator.setState(ElevatorState.GROUND_CORAL_INTAKE);
+        pivot.setState(PivotState.INTAKING_CORAL_HORIZONTAL);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
       }
@@ -330,7 +330,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_BACKWARD_NET);
-        intake.setState(IntakeState.IDLE_W_ALGEA);
+        intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -346,7 +346,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_FORWARD_NET);
-        intake.setState(IntakeState.IDLE_W_ALGEA);
+        intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -362,7 +362,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_PROCESSOR);
-        intake.setState(IntakeState.IDLE_W_ALGEA);
+        intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.PROCESSOR);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);

@@ -2,9 +2,8 @@ package frc.robot.pivot;
 
 public enum PivotState {
   HOMING(0.0),
-
+  INTAKING_CORAL_HORIZONTAL(90),
   STOWED(0.0),
-
   CORAL_SCORE(0.0);
 
   public final double angle;
