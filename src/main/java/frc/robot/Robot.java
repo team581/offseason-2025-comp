@@ -21,6 +21,7 @@ import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends TimedRobot {
@@ -29,9 +30,9 @@ public class Robot extends TimedRobot {
   private final Hardware hardware = new Hardware();
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight topLimelight = new Limelight("top");
-  private final Limelight bottomLimelight = new Limelight("bottom");
-  private final Limelight backLimelight = new Limelight("back");
+  private final Limelight topLimelight = new Limelight("top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topSet);
+  private final Limelight bottomLimelight = new Limelight("bottom",  LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().bottomSet);
+  private final Limelight backLimelight = new Limelight("back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backSet);
 
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, topLimelight, bottomLimelight, backLimelight);
