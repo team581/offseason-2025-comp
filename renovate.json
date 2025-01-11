@@ -6,7 +6,5 @@
     "schedule:daily"
   ],
   "semanticCommits": "disabled",
-  "labels": [
-    "dependencies"
-  ]
+  "labels": ["dependencies"]
 }

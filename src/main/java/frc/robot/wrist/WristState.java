@@ -1,7 +1,5 @@
 package frc.robot.wrist;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
 public enum WristState {
   IDLE(0.0),
   UNJAM(0.0),
@@ -21,11 +19,12 @@ public enum WristState {
   GROUND_ALGAE_INTAKE(0.0);
 
   public final double angle;
+
   WristState(double angle) {
     this.angle = angle;
-
   }
+
   public double getAngle() {
-      return angle;
+    return angle;
   }
 }

@@ -1,14 +1,13 @@
 package frc.robot.vision;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.doglog.DogLog;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.results.TagResult;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
@@ -46,21 +45,21 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     interpolatedVisionResult.clear();
-      var maybeTopResult = topLimelight.getInterpolatedVisionResult();
-      var maybeBottomResult = bottomLimelight.getInterpolatedVisionResult();
-      var maybeBackResult = backLimelight.getInterpolatedVisionResult();
-     
-      if (maybeTopResult.isPresent()) {
-        interpolatedVisionResult.add(maybeTopResult.get());
-      }
+    var maybeTopResult = topLimelight.getInterpolatedVisionResult();
+    var maybeBottomResult = bottomLimelight.getInterpolatedVisionResult();
+    var maybeBackResult = backLimelight.getInterpolatedVisionResult();
 
-      if (maybeBottomResult.isPresent()) {
-        interpolatedVisionResult.add(maybeBottomResult.get());
-      }
-    
-      if (maybeBackResult.isPresent()) {
-        interpolatedVisionResult.add(maybeBackResult.get());
-      }
+    if (maybeTopResult.isPresent()) {
+      interpolatedVisionResult.add(maybeTopResult.get());
+    }
+
+    if (maybeBottomResult.isPresent()) {
+      interpolatedVisionResult.add(maybeBottomResult.get());
+    }
+
+    if (maybeBackResult.isPresent()) {
+      interpolatedVisionResult.add(maybeBackResult.get());
+    }
   }
 
   public List<TagResult> getInterpolatedVisionResult() {
