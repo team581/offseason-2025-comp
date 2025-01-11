@@ -344,17 +344,17 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
-        bottomLimelight.setState(LimelightState.TAGS);
-        topLimelight.setState(LimelightState.TAGS);
-        backLimelight.setState(LimelightState.TAGS);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CLIMBING_2_HANGING -> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
-        bottomLimelight.setState(LimelightState.TAGS);
-        topLimelight.setState(LimelightState.TAGS);
-        backLimelight.setState(LimelightState.TAGS);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
     }
   }
