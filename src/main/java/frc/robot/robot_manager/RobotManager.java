@@ -156,7 +156,6 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
     }
   }
-  }
 
   public void stowRequest() {}
 
