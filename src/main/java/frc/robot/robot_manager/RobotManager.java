@@ -7,6 +7,7 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -168,6 +169,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -176,6 +179,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -184,6 +189,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -192,6 +199,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.GROUND_ALGAE_INTAKE);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.GROUND_ALGAE_INTAKE);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -200,6 +209,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -208,6 +219,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -216,6 +229,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.SOURCE_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
         elevator.setState(ElevatorState.INTAKE_CORAL_STATION);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -224,6 +239,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.GROUND_CORAL_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
         elevator.setState(ElevatorState.GROUND_CORAL_INTAKE);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -232,6 +249,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV1);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -240,6 +259,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV1);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -248,6 +269,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -256,6 +279,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -264,6 +289,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -272,6 +299,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -280,6 +309,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV4);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -288,6 +319,9 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.CORAL_SCORE_LV4);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(0);
+        // TODO
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -296,6 +330,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_BACKWARD_NET);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.NET);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -304,6 +340,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_BACKWARD_NET);
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -312,6 +350,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_FORWARD_NET);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.NET);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -320,6 +360,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_FORWARD_NET);
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -328,6 +370,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_PROCESSOR);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.PROCESSOR);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -336,6 +380,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.ALGAE_PROCESSOR);
         intake.setState(IntakeState.SCORE_ALGEA_PROCESSOR);
         elevator.setState(ElevatorState.PROCESSOR);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -344,6 +390,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
@@ -352,6 +400,8 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
