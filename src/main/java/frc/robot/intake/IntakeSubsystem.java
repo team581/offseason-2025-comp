@@ -62,7 +62,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   protected void afterTransition(IntakeState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
-        motor.setVoltage(0.0);
+        motor.disable();
       }
       case IDLE_W_ALGEA -> {
         motor.setVoltage(1.0);
