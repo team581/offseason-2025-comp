@@ -9,6 +9,8 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightState;
 
 public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
@@ -18,18 +20,25 @@ public class RobotManager extends StateMachine<RobotState> {
   private final LocalizationSubsystem localization;
   private final IntakeSubsystem intake;
 
+  private final Limelight topLimelight;
+  private final Limelight bottomLimelight;
+  private final Limelight backLimelight;
+
   public RobotManager(
       IntakeSubsystem intake,
       VisionSubsystem vision,
       ImuSubsystem imu,
       SwerveSubsystem swerve,
-      LocalizationSubsystem localization) {
+      LocalizationSubsystem localization, Limelight topLimelight, Limelight bottomLimelight, Limelight backLimelight) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.vision = vision;
     this.imu = imu;
     this.swerve = swerve;
     this.localization = localization;
+    this.topLimelight = topLimelight;
+    this.bottomLimelight = bottomLimelight;
+    this.backLimelight = backLimelight;
   }
 
   @Override
