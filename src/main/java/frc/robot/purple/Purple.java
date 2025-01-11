@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import frc.robot.FieldUtil;
 import frc.robot.ReefPipe;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.LimelightHelpers;
@@ -25,7 +24,8 @@ public class Purple {
 
     this.localization = localization;
   }
-  private static Pose2d getPose(LocalizationSubsystem localization){
+
+  private static Pose2d getPose(LocalizationSubsystem localization) {
     return localization.getPose();
   }
 
@@ -44,7 +44,8 @@ public class Purple {
       if (distanceFromScoreSpot(getPose(localization), closestScoreSpot)
           > distanceFromScoreSpot(getPose(localization), pipe.getPose())) {
         closestScoreSpot = pipe.getPose();
-    }}
+      }
+    }
 
     // for (int i = 0; i <= 12; ) {
     //   if (distanceFromScoreSpot(localization.getPose(), closestScoreSpot)

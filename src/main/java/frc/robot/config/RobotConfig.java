@@ -6,7 +6,11 @@ import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 public record RobotConfig(
-    String robotName, IntakeConfig intake, SwerveConfig swerve, VisionConfig vision) {
+    String robotName,
+    IntakeConfig intake,
+    SwerveConfig swerve,
+    VisionConfig vision,
+    WristConfig wrist) {
 
   public record IntakeConfig(
       int motorID,
@@ -29,6 +33,13 @@ public record RobotConfig(
       double xyStdDev,
       double thetaStdDev,
       InterpolatedVisionDataset interpolatedVisionSet) {}
+
+  public record WristConfig(
+      String canBusName,
+      int motorID,
+      TalonFXConfiguration motorConfig,
+      double minAngle,
+      double maxAngle) {}
 
   // TODO: Change this to false during events
   public static final boolean IS_DEVELOPMENT = true;

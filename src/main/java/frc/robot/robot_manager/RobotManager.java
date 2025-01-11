@@ -118,7 +118,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-
   public void confirmScore() {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
@@ -173,7 +172,6 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> {
-
         setStateFromRequest(RobotState.IDLE_NO_GP);
       }
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
