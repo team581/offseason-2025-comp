@@ -120,27 +120,16 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
-  private void updateState(
-      Optional<TagResult> tagResult,
-      Optional<CoralResult> coralResult,
-      Optional<PurpleResult> purpleResult) {
-    var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
-
-    if (limelightHeartbeat != newHeartbeat) {
-      limelightTimer.restart();
-    }
-    limelightHeartbeat = newHeartbeat;
-
-    if (limelightTimer.hasElapsed(5)) {
-      cameraStatus = CameraStatus.OFFLINE;
-      return;
-    }
-
-    if (!tagResult.isEmpty()) {
-      cameraStatus = CameraStatus.GOOD;
-      return;
-    }
-    cameraStatus = CameraStatus.NO_TARGETS;
+  
+    @Override
+    public void robotPeriodic() {
+      super.robotPeriodic();
+      switch (getState()) {
+        case TAGS -> updateState(getRawTagResult());
+        case CORAL -> updateState(getRawCoralResult());
+        case PURPLE -> updateState(getRawPurpleResult());
+        default -> {}
+      }
   }
 
   private void updateState(Optional result) {
