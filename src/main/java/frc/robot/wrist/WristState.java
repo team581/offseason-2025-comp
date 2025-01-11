@@ -16,7 +16,9 @@ public enum WristState {
 
   SOURCE_INTAKE(0.0),
   GROUND_CORAL_INTAKE(0.0),
-  GROUND_ALGAE_INTAKE(0.0);
+  GROUND_ALGAE_INTAKE(0.0),
+
+  COLLISION_AVOIDANCE(0);
 
   public final double angle;
 

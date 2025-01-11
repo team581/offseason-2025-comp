@@ -15,6 +15,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   private double motorAngle;
   private double lowestSeenAngle = Double.MAX_VALUE;
   private double highestSeenAngle = Double.MIN_VALUE;
+  private double collisionAvoidanceGoal;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
@@ -36,6 +37,10 @@ public class WristSubsystem extends StateMachine<WristState> {
 
       setStateFromRequest(newState);
     }
+  }
+
+  public void setCollisionAvoidanceGoal(double angle) {
+    collisionAvoidanceGoal = angle;
   }
 
   public boolean atGoal() {
@@ -142,17 +147,28 @@ public class WristSubsystem extends StateMachine<WristState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    if (getState() == WristState.PRE_MATCH_HOMING
-        && (highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
-      if (DriverStation.isEnabled()) {
-        motor.setPosition(
-            Units.degreesToRotations(
-                RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
+    switch (getState()) {
+      case PRE_MATCH_HOMING -> {
+        if ((highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
+          if (DriverStation.isEnabled()) {
+            motor.setControl(
+                motionMagicRequest.withPosition(
+                    Units.degreesToRotations(
+                        RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle))));
 
-        setStateFromRequest(WristState.IDLE);
-      } else {
-        motor.setControl(brakeNeutralRequest);
+            setStateFromRequest(WristState.IDLE);
+          } else {
+            motor.setControl(brakeNeutralRequest);
+          }
+        }
       }
+      case COLLISION_AVOIDANCE -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+      }
+
+      default -> {}
     }
   }
 
