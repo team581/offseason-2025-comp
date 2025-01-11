@@ -28,9 +28,9 @@ public class RobotManager extends StateMachine<RobotState> {
   private final WristSubsystem wrist;
   private final ElevatorSubsystem elevator;
 
-  private final Limelight topLimelight;
-  private final Limelight bottomLimelight;
-  private final Limelight backLimelight;
+  private final Limelight topPurpleLimelight;
+  private final Limelight bottomCoralLimelight;
+  private final Limelight backwardsTagLimelight;
 
   public RobotManager(
       IntakeSubsystem intake,
@@ -40,9 +40,9 @@ public class RobotManager extends StateMachine<RobotState> {
       ImuSubsystem imu,
       SwerveSubsystem swerve,
       LocalizationSubsystem localization,
-      Limelight topLimelight,
-      Limelight bottomLimelight,
-      Limelight backLimelight) {
+      Limelight topPurpleLimelight,
+      Limelight bottomCoralLimelight,
+      Limelight backwardsTagLimelight) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.wrist = wrist;
@@ -51,9 +51,9 @@ public class RobotManager extends StateMachine<RobotState> {
     this.imu = imu;
     this.swerve = swerve;
     this.localization = localization;
-    this.topLimelight = topLimelight;
-    this.bottomLimelight = bottomLimelight;
-    this.backLimelight = backLimelight;
+    this.topPurpleLimelight = topPurpleLimelight;
+    this.bottomCoralLimelight = bottomCoralLimelight;
+    this.backwardsTagLimelight = backwardsTagLimelight;
   }
 
   @Override
@@ -150,7 +150,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (newState) {
       case SCORE_ASSIST -> {
         // Demo of how to set the state of limelight to coral detection
-        bottomLimelight.setState(LimelightState.CORAL);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.SCORE_ASSIST);
         } else {
@@ -168,111 +168,193 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case IDLE_ALGAE -> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case IDLE_CORAL -> {
         wrist.setState(WristState.IDLE);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_ALGAE_FLOOR -> {
         wrist.setState(WristState.GROUND_ALGAE_INTAKE);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.GROUND_ALGAE_INTAKE);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_ALGAE_L2 -> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_ALGAE_L3 -> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.INTAKING_ALGEA);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_CORAL_STATION -> {
         wrist.setState(WristState.SOURCE_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
         elevator.setState(ElevatorState.INTAKE_CORAL_STATION);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_FLOOR_HORIZONTAL -> {
         wrist.setState(WristState.GROUND_CORAL_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
         elevator.setState(ElevatorState.GROUND_CORAL_INTAKE);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L1_WAITING, CORAL_L1_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.CORAL_SCORE_LV1);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L1_SCORING -> {
         wrist.setState(WristState.CORAL_SCORE_LV1);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L2_WAITING, CORAL_L2_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L2_SCORING -> {
         wrist.setState(WristState.CORAL_SCORE_LV2);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L3_WAITING, CORAL_L3_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L3_SCORING -> {
         wrist.setState(WristState.CORAL_SCORE_LV3);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L4_WAITING, CORAL_L4_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.CORAL_SCORE_LV4);
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L4_SCORING -> {
         wrist.setState(WristState.CORAL_SCORE_LV4);
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_BACKWARD_NET);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.NET);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case NET_BACK_SCORING -> {
         wrist.setState(WristState.ALGAE_BACKWARD_NET);
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_FORWARD_NET);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.NET);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case NET_FORWARD_SCORING -> {
         wrist.setState(WristState.ALGAE_FORWARD_NET);
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
         wrist.setState(WristState.ALGAE_PROCESSOR);
         intake.setState(IntakeState.IDLE_W_ALGEA);
         elevator.setState(ElevatorState.PROCESSOR);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case PROCESSOR_SCORING -> {
         wrist.setState(WristState.ALGAE_PROCESSOR);
         intake.setState(IntakeState.SCORE_ALGEA_PROCESSOR);
         elevator.setState(ElevatorState.PROCESSOR);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case CLIMBING_1_LINEUP -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case CLIMBING_2_HANGING -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
       }
     }
   }

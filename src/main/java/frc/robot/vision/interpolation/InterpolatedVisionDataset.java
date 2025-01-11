@@ -99,13 +99,14 @@ public enum InterpolatedVisionDataset {
                   "BLUE_PODIUM_SPEAKER_INTERSECTION"))),
       new CameraDataset(List.of(), List.of()));
 
-  public final CameraDataset topSet;
-  public final CameraDataset bottomSet;
-  public final CameraDataset backSet;
+  public final CameraDataset topPurpleSet;
+  public final CameraDataset bottomCoralSet;
+  public final CameraDataset backwardsTagSet;
 
-  InterpolatedVisionDataset(CameraDataset top, CameraDataset bottom, CameraDataset back) {
-    this.topSet = top;
-    this.bottomSet = bottom;
-    this.backSet = back;
+  InterpolatedVisionDataset(
+      CameraDataset topPurpleSet, CameraDataset bottomCoralSet, CameraDataset backwardsTagSet) {
+    this.topPurpleSet = topPurpleSet;
+    this.bottomCoralSet = bottomCoralSet;
+    this.backwardsTagSet = backwardsTagSet;
   }
 }
