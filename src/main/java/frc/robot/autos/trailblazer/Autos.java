@@ -1,7 +1,6 @@
-package frc.robot.autos;
+package frc.robot.autos.trailblazer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.scheduling.LifecycleSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;

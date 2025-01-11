@@ -3,6 +3,7 @@ package frc.robot.wrist;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
@@ -24,6 +25,7 @@ public class WristSubsystem extends StateMachine<WristState> {
       new MotionMagicVoltage(0).withEnableFOC(false);
   //private final PositionVoltage pidRequest =
     //  new PositionVoltage(0).withEnableFOC(false);
+
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -51,6 +53,7 @@ public class WristSubsystem extends StateMachine<WristState> {
       case GROUND_ALGAE_INTAKE -> MathUtil.isNear(WristState.GROUND_ALGAE_INTAKE.angle, motorAngle, 1);
       case GROUND_CORAL_INTAKE -> MathUtil.isNear(WristState.GROUND_CORAL_INTAKE.angle, motorAngle, 1);
       case IDLE -> MathUtil.isNear(WristState.IDLE.angle, motorAngle, 1);
+
       case PRE_MATCH_HOMING -> true;
       case SOURCE_INTAKE -> MathUtil.isNear(WristState.SOURCE_INTAKE.angle, motorAngle, 1);
       case UNJAM -> MathUtil.isNear(WristState.UNJAM.angle, motorAngle, 1);
@@ -119,6 +122,7 @@ public class WristSubsystem extends StateMachine<WristState> {
       case IDLE -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(clamp(WristState.IDLE.angle))));
+
       }
       case SOURCE_INTAKE -> {
         motor.setControl(
@@ -128,6 +132,7 @@ public class WristSubsystem extends StateMachine<WristState> {
       case UNJAM -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(clamp(WristState.UNJAM.angle))));
+
       }
       default -> {}
     }
@@ -141,6 +146,7 @@ public class WristSubsystem extends StateMachine<WristState> {
     if (getState() == WristState.PRE_MATCH_HOMING && (highestSeenAngle-lowestSeenAngle)>MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
       if (DriverStation.isEnabled()) {
         motor.setPosition(
+
           Units.degreesToRotations(
               RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
 

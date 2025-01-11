@@ -18,5 +18,6 @@ public class Hardware {
       new DigitalInput(RobotConfig.get().intake().leftSensorID());
   public final DigitalInput intakeRightSensor =
       new DigitalInput(RobotConfig.get().intake().rightSensorID());
-  public final TalonFX wristMotor = new TalonFX(RobotConfig.get().wrist().motorID(),RobotConfig.get().wrist().canBusName());
+  public final TalonFX wristMotor =
+      new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 }

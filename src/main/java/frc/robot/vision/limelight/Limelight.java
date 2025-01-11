@@ -1,5 +1,7 @@
 package frc.robot.vision.limelight;
 
+import java.util.Optional;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +13,6 @@ import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
-import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
@@ -21,6 +22,9 @@ public class Limelight extends StateMachine<LimelightState> {
   private double limelightHeartbeat = -1;
 
   private final Timer limelightTimer = new Timer();
+  private static final int TAG_PIPELINE = 1;
+  private static final int CORAL_PIPELINE = 2;
+  private static final int PURPLE_PIPELINE = 3;
 
   public Limelight(String name) {
     super(SubsystemPriority.VISION, LimelightState.TAGS);
@@ -41,7 +45,11 @@ public class Limelight extends StateMachine<LimelightState> {
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
 
-  public Optional<TagResult> getInterpolatedVisionResult() {
+  public void setState(LimelightState state) {
+    setStateFromRequest(state);
+  }
+
+  public Optional<TagResult> getInterpolatedTagResult() {
     var rawTagResult = getRawTagResult();
 
     if (rawTagResult.isEmpty()) {
@@ -54,13 +62,19 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<TagResult> getRawTagResult() {
+    if (getState() != LimelightState.TAGS) {
+      return Optional.empty();
+    }
+    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != TAG_PIPELINE) {
+      LimelightHelpers.setPipelineIndex(limelightTableName, TAG_PIPELINE);
+    }
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
       return Optional.empty();
     }
 
-    DogLog.log("Vision/" + name + "/RawLimelightPose", estimatePose.pose);
+    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
     if (estimatePose.tagCount == 0) {
       return Optional.empty();
@@ -75,6 +89,12 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<CoralResult> getRawCoralResult() {
+    if (getState() != LimelightState.CORAL) {
+      return Optional.empty();
+    }
+    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != CORAL_PIPELINE) {
+      LimelightHelpers.setPipelineIndex(limelightTableName, CORAL_PIPELINE);
+    }
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -93,6 +113,12 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<PurpleResult> getRawPurpleResult() {
+    if (getState() != LimelightState.PURPLE) {
+      return Optional.empty();
+    }
+    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != PURPLE_PIPELINE) {
+      LimelightHelpers.setPipelineIndex(limelightTableName, PURPLE_PIPELINE);
+    }
     var purpleTX = LimelightHelpers.getTX(limelightTableName);
     var purpleTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -110,27 +136,15 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
-  private void updateState(
-      Optional<TagResult> tagResult,
-      Optional<CoralResult> coralResult,
-      Optional<PurpleResult> purpleResult) {
-    var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
-
-    if (limelightHeartbeat != newHeartbeat) {
-      limelightTimer.restart();
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    switch (getState()) {
+      case TAGS -> updateState(getRawTagResult());
+      case CORAL -> updateState(getRawCoralResult());
+      case PURPLE -> updateState(getRawPurpleResult());
+      default -> {}
     }
-    limelightHeartbeat = newHeartbeat;
-
-    if (limelightTimer.hasElapsed(5)) {
-      cameraStatus = CameraStatus.OFFLINE;
-      return;
-    }
-
-    if (!tagResult.isEmpty()) {
-      cameraStatus = CameraStatus.GOOD;
-      return;
-    }
-    cameraStatus = CameraStatus.NO_TARGETS;
   }
 
   private void updateState(Optional result) {

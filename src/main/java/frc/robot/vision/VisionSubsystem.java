@@ -5,7 +5,6 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,24 +45,20 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     interpolatedVisionResult.clear();
-    if (topLimelight.getState() == LimelightState.TAGS) {
-      var maybeResult = topLimelight.getInterpolatedVisionResult();
-      if (maybeResult.isPresent()) {
-        interpolatedVisionResult.add(maybeResult.get());
-      }
+    var maybeTopResult = topLimelight.getInterpolatedTagResult();
+    var maybeBottomResult = bottomLimelight.getInterpolatedTagResult();
+    var maybeBackResult = backLimelight.getInterpolatedTagResult();
+
+    if (maybeTopResult.isPresent()) {
+      interpolatedVisionResult.add(maybeTopResult.get());
     }
 
-    if (bottomLimelight.getState() == LimelightState.TAGS) {
-      var maybeResult = bottomLimelight.getInterpolatedVisionResult();
-      if (maybeResult.isPresent()) {
-        interpolatedVisionResult.add(maybeResult.get());
-      }
+    if (maybeBottomResult.isPresent()) {
+      interpolatedVisionResult.add(maybeBottomResult.get());
     }
-    if (backLimelight.getState() == LimelightState.TAGS) {
-      var maybeResult = backLimelight.getInterpolatedVisionResult();
-      if (maybeResult.isPresent()) {
-        interpolatedVisionResult.add(maybeResult.get());
-      }
+
+    if (maybeBackResult.isPresent()) {
+      interpolatedVisionResult.add(maybeBackResult.get());
     }
   }
 
@@ -77,10 +72,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     topLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     bottomLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    DogLog.log("Vision/AngularVelocity", angularVelocity);
-    DogLog.log("Vision/Pitch", pitch);
-    DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
 
+    DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
     DogLog.log("Vision/Left/VisionState", topLimelight.getCameraStatus());
     DogLog.log("Vision/Right/VisionState", bottomLimelight.getCameraStatus());
