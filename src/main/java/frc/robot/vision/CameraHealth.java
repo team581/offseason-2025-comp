@@ -1,6 +1,6 @@
 package frc.robot.vision;
 
-public enum CameraStatus {
+public enum CameraHealth {
   GOOD,
   OFFLINE,
   NO_TARGETS;

@@ -33,9 +33,17 @@ public class Robot extends TimedRobot {
       new ElevatorSubsystem(hardware.elevatorTop, hardware.elevatorBottom);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight topLimelight = new Limelight("top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topSet);
-  private final Limelight bottomLimelight = new Limelight("bottom",  LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().bottomSet);
-  private final Limelight backLimelight = new Limelight("back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backSet);
+  private final Limelight topLimelight =
+      new Limelight(
+          "top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topSet);
+  private final Limelight bottomLimelight =
+      new Limelight(
+          "bottom",
+          LimelightState.TAGS,
+          RobotConfig.get().vision().interpolatedVisionSet().bottomSet);
+  private final Limelight backLimelight =
+      new Limelight(
+          "back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backSet);
 
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, topLimelight, bottomLimelight, backLimelight);

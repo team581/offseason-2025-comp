@@ -1,23 +1,24 @@
 package frc.robot.vision.limelight;
 
+import java.util.Optional;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-import frc.robot.vision.CameraStatus;
+import frc.robot.vision.CameraHealth;
 import frc.robot.vision.interpolation.CameraDataset;
 import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
-import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
   private final CameraDataset cameraDataset;
-  private CameraStatus cameraStatus = CameraStatus.NO_TARGETS;
+  private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
   private final Timer limelightTimer = new Timer();
 
@@ -38,9 +39,9 @@ public class Limelight extends StateMachine<LimelightState> {
       double pitchRate,
       double roll,
       double rollRate) {
-        if (getState() == LimelightState.TAGS) {
-          return;
-        }
+    if (getState() == LimelightState.TAGS) {
+      return;
+    }
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
@@ -63,7 +64,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.TAGS) {
       return Optional.empty();
     }
-        
+
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
@@ -88,12 +89,12 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.CORAL) {
       return Optional.empty();
     }
-
-    var coralTX = LimelightHelpers.getTX(limelightTableName);
-    var coralTY = LimelightHelpers.getTY(limelightTableName);
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    var coralTX = t2d[4];
+    var coralTY = t2d[5];
     var latency =
-        LimelightHelpers.getLatency_Capture(limelightTableName)
-            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+        t2d[2]
+            + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
@@ -110,12 +111,12 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.PURPLE) {
       return Optional.empty();
     }
-
-    var purpleTX = LimelightHelpers.getTX(limelightTableName);
-    var purpleTY = LimelightHelpers.getTY(limelightTableName);
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    var purpleTX = t2d[4];
+    var purpleTY = t2d[5];
     var latency =
-        LimelightHelpers.getLatency_Capture(limelightTableName)
-            + LimelightHelpers.getLatency_Pipeline(limelightTableName);
+        t2d[2]
+            + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (purpleTX == 0.0 || purpleTY == 0.0) {
@@ -132,16 +133,15 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<CoralResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
 
-
   @Override
   protected void collectInputs() {
-        tagResult = getRawTagResult();
-        coralResult = getRawCoralResult();
-        purpleResult = getRawPurpleResult();
-        if (getState() == LimelightState.TAGS) {
-          interpolatedPose =
+    tagResult = getRawTagResult();
+    coralResult = getRawCoralResult();
+    purpleResult = getRawPurpleResult();
+    if (getState() == LimelightState.TAGS) {
+      interpolatedPose =
           InterpolatedVision.interpolatePose(getRawTagResult().get().pose(), cameraDataset);
-        }
+    }
   }
 
   @Override
@@ -165,18 +165,18 @@ public class Limelight extends StateMachine<LimelightState> {
     limelightHeartbeat = newHeartbeat;
 
     if (limelightTimer.hasElapsed(5)) {
-      cameraStatus = CameraStatus.OFFLINE;
+      cameraHealth = CameraHealth.OFFLINE;
       return;
     }
 
     if (!result.isEmpty()) {
-      cameraStatus = CameraStatus.GOOD;
+      cameraHealth = CameraHealth.GOOD;
       return;
     }
-    cameraStatus = CameraStatus.NO_TARGETS;
+    cameraHealth = CameraHealth.NO_TARGETS;
   }
 
-  public CameraStatus getCameraStatus() {
-    return cameraStatus;
+  public CameraHealth getCameraHealth() {
+    return cameraHealth;
   }
 }
