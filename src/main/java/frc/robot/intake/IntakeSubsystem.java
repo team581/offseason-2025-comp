@@ -1,7 +1,6 @@
 package frc.robot.intake;
 
 import com.ctre.phoenix.CANifier;
-import com.ctre.phoenix.CANifierConfiguration;
 import com.ctre.phoenix.CANifier.GeneralPin;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
