@@ -25,6 +25,7 @@ public record RobotConfig(
       double tolerance) {}
 
   public record IntakeConfig(
+      String canBusName,
       int motorID,
       int leftSensorID,
       int rightSensorID,
