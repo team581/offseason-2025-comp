@@ -1,7 +1,8 @@
 package frc.robot.vision.interpolation;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import java.util.List;
+
+import edu.wpi.first.math.geometry.Translation2d;
 
 /** A interpolated vision data set for each field, for all cameras. */
 public enum InterpolatedVisionDataset {
@@ -99,13 +100,13 @@ public enum InterpolatedVisionDataset {
                   "BLUE_PODIUM_SPEAKER_INTERSECTION"))),
       new CameraDataset(List.of(), List.of()));
 
-  public final CameraDataset topSet;
-  public final CameraDataset bottomSet;
-  public final CameraDataset backSet;
+  public final CameraDataset topPurpleSet;
+  public final CameraDataset bottomCoralSet;
+  public final CameraDataset backwardsTagSet;
 
-  InterpolatedVisionDataset(CameraDataset top, CameraDataset bottom, CameraDataset back) {
-    this.topSet = top;
-    this.bottomSet = bottom;
-    this.backSet = back;
+  InterpolatedVisionDataset(CameraDataset topPurpleSet, CameraDataset bottomCoralSet, CameraDataset backwardsTagSet) {
+    this.topPurpleSet = topPurpleSet;
+    this.bottomCoralSet = bottomCoralSet;
+    this.backwardsTagSet = backwardsTagSet;
   }
 }
