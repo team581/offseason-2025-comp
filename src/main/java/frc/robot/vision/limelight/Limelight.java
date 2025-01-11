@@ -44,6 +44,10 @@ public class Limelight extends StateMachine<LimelightState> {
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
 
+  public void setState(LimelightState state) {
+    setStateFromRequest(state);
+  }
+
   public Optional<TagResult> getInterpolatedVisionResult() {
     var rawTagResult = getRawTagResult();
 

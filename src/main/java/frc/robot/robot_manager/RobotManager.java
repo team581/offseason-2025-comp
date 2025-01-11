@@ -101,6 +101,8 @@ public class RobotManager extends StateMachine<RobotState> {
     // TODO: Implement
     switch (newState) {
       case SCORE_ASSIST -> {
+        // Demo of how to set the state of limelight to coral detection
+        bottomLimelight.setState(LimelightState.CORAL);
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.SCORE_ASSIST);
         } else {
