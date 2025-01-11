@@ -1,7 +1,13 @@
 package frc.robot.vision.limelight;
 
 public enum LimelightState {
-  CORAL,
-  TAGS,
-  PURPLE
+  CORAL(2),
+  TAGS(1),
+  PURPLE(3);
+
+  final int pipelineIndex;
+
+  LimelightState(int index) {
+    this.pipelineIndex = index;
+  }
 }

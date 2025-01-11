@@ -16,21 +16,19 @@ import java.util.Optional;
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
-  private CameraDataset interpolationData;
+  private final CameraDataset cameraDataset;
   private CameraStatus cameraStatus = CameraStatus.NO_TARGETS;
   private double limelightHeartbeat = -1;
-
   private final Timer limelightTimer = new Timer();
-  private static final int TAG_PIPELINE = 1;
-  private static final int CORAL_PIPELINE = 2;
-  private static final int PURPLE_PIPELINE = 3;
 
-  public Limelight(String name) {
-    super(SubsystemPriority.VISION, LimelightState.TAGS);
+  private Pose2d interpolatedPose = new Pose2d();
+
+  public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
+    super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;
-    this.interpolationData = interpolationData;
     limelightTimer.start();
+    this.cameraDataset = cameraDataset;
   }
 
   public void sendImuData(
@@ -40,6 +38,9 @@ public class Limelight extends StateMachine<LimelightState> {
       double pitchRate,
       double roll,
       double rollRate) {
+    if (getState() == LimelightState.TAGS) {
+      return;
+    }
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
@@ -55,8 +56,6 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
 
-    Pose2d interpolatedPose =
-        InterpolatedVision.interpolatePose(rawTagResult.get().pose(), interpolationData);
     return Optional.of(new TagResult(interpolatedPose, rawTagResult.get().timestamp()));
   }
 
@@ -64,9 +63,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.TAGS) {
       return Optional.empty();
     }
-    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != TAG_PIPELINE) {
-      LimelightHelpers.setPipelineIndex(limelightTableName, TAG_PIPELINE);
-    }
+
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
@@ -91,9 +88,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.CORAL) {
       return Optional.empty();
     }
-    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != CORAL_PIPELINE) {
-      LimelightHelpers.setPipelineIndex(limelightTableName, CORAL_PIPELINE);
-    }
+
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -115,9 +110,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.PURPLE) {
       return Optional.empty();
     }
-    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != PURPLE_PIPELINE) {
-      LimelightHelpers.setPipelineIndex(limelightTableName, PURPLE_PIPELINE);
-    }
+
     var purpleTX = LimelightHelpers.getTX(limelightTableName);
     var purpleTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -135,18 +128,34 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
+  private Optional<TagResult> tagResult = Optional.empty();
+  private Optional<CoralResult> coralResult = Optional.empty();
+  private Optional<PurpleResult> purpleResult = Optional.empty();
+
+  @Override
+  protected void collectInputs() {
+    tagResult = getRawTagResult();
+    coralResult = getRawCoralResult();
+    purpleResult = getRawPurpleResult();
+    if (getState() == LimelightState.TAGS) {
+      interpolatedPose =
+          InterpolatedVision.interpolatePose(getRawTagResult().get().pose(), cameraDataset);
+    }
+  }
+
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
-      case TAGS -> updateState(getRawTagResult());
-      case CORAL -> updateState(getRawCoralResult());
-      case PURPLE -> updateState(getRawPurpleResult());
+      case TAGS -> updateHealth(tagResult);
+      case CORAL -> updateHealth(coralResult);
+      case PURPLE -> updateHealth(purpleResult);
       default -> {}
     }
   }
 
-  private void updateState(Optional result) {
+  private void updateHealth(Optional<?> result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
 
     if (limelightHeartbeat != newHeartbeat) {

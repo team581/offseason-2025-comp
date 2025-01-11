@@ -16,7 +16,8 @@ public class AutoChooser {
     }
 
     chooser.setDefaultOption(
-        AutoSelection.OP.toString(), AutoSelection.OP.auto.apply(robotManager, trailblazer));
+        AutoSelection.DO_NOTHING.toString(),
+        AutoSelection.DO_NOTHING.auto.apply(robotManager, trailblazer));
   }
 
   public BaseAuto getSelectedAuto() {

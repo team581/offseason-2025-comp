@@ -16,11 +16,12 @@ import frc.robot.wrist.WristState;
 import frc.robot.wrist.WristSubsystem;
 
 public class RobotManager extends StateMachine<RobotState> {
+  public final LocalizationSubsystem localization;
+
   private final VisionSubsystem vision;
   private final ImuSubsystem imu;
 
   private final SwerveSubsystem swerve;
-  private final LocalizationSubsystem localization;
   private final IntakeSubsystem intake;
   private final WristSubsystem wrist;
 

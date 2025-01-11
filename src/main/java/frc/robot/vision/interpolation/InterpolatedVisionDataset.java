@@ -23,7 +23,8 @@ public enum InterpolatedVisionDataset {
                   new Translation2d(12.9895, 5.522),
                   new Translation2d(12.87, 5.581),
                   "PODIUM_SPEAKER_INTERSECTION")),
-          List.of())),
+          List.of()),
+      new CameraDataset(List.of(), List.of())),
   // bellarmine is not tested
   BELLARMINE(
       new CameraDataset(
@@ -59,7 +60,8 @@ public enum InterpolatedVisionDataset {
                   new Translation2d(13.799, 4.202),
                   new Translation2d(13.67, 4.106),
                   "FRONT_PODIUM_MIDDLE")),
-          List.of())),
+          List.of()),
+      new CameraDataset(List.of(), List.of())),
   MADTOWN(
       new CameraDataset(
           List.of(
@@ -94,13 +96,16 @@ public enum InterpolatedVisionDataset {
               new VisionInterpolationData(
                   new Translation2d(3.144, 5.522),
                   new Translation2d(3.24, 5.47),
-                  "BLUE_PODIUM_SPEAKER_INTERSECTION"))));
+                  "BLUE_PODIUM_SPEAKER_INTERSECTION"))),
+      new CameraDataset(List.of(), List.of()));
 
-  public final CameraDataset leftSet;
-  public final CameraDataset rightSet;
+  public final CameraDataset topSet;
+  public final CameraDataset bottomSet;
+  public final CameraDataset backSet;
 
-  InterpolatedVisionDataset(CameraDataset left, CameraDataset right) {
-    this.leftSet = left;
-    this.rightSet = right;
+  InterpolatedVisionDataset(CameraDataset top, CameraDataset bottom, CameraDataset back) {
+    this.topSet = top;
+    this.bottomSet = bottom;
+    this.backSet = back;
   }
 }

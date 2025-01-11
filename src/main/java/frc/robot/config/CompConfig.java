@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
@@ -34,6 +35,18 @@ class CompConfig {
   public static final RobotConfig competitionBot =
       new RobotConfig(
           "competition",
+          new ElevatorConfig(
+              // TODO: Get actual Values
+              999,
+              999,
+              CANIVORE_NAME,
+              new TalonFXConfiguration(),
+              new TalonFXConfiguration(),
+              999,
+              999,
+              999,
+              999,
+              999),
           new IntakeConfig(
               0,
               0,
