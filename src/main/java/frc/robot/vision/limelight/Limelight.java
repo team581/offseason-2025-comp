@@ -21,9 +21,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private double limelightHeartbeat = -1;
 
   private final Timer limelightTimer = new Timer();
-  private static final int TAG_PIPELINE = 1;
-  private static final int CORAL_PIPELINE = 2;
-  private static final int PURPLE_PIPELINE = 3;
 
   public Limelight(String name) {
     super(SubsystemPriority.VISION, LimelightState.TAGS);
@@ -64,9 +61,9 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.TAGS) {
       return Optional.empty();
     }
-    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != TAG_PIPELINE) {
+    
       LimelightHelpers.setPipelineIndex(limelightTableName, TAG_PIPELINE);
-    }
+    
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
@@ -91,9 +88,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (getState() != LimelightState.CORAL) {
       return Optional.empty();
     }
-    if (LimelightHelpers.getCurrentPipelineIndex(limelightTableName) != CORAL_PIPELINE) {
-      LimelightHelpers.setPipelineIndex(limelightTableName, CORAL_PIPELINE);
-    }
+
     var coralTX = LimelightHelpers.getTX(limelightTableName);
     var coralTY = LimelightHelpers.getTY(limelightTableName);
     var latency =
@@ -138,6 +133,10 @@ public class Limelight extends StateMachine<LimelightState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+
+    LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
+
+
     switch (getState()) {
       case TAGS -> updateState(getRawTagResult());
       case CORAL -> updateState(getRawCoralResult());
