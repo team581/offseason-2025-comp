@@ -13,6 +13,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
+import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 class CompConfig {
@@ -77,7 +78,8 @@ class CompConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN));
+          new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
+          new WristConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 0, 180));
 
   private CompConfig() {}
 }

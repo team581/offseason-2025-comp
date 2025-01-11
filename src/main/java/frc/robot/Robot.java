@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, leftLimelight, rightLimelight, backLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
-  private final Purple purple = new Purple();
+  private final Purple purple = new Purple(localization);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
 
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
         break;
     }
 
-   // This must be run before any commands are scheduled
+    // This must be run before any commands are scheduled
     LifecycleSubsystemManager.getInstance().ready();
 
     SmartDashboard.putData(CommandScheduler.getInstance());

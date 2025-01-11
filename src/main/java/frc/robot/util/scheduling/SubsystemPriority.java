@@ -15,6 +15,7 @@ public enum SubsystemPriority {
 
   // 10-19 is for actuator subsystems
   INTAKE(10),
+  WRIST(10),
 
   // 0-9 is for manager subsystems
   ROBOT_MANAGER(9),

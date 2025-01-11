@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.fms.FmsSubsystem;
 
 public enum ReefPipe {
@@ -25,12 +24,12 @@ public enum ReefPipe {
     this.redPose = redPose;
     this.bluePose = bluePose;
   }
-  public Pose2d getPose(){
-    if (FmsSubsystem.isRedAlliance()){
+
+  public Pose2d getPose() {
+    if (FmsSubsystem.isRedAlliance()) {
       return redPose;
 
-    }
-    else{
+    } else {
       return bluePose;
     }
   }
