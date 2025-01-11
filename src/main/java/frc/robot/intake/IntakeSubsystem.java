@@ -64,13 +64,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
       case IDLE_NO_GP -> {
         motor.disable();
       }
-      case IDLE_W_ALGEA -> {
+      case IDLE_W_ALGAE -> {
         motor.setVoltage(1.0);
       }
       case IDLE_W_CORAL -> {
         motor.setVoltage(0.0);
       }
-      case INTAKING_ALGEA -> {
+      case INTAKING_ALGAE -> {
         motor.setVoltage(6.0);
       }
       case INTAKING_CORAL -> {
