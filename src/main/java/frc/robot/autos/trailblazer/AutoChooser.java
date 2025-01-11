@@ -1,9 +1,10 @@
 package frc.robot.autos.trailblazer;
 
+import java.util.EnumSet;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.robot_manager.RobotManager;
-import java.util.EnumSet;
 
 public class AutoChooser {
   private final SendableChooser<BaseAuto> chooser = new SendableChooser<>();
@@ -16,7 +17,7 @@ public class AutoChooser {
     }
 
     chooser.setDefaultOption(
-        AutoSelection.OP.toString(), AutoSelection.OP.auto.apply(robotManager, trailblazer));
+        AutoSelection.DO_NOTHING.toString(), AutoSelection.DO_NOTHING.auto.apply(robotManager, trailblazer));
   }
 
   public BaseAuto getSelectedAuto() {

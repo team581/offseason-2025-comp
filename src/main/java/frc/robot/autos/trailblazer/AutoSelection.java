@@ -1,15 +1,11 @@
 package frc.robot.autos.trailblazer;
 
-import frc.robot.autos.amp.Op345Auto;
-import frc.robot.autos.amp.TestAuto;
-import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
-public enum AutoSelection {
-  DO_NOTHING(DoNothingAuto::new),
+import frc.robot.robot_manager.RobotManager;
 
-  OP(Op345Auto::new),
-  PURE_PURSUIT_TEST_AUTO(TestAuto::new);
+public enum AutoSelection {
+  DO_NOTHING(DoNothingAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> auto;
 
