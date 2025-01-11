@@ -25,5 +25,6 @@ public class Hardware {
   public final TalonFX wristMotor =
       new TalonFX(CONFIG.wrist().motorID(), CONFIG.wrist().canBusName());
 
-  public final TalonFX pivotMotor = new TalonFX(CONFIG.pivot().motorID(), CONFIG.pivot().canBusName());
+  public final TalonFX pivotMotor =
+      new TalonFX(CONFIG.pivot().motorID(), CONFIG.pivot().canBusName());
 }
