@@ -41,21 +41,15 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.topMotor = topMotor;
     this.bottomMotor = bottomMotor;
+    //Motor Configs
+    topMotor.getConfigurator().apply(RobotConfig.get().elevator().topMotorConfig());
+    bottomMotor.getConfigurator().apply(RobotConfig.get().elevator().bottomMotorConfig());
   }
 
   public void setState(ElevatorState newState) {
     if (getState() != ElevatorState.PRE_MATCH_HOMING) {
 
       setStateFromRequest(newState);
-    }
-  }
-
-  @Override
-  public void disabledPeriodic() {
-    double currentHeight = height;
-
-    if (currentHeight < lowestSeenHeight) {
-      lowestSeenHeight = currentHeight;
     }
   }
 
@@ -70,62 +64,144 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   }
 
   @Override
+  public void disabledPeriodic() {
+    double currentHeight = height;
+
+    if (currentHeight < lowestSeenHeight) {
+      lowestSeenHeight = currentHeight;
+    }
+  }
+
+  @Override
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
+      case CLIMBING -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CLIMBING.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CLIMBING.value))));
+      }
       case NET -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.NET.value)));
-        bottomMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.NET.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.NET.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.NET.value))));
       }
       case PROCESSOR -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value))));
+      }
+      case ALGAE_DISLODGE_L2 -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L2.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L2.value))));
+      }
+      case ALGAE_DISLODGE_L3 -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L3.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L3.value))));
+      }
+      case ALGAE_INTAKE_L2 -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L2.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L2.value))));
+      }
+      case ALGAE_INTAKE_L3 -> {
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L3.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L3.value))));
       }
       case CORAL_L1 -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value))));
       }
       case CORAL_L2 -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value))));
       }
       case CORAL_L3 -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value))));
       }
       case CORAL_L4 -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value))));
       }
       case GROUND_ALGAE_INTAKE -> {
-        topMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value))));
       }
       case GROUND_CORAL_INTAKE -> {
-        topMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value))));
       }
       case STOWED -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value)));
-        bottomMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value))));
       }
       case INTAKE_CORAL_STATION -> {
-        topMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value)));
-        bottomMotor.setPosition(
-            Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value))));
       }
       case UNJAM -> {
-        topMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value)));
-        bottomMotor.setPosition(Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value)));
+        topMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value))));
+        bottomMotor.setControl(
+            positionRequest.withPosition(
+                Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value))));
       }
       default -> {}
     }

@@ -11,11 +11,19 @@ public enum ElevatorState {
   UNJAM(999),
   ALGAE_DISLODGE_L2(999),
   ALGAE_DISLODGE_L3(999),
+  ALGAE_INTAKE_L2(999),
+  ALGAE_INTAKE_L3(999),
   NET(999),
   CORAL_L1(999),
   CORAL_L2(999),
   CORAL_L3(999),
-  CORAL_L4(999);
+  CORAL_L4(999),
+  COLLISION_AVOIDANCE(0);
+  // collision avoidance is a special state used for collision avoidance (duh)
+  // another class will call a function to set the goal for collision avoidance mode
+  // so, elevator.setCollisionAvoidanceGoal(double height)
+  // this goal is used in the COLLISION_AVOIDANCE state
+  // so that we can have very specific control over exact elevator position to avoid bonking the arm
   final double value;
 
   private ElevatorState(double position) {
