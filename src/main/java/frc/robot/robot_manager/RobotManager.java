@@ -17,7 +17,7 @@ import frc.robot.wrist.WristSubsystem;
 
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
-  
+
   private final VisionSubsystem vision;
   private final ImuSubsystem imu;
 

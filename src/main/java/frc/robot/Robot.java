@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.config.RobotConfig;
+import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
@@ -28,6 +29,8 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
+  private final ElevatorSubsystem elevator =
+      new ElevatorSubsystem(hardware.elevatorTop, hardware.elevatorBottom);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight topLimelight = new Limelight("top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topSet);
