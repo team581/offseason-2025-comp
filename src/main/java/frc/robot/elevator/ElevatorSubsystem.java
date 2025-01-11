@@ -248,7 +248,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   public boolean atGoal(ElevatorState elevatorState) {
     return switch (getState()) {
       case PRE_MATCH_HOMING, UNJAM -> true;
-      default -> MathUtil.isNear(averageMeasuredHeight, elevatorState.value, TOLERANCE);
+      case COLLISION_AVOIDANCE ->
+          MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
+      default -> MathUtil.isNear(elevatorState.value, averageMeasuredHeight, TOLERANCE);
     };
   }
 }
