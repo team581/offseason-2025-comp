@@ -45,9 +45,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     interpolatedVisionResult.clear();
-    var maybeTopResult = topLimelight.getInterpolatedVisionResult();
-    var maybeBottomResult = bottomLimelight.getInterpolatedVisionResult();
-    var maybeBackResult = backLimelight.getInterpolatedVisionResult();
+    var maybeTopResult = topLimelight.getInterpolatedTagResult();
+    var maybeBottomResult = bottomLimelight.getInterpolatedTagResult();
+    var maybeBackResult = backLimelight.getInterpolatedTagResult();
 
     if (maybeTopResult.isPresent()) {
       interpolatedVisionResult.add(maybeTopResult.get());
