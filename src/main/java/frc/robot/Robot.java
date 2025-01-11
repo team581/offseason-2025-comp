@@ -21,6 +21,7 @@ import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
+import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
@@ -42,8 +43,9 @@ public class Robot extends TimedRobot {
   private final IntakeSubsystem intake =
       new IntakeSubsystem(
           hardware.intakeMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
+  private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RobotManager robotManager =
-      new RobotManager(intake, vision, imu, swerve, localization);
+      new RobotManager(intake, wrist, vision, imu, swerve, localization);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);

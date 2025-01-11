@@ -13,6 +13,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
 
   private final TalonFX motor;
+  //TODO: put in CANifier
   private final DigitalInput leftSensor;
   private final DigitalInput rightSensor;
 

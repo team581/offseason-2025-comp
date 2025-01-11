@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveState;
@@ -9,6 +10,8 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.wrist.WristState;
+import frc.robot.wrist.WristSubsystem;
 
 public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
@@ -17,15 +20,18 @@ public class RobotManager extends StateMachine<RobotState> {
   private final SwerveSubsystem swerve;
   private final LocalizationSubsystem localization;
   private final IntakeSubsystem intake;
+  private final WristSubsystem wrist;
 
   public RobotManager(
       IntakeSubsystem intake,
+      WristSubsystem wrist,
       VisionSubsystem vision,
       ImuSubsystem imu,
       SwerveSubsystem swerve,
       LocalizationSubsystem localization) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
+    this.wrist = wrist;
     this.vision = vision;
     this.imu = imu;
     this.swerve = swerve;
@@ -39,7 +45,8 @@ public class RobotManager extends StateMachine<RobotState> {
               IDLE_ALGAE,
               IDLE_CORAL,
               PROCESSOR_WAITING,
-              NET_WAITING,
+              NET_BACK_WAITING,
+              NET_FORWARD_WAITING,
               CORAL_L1_WAITING,
               CORAL_L2_WAITING,
               CORAL_L3_WAITING,
@@ -50,7 +57,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
         //   TODO: add check for PREPARE_TO_SCORE transitions
       case PROCESSOR_PREPARE_TO_SCORE -> true ? RobotState.PROCESSOR_SCORING : currentState;
-      case NET_PREPARE_TO_SCORE -> true ? RobotState.NET_SCORING : currentState;
+      case NET_BACK_PREPARE_TO_SCORE -> true ? RobotState.NET_BACK_SCORING : currentState;
+      case NET_FORWARD_PREPARE_TO_SCORE -> true ? RobotState.NET_FORWARD_SCORING : currentState;
 
       case CORAL_L1_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L1_SCORING : currentState;
       case CORAL_L2_PREPARE_TO_SCORE -> true ? RobotState.CORAL_L2_SCORING : currentState;
@@ -76,7 +84,8 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L3_SCORING,
               CORAL_L4_SCORING,
               PROCESSOR_SCORING,
-              NET_SCORING ->
+              NET_BACK_SCORING,
+              NET_FORWARD_SCORING ->
           !intake.getHasGP() ? RobotState.IDLE_NO_GP : currentState;
 
         // Intaking
@@ -84,6 +93,9 @@ public class RobotManager extends StateMachine<RobotState> {
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
+
+      case SCORE_ASSIST -> currentState;
+      case PURPLE_ALIGN -> currentState;
     };
   }
 
@@ -104,6 +116,94 @@ public class RobotManager extends StateMachine<RobotState> {
         } else {
           swerve.setState(SwerveState.PURPLE_ALIGN);
         }
+      }
+      case IDLE_NO_GP -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_NO_GP);
+      }
+      case IDLE_ALGAE -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_W_ALGEA);
+      }
+      case IDLE_CORAL -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+      }
+      case INTAKE_ALGAE_FLOOR -> {
+        wrist.setState(WristState.GROUND_ALGAE_INTAKE);
+        intake.setState(IntakeState.INTAKING_ALGEA);
+      }
+      case INTAKE_ALGAE_L2 -> {
+        wrist.setState(WristState.CORAL_SCORE_LV2);
+        intake.setState(IntakeState.INTAKING_ALGEA);
+      }
+      case INTAKE_ALGAE_L3 -> {
+        wrist.setState(WristState.CORAL_SCORE_LV3);
+        intake.setState(IntakeState.INTAKING_ALGEA);
+      }
+      case INTAKE_CORAL_STATION -> {
+        wrist.setState(WristState.SOURCE_INTAKE);
+        intake.setState(IntakeState.INTAKING_CORAL);
+      }
+      case INTAKE_CORAL_FLOOR_UPRIGHT,INTAKE_CORAL_FLOOR_HORIZONTAL -> {
+        wrist.setState(WristState.GROUND_CORAL_INTAKE);
+        intake.setState(IntakeState.INTAKING_CORAL);
+      }
+      case CORAL_L1_WAITING, CORAL_L1_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.CORAL_SCORE_LV1);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+      }
+      case CORAL_L1_SCORING -> {
+        wrist.setState(WristState.CORAL_SCORE_LV1);
+        intake.setState(IntakeState.SCORE_CORAL);
+      }
+      case CORAL_L2_WAITING, CORAL_L2_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.CORAL_SCORE_LV2);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+      }
+      case CORAL_L2_SCORING -> {
+        wrist.setState(WristState.CORAL_SCORE_LV2);
+        intake.setState(IntakeState.SCORE_CORAL);
+      }
+      case CORAL_L3_WAITING, CORAL_L3_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.CORAL_SCORE_LV3);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+      }
+      case CORAL_L3_SCORING -> {
+        wrist.setState(WristState.CORAL_SCORE_LV3);
+        intake.setState(IntakeState.SCORE_CORAL);
+      }
+      case CORAL_L4_WAITING, CORAL_L4_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.CORAL_SCORE_LV4);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+      }
+      case CORAL_L4_SCORING -> {
+        wrist.setState(WristState.CORAL_SCORE_LV4);
+        intake.setState(IntakeState.SCORE_CORAL);
+      }
+      case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.ALGAE_BACKWARD_NET);
+        intake.setState(IntakeState.IDLE_W_ALGEA);
+      }
+      case NET_BACK_SCORING -> {
+        wrist.setState(WristState.ALGAE_BACKWARD_NET);
+        intake.setState(IntakeState.SCORE_ALGEA_NET);
+      }
+      case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.ALGAE_FORWARD_NET);
+        intake.setState(IntakeState.IDLE_W_ALGEA);
+      }
+      case NET_FORWARD_SCORING -> {
+        wrist.setState(WristState.ALGAE_FORWARD_NET);
+        intake.setState(IntakeState.SCORE_ALGEA_NET);
+      }
+      case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
+        wrist.setState(WristState.ALGAE_PROCESSOR);
+        intake.setState(IntakeState.IDLE_W_ALGEA);
+      }
+      case PROCESSOR_SCORING -> {
+        wrist.setState(WristState.ALGAE_PROCESSOR);
+        intake.setState(IntakeState.SCORE_ALGEA_PROCESSOR);
       }
     }
   }
@@ -135,15 +235,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case PROCESSOR_WAITING, IDLE_ALGAE ->
           setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
-      case NET_WAITING -> setStateFromRequest(RobotState.NET_PREPARE_TO_SCORE);
-      case PROCESSOR_WAITING, IDLE_ALGAE ->
-          setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
-      case NET_WAITING -> setStateFromRequest(RobotState.NET_PREPARE_TO_SCORE);
-
-      case CORAL_L1_WAITING -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
-      case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
-      case CORAL_L3_WAITING -> setStateFromRequest(RobotState.CORAL_L3_PREPARE_TO_SCORE);
-      case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
+      case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
+      case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
         // change default coral score level or algea score if needed
       default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
@@ -151,12 +244,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
       case CORAL_L3_WAITING -> setStateFromRequest(RobotState.CORAL_L3_PREPARE_TO_SCORE);
       case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
-
-        // change default coral score level or algea score if needed
-      default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
     }
   }
-  }
+  
 
   public void stowRequest() {}
 
