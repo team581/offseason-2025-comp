@@ -1,7 +1,5 @@
 package frc.robot.vision.limelight;
 
-import java.util.Optional;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +11,7 @@ import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
+import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
@@ -92,9 +91,7 @@ public class Limelight extends StateMachine<LimelightState> {
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
     var coralTX = t2d[4];
     var coralTY = t2d[5];
-    var latency =
-        t2d[2]
-            + t2d[3];
+    var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
@@ -114,9 +111,7 @@ public class Limelight extends StateMachine<LimelightState> {
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
     var purpleTX = t2d[4];
     var purpleTY = t2d[5];
-    var latency =
-        t2d[2]
-            + t2d[3];
+    var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (purpleTX == 0.0 || purpleTY == 0.0) {

@@ -41,7 +41,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.topMotor = topMotor;
     this.bottomMotor = bottomMotor;
-    //Motor Configs
+    // Motor Configs
     topMotor.getConfigurator().apply(RobotConfig.get().elevator().topMotorConfig());
     bottomMotor.getConfigurator().apply(RobotConfig.get().elevator().bottomMotorConfig());
   }

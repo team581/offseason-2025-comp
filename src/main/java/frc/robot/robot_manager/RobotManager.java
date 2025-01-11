@@ -74,18 +74,45 @@ public class RobotManager extends StateMachine<RobotState> {
           currentState;
 
         //   TODO: add check for PREPARE_TO_SCORE transitions
-      case PROCESSOR_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.PROCESSOR) ? RobotState.PROCESSOR_SCORING : currentState;
-      case NET_BACK_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.NET) ? RobotState.NET_BACK_SCORING : currentState;
-      case NET_FORWARD_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.NET) ? RobotState.NET_FORWARD_SCORING : currentState;
+      case PROCESSOR_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.PROCESSOR)
+              ? RobotState.PROCESSOR_SCORING
+              : currentState;
+      case NET_BACK_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.NET)
+              ? RobotState.NET_BACK_SCORING
+              : currentState;
+      case NET_FORWARD_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.NET)
+              ? RobotState.NET_FORWARD_SCORING
+              : currentState;
 
-      case CORAL_L1_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L1) ? RobotState.CORAL_L1_SCORING : currentState;
-      case CORAL_L2_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L2) ? RobotState.CORAL_L2_SCORING : currentState;
-      case CORAL_L3_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L3) ? RobotState.CORAL_L3_SCORING : currentState;
-      case CORAL_L4_PREPARE_TO_SCORE -> wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L4) ? RobotState.CORAL_L4_SCORING : currentState;
+      case CORAL_L1_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L1)
+              ? RobotState.CORAL_L1_SCORING
+              : currentState;
+      case CORAL_L2_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L2)
+              ? RobotState.CORAL_L2_SCORING
+              : currentState;
+      case CORAL_L3_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L3)
+              ? RobotState.CORAL_L3_SCORING
+              : currentState;
+      case CORAL_L4_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.CORAL_L4)
+              ? RobotState.CORAL_L4_SCORING
+              : currentState;
 
         // Dislodging
-      case DISLODGE_ALGAE_L2_WAIT -> wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2) ? RobotState.DISLODGE_ALGAE_L2_PUSHING : currentState;
-      case DISLODGE_ALGAE_L3_WAIT -> wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L3) ? RobotState.DISLODGE_ALGAE_L3_PUSHING : currentState;
+      case DISLODGE_ALGAE_L2_WAIT ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2)
+              ? RobotState.DISLODGE_ALGAE_L2_PUSHING
+              : currentState;
+      case DISLODGE_ALGAE_L3_WAIT ->
+          wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L3)
+              ? RobotState.DISLODGE_ALGAE_L3_PUSHING
+              : currentState;
 
       case DISLODGE_ALGAE_L2_PUSHING ->
           wrist.atGoal() && elevator.atGoal(ElevatorState.ALGAE_DISLODGE_L2)

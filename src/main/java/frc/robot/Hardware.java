@@ -11,19 +11,17 @@ public class Hardware {
   RobotConfig CONFIG = RobotConfig.get();
   public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
   public final TalonFX elevatorTop =
-      new TalonFX(
-          CONFIG.elevator().topMotorID(), CONFIG.elevator().canBusName());
+      new TalonFX(CONFIG.elevator().topMotorID(), CONFIG.elevator().canBusName());
   public final TalonFX elevatorBottom =
-      new TalonFX(
-          CONFIG.elevator().bottomMotorID(), CONFIG.elevator().canBusName());
+      new TalonFX(CONFIG.elevator().bottomMotorID(), CONFIG.elevator().canBusName());
 
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
-  public final TalonFX intakeMotor = new TalonFX(CONFIG.intake().motorID(), CONFIG.intake().canBusName());
+  public final TalonFX intakeMotor =
+      new TalonFX(CONFIG.intake().motorID(), CONFIG.intake().canBusName());
   public final CANifier intakeLeftSensor = new CANifier(CONFIG.intake().leftSensorID());
-  public final CANifier intakeRightSensor =
-      new CANifier(CONFIG.intake().rightSensorID());
+  public final CANifier intakeRightSensor = new CANifier(CONFIG.intake().rightSensorID());
   public final TalonFX wristMotor =
       new TalonFX(CONFIG.wrist().motorID(), CONFIG.wrist().canBusName());
 }
