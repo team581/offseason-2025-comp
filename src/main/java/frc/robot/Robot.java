@@ -33,20 +33,20 @@ public class Robot extends TimedRobot {
       new ElevatorSubsystem(hardware.elevatorTop, hardware.elevatorBottom);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight topLimelight =
+  private final Limelight topPurpleLimelight =
       new Limelight(
-          "top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topSet);
-  private final Limelight bottomLimelight =
+          "top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topPurpleSet);
+  private final Limelight bottomCoralLimelight =
       new Limelight(
           "bottom",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().bottomSet);
-  private final Limelight backLimelight =
+          RobotConfig.get().vision().interpolatedVisionSet().bottomCoralSet);
+  private final Limelight backwardsTagLimelight =
       new Limelight(
-          "back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backSet);
+          "back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backwardsTagSet);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, topLimelight, bottomLimelight, backLimelight);
+      new VisionSubsystem(imu, topPurpleLimelight, bottomCoralLimelight, backwardsTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Purple purple = new Purple(localization);
 
@@ -65,9 +65,9 @@ public class Robot extends TimedRobot {
           imu,
           swerve,
           localization,
-          topLimelight,
-          bottomLimelight,
-          backLimelight);
+          topPurpleLimelight,
+          bottomCoralLimelight,
+          backwardsTagLimelight);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);

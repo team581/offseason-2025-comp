@@ -28,9 +28,9 @@ public class RobotManager extends StateMachine<RobotState> {
   private final WristSubsystem wrist;
   private final ElevatorSubsystem elevator;
 
-  private final Limelight topLimelight;
-  private final Limelight bottomLimelight;
-  private final Limelight backLimelight;
+  private final Limelight topPurpleLimelight;
+  private final Limelight bottomCoralLimelight;
+  private final Limelight backwardsTagLimelight;
 
   public RobotManager(
       IntakeSubsystem intake,
@@ -40,9 +40,9 @@ public class RobotManager extends StateMachine<RobotState> {
       ImuSubsystem imu,
       SwerveSubsystem swerve,
       LocalizationSubsystem localization,
-      Limelight topLimelight,
-      Limelight bottomLimelight,
-      Limelight backLimelight) {
+      Limelight topPurpleLimelight,
+      Limelight bottomCoralLimelight,
+      Limelight backwardsTagLimelight) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.wrist = wrist;
@@ -51,9 +51,9 @@ public class RobotManager extends StateMachine<RobotState> {
     this.imu = imu;
     this.swerve = swerve;
     this.localization = localization;
-    this.topLimelight = topLimelight;
-    this.bottomLimelight = bottomLimelight;
-    this.backLimelight = backLimelight;
+    this.topPurpleLimelight = topPurpleLimelight;
+    this.bottomCoralLimelight = bottomCoralLimelight;
+    this.backwardsTagLimelight = backwardsTagLimelight;
   }
 
   @Override
@@ -150,7 +150,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (newState) {
       case SCORE_ASSIST -> {
         // Demo of how to set the state of limelight to coral detection
-        bottomLimelight.setState(LimelightState.CORAL);
+        bottomCoralLimelight.setState(LimelightState.CORAL);
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.SCORE_ASSIST);
         } else {
