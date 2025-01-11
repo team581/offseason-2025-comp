@@ -12,6 +12,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
+import frc.robot.config.RobotConfig.PivotConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
@@ -93,7 +94,8 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
-          new WristConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 0, 180));
+          new WristConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 0, 180),
+          new PivotConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 999, 999));
 
   private CompConfig() {}
 }

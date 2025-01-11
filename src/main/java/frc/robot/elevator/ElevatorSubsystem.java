@@ -192,13 +192,13 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value))));
       }
-      case INTAKE_CORAL_STATION -> {
+      case INTAKING_CORAL_STATION -> {
         topMotor.setControl(
             positionRequest.withPosition(
-                Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value))));
+                Units.degreesToRotations(clampHeight(ElevatorState.INTAKING_CORAL_STATION.value))));
         bottomMotor.setControl(
             positionRequest.withPosition(
-                Units.degreesToRotations(clampHeight(ElevatorState.INTAKE_CORAL_STATION.value))));
+                Units.degreesToRotations(clampHeight(ElevatorState.INTAKING_CORAL_STATION.value))));
       }
       case UNJAM -> {
         topMotor.setControl(
@@ -245,12 +245,12 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     DogLog.log("Elevator/Height", averageMeasuredHeight);
   }
 
-  public boolean atGoal(ElevatorState elevatorState) {
+  public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE ->
           MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
-      default -> MathUtil.isNear(elevatorState.value, averageMeasuredHeight, TOLERANCE);
+      default -> MathUtil.isNear(getState().value, averageMeasuredHeight, TOLERANCE);
     };
   }
 }

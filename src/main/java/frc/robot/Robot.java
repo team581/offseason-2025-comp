@@ -15,6 +15,7 @@ import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.pivot.PivotSubsystem;
 import frc.robot.purple.Purple;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
@@ -60,11 +61,13 @@ public class Robot extends TimedRobot {
       new IntakeSubsystem(
           hardware.intakeMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
+  private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
           wrist,
           elevator,
+          pivot,
           vision,
           imu,
           swerve,

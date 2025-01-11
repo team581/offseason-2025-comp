@@ -60,7 +60,8 @@ public class WristSubsystem extends StateMachine<WristState> {
       case IDLE -> MathUtil.isNear(WristState.IDLE.angle, motorAngle, 1);
 
       case PRE_MATCH_HOMING -> true;
-      case SOURCE_INTAKE -> MathUtil.isNear(WristState.SOURCE_INTAKE.angle, motorAngle, 1);
+      case INTAKING_CORAL_STATION ->
+          MathUtil.isNear(WristState.INTAKING_CORAL_STATION.angle, motorAngle, 1);
       case UNJAM -> MathUtil.isNear(WristState.UNJAM.angle, motorAngle, 1);
       default -> false;
     };
@@ -129,10 +130,10 @@ public class WristSubsystem extends StateMachine<WristState> {
             motionMagicRequest.withPosition(
                 Units.degreesToRotations(clamp(WristState.IDLE.angle))));
       }
-      case SOURCE_INTAKE -> {
+      case INTAKING_CORAL_STATION -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.SOURCE_INTAKE.angle))));
+                Units.degreesToRotations(clamp(WristState.INTAKING_CORAL_STATION.angle))));
       }
       case UNJAM -> {
         motor.setControl(

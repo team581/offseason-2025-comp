@@ -2,9 +2,9 @@ package frc.robot.intake;
 
 public enum IntakeState {
   IDLE_NO_GP,
-  IDLE_W_ALGEA,
+  IDLE_W_ALGAE,
   IDLE_W_CORAL,
-  INTAKING_ALGEA,
+  INTAKING_ALGAE,
   INTAKING_CORAL,
   SCORE_ALGEA_NET,
   SCORE_ALGEA_PROCESSOR,
