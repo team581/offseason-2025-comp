@@ -45,7 +45,16 @@ public class Robot extends TimedRobot {
           hardware.intakeMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RobotManager robotManager =
-      new RobotManager(intake, wrist, vision, imu, swerve, localization, topLimelight, bottomLimelight, backLimelight);
+      new RobotManager(
+          intake,
+          wrist,
+          vision,
+          imu,
+          swerve,
+          localization,
+          topLimelight,
+          bottomLimelight,
+          backLimelight);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);

@@ -23,5 +23,4 @@ public enum WristState {
   WristState(double angle) {
     this.angle = angle;
   }
-
 }

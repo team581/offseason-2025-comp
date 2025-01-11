@@ -1,9 +1,7 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
@@ -18,14 +16,13 @@ public class WristSubsystem extends StateMachine<WristState> {
   private double lowestSeenAngle = Double.MAX_VALUE;
   private double highestSeenAngle = Double.MIN_VALUE;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
-    private final StaticBrake brakeNeutralRequest = new StaticBrake();
-
+  private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withEnableFOC(false);
-  //private final PositionVoltage pidRequest =
-    //  new PositionVoltage(0).withEnableFOC(false);
 
+  // private final PositionVoltage pidRequest =
+  //  new PositionVoltage(0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -43,15 +40,18 @@ public class WristSubsystem extends StateMachine<WristState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      case ALGAE_BACKWARD_NET -> MathUtil.isNear(WristState.ALGAE_BACKWARD_NET.angle, motorAngle, 1);
+      case ALGAE_BACKWARD_NET ->
+          MathUtil.isNear(WristState.ALGAE_BACKWARD_NET.angle, motorAngle, 1);
       case ALGAE_FORWARD_NET -> MathUtil.isNear(WristState.ALGAE_FORWARD_NET.angle, motorAngle, 1);
       case ALGAE_PROCESSOR -> MathUtil.isNear(WristState.ALGAE_PROCESSOR.angle, motorAngle, 1);
       case CORAL_SCORE_LV1 -> MathUtil.isNear(WristState.CORAL_SCORE_LV1.angle, motorAngle, 1);
       case CORAL_SCORE_LV2 -> MathUtil.isNear(WristState.CORAL_SCORE_LV2.angle, motorAngle, 1);
       case CORAL_SCORE_LV3 -> MathUtil.isNear(WristState.CORAL_SCORE_LV3.angle, motorAngle, 1);
       case CORAL_SCORE_LV4 -> MathUtil.isNear(WristState.CORAL_SCORE_LV4.angle, motorAngle, 1);
-      case GROUND_ALGAE_INTAKE -> MathUtil.isNear(WristState.GROUND_ALGAE_INTAKE.angle, motorAngle, 1);
-      case GROUND_CORAL_INTAKE -> MathUtil.isNear(WristState.GROUND_CORAL_INTAKE.angle, motorAngle, 1);
+      case GROUND_ALGAE_INTAKE ->
+          MathUtil.isNear(WristState.GROUND_ALGAE_INTAKE.angle, motorAngle, 1);
+      case GROUND_CORAL_INTAKE ->
+          MathUtil.isNear(WristState.GROUND_CORAL_INTAKE.angle, motorAngle, 1);
       case IDLE -> MathUtil.isNear(WristState.IDLE.angle, motorAngle, 1);
 
       case PRE_MATCH_HOMING -> true;
@@ -66,7 +66,7 @@ public class WristSubsystem extends StateMachine<WristState> {
     motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     if (DriverStation.isDisabled()) {
       lowestSeenAngle = Math.min(lowestSeenAngle, motorAngle);
-      highestSeenAngle = Math.max(highestSeenAngle,motorAngle);
+      highestSeenAngle = Math.max(highestSeenAngle, motorAngle);
     }
   }
 
@@ -121,8 +121,8 @@ public class WristSubsystem extends StateMachine<WristState> {
       }
       case IDLE -> {
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(WristState.IDLE.angle))));
-
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.IDLE.angle))));
       }
       case SOURCE_INTAKE -> {
         motor.setControl(
@@ -131,8 +131,8 @@ public class WristSubsystem extends StateMachine<WristState> {
       }
       case UNJAM -> {
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(WristState.UNJAM.angle))));
-
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.UNJAM.angle))));
       }
       default -> {}
     }
@@ -142,22 +142,18 @@ public class WristSubsystem extends StateMachine<WristState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-
-    if (getState() == WristState.PRE_MATCH_HOMING && (highestSeenAngle-lowestSeenAngle)>MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
+    if (getState() == WristState.PRE_MATCH_HOMING
+        && (highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
       if (DriverStation.isEnabled()) {
         motor.setPosition(
+            Units.degreesToRotations(
+                RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
 
-          Units.degreesToRotations(
-              RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
-
-      setStateFromRequest(WristState.IDLE);
+        setStateFromRequest(WristState.IDLE);
       } else {
         motor.setControl(brakeNeutralRequest);
       }
     }
-
-
-
   }
 
   private static double clamp(double armAngle) {

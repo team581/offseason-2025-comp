@@ -10,10 +10,10 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.wrist.WristState;
-import frc.robot.wrist.WristSubsystem;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
+import frc.robot.wrist.WristState;
+import frc.robot.wrist.WristSubsystem;
 
 public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
@@ -34,7 +34,10 @@ public class RobotManager extends StateMachine<RobotState> {
       VisionSubsystem vision,
       ImuSubsystem imu,
       SwerveSubsystem swerve,
-      LocalizationSubsystem localization, Limelight topLimelight, Limelight bottomLimelight, Limelight backLimelight) {
+      LocalizationSubsystem localization,
+      Limelight topLimelight,
+      Limelight bottomLimelight,
+      Limelight backLimelight) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.wrist = wrist;
@@ -156,7 +159,7 @@ public class RobotManager extends StateMachine<RobotState> {
         wrist.setState(WristState.SOURCE_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
       }
-      case INTAKE_CORAL_FLOOR_UPRIGHT,INTAKE_CORAL_FLOOR_HORIZONTAL -> {
+      case INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_FLOOR_HORIZONTAL -> {
         wrist.setState(WristState.GROUND_CORAL_INTAKE);
         intake.setState(IntakeState.INTAKING_CORAL);
       }
