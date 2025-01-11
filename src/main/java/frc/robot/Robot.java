@@ -35,7 +35,9 @@ public class Robot extends TimedRobot {
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight topPurpleLimelight =
       new Limelight(
-          "top", LimelightState.PURPLE, RobotConfig.get().vision().interpolatedVisionSet().topPurpleSet);
+          "top",
+          LimelightState.PURPLE,
+          RobotConfig.get().vision().interpolatedVisionSet().topPurpleSet);
   private final Limelight bottomCoralLimelight =
       new Limelight(
           "bottom",
@@ -43,7 +45,9 @@ public class Robot extends TimedRobot {
           RobotConfig.get().vision().interpolatedVisionSet().bottomCoralSet);
   private final Limelight backwardsTagLimelight =
       new Limelight(
-          "back", LimelightState.TAGS, RobotConfig.get().vision().interpolatedVisionSet().backwardsTagSet);
+          "back",
+          LimelightState.TAGS,
+          RobotConfig.get().vision().interpolatedVisionSet().backwardsTagSet);
 
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, topPurpleLimelight, bottomCoralLimelight, backwardsTagLimelight);
