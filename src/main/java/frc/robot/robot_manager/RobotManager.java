@@ -149,8 +149,6 @@ public class RobotManager extends StateMachine<RobotState> {
     // TODO: Implement
     switch (newState) {
       case SCORE_ASSIST -> {
-        // Demo of how to set the state of limelight to coral detection
-        bottomCoralLimelight.setState(LimelightState.CORAL);
         if (DriverStation.isTeleop()) {
           swerve.setState(SwerveState.SCORE_ASSIST);
         } else {
@@ -226,6 +224,38 @@ public class RobotManager extends StateMachine<RobotState> {
         elevator.setState(ElevatorState.GROUND_CORAL_INTAKE);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case DISLODGE_ALGAE_L2_WAIT -> {
+        wrist.setState(WristState.DISLODGE_L2_LOW);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        elevator.setState(ElevatorState.ALGAE_DISLODGE_L2);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case DISLODGE_ALGAE_L2_PUSHING -> {
+        wrist.setState(WristState.DISLODGE_L2_HIGH);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        elevator.setState(ElevatorState.ALGAE_DISLODGE_L2);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case DISLODGE_ALGAE_L3_WAIT -> {
+        wrist.setState(WristState.DISLODGE_L3_LOW);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        elevator.setState(ElevatorState.ALGAE_DISLODGE_L3);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
+      case DISLODGE_ALGAE_L3_PUSHING -> {
+        wrist.setState(WristState.DISLODGE_L3_HIGH);
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        elevator.setState(ElevatorState.ALGAE_DISLODGE_L3);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
       case CORAL_L1_WAITING, CORAL_L1_PREPARE_TO_SCORE -> {
