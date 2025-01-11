@@ -1,13 +1,14 @@
 package frc.robot.vision;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.doglog.DogLog;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.results.TagResult;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
@@ -75,49 +76,49 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
-    DogLog.log("Vision/Left/VisionState", topLimelight.getCameraStatus());
-    DogLog.log("Vision/Right/VisionState", bottomLimelight.getCameraStatus());
-    DogLog.log("Vision/Back/VisionState", backLimelight.getCameraStatus());
+    DogLog.log("Vision/Left/VisionState", topLimelight.getCameraHealth());
+    DogLog.log("Vision/Right/VisionState", bottomLimelight.getCameraHealth());
+    DogLog.log("Vision/Back/VisionState", backLimelight.getCameraHealth());
   }
 
-  public CameraStatus getVisionState() {
-    var topStatus = topLimelight.getCameraStatus();
-    var bottomStatus = bottomLimelight.getCameraStatus();
-    var backStatus = backLimelight.getCameraStatus();
+  public CameraHealth getVisionState() {
+    var topStatus = topLimelight.getCameraHealth();
+    var bottomStatus = bottomLimelight.getCameraHealth();
+    var backStatus = backLimelight.getCameraHealth();
 
-    if (topStatus == CameraStatus.OFFLINE
-        && bottomStatus == CameraStatus.OFFLINE
-        && backStatus == CameraStatus.OFFLINE) {
-      return CameraStatus.OFFLINE;
+    if (topStatus == CameraHealth.OFFLINE
+        && bottomStatus == CameraHealth.OFFLINE
+        && backStatus == CameraHealth.OFFLINE) {
+      return CameraHealth.OFFLINE;
     }
 
-    if (topStatus == CameraStatus.GOOD
-        || bottomStatus == CameraStatus.GOOD
-        || backStatus == CameraStatus.GOOD) {
-      return CameraStatus.GOOD;
+    if (topStatus == CameraHealth.GOOD
+        || bottomStatus == CameraHealth.GOOD
+        || backStatus == CameraHealth.GOOD) {
+      return CameraHealth.GOOD;
     }
 
-    return CameraStatus.NO_TARGETS;
+    return CameraHealth.NO_TARGETS;
   }
 
   /** Same as the regular vision state but returns OFFLINE if any camera is offline. */
-  public CameraStatus getPessemisticVisionState() {
-    var topStatus = topLimelight.getCameraStatus();
-    var bottomStatus = bottomLimelight.getCameraStatus();
-    var backStatus = backLimelight.getCameraStatus();
+  public CameraHealth getPessemisticVisionState() {
+    var topStatus = topLimelight.getCameraHealth();
+    var bottomStatus = bottomLimelight.getCameraHealth();
+    var backStatus = backLimelight.getCameraHealth();
 
-    if (topStatus == CameraStatus.OFFLINE
-        || bottomStatus == CameraStatus.OFFLINE
-        || backStatus == CameraStatus.OFFLINE) {
-      return CameraStatus.OFFLINE;
+    if (topStatus == CameraHealth.OFFLINE
+        || bottomStatus == CameraHealth.OFFLINE
+        || backStatus == CameraHealth.OFFLINE) {
+      return CameraHealth.OFFLINE;
     }
 
-    if (topStatus == CameraStatus.GOOD
-        || bottomStatus == CameraStatus.GOOD
-        || backStatus == CameraStatus.GOOD) {
-      return CameraStatus.GOOD;
+    if (topStatus == CameraHealth.GOOD
+        || bottomStatus == CameraHealth.GOOD
+        || backStatus == CameraHealth.GOOD) {
+      return CameraHealth.GOOD;
     }
 
-    return CameraStatus.NO_TARGETS;
+    return CameraHealth.NO_TARGETS;
   }
 }
