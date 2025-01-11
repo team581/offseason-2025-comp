@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
       new RobotManager(
           intake,
           wrist,
+          elevator,
           vision,
           imu,
           swerve,
