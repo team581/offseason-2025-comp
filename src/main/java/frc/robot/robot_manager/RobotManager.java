@@ -1,15 +1,16 @@
 package frc.robot.robot_manager;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.swerve.SnapUtil;
 import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
+import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -35,6 +36,8 @@ public class RobotManager extends StateMachine<RobotState> {
   private final Limelight topPurpleLimelight;
   private final Limelight bottomCoralLimelight;
   private final Limelight backwardsTagLimelight;
+
+  private GamePieceMode gamePieceMode;
 
   public RobotManager(
       IntakeSubsystem intake,
@@ -62,6 +65,8 @@ public class RobotManager extends StateMachine<RobotState> {
     this.backwardsTagLimelight = backwardsTagLimelight;
     backwardsTagLimelight.setState(LimelightState.TAGS);
   }
+
+  private double reefSnapAngle = 0.0;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -206,7 +211,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.INTAKING_ALGAE);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -216,7 +221,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.INTAKING_ALGAE);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -254,6 +259,8 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.ALGAE_DISLODGE_L2);
         pivot.setState(PivotState.STOWED);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
@@ -262,6 +269,8 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.ALGAE_DISLODGE_L2);
         pivot.setState(PivotState.STOWED);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
@@ -270,6 +279,8 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.ALGAE_DISLODGE_L3);
         pivot.setState(PivotState.STOWED);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
@@ -278,6 +289,8 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.ALGAE_DISLODGE_L3);
         pivot.setState(PivotState.STOWED);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
       }
@@ -286,7 +299,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -296,7 +309,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L1);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -306,7 +319,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -316,7 +329,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L2);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -326,7 +339,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -336,7 +349,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L3);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -346,7 +359,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -356,7 +369,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_L4);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(reefSnapAngle);
         pivot.setState(PivotState.CORAL_SCORE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.PURPLE);
@@ -447,10 +460,196 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
     // Continuous state actions
     switch (getState()) {
+      case CORAL_L1_WAITING,
+          CORAL_L1_PREPARE_TO_SCORE,
+          CORAL_L1_SCORING,
+          CORAL_L2_WAITING,
+          CORAL_L2_PREPARE_TO_SCORE,
+          CORAL_L2_SCORING,
+          CORAL_L3_WAITING,
+          CORAL_L3_PREPARE_TO_SCORE,
+          CORAL_L3_SCORING,
+          CORAL_L4_WAITING,
+          CORAL_L4_PREPARE_TO_SCORE,
+          CORAL_L4_SCORING,
+          DISLODGE_ALGAE_L2_WAIT,
+          DISLODGE_ALGAE_L3_WAIT,
+          DISLODGE_ALGAE_L2_PUSHING,
+          DISLODGE_ALGAE_L3_PUSHING,
+          INTAKE_ALGAE_L2,
+          INTAKE_ALGAE_L3 -> {
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
+      }
       default -> {}
+    }
+  }
+
+  @Override
+  protected void collectInputs() {
+    super.collectInputs();
+    reefSnapAngle = AutoAlign.getClosestReefSide(localization.getPose()).getRotation().getDegrees();
+  }
+
+  public void setGamePieceMode(GamePieceMode newMode) {
+    gamePieceMode = newMode;
+  }
+
+  public void stowRequest() {
+    if (intake.getHasGP()) {
+      if (gamePieceMode == GamePieceMode.CORAL) {
+        setStateFromRequest(RobotState.IDLE_CORAL);
+      } else {
+        setStateFromRequest(RobotState.IDLE_ALGAE);
+      }
+    } else {
+      setStateFromRequest(RobotState.IDLE_NO_GP);
+    }
+  }
+
+  public void intakeFloorRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeFloorAlgaeRequest();
+    } else {
+      intakeFloorCoralHorizontalRequest();
+    }
+  }
+
+  public void intakeFloorAlgaeRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_FLOOR);
+    }
+  }
+
+  public void intakeFloorCoralHorizontalRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL);
+    }
+  }
+
+  public void intakeStationRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_CORAL_STATION);
+    }
+  }
+
+  public void lowLineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      processorWaitingRequest();
+    } else {
+      l1CoralLineupRequest();
+    }
+  }
+
+  public void processorWaitingRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.PROCESSOR_WAITING);
+    }
+  }
+
+  public void l1CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L1_WAITING);
+    }
+  }
+
+  public void l2LineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeAlgaeL2Request();
+    } else {
+      l2CoralLineupRequest();
+    }
+  }
+
+  private void intakeAlgaeL2Request() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L2);
+    }
+  }
+
+  public void l2CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L2_WAITING);
+    }
+  }
+
+  public void l3LineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeAlgaeL3Request();
+    } else {
+      l3CoralLineupRequest();
+    }
+  }
+
+  private void intakeAlgaeL3Request() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L3);
+    }
+  }
+
+  public void l3CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L3_WAITING);
+    }
+  }
+
+  public void highLineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      algaeNetRequest();
+    } else {
+      l4CoralLineupRequest();
+    }
+  }
+
+  public void algaeNetRequest() {
+    if (AutoAlign.shouldNetScoreForwards(localization.getPose())) {
+      algaeNetForwardRequest();
+    } else {
+      algaeNetBackRequest();
+    }
+  }
+
+  private void algaeNetForwardRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.NET_FORWARD_WAITING);
+    }
+  }
+
+  private void algaeNetBackRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.NET_BACK_WAITING);
+    }
+  }
+
+  public void l4CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L4_WAITING);
     }
   }
 
@@ -474,20 +673,11 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
-        // change default coral score level or algea score if needed
-      default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
+      default -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
       case CORAL_L1_WAITING -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
       case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
       case CORAL_L3_WAITING -> setStateFromRequest(RobotState.CORAL_L3_PREPARE_TO_SCORE);
       case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
-    }
-  }
-
-  public void stowRequest() {
-    if (intake.getHasGP()) {
-      setStateFromRequest(RobotState.IDLE_CORAL);
-    } else {
-      setStateFromRequest(RobotState.IDLE_NO_GP);
     }
   }
 

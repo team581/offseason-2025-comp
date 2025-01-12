@@ -1,8 +1,8 @@
 package frc.robot.autos.trailblazer;
 
-import frc.robot.autos.trailblazer.autos.Three3Piece2IJKAuto;
 import frc.robot.autos.trailblazer.autos.DoNothingAuto;
 import frc.robot.autos.trailblazer.autos.PushPartnerAuto;
+import frc.robot.autos.trailblazer.autos.Three3Piece2IJKAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 

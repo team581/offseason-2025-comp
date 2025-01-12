@@ -22,8 +22,8 @@ public class ImuSubsystem extends StateMachine<ImuState> {
 
   @Override
   protected void collectInputs() {
-    robotHeading = MathUtil.inputModulus(imu.getYaw().getValue(), -180, 180);
-    angularVelocity = imu.getRate();
+    robotHeading = MathUtil.inputModulus(imu.getYaw().getValueAsDouble(), -180, 180);
+    angularVelocity = imu.getAngularVelocityZWorld().getValueAsDouble();
     pitch = imu.getPitch().getValueAsDouble();
     pitchRate = imu.getAngularVelocityYWorld().getValueAsDouble();
     roll = imu.getRoll().getValueAsDouble();
