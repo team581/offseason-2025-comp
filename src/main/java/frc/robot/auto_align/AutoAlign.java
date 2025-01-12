@@ -1,6 +1,7 @@
 package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.fms.FmsSubsystem;
 import java.util.List;
 
@@ -46,5 +47,10 @@ public class AutoAlign {
 
     // Robot is on red side
     return theta > 90 && theta < 270;
+  }
+
+  public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
+    return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
+        < Units.feetToMeters(3);
   }
 }
