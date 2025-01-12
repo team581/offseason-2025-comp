@@ -40,9 +40,9 @@ class CompConfig {
           "competition",
           new ElevatorConfig(
               // TODO: Get actual Values
-              999,
-              999,
               CANIVORE_NAME,
+              999,
+              999,
               new TalonFXConfiguration(),
               new TalonFXConfiguration(),
               999,

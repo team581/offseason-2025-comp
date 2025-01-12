@@ -9,12 +9,12 @@ import frc.robot.config.RobotConfig;
 
 public class Hardware {
   public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
-  public final TalonFX elevatorTop =
+  public final TalonFX elevatorLeftMotor =
       new TalonFX(
-          RobotConfig.get().elevator().topMotorID(), RobotConfig.get().elevator().canBusName());
-  public final TalonFX elevatorBottom =
+          RobotConfig.get().elevator().leftMotorID(), RobotConfig.get().elevator().canBusName());
+  public final TalonFX elevatorRightMotor =
       new TalonFX(
-          RobotConfig.get().elevator().bottomMotorID(), RobotConfig.get().elevator().canBusName());
+          RobotConfig.get().elevator().rightMotorID(), RobotConfig.get().elevator().canBusName());
 
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);

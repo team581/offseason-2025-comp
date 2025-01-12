@@ -14,11 +14,11 @@ public record RobotConfig(
     WristConfig wrist,
     PivotConfig pivot) {
   public record ElevatorConfig(
-      int topMotorID,
-      int bottomMotorID,
       String canBusName,
-      TalonFXConfiguration topMotorConfig,
-      TalonFXConfiguration bottomMotorConfig,
+      int leftMotorID,
+      int rightMotorID,
+      TalonFXConfiguration leftMotorConfig,
+      TalonFXConfiguration rightMotorConfig,
       double homingEndPosition,
       double minHeight,
       double maxHeight,
