@@ -72,6 +72,16 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
   }
 
   /**
+   * Creates a command that waits until this state machine is in any of the given states.
+   *
+   * @param goalStates An array of the states to wait for.
+   * @return A command that waits until the state is equal to any of the goal states.
+   */
+  public Command waitForStates(S... goalStates) {
+    return waitForStates(Set.of(goalStates));
+  }
+
+  /**
    * Called each loop before processing transitions. Used for retrieving sensor values, etc.
    *
    * <p>Default behavior is to do nothing.
