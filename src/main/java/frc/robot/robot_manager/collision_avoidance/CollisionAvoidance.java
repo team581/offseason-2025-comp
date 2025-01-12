@@ -20,6 +20,12 @@ public class CollisionAvoidance {
   private static Pose2d goalPose = new Pose2d();
 
   public static Optional<SuperstructurePosition> plan(
+      SuperstructurePosition current, SuperstructurePosition goal) {
+    return plan(
+        current.elevatorHeight(), current.wristAngle(), goal.elevatorHeight(), goal.wristAngle());
+  }
+
+  public static Optional<SuperstructurePosition> plan(
       double elevatorHeight, double wristAngle, double elevatorGoal, double wristGoal) {
     possibleGoalPoints.set(0, angleHeightToPose(wristGoal, elevatorGoal));
     possibleGoalPoints.set(1, safePoint1);
