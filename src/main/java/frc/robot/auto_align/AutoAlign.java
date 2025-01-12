@@ -36,8 +36,8 @@ public class AutoAlign {
     double robotX = robotPose.getX();
     double theta = robotPose.getRotation().getDegrees();
 
-    //entire field length is 17.55m
-    double halfFieldLength = 17.55/2.0;
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
 
     // Robot is on blue side
     if (robotX < halfFieldLength) {
