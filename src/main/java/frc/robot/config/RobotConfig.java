@@ -2,6 +2,7 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
@@ -69,6 +70,6 @@ public record RobotConfig(
   public static final String SERIAL_NUMBER = System.getenv("serialnum");
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return PracticeConfig.competitionBot;
   }
 }
