@@ -18,8 +18,10 @@ public class Hardware {
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
-  public final TalonFX intakeMotor =
-      new TalonFX(CONFIG.intake().motorID(), CONFIG.intake().canBusName());
+  public final TalonFX intakeLeftMotor =
+      new TalonFX(CONFIG.intake().leftMotorID(), CONFIG.intake().canBusName());
+  public final TalonFX intakeRightMotor =
+      new TalonFX(CONFIG.intake().rightMotorID(), CONFIG.intake().canBusName());
   public final CANifier intakeLeftSensor = new CANifier(CONFIG.intake().leftSensorID());
   public final CANifier intakeRightSensor = new CANifier(CONFIG.intake().rightSensorID());
   public final TalonFX wristMotor =

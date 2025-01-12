@@ -13,8 +13,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private static final Debouncer LEFT_DEBOUNCER = RobotConfig.get().intake().leftDebouncer();
   private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
 
-  private final TalonFX motor;
-  // TODO: put in CANifier
+  private final TalonFX leftMotor;
+  private final TalonFX rightMotor;
   private final CANifier leftSensor;
   private final CANifier rightSensor;
 
@@ -24,11 +24,14 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean rightSensorDebounced = false;
   private boolean hasGP = false;
 
-  public IntakeSubsystem(TalonFX motor, CANifier leftSensor, CANifier rightSensor) {
+  public IntakeSubsystem(
+      TalonFX leftMotor, TalonFX rightMotor, CANifier leftSensor, CANifier rightSensor) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
-    motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
-    this.motor = motor;
+    leftMotor.getConfigurator().apply(RobotConfig.get().intake().leftMotorConfig());
+    rightMotor.getConfigurator().apply(RobotConfig.get().intake().rightMotorConfig());
+    this.leftMotor = leftMotor;
+    this.rightMotor = rightMotor;
     this.leftSensor = leftSensor;
     this.rightSensor = rightSensor;
   }
@@ -62,31 +65,40 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   protected void afterTransition(IntakeState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
-        motor.disable();
+        leftMotor.disable();
+        rightMotor.disable();
       }
       case IDLE_W_ALGAE -> {
-        motor.setVoltage(1.0);
+        leftMotor.setVoltage(1.0);
+        rightMotor.setVoltage(1.0);
       }
       case IDLE_W_CORAL -> {
-        motor.setVoltage(0.0);
+        leftMotor.setVoltage(0.6);
+        rightMotor.setVoltage(0.6);
       }
       case INTAKING_ALGAE -> {
-        motor.setVoltage(6.0);
+        leftMotor.setVoltage(6.0);
+        rightMotor.setVoltage(6.0);
       }
       case INTAKING_CORAL -> {
-        motor.setVoltage(6.0);
+        leftMotor.setVoltage(6.0);
+        rightMotor.setVoltage(6.0);
       }
       case SCORE_ALGEA_NET -> {
-        motor.setVoltage(-4.0);
+        leftMotor.setVoltage(-4.0);
+        rightMotor.setVoltage(-4.0);
       }
       case SCORE_ALGEA_PROCESSOR -> {
-        motor.setVoltage(-8.0);
+        leftMotor.setVoltage(-8.0);
+        rightMotor.setVoltage(-8.0);
       }
       case SCORE_CORAL -> {
-        motor.setVoltage(-8.0);
+        leftMotor.setVoltage(-8.0);
+        rightMotor.setVoltage(-8.0);
       }
       case OUTTAKING -> {
-        motor.setVoltage(-6.0);
+        leftMotor.setVoltage(-6.0);
+        rightMotor.setVoltage(-6.0);
       }
     }
   }
@@ -94,13 +106,16 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Intake/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Intake/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
-    DogLog.log("Intake/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/LeftSensorRaw", leftSensorRaw);
-    DogLog.log("Intake/RightSensorRaw", rightSensorRaw);
-    DogLog.log("Intake/LeftSensorDebounced", leftSensorDebounced);
-    DogLog.log("Intake/RightSensorDebounced", rightSensorDebounced);
+    DogLog.log("Intake/LeftMotor/StatorCurrent", leftMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Intake/LeftMotor/SupplyCurrent", leftMotor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/LeftMotor/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Intake/RightMotor/StatorCurrent", rightMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Intake/RightMotor/SupplyCurrent", rightMotor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/RightMotor/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Intake/Sensors/LeftSensorRaw", leftSensorRaw);
+    DogLog.log("Intake/Sensors/RightSensorRaw", rightSensorRaw);
+    DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
+    DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/HasGP", hasGP);
   }
 }

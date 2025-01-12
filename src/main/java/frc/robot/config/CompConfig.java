@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.VoltageConfigs;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
@@ -54,10 +55,15 @@ class CompConfig {
               0,
               0,
               0,
+              0,
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))),
+                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
+                  .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
+              new TalonFXConfiguration()
+                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
+                  .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive))),
           new SwerveConfig(
               new PhoenixPIDController(10, 0, 1),
               true,
