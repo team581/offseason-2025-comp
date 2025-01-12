@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.autos.trailblazer.Autos;
 import frc.robot.autos.trailblazer.Trailblazer;
 import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -79,6 +80,8 @@ public class Robot extends TimedRobot {
           topPurpleLimelight,
           bottomCoralLimelight,
           backwardsTagLimelight);
+
+  private final Autos autos = new Autos(robotManager, trailblazer);
 
   public Robot() {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
