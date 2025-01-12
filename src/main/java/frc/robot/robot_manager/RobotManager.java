@@ -1,18 +1,16 @@
 package frc.robot.robot_manager;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.elevator.ElevatorState;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
-import frc.robot.elevator.ElevatorState;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
+import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
@@ -120,7 +118,7 @@ public class RobotManager extends StateMachine<RobotState> {
               ? RobotState.CORAL_L4_SCORING
               : currentState;
 
-        // Dislodging
+      // Dislodging
       case DISLODGE_ALGAE_L2_PUSHING ->
           wrist.atGoal() && elevator.atGoal() && pivot.atGoal()
               ? (intake.getHasGP() ? RobotState.CORAL_L2_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
@@ -130,7 +128,7 @@ public class RobotManager extends StateMachine<RobotState> {
               ? (intake.getHasGP() ? RobotState.CORAL_L3_PREPARE_TO_SCORE : RobotState.IDLE_NO_GP)
               : currentState;
 
-        // Scoring
+      // Scoring
       case CORAL_L1_SCORING,
               CORAL_L2_SCORING,
               CORAL_L3_SCORING,
@@ -140,7 +138,7 @@ public class RobotManager extends StateMachine<RobotState> {
               NET_FORWARD_SCORING ->
           intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
 
-        // Intaking
+      // Intaking
       case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 ->
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
@@ -701,8 +699,6 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
-
-
 
   private void moveSuperstructure(ElevatorState elevatorGoal, WristState wristGoal) {
     var maybeIntermediaryPosition =

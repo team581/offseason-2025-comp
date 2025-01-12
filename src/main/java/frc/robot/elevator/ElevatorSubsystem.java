@@ -53,7 +53,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       setStateFromRequest(newState);
     }
   }
-  public double getHeight(){
+
+  public double getHeight() {
     return averageMeasuredHeight;
   }
 

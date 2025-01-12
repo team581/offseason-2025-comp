@@ -38,7 +38,8 @@ public class WristSubsystem extends StateMachine<WristState> {
       setStateFromRequest(newState);
     }
   }
-  public double getAngle(){
+
+  public double getAngle() {
     return motorAngle;
   }
 

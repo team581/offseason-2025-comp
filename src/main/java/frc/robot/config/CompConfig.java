@@ -60,10 +60,13 @@ class CompConfig {
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
-                  .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
+                  .withMotorOutput(
+                      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
-                  .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive))),
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.CounterClockwise_Positive))),
           new SwerveConfig(
               new PhoenixPIDController(10, 0, 1),
               true,
