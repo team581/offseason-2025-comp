@@ -52,7 +52,7 @@ class PracticeConfig {
               0,
               0.25),
           new IntakeConfig(
-              CANIVORE_NAME,
+              RIO_CAN_NAME,
               3,
               4,
               20,
@@ -106,13 +106,13 @@ class PracticeConfig {
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
           new WristConfig(
-              CANIVORE_NAME,
+              RIO_CAN_NAME,
               5,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               180),
           new PivotConfig(
-              CANIVORE_NAME,
+              RIO_CAN_NAME,
               6,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
