@@ -53,6 +53,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       setStateFromRequest(newState);
     }
   }
+  public double getHeight(){
+    return averageMeasuredHeight;
+  }
 
   public void setCollisionAvoidanceGoal(double height) {
     collisionAvoidanceGoal = height;

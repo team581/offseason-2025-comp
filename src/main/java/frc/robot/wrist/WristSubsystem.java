@@ -38,6 +38,9 @@ public class WristSubsystem extends StateMachine<WristState> {
       setStateFromRequest(newState);
     }
   }
+  public double getAngle(){
+    return motorAngle;
+  }
 
   public void setCollisionAvoidanceGoal(double angle) {
     collisionAvoidanceGoal = angle;

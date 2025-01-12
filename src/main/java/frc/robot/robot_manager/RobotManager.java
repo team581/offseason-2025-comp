@@ -1,13 +1,16 @@
 package frc.robot.robot_manager;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.elevator.ElevatorState;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
+import frc.robot.elevator.ElevatorState;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
 import frc.robot.swerve.SnapUtil;
@@ -696,6 +699,29 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_NO_GP);
       }
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+    }
+  }
+
+
+
+  private void moveSuperstructure(ElevatorState elevatorGoal, WristState wristGoal) {
+    var maybeIntermediaryPosition =
+        CollisionAvoidance.plan(
+            elevator.getHeight(), wrist.getAngle(), elevatorGoal.value, wristGoal.angle);
+
+    if (maybeIntermediaryPosition.isPresent()) {
+      var intermediaryPosition = maybeIntermediaryPosition.get();
+
+      // A collision was detected, so we need to go to an intermediary point
+      elevator.setCollisionAvoidanceGoal(intermediaryPosition.elevatorHeight());
+      elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+
+      wrist.setCollisionAvoidanceGoal(intermediaryPosition.wristAngle());
+      wrist.setState(WristState.COLLISION_AVOIDANCE);
+    } else {
+      // No collision, go straight to goal state
+      elevator.setState(elevatorGoal);
+      wrist.setState(wristGoal);
     }
   }
 }
