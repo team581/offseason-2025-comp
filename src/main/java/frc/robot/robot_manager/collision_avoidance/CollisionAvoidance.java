@@ -1,7 +1,5 @@
 package frc.robot.robot_manager.collision_avoidance;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayList;
@@ -15,9 +13,11 @@ public class CollisionAvoidance {
       new SuperstructurePosition[] {
         new SuperstructurePosition(2.0, 135.0), new SuperstructurePosition(65.0, 85.0)
       }; // TOP RIGHT CORNER IS 0 and TOP RIGHT CORNER IS 1
-  private static ArrayList<SuperstructurePosition> possibleGoalPoints = new ArrayList<SuperstructurePosition>();
+  private static ArrayList<SuperstructurePosition> possibleGoalPoints =
+      new ArrayList<SuperstructurePosition>();
   private static double closestDistance;
-  private static ArrayList<SuperstructurePosition> availablePoints = new ArrayList<SuperstructurePosition>();
+  private static ArrayList<SuperstructurePosition> availablePoints =
+      new ArrayList<SuperstructurePosition>();
   private static Translation2d goalPose = new Translation2d();
 
   public static Optional<SuperstructurePosition> plan(
@@ -59,8 +59,7 @@ public class CollisionAvoidance {
         new Translation2d(
             x1,
             (goalPoseY - currentPoseY) / (goalPoseX - currentPoseX) * (x1 - currentPoseX)
-                + currentPoseY
-            );
+                + currentPoseY);
     Translation2d yInterceptionPoint =
         new Translation2d(
             y1,
@@ -86,8 +85,7 @@ public class CollisionAvoidance {
 
   private static Translation2d angleHeightToPose(double wristAngle, double elevatorHeight) {
     return new Translation2d(
-        Math.cos(wristAngle) * wristLength,
-        elevatorHeight + Math.sin(wristAngle) * wristLength);
+        Math.cos(wristAngle) * wristLength, elevatorHeight + Math.sin(wristAngle) * wristLength);
   }
 
   private static SuperstructurePosition poseToSuperstructurePosition(Translation2d pose) {
@@ -101,9 +99,14 @@ public class CollisionAvoidance {
         (currentPose.getX() - goalPose.getX()) + (currentPose.getY() - goalPose.getY()));
   }
 
-  private static Translation2d getGoalPoint(ArrayList<SuperstructurePosition> possibleGoalPoints, Translation2d currentPose) {
+  private static Translation2d getGoalPoint(
+      ArrayList<SuperstructurePosition> possibleGoalPoints, Translation2d currentPose) {
     for (int i = 0; i < possibleGoalPoints.size(); ) {
-      if (!collides(currentPose, angleHeightToPose(possibleGoalPoints.get(i).wristAngle(), possibleGoalPoints.get(i).elevatorHeight()))) {
+      if (!collides(
+          currentPose,
+          angleHeightToPose(
+              possibleGoalPoints.get(i).wristAngle(),
+              possibleGoalPoints.get(i).elevatorHeight()))) {
         availablePoints.set(i, possibleGoalPoints.get(i));
       }
       i++;
@@ -111,9 +114,15 @@ public class CollisionAvoidance {
     closestDistance = Double.MAX_VALUE;
     for (int w = 0; w < availablePoints.size(); w++) {
 
-      if (distancefromPoses(currentPose, angleHeightToPose(availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight())) < closestDistance) {
+      if (distancefromPoses(
+              currentPose,
+              angleHeightToPose(
+                  availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight()))
+          < closestDistance) {
 
-        goalPose = angleHeightToPose(availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight());
+        goalPose =
+            angleHeightToPose(
+                availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight());
       }
     }
     return goalPose;
