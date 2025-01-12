@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -42,8 +43,8 @@ class PracticeConfig {
           new ElevatorConfig(
               // TODO: Get actual Values
               CANIVORE_NAME,
-              0,
-              0,
+              14,
+              15,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
@@ -53,10 +54,10 @@ class PracticeConfig {
               0.25),
           new IntakeConfig(
               CANIVORE_NAME,
-              0,
-              0,
-              0,
-              0,
+              3,
+              4,
+              20,
+              21,
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
@@ -107,13 +108,13 @@ class PracticeConfig {
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
           new WristConfig(
               CANIVORE_NAME,
-              0,
+              5,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               180),
           new PivotConfig(
               CANIVORE_NAME,
-              0,
+              6,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               0));
