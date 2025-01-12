@@ -27,8 +27,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
-  private final TalonFX topMotor;
-  private final TalonFX bottomMotor;
+  private final TalonFX leftMotor;
+  private final TalonFX rightMotor;
 
   private final MotionMagicVoltage positionRequest =
       new MotionMagicVoltage(ElevatorState.STOWED.value);
@@ -38,13 +38,13 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double averageMeasuredHeight;
   private double collisionAvoidanceGoal;
 
-  public ElevatorSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
+  public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
-    this.topMotor = topMotor;
-    this.bottomMotor = bottomMotor;
+    this.leftMotor = leftMotor;
+    this.rightMotor = rightMotor;
     // Motor Configs
-    topMotor.getConfigurator().apply(RobotConfig.get().elevator().topMotorConfig());
-    bottomMotor.getConfigurator().apply(RobotConfig.get().elevator().bottomMotorConfig());
+    leftMotor.getConfigurator().apply(RobotConfig.get().elevator().leftMotorConfig());
+    rightMotor.getConfigurator().apply(RobotConfig.get().elevator().rightMotorConfig());
   }
 
   public void setState(ElevatorState newState) {
@@ -66,9 +66,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   protected void collectInputs() {
     // Calculate average height of the two motors
     averageMeasuredHeight =
-        (rotationsToInches(Units.rotationsToDegrees(topMotor.getPosition().getValueAsDouble()))
+        (rotationsToInches(Units.rotationsToDegrees(leftMotor.getPosition().getValueAsDouble()))
                 + rotationsToInches(
-                    Units.rotationsToDegrees(bottomMotor.getPosition().getValueAsDouble())))
+                    Units.rotationsToDegrees(rightMotor.getPosition().getValueAsDouble())))
             / 2.0;
   }
 
@@ -85,130 +85,130 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
       case CLIMBING -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CLIMBING.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CLIMBING.value))));
       }
       case NET -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.NET.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.NET.value))));
       }
       case PROCESSOR -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.PROCESSOR.value))));
       }
       case ALGAE_DISLODGE_L2 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L2.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L2.value))));
       }
       case ALGAE_DISLODGE_L3 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L3.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_DISLODGE_L3.value))));
       }
       case ALGAE_INTAKE_L2 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L2.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L2.value))));
       }
       case ALGAE_INTAKE_L3 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L3.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.ALGAE_INTAKE_L3.value))));
       }
       case CORAL_L1 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L1.value))));
       }
       case CORAL_L2 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L2.value))));
       }
       case CORAL_L3 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L3.value))));
       }
       case CORAL_L4 -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.CORAL_L4.value))));
       }
       case GROUND_ALGAE_INTAKE -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.GROUND_ALGAE_INTAKE.value))));
       }
       case GROUND_CORAL_INTAKE -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.GROUND_CORAL_INTAKE.value))));
       }
       case STOWED -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.STOWED.value))));
       }
       case INTAKING_CORAL_STATION -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.INTAKING_CORAL_STATION.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.INTAKING_CORAL_STATION.value))));
       }
       case UNJAM -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(clampHeight(ElevatorState.UNJAM.value))));
       }
@@ -227,18 +227,18 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           // Reset the motor positions, and then transition to idle state
           double homingEndPosition = RobotConfig.get().elevator().homingEndPosition();
           double homedPosition = homingEndPosition + (averageMeasuredHeight - lowestSeenHeight);
-          topMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
-          bottomMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
+          leftMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
+          rightMotor.setPosition(Units.degreesToRotations(inchesToRotations(homedPosition)));
 
           setStateFromRequest(ElevatorState.STOWED);
         }
       }
 
       case COLLISION_AVOIDANCE -> {
-        topMotor.setControl(
+        leftMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(inchesToRotations(clampHeight(collisionAvoidanceGoal)))));
-        bottomMotor.setControl(
+        rightMotor.setControl(
             positionRequest.withPosition(
                 Units.degreesToRotations(inchesToRotations(clampHeight(collisionAvoidanceGoal)))));
       }

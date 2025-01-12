@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
   private final ElevatorSubsystem elevator =
-      new ElevatorSubsystem(hardware.elevatorTop, hardware.elevatorBottom);
+      new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight topPurpleLimelight =

@@ -4,11 +4,13 @@ import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -20,7 +22,7 @@ import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.TunerConstants;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
-class CompConfig {
+class PracticeConfig {
   private static final String CANIVORE_NAME = TunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
@@ -40,16 +42,16 @@ class CompConfig {
           "competition",
           new ElevatorConfig(
               // TODO: Get actual Values
-              999,
-              999,
               CANIVORE_NAME,
-              new TalonFXConfiguration(),
-              new TalonFXConfiguration(),
-              999,
-              999,
-              999,
-              999,
-              999),
+              0,
+              0,
+              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              0,
+              0,
+              68,
+              0,
+              0.25),
           new IntakeConfig(
               CANIVORE_NAME,
               0,
@@ -104,8 +106,18 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
-          new WristConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 0, 180),
-          new PivotConfig(CANIVORE_NAME, 999, new TalonFXConfiguration(), 999, 999));
+          new WristConfig(
+              CANIVORE_NAME,
+              0,
+              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              0,
+              180),
+          new PivotConfig(
+              CANIVORE_NAME,
+              0,
+              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              0,
+              0));
 
-  private CompConfig() {}
+  private PracticeConfig() {}
 }

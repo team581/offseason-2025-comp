@@ -69,36 +69,36 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         rightMotor.disable();
       }
       case IDLE_W_ALGAE -> {
-        leftMotor.setVoltage(1.0);
-        rightMotor.setVoltage(1.0);
+        leftMotor.setVoltage(0.0);
+        rightMotor.setVoltage(0.0);
       }
       case IDLE_W_CORAL -> {
-        leftMotor.setVoltage(0.6);
-        rightMotor.setVoltage(0.6);
+        leftMotor.setVoltage(0.0);
+        rightMotor.setVoltage(0.0);
       }
       case INTAKING_ALGAE -> {
-        leftMotor.setVoltage(6.0);
-        rightMotor.setVoltage(6.0);
+        leftMotor.setVoltage(0.0);
+        rightMotor.setVoltage(0.0);
       }
       case INTAKING_CORAL -> {
-        leftMotor.setVoltage(6.0);
-        rightMotor.setVoltage(6.0);
+        leftMotor.setVoltage(0.0);
+        rightMotor.setVoltage(0.0);
       }
       case SCORE_ALGEA_NET -> {
-        leftMotor.setVoltage(-4.0);
-        rightMotor.setVoltage(-4.0);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
       case SCORE_ALGEA_PROCESSOR -> {
-        leftMotor.setVoltage(-8.0);
-        rightMotor.setVoltage(-8.0);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
       case SCORE_CORAL -> {
-        leftMotor.setVoltage(-8.0);
-        rightMotor.setVoltage(-8.0);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
       case OUTTAKING -> {
-        leftMotor.setVoltage(-6.0);
-        rightMotor.setVoltage(-6.0);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
     }
   }
