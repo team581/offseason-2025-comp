@@ -28,10 +28,10 @@ public class RobotManager extends StateMachine<RobotState> {
   private final ImuSubsystem imu;
 
   private final SwerveSubsystem swerve;
-  private final IntakeSubsystem intake;
-  private final WristSubsystem wrist;
-  private final ElevatorSubsystem elevator;
-  private final PivotSubsystem pivot;
+  public final IntakeSubsystem intake;
+  public final WristSubsystem wrist;
+  public final ElevatorSubsystem elevator;
+  public final PivotSubsystem pivot;
 
   private final Limelight topPurpleLimelight;
   private final Limelight bottomCoralLimelight;
@@ -617,7 +617,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void confirmScore() {
+  public void confirmScoreRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
