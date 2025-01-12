@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -55,8 +56,8 @@ class PracticeConfig {
               RIO_CAN_NAME,
               3,
               4,
-              20,
-              21,
+              16,
+              17,
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
