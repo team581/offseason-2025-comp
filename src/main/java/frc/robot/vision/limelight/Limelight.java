@@ -89,6 +89,9 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return Optional.empty();
+    }
     var coralTX = t2d[4];
     var coralTY = t2d[5];
     var latency = t2d[2] + t2d[3];
@@ -109,6 +112,9 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return Optional.empty();
+    }
     var purpleTX = t2d[4];
     var purpleTY = t2d[5];
     var latency = t2d[2] + t2d[3];
@@ -134,8 +140,11 @@ public class Limelight extends StateMachine<LimelightState> {
     coralResult = getRawCoralResult();
     purpleResult = getRawPurpleResult();
     if (getState() == LimelightState.TAGS) {
-      interpolatedPose =
-          InterpolatedVision.interpolatePose(getRawTagResult().get().pose(), cameraDataset);
+      var maybeInterpolatedPose = getInterpolatedTagResult();
+      if (maybeInterpolatedPose.isPresent()) {
+        interpolatedPose =
+            InterpolatedVision.interpolatePose(maybeInterpolatedPose.get().pose(), cameraDataset);
+      }
     }
   }
 

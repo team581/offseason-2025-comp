@@ -13,7 +13,7 @@ public class CollisionAvoidanceUtils {
   private static final Pose2d[] corners =
       new Pose2d[] {
         new Pose2d(-1, 1, Rotation2d.fromDegrees(0)), new Pose2d(1, 2, Rotation2d.fromDegrees(0))
-      }; // TOP RIGHT CORNER IS 0 and TOP RIGHT CORNER IS 1
+      }; // BOTTOM LEFT CORNER IS INDEX 0 and TOP RIGHT CORNER IS INDEX 1
   private static ArrayList<Pose2d> possibleGoalPoints = new ArrayList<Pose2d>();
   private static double closestDistance;
   private static ArrayList<Pose2d> availablePoints = new ArrayList<Pose2d>();

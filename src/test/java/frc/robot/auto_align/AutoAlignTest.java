@@ -10,6 +10,6 @@ public class AutoAlignTest {
     var b = 2;
     var result = a + b;
 
-    Assertions.assertEquals(4, result);
+    Assertions.assertEquals(3, result);
   }
 }
