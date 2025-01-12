@@ -91,7 +91,8 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_1_LINEUP,
               CLIMBING_2_HANGING,
               DISLODGE_ALGAE_L2_WAIT,
-              DISLODGE_ALGAE_L3_WAIT ->
+              DISLODGE_ALGAE_L3_WAIT,
+              UNJAM ->
           currentState;
 
       case PROCESSOR_PREPARE_TO_SCORE ->
@@ -473,6 +474,16 @@ public class RobotManager extends StateMachine<RobotState> {
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
       }
+      case UNJAM -> {
+        wrist.setState(WristState.UNJAM);
+        intake.setState(IntakeState.OUTTAKING);
+        elevator.setState(ElevatorState.UNJAM);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        pivot.setState(PivotState.STOWED);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+      }
     }
   }
 
@@ -727,6 +738,13 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_NO_GP);
       }
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+    }
+  }
+
+  public void unjamRequest() {
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.UNJAM);
     }
   }
 

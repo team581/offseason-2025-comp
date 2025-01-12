@@ -21,7 +21,7 @@ import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.TunerConstants;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
-class CompConfig {
+class PracticeConfig {
   private static final String CANIVORE_NAME = TunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
@@ -42,8 +42,8 @@ class CompConfig {
           new ElevatorConfig(
               // TODO: Get actual Values
               CANIVORE_NAME,
-              0,
-              0,
+              14,
+              15,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
@@ -52,11 +52,11 @@ class CompConfig {
               0,
               0.25),
           new IntakeConfig(
-              CANIVORE_NAME,
-              0,
-              0,
-              0,
-              0,
+              RIO_CAN_NAME,
+              3,
+              4,
+              16,
+              17,
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
@@ -106,17 +106,17 @@ class CompConfig {
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
           new WristConfig(
-              CANIVORE_NAME,
-              0,
+              RIO_CAN_NAME,
+              5,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               180),
           new PivotConfig(
-              CANIVORE_NAME,
-              0,
+              RIO_CAN_NAME,
+              6,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               0));
 
-  private CompConfig() {}
+  private PracticeConfig() {}
 }

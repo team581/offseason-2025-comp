@@ -69,6 +69,6 @@ public record RobotConfig(
   public static final String SERIAL_NUMBER = System.getenv("serialnum");
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return PracticeConfig.competitionBot;
   }
 }

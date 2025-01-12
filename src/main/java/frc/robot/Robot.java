@@ -19,6 +19,8 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.pivot.PivotSubsystem;
 import frc.robot.purple.Purple;
+import frc.robot.robot_manager.GamePieceMode;
+import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
@@ -80,6 +82,8 @@ public class Robot extends TimedRobot {
           topPurpleLimelight,
           bottomCoralLimelight,
           backwardsTagLimelight);
+
+  private final RobotCommands robotCommands = new RobotCommands(robotManager, trailblazer);
 
   private final Autos autos = new Autos(robotManager, trailblazer);
 
@@ -190,22 +194,25 @@ public class Robot extends TimedRobot {
               }
             }));
 
-    hardware.driverController.rightTrigger().onTrue(Commands.none()).onFalse(Commands.none());
-    hardware.driverController.leftTrigger().onTrue(Commands.none()).onFalse(Commands.none());
-    hardware.driverController.rightBumper().onTrue(Commands.none()).onFalse(Commands.none());
-    hardware.driverController.leftBumper().onTrue(Commands.none()).onFalse(Commands.none());
-    hardware.driverController.y().onTrue(Commands.none());
+    hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
+    hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
+    hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
+    hardware.driverController.leftBumper().onTrue(robotCommands.intakeStationCommand());
+    hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
+    hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
+    hardware.driverController.b().onTrue(robotCommands.l2LineupCommand());
+    hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
+    hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
+    hardware.driverController.povDown().onTrue(robotCommands.climbDownCommand());
     hardware
         .driverController
-        .x()
-        // TODO:snap
-        .onTrue(Commands.none());
-    hardware.driverController.b().onTrue(Commands.none());
-
-    hardware.driverController.a().onTrue(Commands.none());
-    hardware.driverController.povDown().onTrue(Commands.none());
-    hardware.driverController.povLeft().onTrue(Commands.none());
-    hardware.driverController.povUp().onTrue(Commands.none());
+        .povLeft()
+        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.CORAL));
+    hardware
+        .driverController
+        .povRight()
+        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.ALGAE));
+    hardware.driverController.start().onTrue(robotCommands.unjamCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
   }
 }

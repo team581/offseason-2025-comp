@@ -3,6 +3,7 @@ package frc.robot.vision.limelight;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
@@ -17,6 +18,9 @@ public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
   private final CameraDataset cameraDataset;
+  private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
+  private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
+
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
   private final Timer limelightTimer = new Timer();
@@ -130,6 +134,10 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
+  private int[] getAllianceBasedReefTagIDs() {
+    return FmsSubsystem.isRedAlliance() ? RED_REEF_TAGS : BLUE_REEF_TAGS;
+  }
+
   private Optional<TagResult> tagResult = Optional.empty();
   private Optional<CoralResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
@@ -152,10 +160,17 @@ public class Limelight extends StateMachine<LimelightState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
+
     switch (getState()) {
       case TAGS -> updateHealth(tagResult);
       case CORAL -> updateHealth(coralResult);
       case PURPLE -> updateHealth(purpleResult);
+      case REEF_TAGS -> {
+        LimelightHelpers.SetFiducialIDFiltersOverride(
+            limelightTableName, getAllianceBasedReefTagIDs());
+        tagResult = getRawTagResult();
+        updateHealth(tagResult);
+      }
       default -> {}
     }
   }
