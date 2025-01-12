@@ -204,8 +204,14 @@ public class Robot extends TimedRobot {
     hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
     hardware.driverController.povDown().onTrue(robotCommands.climbDownCommand());
-    hardware.driverController.povLeft().onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.CORAL));
-    hardware.driverController.povRight().onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.ALGAE));
+    hardware
+        .driverController
+        .povLeft()
+        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.CORAL));
+    hardware
+        .driverController
+        .povRight()
+        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.ALGAE));
     hardware.driverController.start().onTrue(robotCommands.unjamCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
   }
