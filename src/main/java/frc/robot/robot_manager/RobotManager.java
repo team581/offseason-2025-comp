@@ -692,7 +692,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private void moveSuperstructure(ElevatorState elevatorGoal, WristState wristGoal) {
     var maybeIntermediaryPosition =
         CollisionAvoidance.plan(
-            elevator.getHeight(), wrist.getAngle(), elevatorGoal.value, wristGoal.angle);
+            elevator.getHeight(), wrist.getAngle(), elevatorGoal.height, wristGoal.angle);
 
     if (maybeIntermediaryPosition.isPresent()) {
       var intermediaryPosition = maybeIntermediaryPosition.get();

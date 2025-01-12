@@ -2,6 +2,7 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -10,7 +11,6 @@ import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -45,8 +45,16 @@ class PracticeConfig {
               CANIVORE_NAME,
               0,
               0,
-              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
-              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              // TODO: Sensor to mechanism ratio should be gear ratio multiplied by the sprocket
+              // circumfrence
+              new TalonFXConfiguration()
+                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withFeedback(
+                      new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
+              new TalonFXConfiguration()
+                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withFeedback(
+                      new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
               0,
               0,
               68,

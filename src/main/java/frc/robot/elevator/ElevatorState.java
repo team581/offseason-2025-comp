@@ -25,9 +25,9 @@ public enum ElevatorState {
   // this goal is used in the COLLISION_AVOIDANCE state
   // so that we can have very specific control over exact elevator position to avoid bonking the arm
 
-  public final double value;
+  public final double height;
 
-  private ElevatorState(double position) {
-    this.value = position;
+  private ElevatorState(double height) {
+    this.height = height;
   }
 }
