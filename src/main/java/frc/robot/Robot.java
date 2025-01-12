@@ -2,6 +2,7 @@ package frc.robot;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -59,7 +60,7 @@ public class Robot extends TimedRobot {
 
   private final IntakeSubsystem intake =
       new IntakeSubsystem(
-          hardware.intakeMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
+          hardware.intakeLeftMotor, hardware.intakeRightMotor, hardware.intakeLeftSensor, hardware.intakeRightSensor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
   private final RobotManager robotManager =
@@ -171,5 +172,34 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {}
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    swerve.setDefaultCommand(
+        swerve.run(
+            () -> {
+              if (DriverStation.isTeleop()) {
+                swerve.driveTeleop(
+                    hardware.driverController.getLeftX(),
+                    hardware.driverController.getLeftY(),
+                    hardware.driverController.getRightX());
+              }
+            }));
+
+    hardware.driverController.rightTrigger().onTrue(Commands.none()).onFalse(Commands.none());
+    hardware.driverController.leftTrigger().onTrue(Commands.none()).onFalse(Commands.none());
+    hardware.driverController.rightBumper().onTrue(Commands.none()).onFalse(Commands.none());
+    hardware.driverController.leftBumper().onTrue(Commands.none()).onFalse(Commands.none());
+    hardware.driverController.y().onTrue(Commands.none());
+    hardware
+        .driverController
+        .x()
+        // TODO:snap
+        .onTrue(Commands.none());
+    hardware.driverController.b().onTrue(Commands.none());
+
+    hardware.driverController.a().onTrue(Commands.none());
+    hardware.driverController.povDown().onTrue(Commands.none());
+    hardware.driverController.povLeft().onTrue(Commands.none());
+    hardware.driverController.povUp().onTrue(Commands.none());
+    hardware.driverController.back().onTrue(localization.getZeroCommand());
+  }
 }

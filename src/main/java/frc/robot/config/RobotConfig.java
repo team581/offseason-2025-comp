@@ -1,7 +1,7 @@
 package frc.robot.config;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
@@ -27,12 +27,14 @@ public record RobotConfig(
 
   public record IntakeConfig(
       String canBusName,
-      int motorID,
+      int leftMotorID,
+      int rightMotorID,
       int leftSensorID,
       int rightSensorID,
       Debouncer leftDebouncer,
       Debouncer rightDebouncer,
-      TalonFXConfiguration motorConfig) {}
+      TalonFXConfiguration leftMotorConfig,
+      TalonFXConfiguration rightMotorConfig) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,

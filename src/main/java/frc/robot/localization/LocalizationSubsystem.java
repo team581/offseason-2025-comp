@@ -83,7 +83,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
   public void resetPose(Pose2d estimatedPose) {
     imu.setAngle(estimatedPose.getRotation().getDegrees());
-    swerve.drivetrain.seedFieldRelative(estimatedPose);
+    swerve.drivetrain.resetPose(estimatedPose);
   }
 
   public Command getZeroCommand() {
