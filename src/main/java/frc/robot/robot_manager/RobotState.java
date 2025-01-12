@@ -50,5 +50,7 @@ public enum RobotState {
   CLIMBING_2_HANGING,
 
   SCORE_ASSIST,
-  PURPLE_ALIGN;
+  PURPLE_ALIGN,
+
+  UNJAM;
 }
