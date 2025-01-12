@@ -37,6 +37,8 @@ public class RobotManager extends StateMachine<RobotState> {
   private final Limelight bottomCoralLimelight;
   private final Limelight backwardsTagLimelight;
 
+  private GamePieceMode gamePieceMode;
+
   public RobotManager(
       IntakeSubsystem intake,
       WristSubsystem wrist,
@@ -377,7 +379,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -387,7 +389,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -397,7 +399,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -407,7 +409,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         elevator.setState(ElevatorState.NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(SnapUtil.getNetAngle(imu));
+        swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         topPurpleLimelight.setState(LimelightState.TAGS);
@@ -490,6 +492,166 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     reefSnapAngle = AutoAlign.getClosestReefSide(localization.getPose()).getRotation().getDegrees();
   }
+  
+  public void setGamePieceMode(GamePieceMode newMode) {
+    gamePieceMode = newMode;
+  }
+
+  public void stowRequest() {
+    if (intake.getHasGP()) {
+      if (gamePieceMode == GamePieceMode.CORAL) {
+        setStateFromRequest(RobotState.IDLE_CORAL);
+      } else {
+        setStateFromRequest(RobotState.IDLE_ALGAE);
+      }
+    } else {
+      setStateFromRequest(RobotState.IDLE_NO_GP);
+    }
+  }
+
+  public void intakeFloorRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeFloorAlgaeRequest();
+    } else {
+      intakeFloorCoralHorizontalRequest();
+    }
+  }
+
+  public void intakeFloorAlgaeRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_FLOOR);
+    }
+  }
+
+  public void intakeFloorCoralHorizontalRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL);
+    }
+  }
+
+  public void intakeStationRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_CORAL_STATION);
+    }
+  }
+
+  public void lowLineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      processorWaitingRequest();
+    } else {
+      l1CoralLineupRequest();
+    }
+  }
+
+  public void processorWaitingRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.PROCESSOR_WAITING);
+    }
+  }
+
+  public void l1CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L1_WAITING);
+    }
+  }
+
+  public void l2LineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeAlgaeL2Request();
+    } else {
+      l2CoralLineupRequest();
+    }
+  }
+
+  private void intakeAlgaeL2Request() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L2);
+    }
+  }
+
+  public void l2CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L2_WAITING);
+    }
+  }
+
+  public void l3LineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeAlgaeL3Request();
+    } else {
+      l3CoralLineupRequest();
+    }
+  }
+
+  private void intakeAlgaeL3Request() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L3);
+    }
+  }
+
+  public void l3CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L3_WAITING);
+    }
+  }
+
+  public void highLineupRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      algaeNetRequest();
+    } else {
+      l4CoralLineupRequest();
+    }
+  }
+
+  public void algaeNetRequest() {
+    if (AutoAlign.shouldNetScoreForwards(localization.getPose())) {
+      algaeNetForwardRequest();
+    } else {
+      algaeNetBackRequest();
+    }
+  }
+
+  private void algaeNetForwardRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.NET_FORWARD_WAITING);
+    }
+  }
+
+  private void algaeNetBackRequest() {
+    gamePieceMode = GamePieceMode.ALGAE;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.NET_BACK_WAITING);
+    }
+  }
+
+  public void l4CoralLineupRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L4_WAITING);
+    }
+  }
 
   public void confirmScore() {
     switch (getState()) {
@@ -511,20 +673,11 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
-        // change default coral score level or algea score if needed
-      default -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
+      default -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
       case CORAL_L1_WAITING -> setStateFromRequest(RobotState.CORAL_L1_PREPARE_TO_SCORE);
       case CORAL_L2_WAITING -> setStateFromRequest(RobotState.CORAL_L2_PREPARE_TO_SCORE);
       case CORAL_L3_WAITING -> setStateFromRequest(RobotState.CORAL_L3_PREPARE_TO_SCORE);
       case CORAL_L4_WAITING -> setStateFromRequest(RobotState.CORAL_L4_PREPARE_TO_SCORE);
-    }
-  }
-
-  public void stowRequest() {
-    if (intake.getHasGP()) {
-      setStateFromRequest(RobotState.IDLE_CORAL);
-    } else {
-      setStateFromRequest(RobotState.IDLE_NO_GP);
     }
   }
 

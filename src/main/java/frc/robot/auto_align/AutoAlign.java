@@ -31,4 +31,20 @@ public class AutoAlign {
 
     return reefSide.bluePose;
   }
+
+  public static boolean shouldNetScoreForwards(Pose2d robotPose) {
+    double robotX = robotPose.getX();
+    double theta = robotPose.getRotation().getDegrees();
+
+    //entire field length is 17.55m
+    double halfFieldLength = 17.55/2.0;
+
+    // Robot is on blue side
+    if (robotX < halfFieldLength) {
+      return theta < 90 || theta > 270;
+    }
+
+    // Robot is on red side
+    return theta > 90 && theta < 270;
+  }
 }
