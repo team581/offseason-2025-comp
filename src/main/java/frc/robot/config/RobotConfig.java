@@ -2,7 +2,6 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
