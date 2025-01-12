@@ -492,7 +492,7 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     reefSnapAngle = AutoAlign.getClosestReefSide(localization.getPose()).getRotation().getDegrees();
   }
-  
+
   public void setGamePieceMode(GamePieceMode newMode) {
     gamePieceMode = newMode;
   }
