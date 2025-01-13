@@ -144,8 +144,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    // TODO: Add autos class
-    autonomousCommand = Commands.none();
+    autonomousCommand = autos.getAutoCommand();
 
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
