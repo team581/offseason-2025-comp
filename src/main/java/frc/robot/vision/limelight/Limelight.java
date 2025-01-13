@@ -1,7 +1,5 @@
 package frc.robot.vision.limelight;
 
-import java.util.Optional;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -14,6 +12,7 @@ import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.CoralResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
+import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
@@ -22,7 +21,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
   private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
   private static final double IS_OFFLINE_TIMEOUT = 3;
-
 
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
