@@ -2,7 +2,6 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.fms.FmsSubsystem;
 import java.util.List;
 
 public class AutoAlign {
@@ -17,20 +16,15 @@ public class AutoAlign {
                         robotPose
                             .getTranslation()
                             .getDistance(
-                                (FmsSubsystem.isRedAlliance() ? a.redPose : a.bluePose)
+                                a.getPose()
                                     .getTranslation()),
                         robotPose
                             .getTranslation()
                             .getDistance(
-                                (FmsSubsystem.isRedAlliance() ? b.redPose : b.bluePose)
+                                b.getPose()
                                     .getTranslation())))
             .get();
-
-    if (FmsSubsystem.isRedAlliance()) {
-      return reefSide.redPose;
-    }
-
-    return reefSide.bluePose;
+    return reefSide.getPose();
   }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {

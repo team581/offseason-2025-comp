@@ -2,6 +2,7 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.fms.FmsSubsystem;
 
 public enum ReefSide {
   // TODO:set poses
@@ -44,5 +45,9 @@ public enum ReefSide {
   private ReefSide(Pose2d bluePose, Pose2d redPose) {
     this.bluePose = bluePose;
     this.redPose = redPose;
+  }
+
+  public Pose2d getPose() {
+    return FmsSubsystem.isRedAlliance() ? redPose : bluePose;
   }
 }
