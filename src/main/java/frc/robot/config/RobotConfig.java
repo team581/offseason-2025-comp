@@ -19,7 +19,7 @@ public record RobotConfig(
       int rightMotorID,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig,
-      double homingEndPosition,
+      double homingEndHeight,
       double minHeight,
       double maxHeight,
       double rotationsToDistance,
