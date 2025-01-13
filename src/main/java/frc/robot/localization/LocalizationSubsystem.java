@@ -1,9 +1,5 @@
 package frc.robot.localization;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -22,6 +18,9 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.DistanceAngle;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private static final Vector<N3> VISION_STD_DEVS =
@@ -70,7 +69,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
         swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
         lastAddedVisionTimestamp = visionTimestamp;
       }
-
     }
 
     DogLog.log("Localization/EstimatedPose", getPose());
