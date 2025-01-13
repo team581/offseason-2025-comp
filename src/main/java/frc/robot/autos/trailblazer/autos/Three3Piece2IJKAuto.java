@@ -26,7 +26,7 @@ public class Three3Piece2IJKAuto extends BaseAuto {
         Commands.print(""),
         Commands.runOnce(
             () ->
-                robotManager.localization.resetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(.0)))),
+                robotManager.localization.resetPose(new Pose2d(9.434, 1.903, Rotation2d.fromDegrees(0.0)))),
         trailblazer.followSegment(
             new AutoSegment(
                 new AutoPoint(new Pose2d(9.434, 1.903, Rotation2d.fromDegrees(0.0))),
