@@ -53,10 +53,24 @@ public class WristSubsystem extends StateMachine<WristState> {
           MathUtil.isNear(WristState.ALGAE_BACKWARD_NET.angle, motorAngle, 1);
       case ALGAE_FORWARD_NET -> MathUtil.isNear(WristState.ALGAE_FORWARD_NET.angle, motorAngle, 1);
       case ALGAE_PROCESSOR -> MathUtil.isNear(WristState.ALGAE_PROCESSOR.angle, motorAngle, 1);
-      case CORAL_SCORE_LV1 -> MathUtil.isNear(WristState.CORAL_SCORE_LV1.angle, motorAngle, 1);
-      case CORAL_SCORE_LV2 -> MathUtil.isNear(WristState.CORAL_SCORE_LV2.angle, motorAngle, 1);
-      case CORAL_SCORE_LV3 -> MathUtil.isNear(WristState.CORAL_SCORE_LV3.angle, motorAngle, 1);
-      case CORAL_SCORE_LV4 -> MathUtil.isNear(WristState.CORAL_SCORE_LV4.angle, motorAngle, 1);
+      case CORAL_SCORE_LINEUP_L1 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L1.angle, motorAngle, 1);
+      case CORAL_SCORE_LINEUP_L2 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L2.angle, motorAngle, 1);
+      case CORAL_SCORE_LINEUP_L3 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L3.angle, motorAngle, 1);
+      case CORAL_SCORE_LINEUP_L4 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L4.angle, motorAngle, 1);
+
+      case CORAL_SCORE_PLACING_L1 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L1.angle, motorAngle, 1);
+      case CORAL_SCORE_PLACING_L2 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L2.angle, motorAngle, 1);
+      case CORAL_SCORE_PLACING_L3 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L3.angle, motorAngle, 1);
+      case CORAL_SCORE_PLACING_L4 ->
+          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L4.angle, motorAngle, 1);
+
       case GROUND_ALGAE_INTAKE ->
           MathUtil.isNear(WristState.GROUND_ALGAE_INTAKE.angle, motorAngle, 1);
       case GROUND_CORAL_INTAKE ->
@@ -99,25 +113,45 @@ public class WristSubsystem extends StateMachine<WristState> {
             motionMagicRequest.withPosition(
                 Units.degreesToRotations(clamp(WristState.ALGAE_PROCESSOR.angle))));
       }
-      case CORAL_SCORE_LV1 -> {
+      case CORAL_SCORE_LINEUP_L1 -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LV1.angle))));
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L1.angle))));
       }
-      case CORAL_SCORE_LV2 -> {
+      case CORAL_SCORE_PLACING_L1 -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LV2.angle))));
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L1.angle))));
       }
-      case CORAL_SCORE_LV3 -> {
+      case CORAL_SCORE_LINEUP_L2 -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LV3.angle))));
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L2.angle))));
       }
-      case CORAL_SCORE_LV4 -> {
+      case CORAL_SCORE_PLACING_L2 -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LV4.angle))));
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L2.angle))));
+      }
+      case CORAL_SCORE_LINEUP_L3 -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L3.angle))));
+      }
+      case CORAL_SCORE_PLACING_L3 -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L3.angle))));
+      }
+      case CORAL_SCORE_LINEUP_L4 -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L4.angle))));
+      }
+      case CORAL_SCORE_PLACING_L4 -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L4.angle))));
       }
       case GROUND_ALGAE_INTAKE -> {
         motor.setControl(

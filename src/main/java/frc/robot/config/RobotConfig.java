@@ -14,12 +14,12 @@ public record RobotConfig(
     WristConfig wrist,
     PivotConfig pivot) {
   public record ElevatorConfig(
-      int topMotorID,
-      int bottomMotorID,
       String canBusName,
-      TalonFXConfiguration topMotorConfig,
-      TalonFXConfiguration bottomMotorConfig,
-      double homingEndPosition,
+      int leftMotorID,
+      int rightMotorID,
+      TalonFXConfiguration leftMotorConfig,
+      TalonFXConfiguration rightMotorConfig,
+      double homingEndHeight,
       double minHeight,
       double maxHeight,
       double rotationsToDistance,
@@ -69,6 +69,6 @@ public record RobotConfig(
   public static final String SERIAL_NUMBER = System.getenv("serialnum");
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return PracticeConfig.competitionBot;
   }
 }

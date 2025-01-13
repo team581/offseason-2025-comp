@@ -8,25 +8,29 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
 
 public class Hardware {
-  RobotConfig CONFIG = RobotConfig.get();
   public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
-  public final TalonFX elevatorTop =
-      new TalonFX(CONFIG.elevator().topMotorID(), CONFIG.elevator().canBusName());
-  public final TalonFX elevatorBottom =
-      new TalonFX(CONFIG.elevator().bottomMotorID(), CONFIG.elevator().canBusName());
+  public final TalonFX elevatorLeftMotor =
+      new TalonFX(
+          RobotConfig.get().elevator().leftMotorID(), RobotConfig.get().elevator().canBusName());
+  public final TalonFX elevatorRightMotor =
+      new TalonFX(
+          RobotConfig.get().elevator().rightMotorID(), RobotConfig.get().elevator().canBusName());
 
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final TalonFX intakeLeftMotor =
-      new TalonFX(CONFIG.intake().leftMotorID(), CONFIG.intake().canBusName());
+      new TalonFX(
+          RobotConfig.get().intake().leftMotorID(), RobotConfig.get().intake().canBusName());
   public final TalonFX intakeRightMotor =
-      new TalonFX(CONFIG.intake().rightMotorID(), CONFIG.intake().canBusName());
-  public final CANifier intakeLeftSensor = new CANifier(CONFIG.intake().leftSensorID());
-  public final CANifier intakeRightSensor = new CANifier(CONFIG.intake().rightSensorID());
+      new TalonFX(
+          RobotConfig.get().intake().rightMotorID(), RobotConfig.get().intake().canBusName());
+  public final CANifier intakeLeftSensor = new CANifier(RobotConfig.get().intake().leftSensorID());
+  public final CANifier intakeRightSensor =
+      new CANifier(RobotConfig.get().intake().rightSensorID());
   public final TalonFX wristMotor =
-      new TalonFX(CONFIG.wrist().motorID(), CONFIG.wrist().canBusName());
+      new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 
   public final TalonFX pivotMotor =
-      new TalonFX(CONFIG.pivot().motorID(), CONFIG.pivot().canBusName());
+      new TalonFX(RobotConfig.get().pivot().motorID(), RobotConfig.get().pivot().canBusName());
 }

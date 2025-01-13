@@ -1,7 +1,5 @@
 package frc.robot.robot_manager.collision_avoidance;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.robot_manager.SuperstructurePosition;
@@ -18,7 +16,8 @@ public class CollisionAvoidance {
       }; // TOP RIGHT CORNER IS 0 and TOP RIGHT CORNER IS 1
   static ArrayList<SuperstructurePosition> possibleGoalPoints = new ArrayList<SuperstructurePosition>();
   private static double closestDistance;
-  private static ArrayList<SuperstructurePosition> availablePoints = new ArrayList<SuperstructurePosition>();
+  private static ArrayList<SuperstructurePosition> availablePoints =
+      new ArrayList<SuperstructurePosition>();
   private static Translation2d goalPose = new Translation2d();
 
   public static Optional<SuperstructurePosition> plan(
@@ -61,8 +60,7 @@ public class CollisionAvoidance {
         new Translation2d(
             x1,
             (goalPoseY - currentPoseY) / (goalPoseX - currentPoseX) * (x1 - currentPoseX)
-                + currentPoseY
-            );
+                + currentPoseY);
     Translation2d yInterceptionPoint =
         new Translation2d(
             y1,
@@ -115,9 +113,15 @@ public class CollisionAvoidance {
     closestDistance = Double.MAX_VALUE;
     for (int w = 0; w < availablePoints.size(); ) {
 
-      if (distancefromPoses(currentPose, angleHeightToPose(availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight())) < closestDistance) {
+      if (distancefromPoses(
+              currentPose,
+              angleHeightToPose(
+                  availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight()))
+          < closestDistance) {
 
-        goalPose = angleHeightToPose(availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight());
+        goalPose =
+            angleHeightToPose(
+                availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight());
       }
       w++;
     }
