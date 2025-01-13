@@ -13,16 +13,8 @@ public class AutoAlign {
             .min(
                 (a, b) ->
                     Double.compare(
-                        robotPose
-                            .getTranslation()
-                            .getDistance(
-                                a.getPose()
-                                    .getTranslation()),
-                        robotPose
-                            .getTranslation()
-                            .getDistance(
-                                b.getPose()
-                                    .getTranslation())))
+                        robotPose.getTranslation().getDistance(a.getPose().getTranslation()),
+                        robotPose.getTranslation().getDistance(b.getPose().getTranslation())))
             .get();
     return reefSide.getPose();
   }

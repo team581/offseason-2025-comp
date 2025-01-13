@@ -5,8 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.fms.FmsSubsystem;
 
 public enum ReefSide {
-  // TODO:set poses
-
   SIDE_AB(reefSidePoses(0), fieldFlip(reefSidePoses(0))),
   SIDE_CD(reefSidePoses(1), fieldFlip(reefSidePoses(1))),
   SIDE_EF(reefSidePoses(2), fieldFlip(reefSidePoses(2))),
