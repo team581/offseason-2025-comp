@@ -20,7 +20,7 @@ public enum ReefPipe {
   public final Pose2d redPose;
   public final Pose2d bluePose;
 
-  ReefPipe(Pose2d redPose, Pose2d bluePose) {
+  ReefPipe(Pose2d bluePose, Pose2d redPose) {
     this.redPose = redPose;
     this.bluePose = bluePose;
   }
