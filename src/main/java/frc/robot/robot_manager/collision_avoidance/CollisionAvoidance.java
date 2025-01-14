@@ -35,8 +35,8 @@ public class CollisionAvoidance {
       //  getGoalPoint(possibleGoalPoints, angleHeightToPose(wristAngle, elevatorHeight))
 
       return Optional.of(
-          poseToSuperstructurePosition(
-              getGoalPoint(possibleGoalPoints, angleHeightToPose(wristAngle, elevatorHeight),angleHeightToPose(wristGoal, elevatorGoal)),wristAngle));
+
+              getGoalPoint(possibleGoalPoints, new SuperstructurePosition(elevatorHeight, wristAngle),new SuperstructurePosition(elevatorGoal, wristGoal)));
     }
 
     private CollisionAvoidance() {}
@@ -90,49 +90,48 @@ public class CollisionAvoidance {
           elevatorHeight + Math.sin(Units.degreesToRadians(wristAngle)) * wristLength);
     }
 
-    static SuperstructurePosition poseToSuperstructurePosition(Translation2d pose, double wristAngle) {
-      if(wristAngle>0){
-        return new SuperstructurePosition(
-          pose.getY()+Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
-          Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
-      );
-      } else{return new SuperstructurePosition(
-          pose.getY()-Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
-          //WE SHOULD ADD INSTEAD OF SUBTRACT IN FRONT OF MATH.SQRT IF we Are BELoW 90 degree but idk if we are ever below
-          Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
-      );}
+    // static SuperstructurePosition poseToSuperstructurePosition(Translation2d pose) {
+    //   if(180>wristAngle&&wristAngle>0){
+    //     return new SuperstructurePosition(
+    //       pose.getY()-Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
+    //       Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
+    //   );
+    //   } else{return new SuperstructurePosition(
+    //       pose.getY()+Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
+    //       //WE SHOULD ADD INSTEAD OF SUBTRACT IN FRONT OF MATH.SQRT IF we Are BELoW 90 degree but idk if we are ever below
+    //       -1*Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
+    //   );}
 
-    }
+    // }
 
     static double distancefromPoses(Translation2d currentPose, Translation2d goalPose) {
       return Math.sqrt(
           (Math.pow(goalPose.getX() - currentPose.getX(),2)) + (Math.pow(goalPose.getY() - currentPose.getY(),2)));
     }
 
-    private static Translation2d getGoalPoint(ArrayList<SuperstructurePosition> possibleGoalPoints, Translation2d currentPose, Translation2d goalPose) {
+    private static SuperstructurePosition getGoalPoint(ArrayList<SuperstructurePosition> possibleGoalPoints, SuperstructurePosition currentPose, SuperstructurePosition goalPose) {
       ArrayList<SuperstructurePosition> availablePoints = new ArrayList<SuperstructurePosition>();
-      if(!collides(currentPose, goalPose)){
+      if(!collides(angleHeightToPose(currentPose.wristAngle(), currentPose.elevatorHeight()),angleHeightToPose(goalPose.wristAngle(), goalPose.elevatorHeight()))){
         return goalPose;
       }
       for (int i = 0; i < possibleGoalPoints.size(); ) {
-        if (!collides(currentPose, angleHeightToPose(possibleGoalPoints.get(i).wristAngle(), possibleGoalPoints.get(i).elevatorHeight()))) {
+        if (!collides(angleHeightToPose(currentPose.wristAngle(), currentPose.elevatorHeight()), angleHeightToPose(possibleGoalPoints.get(i).wristAngle(), possibleGoalPoints.get(i).elevatorHeight()))) {
           availablePoints.add(possibleGoalPoints.get(i));
         }
         i++;
       }
       double closestDistance = Double.MAX_VALUE;
-      Translation2d closestPossiblePose = new Translation2d();
+      SuperstructurePosition closestPossiblePose = new SuperstructurePosition(0,0);
       for (int w = 0; w < availablePoints.size(); ) {
 
         if (distancefromPoses(
-                goalPose,
+          angleHeightToPose(goalPose.wristAngle(), goalPose.elevatorHeight()),
                 angleHeightToPose(
                     availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight()))
             < closestDistance) {
 
           closestPossiblePose =
-            angleHeightToPose(
-                availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight());
+            availablePoints.get(w);
       }
       w++;
     }

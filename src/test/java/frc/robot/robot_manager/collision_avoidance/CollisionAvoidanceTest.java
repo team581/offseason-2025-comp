@@ -51,21 +51,14 @@ public class CollisionAvoidanceTest {
   }
   @Test
   void angleHeightToPoseTest3() {
-     var wristAngle = 75;
-    var elevatorHeight = 2;
+     var wristAngle = 15;
+    var elevatorHeight = 0;
 //[elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
     var expected = new Translation2d(0,22);
     assertEquals(expected, result);
   }
-  @Test
-  void poseToSuperstructurePositionTest() {
-    var currentPose = new Translation2d(0, 85);
-    var wristAngle = 0.0;
-    var result = CollisionAvoidance.poseToSuperstructurePosition(currentPose,wristAngle);
-    var expected = new SuperstructurePosition(0.0,90.0);
-    assertEquals(expected, result);
-  }
+
   @Test
   void distancefromPosesTest() {
     var currentPose = new Translation2d(4.0, 0.0);
