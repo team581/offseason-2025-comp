@@ -2,13 +2,8 @@ package frc.robot.robot_manager.collision_avoidance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.robot_manager.SuperstructurePosition;
-
-import java.io.Serial;
-import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
@@ -21,41 +16,45 @@ public class CollisionAvoidanceTest {
     var expected = true;
     assertEquals(expected, result);
   }
+
   @Test
   void angleHeightToPoseTest() {
-    //2.0, 135.0
+    // 2.0, 135.0
     var wristAngle = 135.0;
     var elevatorHeight = 2.0;
 
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
-    var expected = new Translation2d(0,22);
+    var expected = new Translation2d(0, 22);
     assertEquals(expected, result);
   }
+
   @Test
   void angleHeightToPoseTest1() {
-     var wristAngle = 85.0;
+    var wristAngle = 85.0;
     var elevatorHeight = 65.0;
 
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
-    var expected = new Translation2d(0,22);
+    var expected = new Translation2d(0, 22);
     assertEquals(expected, result);
   }
+
   @Test
   void angleHeightToPoseTest2() {
-     var wristAngle = 15.000000000000018;
+    var wristAngle = 15.000000000000018;
     var elevatorHeight = -10.388037984510916;
-//[elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
+    // [elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
-    var expected = new Translation2d(0,22);
+    var expected = new Translation2d(0, 22);
     assertEquals(expected, result);
   }
+
   @Test
   void angleHeightToPoseTest3() {
-     var wristAngle = 15;
+    var wristAngle = 15;
     var elevatorHeight = 0;
-//[elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
+    // [elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
-    var expected = new Translation2d(0,22);
+    var expected = new Translation2d(0, 22);
     assertEquals(expected, result);
   }
 
@@ -68,7 +67,6 @@ public class CollisionAvoidanceTest {
     var expected = 0;
     assertEquals(expected, result);
   }
-
 
   @Test
   void testPlanNoCollisionsLow() {
