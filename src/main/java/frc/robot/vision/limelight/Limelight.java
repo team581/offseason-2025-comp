@@ -68,7 +68,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<TagResult> getRawTagResult() {
-    if (getState() != LimelightState.TAGS) {
+    if (getState() != LimelightState.TAGS || getState() != LimelightState.REEF_TAGS) {
       return Optional.empty();
     }
 
@@ -151,11 +151,11 @@ public class Limelight extends StateMachine<LimelightState> {
     tagResult = getRawTagResult();
     coralResult = getRawCoralResult();
     purpleResult = getRawPurpleResult();
-    if (getState() == LimelightState.TAGS) {
-      var maybeInterpolatedPose = getInterpolatedTagResult();
-      if (maybeInterpolatedPose.isPresent()) {
+    if (getState() == LimelightState.TAGS || getState() == LimelightState.REEF_TAGS) {
+      var maybeRawPose = getRawTagResult();
+      if (maybeRawPose.isPresent()) {
         interpolatedPose =
-            InterpolatedVision.interpolatePose(maybeInterpolatedPose.get().pose(), cameraDataset);
+            InterpolatedVision.interpolatePose(maybeRawPose.get().pose(), cameraDataset);
       }
     }
   }
