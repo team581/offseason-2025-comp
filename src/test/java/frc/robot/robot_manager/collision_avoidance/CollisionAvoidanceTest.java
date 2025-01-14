@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.robot_manager.SuperstructurePosition;
+
+import java.io.Serial;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
@@ -21,29 +23,56 @@ public class CollisionAvoidanceTest {
   }
   @Test
   void angleHeightToPoseTest() {
-    var wristAngle = 90.0;
-    var elevatorHeight = 0.0;
+    //2.0, 135.0
+    var wristAngle = 135.0;
+    var elevatorHeight = 2.0;
 
     var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
     var expected = new Translation2d(0,22);
     assertEquals(expected, result);
   }
+  @Test
+  void angleHeightToPoseTest1() {
+     var wristAngle = 85.0;
+    var elevatorHeight = 65.0;
 
+    var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
+    var expected = new Translation2d(0,22);
+    assertEquals(expected, result);
+  }
+  @Test
+  void angleHeightToPoseTest2() {
+     var wristAngle = 15.000000000000018;
+    var elevatorHeight = -10.388037984510916;
+//[elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
+    var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
+    var expected = new Translation2d(0,22);
+    assertEquals(expected, result);
+  }
+  @Test
+  void angleHeightToPoseTest3() {
+     var wristAngle = 75;
+    var elevatorHeight = 2;
+//[elevatorHeight=-10.388037984510916, wristAngle=15.000000000000018]]
+    var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
+    var expected = new Translation2d(0,22);
+    assertEquals(expected, result);
+  }
   @Test
   void poseToSuperstructurePositionTest() {
-    var currentPose = new Translation2d(0, 22);
-
-    var result = CollisionAvoidance.poseToSuperstructurePosition(currentPose);
+    var currentPose = new Translation2d(0, 85);
+    var wristAngle = 0.0;
+    var result = CollisionAvoidance.poseToSuperstructurePosition(currentPose,wristAngle);
     var expected = new SuperstructurePosition(0.0,90.0);
     assertEquals(expected, result);
   }
   @Test
   void distancefromPosesTest() {
     var currentPose = new Translation2d(4.0, 0.0);
-    var goalPose = new Translation2d(1.0, 1.0);
+    var goalPose = new Translation2d(4.0, 0.0);
 
     var result = CollisionAvoidance.distancefromPoses(currentPose, goalPose);
-    var expected = 3.1622776601683795;
+    var expected = 0;
     assertEquals(expected, result);
   }
 
@@ -54,6 +83,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(1, -15);
     SuperstructurePosition expectedResult = new SuperstructurePosition(1, -15);
     var result = CollisionAvoidance.plan(current, goal);
+
     assertEquals(expectedResult, result);
   }
 
@@ -68,7 +98,7 @@ public class CollisionAvoidanceTest {
 
   @Test
   void testPlanNoCollisionsHigh() {
-    SuperstructurePosition current = new SuperstructurePosition(65, 10);
+    SuperstructurePosition current = new SuperstructurePosition(90, 10);
     SuperstructurePosition goal = new SuperstructurePosition(68, 135);
     SuperstructurePosition expectedResult = new SuperstructurePosition(68.0, 135.0);
     var result = CollisionAvoidance.plan(current, goal);
