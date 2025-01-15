@@ -2,7 +2,6 @@ package frc.robot.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import frc.robot.util.MathHelpers;
 import org.junit.jupiter.api.Test;
 
 public class MathHelpersTest {

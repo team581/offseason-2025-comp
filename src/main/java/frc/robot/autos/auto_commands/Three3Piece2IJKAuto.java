@@ -49,10 +49,11 @@ public class Three3Piece2IJKAuto extends BaseAuto {
                 new AutoPoint(new Pose2d(15.686, 0.524, Rotation2d.fromDegrees(127.71))))),
         Commands.print("intake from S3"),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(13.983, 2.925, Rotation2d.fromDegrees(123.43))))),
+            new AutoSegment(
+                new AutoPoint(new Pose2d(13.983, 2.925, Rotation2d.fromDegrees(123.43))))),
         Commands.print("score coral 3 (K)"),
         trailblazer.followSegment(
-          new AutoSegment(
-              new AutoPoint(new Pose2d(14.104, 3.111, Rotation2d.fromDegrees(119.57))))));
-}
+            new AutoSegment(
+                new AutoPoint(new Pose2d(14.104, 3.111, Rotation2d.fromDegrees(119.57))))));
   }
+}
