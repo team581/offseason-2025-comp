@@ -426,7 +426,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(SnapUtil.getBackwardNetDirection());
         pivot.setState(PivotState.STOWED);
         topPurpleLimelight.setState(LimelightState.TAGS);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -436,7 +436,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(SnapUtil.getBackwardNetDirection());
         pivot.setState(PivotState.STOWED);
         topPurpleLimelight.setState(LimelightState.TAGS);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -446,7 +446,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(SnapUtil.getForwardNetDirection());
         pivot.setState(PivotState.STOWED);
         topPurpleLimelight.setState(LimelightState.TAGS);
         bottomCoralLimelight.setState(LimelightState.TAGS);
@@ -456,7 +456,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_ALGEA_NET);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
         swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(0);
+        swerve.setSnapToAngle(SnapUtil.getForwardNetDirection());
         pivot.setState(PivotState.STOWED);
         topPurpleLimelight.setState(LimelightState.TAGS);
         bottomCoralLimelight.setState(LimelightState.TAGS);
