@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer;
+package frc.robot.autos;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

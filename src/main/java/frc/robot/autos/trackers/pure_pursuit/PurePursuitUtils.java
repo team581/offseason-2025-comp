@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer.trackers.pure_pursuit;
+package frc.robot.autos.trackers.pure_pursuit;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

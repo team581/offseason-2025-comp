@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer;
+package frc.robot.autos;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
@@ -7,12 +7,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.trailblazer.constraints.AutoConstraintCalculator;
-import frc.robot.autos.trailblazer.constraints.AutoConstraintOptions;
-import frc.robot.autos.trailblazer.followers.PathFollower;
-import frc.robot.autos.trailblazer.followers.PidPathFollower;
-import frc.robot.autos.trailblazer.trackers.PathTracker;
-import frc.robot.autos.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
+import frc.robot.autos.constraints.AutoConstraintCalculator;
+import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.autos.followers.PathFollower;
+import frc.robot.autos.followers.PidPathFollower;
+import frc.robot.autos.trackers.PathTracker;
+import frc.robot.autos.trackers.pure_pursuit.PurePursuitPathTracker;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 
