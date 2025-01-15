@@ -682,7 +682,8 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void algaeNetRequest() {
-    if (!vision.isAnyTagLimelightOnline() || AutoAlign.shouldNetScoreForwards(localization.getPose())) {
+    if (!vision.isAnyTagLimelightOnline()
+        || AutoAlign.shouldNetScoreForwards(localization.getPose())) {
       algaeNetForwardRequest();
     } else {
       algaeNetBackRequest();
