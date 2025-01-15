@@ -1,5 +1,6 @@
 package frc.robot.robot_manager;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
@@ -517,6 +518,8 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("RobotManager/NearestReefSidePose", nearestReefSidePose);
+
     // Continuous state actions
     switch (getState()) {
       case CORAL_L1_1_APPROACH,
@@ -786,13 +789,19 @@ public class RobotManager extends StateMachine<RobotState> {
       // A collision was detected, so we need to go to an intermediary point
       elevator.setCollisionAvoidanceGoal(intermediaryPosition.elevatorHeight());
       elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+      DogLog.log("RobotManager/CollisionAvoidance/Elevator", intermediaryPosition.elevatorHeight());
 
       wrist.setCollisionAvoidanceGoal(intermediaryPosition.wristAngle());
       wrist.setState(WristState.COLLISION_AVOIDANCE);
+      DogLog.log("RobotManager/CollisionAvoidance/Wrist", intermediaryPosition.wristAngle());
+
     } else {
       // No collision, go straight to goal state
       elevator.setState(elevatorGoal);
       wrist.setState(wristGoal);
+      DogLog.log("RobotManager/CollisionAvoidance/Elevator", 0);
+      DogLog.log("RobotManager/CollisionAvoidance/Wrist", 0);
     }
+    DogLog.log("RobotManager/CollisionAvoidanceTriggered", maybeIntermediaryPosition.isPresent());
   }
 }
