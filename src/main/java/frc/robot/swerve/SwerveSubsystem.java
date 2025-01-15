@@ -24,10 +24,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
-  /** Max speed allowed to make a speaker shot and feeding. */
-  private static final double MAX_SPEED_SHOOTING = Units.feetToMeters(0.5);
-
-  private static final double MAX_FLOOR_SPEED_SHOOTING = Units.feetToMeters(1.0);
 
   public static final double MaxSpeed = 4.75;
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
@@ -64,11 +60,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private double lastSimTime;
   private Notifier simNotifier = null;
 
-  private boolean slowEnoughToShoot = false;
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();
   private ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds();
-  private boolean slowEnoughToFeed;
   private double goalSnapAngle = 0;
 
   /** The latest requested teleop speeds. */
@@ -82,14 +76,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public ChassisSpeeds getFieldRelativeSpeeds() {
     return fieldRelativeSpeeds;
-  }
-
-  public boolean isSlowEnoughToShoot() {
-    return slowEnoughToShoot;
-  }
-
-  public boolean isSlowEnoughToFeed() {
-    return slowEnoughToFeed;
   }
 
   public SwerveDriveState getDrivetrainState() {
@@ -192,27 +178,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     drivetrainState = drivetrain.getState();
     robotRelativeSpeeds = drivetrainState.Speeds;
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
-    slowEnoughToShoot = calculateMovingSlowEnoughForSpeakerShot(robotRelativeSpeeds);
-    slowEnoughToFeed = calculateMovingSlowEnoughForFloorShot(robotRelativeSpeeds);
   }
 
   private ChassisSpeeds calculateFieldRelativeSpeeds() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(
         robotRelativeSpeeds, drivetrainState.Pose.getRotation());
-  }
-
-  private static boolean calculateMovingSlowEnoughForSpeakerShot(ChassisSpeeds speeds) {
-    double linearSpeed =
-        Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
-
-    return linearSpeed < MAX_SPEED_SHOOTING;
-  }
-
-  private boolean calculateMovingSlowEnoughForFloorShot(ChassisSpeeds speeds) {
-    double linearSpeed =
-        Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
-
-    return linearSpeed < MAX_FLOOR_SPEED_SHOOTING;
   }
 
   private void sendSwerveRequest() {

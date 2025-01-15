@@ -26,18 +26,7 @@ class PracticeConfig {
   private static final String CANIVORE_NAME = TunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
-  private static final ClosedLoopRampsConfigs CLOSED_LOOP_RAMP =
-      new ClosedLoopRampsConfigs()
-          .withDutyCycleClosedLoopRampPeriod(0.04)
-          .withTorqueClosedLoopRampPeriod(0.04)
-          .withVoltageClosedLoopRampPeriod(0.04);
-  private static final OpenLoopRampsConfigs OPEN_LOOP_RAMP =
-      new OpenLoopRampsConfigs()
-          .withDutyCycleOpenLoopRampPeriod(0.04)
-          .withTorqueOpenLoopRampPeriod(0.04)
-          .withVoltageOpenLoopRampPeriod(0.04);
-
-  public static final RobotConfig competitionBot =
+  public static final RobotConfig practiceBot =
       new RobotConfig(
           "competition",
           new ElevatorConfig(
@@ -86,14 +75,14 @@ class PracticeConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(75)
+                          .withStatorCurrentLimit(80)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(55)
-                          .withSupplyCurrentLowerTime(0.25))
+                          .withSupplyCurrentLimit(80))
                   .withOpenLoopRamps(
                       new OpenLoopRampsConfigs()
-                          .withDutyCycleOpenLoopRampPeriod(0.25)
-                          .withVoltageOpenLoopRampPeriod(0.25))
+                          .withDutyCycleOpenLoopRampPeriod(0.01)
+                          .withVoltageOpenLoopRampPeriod(0.01)
+                          .withTorqueOpenLoopRampPeriod(0.01))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
@@ -105,10 +94,9 @@ class PracticeConfig {
                           // relatively low stator current limit to help avoid brownouts without
                           // impacting performance.
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(80)
+                          .withStatorCurrentLimit(50)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(60)
-                          .withSupplyCurrentLowerTime(0.2))
+                          .withSupplyCurrentLimit(80))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
@@ -123,7 +111,14 @@ class PracticeConfig {
           new PivotConfig(
               RIO_CAN_NAME,
               6,
-              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
+              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                      .withStatorCurrentLimitEnable(true)
+                      .withStatorCurrentLimit(10)
+                      .withSupplyCurrentLimitEnable(true)
+                      .withSupplyCurrentLimit(10)
+                  ),
               0,
               0));
 
