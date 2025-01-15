@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.autos.Trailblazer;
-
 import java.util.List;
 
 public class RobotCommands {
@@ -74,5 +73,9 @@ public class RobotCommands {
 
   public Command unjamCommand() {
     return Commands.runOnce(robot::unjamRequest, requirements);
+  }
+
+  public Command reHomeCommand() {
+    return Commands.runOnce(robot::rehomeRequest, requirements);
   }
 }
