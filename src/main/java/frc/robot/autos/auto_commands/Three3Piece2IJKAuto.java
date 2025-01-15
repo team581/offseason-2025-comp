@@ -27,33 +27,33 @@ public class Three3Piece2IJKAuto extends BaseAuto {
         Commands.runOnce(
             () ->
                 robotManager.localization.resetPose(
-                    new Pose2d(10.380, 1.903, Rotation2d.fromDegrees(0.0)))),
+                    new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(10.380, 1.903, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(12.493, 2.774, Rotation2d.fromDegrees(58.45))))),
+                new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(12.493, 2.965, Rotation2d.fromDegrees(58.45))))),
         Commands.print("score coral 1 (I)"),
         trailblazer.followSegment(
             new AutoSegment(
                 new AutoPoint(new Pose2d(14.202, 1.568, Rotation2d.fromDegrees(135.88))),
-                new AutoPoint(new Pose2d(15.686, 0.524, Rotation2d.fromDegrees(127.71))))),
+                new AutoPoint(new Pose2d(15.902, 0.553, Rotation2d.fromDegrees(127.71))))),
         Commands.print("intake from S3"),
         trailblazer.followSegment(
             new AutoSegment(
                 new AutoPoint(new Pose2d(14.66, 1.568, Rotation2d.fromDegrees(137.36))),
-                new AutoPoint(new Pose2d(13.506, 2.774, Rotation2d.fromDegrees(116.76))))),
+                new AutoPoint(new Pose2d(13.562, 2.87, Rotation2d.fromDegrees(119.50))))),
         Commands.print("score coral 2 (J)"),
         trailblazer.followSegment(
             new AutoSegment(
                 new AutoPoint(new Pose2d(14.202, 1.568, Rotation2d.fromDegrees(131.81))),
-                new AutoPoint(new Pose2d(15.686, 0.524, Rotation2d.fromDegrees(127.71))))),
+                new AutoPoint(new Pose2d(15.902, 0.553, Rotation2d.fromDegrees(127.71))))),
         Commands.print("intake from S3"),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(13.983, 2.925, Rotation2d.fromDegrees(123.43))))),
+                new AutoPoint(new Pose2d(13.918, 3.117, Rotation2d.fromDegrees(123.427))))),
         Commands.print("score coral 3 (K)"),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(14.104, 3.111, Rotation2d.fromDegrees(119.57))))));
+                new AutoPoint(new Pose2d(14.104, 3.117, Rotation2d.fromDegrees(123.427))))));
   }
 }
