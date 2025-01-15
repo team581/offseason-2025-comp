@@ -2,6 +2,7 @@ package frc.robot.pivot;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
@@ -85,5 +86,13 @@ public class PivotSubsystem extends StateMachine<PivotState> {
       case CORAL_SCORE -> MathUtil.isNear(getScoreDirection(), motorAngle, 1);
       default -> MathUtil.isNear(getState().angle, motorAngle, 1);
     };
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DogLog.log("Pivot/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Pivot/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Pivot/Position", motor.getPosition().getValueAsDouble());
   }
 }

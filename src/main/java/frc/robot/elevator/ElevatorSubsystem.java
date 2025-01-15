@@ -49,6 +49,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   public void setCollisionAvoidanceGoal(double height) {
     collisionAvoidanceGoal = height;
+    DogLog.log("Elevator/CollisionAvoidanceGoalHeight", collisionAvoidanceGoal);
   }
 
   @Override
@@ -171,6 +172,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("Elevator/Left/StatorCurrent", leftMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Elevator/Right/StatorCurrent", rightMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Elevator/Height", averageMeasuredHeight);
 
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
@@ -193,8 +199,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
       default -> {}
     }
-
-    DogLog.log("Elevator/Height", averageMeasuredHeight);
   }
 
   public boolean atGoal() {
