@@ -1,9 +1,10 @@
-package frc.robot.autos.trailblazer;
+package frc.robot.autos;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.trailblazer.constraints.AutoConstraintOptions;
+import frc.robot.autos.constraints.AutoConstraintOptions;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 

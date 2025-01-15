@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer.followers;
+package frc.robot.autos.followers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;

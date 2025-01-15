@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer.constraints;
+package frc.robot.autos.constraints;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 

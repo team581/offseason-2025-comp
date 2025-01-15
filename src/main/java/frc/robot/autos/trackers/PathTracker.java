@@ -1,8 +1,9 @@
-package frc.robot.autos.trailblazer.trackers;
+package frc.robot.autos.trackers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.autos.trailblazer.AutoPoint;
+import frc.robot.autos.AutoPoint;
+
 import java.util.List;
 
 /**
