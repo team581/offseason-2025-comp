@@ -183,6 +183,8 @@ public class Limelight extends StateMachine<LimelightState> {
       cameraHealth = CameraHealth.OFFLINE;
       DogLog.logFault(limelightTableName + " is offline", AlertType.kError);
       return;
+    } else {
+      DogLog.clearFault(limelightTableName + " is offline");
     }
 
     if (!result.isEmpty()) {
