@@ -1,7 +1,6 @@
 package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.fms.FmsSubsystem;
@@ -16,18 +15,21 @@ import frc.robot.vision.results.TagResult;
 import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
-  private final String limelightTableName;
-  private final String name;
-  private final CameraDataset cameraDataset;
   private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
   private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
+  private final String limelightTableName;
+  private final String name;
+  private final CameraDataset cameraDataset;
+
+  private final Timer limelightTimer = new Timer();
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
-  private final Timer limelightTimer = new Timer();
 
-  private Pose2d interpolatedPose = new Pose2d();
+  private Optional<TagResult> interpolatedResult = Optional.empty();
+  private Optional<CoralResult> coralResult = Optional.empty();
+  private Optional<PurpleResult> purpleResult = Optional.empty();
 
   public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
     super(SubsystemPriority.VISION, initialState);
@@ -56,16 +58,21 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public Optional<TagResult> getInterpolatedTagResult() {
-    var rawTagResult = getRawTagResult();
+    return interpolatedResult;
+  }
 
+  private Optional<TagResult> calculateInterpolatedTagResult(Optional<TagResult> rawTagResult) {
     if (rawTagResult.isEmpty()) {
       return Optional.empty();
     }
 
-    return Optional.of(new TagResult(interpolatedPose, rawTagResult.get().timestamp()));
+    return Optional.of(
+        new TagResult(
+            InterpolatedVision.interpolatePose(rawTagResult.get().pose(), cameraDataset),
+            rawTagResult.get().timestamp()));
   }
 
-  private Optional<TagResult> getRawTagResult() {
+  private Optional<TagResult> calculateRawTagResult() {
     if (getState() != LimelightState.TAGS || getState() != LimelightState.REEF_TAGS) {
       return Optional.empty();
     }
@@ -140,38 +147,25 @@ public class Limelight extends StateMachine<LimelightState> {
     return FmsSubsystem.isRedAlliance() ? RED_REEF_TAGS : BLUE_REEF_TAGS;
   }
 
-  private Optional<TagResult> tagResult = Optional.empty();
-  private Optional<CoralResult> coralResult = Optional.empty();
-  private Optional<PurpleResult> purpleResult = Optional.empty();
-
   @Override
   protected void collectInputs() {
-    tagResult = getRawTagResult();
+    interpolatedResult = calculateInterpolatedTagResult(calculateRawTagResult());
     coralResult = getRawCoralResult();
     purpleResult = getRawPurpleResult();
-    if (getState() == LimelightState.TAGS || getState() == LimelightState.REEF_TAGS) {
-      var maybeRawPose = getRawTagResult();
-      if (maybeRawPose.isPresent()) {
-        interpolatedPose =
-            InterpolatedVision.interpolatePose(maybeRawPose.get().pose(), cameraDataset);
-      }
-    }
   }
 
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
-
     switch (getState()) {
-      case TAGS -> updateHealth(tagResult);
+      case TAGS -> updateHealth(interpolatedResult);
       case CORAL -> updateHealth(coralResult);
       case PURPLE -> updateHealth(purpleResult);
       case REEF_TAGS -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(
             limelightTableName, getAllianceBasedReefTagIDs());
-        tagResult = getRawTagResult();
-        updateHealth(tagResult);
+        updateHealth(interpolatedResult);
       }
       default -> {}
     }
@@ -189,6 +183,8 @@ public class Limelight extends StateMachine<LimelightState> {
       cameraHealth = CameraHealth.OFFLINE;
       DogLog.logFault(limelightTableName + " is offline", AlertType.kError);
       return;
+    } else {
+      DogLog.clearFault(limelightTableName + " is offline");
     }
 
     if (!result.isEmpty()) {

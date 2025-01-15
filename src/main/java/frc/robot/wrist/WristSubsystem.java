@@ -3,6 +3,7 @@ package frc.robot.wrist;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,6 +46,7 @@ public class WristSubsystem extends StateMachine<WristState> {
 
   public void setCollisionAvoidanceGoal(double angle) {
     collisionAvoidanceGoal = angle;
+    DogLog.log("Wrist/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
   }
 
   public boolean atGoal() {
@@ -185,6 +187,13 @@ public class WristSubsystem extends StateMachine<WristState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("Wrist/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Wrist/Position", motor.getPosition().getValueAsDouble());
+    if (DriverStation.isDisabled()) {
+      DogLog.log("Wrist/LowestAngle", lowestSeenAngle);
+      DogLog.log("Wrist/HighestAngle", highestSeenAngle);
+    }
 
     switch (getState()) {
       case PRE_MATCH_HOMING -> {

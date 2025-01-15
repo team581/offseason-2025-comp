@@ -1,13 +1,13 @@
-package frc.robot.autos.trailblazer.autos;
+package frc.robot.autos.auto_commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.trailblazer.AutoPoint;
-import frc.robot.autos.trailblazer.AutoSegment;
-import frc.robot.autos.trailblazer.BaseAuto;
-import frc.robot.autos.trailblazer.Trailblazer;
+import frc.robot.autos.AutoPoint;
+import frc.robot.autos.AutoSegment;
+import frc.robot.autos.BaseAuto;
+import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
 public class PushPartnerAuto extends BaseAuto {
@@ -23,16 +23,16 @@ public class PushPartnerAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print(null),
+        Commands.print("Red Push Partner Auto"),
         Commands.runOnce(
             () ->
                 robotManager.localization.resetPose(
-                    new Pose2d(8.67, 2.893, Rotation2d.fromDegrees(0.0)))),
+                    new Pose2d(9.47, 2.893, Rotation2d.fromDegrees(0.0)))),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(8.67, 2.893, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(9.563, 2.892, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(10.646, 1.921, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(9.47, 2.893, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(10.41, 2.892, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.fromDegrees(0.0))),
                 new AutoPoint(new Pose2d(12.531, 2.757, Rotation2d.fromDegrees(60.61))))),
         Commands.print("score coral 1 (J)"),
         trailblazer.followSegment(

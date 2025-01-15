@@ -56,5 +56,6 @@ public enum RobotState {
   SCORE_ASSIST,
   PURPLE_ALIGN,
 
-  UNJAM;
+  UNJAM,
+  REHOME;
 }

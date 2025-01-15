@@ -1,6 +1,6 @@
-package frc.robot.autos.trailblazer;
+package frc.robot.autos;
 
-import frc.robot.autos.trailblazer.constraints.AutoConstraintOptions;
+import frc.robot.autos.constraints.AutoConstraintOptions;
 import java.util.List;
 
 /**

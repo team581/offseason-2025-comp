@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer.constraints;
+package frc.robot.autos.constraints;
 
 public record AutoConstraintOptions(
     /** Whether collision avoidance should be enabled. */

@@ -1,7 +1,7 @@
 package frc.robot.robot_manager;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -13,7 +13,6 @@ import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.swerve.SnapUtil;
-import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -92,7 +91,8 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_2_HANGING,
               DISLODGE_ALGAE_L2_WAIT,
               DISLODGE_ALGAE_L3_WAIT,
-              UNJAM ->
+              UNJAM,
+              REHOME ->
           currentState;
 
       case PROCESSOR_PREPARE_TO_SCORE ->
@@ -147,29 +147,12 @@ public class RobotManager extends StateMachine<RobotState> {
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
-
-      case SCORE_ASSIST -> currentState;
-      case PURPLE_ALIGN -> currentState;
     };
   }
 
   @Override
   protected void afterTransition(RobotState newState) {
     switch (newState) {
-      case SCORE_ASSIST -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        } else {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        }
-      }
-      case PURPLE_ALIGN -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        } else {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        }
-      }
       case IDLE_NO_GP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.IDLE);
@@ -511,12 +494,25 @@ public class RobotManager extends StateMachine<RobotState> {
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
+      case REHOME -> {
+        wrist.setState(WristState.IDLE);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        pivot.setState(PivotState.HOMING);
+        topPurpleLimelight.setState(LimelightState.TAGS);
+        bottomCoralLimelight.setState(LimelightState.TAGS);
+        backwardsTagLimelight.setState(LimelightState.TAGS);
+      }
     }
   }
 
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("RobotManager/NearestReefSidePose", nearestReefSidePose);
+
     // Continuous state actions
     switch (getState()) {
       case CORAL_L1_1_APPROACH,
@@ -775,6 +771,13 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void rehomeRequest() {
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.REHOME);
+    }
+  }
+
   private void moveSuperstructure(ElevatorState elevatorGoal, WristState wristGoal) {
     var maybeIntermediaryPosition =
         CollisionAvoidance.plan(
@@ -787,13 +790,19 @@ public class RobotManager extends StateMachine<RobotState> {
       // A collision was detected, so we need to go to an intermediary point
       elevator.setCollisionAvoidanceGoal(intermediaryPosition.elevatorHeight());
       elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+      DogLog.log("RobotManager/CollisionAvoidance/Elevator", intermediaryPosition.elevatorHeight());
 
       wrist.setCollisionAvoidanceGoal(intermediaryPosition.wristAngle());
       wrist.setState(WristState.COLLISION_AVOIDANCE);
+      DogLog.log("RobotManager/CollisionAvoidance/Wrist", intermediaryPosition.wristAngle());
+
     } else {
       // No collision, go straight to goal state
       elevator.setState(elevatorGoal);
       wrist.setState(wristGoal);
+      DogLog.log("RobotManager/CollisionAvoidance/Elevator", 0);
+      DogLog.log("RobotManager/CollisionAvoidance/Wrist", 0);
     }
+    DogLog.log("RobotManager/CollisionAvoidanceTriggered", maybeIntermediaryPosition.isPresent());
   }
 }

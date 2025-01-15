@@ -1,4 +1,4 @@
-package frc.robot.autos.trailblazer;
+package frc.robot.autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;

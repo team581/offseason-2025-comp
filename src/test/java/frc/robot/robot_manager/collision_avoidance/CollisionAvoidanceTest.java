@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 public class CollisionAvoidanceTest {
   @Test
   void collidesTest() {
-    var currentPose = new Translation2d(-15.56,  15.56); // 0,0
-    var goalPose = new Translation2d( 3.82,  41.67); // 65,80
+    var currentPose = new Translation2d(-15.56, 15.56); // 0,0
+    var goalPose = new Translation2d(3.82, 41.67); // 65,80
 
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = true;
@@ -28,7 +28,6 @@ public class CollisionAvoidanceTest {
     var expected = new Translation2d(0, 22);
     assertEquals(expected, result);
   }
-
 
   @Test
   void distancefromPosesTest() {
@@ -69,12 +68,13 @@ public class CollisionAvoidanceTest {
 
   @Test
   void testPlanCollisionLowToMid() {
-    SuperstructurePosition current = new SuperstructurePosition(0, 135);// -15.56, Y: 15.56
-    SuperstructurePosition goal = new SuperstructurePosition(20, 80);//X: 3.82, Y: 41.67
+    SuperstructurePosition current = new SuperstructurePosition(0, 135); // -15.56, Y: 15.56
+    SuperstructurePosition goal = new SuperstructurePosition(20, 80); // X: 3.82, Y: 41.67
     SuperstructurePosition expectedResult = new SuperstructurePosition(0.0, 0.0);
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(expectedResult, result.get());
   }
+
   @Test
   void testPlanCollisionLowToHigh() {
     SuperstructurePosition current = new SuperstructurePosition(0, 135);
@@ -83,6 +83,7 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(expectedResult, result.get());
   }
+
   @Test
   void testPlanNoCollisionSuperClose() {
     SuperstructurePosition current = new SuperstructurePosition(0, 135);
@@ -91,6 +92,7 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(expectedResult, result.get());
   }
+
   @Test
   void testPlanNoCollisionSuperDuperClose() {
     SuperstructurePosition current = new SuperstructurePosition(0, 135);
@@ -100,4 +102,3 @@ public class CollisionAvoidanceTest {
     assertEquals(expectedResult, result.get());
   }
 }
-
