@@ -15,7 +15,8 @@ public class CollisionAvoidance {
   // private static final SuperstructurePosition safePoint2 = new SuperstructurePosition(0.0, 0.0);
   private static final SuperstructurePosition[] corners =
       new SuperstructurePosition[] {
-        new SuperstructurePosition(2.0, 135.0), new SuperstructurePosition(65.0, 85.0)
+        new SuperstructurePosition(7.4436508139, 135.0),
+        new SuperstructurePosition(65.0, 85.0) // h=22-\sin(a)*22 + 1(for clearence) -> a = 135
       };
 
   public static Optional<SuperstructurePosition> plan(
