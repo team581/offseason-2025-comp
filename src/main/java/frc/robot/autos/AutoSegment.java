@@ -1,8 +1,7 @@
 package frc.robot.autos;
 
-import java.util.List;
-
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import java.util.List;
 
 /**
  * A segment is a path (a continuous set of {@link AutoPoint points}) that the roobt will follow.
