@@ -3,7 +3,6 @@ package frc.robot.autos.trackers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.autos.AutoPoint;
-
 import java.util.List;
 
 /**

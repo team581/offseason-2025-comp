@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.autos.AutoPoint;
-
 import java.util.List;
 
 // TODO: Implement https://github.com/team581/2024-offseason-bot/issues/94
