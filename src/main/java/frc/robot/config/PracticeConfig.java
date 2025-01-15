@@ -1,6 +1,5 @@
 package frc.robot.config;
 
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -111,14 +110,14 @@ class PracticeConfig {
           new PivotConfig(
               RIO_CAN_NAME,
               6,
-              new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+              new TalonFXConfiguration()
+                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                      .withStatorCurrentLimitEnable(true)
-                      .withStatorCurrentLimit(10)
-                      .withSupplyCurrentLimitEnable(true)
-                      .withSupplyCurrentLimit(10)
-                  ),
+                          .withStatorCurrentLimitEnable(true)
+                          .withStatorCurrentLimit(10)
+                          .withSupplyCurrentLimitEnable(true)
+                          .withSupplyCurrentLimit(10)),
               0,
               0));
 
