@@ -149,29 +149,12 @@ public class RobotManager extends StateMachine<RobotState> {
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
-
-      case SCORE_ASSIST -> currentState;
-      case PURPLE_ALIGN -> currentState;
     };
   }
 
   @Override
   protected void afterTransition(RobotState newState) {
     switch (newState) {
-      case SCORE_ASSIST -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        } else {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        }
-      }
-      case PURPLE_ALIGN -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        } else {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        }
-      }
       case IDLE_NO_GP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.IDLE);
