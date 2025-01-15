@@ -5,6 +5,7 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,21 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     DogLog.log("Vision/Left/VisionState", topPurpleLimelight.getCameraHealth());
     DogLog.log("Vision/Right/VisionState", bottomCoralLimelight.getCameraHealth());
     DogLog.log("Vision/Back/VisionState", backwardsTagLimelight.getCameraHealth());
+  }
+
+  public boolean isAnyTagLimelightOnline() {
+    if ((bottomCoralLimelight.getState() == LimelightState.TAGS
+            || bottomCoralLimelight.getState() == LimelightState.REEF_TAGS)
+        && bottomCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+      return false;
+    }
+    if ((backwardsTagLimelight.getState() == LimelightState.TAGS
+            || backwardsTagLimelight.getState() == LimelightState.REEF_TAGS)
+        && backwardsTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+      return false;
+    }
+
+    return true;
   }
 
   public CameraHealth getVisionState() {

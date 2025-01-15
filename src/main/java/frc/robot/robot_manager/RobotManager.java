@@ -159,7 +159,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -170,7 +170,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case IDLE_CORAL -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
@@ -179,7 +179,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.TAGS);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_ALGAE_FLOOR -> {
         intake.setState(IntakeState.INTAKING_ALGAE);
@@ -188,7 +188,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_ALGAE_L2 -> {
         intake.setState(IntakeState.INTAKING_ALGAE);
@@ -215,7 +215,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()));
         bottomCoralLimelight.setState(LimelightState.CORAL);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_CORAL_FLOOR_UPRIGHT -> {
         intake.setState(IntakeState.INTAKING_CORAL);
@@ -224,7 +224,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
         bottomCoralLimelight.setState(LimelightState.CORAL);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case INTAKE_CORAL_FLOOR_HORIZONTAL -> {
         intake.setState(IntakeState.INTAKING_CORAL);
@@ -233,7 +233,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.INTAKING_CORAL_HORIZONTAL);
         bottomCoralLimelight.setState(LimelightState.CORAL);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
       }
       case DISLODGE_ALGAE_L2_WAIT -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
@@ -411,7 +411,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getBackwardNetDirection());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -421,7 +421,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getBackwardNetDirection());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -431,7 +431,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getForwardNetDirection());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -441,7 +441,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getForwardNetDirection());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -451,7 +451,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -461,7 +461,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -471,7 +471,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -481,7 +481,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -492,7 +492,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.STOWED);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -503,7 +503,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         pivot.setState(PivotState.HOMING);
-        topPurpleLimelight.setState(LimelightState.TAGS);
+        topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.TAGS);
         backwardsTagLimelight.setState(LimelightState.TAGS);
       }
@@ -682,7 +682,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void algaeNetRequest() {
-    if (AutoAlign.shouldNetScoreForwards(localization.getPose())) {
+    if (!vision.isAnyTagLimelightOnline() || AutoAlign.shouldNetScoreForwards(localization.getPose())) {
       algaeNetForwardRequest();
     } else {
       algaeNetBackRequest();
