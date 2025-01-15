@@ -23,16 +23,16 @@ public class PushPartnerAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print(null),
+        Commands.print("Red Push Partner Auto"),
         Commands.runOnce(
             () ->
                 robotManager.localization.resetPose(
-                    new Pose2d(8.67, 2.893, Rotation2d.fromDegrees(0.0)))),
+                    new Pose2d(9.47, 2.893, Rotation2d.fromDegrees(0.0)))),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(8.67, 2.893, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(9.563, 2.892, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(10.646, 1.921, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(9.47, 2.893, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(10.41, 2.892, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.fromDegrees(0.0))),
                 new AutoPoint(new Pose2d(12.531, 2.757, Rotation2d.fromDegrees(60.61))))),
         Commands.print("score coral 1 (J)"),
         trailblazer.followSegment(
