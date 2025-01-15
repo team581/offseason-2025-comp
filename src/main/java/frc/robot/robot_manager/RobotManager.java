@@ -2,7 +2,6 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -14,7 +13,6 @@ import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.swerve.SnapUtil;
-import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -149,29 +147,12 @@ public class RobotManager extends StateMachine<RobotState> {
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
-
-      case SCORE_ASSIST -> currentState;
-      case PURPLE_ALIGN -> currentState;
     };
   }
 
   @Override
   protected void afterTransition(RobotState newState) {
     switch (newState) {
-      case SCORE_ASSIST -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        } else {
-          swerve.setState(SwerveState.SCORE_ASSIST);
-        }
-      }
-      case PURPLE_ALIGN -> {
-        if (DriverStation.isTeleop()) {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        } else {
-          swerve.setState(SwerveState.PURPLE_ALIGN);
-        }
-      }
       case IDLE_NO_GP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.IDLE);
@@ -800,7 +781,8 @@ public class RobotManager extends StateMachine<RobotState> {
   private void moveSuperstructure(ElevatorState elevatorGoal, WristState wristGoal) {
     var maybeIntermediaryPosition =
         CollisionAvoidance.plan(
-            elevator.getHeight(), wrist.getAngle(), elevatorGoal.height, wristGoal.angle);
+            new SuperstructurePosition(elevator.getHeight(), wrist.getAngle()),
+            new SuperstructurePosition(elevatorGoal.height, wristGoal.angle));
 
     if (maybeIntermediaryPosition.isPresent()) {
       var intermediaryPosition = maybeIntermediaryPosition.get();
