@@ -15,20 +15,23 @@ public class GamePieceDetection {
     // convention, so we need to negate by one
 
     double thetaX = -1 * Units.degreesToRadians(tx);
-    double adjustedThetaX = limelightPoseRobotSpace.getRotation().getZ() - thetaX;
-
     double thetaY = Units.degreesToRadians(ty);
     double adjustedThetaY = limelightPoseRobotSpace.getRotation().getY() - thetaY;
     double yOffset =
-        // .getY() is supposed to represent up and down distance from center of robot
-        (limelightPoseRobotSpace.getZ() / Math.tan(adjustedThetaY));
+        // .getZ() represents height from floor
+        (limelightPoseRobotSpace.getZ() / Math.tan(adjustedThetaY))
+            // .getY() is supposed to represent forward and backward distance from center of robot
+            + Math.abs(limelightPoseRobotSpace.getY());
 
-    double xOffset = yOffset * Math.tan(adjustedThetaX);
+    double xOffset = yOffset * Math.tan(thetaX);
 
-    var robotRelativeTranslation = new Translation2d(yOffset, xOffset);
+    var cameraRelativeTranslation = new Translation2d(yOffset, xOffset);
     var fieldRelativeTranslation =
-        robotRelativeTranslation
-            .rotateBy(new Rotation2d(robotPoseAtCapture.getRotation().getRadians()))
+        cameraRelativeTranslation
+            .rotateBy(
+                Rotation2d.fromRadians(
+                    robotPoseAtCapture.getRotation().getRadians()
+                        + limelightPoseRobotSpace.getRotation().getZ()))
             .plus(robotPoseAtCapture.getTranslation())
             .plus(limelightPoseRobotSpace.getTranslation().toTranslation2d());
     return fieldRelativeTranslation;
