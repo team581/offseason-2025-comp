@@ -50,8 +50,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     return swerve.getDrivetrainState().Pose;
   }
 
-  public Optional<Pose2d> getPose(double timestamp) {
-    return swerve.drivetrain.samplePoseAt(timestamp);
+  public Pose2d getPose(double timestamp) {
+    return swerve.drivetrain.samplePoseAt(timestamp).orElse(getPose());
   }
 
   @Override
