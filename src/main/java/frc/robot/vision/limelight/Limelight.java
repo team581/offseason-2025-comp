@@ -9,7 +9,7 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.interpolation.CameraDataset;
 import frc.robot.vision.interpolation.InterpolatedVision;
-import frc.robot.vision.results.CoralResult;
+import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private double limelightHeartbeat = -1;
 
   private Optional<TagResult> interpolatedResult = Optional.empty();
-  private Optional<CoralResult> coralResult = Optional.empty();
+  private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
 
   public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
@@ -97,7 +97,7 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new TagResult(estimatePose.pose, estimatePose.timestampSeconds));
   }
 
-  private Optional<CoralResult> getRawCoralResult() {
+  private Optional<GamePieceResult> getRawCoralResult() {
     if (getState() != LimelightState.CORAL) {
       return Optional.empty();
     }
@@ -117,7 +117,7 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
 
-    return Optional.of(new CoralResult(coralTX, coralTY, timestamp));
+    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
   }
 
   private Optional<PurpleResult> getRawPurpleResult() {
