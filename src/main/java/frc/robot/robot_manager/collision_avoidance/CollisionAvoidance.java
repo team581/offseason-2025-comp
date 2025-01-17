@@ -33,10 +33,10 @@ public class CollisionAvoidance {
 
   static boolean collides(Translation2d currentPose, Translation2d goalPose) {
 
-    double x1 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getX();
-    double y1 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getY();
-    double y2 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getY();
-    double x2 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getX();
+    double x2 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getX();
+    double y2 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getY();
+    double y1 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getY();
+    double x1 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getX();
 
     double currentPoseX = currentPose.getX();
     double currentPoseY = currentPose.getY();
@@ -48,29 +48,28 @@ public class CollisionAvoidance {
     // y - y1 = (y2 - y1)/(x2 - x1) × (x - x1).
     Translation2d xInterceptionPoint =
         new Translation2d(
-            x1,
-            (goalPoseY - currentPoseY) / (goalPoseX - currentPoseX) * (x1 - currentPoseX)
+            x2,
+            (goalPoseY - currentPoseY) / (goalPoseX - currentPoseX) * (x2 - currentPoseX)
                 + currentPoseY);
     Translation2d yInterceptionPoint =
         new Translation2d(
-            y1,
-            (y1 - currentPoseY + currentPoseX)
-                / ((goalPoseY - currentPoseY) / (goalPoseX - currentPoseX)));
+            ((goalPoseX - currentPoseX) * (y1 - currentPoseY)
+                    + (goalPoseY - currentPoseY) * currentPoseX)
+                / (goalPoseY - currentPoseY),
+            y1);
     Translation2d y2InterceptionPoint =
         new Translation2d(
-            y2,
-            (y2 - currentPoseY + currentPoseX)
-                / ((goalPoseY - currentPoseY) / (goalPoseX - currentPoseX)));
+            ((goalPoseX - currentPoseX) * (y2 - currentPoseY)
+                    + (goalPoseY - currentPoseY) * currentPoseX)
+                / (goalPoseY - currentPoseY),
+            y2);
 
-    if (y1 < xInterceptionPoint.getY() && xInterceptionPoint.getY() < y2) {
+    if (y1 < xInterceptionPoint.getY() && xInterceptionPoint.getY() < y2
+        || x1 < yInterceptionPoint.getX() && yInterceptionPoint.getX() < x2
+        || x1 < y2InterceptionPoint.getX() && y2InterceptionPoint.getX() < x2) {
       return true;
     }
-    if (x2 < yInterceptionPoint.getY() && yInterceptionPoint.getY() < x1) {
-      return true;
-    }
-    if (x2 < y2InterceptionPoint.getY() && y2InterceptionPoint.getY() < x1) {
-      return true;
-    }
+
     return false;
   }
 
@@ -128,7 +127,7 @@ public class CollisionAvoidance {
       i++;
     }
     double closestDistance = Double.MAX_VALUE;
-    SuperstructurePosition closestPossiblePose = new SuperstructurePosition(0, 0);
+    SuperstructurePosition closestPossiblePose = new SuperstructurePosition(999, 999);
     for (int w = 0; w < availablePoints.size(); ) {
 
       if (distancefromPoses(
