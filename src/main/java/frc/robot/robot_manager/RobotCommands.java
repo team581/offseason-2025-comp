@@ -9,11 +9,9 @@ import java.util.List;
 public class RobotCommands {
   private final RobotManager robot;
   private final Subsystem[] requirements;
-  private final Trailblazer trailblazer;
 
-  public RobotCommands(RobotManager robot, Trailblazer trailblazer) {
+  public RobotCommands(RobotManager robot) {
     this.robot = robot;
-    this.trailblazer = trailblazer;
     // TODO: Add climber to the requirement list when it is added into robot manager
     var requirementsList = List.of(robot.elevator, robot.wrist, robot.pivot, robot.intake);
     requirements = requirementsList.toArray(Subsystem[]::new);

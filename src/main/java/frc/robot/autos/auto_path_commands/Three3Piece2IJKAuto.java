@@ -10,6 +10,7 @@ import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
+
 public class Three3Piece2IJKAuto extends BaseAuto {
   public Three3Piece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
