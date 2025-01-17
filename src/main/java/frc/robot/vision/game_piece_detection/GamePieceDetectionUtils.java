@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class GamePieceDetectionUtils {
-      public static Translation2d calculateFieldRelativeTranslationFromCamera(
+  public static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
 
     // Convert tx and ty to angles, tx on the limelight does not follow RHR
@@ -17,11 +17,11 @@ public class GamePieceDetectionUtils {
     double thetaY = Units.degreesToRadians(ty);
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - thetaY;
 
-    double yOffset =0;
-    if (adjustedThetaY ==0){
-       yOffset = Math.abs(limelightToRobotOffset.getY());
+    double yOffset = 0;
+    if (adjustedThetaY == 0) {
+      yOffset = Math.abs(limelightToRobotOffset.getY());
     } else {
-       yOffset =
+      yOffset =
           // .getZ() represents height from floor
           (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
               // .getY() is supposed to represent forward and backward distance from center of robot
