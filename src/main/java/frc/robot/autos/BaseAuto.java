@@ -3,8 +3,8 @@ package frc.robot.autos;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.fms.FmsSubsystem;
-import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
 
 public abstract class BaseAuto {
   protected final RobotManager robotManager;

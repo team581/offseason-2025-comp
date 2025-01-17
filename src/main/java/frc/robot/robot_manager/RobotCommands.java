@@ -3,7 +3,6 @@ package frc.robot.robot_manager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.autos.Trailblazer;
 import java.util.List;
 
 public class RobotCommands {

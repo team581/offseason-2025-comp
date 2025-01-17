@@ -10,7 +10,6 @@ import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-
 public class PushPartnerAuto extends BaseAuto {
   public PushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
