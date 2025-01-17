@@ -1,4 +1,4 @@
-package frc.robot.autos.auto_commands;
+package frc.robot.autos.auto_path_commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
