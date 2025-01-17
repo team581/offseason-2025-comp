@@ -1,8 +1,8 @@
 package frc.robot.autos;
 
-import frc.robot.autos.auto_commands.DoNothingAuto;
-import frc.robot.autos.auto_commands.PushPartnerAuto;
-import frc.robot.autos.auto_commands.Three3Piece2IJKAuto;
+import frc.robot.autos.auto_path_commands.DoNothingAuto;
+import frc.robot.autos.auto_path_commands.PushPartnerAuto;
+import frc.robot.autos.auto_path_commands.Three3Piece2IJKAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 

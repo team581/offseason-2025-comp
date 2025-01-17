@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
           bottomCoralLimelight,
           backwardsTagLimelight);
 
-  private final RobotCommands robotCommands = new RobotCommands(robotManager, trailblazer);
+  private final RobotCommands robotCommands = new RobotCommands(robotManager);
 
   private final Autos autos = new Autos(robotManager, trailblazer);
 

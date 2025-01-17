@@ -1,4 +1,4 @@
-package frc.robot.autos.auto_commands;
+package frc.robot.autos.auto_path_commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
