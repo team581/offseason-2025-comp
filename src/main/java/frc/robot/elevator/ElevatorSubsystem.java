@@ -112,29 +112,29 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         rightMotor.setControl(
             positionRequest.withPosition(clampHeight(ElevatorState.ALGAE_INTAKE_L3.height)));
       }
-      case CORAL_L1 -> {
+      case CORAL_L1_PLACE -> {
         leftMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L1.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L1_PLACE.height)));
         rightMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L1.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L1_PLACE.height)));
       }
-      case CORAL_L2 -> {
+      case CORAL_L2_PLACE -> {
         leftMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L2.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L2_PLACE.height)));
         rightMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L2.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L2_PLACE.height)));
       }
-      case CORAL_L3 -> {
+      case CORAL_L3_PLACE -> {
         leftMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L3.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L3_PLACE.height)));
         rightMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L3.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L3_PLACE.height)));
       }
-      case CORAL_L4 -> {
+      case CORAL_L4_PLACE -> {
         leftMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L4.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L4_PLACE.height)));
         rightMotor.setControl(
-            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L4.height)));
+            positionRequest.withPosition(clampHeight(ElevatorState.CORAL_L4_PLACE.height)));
       }
       case GROUND_ALGAE_INTAKE -> {
         leftMotor.setControl(
