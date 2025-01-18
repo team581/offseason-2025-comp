@@ -32,8 +32,8 @@ class PracticeConfig {
           new ElevatorConfig(
               // TODO: Get actual Values
               CANIVORE_NAME,
-              14,
               15,
+              16,
               // TODO: Sensor to mechanism ratio should be gear ratio multiplied by the sprocket
               // circumfrence
               new TalonFXConfiguration()
@@ -51,10 +51,10 @@ class PracticeConfig {
               0.25),
           new IntakeConfig(
               RIO_CAN_NAME,
-              3,
-              4,
-              16,
+              20,
+              21,
               17,
+              19,
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
@@ -104,13 +104,13 @@ class PracticeConfig {
           new VisionConfig(4, 0.4, 0.4, InterpolatedVisionDataset.MADTOWN),
           new WristConfig(
               RIO_CAN_NAME,
-              5,
+              22,
               new TalonFXConfiguration().withSlot0(new Slot0Configs().withKP(0.0).withKV(0)),
               0,
               180),
           new PivotConfig(
               RIO_CAN_NAME,
-              6,
+              23,
               new TalonFXConfiguration()
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withCurrentLimits(
@@ -121,7 +121,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(10)),
               0,
               0),
-          new LightsConfig(RIO_CAN_NAME, 2));
+          new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}
 }
