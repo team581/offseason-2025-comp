@@ -13,7 +13,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private Timer blinkTimer = new Timer();
 
   public LightsSubsystem(CANdle candle) {
-    super(SubsystemPriority.LIGHTS, LightsState.READY);
+    super(SubsystemPriority.LIGHTS, LightsState.IDLE_NO_GP_CORAL_MODE);
 
     this.candle = candle;
     blinkTimer.start();
