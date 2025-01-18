@@ -12,7 +12,8 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
 public class ThreePiece1DEC extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(false, 5, 500, 8.0, 5000);
+  private static final AutoConstraintOptions CONSTRAINTS =
+      new AutoConstraintOptions(false, 5, 500, 8.0, 5000);
 
   public ThreePiece1DEC(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -52,7 +53,7 @@ public class ThreePiece1DEC extends BaseAuto {
         Commands.print("score coral (E)"),
         trailblazer.followSegment(
             new AutoSegment(
-                CONSTRAINTS, 
+                CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.66, 6.482, Rotation2d.fromDegrees(-131.81))),
                 new AutoPoint(new Pose2d(15.902, 7.497, Rotation2d.fromDegrees(0.0))))),
         Commands.print("intake"),
@@ -64,7 +65,7 @@ public class ThreePiece1DEC extends BaseAuto {
         Commands.print("score coral (C)"),
         trailblazer.followSegment(
             new AutoSegment(
-                CONSTRAINTS, 
+                CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.102, 4.789, Rotation2d.fromDegrees(-123.427))))));
   }
 }
