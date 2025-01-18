@@ -12,7 +12,8 @@ public record RobotConfig(
     SwerveConfig swerve,
     VisionConfig vision,
     WristConfig wrist,
-    PivotConfig pivot) {
+    PivotConfig pivot,
+    LightsConfig lights) {
   public record ElevatorConfig(
       String canBusName,
       int leftMotorID,
@@ -63,6 +64,8 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig,
       double homingCurrentThreshold,
       double homingPosition) {}
+
+  public record LightsConfig(String canBusName, int candleID) {}
 
   // TODO: Change this to false during events
   public static final boolean IS_DEVELOPMENT = true;

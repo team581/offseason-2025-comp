@@ -142,11 +142,11 @@
       "rotationDegrees": 137.3575044628174
     },
     {
-      "waypointRelativePos": 5.0,
+      "waypointRelativePos": 5,
       "rotationDegrees": 119.50252557584551
     },
     {
-      "waypointRelativePos": 6.0,
+      "waypointRelativePos": 6,
       "rotationDegrees": 131.80692812739719
     }
   ],
@@ -154,11 +154,11 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 12.0,
+    "maxVelocity": 3,
+    "maxAcceleration": 3,
+    "maxAngularVelocity": 540,
+    "maxAngularAcceleration": 720,
+    "nominalVoltage": 12,
     "unlimited": false
   },
   "goalEndState": {
@@ -169,7 +169,7 @@
   "folder": "Auto Path Coords",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0
   },
   "useDefaultConstraints": true
 }

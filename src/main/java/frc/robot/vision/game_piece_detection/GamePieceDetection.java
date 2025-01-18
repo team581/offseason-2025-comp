@@ -25,11 +25,17 @@ public class GamePieceDetection {
     double thetaX = -1 * Units.degreesToRadians(tx);
     double thetaY = Units.degreesToRadians(ty);
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - thetaY;
-    double yOffset =
-        // .getZ() represents height from floor
-        (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
-            // .getY() is supposed to represent forward and backward distance from center of robot
-            + Math.abs(limelightToRobotOffset.getY());
+
+    double yOffset = 0;
+    if (adjustedThetaY == 0) {
+      yOffset = Math.abs(limelightToRobotOffset.getY());
+    } else {
+      yOffset =
+          // .getZ() represents height from floor
+          (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
+              // .getY() is supposed to represent forward and backward distance from center of robot
+              + Math.abs(limelightToRobotOffset.getY());
+    }
 
     double xOffset = yOffset * Math.tan(thetaX);
 
