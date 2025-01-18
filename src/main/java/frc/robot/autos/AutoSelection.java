@@ -13,7 +13,6 @@ public enum AutoSelection {
   PUSH_PARTNER(PushPartnerAuto::new),
   THREE_PIECE_1DEC(ThreePiece1DEC::new);
 
-
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> auto;
 
   private AutoSelection(BiFunction<RobotManager, Trailblazer, BaseAuto> auto) {
