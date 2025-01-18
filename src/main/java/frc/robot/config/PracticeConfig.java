@@ -14,6 +14,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
+import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.PivotConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
@@ -119,7 +120,8 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               0,
-              0));
+              0),
+          new LightsConfig(RIO_CAN_NAME, 2));
 
   private PracticeConfig() {}
 }

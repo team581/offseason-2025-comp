@@ -15,6 +15,7 @@ import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
+import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.pivot.PivotSubsystem;
 import frc.robot.purple.Purple;
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
           hardware.intakeRightSensor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
+  private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -80,7 +82,8 @@ public class Robot extends TimedRobot {
           localization,
           topPurpleLimelight,
           bottomCoralLimelight,
-          backwardsTagLimelight);
+          backwardsTagLimelight,
+          lights);
 
   private final RobotCommands robotCommands = new RobotCommands(robotManager);
 

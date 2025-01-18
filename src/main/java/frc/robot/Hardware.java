@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -33,4 +34,7 @@ public class Hardware {
 
   public final TalonFX pivotMotor =
       new TalonFX(RobotConfig.get().pivot().motorID(), RobotConfig.get().pivot().canBusName());
+
+  public final CANdle candle =
+      new CANdle(RobotConfig.get().lights().candleID(), RobotConfig.get().lights().canBusName());
 }
