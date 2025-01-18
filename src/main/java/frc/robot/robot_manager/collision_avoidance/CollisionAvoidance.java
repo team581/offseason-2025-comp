@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.robot_manager.SuperstructurePosition;
@@ -25,11 +26,26 @@ public class CollisionAvoidance {
 
     // possibleGoalPoints.set(2, safePoint2);
     //  getGoalPoint(possibleGoalPoints, angleHeightToPose(wristAngle, elevatorHeight))
-
+    DogLog.log("CollisionAvoidance/isInBadZone", isInBadZone(current));
     return getGoalPoint(possibleGoalPoints, current, goal);
   }
 
   private CollisionAvoidance() {}
+
+  private static boolean isInBadZone(SuperstructurePosition current) {
+    Translation2d pose = angleHeightToPose(current.wristAngle(), current.elevatorHeight());
+    Translation2d bottomCorner =
+        angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight());
+    Translation2d topCorner =
+        angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight());
+    if (bottomCorner.getX() < pose.getX()
+        && pose.getX() < topCorner.getX()
+        && bottomCorner.getY() < pose.getY()
+        && pose.getY() < topCorner.getY()) {
+      return true;
+    }
+    return false;
+  }
 
   static boolean collides(Translation2d currentPose, Translation2d goalPose) {
 
