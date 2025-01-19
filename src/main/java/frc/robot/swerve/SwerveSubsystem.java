@@ -226,30 +226,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withVelocityY(autoSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
-
-      case SCORE_ASSIST -> {
-        var scoreAssist =
-            Purple.getRobotRelativeScoreAssistSpeeds(
-                MathUtil.inputModulus(drivetrainPigeon.getYaw().getValueAsDouble(), -180, 180),
-                teleopSpeeds);
-
-        drivetrain.setControl(
-            drive
-                .withVelocityX(scoreAssist.vxMetersPerSecond)
-                .withVelocityY(scoreAssist.vyMetersPerSecond)
-                .withRotationalRate(scoreAssist.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-      }
-      case PURPLE_ALIGN -> {
-        var purpleAlign = Purple.getPurpleAdjustmentRobotRelative();
-
-        drivetrain.setControl(
-            drive
-                .withVelocityX(purpleAlign.vxMetersPerSecond)
-                .withVelocityY(purpleAlign.vyMetersPerSecond)
-                .withRotationalRate(purpleAlign.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-      }
     }
   }
 
