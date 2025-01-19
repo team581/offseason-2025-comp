@@ -1,0 +1,11 @@
+package frc.robot.auto_align;
+
+public enum ReefAlignState {
+  CAMERA_DEAD,
+  NO_TAGS_WRONG_POSITION,
+  NO_TAGS_IN_POSITION,
+  HAS_TAGS_WRONG_POSITION,
+  HAS_TAGS_IN_POSITION,
+  HAS_PURPLE_NOT_ALIGNED,
+  HAS_PURPLE_ALIGNED;
+}

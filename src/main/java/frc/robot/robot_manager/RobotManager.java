@@ -3,6 +3,7 @@ package frc.robot.robot_manager;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.ReefAlignState;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.elevator.ElevatorState;
@@ -15,11 +16,13 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.pivot.PivotState;
 import frc.robot.pivot.PivotSubsystem;
+import frc.robot.purple.Purple;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.vision.CameraHealth;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
@@ -45,6 +48,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private final LightsSubsystem lights;
 
+  private final Purple purple;
+
   private GamePieceMode gamePieceMode;
 
   public RobotManager(
@@ -60,6 +65,7 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight bottomCoralLimelight,
       Limelight backwardsTagLimelight,
       LightsSubsystem lights,
+      Purple purple,
       ClimberSubsystem climber) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
@@ -74,6 +80,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.bottomCoralLimelight = bottomCoralLimelight;
     this.backwardsTagLimelight = backwardsTagLimelight;
     this.lights = lights;
+    this.purple = purple;
     this.climber = climber;
   }
 
@@ -981,5 +988,16 @@ public class RobotManager extends StateMachine<RobotState> {
       DogLog.log("RobotManager/CollisionAvoidance/Wrist", 0);
     }
     DogLog.log("RobotManager/CollisionAvoidanceTriggered", maybeIntermediaryPosition.isPresent());
+  }
+
+  private ReefAlignState getReefAlignState() {
+    return AutoAlign.getReefAlignState(
+        localization.getPose(),
+        purple.getPurpleState(),
+        bottomCoralLimelight
+            .getInterpolatedTagResult()
+            .or(backwardsTagLimelight::getInterpolatedTagResult),
+        CameraHealth.combine(
+            bottomCoralLimelight.getCameraHealth(), backwardsTagLimelight.getCameraHealth()));
   }
 }
