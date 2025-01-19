@@ -18,7 +18,7 @@ public class PurePursuitPathTracker implements PathTracker {
   private static final double DYNAMIC_LOOKAHEAD_TRANSITION_TIME = 0.5;
   private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.5;
   private static final double DYNAMIC_LOOKAHEAD_MAX = 2.0;
-  private double lookaheadDistance = 0.0;
+  private double lookaheadDistance = 1.5;
   private double lastRequestedLookaheadDistance = Double.MAX_VALUE;
   private double transitionStartTime = 0.0;
   private double lastStartTime = 0.0;
@@ -197,7 +197,9 @@ public class PurePursuitPathTracker implements PathTracker {
     var AC = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1));
     var s = (AB + BC + AC) / 2;
     var area = Math.sqrt(s * (s - AB) * (s - BC) * (s - AC));
-
+    if (area == 0) {
+      return DYNAMIC_LOOKAHEAD_MAX;
+    }
     var curvature = (AB * BC * AC) / (4 * area);
     double value = curvature * DYNAMIC_LOOKAHEAD_SCALE;
     Pose2d[] curvaturepoints = {firstPoint, secondPoint, thirdPoint};
