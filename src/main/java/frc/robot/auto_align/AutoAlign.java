@@ -2,6 +2,7 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.fms.FmsSubsystem;
 import frc.robot.purple.PurpleState;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.results.TagResult;
@@ -11,16 +12,24 @@ import java.util.Optional;
 public class AutoAlign {
   private static final List<ReefSide> ALL_REEF_SIDES = List.of(ReefSide.values());
 
-  public static Pose2d getClosestReefSide(Pose2d robotPose) {
+  public static Pose2d getClosestReefSide(Pose2d robotPose, boolean isRedAlliance) {
     var reefSide =
         ALL_REEF_SIDES.stream()
             .min(
                 (a, b) ->
                     Double.compare(
-                        robotPose.getTranslation().getDistance(a.getPose().getTranslation()),
-                        robotPose.getTranslation().getDistance(b.getPose().getTranslation())))
+                        robotPose
+                            .getTranslation()
+                            .getDistance(a.getPose(isRedAlliance).getTranslation()),
+                        robotPose
+                            .getTranslation()
+                            .getDistance(b.getPose(isRedAlliance).getTranslation())))
             .get();
-    return reefSide.getPose();
+    return reefSide.getPose(isRedAlliance);
+  }
+
+  public static Pose2d getClosestReefSide(Pose2d robotPose) {
+    return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
   }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
