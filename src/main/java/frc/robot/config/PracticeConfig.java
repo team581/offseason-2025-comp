@@ -1,7 +1,9 @@
 package frc.robot.config;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -12,6 +14,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.LightsConfig;
@@ -121,6 +124,13 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(10)),
               0,
               0),
+          new ClimberConfig(
+              CANIVORE_NAME,
+              24,
+              25,
+              new TalonFXConfiguration(),
+              new CANcoderConfiguration()
+                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}

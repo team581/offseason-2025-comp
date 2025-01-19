@@ -1,5 +1,6 @@
 package frc.robot.config;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
@@ -13,6 +14,7 @@ public record RobotConfig(
     VisionConfig vision,
     WristConfig wrist,
     PivotConfig pivot,
+    ClimberConfig climber,
     LightsConfig lights) {
   public record ElevatorConfig(
       String canBusName,
@@ -57,6 +59,13 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig,
       double minAngle,
       double maxAngle) {}
+
+  public record ClimberConfig(
+      String canBusName,
+      int motorID,
+      int cancoderID,
+      TalonFXConfiguration motorConfig,
+      CANcoderConfiguration cancoderConfig) {}
 
   public record PivotConfig(
       String canBusName,
