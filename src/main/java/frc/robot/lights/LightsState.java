@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public enum LightsState {
   CAMERA_DEAD(Color.kRed, BlinkPattern.BLINK_FAST),
-  
+
   IDLE_NO_GP_CORAL_MODE(Color.kWhite, BlinkPattern.BLINK_SLOW),
   IDLE_WITH_CORAL(Color.kWhite, BlinkPattern.SOLID),
 

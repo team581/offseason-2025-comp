@@ -167,7 +167,8 @@ public class RobotManager extends StateMachine<RobotState> {
         topPurpleLimelight.setState(LimelightState.PURPLE);
         bottomCoralLimelight.setState(LimelightState.CORAL);
         backwardsTagLimelight.setState(LimelightState.TAGS);
-        // Game piece mode can change without a state transition, so we update lights when the game piece mode is updated
+        // Game piece mode can change without a state transition, so we update lights when the game
+        // piece mode is updated
       }
       case IDLE_ALGAE -> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
@@ -619,7 +620,7 @@ public class RobotManager extends StateMachine<RobotState> {
           UNJAM,
           REHOME -> {}
       case IDLE_NO_GP, IDLE_ALGAE, IDLE_CORAL -> {
-          stowRequest();
+        stowRequest();
       }
       case INTAKE_ALGAE_FLOOR -> {
         if (newMode == GamePieceMode.CORAL) {
@@ -666,7 +667,10 @@ public class RobotManager extends StateMachine<RobotState> {
           algaeNetRequest();
         }
       }
-      case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE, NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
+      case NET_BACK_WAITING,
+          NET_BACK_PREPARE_TO_SCORE,
+          NET_FORWARD_WAITING,
+          NET_FORWARD_PREPARE_TO_SCORE -> {
         if (newMode == GamePieceMode.CORAL) {
           l4CoralLineupRequest();
         }
@@ -690,7 +694,7 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       setStateFromRequest(RobotState.IDLE_NO_GP);
 
-      if(gamePieceMode == GamePieceMode.CORAL) {
+      if (gamePieceMode == GamePieceMode.CORAL) {
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
       } else {
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);

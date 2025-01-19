@@ -12,8 +12,9 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
 public class ThreePiece2IJKAuto extends BaseAuto {
-private static final AutoConstraintOptions CONSTRAINTS =
+  private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(false, 5, 500, 8.0, 5000);
+
   public ThreePiece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
