@@ -61,6 +61,10 @@ public class Limelight extends StateMachine<LimelightState> {
     return interpolatedResult;
   }
 
+  public Optional<PurpleResult> getPurpleResult() {
+    return purpleResult;
+  }
+
   private Optional<TagResult> calculateInterpolatedTagResult(Optional<TagResult> rawTagResult) {
     if (rawTagResult.isEmpty()) {
       return Optional.empty();

@@ -19,6 +19,7 @@ public enum SubsystemPriority {
   PIVOT(10),
   ELEVATOR(10),
   WRIST(10),
+  CLIMBER(10),
   LIGHTS(10),
 
   // 0-9 is for manager subsystems
