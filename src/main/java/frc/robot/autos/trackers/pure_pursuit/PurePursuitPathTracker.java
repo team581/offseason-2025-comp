@@ -16,7 +16,7 @@ public class PurePursuitPathTracker implements PathTracker {
   private static final double AT_END_OF_SEGMENT_DISTANCE_THRESHOLD = 0.1;
   private static final double AT_END_OF_SEGMENT_ROTATION_THRESHOLD = 5;
   private static final double DYNAMIC_LOOKAHEAD_TRANSITION_TIME = 0.5;
-  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.5;
+  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.45;
   private static final double DYNAMIC_LOOKAHEAD_MAX = 2.0;
   private double lookaheadDistance = 1.5;
   private double lastRequestedLookaheadDistance = Double.MAX_VALUE;
@@ -29,13 +29,16 @@ public class PurePursuitPathTracker implements PathTracker {
   private boolean startingRobotPoseUpdated = false;
   private Pose2d lastTargetWaypoint = new Pose2d();
   private Pose2d currentTargetWaypoint = new Pose2d();
-  private int currentPointIndex = 0;
+  private int currentLookaheadPointIndex = 0;
+  private int currentRobotFollowedPointIndex = 0;
+  private Rotation2d currentInterpolatedRotation = new Rotation2d();
 
   @Override
   public void resetAndSetPoints(List<AutoPoint> points) {
     startingRobotPose = new Pose2d();
     startingRobotPoseUpdated = false;
-    currentPointIndex = 0;
+    currentLookaheadPointIndex = 0;
+    currentRobotFollowedPointIndex = 0;
     this.points = points;
   }
 
@@ -49,6 +52,10 @@ public class PurePursuitPathTracker implements PathTracker {
     }
     DogLog.log(
         "Autos/Trailblazer/PurePursuitPathTracker/CurrentPointIndex", getCurrentPointIndex());
+
+    DogLog.log(
+        "Autos/Trailblazer/PurePursuitPathTracker/CurrentLookaheadPointIndex",
+        getCurrentLookaheadPointIndex());
     DogLog.log(
         "Autos/Trailblazer/PurePursuitPathTracker/StartingRobotPose/Point", startingRobotPose);
     DogLog.log(
@@ -63,18 +70,17 @@ public class PurePursuitPathTracker implements PathTracker {
   public Pose2d getTargetPose() {
     DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
     updateLookahead();
-    var lastTargetWaypoint = new Pose2d();
-    var currentTargetWaypoint = new Pose2d();
+    updateRotation();
     DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
       return new Pose2d();
     }
-    if (getCurrentPointIndex() == 0) {
+    if (getCurrentLookaheadPointIndex() == 0) {
       lastTargetWaypoint = startingRobotPose;
     } else {
-      lastTargetWaypoint = points.get(getCurrentPointIndex() - 1).poseSupplier.get();
+      lastTargetWaypoint = points.get(getCurrentLookaheadPointIndex() - 1).poseSupplier.get();
     }
-    currentTargetWaypoint = points.get(getCurrentPointIndex()).poseSupplier.get();
+    currentTargetWaypoint = points.get(getCurrentLookaheadPointIndex()).poseSupplier.get();
     var perpendicularPoint =
         getPerpendicularPoint(lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
 
@@ -89,8 +95,7 @@ public class PurePursuitPathTracker implements PathTracker {
                             .getTranslation()
                             .getDistance(perpendicularPoint.getTranslation()))
                 .getTranslation(),
-            getPointToPointInterpolatedRotation(
-                lastTargetWaypoint, currentTargetWaypoint, perpendicularPoint));
+            currentInterpolatedRotation);
 
     var lookaheadInside =
         PurePursuitUtils.isBetween(lastTargetWaypoint, currentTargetWaypoint, lookaheadPoint);
@@ -100,55 +105,71 @@ public class PurePursuitPathTracker implements PathTracker {
         lookaheadPoint.getTranslation().getDistance(currentTargetWaypoint.getTranslation());
     if (!lookaheadInside) {
       if (lookaheadToEndDistance > lookaheadToStartDistance) {
-        return new Pose2d(
-            lastTargetWaypoint.getTranslation(),
-            getPointToPointInterpolatedRotation(
-                lastTargetWaypoint,
-                currentTargetWaypoint,
-                getPerpendicularPoint(
-                    lastTargetWaypoint, currentTargetWaypoint, currentRobotPose)));
+        return new Pose2d(lastTargetWaypoint.getTranslation(), currentInterpolatedRotation);
       }
-      if (getCurrentPointIndex() < points.size() - 1) {
-        var futurePoint = points.get(getCurrentPointIndex() + 1).poseSupplier.get();
+      if (getCurrentLookaheadPointIndex() < points.size() - 1) {
+        var futurePoint = points.get(getCurrentLookaheadPointIndex() + 1).poseSupplier.get();
         var perpendicularToCurrentEndDistance =
             perpendicularPoint.getTranslation().getDistance(currentTargetWaypoint.getTranslation());
         var newLookaheadPoint =
-            getLookaheadPoint(
-                currentTargetWaypoint,
-                futurePoint,
-                currentTargetWaypoint,
-                lookaheadDistance - perpendicularToCurrentEndDistance);
+            new Pose2d(
+                getLookaheadPoint(
+                        currentTargetWaypoint,
+                        futurePoint,
+                        currentTargetWaypoint,
+                        lookaheadDistance - perpendicularToCurrentEndDistance)
+                    .getTranslation(),
+                currentInterpolatedRotation);
 
-        currentPointIndex++;
+        currentLookaheadPointIndex++;
         var newLookaheadInside =
             PurePursuitUtils.isBetween(currentTargetWaypoint, futurePoint, newLookaheadPoint);
         if (!newLookaheadInside) {
-          return new Pose2d(
-              currentTargetWaypoint.getTranslation(),
-              getPointToPointInterpolatedRotation(
-                  lastTargetWaypoint,
-                  currentTargetWaypoint,
-                  getPerpendicularPoint(
-                      lastTargetWaypoint, currentTargetWaypoint, currentRobotPose)));
+          return new Pose2d(currentTargetWaypoint.getTranslation(), currentInterpolatedRotation);
         }
 
         return newLookaheadPoint;
       } else {
-        return new Pose2d(
-            currentTargetWaypoint.getTranslation(),
-            getPointToPointInterpolatedRotation(
-                lastTargetWaypoint,
-                currentTargetWaypoint,
-                getPerpendicularPoint(
-                    lastTargetWaypoint, currentTargetWaypoint, currentRobotPose)));
+        return new Pose2d(currentTargetWaypoint.getTranslation(), currentInterpolatedRotation);
       }
     }
     return lookaheadPoint;
   }
 
+  private void updateRotation() {
+    var lastTargetWaypoint = new Pose2d();
+    if (currentRobotFollowedPointIndex == 0) {
+      lastTargetWaypoint = startingRobotPose;
+    } else {
+      lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
+    }
+    var currentTargetPoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
+
+    var perpendicularPoint =
+        getPerpendicularPoint(lastTargetWaypoint, currentTargetPoint, currentRobotPose);
+    if (currentRobotFollowedPointIndex < points.size() - 1
+        && perpendicularPoint.getTranslation().getDistance(lastTargetWaypoint.getTranslation())
+                / lastTargetWaypoint
+                    .getTranslation()
+                    .getDistance(currentTargetPoint.getTranslation())
+            > 0.9) {
+
+      currentRobotFollowedPointIndex++;
+      currentTargetWaypoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
+      lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
+    }
+    currentInterpolatedRotation =
+        getPointToPointInterpolatedRotation(
+            lastTargetWaypoint, currentTargetPoint, perpendicularPoint);
+  }
+
+  private int getCurrentLookaheadPointIndex() {
+    return currentLookaheadPointIndex;
+  }
+
   @Override
   public int getCurrentPointIndex() {
-    return currentPointIndex;
+    return currentRobotFollowedPointIndex;
   }
 
   @Override
