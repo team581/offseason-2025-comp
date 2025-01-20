@@ -3,7 +3,6 @@ package frc.robot.autos.trackers.pure_pursuit;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.autos.AutoPoint;
@@ -62,6 +61,10 @@ public class PurePursuitPathTracker implements PathTracker {
   @Override
   public Pose2d getTargetPose() {
     DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
+    updateLookahead();
+    var lastTargetWaypoint = new Pose2d();
+    var currentTargetWaypoint = new Pose2d();
+    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
       return new Pose2d();
     }
@@ -72,11 +75,11 @@ public class PurePursuitPathTracker implements PathTracker {
     }
     currentTargetWaypoint = points.get(getCurrentPointIndex()).poseSupplier.get();
     var perpendicularPoint =
-        getPerpendicularPoint(lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
+        PurePursuitUtils.getPerpendicularPoint(
+            lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
 
-    updateLookahead();
     var lookaheadPoint =
-        getLookaheadPoint(
+        PurePursuitUtils.getLookaheadPoint(
             lastTargetWaypoint,
             currentTargetWaypoint,
             perpendicularPoint,
@@ -84,25 +87,20 @@ public class PurePursuitPathTracker implements PathTracker {
                 - currentRobotPose
                     .getTranslation()
                     .getDistance(perpendicularPoint.getTranslation()));
-    var lookaheadOutside =
-        !((lookaheadPoint.getX() - lastTargetWaypoint.getX())
-                    * (lookaheadPoint.getX() - currentTargetWaypoint.getX())
-                <= 0
-            && (lookaheadPoint.getY() - lastTargetWaypoint.getY())
-                    * (lookaheadPoint.getY() - currentTargetWaypoint.getY())
-                <= 0);
+    var lookaheadInside =
+        PurePursuitUtils.isBetween(lastTargetWaypoint, currentTargetWaypoint, lookaheadPoint);
     var lookaheadToStartDistance =
         lookaheadPoint.getTranslation().getDistance(lastTargetWaypoint.getTranslation());
     var lookaheadToEndDistance =
         lookaheadPoint.getTranslation().getDistance(currentTargetWaypoint.getTranslation());
-    if (lookaheadOutside) {
+    if (!lookaheadInside) {
       if (lookaheadToEndDistance > lookaheadToStartDistance) {
         return new Pose2d(
             lastTargetWaypoint.getTranslation(),
-            getPointToPointInterpolatedRotation(
+            PurePursuitUtils.getPointToPointInterpolatedRotation(
                 lastTargetWaypoint,
                 currentTargetWaypoint,
-                getPerpendicularPoint(
+                PurePursuitUtils.getPerpendicularPoint(
                     lastTargetWaypoint, currentTargetWaypoint, currentRobotPose)));
       }
       if (getCurrentPointIndex() < points.size() - 1) {
@@ -110,22 +108,32 @@ public class PurePursuitPathTracker implements PathTracker {
         var perpendicularToCurrentEndDistance =
             perpendicularPoint.getTranslation().getDistance(currentTargetWaypoint.getTranslation());
         var newLookaheadPoint =
-            getLookaheadPoint(
+            PurePursuitUtils.getLookaheadPoint(
                 currentTargetWaypoint,
                 futurePoint,
                 currentTargetWaypoint,
                 lookaheadDistance - perpendicularToCurrentEndDistance);
 
         currentPointIndex++;
-
+        var newLookaheadInside =
+            PurePursuitUtils.isBetween(currentTargetWaypoint, futurePoint, newLookaheadPoint);
+        if (!newLookaheadInside) {
+          return new Pose2d(
+              currentTargetWaypoint.getTranslation(),
+              PurePursuitUtils.getPointToPointInterpolatedRotation(
+                  currentRobotPose,
+                  futurePoint,
+                  PurePursuitUtils.getPerpendicularPoint(
+                      currentTargetWaypoint, futurePoint, currentRobotPose)));
+        }
         return newLookaheadPoint;
       } else {
         return new Pose2d(
             currentTargetWaypoint.getTranslation(),
-            getPointToPointInterpolatedRotation(
+            PurePursuitUtils.getPointToPointInterpolatedRotation(
                 lastTargetWaypoint,
                 currentTargetWaypoint,
-                getPerpendicularPoint(
+                PurePursuitUtils.getPerpendicularPoint(
                     lastTargetWaypoint, currentTargetWaypoint, currentRobotPose)));
       }
     }
@@ -230,96 +238,5 @@ public class PurePursuitPathTracker implements PathTracker {
       lastStartTime = transitionStartTime;
       lookaheadDistance = targetLookahead;
     }
-  }
-
-  private Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
-    var x1 = startPoint.getX();
-    var y1 = startPoint.getY();
-
-    var x2 = endPoint.getX();
-    var y2 = endPoint.getY();
-
-    var x3 = robotPose.getX();
-    var y3 = robotPose.getY();
-
-    if (y1 == y2) {
-      return new Pose2d(x3, y1, new Rotation2d());
-    }
-    if (x1 == x2) {
-      return new Pose2d(x1, y3, new Rotation2d());
-    }
-    // Find the slope of the path and y-int
-    double pathSlope = (y2 - y1) / (x2 - x1);
-    double yInt = y1 - pathSlope * x1;
-
-    // Find the slope and y-int of the perpendicular line
-    double perpSlope = -1 / pathSlope;
-    double perpYInt = y3 - perpSlope * x3;
-
-    // Calculate the perpendicular intersection
-    double perpX = (perpYInt - yInt) / (pathSlope - perpSlope);
-    double perpY = pathSlope * perpX + yInt;
-
-    return new Pose2d(perpX, perpY, new Rotation2d());
-  }
-
-  private Pose2d getLookaheadPoint(
-      Pose2d startPoint, Pose2d endPoint, Pose2d pointOnPath, double lookaheadDistance) {
-    var x1 = startPoint.getX();
-    var y1 = startPoint.getY();
-
-    var x2 = endPoint.getX();
-    var y2 = endPoint.getY();
-
-    var x = pointOnPath.getX();
-    var y = pointOnPath.getY();
-
-    var xLookahead =
-        x
-            + lookaheadDistance
-                * ((x2 - x1) / (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
-    var yLookahead =
-        y
-            + lookaheadDistance
-                * ((y2 - y1) / (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
-    var lookahead = new Pose2d(xLookahead, yLookahead, new Rotation2d());
-    var distanceToStart = lookahead.getTranslation().getDistance(startPoint.getTranslation());
-    var distanceToEnd = lookahead.getTranslation().getDistance(endPoint.getTranslation());
-    var lookaheadOutside =
-        !((lookahead.getX() - startPoint.getX()) * (lookahead.getX() - endPoint.getX()) <= 0
-            && (lookahead.getY() - startPoint.getY()) * (lookahead.getY() - endPoint.getY()) <= 0);
-    if (lookaheadOutside) {
-      if (distanceToEnd > distanceToStart) {
-        return startPoint;
-      }
-    }
-    return lookahead;
-  }
-
-  private Rotation2d getPointToPointInterpolatedRotation(
-      Pose2d startPoint, Pose2d endPoint, Pose2d pointOnPath) {
-    // TODO: do unit tests for interpolated rotation
-    var totalDistance = startPoint.getTranslation().getDistance(endPoint.getTranslation());
-    var pointToStart = pointOnPath.getTranslation().getDistance(startPoint.getTranslation());
-    var pointToEnd = pointOnPath.getTranslation().getDistance(endPoint.getTranslation());
-
-    if (!((pointOnPath.getX() - startPoint.getX()) * (pointOnPath.getX() - endPoint.getX()) <= 0
-        && (pointOnPath.getY() - startPoint.getY()) * (pointOnPath.getY() - endPoint.getY())
-            <= 0)) {
-      if (pointToEnd > pointToStart) {
-        return startPoint.getRotation();
-      } else {
-        return endPoint.getRotation();
-      }
-    }
-    var progressPercent = Math.abs((pointToStart / totalDistance));
-    if (progressPercent > 0.9) {
-      progressPercent = 1.0;
-    }
-
-    var interpolatedRotation =
-        startPoint.getRotation().interpolate(endPoint.getRotation(), progressPercent);
-
-    return interpolatedRotation;
   }
 }
