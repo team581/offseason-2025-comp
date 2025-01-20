@@ -41,12 +41,16 @@ class PracticeConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio(((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio(
+                              ((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio(((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio(
+                              ((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
               0,
               0,
               68,
