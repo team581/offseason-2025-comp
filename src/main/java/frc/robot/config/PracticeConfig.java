@@ -31,7 +31,7 @@ class PracticeConfig {
 
   public static final RobotConfig practiceBot =
       new RobotConfig(
-          "competition",
+          "practice",
           new ElevatorConfig(
               // TODO: Get actual Values
               CANIVORE_NAME,
@@ -40,10 +40,12 @@ class PracticeConfig {
               // TODO: Sensor to mechanism ratio should be gear ratio multiplied by the sprocket
               // circumfrence
               new TalonFXConfiguration()
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
               new TalonFXConfiguration()
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
@@ -64,13 +66,16 @@ class PracticeConfig {
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
-                      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast)),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive))),
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))),
           new SwerveConfig(
               new PhoenixPIDController(10, 0, 1),
               true,
@@ -111,6 +116,7 @@ class PracticeConfig {
               RIO_CAN_NAME,
               22,
               new TalonFXConfiguration()
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
@@ -125,6 +131,7 @@ class PracticeConfig {
               RIO_CAN_NAME,
               23,
               new TalonFXConfiguration()
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(2).withPeakReverseVoltage(2))
@@ -141,7 +148,14 @@ class PracticeConfig {
               CANIVORE_NAME,
               24,
               25,
-              new TalonFXConfiguration(),
+              new TalonFXConfiguration()
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimitEnable(true)
+                          .withStatorCurrentLimit(10)
+                          .withSupplyCurrentLimitEnable(true)
+                          .withSupplyCurrentLimit(10)),
               new CANcoderConfiguration()
                   .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0))),
           new LightsConfig(RIO_CAN_NAME, 18));
