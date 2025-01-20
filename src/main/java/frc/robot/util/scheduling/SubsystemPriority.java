@@ -34,6 +34,4 @@ public enum SubsystemPriority {
   private SubsystemPriority(int priority) {
     this.value = priority;
   }
-
-  // TODO: Tweak subsystem priority values when more of the subsystems are added
 }

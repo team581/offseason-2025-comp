@@ -11,8 +11,7 @@ public class RobotCommands {
 
   public RobotCommands(RobotManager robot) {
     this.robot = robot;
-    // TODO: Add climber to the requirement list when it is added into robot manager
-    var requirementsList = List.of(robot.elevator, robot.wrist, robot.pivot, robot.intake);
+    var requirementsList = List.of(robot.elevator, robot.wrist, robot.pivot, robot.intake, robot.climber);
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 

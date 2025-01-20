@@ -33,22 +33,20 @@ class PracticeConfig {
       new RobotConfig(
           "practice",
           new ElevatorConfig(
-              // TODO: Get actual Values
               CANIVORE_NAME,
               15,
               16,
-              // TODO: Sensor to mechanism ratio should be gear ratio multiplied by the sprocket
-              // circumfrence
+              // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
+                      new FeedbackConfigs().withSensorToMechanismRatio(((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio(999 * (Math.PI * 999))),
+                      new FeedbackConfigs().withSensorToMechanismRatio(((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
               0,
               0,
               68,
