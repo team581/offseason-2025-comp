@@ -58,7 +58,7 @@ public class TunerConstants {
 
   private static final Slot0Configs simSteerGains =
       new Slot0Configs()
-          .withKP(170.0)
+          .withKP(160.0)
           .withKI(0.0)
           .withKD(0.0)
           .withKS(0.0)
