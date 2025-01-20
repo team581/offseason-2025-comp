@@ -53,7 +53,7 @@
       },
       "prevControl": {
         "x": 15.678038912279371,
-        "y": 0.723662680560411
+        "y": 0.7236626805604109
       },
       "nextControl": {
         "x": 16.124751514582066,
@@ -154,11 +154,11 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3,
-    "maxAcceleration": 3,
-    "maxAngularVelocity": 540,
-    "maxAngularAcceleration": 720,
-    "nominalVoltage": 12,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
@@ -169,7 +169,7 @@
   "folder": "Auto Path Coords",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
