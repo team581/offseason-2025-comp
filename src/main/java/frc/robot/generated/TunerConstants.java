@@ -56,7 +56,7 @@ public class TunerConstants {
   private static final Slot0Configs driveGains =
       new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0).withKV(0.124);
 
-      private static final Slot0Configs simSteerGains =
+  private static final Slot0Configs simSteerGains =
       new Slot0Configs()
           .withKP(150.0)
           .withKI(0.0)
@@ -151,8 +151,8 @@ public class TunerConstants {
               .withSteerMotorGearRatio(kSteerGearRatio)
               .withCouplingGearRatio(kCoupleRatio)
               .withWheelRadius(kWheelRadius)
-              .withSteerMotorGains(RobotBase.isSimulation()? simSteerGains : steerGains)
-              .withDriveMotorGains(RobotBase.isSimulation()? simDriveGains : driveGains)
+              .withSteerMotorGains(RobotBase.isSimulation() ? simSteerGains : steerGains)
+              .withDriveMotorGains(RobotBase.isSimulation() ? simDriveGains : driveGains)
               .withSteerMotorClosedLoopOutput(kSteerClosedLoopOutput)
               .withDriveMotorClosedLoopOutput(kDriveClosedLoopOutput)
               .withSlipCurrent(kSlipCurrent)

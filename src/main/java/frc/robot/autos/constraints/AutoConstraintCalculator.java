@@ -74,7 +74,7 @@ public class AutoConstraintCalculator {
     double deltaVx = inputSpeeds.vxMetersPerSecond - previousSpeeds.vxMetersPerSecond;
     double deltaVy = inputSpeeds.vyMetersPerSecond - previousSpeeds.vyMetersPerSecond;
 
-    if (deltaVx<0 || deltaVy<0) {
+    if (deltaVx < 0 || deltaVy < 0) {
       return inputSpeeds;
     }
     double unconstrainedLinearAcceleration =
