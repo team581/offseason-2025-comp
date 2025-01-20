@@ -1,6 +1,6 @@
 package frc.robot.wrist;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
@@ -20,8 +20,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0).withEnableFOC(false);
+  private final PositionVoltage motionMagicRequest = new PositionVoltage(0).withEnableFOC(false);
 
   // private final PositionVoltage pidRequest =
   //  new PositionVoltage(0).withEnableFOC(false);

@@ -1,6 +1,6 @@
 package frc.robot.pivot;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -17,8 +17,8 @@ public class PivotSubsystem extends StateMachine<PivotState> {
 
   private final IntakeSubsystem intake;
 
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(PivotState.STOWED.angle).withEnableFOC(false);
+  private final PositionVoltage motionMagicRequest =
+      new PositionVoltage(PivotState.STOWED.angle).withEnableFOC(false);
 
   public PivotSubsystem(TalonFX motor, IntakeSubsystem intake) {
     super(SubsystemPriority.PIVOT, PivotState.HOMING);
