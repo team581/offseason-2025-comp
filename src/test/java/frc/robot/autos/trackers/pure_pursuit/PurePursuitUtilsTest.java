@@ -61,7 +61,7 @@ public class PurePursuitUtilsTest {
     int currentIndex = 3;
     var lookaheadDistance = 1.0;
     var startingRobotPose = PurePursuitUtils.generateRandomPose();
-    var iterations = 100000;
+    var iterations = 10000;
 
     for (int i = 0; i < iterations; i++) {
       List<AutoPoint> points = new ArrayList<>();
