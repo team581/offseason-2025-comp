@@ -13,7 +13,7 @@ public record AutoConstraintOptions(
     double maxAngularAcceleration) {
   /** Default constraint options to use if no point or segment specific options are set. */
   public AutoConstraintOptions() {
-    this(false, 0, 0, 0, 0);
+    this(false, 4.75, 71.5, 8.5, 35.2);
   }
 
   public AutoConstraintOptions withCollisionAvoidance(boolean collisionAvoidance) {
