@@ -61,11 +61,13 @@ class PracticeConfig {
               new Debouncer(0.0, DebounceType.kBoth),
               new Debouncer(0.0, DebounceType.kBoth),
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
+                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
+                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(0))
+                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
+                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive))),
@@ -116,12 +118,15 @@ class PracticeConfig {
               23,
               new TalonFXConfiguration()
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withVoltage(
+                      new VoltageConfigs().withPeakForwardVoltage(2).withPeakReverseVoltage(2))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
                           .withStatorCurrentLimit(10)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
+              // TODO: Slides recommend 10A threshold
               0,
               0),
           new ClimberConfig(
