@@ -14,12 +14,12 @@ public class MagnetismUtil {
 
   private static double clampX(double val, double rad) {
     return Math.min(
-        Math.max(val, MIN_ASSIST_SPEED*Math.cos(rad)), MAX_ASSIST_SPEED*Math.cos(rad));
+        Math.max(val, MIN_ASSIST_SPEED * Math.cos(rad)), MAX_ASSIST_SPEED * Math.cos(rad));
   }
 
   private static double clampY(double val, double rad) {
     return Math.min(
-        Math.max(val, MIN_ASSIST_SPEED*Math.sin(rad)), MAX_ASSIST_SPEED*Math.sin(rad));
+        Math.max(val, MIN_ASSIST_SPEED * Math.sin(rad)), MAX_ASSIST_SPEED * Math.sin(rad));
   }
 
   private static Pose2d[] getPipePoses() {
@@ -41,31 +41,36 @@ public class MagnetismUtil {
     double timesRan = 0.0;
     for (Pose2d pipe : getPipePoses()) {
       Translation2d dXdY = pipe.getTranslation().minus(robotPose.getTranslation());
-      boolean tempInRadius = (Math.hypot(dXdY.getX(),dXdY.getY()) < ASSIST_RADIUS);
+      boolean tempInRadius = (Math.hypot(dXdY.getX(), dXdY.getY()) < ASSIST_RADIUS);
       if (!tempInRadius) {
         continue;
       }
       withinRadius = true;
-      accumulateSpeeds = accumulateSpeeds.plus(new ChassisSpeeds(dXdY.getX() * kP, dXdY.getY() * kP, 0.0));
+      accumulateSpeeds =
+          accumulateSpeeds.plus(new ChassisSpeeds(dXdY.getX() * kP, dXdY.getY() * kP, 0.0));
       timesRan += 1.0;
     }
     if (!withinRadius) {
       return fieldRelativeRobotSpeeds;
     }
-    double robotDirection = Math.atan2(fieldRelativeRobotSpeeds.vyMetersPerSecond, fieldRelativeRobotSpeeds.vxMetersPerSecond);
+    double robotDirection =
+        Math.atan2(
+            fieldRelativeRobotSpeeds.vyMetersPerSecond, fieldRelativeRobotSpeeds.vxMetersPerSecond);
     double vxSign = Math.copySign(1.0, fieldRelativeRobotSpeeds.vxMetersPerSecond);
     double vySign = Math.copySign(1.0, fieldRelativeRobotSpeeds.vyMetersPerSecond);
 
     accumulateSpeeds.vxMetersPerSecond =
-        vxSign*
-        clampX(
-            (Math.abs(accumulateSpeeds.vxMetersPerSecond)/(timesRan*MathHelpers.sec(robotDirection))),
-            robotDirection);
+        vxSign
+            * clampX(
+                (Math.abs(accumulateSpeeds.vxMetersPerSecond)
+                    / (timesRan * MathHelpers.sec(robotDirection))),
+                robotDirection);
     accumulateSpeeds.vyMetersPerSecond =
-        vySign *
-        clampY(
-            (Math.abs(accumulateSpeeds.vyMetersPerSecond)/(timesRan*MathHelpers.csc(robotDirection))),
-            robotDirection);
+        vySign
+            * clampY(
+                (Math.abs(accumulateSpeeds.vyMetersPerSecond)
+                    / (timesRan * MathHelpers.csc(robotDirection))),
+                robotDirection);
 
     return fieldRelativeRobotSpeeds.plus(accumulateSpeeds);
   }
