@@ -282,10 +282,18 @@ public class PurePursuitPathTracker implements PathTracker {
         y
             + lookaheadDistance
                 * ((y2 - y1) / (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
-    return new Pose2d(
-        xLookahead,
-        yLookahead,
-        getPointToPointInterpolatedRotation(startPoint, endPoint, pointOnPath));
+    var lookahead = new Pose2d(xLookahead, yLookahead, new Rotation2d());
+    var distanceToStart = lookahead.getTranslation().getDistance(startPoint.getTranslation());
+    var distanceToEnd = lookahead.getTranslation().getDistance(endPoint.getTranslation());
+    var lookaheadOutside =
+        !((lookahead.getX() - startPoint.getX()) * (lookahead.getX() - endPoint.getX()) <= 0
+            && (lookahead.getY() - startPoint.getY()) * (lookahead.getY() - endPoint.getY()) <= 0);
+    if (lookaheadOutside) {
+      if (distanceToEnd > distanceToStart) {
+        return startPoint;
+      }
+    }
+    return lookahead;
   }
 
   private Rotation2d getPointToPointInterpolatedRotation(
