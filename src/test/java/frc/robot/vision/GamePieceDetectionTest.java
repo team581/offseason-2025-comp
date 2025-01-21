@@ -12,12 +12,6 @@ import frc.robot.vision.game_piece_detection.GamePieceDetectionUtils;
 import org.junit.jupiter.api.Test;
 
 public class GamePieceDetectionTest {
-  private static Translation2d round(Translation2d translation) {
-    return new Translation2d(
-        MathHelpers.roundTo(translation.getX(), 0.01),
-        MathHelpers.roundTo(translation.getY(), 0.01));
-  }
-
   @Test
   public void gamePieceDetectionTest() {
     var result =
@@ -34,6 +28,7 @@ public class GamePieceDetectionTest {
             11.31,
             new Pose2d(),
             new Pose3d(0, 0, 5, new Rotation3d(0, Units.degreesToRadians(180 + 90), 0)));
-    assertEquals(round(new Translation2d(1.0, 0.0)), round(result));
+    assertEquals(
+        MathHelpers.roundTo(new Translation2d(1.0, 0.0), 0.01), MathHelpers.roundTo(result, 0.01));
   }
 }
