@@ -671,9 +671,9 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     if (DriverStation.isDisabled()) {
-      if (topPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
-          || bottomCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
-          || backwardsTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+      if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
+          || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
+          || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
         lights.setState(LightsState.ERROR);
       } else if (wrist.getState() == WristState.PRE_MATCH_HOMING
           || elevator.getState() == ElevatorState.PRE_MATCH_HOMING) {
