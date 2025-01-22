@@ -30,12 +30,12 @@ public record RobotConfig(
 
   public record IntakeConfig(
       String canBusName,
-      int leftMotorID,
-      int rightMotorID,
-      Debouncer leftDebouncer,
-      Debouncer rightDebouncer,
-      TalonFXConfiguration leftMotorConfig,
-      TalonFXConfiguration rightMotorConfig) {}
+      int topMotorID,
+      int bottomMotorID,
+      Debouncer topDebouncer,
+      Debouncer bottomDebouncer,
+      TalonFXConfiguration topMotorConfig,
+      TalonFXConfiguration bottomMotorConfig) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,
