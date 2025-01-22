@@ -94,6 +94,5 @@ public class PivotSubsystem extends StateMachine<PivotState> {
     DogLog.log("Pivot/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Pivot/Position", motor.getPosition().getValueAsDouble() * 360);
     DogLog.log("Pivot/PositionAngle", motorAngle);
-
   }
 }

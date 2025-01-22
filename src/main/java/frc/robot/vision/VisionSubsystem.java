@@ -70,11 +70,11 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    elevatorPurpleLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    elevatorPurpleLimelight.sendImuData(
+        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     frontCoralLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    backTagLimelight.sendImuData(
-        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
 
     DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
