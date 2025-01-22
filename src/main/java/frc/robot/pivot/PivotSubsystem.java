@@ -36,15 +36,14 @@ public class PivotSubsystem extends StateMachine<PivotState> {
         // TODO: Set homing voltage to like 2ish
         motor.setVoltage(0);
       }
-      case STOWED -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(PivotState.STOWED.angle)));
-      }
       case CORAL_SCORE -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(getScoreDirection())));
       }
-      default -> {}
+      default -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(getState().angle)));
+      }
     }
   }
 
