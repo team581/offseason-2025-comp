@@ -11,11 +11,11 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class ThreePiece1DEC extends BaseAuto {
+public class ThreePiece1EDC extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
-  public ThreePiece1DEC(RobotManager robotManager, Trailblazer trailblazer) {
+  public ThreePiece1EDC(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
