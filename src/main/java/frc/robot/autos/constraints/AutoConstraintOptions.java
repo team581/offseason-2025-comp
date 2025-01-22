@@ -1,8 +1,6 @@
 package frc.robot.autos.constraints;
 
 public record AutoConstraintOptions(
-    /** Whether collision avoidance should be enabled. */
-    boolean collisionAvoidance,
     /** Max linear velocity allowed in meters per second. Set to 0 to disable. */
     double maxLinearVelocity,
     /** Max angular velocity allowed in radians per second. Set to 0 to disable. */
@@ -13,12 +11,11 @@ public record AutoConstraintOptions(
     double maxAngularAcceleration) {
   /** Default constraint options to use if no point or segment specific options are set. */
   public AutoConstraintOptions() {
-    this(false, 4.75, 71.5, 8.5, 35.2);
+    this(4.75, 71.5, 8.5, 35.2);
   }
 
   public AutoConstraintOptions withCollisionAvoidance(boolean collisionAvoidance) {
     return new AutoConstraintOptions(
-        collisionAvoidance,
         maxLinearVelocity(),
         maxAngularVelocity(),
         maxLinearAcceleration(),
@@ -27,37 +24,21 @@ public record AutoConstraintOptions(
 
   public AutoConstraintOptions withMaxLinearVelocity(double maxLinearVelocity) {
     return new AutoConstraintOptions(
-        collisionAvoidance(),
-        maxLinearVelocity,
-        maxAngularVelocity(),
-        maxLinearAcceleration(),
-        maxAngularAcceleration());
+        maxLinearVelocity, maxAngularVelocity(), maxLinearAcceleration(), maxAngularAcceleration());
   }
 
   public AutoConstraintOptions withMaxAngularVelocity(double maxAngularVelocity) {
     return new AutoConstraintOptions(
-        collisionAvoidance(),
-        maxLinearVelocity(),
-        maxAngularVelocity,
-        maxLinearAcceleration(),
-        maxAngularAcceleration());
+        maxLinearVelocity(), maxAngularVelocity, maxLinearAcceleration(), maxAngularAcceleration());
   }
 
   public AutoConstraintOptions withMaxLinearAcceleration(double maxLinearAcceleration) {
     return new AutoConstraintOptions(
-        collisionAvoidance(),
-        maxLinearVelocity(),
-        maxAngularVelocity(),
-        maxLinearAcceleration,
-        maxAngularAcceleration());
+        maxLinearVelocity(), maxAngularVelocity(), maxLinearAcceleration, maxAngularAcceleration());
   }
 
   public AutoConstraintOptions withMaxAngularAcceleration(double maxAngularAcceleration) {
     return new AutoConstraintOptions(
-        collisionAvoidance(),
-        maxLinearVelocity(),
-        maxAngularVelocity(),
-        maxLinearAcceleration(),
-        maxAngularAcceleration);
+        maxLinearVelocity(), maxAngularVelocity(), maxLinearAcceleration(), maxAngularAcceleration);
   }
 }

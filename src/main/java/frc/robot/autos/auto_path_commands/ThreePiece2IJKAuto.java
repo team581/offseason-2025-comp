@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class ThreePiece2IJKAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(false, 5, 500, 8.0, 5000);
+      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
   public ThreePiece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -27,11 +27,12 @@ public class ThreePiece2IJKAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print("Red Three Piece 2 IJK"),
+        Commands.print("Red Three Piece 2 IJK Auto"),
         Commands.runOnce(
             () ->
                 robotManager.localization.resetPose(
                     new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
+        actions.reHomeCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
@@ -53,8 +54,8 @@ public class ThreePiece2IJKAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.202, 1.568, Rotation2d.fromDegrees(131.81))),
-                new AutoPoint(new Pose2d(15.902, 0.553, Rotation2d.fromDegrees(127.71))))),
+                new AutoPoint(new Pose2d(14.391, 1.568, Rotation2d.fromDegrees(135.88))),
+                new AutoPoint(new Pose2d(15.802, 0.553, Rotation2d.fromDegrees(127.71))))),
         actions.intakeStationCommand(),
         trailblazer.followSegment(
             new AutoSegment(
