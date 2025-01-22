@@ -36,7 +36,9 @@ public class ThreePiece1DEC extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
+                new AutoPoint(new Pose2d(10.289, 3.047, Rotation2d.fromDegrees(0.0))),
                 new AutoPoint(new Pose2d(11.075, 4.443, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(11.672, 4.88, Rotation2d.fromDegrees(-32.95))),
                 new AutoPoint(new Pose2d(12.493, 5.085, Rotation2d.fromDegrees(-58.45))))),
         Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
         trailblazer.followSegment(
