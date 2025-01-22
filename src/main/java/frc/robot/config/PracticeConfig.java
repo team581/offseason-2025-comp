@@ -119,7 +119,7 @@ class PracticeConfig {
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64/8)*(50/18)*(36/12)))
+                          .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)

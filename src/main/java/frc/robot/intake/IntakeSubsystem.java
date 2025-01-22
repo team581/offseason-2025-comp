@@ -10,7 +10,6 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
 
-
   private boolean topSensorRaw = false;
   private boolean bottomSensorRaw = false;
   private boolean topSensorDebounced = false;
@@ -19,8 +18,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean bottomMotorGP = false;
   private boolean hasGP = false;
 
-  public IntakeSubsystem(
-      TalonFX topMotor, TalonFX bottomMotor) {
+  public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
 
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
@@ -101,9 +99,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/TopMotor/StatorCurrent", topMotor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Intake/TopMotor/SupplyCurrent", topMotor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Intake/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/BottomMotor/StatorCurrent", bottomMotor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Intake/BottomMotor/SupplyCurrent", bottomMotor.getSupplyCurrent().getValueAsDouble());
-    DogLog.log("Intake/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log(
+        "Intake/BottomMotor/StatorCurrent", bottomMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log(
+        "Intake/BottomMotor/SupplyCurrent", bottomMotor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log(
+        "Intake/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Intake/Sensors/TopSensorRaw", topSensorRaw);
     DogLog.log("Intake/Sensors/BottomSensorRaw", bottomSensorRaw);
     DogLog.log("Intake/Sensors/TopSensorDebounced", topSensorDebounced);

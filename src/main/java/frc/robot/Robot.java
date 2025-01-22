@@ -66,9 +66,7 @@ public class Robot extends TimedRobot {
       new RumbleControllerSubsystem(hardware.driverController, false);
 
   private final IntakeSubsystem intake =
-      new IntakeSubsystem(
-          hardware.intakeTopMotor,
-          hardware.intakeBottomMotor);
+      new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor);
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
