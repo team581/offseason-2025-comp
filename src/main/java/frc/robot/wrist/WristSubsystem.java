@@ -20,10 +20,11 @@ public class WristSubsystem extends StateMachine<WristState> {
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
-  private final PositionVoltage motionMagicRequest = new PositionVoltage(0).withEnableFOC(false);
+  private final PositionVoltage motionMagicRequest =
+      new PositionVoltage(0).withEnableFOC(false).withOverrideBrakeDurNeutral(true);
 
   // private final PositionVoltage pidRequest =
-  //  new PositionVoltage(0).withEnableFOC(false);
+  //  new PositionVoltage(0).withEnableFOC(false).withOverrideBrakeDurNeutral(true);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
