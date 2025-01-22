@@ -40,26 +40,26 @@ public class Robot extends TimedRobot {
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight topPurpleLimelight =
+  private final Limelight elevatorPurpleLimelight =
       new Limelight(
-          "top",
+          "elev",
           LimelightState.PURPLE,
-          RobotConfig.get().vision().interpolatedVisionSet().topPurpleSet);
-  private final Limelight bottomCoralLimelight =
+          RobotConfig.get().vision().interpolatedVisionSet().elevatorPurpleSet);
+  private final Limelight frontCoralLimelight =
       new Limelight(
-          "bottom",
+          "front",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().bottomCoralSet);
-  private final Limelight backwardsTagLimelight =
+          RobotConfig.get().vision().interpolatedVisionSet().frontCoralSet);
+  private final Limelight backTagLimelight =
       new Limelight(
           "back",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().backwardsTagSet);
+          RobotConfig.get().vision().interpolatedVisionSet().backTagSet);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, topPurpleLimelight, bottomCoralLimelight, backwardsTagLimelight);
+      new VisionSubsystem(imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
-  private final Purple purple = new Purple(topPurpleLimelight);
+  private final Purple purple = new Purple(elevatorPurpleLimelight);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =
@@ -83,9 +83,9 @@ public class Robot extends TimedRobot {
           imu,
           swerve,
           localization,
-          topPurpleLimelight,
-          bottomCoralLimelight,
-          backwardsTagLimelight,
+          elevatorPurpleLimelight,
+          frontCoralLimelight,
+          backTagLimelight,
           lights,
           purple,
           climber);

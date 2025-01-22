@@ -151,7 +151,7 @@ class PracticeConfig {
                       new FeedbackConfigs().withSensorToMechanismRatio((60 / 8) * (60 / 15)))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(2).withPeakReverseVoltage(2))
+                      new VoltageConfigs().withPeakForwardVoltage(2).withPeakReverseVoltage(-2))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
