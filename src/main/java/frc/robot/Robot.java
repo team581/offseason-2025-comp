@@ -66,7 +66,10 @@ public class Robot extends TimedRobot {
       new RumbleControllerSubsystem(hardware.driverController, false);
 
   private final IntakeSubsystem intake =
-      new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor);
+      new IntakeSubsystem(
+          hardware.intakeTopMotor,
+          hardware.intakeBottomMotor);
+
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
@@ -137,6 +140,14 @@ public class Robot extends TimedRobot {
     Stopwatch.getInstance().start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
+
+    // Memory logging
+    DogLog.log("Debug/Memory/Total", Runtime.getRuntime().totalMemory());
+    DogLog.log("Debug/Memory/Free", Runtime.getRuntime().freeMemory());
+    DogLog.log("Debug/Memory/Max", Runtime.getRuntime().maxMemory());
+    DogLog.log(
+        "Debug/Memory/Used",
+        Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
   }
 
   @Override
