@@ -12,9 +12,9 @@ import java.util.List;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
-  private final Limelight topPurpleLimelight;
-  private final Limelight bottomCoralLimelight;
-  private final Limelight backwardsTagLimelight;
+  private final Limelight elevatorPurpleLimelight;
+  private final Limelight frontCoralLimelight;
+  private final Limelight backTagLimelight;
   private final List<TagResult> interpolatedVisionResult = new ArrayList<>();
   private double robotHeading;
   private double pitch;
@@ -25,14 +25,14 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
   public VisionSubsystem(
       ImuSubsystem imu,
-      Limelight topPurpleLimelight,
-      Limelight bottomCoralLimelight,
-      Limelight backwardsTagLimelight) {
+      Limelight elevatorPurpleLimelight,
+      Limelight frontCoralLimelight,
+      Limelight backTagLimelight) {
     super(SubsystemPriority.VISION, VisionState.DEFAULT_STATE);
     this.imu = imu;
-    this.topPurpleLimelight = topPurpleLimelight;
-    this.bottomCoralLimelight = bottomCoralLimelight;
-    this.backwardsTagLimelight = backwardsTagLimelight;
+    this.elevatorPurpleLimelight = elevatorPurpleLimelight;
+    this.frontCoralLimelight = frontCoralLimelight;
+    this.backTagLimelight = backTagLimelight;
   }
 
   @Override
@@ -46,9 +46,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     interpolatedVisionResult.clear();
-    var maybeTopResult = topPurpleLimelight.getInterpolatedTagResult();
-    var maybeBottomResult = bottomCoralLimelight.getInterpolatedTagResult();
-    var maybeBackResult = backwardsTagLimelight.getInterpolatedTagResult();
+    var maybeTopResult = elevatorPurpleLimelight.getInterpolatedTagResult();
+    var maybeBottomResult = frontCoralLimelight.getInterpolatedTagResult();
+    var maybeBackResult = backTagLimelight.getInterpolatedTagResult();
 
     if (maybeTopResult.isPresent()) {
       interpolatedVisionResult.add(maybeTopResult.get());
@@ -70,28 +70,28 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    topPurpleLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    bottomCoralLimelight.sendImuData(
+    elevatorPurpleLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    frontCoralLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    backwardsTagLimelight.sendImuData(
+    backTagLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
 
     DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
-    DogLog.log("Vision/Left/VisionState", topPurpleLimelight.getCameraHealth());
-    DogLog.log("Vision/Right/VisionState", bottomCoralLimelight.getCameraHealth());
-    DogLog.log("Vision/Back/VisionState", backwardsTagLimelight.getCameraHealth());
+    DogLog.log("Vision/Left/VisionState", elevatorPurpleLimelight.getCameraHealth());
+    DogLog.log("Vision/Right/VisionState", frontCoralLimelight.getCameraHealth());
+    DogLog.log("Vision/Back/VisionState", backTagLimelight.getCameraHealth());
   }
 
   public boolean isAnyTagLimelightOnline() {
-    if ((bottomCoralLimelight.getState() == LimelightState.TAGS
-            || bottomCoralLimelight.getState() == LimelightState.REEF_TAGS)
-        && bottomCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+    if ((frontCoralLimelight.getState() == LimelightState.TAGS
+            || frontCoralLimelight.getState() == LimelightState.REEF_TAGS)
+        && frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
       return false;
     }
-    if ((backwardsTagLimelight.getState() == LimelightState.TAGS
-            || backwardsTagLimelight.getState() == LimelightState.REEF_TAGS)
-        && backwardsTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+    if ((backTagLimelight.getState() == LimelightState.TAGS
+            || backTagLimelight.getState() == LimelightState.REEF_TAGS)
+        && backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
       return false;
     }
 
@@ -99,9 +99,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public CameraHealth getVisionState() {
-    var topStatus = topPurpleLimelight.getCameraHealth();
-    var bottomStatus = bottomCoralLimelight.getCameraHealth();
-    var backStatus = backwardsTagLimelight.getCameraHealth();
+    var topStatus = elevatorPurpleLimelight.getCameraHealth();
+    var bottomStatus = frontCoralLimelight.getCameraHealth();
+    var backStatus = backTagLimelight.getCameraHealth();
 
     if (topStatus == CameraHealth.OFFLINE
         && bottomStatus == CameraHealth.OFFLINE
@@ -120,9 +120,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
   /** Same as the regular vision state but returns OFFLINE if any camera is offline. */
   public CameraHealth getPessemisticVisionState() {
-    var topStatus = topPurpleLimelight.getCameraHealth();
-    var bottomStatus = bottomCoralLimelight.getCameraHealth();
-    var backStatus = backwardsTagLimelight.getCameraHealth();
+    var topStatus = elevatorPurpleLimelight.getCameraHealth();
+    var bottomStatus = frontCoralLimelight.getCameraHealth();
+    var backStatus = backTagLimelight.getCameraHealth();
 
     if (topStatus == CameraHealth.OFFLINE
         || bottomStatus == CameraHealth.OFFLINE
