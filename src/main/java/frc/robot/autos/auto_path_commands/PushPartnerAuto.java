@@ -37,7 +37,10 @@ public class PushPartnerAuto extends BaseAuto {
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(9.57, 2.893, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.fromDegrees(0.0))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
                 new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.fromDegrees(0.0))),
                 new AutoPoint(new Pose2d(12.529, 2.892, Rotation2d.fromDegrees(56.63))))),
         Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
