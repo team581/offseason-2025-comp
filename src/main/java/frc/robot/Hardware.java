@@ -1,16 +1,13 @@
 package frc.robot;
 
-import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
 
 public class Hardware {
-  public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+  // public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
   public final TalonFX elevatorLeftMotor =
       new TalonFX(
           RobotConfig.get().elevator().leftMotorID(), RobotConfig.get().elevator().canBusName());
@@ -21,13 +18,12 @@ public class Hardware {
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
-  public final TalonFX intakeLeftMotor =
+  public final TalonFX intakeTopMotor =
       new TalonFX(
           RobotConfig.get().intake().leftMotorID(), RobotConfig.get().intake().canBusName());
-  public final TalonFX intakeRightMotor =
+  public final TalonFX intakeBottomMotor =
       new TalonFX(
           RobotConfig.get().intake().rightMotorID(), RobotConfig.get().intake().canBusName());
-  public final CANifier intakeCaNifier = new CANifier(RobotConfig.get().intake().canifierID());
   public final TalonFX wristMotor =
       new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 
@@ -41,5 +37,6 @@ public class Hardware {
       new TalonFX(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
 
   public final CANcoder climberCANcoder =
-      new CANcoder(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
+      new CANcoder(
+          RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
 }

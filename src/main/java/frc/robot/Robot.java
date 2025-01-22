@@ -66,10 +66,7 @@ public class Robot extends TimedRobot {
       new RumbleControllerSubsystem(hardware.driverController, false);
 
   private final IntakeSubsystem intake =
-      new IntakeSubsystem(
-          hardware.intakeLeftMotor,
-          hardware.intakeRightMotor,
-          hardware.intakeCaNifier);
+      new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
@@ -101,7 +98,7 @@ public class Robot extends TimedRobot {
 
     DogLog.setOptions(
         new DogLogOptions().withCaptureNt(false).withNtPublish(RobotConfig.IS_DEVELOPMENT));
-    DogLog.setPdh(hardware.pdh);
+    // DogLog.setPdh(hardware.pdh);
 
     // Record metadata
     DogLog.log("Metadata/ProjectName", BuildConstants.MAVEN_NAME);

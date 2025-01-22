@@ -21,7 +21,7 @@ public class PivotSubsystem extends StateMachine<PivotState> {
       new PositionVoltage(PivotState.STOWED.angle).withEnableFOC(false);
 
   public PivotSubsystem(TalonFX motor, IntakeSubsystem intake) {
-    super(SubsystemPriority.PIVOT, PivotState.HOMING);
+    super(SubsystemPriority.PIVOT, PivotState.STOWED);
 
     motor.getConfigurator().apply(RobotConfig.get().pivot().motorConfig());
 
