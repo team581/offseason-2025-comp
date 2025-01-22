@@ -25,7 +25,6 @@ public record RobotConfig(
       double homingEndHeight,
       double minHeight,
       double maxHeight,
-      double rotationsToDistance,
       double tolerance) {}
 
   public record IntakeConfig(

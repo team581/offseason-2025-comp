@@ -43,18 +43,17 @@ class PracticeConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              ((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
+                              ((50.0 / 14.0) * (50.0 / 36.0)) * (2.0 / 1.0) * (Math.PI * 1.274))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              ((50.0 / 14.0) * (50.0 / 36.0)) * (Math.PI * 1.274))),
+                              ((50.0 / 14.0) * (50.0 / 36.0)) * (2.0 / 1.0) * (Math.PI * 1.274))),
               0,
               0,
               68,
-              0,
               0.25),
           new IntakeConfig(
               RIO_CAN_NAME,
@@ -120,11 +119,13 @@ class PracticeConfig {
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio(66.0 + 2.0 / 3.0)) // 64/8*50/18*36/12
+                          .withSensorToMechanismRatio((64/8)*(50/18)*(36/12)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(25.0)),
+                          .withStatorCurrentLimitEnable(true)
+                          .withSupplyCurrentLimit(25.0)
+                          .withStatorCurrentLimit(25.0)),
               0,
               180),
           new PivotConfig(

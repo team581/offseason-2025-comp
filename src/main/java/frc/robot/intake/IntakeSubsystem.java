@@ -7,9 +7,9 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
+
 
   private boolean topSensorRaw = false;
   private boolean bottomSensorRaw = false;
@@ -21,6 +21,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   public IntakeSubsystem(
       TalonFX topMotor, TalonFX bottomMotor) {
+
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
     topMotor.getConfigurator().apply(RobotConfig.get().intake().topMotorConfig());
