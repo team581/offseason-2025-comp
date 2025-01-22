@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.climber.ClimberState;
@@ -667,6 +668,19 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(getLightStateForScoring());
       }
       default -> {}
+    }
+
+    if (DriverStation.isDisabled()) {
+      if (topPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
+          || bottomCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
+          || backwardsTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+        lights.setState(LightsState.ERROR);
+      } else if (wrist.getState() == WristState.PRE_MATCH_HOMING
+          || elevator.getState() == ElevatorState.PRE_MATCH_HOMING) {
+        lights.setState(LightsState.UNHOMED);
+      } else {
+        lights.setState(LightsState.HEALTHY);
+      }
     }
   }
 
