@@ -1,45 +1,39 @@
 package frc.robot.intake;
 
-import com.ctre.phoenix.CANifier;
-import com.ctre.phoenix.CANifier.GeneralPin;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-  private static final Debouncer LEFT_DEBOUNCER = RobotConfig.get().intake().leftDebouncer();
-  private static final Debouncer RIGHT_DEBOUNCER = RobotConfig.get().intake().rightDebouncer();
 
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
-  private final CANifier canifier;
 
   private boolean leftSensorRaw = false;
   private boolean rightSensorRaw = false;
   private boolean leftSensorDebounced = false;
   private boolean rightSensorDebounced = false;
+  private boolean leftMotorGP = false;
+  private boolean rightMotorGP = false;
   private boolean hasGP = false;
 
   public IntakeSubsystem(
-      TalonFX leftMotor, TalonFX rightMotor, CANifier canifier) {
+      TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
     leftMotor.getConfigurator().apply(RobotConfig.get().intake().leftMotorConfig());
     rightMotor.getConfigurator().apply(RobotConfig.get().intake().rightMotorConfig());
     this.leftMotor = leftMotor;
     this.rightMotor = rightMotor;
-    this.canifier = canifier;
   }
 
   @Override
   protected void collectInputs() {
-    leftSensorRaw = canifier.getGeneralInput(GeneralPin.LIMF);
-    leftSensorDebounced = LEFT_DEBOUNCER.calculate(leftSensorRaw);
-    rightSensorDebounced = RIGHT_DEBOUNCER.calculate(rightSensorRaw);
-    hasGP = leftSensorDebounced || rightSensorDebounced;
+    leftMotorGP = (leftMotor.getStatorCurrent().getValueAsDouble() > 10);
+    rightMotorGP = (rightMotor.getStatorCurrent().getValueAsDouble() > 10);
+    hasGP = leftMotorGP || rightMotorGP;
   }
 
   public boolean getLeftSensor() {

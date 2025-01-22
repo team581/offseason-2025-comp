@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,7 +26,6 @@ public class Hardware {
   public final TalonFX intakeRightMotor =
       new TalonFX(
           RobotConfig.get().intake().rightMotorID(), RobotConfig.get().intake().canBusName());
-  public final CANifier intakeCaNifier = new CANifier(RobotConfig.get().intake().canifierID());
   public final TalonFX wristMotor =
       new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 
