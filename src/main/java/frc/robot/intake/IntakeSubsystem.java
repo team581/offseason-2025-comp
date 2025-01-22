@@ -7,7 +7,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
