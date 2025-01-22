@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class ThreePiece1DEC extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(false, 4.75, 71.5, 8.5, 35.2);
+      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
   public ThreePiece1DEC(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -27,11 +27,12 @@ public class ThreePiece1DEC extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print(""),
+        Commands.print("Red Three 1 DEC Auto"),
         Commands.runOnce(
             () ->
                 robotManager.localization.resetPose(
                     new Pose2d(10.289, 3.047, Rotation2d.fromDegrees(0.0)))),
+        actions.reHomeCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,

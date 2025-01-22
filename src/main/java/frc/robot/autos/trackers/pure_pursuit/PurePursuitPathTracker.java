@@ -50,28 +50,23 @@ public class PurePursuitPathTracker implements PathTracker {
       startingRobotPose = currentPose;
       startingRobotPoseUpdated = true;
     }
-    DogLog.log(
-        "Autos/Trailblazer/PurePursuitPathTracker/CurrentPointIndex", getCurrentPointIndex());
+    DogLog.log("Autos/PurePursuitPathTracker/CurrentPointIndex", getCurrentPointIndex());
 
     DogLog.log(
-        "Autos/Trailblazer/PurePursuitPathTracker/CurrentLookaheadPointIndex",
-        getCurrentLookaheadPointIndex());
-    DogLog.log(
-        "Autos/Trailblazer/PurePursuitPathTracker/StartingRobotPose/Point", startingRobotPose);
-    DogLog.log(
-        "Autos/Trailblazer/PurePursuitPathTracker/StartingRobotPose/Updated",
-        startingRobotPoseUpdated);
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/LookaheadDistance", lookaheadDistance);
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Waypoints/Start", lastTargetWaypoint);
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Waypoints/End", currentTargetWaypoint);
+        "Autos/PurePursuitPathTracker/CurrentLookaheadPointIndex", getCurrentLookaheadPointIndex());
+    DogLog.log("Autos/PurePursuitPathTracker/StartingRobotPose/Point", startingRobotPose);
+    DogLog.log("Autos/PurePursuitPathTracker/StartingRobotPose/Updated", startingRobotPoseUpdated);
+    DogLog.log("Autos/PurePursuitPathTracker/LookaheadDistance", lookaheadDistance);
+    DogLog.log("Autos/PurePursuitPathTracker/Waypoints/Start", lastTargetWaypoint);
+    DogLog.log("Autos/PurePursuitPathTracker/Waypoints/End", currentTargetWaypoint);
   }
 
   @Override
   public Pose2d getTargetPose() {
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
+    DogLog.log("Autos/PurePursuitPathTracker/Size", points.size());
     updateLookahead();
     updateRotation();
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
+    DogLog.log("Autos/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
       return new Pose2d();
     }
