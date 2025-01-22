@@ -100,8 +100,7 @@ public class WristSubsystem extends StateMachine<WristState> {
     switch (newState) {
       default -> {
         motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(newState.angle))));
+            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
       }
       // Unused states (currently)
       case COLLISION_AVOIDANCE,
