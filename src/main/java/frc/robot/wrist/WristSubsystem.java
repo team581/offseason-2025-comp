@@ -50,39 +50,9 @@ public class WristSubsystem extends StateMachine<WristState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      case ALGAE_BACKWARD_NET ->
-          MathUtil.isNear(WristState.ALGAE_BACKWARD_NET.angle, motorAngle, 1);
-      case ALGAE_FORWARD_NET -> MathUtil.isNear(WristState.ALGAE_FORWARD_NET.angle, motorAngle, 1);
-      case ALGAE_PROCESSOR -> MathUtil.isNear(WristState.ALGAE_PROCESSOR.angle, motorAngle, 1);
-      case CORAL_SCORE_LINEUP_L1 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L1.angle, motorAngle, 1);
-      case CORAL_SCORE_LINEUP_L2 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L2.angle, motorAngle, 1);
-      case CORAL_SCORE_LINEUP_L3 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L3.angle, motorAngle, 1);
-      case CORAL_SCORE_LINEUP_L4 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_LINEUP_L4.angle, motorAngle, 1);
-
-      case CORAL_SCORE_PLACING_L1 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L1.angle, motorAngle, 1);
-      case CORAL_SCORE_PLACING_L2 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L2.angle, motorAngle, 1);
-      case CORAL_SCORE_PLACING_L3 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L3.angle, motorAngle, 1);
-      case CORAL_SCORE_PLACING_L4 ->
-          MathUtil.isNear(WristState.CORAL_SCORE_PLACING_L4.angle, motorAngle, 1);
-
-      case GROUND_ALGAE_INTAKE ->
-          MathUtil.isNear(WristState.GROUND_ALGAE_INTAKE.angle, motorAngle, 1);
-      case GROUND_CORAL_INTAKE ->
-          MathUtil.isNear(WristState.GROUND_CORAL_INTAKE.angle, motorAngle, 1);
-      case IDLE -> MathUtil.isNear(WristState.IDLE.angle, motorAngle, 1);
-
+      default -> MathUtil.isNear(getState().angle, motorAngle, 1);
+      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1);
       case PRE_MATCH_HOMING -> true;
-      case INTAKING_CORAL_STATION ->
-          MathUtil.isNear(WristState.INTAKING_CORAL_STATION.angle, motorAngle, 1);
-      case UNJAM -> MathUtil.isNear(WristState.UNJAM.angle, motorAngle, 1);
-      default -> false;
     };
   }
 
@@ -102,18 +72,11 @@ public class WristSubsystem extends StateMachine<WristState> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
       }
-      // Unused states (currently)
-      case COLLISION_AVOIDANCE,
-          CORAL_INTAKE_L1,
-          CORAL_INTAKE_L2,
-          CORAL_INTAKE_L3,
-          CORAL_INTAKE_L4,
-          ALGAE_INTAKE_L2,
-          ALGAE_INTAKE_L3,
-          DISLODGE_L2_HIGH,
-          DISLODGE_L2_LOW,
-          DISLODGE_L3_HIGH,
-          DISLODGE_L3_LOW -> {}
+      case COLLISION_AVOIDANCE -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+      }
     }
   }
 
