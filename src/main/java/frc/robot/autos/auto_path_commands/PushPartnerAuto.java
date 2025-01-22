@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class PushPartnerAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(false, 5, 500, 8.0, 5000);
+      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
   public PushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -32,6 +32,7 @@ public class PushPartnerAuto extends BaseAuto {
             () ->
                 robotManager.localization.resetPose(
                     new Pose2d(9.57, 2.893, Rotation2d.fromDegrees(0.0)))),
+        actions.reHomeCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
