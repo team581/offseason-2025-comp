@@ -137,6 +137,14 @@ public class Robot extends TimedRobot {
     Stopwatch.getInstance().start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
+
+    // Memory logging
+    DogLog.log("Debug/Memory/Total", Runtime.getRuntime().totalMemory());
+    DogLog.log("Debug/Memory/Free", Runtime.getRuntime().freeMemory());
+    DogLog.log("Debug/Memory/Max", Runtime.getRuntime().maxMemory());
+    DogLog.log(
+        "Debug/Memory/Used",
+        Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
   }
 
   @Override
