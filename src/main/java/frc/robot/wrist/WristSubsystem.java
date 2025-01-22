@@ -1,5 +1,6 @@
 package frc.robot.wrist;
 
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,8 +18,9 @@ public class WristSubsystem extends StateMachine<WristState> {
   private double lowestSeenAngle = Double.MAX_VALUE;
   private double highestSeenAngle = Double.MIN_VALUE;
   private double collisionAvoidanceGoal;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
+  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 180.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private final CoastOut coastNeutralRequest = new CoastOut();
 
   private final PositionVoltage motionMagicRequest =
       new PositionVoltage(0).withEnableFOC(false).withOverrideBrakeDurNeutral(true);
@@ -77,6 +79,9 @@ public class WristSubsystem extends StateMachine<WristState> {
         motor.setControl(
             motionMagicRequest.withPosition(
                 Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+      }
+      case PRE_MATCH_HOMING -> {
+        motor.setControl(coastNeutralRequest);
       }
     }
   }

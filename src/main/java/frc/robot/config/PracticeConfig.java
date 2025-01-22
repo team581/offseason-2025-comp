@@ -140,7 +140,7 @@ class PracticeConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(25.0)),
-              0,
+              -59.5,
               180),
           new PivotConfig(
               RIO_CAN_NAME,
