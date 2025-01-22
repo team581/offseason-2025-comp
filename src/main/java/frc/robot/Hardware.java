@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
 
 public class Hardware {
-  public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+  // public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
   public final TalonFX elevatorLeftMotor =
       new TalonFX(
           RobotConfig.get().elevator().leftMotorID(), RobotConfig.get().elevator().canBusName());
