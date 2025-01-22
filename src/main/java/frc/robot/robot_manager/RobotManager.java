@@ -675,8 +675,7 @@ public class RobotManager extends StateMachine<RobotState> {
           || bottomCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
           || backwardsTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
         lights.setState(LightsState.ERROR);
-      } else if (wrist.getState() == WristState.PRE_MATCH_HOMING
-          || elevator.getState() == ElevatorState.PRE_MATCH_HOMING) {
+      } else if (!wrist.rangeOfMotionGood()) {
         lights.setState(LightsState.UNHOMED);
       } else {
         lights.setState(LightsState.HEALTHY);

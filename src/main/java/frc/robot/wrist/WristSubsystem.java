@@ -94,7 +94,7 @@ public class WristSubsystem extends StateMachine<WristState> {
 
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
-        if ((highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE) {
+        if (rangeOfMotionGood()) {
           if (DriverStation.isEnabled()) {
             motor.setControl(
                 motionMagicRequest.withPosition(
@@ -115,6 +115,10 @@ public class WristSubsystem extends StateMachine<WristState> {
 
       default -> {}
     }
+  }
+
+  public boolean rangeOfMotionGood() {
+    return (highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
   private static double clamp(double armAngle) {
