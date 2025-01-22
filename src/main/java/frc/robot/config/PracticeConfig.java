@@ -41,19 +41,27 @@ class PracticeConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Brake))
+                          .withNeutralMode(NeutralModeValue.Coast))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              ((50.0 / 14.0) * (50.0 / 36.0)) * (2.0 / 1.0) * (Math.PI * 1.274))),
+                              1
+                                  / ((14.0 / 50.0)
+                                      * (36.0 / 50.0)
+                                      * (2.0 / 1.0)
+                                      * (Math.PI * 1.274)))),
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              ((50.0 / 14.0) * (50.0 / 36.0)) * (2.0 / 1.0) * (Math.PI * 1.274))),
+                              1
+                                  / ((14.0 / 50.0)
+                                      * (36.0 / 50.0)
+                                      * (2.0 / 1.0)
+                                      * (Math.PI * 1.274)))),
               0,
               0,
               68,
@@ -118,8 +126,10 @@ class PracticeConfig {
               RIO_CAN_NAME,
               22,
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake)
-                  .withInverted(InvertedValue.Clockwise_Positive))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withNeutralMode(NeutralModeValue.Brake)
+                          .withInverted(InvertedValue.Clockwise_Positive))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
