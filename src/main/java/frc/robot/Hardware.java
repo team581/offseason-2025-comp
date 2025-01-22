@@ -27,9 +27,7 @@ public class Hardware {
   public final TalonFX intakeRightMotor =
       new TalonFX(
           RobotConfig.get().intake().rightMotorID(), RobotConfig.get().intake().canBusName());
-  public final CANifier intakeLeftSensor = new CANifier(RobotConfig.get().intake().leftSensorID());
-  public final CANifier intakeRightSensor =
-      new CANifier(RobotConfig.get().intake().rightSensorID());
+  public final CANifier intakeCaNifier = new CANifier(RobotConfig.get().intake().canifierID());
   public final TalonFX wristMotor =
       new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 

@@ -69,8 +69,7 @@ public class Robot extends TimedRobot {
       new IntakeSubsystem(
           hardware.intakeLeftMotor,
           hardware.intakeRightMotor,
-          hardware.intakeLeftSensor,
-          hardware.intakeRightSensor);
+          hardware.intakeCaNifier);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);

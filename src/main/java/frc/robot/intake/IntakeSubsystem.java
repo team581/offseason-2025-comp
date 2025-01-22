@@ -15,8 +15,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
-  private final CANifier leftSensor;
-  private final CANifier rightSensor;
+  private final CANifier canifier;
 
   private boolean leftSensorRaw = false;
   private boolean rightSensorRaw = false;
@@ -25,21 +24,19 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean hasGP = false;
 
   public IntakeSubsystem(
-      TalonFX leftMotor, TalonFX rightMotor, CANifier leftSensor, CANifier rightSensor) {
+      TalonFX leftMotor, TalonFX rightMotor, CANifier canifier) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
     leftMotor.getConfigurator().apply(RobotConfig.get().intake().leftMotorConfig());
     rightMotor.getConfigurator().apply(RobotConfig.get().intake().rightMotorConfig());
     this.leftMotor = leftMotor;
     this.rightMotor = rightMotor;
-    this.leftSensor = leftSensor;
-    this.rightSensor = rightSensor;
+    this.canifier = canifier;
   }
 
   @Override
   protected void collectInputs() {
-    leftSensorRaw = leftSensor.getGeneralInput(GeneralPin.LIMF);
-    rightSensorRaw = rightSensor.getGeneralInput(GeneralPin.LIMF);
+    leftSensorRaw = canifier.getGeneralInput(GeneralPin.LIMF);
     leftSensorDebounced = LEFT_DEBOUNCER.calculate(leftSensorRaw);
     rightSensorDebounced = RIGHT_DEBOUNCER.calculate(rightSensorRaw);
     hasGP = leftSensorDebounced || rightSensorDebounced;
