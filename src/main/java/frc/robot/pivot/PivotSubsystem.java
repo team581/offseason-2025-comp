@@ -93,6 +93,8 @@ public class PivotSubsystem extends StateMachine<PivotState> {
     super.robotPeriodic();
     DogLog.log("Pivot/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Pivot/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Pivot/Position", motor.getPosition().getValueAsDouble());
+    DogLog.log("Pivot/Position", motor.getPosition().getValueAsDouble() * 360);
+    DogLog.log("Pivot/PositionAngle", motorAngle);
+
   }
 }
