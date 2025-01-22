@@ -38,7 +38,10 @@ class PracticeConfig {
               16,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive).withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
                   .withFeedback(
                       new FeedbackConfigs()
