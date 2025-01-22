@@ -67,7 +67,7 @@ public class PivotSubsystem extends StateMachine<PivotState> {
   }
 
   private double getScoreDirection() {
-    if (!intake.getRightSensor()) {
+    if (!intake.getBottomSensor()) {
       return 90;
     }
 

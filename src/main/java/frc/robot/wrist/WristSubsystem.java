@@ -98,88 +98,23 @@ public class WristSubsystem extends StateMachine<WristState> {
   @Override
   protected void afterTransition(WristState newState) {
     switch (newState) {
-      case ALGAE_BACKWARD_NET -> {
+      default -> {
         motor.setControl(
             motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.ALGAE_BACKWARD_NET.angle))));
+                Units.degreesToRotations(clamp(newState.angle))));
       }
-
-      case ALGAE_FORWARD_NET -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.ALGAE_FORWARD_NET.angle))));
-      }
-      case ALGAE_PROCESSOR -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.ALGAE_PROCESSOR.angle))));
-      }
-      case CORAL_SCORE_LINEUP_L1 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L1.angle))));
-      }
-      case CORAL_SCORE_PLACING_L1 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L1.angle))));
-      }
-      case CORAL_SCORE_LINEUP_L2 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L2.angle))));
-      }
-      case CORAL_SCORE_PLACING_L2 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L2.angle))));
-      }
-      case CORAL_SCORE_LINEUP_L3 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L3.angle))));
-      }
-      case CORAL_SCORE_PLACING_L3 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L3.angle))));
-      }
-      case CORAL_SCORE_LINEUP_L4 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_LINEUP_L4.angle))));
-      }
-      case CORAL_SCORE_PLACING_L4 -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.CORAL_SCORE_PLACING_L4.angle))));
-      }
-      case GROUND_ALGAE_INTAKE -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.GROUND_ALGAE_INTAKE.angle))));
-      }
-      case GROUND_CORAL_INTAKE -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.GROUND_CORAL_INTAKE.angle))));
-      }
-      case IDLE -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.IDLE.angle))));
-      }
-      case INTAKING_CORAL_STATION -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.INTAKING_CORAL_STATION.angle))));
-      }
-      case UNJAM -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(clamp(WristState.UNJAM.angle))));
-      }
-      default -> {}
+      // Unused states (currently)
+      case COLLISION_AVOIDANCE,
+          CORAL_INTAKE_L1,
+          CORAL_INTAKE_L2,
+          CORAL_INTAKE_L3,
+          CORAL_INTAKE_L4,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L3,
+          DISLODGE_L2_HIGH,
+          DISLODGE_L2_LOW,
+          DISLODGE_L3_HIGH,
+          DISLODGE_L3_LOW -> {}
     }
   }
 
