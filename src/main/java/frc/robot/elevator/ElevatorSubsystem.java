@@ -1,6 +1,6 @@
 package frc.robot.elevator;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -20,7 +20,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
-  private final PositionVoltage positionRequest = new PositionVoltage(ElevatorState.STOWED.height);
+  private final MotionMagicVoltage positionRequest =
+      new MotionMagicVoltage(ElevatorState.STOWED.height);
 
   // Homing
   private double lowestSeenHeight = 0.0;

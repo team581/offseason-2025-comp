@@ -44,7 +44,16 @@ class PracticeConfig {
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
-                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(1.0)
+                          .withKV(0)
+                          .withKG(0.4)
+                          .withGravityType(GravityTypeValue.Elevator_Static))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(250.0)
+                          .withMotionMagicCruiseVelocity(250.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -55,7 +64,16 @@ class PracticeConfig {
                                       * (Math.PI * 1.274)))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
-                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(1.0)
+                          .withKV(0)
+                          .withKG(0.4)
+                          .withGravityType(GravityTypeValue.Elevator_Static))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(250.0)
+                          .withMotionMagicCruiseVelocity(250.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -66,7 +84,7 @@ class PracticeConfig {
                                       * (Math.PI * 1.274)))),
               0,
               0,
-              68,
+              58,
               0.25),
           new IntakeConfig(
               RIO_CAN_NAME,
