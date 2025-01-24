@@ -64,7 +64,10 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
       if (visionTimestamp == lastAddedVisionTimestamp) {
         // Don't add the same vision pose over and over
+        DogLog.timestamp("Vision/Debug/TimestampEqualToLastAdded");
+
       } else {
+        DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
         swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
         lastAddedVisionTimestamp = visionTimestamp;
       }
