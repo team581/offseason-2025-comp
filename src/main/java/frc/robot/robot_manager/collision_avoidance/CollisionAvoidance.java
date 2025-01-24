@@ -24,8 +24,6 @@ public class CollisionAvoidance {
       SuperstructurePosition current, SuperstructurePosition goal) {
     var possibleGoalPoints = List.of(goal, safePoint1, safePoint2);
 
-    // possibleGoalPoints.set(2, safePoint2);
-    //  getGoalPoint(possibleGoalPoints, angleHeightToPose(wristAngle, elevatorHeight))
     DogLog.log("CollisionAvoidance/isInBadZone", isInBadZone(current));
     return getGoalPoint(possibleGoalPoints, current, goal);
   }
@@ -33,51 +31,58 @@ public class CollisionAvoidance {
   private CollisionAvoidance() {}
 
   private static boolean isInBadZone(SuperstructurePosition current) {
-    Translation2d pose = angleHeightToPose(current.wristAngle(), current.elevatorHeight());
+    Translation2d translation =
+        angleHeightToTranslation(current.wristAngle(), current.elevatorHeight());
     Translation2d bottomCorner =
-        angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight());
+        angleHeightToTranslation(corners[0].wristAngle(), corners[0].elevatorHeight());
     Translation2d topCorner =
-        angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight());
-    if (bottomCorner.getX() < pose.getX()
-        && pose.getX() < topCorner.getX()
-        && bottomCorner.getY() < pose.getY()
-        && pose.getY() < topCorner.getY()) {
+        angleHeightToTranslation(corners[1].wristAngle(), corners[1].elevatorHeight());
+    if (bottomCorner.getX() < translation.getX()
+        && translation.getX() < topCorner.getX()
+        && bottomCorner.getY() < translation.getY()
+        && translation.getY() < topCorner.getY()) {
       return true;
     }
     return false;
   }
 
-  static boolean collides(Translation2d currentPose, Translation2d goalPose) {
+  static boolean collides(Translation2d currentTranslation, Translation2d goalTranslation) {
 
-    double x2 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getX();
-    double y2 = angleHeightToPose(corners[1].wristAngle(), corners[1].elevatorHeight()).getY();
-    double y1 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getY();
-    double x1 = angleHeightToPose(corners[0].wristAngle(), corners[0].elevatorHeight()).getX();
+    double x2 =
+        angleHeightToTranslation(corners[1].wristAngle(), corners[1].elevatorHeight()).getX();
+    double y2 =
+        angleHeightToTranslation(corners[1].wristAngle(), corners[1].elevatorHeight()).getY();
+    double y1 =
+        angleHeightToTranslation(corners[0].wristAngle(), corners[0].elevatorHeight()).getY();
+    double x1 =
+        angleHeightToTranslation(corners[0].wristAngle(), corners[0].elevatorHeight()).getX();
 
-    double currentPoseX = currentPose.getX();
-    double currentPoseY = currentPose.getY();
+    double currentTranslationX = currentTranslation.getX();
+    double currentTranslationY = currentTranslation.getY();
 
-    double goalPoseX = goalPose.getX();
-    double goalPoseY = goalPose.getY();
+    double goalTranslationX = goalTranslation.getX();
+    double goalTranslationY = goalTranslation.getY();
     // If the points are (x1, y1) and (x2, y2), then the two-point form reads:
 
     // y - y1 = (y2 - y1)/(x2 - x1) × (x - x1).
     Translation2d xInterceptionPoint =
         new Translation2d(
             x2,
-            (goalPoseY - currentPoseY) / (goalPoseX - currentPoseX) * (x2 - currentPoseX)
-                + currentPoseY);
+            (goalTranslationY - currentTranslationY)
+                    / (goalTranslationX - currentTranslationX)
+                    * (x2 - currentTranslationX)
+                + currentTranslationY);
     Translation2d yInterceptionPoint =
         new Translation2d(
-            ((goalPoseX - currentPoseX) * (y1 - currentPoseY)
-                    + (goalPoseY - currentPoseY) * currentPoseX)
-                / (goalPoseY - currentPoseY),
+            ((goalTranslationX - currentTranslationX) * (y1 - currentTranslationY)
+                    + (goalTranslationY - currentTranslationY) * currentTranslationX)
+                / (goalTranslationY - currentTranslationY),
             y1);
     Translation2d y2InterceptionPoint =
         new Translation2d(
-            ((goalPoseX - currentPoseX) * (y2 - currentPoseY)
-                    + (goalPoseY - currentPoseY) * currentPoseX)
-                / (goalPoseY - currentPoseY),
+            ((goalTranslationX - currentTranslationX) * (y2 - currentTranslationY)
+                    + (goalTranslationY - currentTranslationY) * currentTranslationX)
+                / (goalTranslationY - currentTranslationY),
             y2);
 
     if (y1 < xInterceptionPoint.getY() && xInterceptionPoint.getY() < y2
@@ -89,31 +94,17 @@ public class CollisionAvoidance {
     return false;
   }
 
-  static Translation2d angleHeightToPose(double wristAngle, double elevatorHeight) {
+  static Translation2d angleHeightToTranslation(double wristAngle, double elevatorHeight) {
     return new Translation2d(
         Math.cos(Units.degreesToRadians(wristAngle)) * wristLength,
         elevatorHeight + Math.sin(Units.degreesToRadians(wristAngle)) * wristLength);
   }
 
-  // static SuperstructurePosition poseToSuperstructurePosition(Translation2d pose) {
-  //   if(180>wristAngle&&wristAngle>0){
-  //     return new SuperstructurePosition(
-  //       pose.getY()-Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
-  //       Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
-  //   );
-  //   } else{return new SuperstructurePosition(
-  //       pose.getY()+Math.sqrt(Math.pow(wristLength, 2)-Math.pow(pose.getX(), 2)),
-  //       //WE SHOULD ADD INSTEAD OF SUBTRACT IN FRONT OF MATH.SQRT IF we Are BELoW 90 degree but
-  // idk if we are ever below
-  //       -1*Units.radiansToDegrees(Math.acos(pose.getX()/wristLength))
-  //   );}
-
-  // }
-
-  static double distancefromPoses(Translation2d currentPose, Translation2d goalPose) {
+  static double distancefromTranslations(
+      Translation2d currentTranslation, Translation2d goalTranslation) {
     return Math.sqrt(
-        (Math.pow(goalPose.getX() - currentPose.getX(), 2))
-            + (Math.pow(goalPose.getY() - currentPose.getY(), 2)));
+        (Math.pow(goalTranslation.getX() - currentTranslation.getX(), 2))
+            + (Math.pow(goalTranslation.getY() - currentTranslation.getY(), 2)));
   }
 
   private static Optional<SuperstructurePosition> getGoalPoint(
@@ -122,20 +113,20 @@ public class CollisionAvoidance {
       SuperstructurePosition goalSuperstructurePosition) {
     ArrayList<SuperstructurePosition> availablePoints = new ArrayList<SuperstructurePosition>();
     if (!collides(
-        angleHeightToPose(
+        angleHeightToTranslation(
             currentSuperstructurePosition.wristAngle(),
             currentSuperstructurePosition.elevatorHeight()),
-        angleHeightToPose(
+        angleHeightToTranslation(
             goalSuperstructurePosition.wristAngle(),
             goalSuperstructurePosition.elevatorHeight()))) {
       return Optional.empty();
     }
     for (int i = 0; i < possibleGoalPoints.size(); ) {
       if (!collides(
-          angleHeightToPose(
+          angleHeightToTranslation(
               currentSuperstructurePosition.wristAngle(),
               currentSuperstructurePosition.elevatorHeight()),
-          angleHeightToPose(
+          angleHeightToTranslation(
               possibleGoalPoints.get(i).wristAngle(),
               possibleGoalPoints.get(i).elevatorHeight()))) {
         availablePoints.add(possibleGoalPoints.get(i));
@@ -143,27 +134,27 @@ public class CollisionAvoidance {
       i++;
     }
     double closestDistance = Double.MAX_VALUE;
-    SuperstructurePosition closestPossiblePose = new SuperstructurePosition(999, 999);
+    SuperstructurePosition closestPossibleTranslation = new SuperstructurePosition(999, 999);
     for (int w = 0; w < availablePoints.size(); ) {
 
-      if (distancefromPoses(
-              angleHeightToPose(
+      if (distancefromTranslations(
+              angleHeightToTranslation(
                   goalSuperstructurePosition.wristAngle(),
                   goalSuperstructurePosition.elevatorHeight()),
-              angleHeightToPose(
+              angleHeightToTranslation(
                   availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight()))
           < closestDistance) {
         closestDistance =
-            distancefromPoses(
-                angleHeightToPose(
+            distancefromTranslations(
+                angleHeightToTranslation(
                     goalSuperstructurePosition.wristAngle(),
                     goalSuperstructurePosition.elevatorHeight()),
-                angleHeightToPose(
+                angleHeightToTranslation(
                     availablePoints.get(w).wristAngle(), availablePoints.get(w).elevatorHeight()));
-        closestPossiblePose = availablePoints.get(w);
+        closestPossibleTranslation = availablePoints.get(w);
       }
       w++;
     }
-    return Optional.of(closestPossiblePose);
+    return Optional.of(closestPossibleTranslation);
   }
 }

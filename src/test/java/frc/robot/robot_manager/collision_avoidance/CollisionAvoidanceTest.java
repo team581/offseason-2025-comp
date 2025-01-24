@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 public class CollisionAvoidanceTest {
   @Test
   void collidesTest() {
-    var currentPose = CollisionAvoidance.angleHeightToPose(135, 0);
-    var goalPose = CollisionAvoidance.angleHeightToPose(90, 0);
+    var currentPose = CollisionAvoidance.angleHeightToTranslation(135, 0);
+    var goalPose = CollisionAvoidance.angleHeightToTranslation(90, 0);
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = false;
     assertEquals(expected, result);
@@ -20,8 +20,8 @@ public class CollisionAvoidanceTest {
 
   @Test
   void collidesTestFromSuperStructure() {
-    var currentPose = CollisionAvoidance.angleHeightToPose(80, 65);
-    var goalPose = CollisionAvoidance.angleHeightToPose(0, 0);
+    var currentPose = CollisionAvoidance.angleHeightToTranslation(80, 65);
+    var goalPose = CollisionAvoidance.angleHeightToTranslation(0, 0);
 
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = false;
@@ -30,8 +30,8 @@ public class CollisionAvoidanceTest {
 
   @Test
   void collidesTestFromSuperStructure5() {
-    var currentPose = CollisionAvoidance.angleHeightToPose(80, 20);
-    var goalPose = CollisionAvoidance.angleHeightToPose(135, 0);
+    var currentPose = CollisionAvoidance.angleHeightToTranslation(80, 20);
+    var goalPose = CollisionAvoidance.angleHeightToTranslation(135, 0);
 
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = true;
@@ -40,8 +40,8 @@ public class CollisionAvoidanceTest {
 
   @Test
   void collidesTestFromSuperStructure2() {
-    var currentPose = CollisionAvoidance.angleHeightToPose(10, 90);
-    var goalPose = CollisionAvoidance.angleHeightToPose(0, 90);
+    var currentPose = CollisionAvoidance.angleHeightToTranslation(10, 90);
+    var goalPose = CollisionAvoidance.angleHeightToTranslation(0, 90);
 
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = false;
@@ -50,8 +50,8 @@ public class CollisionAvoidanceTest {
 
   @Test
   void collidesTestFromSuperStructure3() {
-    var currentPose = CollisionAvoidance.angleHeightToPose(10, 90);
-    var goalPose = CollisionAvoidance.angleHeightToPose(0, 0);
+    var currentPose = CollisionAvoidance.angleHeightToTranslation(10, 90);
+    var goalPose = CollisionAvoidance.angleHeightToTranslation(0, 0);
 
     var result = CollisionAvoidance.collides(currentPose, goalPose);
     var expected = false;
@@ -64,7 +64,7 @@ public class CollisionAvoidanceTest {
     var wristAngle = 135.0;
     var elevatorHeight = 6.4436508139;
 
-    var result = CollisionAvoidance.angleHeightToPose(wristAngle, elevatorHeight);
+    var result = CollisionAvoidance.angleHeightToTranslation(wristAngle, elevatorHeight);
     var expected = new Translation2d(-15.56, 22.00);
     var roundedResult =
         new Translation2d(
@@ -77,7 +77,7 @@ public class CollisionAvoidanceTest {
     var currentPose = new Translation2d(4.0, 0.0);
     var goalPose = new Translation2d(4.0, 0.0);
 
-    var result = CollisionAvoidance.distancefromPoses(currentPose, goalPose);
+    var result = CollisionAvoidance.distancefromTranslations(currentPose, goalPose);
     var expected = 0;
     assertEquals(expected, result);
   }
