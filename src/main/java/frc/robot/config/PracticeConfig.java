@@ -161,9 +161,9 @@ class PracticeConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(
                       new FeedbackConfigs().withSensorToMechanismRatio((60 / 8) * (60 / 15)))
-                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(2).withPeakReverseVoltage(-2))
+                      new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
