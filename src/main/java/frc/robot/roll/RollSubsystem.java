@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -94,5 +96,14 @@ public class RollSubsystem extends StateMachine<RollState> {
     DogLog.log("Roll/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Roll/Position", motor.getPosition().getValueAsDouble() * 360);
     DogLog.log("Roll/PositionAngle", motorAngle);
+    if (DriverStation.isEnabled()) {
+      if (getState() == RollState.HOMING) {
+        DogLog.logFault("Roll Unhomed", AlertType.kWarning);
+      }
+    } else {
+      if (getState() != RollState.HOMING) {
+        DogLog.clearFault("Roll Unhomed");
+      }
+    }
   }
 }
