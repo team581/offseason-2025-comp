@@ -35,7 +35,6 @@ public class RollSubsystem extends StateMachine<RollState> {
   protected void afterTransition(RollState newState) {
     switch (newState) {
       case HOMING -> {
-        // TODO: Set homing voltage to like 2ish
         motor.setVoltage(1);
       }
       case CORAL_SCORE -> {
@@ -53,7 +52,7 @@ public class RollSubsystem extends StateMachine<RollState> {
   protected RollState getNextState(RollState currentState) {
     if (currentState == RollState.HOMING
         && motorCurrent > RobotConfig.get().roll().homingCurrentThreshold()) {
-      motor.setPosition(RobotConfig.get().roll().homingPosition());
+      motor.setPosition(Units.degreesToRotations(RobotConfig.get().roll().homingPosition()));
       return RollState.STOWED;
     }
 
@@ -94,8 +93,7 @@ public class RollSubsystem extends StateMachine<RollState> {
     super.robotPeriodic();
     DogLog.log("Roll/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Roll/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Roll/Position", motor.getPosition().getValueAsDouble() * 360);
-    DogLog.log("Roll/PositionAngle", motorAngle);
+    DogLog.log("Roll/Position", motorAngle);
     if (DriverStation.isEnabled()) {
       if (getState() == RollState.HOMING) {
         DogLog.logFault("Roll Unhomed", AlertType.kWarning);

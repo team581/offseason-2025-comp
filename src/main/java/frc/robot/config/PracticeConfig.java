@@ -172,8 +172,8 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               // TODO: Slides recommend 10A threshold
-              5,
-              98),
+              10,
+              101),
           new ClimberConfig(
               CANIVORE_NAME,
               24,

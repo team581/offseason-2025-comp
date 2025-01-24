@@ -109,8 +109,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_2_HANGING,
               DISLODGE_ALGAE_L2_WAIT,
               DISLODGE_ALGAE_L3_WAIT,
-              UNJAM,
-              REHOME ->
+              UNJAM ->
           currentState;
 
       case PROCESSOR_PREPARE_TO_SCORE ->
@@ -165,6 +164,7 @@ public class RobotManager extends StateMachine<RobotState> {
           intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
       case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
+      case REHOME -> roll.getState() == RollState.STOWED ? RobotState.IDLE_NO_GP : currentState;
     };
   }
 
