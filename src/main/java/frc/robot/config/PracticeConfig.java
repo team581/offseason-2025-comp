@@ -4,11 +4,13 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.VoltageConfigs;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
@@ -130,7 +132,17 @@ class PracticeConfig {
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
                           .withInverted(InvertedValue.Clockwise_Positive))
-                  .withSlot0(new Slot0Configs().withKP(0.0).withKV(0))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(100.0)
+                          .withKV(0.0)
+                          .withKD(3.0)
+                          .withKG(0.3)
+                          .withGravityType(GravityTypeValue.Arm_Cosine))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(5)
+                          .withMotionMagicCruiseVelocity(10))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))
@@ -139,9 +151,9 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
-                          .withStatorCurrentLimit(25.0)),
-              -59.5,
-              180),
+                          .withStatorCurrentLimit(40.0)),
+              -85.0,
+              200),
           new PivotConfig(
               RIO_CAN_NAME,
               23,

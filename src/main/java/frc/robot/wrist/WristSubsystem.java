@@ -1,7 +1,7 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
@@ -22,11 +22,11 @@ public class WristSubsystem extends StateMachine<WristState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
-  private final PositionVoltage motionMagicRequest =
-      new PositionVoltage(0).withEnableFOC(false).withOverrideBrakeDurNeutral(true);
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   // private final PositionVoltage pidRequest =
-  //  new PositionVoltage(0).withEnableFOC(false).withOverrideBrakeDurNeutral(true);
+  //  new PositionVoltage(0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -101,10 +101,9 @@ public class WristSubsystem extends StateMachine<WristState> {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isEnabled()) {
-            motor.setControl(
-                motionMagicRequest.withPosition(
-                    Units.degreesToRotations(
-                        RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle))));
+            motor.setPosition(
+                Units.degreesToRotations(
+                    RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
 
             setStateFromRequest(WristState.IDLE);
           } else {
