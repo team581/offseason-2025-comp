@@ -9,6 +9,12 @@ public enum InterpolatedVisionDataset {
       new CameraDataset(
           List.of(),
           List.of()),
+          new CameraDataset(
+          List.of(),
+          List.of()),
+          new CameraDataset(
+          List.of(),
+          List.of())
   );
 
   public final CameraDataset elevatorPurpleSet;
