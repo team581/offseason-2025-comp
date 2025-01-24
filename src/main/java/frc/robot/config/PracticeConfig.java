@@ -154,7 +154,6 @@ class PracticeConfig {
                           .withStatorCurrentLimit(40.0)),
               -85.0,
               200),
-
           new RollConfig(
               RIO_CAN_NAME,
               23,
