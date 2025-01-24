@@ -19,11 +19,11 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.pivot.PivotSubsystem;
 import frc.robot.purple.Purple;
 import frc.robot.robot_manager.GamePieceMode;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
       new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor);
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
-  private final PivotSubsystem pivot = new PivotSubsystem(hardware.pivotMotor, intake);
+  private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
           intake,
           wrist,
           elevator,
-          pivot,
+          roll,
           vision,
           imu,
           swerve,

@@ -18,7 +18,7 @@ import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.LightsConfig;
-import frc.robot.config.RobotConfig.PivotConfig;
+import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
@@ -142,7 +142,7 @@ class PracticeConfig {
                           .withStatorCurrentLimit(25.0)),
               -59.5,
               180),
-          new PivotConfig(
+          new RollConfig(
               RIO_CAN_NAME,
               23,
               new TalonFXConfiguration()
@@ -159,8 +159,8 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               // TODO: Slides recommend 10A threshold
-              0,
-              0),
+              5,
+              98),
           new ClimberConfig(
               CANIVORE_NAME,
               24,
