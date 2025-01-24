@@ -51,14 +51,19 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var maybeBackResult = backTagLimelight.getInterpolatedTagResult();
 
     if (maybeTopResult.isPresent()) {
+      DogLog.timestamp("Vision/Debug/ElevatorResultEmpty");
       interpolatedVisionResult.add(maybeTopResult.get());
     }
 
     if (maybeBottomResult.isPresent()) {
+      DogLog.timestamp("Vision/Debug/FrontResultEmpty");
+
       interpolatedVisionResult.add(maybeBottomResult.get());
     }
 
     if (maybeBackResult.isPresent()) {
+      DogLog.timestamp("Vision/Debug/BackResultEmpty");
+
       interpolatedVisionResult.add(maybeBackResult.get());
     }
   }
