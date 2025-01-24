@@ -1,0 +1,64 @@
+package frc.robot.autos.auto_path_commands;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.autos.AutoPoint;
+import frc.robot.autos.AutoSegment;
+import frc.robot.autos.BaseAuto;
+import frc.robot.autos.Trailblazer;
+import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.robot_manager.RobotManager;
+
+public class TestAuto extends BaseAuto {
+  private static final AutoConstraintOptions CONSTRAINTS =
+      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
+
+  public TestAuto(RobotManager robotManager, Trailblazer trailblazer) {
+    super(robotManager, trailblazer);
+  }
+
+  @Override
+  protected Command getBlueAutoCommand() {
+    return Commands.none();
+  }
+
+  @Override
+  protected Command getRedAutoCommand() {
+    return Commands.sequence(
+        Commands.print(""),
+        Commands.runOnce(
+            () ->
+                robotManager.localization.resetPose(
+                    new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(12.493, 2.965, Rotation2d.fromDegrees(58.45))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(14.202, 1.568, Rotation2d.fromDegrees(135.88))),
+                new AutoPoint(new Pose2d(15.902, 0.553, Rotation2d.fromDegrees(127.71))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(14.66, 1.568, Rotation2d.fromDegrees(137.36))),
+                new AutoPoint(new Pose2d(13.562, 2.87, Rotation2d.fromDegrees(119.50))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(14.391, 1.568, Rotation2d.fromDegrees(135.88))),
+                new AutoPoint(new Pose2d(15.802, 0.553, Rotation2d.fromDegrees(127.71))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(13.918, 3.117, Rotation2d.fromDegrees(123.427))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(14.104, 3.117, Rotation2d.fromDegrees(123.427))))));
+  }
+}
