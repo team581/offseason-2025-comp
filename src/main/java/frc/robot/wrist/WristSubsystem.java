@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -95,6 +96,11 @@ public class WristSubsystem extends StateMachine<WristState> {
     if (DriverStation.isDisabled()) {
       DogLog.log("Wrist/LowestAngle", lowestSeenAngle);
       DogLog.log("Wrist/HighestAngle", highestSeenAngle);
+    }
+    if (rangeOfMotionGood()) {
+      DogLog.clearFault("Wrist not seen range of motion");
+    } else {
+      DogLog.logFault("Wrist not seen range of motion", AlertType.kWarning);
     }
 
     switch (getState()) {

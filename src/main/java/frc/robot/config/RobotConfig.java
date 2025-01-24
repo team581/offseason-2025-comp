@@ -13,7 +13,7 @@ public record RobotConfig(
     SwerveConfig swerve,
     VisionConfig vision,
     WristConfig wrist,
-    PivotConfig pivot,
+    RollConfig roll,
     ClimberConfig climber,
     LightsConfig lights) {
   public record ElevatorConfig(
@@ -64,7 +64,7 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig,
       CANcoderConfiguration cancoderConfig) {}
 
-  public record PivotConfig(
+  public record RollConfig(
       String canBusName,
       int motorID,
       TalonFXConfiguration motorConfig,

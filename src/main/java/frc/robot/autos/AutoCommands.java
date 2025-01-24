@@ -16,7 +16,7 @@ public class AutoCommands {
     this.robotCommands = robotCommands;
     this.robotManager = robotManager;
     var requirementsList =
-        List.of(robotManager.elevator, robotManager.wrist, robotManager.pivot, robotManager.intake);
+        List.of(robotManager.elevator, robotManager.wrist, robotManager.roll, robotManager.intake);
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
