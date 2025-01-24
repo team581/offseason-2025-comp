@@ -1,16 +1,18 @@
-package frc.robot.pivot;
+package frc.robot.roll;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
-public class PivotSubsystem extends StateMachine<PivotState> {
+public class RollSubsystem extends StateMachine<RollState> {
   private final TalonFX motor;
   private double motorAngle;
   private double motorCurrent;
@@ -18,23 +20,22 @@ public class PivotSubsystem extends StateMachine<PivotState> {
   private final IntakeSubsystem intake;
 
   private final PositionVoltage motionMagicRequest =
-      new PositionVoltage(PivotState.STOWED.angle).withEnableFOC(false);
+      new PositionVoltage(RollState.STOWED.angle).withEnableFOC(false);
 
-  public PivotSubsystem(TalonFX motor, IntakeSubsystem intake) {
-    super(SubsystemPriority.PIVOT, PivotState.STOWED);
+  public RollSubsystem(TalonFX motor, IntakeSubsystem intake) {
+    super(SubsystemPriority.ROLL, RollState.STOWED);
 
-    motor.getConfigurator().apply(RobotConfig.get().pivot().motorConfig());
+    motor.getConfigurator().apply(RobotConfig.get().roll().motorConfig());
 
     this.motor = motor;
     this.intake = intake;
   }
 
   @Override
-  protected void afterTransition(PivotState newState) {
+  protected void afterTransition(RollState newState) {
     switch (newState) {
       case HOMING -> {
-        // TODO: Set homing voltage to like 2ish
-        motor.setVoltage(0);
+        motor.setVoltage(1);
       }
       case CORAL_SCORE -> {
         motor.setControl(
@@ -48,11 +49,11 @@ public class PivotSubsystem extends StateMachine<PivotState> {
   }
 
   @Override
-  protected PivotState getNextState(PivotState currentState) {
-    if (currentState == PivotState.HOMING
-        && motorCurrent > RobotConfig.get().pivot().homingCurrentThreshold()) {
-      motor.setPosition(RobotConfig.get().pivot().homingPosition());
-      return PivotState.STOWED;
+  protected RollState getNextState(RollState currentState) {
+    if (currentState == RollState.HOMING
+        && motorCurrent > RobotConfig.get().roll().homingCurrentThreshold()) {
+      motor.setPosition(Units.degreesToRotations(RobotConfig.get().roll().homingPosition()));
+      return RollState.STOWED;
     }
 
     // Don't do anything
@@ -73,8 +74,8 @@ public class PivotSubsystem extends StateMachine<PivotState> {
     return -90;
   }
 
-  public void setState(PivotState newState) {
-    if (getState() != PivotState.HOMING) {
+  public void setState(RollState newState) {
+    if (getState() != RollState.HOMING) {
       setStateFromRequest(newState);
     }
   }
@@ -90,9 +91,17 @@ public class PivotSubsystem extends StateMachine<PivotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Pivot/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Pivot/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Pivot/Position", motor.getPosition().getValueAsDouble() * 360);
-    DogLog.log("Pivot/PositionAngle", motorAngle);
+    DogLog.log("Roll/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Roll/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Roll/Position", motorAngle);
+    if (DriverStation.isEnabled()) {
+      if (getState() == RollState.HOMING) {
+        DogLog.logFault("Roll Unhomed", AlertType.kWarning);
+      }
+    } else {
+      if (getState() != RollState.HOMING) {
+        DogLog.clearFault("Roll Unhomed");
+      }
+    }
   }
 }
