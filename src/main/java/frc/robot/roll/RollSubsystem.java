@@ -23,7 +23,7 @@ public class RollSubsystem extends StateMachine<RollState> {
       new PositionVoltage(RollState.STOWED.angle).withEnableFOC(false);
 
   public RollSubsystem(TalonFX motor, IntakeSubsystem intake) {
-    super(SubsystemPriority.ROLL, RollState.STOWED);
+    super(SubsystemPriority.ROLL, RollState.UNHOMED);
 
     motor.getConfigurator().apply(RobotConfig.get().roll().motorConfig());
 
@@ -41,6 +41,7 @@ public class RollSubsystem extends StateMachine<RollState> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(getScoreDirection())));
       }
+      case UNHOMED -> motor.disable();
       default -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(getState().angle)));
@@ -75,7 +76,9 @@ public class RollSubsystem extends StateMachine<RollState> {
   }
 
   public void setState(RollState newState) {
-    if (getState() != RollState.HOMING) {
+    if (getState() == RollState.UNHOMED && newState == RollState.HOMING) {
+      setStateFromRequest(RollState.HOMING);
+    } else if (getState() != RollState.HOMING) {
       setStateFromRequest(newState);
     }
   }
