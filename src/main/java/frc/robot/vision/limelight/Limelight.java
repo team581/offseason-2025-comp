@@ -58,11 +58,17 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public Optional<TagResult> getInterpolatedTagResult() {
-    return interpolatedResult;
+    return getState() == LimelightState.TAGS || getState() == LimelightState.REEF_TAGS
+        ? interpolatedResult
+        : Optional.empty();
+  }
+
+  public Optional<GamePieceResult> getCoralResult() {
+    return getState() == LimelightState.CORAL ? coralResult : Optional.empty();
   }
 
   public Optional<PurpleResult> getPurpleResult() {
-    return purpleResult;
+    return getState() == LimelightState.PURPLE ? purpleResult : Optional.empty();
   }
 
   private Optional<TagResult> calculateInterpolatedTagResult(Optional<TagResult> rawTagResult) {
