@@ -78,9 +78,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
-    DogLog.log("Vision/Left/VisionState", elevatorPurpleLimelight.getCameraHealth());
-    DogLog.log("Vision/Right/VisionState", frontCoralLimelight.getCameraHealth());
-    DogLog.log("Vision/Back/VisionState", backTagLimelight.getCameraHealth());
   }
 
   public boolean isAnyTagLimelightOnline() {

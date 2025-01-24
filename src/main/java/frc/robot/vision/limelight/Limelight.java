@@ -199,6 +199,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public CameraHealth getCameraHealth() {
+    DogLog.log("Vision/" + name + "/Health", cameraHealth);
     return cameraHealth;
   }
 }
