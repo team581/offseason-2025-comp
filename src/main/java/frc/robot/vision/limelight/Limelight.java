@@ -2,6 +2,8 @@ package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -83,8 +85,8 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   private Optional<TagResult> calculateRawTagResult() {
-    if (getState() != LimelightState.TAGS || getState() != LimelightState.REEF_TAGS) {
-      DogLog.timestamp("Vision/Debug/" + name + "/NotInTagState");
+    if (getState() != LimelightState.TAGS && getState() != LimelightState.REEF_TAGS) {
+      DogLog.timestamp("Vision/" + name + "/NotInTagState");
       return Optional.empty();
     }
 
