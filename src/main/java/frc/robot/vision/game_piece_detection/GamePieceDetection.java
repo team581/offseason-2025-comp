@@ -3,13 +3,15 @@ package frc.robot.vision.game_piece_detection;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetection {
-  private static final Pose3d LIMELIGHT_POSE_TO_ROBOT = new Pose3d();
-
+  private static final Pose3d LIMELIGHT_POSE_TO_ROBOT = new Pose3d(1.0,0.0,0.5, new Rotation3d(0,-10,0));
   private static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
 
@@ -49,5 +51,10 @@ public class GamePieceDetection {
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     return calculateFieldRelativeTranslationFromCamera(
         visionResult.tx(), visionResult.ty(), robotPoseAtCapture, LIMELIGHT_POSE_TO_ROBOT);
+  }
+
+  public static double calculateXAngleOffsetToGamePiece(Pose2d robotPoseAtCapture, GamePieceResult visionResult){
+    var gamePiecePose = calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
+    return LocalizationSubsystem.distanceAngleToTarget(new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture).targetAngle();
   }
 }

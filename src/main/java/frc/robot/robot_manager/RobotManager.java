@@ -48,8 +48,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private final Limelight frontCoralLimelight;
   private final Limelight backTagLimelight;
 
-  private final GamePieceDetection gamePieceDetection;
-
   private final LightsSubsystem lights;
 
   private final Purple purple;
@@ -68,7 +66,6 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight elevatorPurpleLimelight,
       Limelight frontCoralLimelight,
       Limelight backTagLimelight,
-      GamePieceDetection gamePieceDetection,
       LightsSubsystem lights,
       Purple purple,
       ClimberSubsystem climber) {
@@ -84,7 +81,6 @@ public class RobotManager extends StateMachine<RobotState> {
     this.elevatorPurpleLimelight = elevatorPurpleLimelight;
     this.frontCoralLimelight = frontCoralLimelight;
     this.backTagLimelight = backTagLimelight;
-    this.gamePieceDetection = gamePieceDetection;
     this.lights = lights;
     this.purple = purple;
     this.climber = climber;
