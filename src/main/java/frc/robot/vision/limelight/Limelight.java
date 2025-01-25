@@ -104,6 +104,7 @@ public class Limelight extends StateMachine<LimelightState> {
       DogLog.timestamp("Vision/" + name + "/MT2XYZero");
       return Optional.empty();
     }
+    DogLog.log("Vision/"+name+"/TagTimestamp", estimatePose.timestampSeconds);
 
     return Optional.of(new TagResult(estimatePose.pose, estimatePose.timestampSeconds));
   }
