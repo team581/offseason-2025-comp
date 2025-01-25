@@ -76,8 +76,10 @@ public class RollSubsystem extends StateMachine<RollState> {
   }
 
   public void setState(RollState newState) {
-    if (getState() == RollState.UNHOMED && newState == RollState.HOMING) {
-      setStateFromRequest(RollState.HOMING);
+    if (getState() == RollState.UNHOMED) {
+      if (newState == RollState.HOMING) {
+        setStateFromRequest(RollState.HOMING);
+      }
     } else if (getState() != RollState.HOMING) {
       setStateFromRequest(newState);
     }
