@@ -91,20 +91,20 @@ public class Limelight extends StateMachine<LimelightState> {
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
-      DogLog.timestamp("Vision/Debug/" + name + "/EstimatedPoseNull");
+      DogLog.timestamp("Vision/" + name + "/EstimatedPoseNull");
       return Optional.empty();
     }
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
     if (estimatePose.tagCount == 0) {
-      DogLog.timestamp("Vision/Debug/" + name + "/MT2TagCountZero");
+      DogLog.timestamp("Vision/" + name + "/MT2TagCountZero");
       return Optional.empty();
     }
 
     // This prevents pose estimator from having crazy poses if the Limelight loses power
     if (estimatePose.pose.getX() == 0.0 && estimatePose.pose.getY() == 0.0) {
-      DogLog.timestamp("Vision/Debug/" + name + "/MT2XYZero");
+      DogLog.timestamp("Vision/" + name + "/MT2XYZero");
       return Optional.empty();
     }
 
@@ -171,6 +171,7 @@ public class Limelight extends StateMachine<LimelightState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("Vision/" +name+"/State", getState());
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> updateHealth(interpolatedResult);

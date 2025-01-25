@@ -51,18 +51,18 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var maybeBackResult = backTagLimelight.getInterpolatedTagResult();
 
     if (maybeTopResult.isPresent()) {
-      DogLog.timestamp("Vision/Debug/ElevatorResultEmpty");
+      DogLog.timestamp("Vision/Debug/ElevatorResultPresent");
       interpolatedVisionResult.add(maybeTopResult.get());
     }
 
     if (maybeBottomResult.isPresent()) {
-      DogLog.timestamp("Vision/Debug/FrontResultEmpty");
+      DogLog.timestamp("Vision/Debug/FrontResultPresent");
 
       interpolatedVisionResult.add(maybeBottomResult.get());
     }
 
     if (maybeBackResult.isPresent()) {
-      DogLog.timestamp("Vision/Debug/BackResultEmpty");
+      DogLog.timestamp("Vision/Debug/BackResultPresent");
 
       interpolatedVisionResult.add(maybeBackResult.get());
     }
@@ -81,7 +81,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
 
-    DogLog.log("Vision/visionIsEmpty", getInterpolatedVisionResult().isEmpty());
+    DogLog.log("Vision/Debug/VisionIsEmpty", getInterpolatedVisionResult().isEmpty());
     DogLog.log("Vision/CombinedVisionState", getVisionState());
   }
 
