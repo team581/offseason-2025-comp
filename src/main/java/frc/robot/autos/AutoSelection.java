@@ -2,6 +2,7 @@ package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.DoNothingAuto;
 import frc.robot.autos.auto_path_commands.PushPartnerAuto;
+import frc.robot.autos.auto_path_commands.StraightLineAuto;
 import frc.robot.autos.auto_path_commands.TestAuto;
 import frc.robot.autos.auto_path_commands.ThreePiece1EDC;
 import frc.robot.autos.auto_path_commands.ThreePiece2IJKAuto;
@@ -13,6 +14,7 @@ public enum AutoSelection {
   THREE_PIECE_2IJK(ThreePiece2IJKAuto::new),
   PUSH_PARTNER(PushPartnerAuto::new),
   THREE_PIECE_1EDC(ThreePiece1EDC::new),
+  STRAIGHT_LINE(StraightLineAuto::new),
   TEST_AUTO(TestAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> auto;
