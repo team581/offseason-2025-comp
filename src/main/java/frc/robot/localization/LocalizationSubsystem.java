@@ -48,9 +48,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   public Pose2d getPose() {
-    var timestamp = swerve.getDrivetrainState().Timestamp;
-    DogLog.log("Vision/Debug/GetPoseTimestamp", timestamp);
-    DogLog.log("Vision/Debug/FPGA", Timer.getFPGATimestamp());
     return swerve.getDrivetrainState().Pose;
   }
 
@@ -67,9 +64,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
       double visionTimestamp = Utils.fpgaToCurrentTime(results.timestamp());
 
-      DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
-      DogLog.log("Vision/Debug/RawVisionTimestamp", visionTimestamp);
-      DogLog.log("Vision/Debug/RawVisionPose", visionPose);
 
       swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
     }

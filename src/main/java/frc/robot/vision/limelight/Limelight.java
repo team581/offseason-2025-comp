@@ -81,27 +81,23 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private Optional<TagResult> calculateRawTagResult() {
     if (getState() != LimelightState.TAGS && getState() != LimelightState.REEF_TAGS) {
-      DogLog.timestamp("Vision/" + name + "/NotInTagState");
       return Optional.empty();
     }
 
     var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
 
     if (estimatePose == null) {
-      DogLog.timestamp("Vision/" + name + "/EstimatedPoseNull");
       return Optional.empty();
     }
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
     if (estimatePose.tagCount == 0) {
-      DogLog.timestamp("Vision/" + name + "/MT2TagCountZero");
       return Optional.empty();
     }
 
     // This prevents pose estimator from having crazy poses if the Limelight loses power
     if (estimatePose.pose.getX() == 0.0 && estimatePose.pose.getY() == 0.0) {
-      DogLog.timestamp("Vision/" + name + "/MT2XYZero");
       return Optional.empty();
     }
 
