@@ -775,6 +775,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
+    DogLog.timestamp("Debug/StowRequest");
     if (intake.getHasGP()) {
       if (gamePieceMode == GamePieceMode.CORAL) {
         setStateFromRequest(RobotState.IDLE_CORAL);
@@ -933,7 +934,7 @@ public class RobotManager extends StateMachine<RobotState> {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
-      default -> setStateFromRequest(RobotState.CORAL_L3_1_APPROACH);
+      default -> setStateFromRequest(RobotState.CORAL_L4_1_APPROACH);
     }
   }
 
@@ -957,18 +958,23 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
-      default -> setStateFromRequest(RobotState.CORAL_L1_1_APPROACH);
+      case CORAL_L1_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L1_2_LINEUP);
       case CORAL_L1_2_LINEUP -> setStateFromRequest(RobotState.CORAL_L1_3_PLACE);
       case CORAL_L1_3_PLACE -> setStateFromRequest(RobotState.CORAL_L1_4_RELEASE);
 
+      case CORAL_L2_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L2_2_LINEUP);
       case CORAL_L2_2_LINEUP -> setStateFromRequest(RobotState.CORAL_L2_3_PLACE);
       case CORAL_L2_3_PLACE -> setStateFromRequest(RobotState.CORAL_L2_4_RELEASE);
 
+      case CORAL_L3_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L3_2_LINEUP);
       case CORAL_L3_2_LINEUP -> setStateFromRequest(RobotState.CORAL_L3_3_PLACE);
       case CORAL_L3_3_PLACE -> setStateFromRequest(RobotState.CORAL_L3_4_RELEASE);
 
+      case CORAL_L4_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L4_2_LINEUP);
       case CORAL_L4_2_LINEUP -> setStateFromRequest(RobotState.CORAL_L4_3_PLACE);
       case CORAL_L4_3_PLACE -> setStateFromRequest(RobotState.CORAL_L4_4_RELEASE);
+
+      default -> setStateFromRequest(RobotState.CORAL_L1_1_APPROACH);
     }
   }
 

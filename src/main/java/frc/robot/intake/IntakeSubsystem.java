@@ -7,6 +7,9 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
+  private static final double ALGAE_INTAKE_CURRENT = 30;
+  private static final double CORAL_INTAKE_CURRENT = 30;
+
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
 
@@ -14,8 +17,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean bottomSensorRaw = false;
   private boolean topSensorDebounced = false;
   private boolean bottomSensorDebounced = false;
-  private boolean topMotorGP = false;
-  private boolean bottomMotorGP = false;
+  private double topMotorCurrent;
+  private double bottomMotorCurrent;
   private boolean hasGP = false;
 
   public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
@@ -30,9 +33,17 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    topMotorGP = (topMotor.getStatorCurrent().getValueAsDouble() > 10);
-    bottomMotorGP = (bottomMotor.getStatorCurrent().getValueAsDouble() > 10);
-    hasGP = topMotorGP || bottomMotorGP;
+    topMotorCurrent = topMotor.getStatorCurrent().getValueAsDouble();
+    bottomMotorCurrent = bottomMotor.getStatorCurrent().getValueAsDouble();
+    var averageCurrent = (topMotorCurrent + bottomMotorCurrent) / 2;
+
+    hasGP =
+        switch (getState()) {
+          case INTAKING_ALGAE -> averageCurrent > ALGAE_INTAKE_CURRENT;
+          case INTAKING_CORAL -> averageCurrent > CORAL_INTAKE_CURRENT;
+          case SCORE_CORAL -> (averageCurrent < 3) ? false : true;
+          default -> false;
+        };
   }
 
   public boolean getTopSensor() {
@@ -59,36 +70,36 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotor.disable();
       }
       case IDLE_W_ALGAE -> {
-        topMotor.setVoltage(0.0);
-        bottomMotor.setVoltage(0.0);
+        topMotor.setVoltage(1.5);
+        bottomMotor.setVoltage(1.5);
       }
       case IDLE_W_CORAL -> {
-        topMotor.setVoltage(0.0);
-        bottomMotor.setVoltage(0.0);
+        topMotor.setVoltage(1.0);
+        bottomMotor.setVoltage(1.0);
       }
       case INTAKING_ALGAE -> {
-        topMotor.setVoltage(0.0);
-        bottomMotor.setVoltage(0.0);
+        topMotor.setVoltage(4.0);
+        bottomMotor.setVoltage(4.0);
       }
       case INTAKING_CORAL -> {
-        topMotor.setVoltage(0.0);
-        bottomMotor.setVoltage(0.0);
+        topMotor.setVoltage(10.0);
+        bottomMotor.setVoltage(10.0);
       }
       case SCORE_ALGEA_NET -> {
-        topMotor.setVoltage(-0.0);
-        bottomMotor.setVoltage(-0.0);
+        topMotor.setVoltage(-1.0);
+        bottomMotor.setVoltage(-1.0);
       }
       case SCORE_ALGEA_PROCESSOR -> {
-        topMotor.setVoltage(-0.0);
-        bottomMotor.setVoltage(-0.0);
+        topMotor.setVoltage(-1.0);
+        bottomMotor.setVoltage(-1.0);
       }
       case SCORE_CORAL -> {
-        topMotor.setVoltage(-0.0);
-        bottomMotor.setVoltage(-0.0);
+        topMotor.setVoltage(-5.0);
+        bottomMotor.setVoltage(-5.0);
       }
       case OUTTAKING -> {
-        topMotor.setVoltage(-0.0);
-        bottomMotor.setVoltage(-0.0);
+        topMotor.setVoltage(-1.0);
+        bottomMotor.setVoltage(-1.0);
       }
     }
   }

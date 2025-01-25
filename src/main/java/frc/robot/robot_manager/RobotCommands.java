@@ -21,8 +21,7 @@ public class RobotCommands {
   }
 
   public Command confirmScoreCommand() {
-    return Commands.runOnce(robot::confirmScoreRequest, requirements)
-        .andThen(robot.waitForState(RobotState.IDLE_NO_GP));
+    return Commands.runOnce(robot::confirmScoreRequest, requirements);
   }
 
   public Command stowCommand() {
