@@ -30,7 +30,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
-  private double lastAddedVisionTimestamp = 0;
   private List<TagResult> latestResult = new ArrayList<>();
 
   public LocalizationSubsystem(ImuSubsystem imu, VisionSubsystem vision, SwerveSubsystem swerve) {
@@ -62,15 +61,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
       double visionTimestamp = results.timestamp();
 
-      if (visionTimestamp == lastAddedVisionTimestamp) {
-        // Don't add the same vision pose over and over
-        DogLog.timestamp("Vision/Debug/TimestampEqualToLastAdded");
-
-      } else {
-        DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
-        swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
-        lastAddedVisionTimestamp = visionTimestamp;
-      }
+      DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
+      swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
     }
 
     DogLog.log("Localization/EstimatedPose", getPose());
