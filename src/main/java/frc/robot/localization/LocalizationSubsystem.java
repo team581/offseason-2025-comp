@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
@@ -20,6 +21,8 @@ import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ctre.phoenix6.Utils;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private static final Vector<N3> VISION_STD_DEVS =
@@ -45,6 +48,9 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   public Pose2d getPose() {
+    var timestamp = swerve.getDrivetrainState().Timestamp;
+    DogLog.log("Vision/Debug/GetPoseTimestamp", timestamp);
+    DogLog.log("Vision/Debug/FPGA", Timer.getFPGATimestamp());
     return swerve.getDrivetrainState().Pose;
   }
 
@@ -59,9 +65,12 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     for (var results : latestResult) {
       Pose2d visionPose = results.pose();
 
-      double visionTimestamp = results.timestamp();
+      double visionTimestamp = Utils.fpgaToCurrentTime(results.timestamp());
 
       DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
+      DogLog.log("Vision/Debug/RawVisionTimestamp", visionTimestamp);
+      DogLog.log("Vision/Debug/RawVisionPose", visionPose);
+
       swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
     }
 
