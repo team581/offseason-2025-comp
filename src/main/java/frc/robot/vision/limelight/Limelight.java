@@ -46,9 +46,6 @@ public class Limelight extends StateMachine<LimelightState> {
       double pitchRate,
       double roll,
       double rollRate) {
-    if (getState() == LimelightState.TAGS) {
-      return;
-    }
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
