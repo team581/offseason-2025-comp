@@ -103,6 +103,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Height", averageMeasuredHeight);
+    DogLog.log("Elevator/AtGoal", atGoal());
 
     switch (getState()) {
       case PRE_MATCH_HOMING -> {

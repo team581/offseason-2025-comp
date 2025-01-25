@@ -93,6 +93,7 @@ public class WristSubsystem extends StateMachine<WristState> {
     DogLog.log("Wrist/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Wrist/Position", motorAngle);
+    DogLog.log("Wrist/AtGoal", atGoal());
     if (DriverStation.isDisabled()) {
       DogLog.log("Wrist/LowestAngle", lowestSeenAngle);
       DogLog.log("Wrist/HighestAngle", highestSeenAngle);
