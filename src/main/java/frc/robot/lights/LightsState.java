@@ -10,8 +10,8 @@ public enum LightsState {
   IDLE_NO_GP_CORAL_MODE(Color.kWhite, BlinkPattern.BLINK_SLOW),
   IDLE_WITH_CORAL(Color.kWhite, BlinkPattern.SOLID),
 
-  IDLE_NO_GP_ALGAE_MODE(Color.kTurquoise, BlinkPattern.BLINK_SLOW),
-  IDLE_WITH_ALGAE(Color.kTurquoise, BlinkPattern.SOLID),
+  IDLE_NO_GP_ALGAE_MODE(Color.kTeal, BlinkPattern.BLINK_SLOW),
+  IDLE_WITH_ALGAE(Color.kTeal, BlinkPattern.SOLID),
 
   SCORE_ALIGN_NOT_READY(Color.kYellow, BlinkPattern.SOLID),
   SCORE_ALIGN_READY(Color.kGreen, BlinkPattern.SOLID),
