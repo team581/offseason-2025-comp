@@ -645,6 +645,10 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
       }
+      case INTAKE_CORAL_STATION ->{
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()));
+      }
       default -> {}
     }
 
