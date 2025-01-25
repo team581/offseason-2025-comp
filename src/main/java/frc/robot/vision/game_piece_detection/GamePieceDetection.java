@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetection {
@@ -46,11 +45,9 @@ public class GamePieceDetection {
     return fieldRelativeTranslation;
   }
 
-  public static Translation2d calculateFieldRelativeTranslationFromCamera(Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
+  public static Translation2d calculateFieldRelativeTranslationFromCamera(
+      Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     return calculateFieldRelativeTranslationFromCamera(
-        visionResult.tx(),
-        visionResult.ty(),
-        robotPoseAtCapture,
-        LIMELIGHT_POSE_TO_ROBOT);
+        visionResult.tx(), visionResult.ty(), robotPoseAtCapture, LIMELIGHT_POSE_TO_ROBOT);
   }
 }

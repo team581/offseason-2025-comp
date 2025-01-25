@@ -61,9 +61,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
       double visionTimestamp = results.timestamp();
 
-
-        DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
-        swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
+      DogLog.timestamp("Vision/Debug/AddVisionMeasurement");
+      swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);
     }
 
     DogLog.log("Localization/EstimatedPose", getPose());
