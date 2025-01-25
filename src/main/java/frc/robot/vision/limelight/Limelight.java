@@ -2,8 +2,6 @@ package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -173,7 +171,7 @@ public class Limelight extends StateMachine<LimelightState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Vision/" +name+"/State", getState());
+    DogLog.log("Vision/" + name + "/State", getState());
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> updateHealth(interpolatedResult);
