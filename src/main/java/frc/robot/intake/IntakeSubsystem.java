@@ -74,8 +74,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotor.setVoltage(1.5);
       }
       case IDLE_W_CORAL -> {
-        topMotor.setVoltage(0.5);
-        bottomMotor.setVoltage(0.5);
+        topMotor.setVoltage(0.25);
+        bottomMotor.setVoltage(0.25);
       }
       case INTAKING_ALGAE -> {
         topMotor.setVoltage(4.0);
