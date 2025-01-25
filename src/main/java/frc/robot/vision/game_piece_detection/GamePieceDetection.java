@@ -9,12 +9,7 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetection {
-  private final LocalizationSubsystem localization;
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT = new Pose3d();
-
-  public GamePieceDetection(LocalizationSubsystem localization) {
-    this.localization = localization;
-  }
 
   private static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
@@ -51,11 +46,11 @@ public class GamePieceDetection {
     return fieldRelativeTranslation;
   }
 
-  public Translation2d calculateFieldRelativeTranslationFromCamera(GamePieceResult visionResult) {
+  public static Translation2d calculateFieldRelativeTranslationFromCamera(Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     return calculateFieldRelativeTranslationFromCamera(
         visionResult.tx(),
         visionResult.ty(),
-        localization.getPose(visionResult.timestamp()),
+        robotPoseAtCapture,
         LIMELIGHT_POSE_TO_ROBOT);
   }
 }
