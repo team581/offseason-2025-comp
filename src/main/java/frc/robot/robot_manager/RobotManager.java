@@ -25,6 +25,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.game_piece_detection.GamePieceDetection;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristState;
@@ -47,6 +48,8 @@ public class RobotManager extends StateMachine<RobotState> {
   private final Limelight frontCoralLimelight;
   private final Limelight backTagLimelight;
 
+  private final GamePieceDetection gamePieceDetection;
+
   private final LightsSubsystem lights;
 
   private final Purple purple;
@@ -65,6 +68,7 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight elevatorPurpleLimelight,
       Limelight frontCoralLimelight,
       Limelight backTagLimelight,
+      GamePieceDetection gamePieceDetection,
       LightsSubsystem lights,
       Purple purple,
       ClimberSubsystem climber) {
@@ -80,6 +84,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.elevatorPurpleLimelight = elevatorPurpleLimelight;
     this.frontCoralLimelight = frontCoralLimelight;
     this.backTagLimelight = backTagLimelight;
+    this.gamePieceDetection = gamePieceDetection;
     this.lights = lights;
     this.purple = purple;
     this.climber = climber;
@@ -178,7 +183,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
-        frontCoralLimelight.setState(LimelightState.CORAL);
+        frontCoralLimelight.setState(LimelightState.TAGS);
         backTagLimelight.setState(LimelightState.TAGS);
         // Game piece mode can change without a state transition, so we update lights when the game
         // piece mode is updated
@@ -227,7 +232,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.STOWED);
-        frontCoralLimelight.setState(LimelightState.CORAL);
+        frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.REEF_TAGS);
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
@@ -239,7 +244,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.STOWED);
-        frontCoralLimelight.setState(LimelightState.CORAL);
+        frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.REEF_TAGS);
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
@@ -251,7 +256,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.STOWED);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()));
-        frontCoralLimelight.setState(LimelightState.CORAL);
+        frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
