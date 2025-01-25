@@ -88,7 +88,6 @@ public class Robot extends TimedRobot {
           elevatorPurpleLimelight,
           frontCoralLimelight,
           backTagLimelight,
-          gamePieceDetection,
           lights,
           purple,
           climber);
