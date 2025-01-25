@@ -680,6 +680,10 @@ public class RobotManager extends StateMachine<RobotState> {
       } else {
         lights.setState(LightsState.HEALTHY);
       }
+
+      var currentSuperstructurePosition =
+          new SuperstructurePosition(elevator.getHeight(), wrist.getAngle());
+      CollisionAvoidance.plan(currentSuperstructurePosition, currentSuperstructurePosition);
     }
   }
 
