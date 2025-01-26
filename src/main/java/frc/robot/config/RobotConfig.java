@@ -23,6 +23,7 @@ public record RobotConfig(
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig,
       double homingEndHeight,
+      double homingCurrentThreshold,
       double minHeight,
       double maxHeight,
       double tolerance) {}
@@ -55,7 +56,9 @@ public record RobotConfig(
       int motorID,
       TalonFXConfiguration motorConfig,
       double minAngle,
-      double maxAngle) {}
+      double maxAngle,
+      double homingCurrentThreshold,
+      double homingPosition) {}
 
   public record ClimberConfig(
       String canBusName,

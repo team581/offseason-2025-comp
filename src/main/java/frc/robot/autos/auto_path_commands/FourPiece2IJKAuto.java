@@ -32,7 +32,7 @@ public class FourPiece2IJKAuto extends BaseAuto {
             () ->
                 robotManager.localization.resetPose(
                     new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
-        actions.reHomeCommand(),
+        actions.rehomeRollCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,

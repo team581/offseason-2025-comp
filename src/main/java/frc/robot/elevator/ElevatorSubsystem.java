@@ -28,6 +28,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double averageMeasuredHeight;
   private double collisionAvoidanceGoal;
 
+  // Mid-match homing
+  private double averageStatorCurrent;
+
   public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.leftMotor = leftMotor;
@@ -38,7 +41,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   }
 
   public void setState(ElevatorState newState) {
-    if (getState() != ElevatorState.PRE_MATCH_HOMING) {
+    if (getState() != ElevatorState.PRE_MATCH_HOMING
+        || newState == ElevatorState.MID_MATCH_HOMING) {
       setStateFromRequest(newState);
     }
   }
@@ -58,6 +62,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     averageMeasuredHeight =
         (leftMotor.getPosition().getValueAsDouble() + rightMotor.getPosition().getValueAsDouble())
             / 2.0;
+
+    averageStatorCurrent =
+        (leftMotor.getStatorCurrent().getValueAsDouble()
+                + rightMotor.getStatorCurrent().getValueAsDouble())
+            / 2.0;
   }
 
   @Override
@@ -75,6 +84,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       default -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
+      }
+      case MID_MATCH_HOMING -> {
+        leftMotor.setVoltage(-0.5);
+        rightMotor.setVoltage(-0.5);
       }
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
@@ -125,9 +138,22 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     }
   }
 
+  @Override
+  protected ElevatorState getNextState(ElevatorState currentState) {
+    if (currentState == ElevatorState.MID_MATCH_HOMING
+        && averageStatorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
+      leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+      rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+      return ElevatorState.STOWED;
+    }
+
+    // Don't do anything
+    return currentState;
+  }
+
   public boolean atGoal() {
     return switch (getState()) {
-      case PRE_MATCH_HOMING, UNJAM -> true;
+      case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE ->
           MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
       default -> MathUtil.isNear(getState().height, averageMeasuredHeight, TOLERANCE);

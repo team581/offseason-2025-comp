@@ -1,9 +1,10 @@
 package frc.robot.wrist;
 
 public enum WristState {
-  IDLE(0.0),
+  STOWED(0.0),
   UNJAM(0.0),
   PRE_MATCH_HOMING(0.0),
+  MID_MATCH_HOMING(0.0),
 
   CORAL_SCORE_LINEUP_L1(3.0),
   CORAL_SCORE_PLACING_L1(3.0),
