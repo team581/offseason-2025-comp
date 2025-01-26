@@ -1,7 +1,8 @@
 package frc.robot.wrist;
 
 public enum WristState {
-  IDLE(45.4),
+
+  IDLE(0.0),
   UNJAM(0.0),
   PRE_MATCH_HOMING(0.0),
 
@@ -27,9 +28,13 @@ public enum WristState {
   DISLODGE_L3_LOW(0.0),
   DISLODGE_L3_HIGH(0.0),
 
-  INTAKING_CORAL_STATION(206.4),
+
   GROUND_CORAL_INTAKE(-82.3),
   GROUND_ALGAE_INTAKE(-82.3),
+
+  PRE_INTAKE_CORAL_STATION(0.0),
+  INTAKING_CORAL_STATION(160.0),
+
 
   COLLISION_AVOIDANCE(0);
 
