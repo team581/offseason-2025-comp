@@ -1,6 +1,5 @@
 package frc.robot.vision.game_piece_detection;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +11,11 @@ import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
-      new Pose3d(0.5, 0.0, 0.5, new Rotation3d(0, Units.degreesToRadians(20), 0));
+      new Pose3d(
+          0.2741422,
+          0.2809748,
+          0.399542,
+          new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(-10)));
 
   private static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
@@ -56,7 +59,6 @@ public class GamePieceDetectionUtil {
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var gamePiecePose =
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
-    DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
     return LocalizationSubsystem.distanceAngleToTarget(
             new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
         .targetAngle();
@@ -98,7 +100,6 @@ public class GamePieceDetectionUtil {
 
   public static double getRobotRelativeAngleToGamePiece(GamePieceResult visionResult) {
     var gamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
-    DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
     return LocalizationSubsystem.distanceAngleToTarget(
             new Pose2d(gamePiecePose, new Rotation2d()), new Pose2d())
         .targetAngle();
