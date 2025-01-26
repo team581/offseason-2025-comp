@@ -10,16 +10,13 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
-public class GamePieceDetection {
+public class GamePieceDetectionUtil {
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
       new Pose3d(0.5, 0.0, 0.5, new Rotation3d(0, Units.degreesToRadians(20), 0));
 
   private static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
 
-    // Convert tx and ty to angles, tx on the limelight does not follow RHR
-    // convention, so we need to negate by one
-    DogLog.log("GamePieceDetection/limelightPose3d", LIMELIGHT_POSE_TO_ROBOT);
     double thetaX = -1 * Units.degreesToRadians(tx);
     double thetaY = Units.degreesToRadians(ty);
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - thetaY;
@@ -55,15 +52,55 @@ public class GamePieceDetection {
         visionResult.tx(), visionResult.ty(), robotPoseAtCapture, LIMELIGHT_POSE_TO_ROBOT);
   }
 
-  public static double calculateXAngleOffsetToGamePiece(
+  public static double getFieldRelativeAngleToGamePiece(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var gamePiecePose =
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
     DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
-    return -1
-        * (LocalizationSubsystem.distanceAngleToTarget(
-                    new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
-                .targetAngle()
-            - robotPoseAtCapture.getRotation().getDegrees());
+    return LocalizationSubsystem.distanceAngleToTarget(
+            new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
+        .targetAngle();
+  }
+
+  private static Translation2d calculateRobotRelativeTranslationFromCamera(
+      double tx, double ty, Pose3d limelightToRobotOffset) {
+
+    double thetaX = -1 * Units.degreesToRadians(tx);
+    double thetaY = Units.degreesToRadians(ty);
+    double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - thetaY;
+
+    double yOffset = 0;
+    if (adjustedThetaY == 0) {
+      yOffset = Math.abs(limelightToRobotOffset.getY());
+    } else {
+      yOffset =
+          // .getZ() represents height from floor
+          (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
+              // .getX() is supposed to represent forward and backward distance from center of robot
+              + Math.abs(limelightToRobotOffset.getX());
+    }
+
+    double xOffset = yOffset * Math.tan(thetaX);
+
+    var cameraRelativeTranslation = new Translation2d(yOffset, xOffset);
+    var robotRelativeTranslation =
+        cameraRelativeTranslation
+            .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))
+            .plus(limelightToRobotOffset.getTranslation().toTranslation2d());
+    return robotRelativeTranslation;
+  }
+
+  public static Translation2d calculateRobotRelativeTranslationFromCamera(
+      GamePieceResult visionResult) {
+    return calculateRobotRelativeTranslationFromCamera(
+        visionResult.tx(), visionResult.ty(), LIMELIGHT_POSE_TO_ROBOT);
+  }
+
+  public static double getRobotRelativeAngleToGamePiece(GamePieceResult visionResult) {
+    var gamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
+    DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
+    return LocalizationSubsystem.distanceAngleToTarget(
+            new Pose2d(gamePiecePose, new Rotation2d()), new Pose2d())
+        .targetAngle();
   }
 }

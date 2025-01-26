@@ -12,8 +12,7 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
 public class StraightLineAuto extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(1, 50, 4, 30);
 
   public StraightLineAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);

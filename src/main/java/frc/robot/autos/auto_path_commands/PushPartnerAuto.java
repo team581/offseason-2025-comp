@@ -32,7 +32,7 @@ public class PushPartnerAuto extends BaseAuto {
             () ->
                 robotManager.localization.resetPose(
                     new Pose2d(9.57, 2.893, Rotation2d.fromDegrees(0.0)))),
-        actions.reHomeCommand(),
+        actions.rehomeRollCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,

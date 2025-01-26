@@ -16,6 +16,7 @@ import frc.robot.util.state_machines.StateMachine;
 public class WristSubsystem extends StateMachine<WristState> {
   private final TalonFX motor;
   private double motorAngle;
+  private double motorCurrent;
   private double lowestSeenAngle = Double.MAX_VALUE;
   private double highestSeenAngle = Double.MIN_VALUE;
   private double collisionAvoidanceGoal;
@@ -37,7 +38,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   }
 
   public void setState(WristState newState) {
-    if (getState() != WristState.PRE_MATCH_HOMING) {
+    if (getState() != WristState.PRE_MATCH_HOMING || newState == WristState.MID_MATCH_HOMING) {
 
       setStateFromRequest(newState);
     }
@@ -67,14 +68,15 @@ public class WristSubsystem extends StateMachine<WristState> {
       lowestSeenAngle = Math.min(lowestSeenAngle, motorAngle);
       highestSeenAngle = Math.max(highestSeenAngle, motorAngle);
     }
+
+    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
   protected void afterTransition(WristState newState) {
     switch (newState) {
-      default -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
+      case MID_MATCH_HOMING -> {
+        motor.setVoltage(-0.5);
       }
       case COLLISION_AVOIDANCE -> {
         motor.setControl(
@@ -83,6 +85,10 @@ public class WristSubsystem extends StateMachine<WristState> {
       }
       case PRE_MATCH_HOMING -> {
         motor.setControl(coastNeutralRequest);
+      }
+      default -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
       }
     }
   }
@@ -112,7 +118,7 @@ public class WristSubsystem extends StateMachine<WristState> {
                 Units.degreesToRotations(
                     RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
 
-            setStateFromRequest(WristState.IDLE);
+            setStateFromRequest(WristState.STOWED);
           } else {
             motor.setControl(brakeNeutralRequest);
           }
@@ -126,6 +132,18 @@ public class WristSubsystem extends StateMachine<WristState> {
 
       default -> {}
     }
+  }
+
+  @Override
+  protected WristState getNextState(WristState currentState) {
+    if (currentState == WristState.MID_MATCH_HOMING
+        && motorCurrent > RobotConfig.get().wrist().homingCurrentThreshold()) {
+      motor.setPosition(Units.degreesToRotations(RobotConfig.get().wrist().homingPosition()));
+      return WristState.STOWED;
+    }
+
+    // Don't do anything
+    return currentState;
   }
 
   public boolean rangeOfMotionGood() {

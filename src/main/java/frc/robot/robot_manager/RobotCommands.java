@@ -71,7 +71,15 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, requirements);
   }
 
-  public Command reHomeCommand() {
-    return Commands.runOnce(robot::rehomeRequest, requirements);
+  public Command rehomeElevatorCommand() {
+    return Commands.runOnce(robot::rehomeElevatorRequest, requirements);
+  }
+
+  public Command rehomeWristCommand() {
+    return Commands.runOnce(robot::rehomeWristRequest, requirements);
+  }
+
+  public Command rehomeRollCommand() {
+    return Commands.runOnce(robot::rehomeRollRequest, requirements);
   }
 }
