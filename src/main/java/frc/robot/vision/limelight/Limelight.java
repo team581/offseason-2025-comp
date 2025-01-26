@@ -24,6 +24,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private final CameraDataset cameraDataset;
 
   private final Timer limelightTimer = new Timer();
+  private final Timer seedIMUTimer = new Timer();
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
 
@@ -177,6 +178,14 @@ public class Limelight extends StateMachine<LimelightState> {
       }
       default -> {}
     }
+
+    LimelightHelpers.SetIMUMode(limelightTableName, seedIMUTimer.hasElapsed(2.0) ? 2 : 1);
+  }
+
+  @Override
+  public void autonomousInit() {
+    seedIMUTimer.reset();
+    seedIMUTimer.start();
   }
 
   private void updateHealth(Optional<?> result) {
