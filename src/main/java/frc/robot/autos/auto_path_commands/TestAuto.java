@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class TestAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(2, 60, 8.5, 35.2);
+      new AutoConstraintOptions(1, 50, 4, 30);
 
   public TestAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);

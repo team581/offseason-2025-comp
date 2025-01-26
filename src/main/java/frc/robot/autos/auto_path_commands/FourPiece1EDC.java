@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class FourPiece1EDC extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
+      new AutoConstraintOptions(1, 50, 4, 30);
 
   public FourPiece1EDC(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
