@@ -195,7 +195,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
-        roll.setState(RollState.STOWED);
+        roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.TAGS);
         backTagLimelight.setState(LimelightState.TAGS);
@@ -220,7 +220,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
-        roll.setState(RollState.STOWED);
+        roll.setState(RollState.CORAL_SCORE);
         frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
@@ -353,7 +353,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
-        roll.setState(RollState.STOWED);
+        roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.REEF_TAGS);
         backTagLimelight.setState(LimelightState.REEF_TAGS);
