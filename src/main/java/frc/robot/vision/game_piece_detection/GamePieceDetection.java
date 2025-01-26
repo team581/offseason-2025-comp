@@ -55,15 +55,13 @@ public class GamePieceDetection {
         visionResult.tx(), visionResult.ty(), robotPoseAtCapture, LIMELIGHT_POSE_TO_ROBOT);
   }
 
-  public static double calculateXAngleOffsetToGamePiece(
+  public static double getFieldRelativeAngleToGamePiece(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var gamePiecePose =
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
     DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
-    return -1
-        * (LocalizationSubsystem.distanceAngleToTarget(
+    return LocalizationSubsystem.distanceAngleToTarget(
                     new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
-                .targetAngle()
-            - robotPoseAtCapture.getRotation().getDegrees());
+                .targetAngle();
   }
 }
