@@ -111,8 +111,17 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
       }
-
       default -> {}
+    }
+
+    var usedHeight =
+        getState() == ElevatorState.COLLISION_AVOIDANCE
+            ? collisionAvoidanceGoal
+            : getState().height;
+
+    if (MathUtil.isNear(0, usedHeight, 1.0) && MathUtil.isNear(0, getHeight(), 1.0)) {
+      leftMotor.disable();
+      rightMotor.disable();
     }
   }
 
