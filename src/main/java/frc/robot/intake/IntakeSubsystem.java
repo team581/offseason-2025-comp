@@ -7,8 +7,8 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-  private static final double ALGAE_INTAKE_CURRENT = 30;
-  private static final double CORAL_INTAKE_CURRENT = 30;
+  private static final double ALGAE_INTAKE_CURRENT = 20;
+  private static final double CORAL_INTAKE_CURRENT = 20;
 
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
@@ -94,8 +94,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotor.setVoltage(-1.0);
       }
       case SCORE_CORAL -> {
-        topMotor.setVoltage(-1.0);
-        bottomMotor.setVoltage(-1.0);
+        topMotor.setVoltage(-2.0);
+        bottomMotor.setVoltage(-2.0);
       }
       case OUTTAKING -> {
         topMotor.setVoltage(-1.0);
