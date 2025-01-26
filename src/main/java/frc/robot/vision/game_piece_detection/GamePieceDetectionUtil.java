@@ -15,7 +15,7 @@ public class GamePieceDetectionUtil {
           0.2741422,
           0.2809748,
           0.399542,
-          new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(-10)));
+          new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(-15)));
 
   private static Translation2d calculateFieldRelativeTranslationFromCamera(
       double tx, double ty, Pose2d robotPoseAtCapture, Pose3d limelightToRobotOffset) {
