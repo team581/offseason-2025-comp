@@ -1001,7 +1001,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void l4CoralScoreRequest(){
+  public void l4CoralScoreRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
@@ -1009,7 +1009,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void l4CoralReleaseRequest(){
+  public void l4CoralReleaseRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
