@@ -70,19 +70,15 @@ public class FourPiece1EDC extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(15.093, 6.079, Rotation2d.fromDegrees(-123.427))),
                 new AutoPoint(new Pose2d(16.292, 7.208, Rotation2d.fromDegrees(-123.819))))),
-          actions.intakeStationCommand(),
+        actions.intakeStationCommand(),
         trailblazer.followSegment(
-          new AutoSegment(
-            CONSTRAINTS,
-            new AutoPoint(new Pose2d(15.295, 5.615, Rotation2d.fromDegrees(0))),
-            new AutoPoint(new Pose2d(14.391, 4.24, Rotation2d.fromDegrees(0))))),
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(15.295, 5.615, Rotation2d.fromDegrees(0))),
+                new AutoPoint(new Pose2d(14.391, 4.24, Rotation2d.fromDegrees(0))))),
         Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
         trailblazer.followSegment(
-          new AutoSegment(
-            CONSTRAINTS,
-            new AutoPoint(new Pose2d(14.391, 4.24, Rotation2d.fromDegrees(0)))
-          )
-        )
-        );
+            new AutoSegment(
+                CONSTRAINTS, new AutoPoint(new Pose2d(14.391, 4.24, Rotation2d.fromDegrees(0))))));
   }
 }

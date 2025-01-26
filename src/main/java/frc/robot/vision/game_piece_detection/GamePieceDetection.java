@@ -61,7 +61,7 @@ public class GamePieceDetection {
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
     DogLog.log("GamePieceDetection/pose", new Pose2d(gamePiecePose, new Rotation2d()));
     return LocalizationSubsystem.distanceAngleToTarget(
-                    new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
-                .targetAngle();
+            new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
+        .targetAngle();
   }
 }

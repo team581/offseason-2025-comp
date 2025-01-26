@@ -18,16 +18,19 @@ public class IntakeAssistManager {
   /// tune angle change
 
   public static ChassisSpeeds getRobotRelativeAssistSpeeds(
-      LocalizationSubsystem localization, Limelight limelight, ChassisSpeeds fieldRelativeInputSpeeds) {
-        var visionResult = limelight.getCoralResult();
-        if (visionResult.isEmpty()){
-          return fieldRelativeInputSpeeds;
-        }
+      LocalizationSubsystem localization,
+      Limelight limelight,
+      ChassisSpeeds fieldRelativeInputSpeeds) {
+    var visionResult = limelight.getCoralResult();
+    if (visionResult.isEmpty()) {
+      return fieldRelativeInputSpeeds;
+    }
 
     Pose2d robotPose = localization.getPose(visionResult.get().timestamp());
-    double fieldRelativeAngle = GamePieceDetection.getFieldRelativeAngleToGamePiece(robotPose, visionResult.get());
+    double fieldRelativeAngle =
+        GamePieceDetection.getFieldRelativeAngleToGamePiece(robotPose, visionResult.get());
     DogLog.log("IntakeAssist/TX", fieldRelativeAngle);
-    double angleError = fieldRelativeAngle-robotPose.getRotation().getDegrees();
+    double angleError = fieldRelativeAngle - robotPose.getRotation().getDegrees();
     double angleChange = MathUtil.clamp(MIN_ANGLE_CHANGE, MAX_ANGLE_CHANGE, angleError * ASSIST_KP);
 
     Translation2d requestedFieldRelativeDrive =
