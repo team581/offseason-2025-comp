@@ -1,19 +1,19 @@
 package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.DoNothingAuto;
+import frc.robot.autos.auto_path_commands.FourPiece2IJKAuto;
 import frc.robot.autos.auto_path_commands.PushPartnerAuto;
 import frc.robot.autos.auto_path_commands.StraightLineAuto;
 import frc.robot.autos.auto_path_commands.TestAuto;
-import frc.robot.autos.auto_path_commands.ThreePiece1EDC;
-import frc.robot.autos.auto_path_commands.ThreePiece2IJKAuto;
+import frc.robot.autos.auto_path_commands.FourPiece1EDC;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
 public enum AutoSelection {
   DO_NOTHING(DoNothingAuto::new),
-  THREE_PIECE_2IJK(ThreePiece2IJKAuto::new),
+  FOUR_PIECE_2IJK(FourPiece2IJKAuto::new),
   PUSH_PARTNER(PushPartnerAuto::new),
-  THREE_PIECE_1EDC(ThreePiece1EDC::new),
+  FOUR_PIECE_1EDC(FourPiece1EDC::new),
   STRAIGHT_LINE(StraightLineAuto::new),
   TEST_AUTO(TestAuto::new);
 

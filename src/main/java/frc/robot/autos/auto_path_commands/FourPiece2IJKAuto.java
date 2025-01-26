@@ -11,11 +11,11 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class ThreePiece2IJKAuto extends BaseAuto {
+public class FourPiece2IJKAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
+      new AutoConstraintOptions(2, 71.5, 8.5, 35.2);
 
-  public ThreePiece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public FourPiece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
@@ -65,6 +65,16 @@ public class ThreePiece2IJKAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.104, 3.117, Rotation2d.fromDegrees(123.427))))));
+                new AutoPoint(new Pose2d(15.093, 1.971, Rotation2d.fromDegrees(133.277))),
+                new AutoPoint(new Pose2d(16.292, 0.842, Rotation2d.fromDegrees(123.819))))),
+        actions.intakeStationCommand(),
+        trailblazer.followSegment(
+            new AutoSegment(
+                new AutoPoint(new Pose2d(15.295, 2.435, Rotation2d.fromDegrees(115.844))),
+                new AutoPoint(new Pose2d(14.391, 3.81, Rotation2d.fromDegrees(176.077))))),
+        Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
+        trailblazer.followSegment(
+            new AutoSegment(
+                new AutoPoint(new Pose2d(14.391, 3.81, Rotation2d.fromDegrees(176.077))))));
   }
 }

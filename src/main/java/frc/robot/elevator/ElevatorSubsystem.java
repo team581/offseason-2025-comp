@@ -72,27 +72,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
-      case CLIMBING,
-          NET,
-          PROCESSOR,
-          ALGAE_DISLODGE_L2,
-          ALGAE_DISLODGE_L3,
-          ALGAE_INTAKE_L2,
-          ALGAE_INTAKE_L3,
-          CORAL_L1_LINEUP_OR_PLACE,
-          CORAL_L2_LINEUP_OR_PLACE,
-          CORAL_L3_LINEUP_OR_PLACE,
-          CORAL_L4_LINEUP_OR_PLACE,
-          GROUND_ALGAE_INTAKE,
-          GROUND_CORAL_INTAKE,
-          STOWED,
-          INTAKING_CORAL_STATION,
-          UNJAM,
-          PRE_INTAKE_CORAL_STATION -> {
+      default -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
       }
-      default -> {}
+      case COLLISION_AVOIDANCE -> {
+        leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
+        rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
+      }
     }
   }
 
