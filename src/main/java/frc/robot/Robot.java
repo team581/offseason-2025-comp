@@ -28,7 +28,6 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.vision.game_piece_detection.GamePieceDetection;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristSubsystem;
@@ -68,7 +67,6 @@ public class Robot extends TimedRobot {
 
   private final IntakeSubsystem intake =
       new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor);
-  private final GamePieceDetection gamePieceDetection = new GamePieceDetection();
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);

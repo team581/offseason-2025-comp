@@ -119,10 +119,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
-      case INTAKE_ASSIST_AUTO, INTAKE_ASSIST_TELEOP ->
+      case INTAKE_ASSIST_CORAL_AUTO, INTAKE_ASSIST_CORAL_TELEOP ->
           DriverStation.isAutonomous()
-              ? SwerveState.INTAKE_ASSIST_AUTO
-              : SwerveState.INTAKE_ASSIST_TELEOP;
+              ? SwerveState.INTAKE_ASSIST_CORAL_AUTO
+              : SwerveState.INTAKE_ASSIST_CORAL_TELEOP;
+      case INTAKE_ASSIST_ALGAE_AUTO, INTAKE_ASSIST_ALGAE_TELEOP ->
+          DriverStation.isAutonomous()
+              ? SwerveState.INTAKE_ASSIST_ALGAE_AUTO
+              : SwerveState.INTAKE_ASSIST_ALGAE_TELEOP;
       case PURPLE_ALIGN -> currentState;
       case SCORE_ASSIST -> currentState;
       case AUTO_SNAPS, TELEOP_SNAPS ->
@@ -233,9 +237,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public void setSnapsEnabled(boolean newValue) {
     switch (getState()) {
-      case TELEOP, TELEOP_SNAPS, INTAKE_ASSIST_TELEOP, PURPLE_ALIGN, SCORE_ASSIST ->
+      case TELEOP,
+              TELEOP_SNAPS,
+              INTAKE_ASSIST_CORAL_TELEOP,
+              INTAKE_ASSIST_ALGAE_TELEOP,
+              PURPLE_ALIGN,
+              SCORE_ASSIST ->
           setStateFromRequest(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
-      case AUTO, AUTO_SNAPS, INTAKE_ASSIST_AUTO ->
+      case AUTO, AUTO_SNAPS, INTAKE_ASSIST_CORAL_AUTO, INTAKE_ASSIST_ALGAE_AUTO ->
           setStateFromRequest(newValue ? SwerveState.AUTO_SNAPS : SwerveState.AUTO);
     }
   }
