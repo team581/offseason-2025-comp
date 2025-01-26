@@ -226,6 +226,7 @@ public class Robot extends TimedRobot {
         .driverController
         .povRight()
         .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.ALGAE));
+    hardware.driverController.start().onTrue(robotCommands.rehomeRollCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
     hardware.operatorController.a().onTrue(robotCommands.rehomeElevatorCommand());
