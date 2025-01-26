@@ -27,4 +27,12 @@ public class AutoCommands {
   public Command l4LineupCommand() {
     return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements);
   }
+
+  public Command l4ScoreCommand() {
+    return Commands.runOnce(robotManager::l4CoralScoreRequest, requirements);
+  }
+
+  public Command l4ReleaseCommand() {
+    return Commands.runOnce(robotManager::l4CoralReleaseRequest, requirements);
+  }
 }

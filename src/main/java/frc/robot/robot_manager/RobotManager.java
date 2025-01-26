@@ -806,7 +806,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_4_RELEASE,
           CORAL_L2_4_RELEASE,
           CORAL_L3_4_RELEASE,
-          CORAL_L4_4_RELEASE,
           CLIMBING_1_LINEUP,
           NET_BACK_SCORING,
           NET_FORWARD_SCORING,
@@ -999,6 +998,22 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L3_1_APPROACH);
+    }
+  }
+
+  public void l4CoralScoreRequest(){
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L4_3_PLACE);
+    }
+  }
+
+  public void l4CoralReleaseRequest(){
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L4_4_RELEASE);
     }
   }
 
