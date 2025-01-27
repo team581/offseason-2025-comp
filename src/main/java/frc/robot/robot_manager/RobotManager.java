@@ -166,6 +166,10 @@ public class RobotManager extends StateMachine<RobotState> {
           wrist.atGoal() && elevator.atGoal() && timeout(0.5)
               ? RobotState.IDLE_NO_GP
               : currentState;
+      case CORAL_L4_3_PLACE_THEN_RELEASE ->
+          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
+              ? RobotState.CORAL_L4_4_RELEASE
+              : currentState;
 
       // Intaking
       case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 ->
@@ -481,6 +485,18 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L4_3_PLACE -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L4_PLACE, WristState.CORAL_SCORE_PLACING_L4);
+        swerve.setSnapsEnabled(true);
+        swerve.setSnapToAngle(reefSnapAngle);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L4_3_PLACE_THEN_RELEASE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L4_PLACE, WristState.CORAL_SCORE_PLACING_L4);
         swerve.setSnapsEnabled(true);
@@ -1006,6 +1022,14 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
       default -> setStateFromRequest(RobotState.CORAL_L4_3_PLACE);
+    }
+  }
+
+  public void l4coralPlaceAndReleaseRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.CORAL_L4_3_PLACE_THEN_RELEASE);
     }
   }
 
