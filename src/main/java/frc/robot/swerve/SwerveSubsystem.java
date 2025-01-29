@@ -128,8 +128,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     return switch (currentState) {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
       case INTAKE_ASSIST_CORAL_TELEOP -> currentState;
-      case INTAKE_ASSIST_ALGAE_TELEOP ->
-               SwerveState.INTAKE_ASSIST_ALGAE_TELEOP;
+      case INTAKE_ASSIST_ALGAE_TELEOP -> SwerveState.INTAKE_ASSIST_ALGAE_TELEOP;
       case PURPLE_ALIGN -> currentState;
       case SCORE_ASSIST -> currentState;
       case AUTO_SNAPS, TELEOP_SNAPS ->
