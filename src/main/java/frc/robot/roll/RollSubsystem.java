@@ -68,7 +68,7 @@ public class RollSubsystem extends StateMachine<RollState> {
   }
 
   private double getScoreDirection() {
-    if (!intake.getBottomSensor()) {
+    if (intake.getLeftSensor()) {
       return 90;
     }
 

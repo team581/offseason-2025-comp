@@ -32,8 +32,9 @@ public record RobotConfig(
       String canBusName,
       int topMotorID,
       int bottomMotorID,
-      Debouncer topDebouncer,
-      Debouncer bottomDebouncer,
+      int candiID,
+      Debouncer rightDebouncer,
+      Debouncer leftDebouncer,
       TalonFXConfiguration topMotorConfig,
       TalonFXConfiguration bottomMotorConfig) {}
 

@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
@@ -23,6 +24,9 @@ public class Hardware {
   public final TalonFX intakeBottomMotor =
       new TalonFX(
           RobotConfig.get().intake().bottomMotorID(), RobotConfig.get().intake().canBusName());
+  public final CANdi candi =
+      new CANdi(RobotConfig.get().intake().candiID(), RobotConfig.get().intake().canBusName());
+
   public final TalonFX wristMotor =
       new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());
 
