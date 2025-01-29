@@ -97,7 +97,6 @@ public class RobotManager extends StateMachine<RobotState> {
               PROCESSOR_WAITING,
               NET_BACK_WAITING,
               NET_FORWARD_WAITING,
-              CORAL_L1_2_LINEUP,
               CORAL_L1_3_PLACE,
               CORAL_L2_2_LINEUP,
               CORAL_L2_3_PLACE,
@@ -133,7 +132,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CORAL_L1_1_APPROACH ->
           AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose)
-              ? RobotState.CORAL_L1_2_LINEUP
+              ? RobotState.CORAL_L1_3_PLACE
               : currentState;
       case CORAL_L2_1_APPROACH ->
           AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose)
@@ -370,18 +369,6 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
-        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
-        backTagLimelight.setState(LimelightState.REEF_TAGS);
-        lights.setState(getLightStateForScoring());
-        climber.setState(ClimberState.STOWED);
-      }
-      case CORAL_L1_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.CORAL_L1_LINEUP, WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.setSnapsEnabled(true);
-        swerve.setSnapToAngle(reefSnapAngle);
-        roll.setState(RollState.STOWED);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.REEF_TAGS);
         backTagLimelight.setState(LimelightState.REEF_TAGS);
@@ -749,7 +736,6 @@ public class RobotManager extends StateMachine<RobotState> {
     // Update snaps
     switch (getState()) {
       case CORAL_L1_1_APPROACH,
-          CORAL_L1_2_LINEUP,
           CORAL_L1_3_PLACE,
           CORAL_L1_4_RELEASE,
           CORAL_L2_1_APPROACH,
@@ -783,7 +769,6 @@ public class RobotManager extends StateMachine<RobotState> {
     // Update lights
     switch (getState()) {
       case CORAL_L1_1_APPROACH,
-          CORAL_L1_2_LINEUP,
           CORAL_L1_3_PLACE,
           CORAL_L1_4_RELEASE,
           CORAL_L2_1_APPROACH,
@@ -886,7 +871,7 @@ public class RobotManager extends StateMachine<RobotState> {
           intakeFloorAlgaeRequest();
         }
       }
-      case CORAL_L1_1_APPROACH, CORAL_L1_2_LINEUP, CORAL_L1_3_PLACE -> {
+      case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE -> {
         if (newMode == GamePieceMode.ALGAE) {
           processorWaitingRequest();
         }
@@ -1131,8 +1116,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
-      case CORAL_L1_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L1_2_LINEUP);
-      case CORAL_L1_2_LINEUP -> setStateFromRequest(RobotState.CORAL_L1_3_PLACE);
+      case CORAL_L1_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L1_3_PLACE);
       case CORAL_L1_3_PLACE -> setStateFromRequest(RobotState.CORAL_L1_4_RELEASE);
 
       case CORAL_L2_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L2_2_LINEUP);
