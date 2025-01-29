@@ -808,7 +808,7 @@ public class RobotManager extends StateMachine<RobotState> {
           || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
           || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
         lights.setState(LightsState.ERROR);
-      } else if (!wrist.rangeOfMotionGood()) {
+      } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
         lights.setState(LightsState.UNHOMED);
       } else {
         lights.setState(LightsState.HEALTHY);
