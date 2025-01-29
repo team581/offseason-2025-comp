@@ -79,8 +79,11 @@ public record RobotConfig(
   // TODO: Change this to false during events
   public static final boolean IS_DEVELOPMENT = true;
   public static final String SERIAL_NUMBER = System.getenv("serialnum");
+  private static final String PRACTICE_BOT_SERIAL_NUMBER = "0329F344";
+  public static final boolean IS_PRACTICE_BOT =
+      SERIAL_NUMBER != null && SERIAL_NUMBER.equals(PRACTICE_BOT_SERIAL_NUMBER);
 
   public static RobotConfig get() {
-    return PracticeConfig.practiceBot;
+    return IS_PRACTICE_BOT ? PracticeConfig.practiceBot : CompConfig.competitionBot;
   }
 }
