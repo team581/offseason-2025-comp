@@ -117,8 +117,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
           var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
           var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
-          leftMotor.setPosition(leftHomedHeight);
-          rightMotor.setPosition(rightHomedHeight);
+          // TODO: Restore elevator homing
+          leftMotor.setPosition(homingEndHeight);
+          rightMotor.setPosition(homingEndHeight);
 
           setStateFromRequest(ElevatorState.STOWED);
         }
