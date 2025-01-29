@@ -86,7 +86,7 @@ class PracticeConfig {
               20,
               0,
               58,
-              0.4),
+              0.5),
           new IntakeConfig(
               RIO_CAN_NAME,
               20,
