@@ -15,8 +15,9 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
-import frc.robot.generated.TunerConstants;
-import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.generated.CompBotTunerConstants;
+import frc.robot.generated.PracticeBotTunerConstants;
+import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.ControllerHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -34,12 +35,19 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
 
   public final TunerSwerveDrivetrain drivetrain =
-      new TunerSwerveDrivetrain(
-          TunerConstants.DrivetrainConstants,
-          TunerConstants.FrontLeft,
-          TunerConstants.FrontRight,
-          TunerConstants.BackLeft,
-          TunerConstants.BackRight);
+      RobotConfig.IS_PRACTICE_BOT
+          ? new TunerSwerveDrivetrain(
+              PracticeBotTunerConstants.DrivetrainConstants,
+              PracticeBotTunerConstants.FrontLeft,
+              PracticeBotTunerConstants.FrontRight,
+              PracticeBotTunerConstants.BackLeft,
+              PracticeBotTunerConstants.BackRight)
+          : new TunerSwerveDrivetrain(
+              CompBotTunerConstants.DrivetrainConstants,
+              CompBotTunerConstants.FrontLeft,
+              CompBotTunerConstants.FrontRight,
+              CompBotTunerConstants.BackLeft,
+              CompBotTunerConstants.BackRight);
 
   public final Pigeon2 drivetrainPigeon = drivetrain.getPigeon2();
 

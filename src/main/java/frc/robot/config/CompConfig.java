@@ -24,11 +24,11 @@ import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 class CompConfig {
-  private static final String CANIVORE_NAME = TunerConstants.kCANBus.getName();
+  private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
   public static final RobotConfig competitionBot =
