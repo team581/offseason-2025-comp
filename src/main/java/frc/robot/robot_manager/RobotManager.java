@@ -1125,7 +1125,9 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_CORAL_FLOOR_UPRIGHT,
           INTAKE_CORAL_STATION -> {}
 
-      case PROCESSOR_WAITING, IDLE_ALGAE ->
+          case IDLE_ALGAE ->
+          setStateFromRequest(RobotState.PROCESSOR_WAITING);
+      case PROCESSOR_WAITING ->
           setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);

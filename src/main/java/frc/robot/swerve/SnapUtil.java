@@ -6,7 +6,7 @@ import frc.robot.fms.FmsSubsystem;
 public class SnapUtil {
 
   public static double getProcessorAngle() {
-    return FmsSubsystem.isRedAlliance() ? 270 : 90.0;
+    return FmsSubsystem.isRedAlliance() ? 90 : 270;
   }
 
   public static double getForwardNetDirection() {
