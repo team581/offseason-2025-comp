@@ -48,9 +48,14 @@ public class AutoAlign {
     return theta > 90 && theta < 270;
   }
 
-  public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
+  public static boolean isCloseToReefSide(
+      Pose2d robotPose, Pose2d nearestReefSide, double thresholdMeters) {
     return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
-        < Units.feetToMeters(3);
+        < thresholdMeters;
+  }
+
+  public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
+    return isCloseToReefSide(robotPose, nearestReefSide, Units.feetToMeters(3));
   }
 
   public static ReefAlignState getReefAlignState(

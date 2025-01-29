@@ -149,23 +149,35 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Dislodging
-      case DISLODGE_ALGAE_L2_PUSHING ->
-          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
-              ? (intake.getHasGP() ? RobotState.CORAL_L2_2_LINEUP : RobotState.IDLE_NO_GP)
-              : currentState;
-      case DISLODGE_ALGAE_L3_PUSHING ->
-          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
-              ? (intake.getHasGP() ? RobotState.CORAL_L3_2_LINEUP : RobotState.IDLE_NO_GP)
-              : currentState;
-
+      case DISLODGE_ALGAE_L2_PUSHING -> {
+        if (wrist.atGoal() && elevator.atGoal() && roll.atGoal()) {
+          if (intake.getHasGP()) {
+            yield RobotState.CORAL_L2_2_LINEUP;
+          } else if (cameraOnlineAndFarEnoughFromReef()) {
+            yield RobotState.IDLE_NO_GP;
+          }
+        }
+        yield currentState;
+      }
+      case DISLODGE_ALGAE_L3_PUSHING -> {
+        if (wrist.atGoal() && elevator.atGoal() && roll.atGoal()) {
+          if (intake.getHasGP()) {
+            yield RobotState.CORAL_L3_2_LINEUP;
+          } else if (cameraOnlineAndFarEnoughFromReef()) {
+            yield RobotState.IDLE_NO_GP;
+          }
+        }
+        yield currentState;
+      }
       // Scoring
       case PROCESSOR_SCORING, NET_FORWARD_SCORING ->
           intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
 
       case CORAL_L1_4_RELEASE, CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE ->
-          wrist.atGoal() && elevator.atGoal() && timeout(0.5)
+          wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef()
               ? RobotState.IDLE_NO_GP
               : currentState;
+
       case CORAL_L4_3_PLACE_THEN_RELEASE ->
           wrist.atGoal() && elevator.atGoal() && roll.atGoal()
               ? RobotState.CORAL_L4_4_RELEASE
@@ -813,6 +825,22 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSidePose = AutoAlign.getClosestReefSide(localization.getPose());
     reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
+  }
+
+  private boolean cameraOnlineAndFarEnoughFromReef() {
+    var tagCameraOnline = vision.isAnyTagLimelightOnline();
+    var isFarEnoughFromReefSide =
+        !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.5);
+
+    if (tagCameraOnline == false) {
+      return timeout(0.5);
+    }
+
+    if ((tagCameraOnline && isFarEnoughFromReefSide) || timeout(15.0)) {
+      return true;
+    }
+
+    return false;
   }
 
   public void setGamePieceMode(GamePieceMode newMode) {
