@@ -1238,7 +1238,8 @@ public class RobotManager extends StateMachine<RobotState> {
   private LightsState getLightStateForScoring() {
     return switch (getReefAlignState()) {
       case CAMERA_DEAD -> LightsState.ERROR;
-      case HAS_PURPLE_ALIGNED -> LightsState.SCORE_ALIGN_READY;
+      // TODO: Once purple is implemented, only say we're ready once purple is aligned
+      case HAS_TAGS_IN_POSITION, HAS_PURPLE_ALIGNED -> LightsState.SCORE_ALIGN_READY;
       default -> LightsState.SCORE_ALIGN_NOT_READY;
     };
   }
