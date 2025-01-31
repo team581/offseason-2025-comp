@@ -180,8 +180,8 @@ public class RobotManager extends StateMachine<RobotState> {
         rumbleController.rumbleRequest();
         yield RobotState.IDLE_NO_GP;
       }
-
-      case CORAL_L1_4_RELEASE, CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE -> {
+      case CORAL_L1_4_RELEASE -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
+      case CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE -> {
         var done = wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef();
 
         if (done) {
