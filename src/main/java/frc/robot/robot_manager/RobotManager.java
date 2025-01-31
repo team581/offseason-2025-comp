@@ -2,7 +2,6 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.climber.ClimberState;
@@ -755,16 +754,14 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> {}
     }
 
-    if (DriverStation.isDisabled()) {
-      if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
-          || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
-          || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
-        lights.setState(LightsState.ERROR);
-      } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
-        lights.setState(LightsState.UNHOMED);
-      } else {
-        lights.setState(LightsState.HEALTHY);
-      }
+    if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+      lights.setDisabledState(LightsState.ERROR);
+    } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
+      lights.setDisabledState(LightsState.UNHOMED);
+    } else {
+      lights.setDisabledState(LightsState.HEALTHY);
     }
 
     // Superstructure collision avoidance logging
