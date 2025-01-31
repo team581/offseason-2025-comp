@@ -190,7 +190,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private void updateHealth(Optional<?> result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
-
+    DogLog.log("Vision/" + name + "/Heartbeat", newHeartbeat);
     if (limelightHeartbeat != newHeartbeat) {
       limelightTimer.restart();
     }
