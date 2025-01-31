@@ -129,6 +129,11 @@ public class CollisionAvoidance {
     // }
     DogLog.log("CollisionAvoidance/currentZone", currentZone);
     DogLog.log("CollisionAvoidance/goalZone", goalZone);
+    DogLog.log(
+        "CollisionAvoidance/CurrentPosition",
+        angleHeightToTranslation(
+            currentSuperstructurePosition.wristAngle(),
+            currentSuperstructurePosition.elevatorHeight()));
 
     if (collisionBoxToNum(currentZone) < collisionBoxToNum(goalZone)) {
       return Optional.of(numToCollisionBoxes(collisionBoxToNum(currentZone) + 1).box.safeZone());
