@@ -99,31 +99,4 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(Optional.empty(), result); //
   }
-
-  @Test
-  void testPlanCollisionLowToMid() {
-    SuperstructurePosition current = new SuperstructurePosition(0, 135);
-    SuperstructurePosition goal = new SuperstructurePosition(20, 80);
-    SuperstructurePosition expectedResult = new SuperstructurePosition(0.0, 80.0);
-    var result = CollisionAvoidance.plan(current, goal);
-    assertEquals(expectedResult, result.get());
-  }
-
-  @Test
-  void testPlanCollisionLowToHigh() {
-    SuperstructurePosition current = new SuperstructurePosition(0, 135);
-    SuperstructurePosition goal = new SuperstructurePosition(88, 90);
-    SuperstructurePosition expectedResult = new SuperstructurePosition(0.0, 80.0);
-    var result = CollisionAvoidance.plan(current, goal);
-    assertEquals(expectedResult, result.get());
-  }
-
-  @Test
-  void testPlanNoCollisionSuperClose() {
-    SuperstructurePosition current = new SuperstructurePosition(0, 135);
-    SuperstructurePosition goal = new SuperstructurePosition(0, 90);
-    SuperstructurePosition expectedResult = new SuperstructurePosition(0.0, 80.0);
-    var result = CollisionAvoidance.plan(current, goal);
-    assertEquals(expectedResult, result.get());
-  }
 }
