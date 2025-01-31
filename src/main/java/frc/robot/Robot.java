@@ -2,7 +2,9 @@ package frc.robot;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -141,13 +143,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
 
-    // Memory logging
-    DogLog.log("Debug/Memory/Total", Runtime.getRuntime().totalMemory());
-    DogLog.log("Debug/Memory/Free", Runtime.getRuntime().freeMemory());
-    DogLog.log("Debug/Memory/Max", Runtime.getRuntime().maxMemory());
-    DogLog.log(
-        "Debug/Memory/Used",
-        Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+    if (RobotController.getBatteryVoltage() < 12.5) {
+      DogLog.logFault("Battery voltage low", AlertType.kWarning);
+    } else {
+      DogLog.clearFault("Battery voltage low");
+    }
   }
 
   @Override
