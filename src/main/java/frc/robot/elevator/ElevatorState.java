@@ -18,7 +18,6 @@ public enum ElevatorState {
   NET(58.0),
   PROCESSOR(0),
 
-  CORAL_L1_LINEUP(0.0),
   CORAL_L1_PLACE(0.0),
   CORAL_L1_RELEASE(0.0),
 

@@ -24,9 +24,13 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       new MotionMagicVoltage(ElevatorState.STOWED.height);
 
   // Homing
-  private double lowestSeenHeight = 0.0;
-  private double averageMeasuredHeight;
-  private double collisionAvoidanceGoal;
+  private double leftHeight = 0;
+  private double rightHeight = 0;
+  private double lowestSeenHeightLeft = 0.0;
+  private double lowestSeenHeightRight = 0.0;
+
+  private double averageMeasuredHeight = 0;
+  private double collisionAvoidanceGoal = ElevatorState.STOWED.height;
 
   // Mid-match homing
   private double averageStatorCurrent;
@@ -59,22 +63,19 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected void collectInputs() {
     // Calculate average height of the two motors
-    averageMeasuredHeight =
-        (leftMotor.getPosition().getValueAsDouble() + rightMotor.getPosition().getValueAsDouble())
-            / 2.0;
+    leftHeight = leftMotor.getPosition().getValueAsDouble();
+    rightHeight = rightMotor.getPosition().getValueAsDouble();
+
+    averageMeasuredHeight = (leftHeight + rightHeight) / 2.0;
 
     averageStatorCurrent =
         (leftMotor.getStatorCurrent().getValueAsDouble()
                 + rightMotor.getStatorCurrent().getValueAsDouble())
             / 2.0;
-  }
 
-  @Override
-  public void disabledPeriodic() {
-    double currentHeight = averageMeasuredHeight;
-
-    if (currentHeight < lowestSeenHeight) {
-      lowestSeenHeight = currentHeight;
+    if (DriverStation.isDisabled()) {
+      lowestSeenHeightLeft = Math.min(lowestSeenHeightLeft, leftHeight);
+      lowestSeenHeightRight = Math.min(lowestSeenHeightRight, rightHeight);
     }
   }
 
@@ -103,6 +104,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     DogLog.log("Elevator/Right/StatorCurrent", rightMotor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Elevator/Left/Height", leftHeight);
+    DogLog.log("Elevator/Right/Height", rightHeight);
     DogLog.log("Elevator/Height", averageMeasuredHeight);
     DogLog.log("Elevator/AtGoal", atGoal());
 
@@ -112,9 +115,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           // We are enabled and still in pre match homing
           // Reset the motor positions, and then transition to idle state
           double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
-          double homedHeight = homingEndHeight + (averageMeasuredHeight - lowestSeenHeight);
-          leftMotor.setPosition(homedHeight);
-          rightMotor.setPosition(homedHeight);
+          var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
+          var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
+          // TODO: Restore elevator homing
+          leftMotor.setPosition(homingEndHeight);
+          rightMotor.setPosition(homingEndHeight);
 
           setStateFromRequest(ElevatorState.STOWED);
         }

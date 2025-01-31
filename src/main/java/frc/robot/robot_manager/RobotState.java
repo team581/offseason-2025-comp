@@ -36,7 +36,7 @@ public enum RobotState {
   NET_BACK_SCORING,
 
   CORAL_L1_1_APPROACH,
-  CORAL_L1_2_LINEUP,
+  // L1 scoring has no LINEUP state since it's so simple to score
   CORAL_L1_3_PLACE,
   CORAL_L1_4_RELEASE,
 
