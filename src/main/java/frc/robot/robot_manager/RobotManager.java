@@ -7,6 +7,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
@@ -42,6 +43,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public final ElevatorSubsystem elevator;
   public final RollSubsystem roll;
   public final ClimberSubsystem climber;
+  public final RumbleControllerSubsystem rumbleController;
 
   private final Limelight elevatorPurpleLimelight;
   private final Limelight frontCoralLimelight;
@@ -67,7 +69,8 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight backTagLimelight,
       LightsSubsystem lights,
       Purple purple,
-      ClimberSubsystem climber) {
+      ClimberSubsystem climber,
+      RumbleControllerSubsystem rumbleController) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
     this.intake = intake;
     this.wrist = wrist;
@@ -83,6 +86,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.lights = lights;
     this.purple = purple;
     this.climber = climber;
+    this.rumbleController = rumbleController;
   }
 
   private double reefSnapAngle = 0.0;
@@ -170,13 +174,25 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       // Scoring
-      case PROCESSOR_SCORING, NET_FORWARD_SCORING ->
-          intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
+      case PROCESSOR_SCORING, NET_FORWARD_SCORING -> {
+        if (intake.getHasGP()) {
+          yield currentState;
+        }
 
-      case CORAL_L1_4_RELEASE, CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE ->
-          wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef()
-              ? RobotState.IDLE_NO_GP
-              : currentState;
+        rumbleController.rumbleRequest();
+        yield RobotState.IDLE_NO_GP;
+      }
+
+      case CORAL_L1_4_RELEASE, CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE -> {
+        var done = wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef();
+
+        if (done) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_NO_GP;
+        }
+
+        yield currentState;
+      }
 
       case CORAL_L4_3_PLACE_THEN_RELEASE ->
           wrist.atGoal() && elevator.atGoal() && roll.atGoal()
@@ -184,10 +200,24 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Intaking
-      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 ->
-          intake.getHasGP() ? RobotState.IDLE_ALGAE : currentState;
-      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT ->
-          intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
+      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_ALGAE;
+        }
+
+        yield currentState;
+      }
+
+      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_CORAL;
+        }
+
+        yield currentState;
+      }
+
       case INTAKE_CORAL_STATION ->
           intake.getHasGP() ? RobotState.AFTER_INTAKE_CORAL_STATION : currentState;
       case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.AFTER_NET_BACK_WAITING;
@@ -722,6 +752,7 @@ public class RobotManager extends StateMachine<RobotState> {
         backTagLimelight.setState(LimelightState.TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
         climber.setState(ClimberState.STOWED);
+        rumbleController.rumbleRequest();
       }
       case AFTER_NET_BACK_WAITING -> {
         intake.setState(IntakeState.IDLE_NO_GP);
@@ -735,6 +766,7 @@ public class RobotManager extends StateMachine<RobotState> {
         backTagLimelight.setState(LimelightState.TAGS);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOWED);
+        rumbleController.rumbleRequest();
       }
     }
   }

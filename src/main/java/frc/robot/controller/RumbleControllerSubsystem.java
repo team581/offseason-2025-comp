@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -20,8 +22,20 @@ public class RumbleControllerSubsystem extends StateMachine<RumbleControllerStat
     matchTimer.start();
   }
 
+  @Override
+  public void disabledInit() {
+    matchTimer.stop();
+  }
+
   public RumbleControllerSubsystem(CommandXboxController controller, boolean matchTimeRumble) {
     this(controller.getHID(), matchTimeRumble);
+
+    if (matchTimeRumble) {
+      var rumbleCommand = Commands.runOnce(() -> rumbleRequest());
+      new Trigger(() -> matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 90)).onTrue(rumbleCommand);
+      new Trigger(() -> matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 60)).onTrue(rumbleCommand);
+      new Trigger(() -> matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 30)).onTrue(rumbleCommand);
+    }
   }
 
   public RumbleControllerSubsystem(GenericHID controller, boolean matchTimeRumble) {
@@ -39,7 +53,7 @@ public class RumbleControllerSubsystem extends StateMachine<RumbleControllerStat
   @Override
   protected RumbleControllerState getNextState(RumbleControllerState currentState) {
     return switch (currentState) {
-      case ON -> timeout(1) ? RumbleControllerState.OFF : currentState;
+      case ON -> timeout(0.5) ? RumbleControllerState.OFF : currentState;
       default -> currentState;
     };
   }
@@ -54,21 +68,6 @@ public class RumbleControllerSubsystem extends StateMachine<RumbleControllerStat
         controller.setRumble(RumbleType.kBothRumble, 0);
       }
       default -> {}
-    }
-  }
-
-  @Override
-  public void robotPeriodic() {
-    if (matchTimeRumble) {
-      if (matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 90)) {
-        rumbleRequest();
-      }
-      if (matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 60)) {
-        rumbleRequest();
-      }
-      if (matchTimer.hasElapsed(MATCH_DURATION_TELEOP - 30)) {
-        rumbleRequest();
-      }
     }
   }
 }
