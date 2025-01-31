@@ -14,8 +14,8 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private final Limelight limelight;
 
   private Timer blinkTimer = new Timer();
-  private LightsState storedState;
-  private LightsState disabledState;
+  private LightsState storedState = LightsState.IDLE_NO_GP_CORAL_MODE;
+  private LightsState disabledState = LightsState.HEALTHY;
 
   public LightsSubsystem(CANdle candle, Limelight limelight) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_NO_GP_CORAL_MODE);
