@@ -7,6 +7,8 @@ public enum LightsState {
   UNHOMED(Color.kYellow, BlinkPattern.BLINK_SLOW),
   HEALTHY(Color.kGreen, BlinkPattern.SOLID),
 
+  BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
+
   IDLE_NO_GP_CORAL_MODE(Color.kWhite, BlinkPattern.BLINK_SLOW),
   IDLE_WITH_CORAL(Color.kWhite, BlinkPattern.SOLID),
 
