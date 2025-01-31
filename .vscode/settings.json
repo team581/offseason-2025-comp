@@ -1,5 +1,6 @@
 {
   "[gradle]": {"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"},
+  "java.debug.settings.onBuildFailureProceed": true,
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.test.defaultConfig": "WPIlibUnitTests",
   "[python]": {

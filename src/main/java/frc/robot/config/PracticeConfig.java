@@ -72,7 +72,7 @@ class PracticeConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(250.0)
+                          .withMotionMagicAcceleration(250)
                           .withMotionMagicCruiseVelocity(250.0))
                   .withFeedback(
                       new FeedbackConfigs()
@@ -162,7 +162,7 @@ class PracticeConfig {
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(5)
-                          .withMotionMagicCruiseVelocity(10))
+                          .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))

@@ -38,7 +38,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    rightSensorRaw = candi.getS1State().getValue() != S1StateValue.High;
+    rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
     rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
