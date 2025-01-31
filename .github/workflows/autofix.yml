@@ -1,0 +1,37 @@
+name: autofix.ci # needed to securely identify the workflow
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  validation:
+    name: Validate Gradle wrappers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git repository
+        uses: actions/checkout@v4
+      - name: Validate Gradle wrappers
+        uses: gradle/actions/wrapper-validation@v4
+  autofix:
+    name: Autofix
+    runs-on: ubuntu-latest
+    needs:
+      - validation
+    steps:
+      - name: Checkout Git repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: "gradle"
+
+      - name: Format with Spotless
+        run: ./gradlew spotlessApply
+
+      - name: Run autofix.ci
+        uses: autofix-ci/action@551dded8c6cc8a1054039c8bc0b8b48c51dfc6ef
