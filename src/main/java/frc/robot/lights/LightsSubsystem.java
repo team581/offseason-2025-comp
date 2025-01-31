@@ -2,19 +2,24 @@ package frc.robot.lights;
 
 import com.ctre.phoenix.led.CANdle;
 import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.vision.limelight.Limelight;
 
 public class LightsSubsystem extends StateMachine<LightsState> {
   private final CANdle candle;
+  private final Limelight limelight;
 
   private Timer blinkTimer = new Timer();
+  private LightsState storedState;
+  private LightsState disabledState;
 
-  public LightsSubsystem(CANdle candle) {
+  public LightsSubsystem(CANdle candle, Limelight limelight) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_NO_GP_CORAL_MODE);
-
+    this.limelight = limelight;
     this.candle = candle;
     blinkTimer.start();
   }
@@ -23,23 +28,40 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     setStateFromRequest(newState);
   }
 
+  public void blink() {
+    storedState = getState();
+    setStateFromRequest(LightsState.BLINK);
+  }
+
+  public void setDisabledState(LightsState newDisabledState) {
+    disabledState = newDisabledState;
+  }
+
+  @Override
+  protected LightsState getNextState(LightsState currentState) {
+    return switch (currentState) {
+      case BLINK -> timeout(1.0) ? storedState : currentState;
+      default -> currentState;
+    };
+  }
+
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
-    Color8Bit color8Bit = new Color8Bit(getState().color);
-
-    if (getState().pattern == BlinkPattern.SOLID) {
+    var usedState = DriverStation.isDisabled() ? disabledState : getState();
+    limelight.setBlinkEnabled(usedState == LightsState.BLINK);
+    Color8Bit color8Bit = new Color8Bit(usedState.color);
+    if (usedState.pattern == BlinkPattern.SOLID) {
       candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
     } else {
       double time = blinkTimer.get();
       double onDuration = 0;
       double offDuration = 0;
 
-      if (getState().pattern == BlinkPattern.BLINK_FAST) {
+      if (usedState.pattern == BlinkPattern.BLINK_FAST) {
         onDuration = BlinkPattern.BLINK_FAST.duration;
         offDuration = BlinkPattern.BLINK_FAST.duration * 2;
-      } else if (getState().pattern == BlinkPattern.BLINK_SLOW) {
+      } else if (usedState.pattern == BlinkPattern.BLINK_SLOW) {
         onDuration = BlinkPattern.BLINK_SLOW.duration;
         offDuration = BlinkPattern.BLINK_SLOW.duration * 2;
       }
@@ -52,7 +74,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
       }
     }
 
-    DogLog.log("Lights/Color", getState().color.toString());
-    DogLog.log("Lights/Pattern", getState().pattern);
+    DogLog.log("Lights/Color", usedState.color.toString());
+    DogLog.log("Lights/Pattern", usedState.pattern);
   }
 }

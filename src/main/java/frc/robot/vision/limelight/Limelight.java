@@ -211,6 +211,14 @@ public class Limelight extends StateMachine<LimelightState> {
     cameraHealth = CameraHealth.NO_TARGETS;
   }
 
+  public void setBlinkEnabled(boolean enabled) {
+    if (enabled) {
+      LimelightHelpers.setLEDMode_ForceBlink(limelightTableName);
+    } else {
+      LimelightHelpers.setLEDMode_ForceOff(limelightTableName);
+    }
+  }
+
   public CameraHealth getCameraHealth() {
     DogLog.log("Vision/" + name + "/Health", cameraHealth);
     return cameraHealth;
