@@ -42,12 +42,10 @@ public enum ReefPipe {
       new Pose2d(3.9463, 3.4319, new Rotation2d(-2.0944)),
       new Pose2d(13.5774, 4.62008, new Rotation2d(1.0472)));
 
-  // These are the poses for the tip of each vertical pipe on the reef
-  // PIPE_A is on the reef side closest to alliance area, it is the leftmost bottom pipe
-  // The following pipes are in order clockwise, with PIPE_B being above PIPE_A, and PIPE_C on the
-  // following reef side
-  // For each pipe there has been 2 poses inputted, first one is the pipes on the reef of the blue
-  // side of the field and the red side
+  private static final Pose2d L1Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L2Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L3Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L4Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
 
   public final Pose2d redPose;
   public final Pose2d bluePose;
@@ -57,7 +55,23 @@ public enum ReefPipe {
     this.bluePose = bluePose;
   }
 
-  public Pose2d getPose() {
-    return (FmsSubsystem.isRedAlliance() ? redPose : bluePose);
+  public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
+    var basePipePose = isRedAlliance ? redPose : bluePose;
+
+    var offset =
+        switch (level) {
+          case BASE -> new Pose2d();
+          case L1 -> L1Offset;
+          case L2 -> L2Offset;
+          case L3 -> L3Offset;
+          case L4 -> L4Offset;
+        };
+
+    return new Pose2d(
+        basePipePose.getTranslation().plus(offset.getTranslation()), basePipePose.getRotation());
+  }
+
+  public Pose2d getPose(ReefPipeLevel level) {
+    return getPose(level, FmsSubsystem.isRedAlliance());
   }
 }

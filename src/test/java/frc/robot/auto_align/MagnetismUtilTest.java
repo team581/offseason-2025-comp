@@ -2,70 +2,71 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.fms.FmsSubsystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MagnetismUtilTest {
-  private static final double kP = 2.0;
-  private static final double MAX_ASSIST = 2.0;
-  private static final double MIN_ASSIST = 1.0;
-  private static final double ASSIST_RADIUS = 1.5;
 
-  private static double clamp(double val) {
-    return Math.min(Math.max(val, MIN_ASSIST), MAX_ASSIST);
+  Translation2d getTranslationFromChassisSpeeds(ChassisSpeeds speeds) {
+    return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
   }
 
-  private static Pose2d[] getPipePoses() {
-    ReefPipe[] values = ReefPipe.values();
-    Pose2d[] reefPipes = new Pose2d[12];
-    int i = 0;
-    for (ReefPipe pipe : values) {
-      reefPipes[i] = FmsSubsystem.isRedAlliance() ? pipe.redPose : pipe.bluePose;
-      i++;
-    }
-    return reefPipes;
+  double getMagnitudeFromChassisSpeeds(ChassisSpeeds speeds) {
+    return Math.round(getTranslationFromChassisSpeeds(speeds).getNorm());
   }
 
-  public static ChassisSpeeds getMagnetizedChassisSpeeds(
-      ChassisSpeeds fieldRelativeRobotSpeeds, Pose2d robotPose) {
-    double accumulateAngle = 0.0;
-    double accumulateMagnitude = 0.0;
-    double timesRan = 0.0;
-    for (Pose2d pipe : getPipePoses()) {
-      double dist = pipe.getTranslation().getDistance(robotPose.getTranslation());
-      if (dist > ASSIST_RADIUS) {
-        continue;
-      }
-      accumulateAngle +=
-          pipe.getTranslation().minus(robotPose.getTranslation()).getAngle().getRadians();
-      accumulateMagnitude += clamp(kP / dist);
-
-      timesRan += 1.0;
-    }
-    double averageHeading =
-        (Math.atan2(
-                    fieldRelativeRobotSpeeds.vxMetersPerSecond,
-                    fieldRelativeRobotSpeeds.vyMetersPerSecond)
-                + (accumulateAngle / timesRan))
-            / 2;
-    double robotVectorMagnitude =
-        Math.hypot(
-                fieldRelativeRobotSpeeds.vxMetersPerSecond,
-                fieldRelativeRobotSpeeds.vyMetersPerSecond)
-            * (accumulateMagnitude / timesRan);
-
-    return new ChassisSpeeds(
-        robotVectorMagnitude * Math.cos(averageHeading),
-        robotVectorMagnitude * Math.sin(averageHeading),
-        fieldRelativeRobotSpeeds.omegaRadiansPerSecond);
+  Rotation2d getAngleFromChassisSpeeds(ChassisSpeeds speeds) {
+    return getTranslationFromChassisSpeeds(speeds).getAngle();
   }
 
   @Test
-  void robotSpeedVersusMagnetized() {
-    Pose2d robot = new Pose2d(11.2640, 2.8617, Rotation2d.fromDegrees(0.0));
-    ChassisSpeeds robotSpeed = new ChassisSpeeds(0.0, 0.0, 0.0);
-    Assertions.assertEquals(robotSpeed, getMagnetizedChassisSpeeds(robotSpeed, robot));
+  void testMagnetizedMagnitudeSameAsInputMagnitude() {
+    /* Verify input magnitude is the same as the output magnitude. */
+    ChassisSpeeds robotSpeed = new ChassisSpeeds(20.56, 11.14, 0.0);
+    Pose2d robotPose = new Pose2d();
+    Pose2d goalPose = new Pose2d();
+
+    ChassisSpeeds magnetizedSpeed =
+        MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPose, goalPose);
+    Assertions.assertEquals(
+        getMagnitudeFromChassisSpeeds(robotSpeed), getMagnitudeFromChassisSpeeds(magnetizedSpeed));
+  }
+
+  @Test
+  void testMagnetizedAngleBetweenInputAngleAndStraightLineAngle() {
+    /* Verify that the magnetized angle is between the input angle and the angle between robot and goal. */
+    ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
+    Pose2d robotPose = new Pose2d(2.0, 2.0, new Rotation2d());
+    Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
+    Rotation2d robotToGoal = Rotation2d.fromDegrees(90);
+
+    ChassisSpeeds magnetizedSpeed =
+        MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPose, goalPose);
+
+    Assertions.assertTrue(
+        robotToGoal.getDegrees() > getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees());
+    Assertions.assertTrue(
+        getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees()
+            > getAngleFromChassisSpeeds(robotSpeed).getDegrees());
+  }
+
+  @Test
+  void testMagnetismAngleGetsStrongerCloserToGoal() {
+    /* Test angle when robot is closer to goal is stronger than when farther. */
+    ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
+    Pose2d robotPoseFar = new Pose2d(2.0, 2.0, new Rotation2d());
+    Pose2d robotPoseClose = new Pose2d(2.0, 2.5, new Rotation2d());
+    Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
+
+    ChassisSpeeds magnetizedSpeedClose =
+        MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPoseClose, goalPose);
+    ChassisSpeeds magnetizedSpeedFar =
+        MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPoseFar, goalPose);
+
+    Assertions.assertTrue(
+        getAngleFromChassisSpeeds(magnetizedSpeedClose).getDegrees()
+            > getAngleFromChassisSpeeds(magnetizedSpeedFar).getDegrees());
   }
 }

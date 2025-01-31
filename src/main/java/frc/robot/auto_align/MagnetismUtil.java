@@ -1,61 +1,56 @@
 package frc.robot.auto_align;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.fms.FmsSubsystem;
+import frc.robot.util.MathHelpers;
 
 public class MagnetismUtil {
-  private static final double kP = 2.0;
-  private static final double MAX_ASSIST = 2.0;
-  private static final double MIN_ASSIST = 1.0;
-  private static final double ASSIST_RADIUS = 1.5;
-
-  private static double clamp(double val) {
-    return Math.min(Math.max(val, MIN_ASSIST), MAX_ASSIST);
-  }
-
-  private static Pose2d[] getPipePoses() {
-    ReefPipe[] values = ReefPipe.values();
-    Pose2d[] reefPipes = new Pose2d[12];
-    int i = 0;
-    for (ReefPipe pipe : values) {
-      reefPipes[i] = FmsSubsystem.isRedAlliance() ? pipe.redPose : pipe.bluePose;
-      i++;
-    }
-    return reefPipes;
-  }
+  private static final double IDEAL_MAGNITUDE = 1.0;
+  private static final double ASSIST_RADIUS = 2.0;
 
   public static ChassisSpeeds getMagnetizedChassisSpeeds(
-      ChassisSpeeds fieldRelativeRobotSpeeds, Pose2d robotPose) {
-    double accumulateAngle = 0.0;
-    double accumulateMagnitude = 0.0;
-    double timesRan = 0.0;
-    for (Pose2d pipe : getPipePoses()) {
-      double dist = pipe.getTranslation().getDistance(robotPose.getTranslation());
-      if (dist > ASSIST_RADIUS) {
-        continue;
-      }
-      accumulateAngle +=
-          pipe.getTranslation().minus(robotPose.getTranslation()).getAngle().getRadians();
-      accumulateMagnitude += clamp(kP / dist);
+      ChassisSpeeds fieldRelativeSpeeds, Pose2d robotPose, Pose2d goalPose) {
+    var robotRelativeToGoal = goalPose.minus(robotPose).getTranslation();
 
-      timesRan += 1.0;
+    if (robotRelativeToGoal.getNorm() > ASSIST_RADIUS) {
+      return fieldRelativeSpeeds;
     }
-    double averageHeading =
-        (Math.atan2(
-                    fieldRelativeRobotSpeeds.vxMetersPerSecond,
-                    fieldRelativeRobotSpeeds.vyMetersPerSecond)
-                + (accumulateAngle / timesRan))
-            / 2;
-    double robotVectorMagnitude =
-        Math.hypot(
-                fieldRelativeRobotSpeeds.vxMetersPerSecond,
-                fieldRelativeRobotSpeeds.vyMetersPerSecond)
-            * (accumulateMagnitude / timesRan);
+    var robotSpeeds = MathHelpers.chassisSpeedsToTranslation2d(fieldRelativeSpeeds).unaryMinus();
+    var idealSpeeds = new Translation2d(IDEAL_MAGNITUDE, robotRelativeToGoal.getAngle());
 
-    return new ChassisSpeeds(
-        robotVectorMagnitude * Math.cos(averageHeading),
-        robotVectorMagnitude * Math.sin(averageHeading),
-        fieldRelativeRobotSpeeds.omegaRadiansPerSecond);
+    var magnetismWeight =
+        (1 - MathHelpers.nonZeroDivide(robotRelativeToGoal.getNorm(), ASSIST_RADIUS));
+
+    var unnormalizedTransform =
+        idealSpeeds.times(magnetismWeight).plus(robotSpeeds.times(1 - magnetismWeight));
+
+    var normalizedTransform =
+        new Translation2d(robotSpeeds.getNorm(), unnormalizedTransform.getAngle());
+
+    ChassisSpeeds magnetizedSpeeds =
+        new ChassisSpeeds(
+            normalizedTransform.getX(),
+            normalizedTransform.getY(),
+            fieldRelativeSpeeds.omegaRadiansPerSecond);
+    DogLog.log("Debug/RobotVectorAngle", robotSpeeds.plus(new Translation2d(0.001, 0)).getAngle());
+    DogLog.log("Debug/IdealVectorAngle", idealSpeeds.getAngle());
+    DogLog.log("Debug/IdealSpeeds", MathHelpers.translation2dToChassisSpeeds(idealSpeeds));
+    DogLog.log("Debug/RobotSpeeds", MathHelpers.translation2dToChassisSpeeds(robotSpeeds));
+    DogLog.log("Debug/RobotPose", robotPose);
+    DogLog.log("Debug/GoalPose", goalPose);
+    DogLog.log("Debug/OutputVectorAngle", normalizedTransform.getAngle());
+    DogLog.log("Debug/MagnetizedSpeeds", magnetizedSpeeds);
+
+    return magnetizedSpeeds;
+  }
+
+  public static ChassisSpeeds getReefMagnetizedChassisSpeeds(
+      ChassisSpeeds fieldRelativeSpeeds, Pose2d robotPose) {
+    Pose2d closestReefPipe =
+        robotPose.nearest(AutoAlign.getClosestReefSide(robotPose).getPipes(ReefPipeLevel.L1));
+
+    return getMagnetizedChassisSpeeds(fieldRelativeSpeeds, robotPose, closestReefPipe);
   }
 }
