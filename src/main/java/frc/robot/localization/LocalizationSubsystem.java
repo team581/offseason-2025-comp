@@ -57,7 +57,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
     for (var results : latestResult) {
       Pose2d visionPose = results.pose();
 
