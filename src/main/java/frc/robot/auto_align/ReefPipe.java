@@ -68,7 +68,10 @@ public enum ReefPipe {
         };
 
     return new Pose2d(
-        basePipePose.getTranslation().plus(offset.getTranslation().rotateBy(basePipePose.getRotation())), basePipePose.getRotation());
+        basePipePose
+            .getTranslation()
+            .plus(offset.getTranslation().rotateBy(basePipePose.getRotation())),
+        basePipePose.getRotation());
   }
 
   public Pose2d getPose(ReefPipeLevel level) {
