@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
   @Test
-  void testAngleHeightToTranslation() {
-    double angle = 0;
-    double height = 0;
-    var result = CollisionAvoidance.angleHeightToTranslation(angle, height);
+  void testPositionToTranslation() {
+    var result = CollisionAvoidance.positionToTranslation(new SuperstructurePosition(0, 0));
     var expectedResult = new Translation2d(19, 0);
     assertEquals(expectedResult, result);
   }
@@ -20,17 +18,16 @@ public class CollisionAvoidanceTest {
   @Test
   void testInZone() {
     SuperstructurePosition current = new SuperstructurePosition(0, 90);
-    CollisionBoxes box = CollisionBoxes.BOX_3;
-    var result = CollisionAvoidance.inZone(current, box);
-    var expectedResult = true;
-    assertEquals(expectedResult, result);
+    CollisionBox box = CollisionBox.BOX_3;
+    var result = CollisionAvoidance.getZone(current);
+    assertEquals(box, result);
   }
 
   @Test
   void testGetZoneOutofBounds() {
     SuperstructurePosition current = new SuperstructurePosition(100, 45);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_5;
+    var expectedResult = CollisionBox.BOX_5;
     assertEquals(expectedResult, result);
   }
 
@@ -38,7 +35,7 @@ public class CollisionAvoidanceTest {
   void testGetZone1() {
     SuperstructurePosition current = new SuperstructurePosition(25, 180);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_1;
+    var expectedResult = CollisionBox.BOX_1;
     assertEquals(expectedResult, result);
   }
 
@@ -46,7 +43,7 @@ public class CollisionAvoidanceTest {
   void testGetZone2() {
     SuperstructurePosition current = new SuperstructurePosition(0, 180);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_2;
+    var expectedResult = CollisionBox.BOX_2;
     assertEquals(expectedResult, result);
   }
 
@@ -54,7 +51,7 @@ public class CollisionAvoidanceTest {
   void testGetZone3() {
     SuperstructurePosition current = new SuperstructurePosition(0, 90);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_3;
+    var expectedResult = CollisionBox.BOX_3;
     assertEquals(expectedResult, result);
   }
 
@@ -62,7 +59,7 @@ public class CollisionAvoidanceTest {
   void testGetZone4() {
     SuperstructurePosition current = new SuperstructurePosition(0, 0);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_3;
+    var expectedResult = CollisionBox.BOX_3;
     assertEquals(expectedResult, result);
   }
 
@@ -70,7 +67,7 @@ public class CollisionAvoidanceTest {
   void testGetZone6() {
     SuperstructurePosition current = new SuperstructurePosition(67, 45);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_5;
+    var expectedResult = CollisionBox.BOX_5;
     assertEquals(expectedResult, result);
   }
 
@@ -78,7 +75,7 @@ public class CollisionAvoidanceTest {
   void testGetZone7() {
     SuperstructurePosition current = new SuperstructurePosition(67, 135);
     var result = CollisionAvoidance.getZone(current);
-    var expectedResult = CollisionBoxes.BOX_6;
+    var expectedResult = CollisionBox.BOX_6;
     assertEquals(expectedResult, result);
   }
 
@@ -97,6 +94,6 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition current = new SuperstructurePosition(67, 10);
     SuperstructurePosition goal = new SuperstructurePosition(65, 85);
     var result = CollisionAvoidance.plan(current, goal);
-    assertEquals(Optional.empty(), result); //
+    assertEquals(Optional.empty(), result);
   }
 }

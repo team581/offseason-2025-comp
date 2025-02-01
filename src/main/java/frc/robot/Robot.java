@@ -25,6 +25,7 @@ import frc.robot.purple.Purple;
 import frc.robot.robot_manager.GamePieceMode;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.robot_manager.collision_avoidance.CollisionBox;
 import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.Stopwatch;
@@ -132,6 +133,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(CommandScheduler.getInstance());
 
     configureBindings();
+
+    CollisionBox.visualize();
   }
 
   @Override
