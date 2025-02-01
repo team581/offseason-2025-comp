@@ -42,10 +42,10 @@ public enum ReefPipe {
       new Pose2d(3.9463, 3.4319, new Rotation2d(-2.0944)),
       new Pose2d(13.5774, 4.62008, new Rotation2d(1.0472)));
 
-  private static final Pose2d L1Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
-  private static final Pose2d L2Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
-  private static final Pose2d L3Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
-  private static final Pose2d L4Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L1Offset = new Pose2d(0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L2Offset = new Pose2d(0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L3Offset = new Pose2d(0.5, 0, Rotation2d.kZero);
+  private static final Pose2d L4Offset = new Pose2d(0.5, 0, Rotation2d.kZero);
 
   public final Pose2d redPose;
   public final Pose2d bluePose;
@@ -68,7 +68,7 @@ public enum ReefPipe {
         };
 
     return new Pose2d(
-        basePipePose.getTranslation().plus(offset.getTranslation()), basePipePose.getRotation());
+        basePipePose.getTranslation().plus(offset.getTranslation().rotateBy(basePipePose.getRotation())), basePipePose.getRotation());
   }
 
   public Pose2d getPose(ReefPipeLevel level) {
