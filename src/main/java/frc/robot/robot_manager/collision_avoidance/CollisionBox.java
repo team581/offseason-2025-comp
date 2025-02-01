@@ -16,18 +16,18 @@ public enum CollisionBox {
   BOX_2(
       2,
       new Rectangle2d( // bottom right zone
-          new Translation2d(-20, 0), new Translation2d(-1, 30)),
+          new Translation2d(-20, -20), new Translation2d(-1, 30)),
       new SuperstructurePosition(0, 180)), // 0 and angle of station intake
   BOX_3(
       3,
       new Rectangle2d( // middle to the left
-          new Translation2d(-1, 0), new Translation2d(20, 20)),
+          new Translation2d(-1, -20), new Translation2d(20, 23)),
       new SuperstructurePosition(0, 45)),
 
   BOX_4(
       4,
       new Rectangle2d( // middle left zone
-          new Translation2d(1, 20), new Translation2d(20, 45)),
+          new Translation2d(1, 23), new Translation2d(20, 45)),
       new SuperstructurePosition(30, 45)),
   BOX_5(
       5,
