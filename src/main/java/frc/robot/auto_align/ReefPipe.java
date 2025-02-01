@@ -14,7 +14,7 @@ public enum ReefPipe {
   PIPE_C(
       new Pose2d(3.9463, 4.6199, new Rotation2d(2.0944)),
       new Pose2d(13.5774, 4.62008, new Rotation2d(1.0472))),
-     // new Pose2d(13.5774, 3.4320, new Rotation2d(-1.0472))),
+  // new Pose2d(13.5774, 3.4320, new Rotation2d(-1.0472))),
   PIPE_D(
       new Pose2d(4.2309, 4.7842, new Rotation2d(2.0944)),
       new Pose2d(13.2928, 4.7843, new Rotation2d(1.0472))),
@@ -41,7 +41,8 @@ public enum ReefPipe {
       new Pose2d(13.2928, 3.2677, new Rotation2d(-1.0472))),
   PIPE_L(
       new Pose2d(3.9463, 3.4319, new Rotation2d(-2.0944)),
-      new Pose2d(13.5774, 3.4320, new Rotation2d(-1.0472))),;
+      new Pose2d(13.5774, 3.4320, new Rotation2d(-1.0472))),
+  ;
 
   private static final Pose2d L1Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
   private static final Pose2d L2Offset = new Pose2d(-0.5, 0, Rotation2d.kZero);
