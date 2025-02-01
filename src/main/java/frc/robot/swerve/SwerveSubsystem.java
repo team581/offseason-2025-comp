@@ -189,7 +189,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     magnetizedSpeeds =
         MAGNETISM_ENABLED
             ? MagnetismUtil.getReefMagnetizedChassisSpeeds(teleopSpeeds, drivetrainState.Pose)
-            : new ChassisSpeeds();
+            : teleopSpeeds;
   }
 
   private ChassisSpeeds calculateFieldRelativeSpeeds() {
