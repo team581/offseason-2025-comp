@@ -39,7 +39,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
                 new AutoPoint(
                     new Pose2d(11.171, 2.443, Rotation2d.fromDegrees(23.844)),
-                    autoCommands.l4LineupCommand()),
+                    Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 new AutoPoint(new Pose2d(12.212, 2.932, Rotation2d.fromDegrees(58.446))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
@@ -53,7 +53,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(
                     new Pose2d(13.982, 1.637, Rotation2d.fromDegrees(135.878)),
-                    autoCommands.l4LineupCommand()),
+                    Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 // REEF PIPE J
                 new AutoPoint(new Pose2d(12.497, 2.768, Rotation2d.fromDegrees(59.1))))),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -68,7 +68,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(
                     new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(0)),
-                    autoCommands.l4LineupCommand()),
+                    Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 new AutoPoint(
                     // REEF PIPE K
                     new Pose2d(13.593, 2.760, Rotation2d.fromDegrees(121.252))))),
@@ -84,7 +84,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(
                     new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
-                    autoCommands.l4LineupCommand()),
+                    Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 // REEF PIPE L
                 new AutoPoint(new Pose2d(13.877, 2.932, Rotation2d.fromDegrees(120.471))))),
         autoCommands.l4ScoreAndReleaseCommand(),
