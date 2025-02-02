@@ -93,12 +93,12 @@ public class Trailblazer {
     if (shouldEnd) {
       return command
           .until(pathTracker::isFinished)
-          .withName("FollowSegmentUntilFinished")
           .andThen(
               Commands.runOnce(
                   () -> {
                     swerve.setFieldRelativeAutoSpeeds(new ChassisSpeeds());
-                  }));
+                  }))
+          .withName("FollowSegmentUntilFinished");
     }
 
     return command;
