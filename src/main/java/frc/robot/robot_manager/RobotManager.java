@@ -1074,6 +1074,7 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> setStateFromRequest(RobotState.CORAL_L4_1_APPROACH);
     }
   }
+
   public void l4CoralLineupRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
