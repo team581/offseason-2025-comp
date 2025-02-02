@@ -22,24 +22,29 @@ public class AutoCommands {
   }
 
   public Command doNothingCommand() {
-    return Commands.none();
+    return Commands.none().withName("DoNothingCommand");
   }
 
   public Command l4LineupCommand() {
-    return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements);
+    return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements)
+        .withName("L4LineupCommand");
   }
 
   public Command l4ScoreAndReleaseCommand() {
     return Commands.runOnce(robotManager::l4coralPlaceAndReleaseRequest, requirements)
-        .andThen(robotManager.waitForState(RobotState.IDLE_NO_GP).withTimeout(4));
+        .andThen(robotManager.waitForState(RobotState.IDLE_NO_GP).withTimeout(4))
+        .withName("L4ScoreAndReleaseCommand");
   }
 
-  public Command intakeStationWaitUntilCommand() {
-    return Commands.runOnce(robotManager::intakeStationRequest, requirements)
-        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL).withTimeout(4));
+  public Command intakeStationWithTimeoutCommand() {
+    return robotCommands
+        .intakeStationCommand()
+        .withTimeout(4)
+        .withName("IntakeStationWithTimeoutCommand");
   }
 
   public Command preloadCoralCommand() {
-    return Commands.runOnce(robotManager::preloadCoralRequest, requirements);
+    return Commands.runOnce(robotManager::preloadCoralRequest, requirements)
+        .withName("PreloadCoralCommand");
   }
 }

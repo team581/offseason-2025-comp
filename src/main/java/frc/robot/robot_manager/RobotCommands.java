@@ -17,69 +17,75 @@ public class RobotCommands {
   }
 
   public Command floorIntakeCommand() {
-    return Commands.runOnce(robot::intakeFloorRequest, requirements);
+    return Commands.runOnce(robot::intakeFloorRequest, requirements).withName("FloorIntakeCommand");
   }
 
   public Command confirmScoreCommand() {
-    return Commands.runOnce(robot::confirmScoreRequest, requirements);
+    return Commands.runOnce(robot::confirmScoreRequest, requirements)
+        .withName("ConfirmScoreCommand");
   }
 
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, requirements)
         .andThen(
             robot.waitForStates(
-                RobotState.IDLE_ALGAE, RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP));
+                RobotState.IDLE_ALGAE, RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP))
+        .withName("StowCommand");
   }
 
   public Command intakeStationCommand() {
     return Commands.runOnce(robot::intakeStationRequest, requirements)
-        .andThen(robot.waitForState(RobotState.IDLE_CORAL));
+        .andThen(robot.waitForState(RobotState.IDLE_CORAL))
+        .withName("IntakeStationCommand");
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, requirements);
+    return Commands.runOnce(robot::lowLineupRequest, requirements).withName("LowLineupCommand");
   }
 
   public Command l2LineupCommand() {
-    return Commands.runOnce(robot::l2LineupRequest, requirements);
+    return Commands.runOnce(robot::l2LineupRequest, requirements).withName("L2LineupCommand");
   }
 
   public Command l3LineupCommand() {
-    return Commands.runOnce(robot::l3LineupRequest, requirements);
+    return Commands.runOnce(robot::l3LineupRequest, requirements).withName("L3LineupCommand");
   }
 
   public Command highLineupCommand() {
-    return Commands.runOnce(robot::highLineupRequest, requirements);
+    return Commands.runOnce(robot::highLineupRequest, requirements).withName("HighLineupCommand");
   }
 
   public Command setGamepieceModeCommand(GamePieceMode newMode) {
     return Commands.runOnce(
-        () -> {
-          robot.setGamePieceMode(newMode);
-        });
+            () -> {
+              robot.setGamePieceMode(newMode);
+            })
+        .withName("SetGamepieceModeCommand");
   }
 
   public Command climbUpCommand() {
-    return Commands.runOnce(robot::nextClimbStateRequest, requirements);
+    return Commands.runOnce(robot::nextClimbStateRequest, requirements).withName("ClimbUpCommand");
   }
 
   public Command climbDownCommand() {
-    return Commands.runOnce(robot::previousClimbStateRequest, requirements);
+    return Commands.runOnce(robot::previousClimbStateRequest, requirements)
+        .withName("ClimbDownCommand");
   }
 
   public Command unjamCommand() {
-    return Commands.runOnce(robot::unjamRequest, requirements);
+    return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
   }
 
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorRequest, requirements);
+    return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
+        .withName("RehomeElevatorCommand");
   }
 
   public Command rehomeWristCommand() {
-    return Commands.runOnce(robot::rehomeWristRequest, requirements);
+    return Commands.runOnce(robot::rehomeWristRequest, requirements).withName("RehomeWristCommand");
   }
 
   public Command rehomeRollCommand() {
-    return Commands.runOnce(robot::rehomeRollRequest, requirements);
+    return Commands.runOnce(robot::rehomeRollRequest, requirements).withName("RehomeRollCommand");
   }
 }
