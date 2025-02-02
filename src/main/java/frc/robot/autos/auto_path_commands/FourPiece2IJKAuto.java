@@ -32,57 +32,65 @@ public class FourPiece2IJKAuto extends BaseAuto {
                 robotManager.localization.resetPose(
                     new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
         actions.rehomeRollCommand(),
-        Commands.parallel(
-            trailblazer.followSegment(
-                new AutoSegment(
-                    CONSTRAINTS,
-                    new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
-                    new AutoPoint(new Pose2d(12.493, 2.965, Rotation2d.fromDegrees(58.45))))),
-            autoCommands.l4LineupCommand().withTimeout(3)),
+        autoCommands.preloadCoralCommand(),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(
+                    new Pose2d(11.171, 2.443, Rotation2d.fromDegrees(23.844)),
+                    autoCommands.l4LineupCommand()),
+                new AutoPoint(new Pose2d(12.212, 2.932, Rotation2d.fromDegrees(58.446))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.202, 1.568, Rotation2d.fromDegrees(135.88))),
+                new AutoPoint(new Pose2d(13.301, 1.971, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
         autoCommands.intakeStationWaitUntilCommand(),
-        Commands.parallel(
-            trailblazer.followSegment(
-                new AutoSegment(
-                    CONSTRAINTS,
-                    new AutoPoint(new Pose2d(14.66, 1.568, Rotation2d.fromDegrees(137.36))),
-                    new AutoPoint(new Pose2d(13.562, 2.87, Rotation2d.fromDegrees(119.50))))),
-            autoCommands.l4LineupCommand().withTimeout(2)),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(
+                    new Pose2d(13.982, 1.637, Rotation2d.fromDegrees(135.878)),
+                    autoCommands.l4LineupCommand()),
+                // REEF PIPE J
+                new AutoPoint(new Pose2d(12.497, 2.768, Rotation2d.fromDegrees(59.1))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.391, 1.568, Rotation2d.fromDegrees(135.88))),
+                new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
         autoCommands.intakeStationWaitUntilCommand(),
-        Commands.parallel(
-            trailblazer.followSegment(
-                new AutoSegment(
-                    CONSTRAINTS,
-                    new AutoPoint(
-                        new Pose2d(13.918, 3.117, Rotation2d.fromDegrees(123.427)),
-                        autoCommands.l4LineupCommand().withTimeout(2))))),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(
+                    new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(0)),
+                    autoCommands.l4LineupCommand()),
+                new AutoPoint(
+                    // REEF PIPE K
+                    new Pose2d(13.593, 2.760, Rotation2d.fromDegrees(121.252))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(15.093, 1.971, Rotation2d.fromDegrees(133.277))),
-                new AutoPoint(new Pose2d(16.292, 0.842, Rotation2d.fromDegrees(123.819))))),
+                new AutoPoint(new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
+                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819))))),
         autoCommands.intakeStationWaitUntilCommand(),
-        Commands.parallel(
-            trailblazer.followSegment(
-                new AutoSegment(
-                    new AutoPoint(new Pose2d(15.295, 2.435, Rotation2d.fromDegrees(115.844))),
-                    new AutoPoint(new Pose2d(14.391, 3.81, Rotation2d.fromDegrees(176.077))))),
-            autoCommands.l4LineupCommand().withTimeout(2)),
+        trailblazer.followSegment(
+            new AutoSegment(
+                CONSTRAINTS,
+                new AutoPoint(
+                    new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
+                    autoCommands.l4LineupCommand()),
+                // REEF PIPE L
+                new AutoPoint(new Pose2d(13.877, 2.932, Rotation2d.fromDegrees(120.471))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(14.391, 3.81, Rotation2d.fromDegrees(176.077))))));
+                CONSTRAINTS,
+                new AutoPoint(new Pose2d(13.877, 2.932, Rotation2d.fromDegrees(120.471))))));
   }
 }

@@ -26,18 +26,20 @@ public class AutoCommands {
   }
 
   public Command l4LineupCommand() {
-    return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements);
+    return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements).withTimeout(2);
   }
 
   public Command l4ScoreAndReleaseCommand() {
-    return Commands.run(robotManager::l4coralPlaceAndReleaseRequest, requirements)
-        .until(() -> robotManager.getState() == RobotState.IDLE_NO_GP)
-        .withTimeout(4);
+    return Commands.runOnce(robotManager::l4coralPlaceAndReleaseRequest, requirements)
+        .andThen(robotManager.waitForState(RobotState.IDLE_NO_GP).withTimeout(4));
   }
 
   public Command intakeStationWaitUntilCommand() {
-    return Commands.run(robotManager::intakeStationRequest, requirements)
-        .until(() -> robotManager.getState() == RobotState.IDLE_CORAL)
-        .withTimeout(4);
+    return Commands.runOnce(robotManager::intakeStationRequest, requirements)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL).withTimeout(4));
+  }
+
+  public Command preloadCoralCommand() {
+    return Commands.runOnce(robotManager::preloadCoralRequest, requirements);
   }
 }

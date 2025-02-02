@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
@@ -184,7 +185,10 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L1_4_RELEASE -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
       case CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE -> {
-        var done = wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef();
+        var done =
+            wrist.atGoal()
+                && elevator.atGoal()
+                && (DriverStation.isTeleop() ? cameraOnlineAndFarEnoughFromReef() : timeout(0.5));
 
         if (done) {
           rumbleController.rumbleRequest();
@@ -1068,6 +1072,14 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L4_1_APPROACH);
+    }
+  }
+
+  public void preloadCoralRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      default -> setStateFromRequest(RobotState.IDLE_CORAL);
     }
   }
 
