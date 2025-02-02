@@ -39,21 +39,22 @@ public enum CollisionBox {
       new Rectangle2d( // forwards Top
           new Translation2d(-20, 56.5), new Translation2d(7.5, 86)),
       new SuperstructurePosition(67, 135)),
-      ;
+  ;
 
   public final int id;
   public final Rectangle2d bounds;
   public final SuperstructurePosition safeZone;
 
   public boolean shortCutPossible(CollisionBox goal) {
-    if(this==goal){
+    if (this == goal) {
       return false;
     }
-    return switch(goal) {
-      case BOX_3, BOX_4, BOX_5-> switch(this) {
-        case BOX_3, BOX_4, BOX_5 -> true;
-        default -> false;
-      };
+    return switch (goal) {
+      case BOX_3, BOX_4, BOX_5 ->
+          switch (this) {
+            case BOX_3, BOX_4, BOX_5 -> true;
+            default -> false;
+          };
       default -> false;
     };
   }
