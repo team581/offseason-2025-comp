@@ -11,10 +11,10 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class FourPiece2IJKAuto extends BaseAuto {
+public class FourPiece2IJKLAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(1, 50, 4, 30);
 
-  public FourPiece2IJKAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public FourPiece2IJKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
