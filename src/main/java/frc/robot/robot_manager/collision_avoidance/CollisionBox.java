@@ -12,37 +12,51 @@ public enum CollisionBox {
       1,
       new Rectangle2d( // zone where the station intake happens
           new Translation2d(-20, 12), new Translation2d(-14, 30)),
-      new SuperstructurePosition(20, 180)), // whatever it is for station intake
+      new SuperstructurePosition(13, 180)), // whatever it is for station intake
   BOX_2(
       2,
-      new Rectangle2d( // bottom right zone
-          new Translation2d(-20, -20), new Translation2d(-1, 30)),
+      new Rectangle2d( // bottom backwards
+          new Translation2d(-20, -20), new Translation2d(7.5, 30)),
       new SuperstructurePosition(0, 180)), // 0 and angle of station intake
   BOX_3(
       3,
-      new Rectangle2d( // middle to the left
-          new Translation2d(-1, -20), new Translation2d(20, 23)),
+      new Rectangle2d( // forwards bottom
+          new Translation2d(7.5, -20), new Translation2d(20, 25)),
       new SuperstructurePosition(0, 45)),
 
   BOX_4(
       4,
-      new Rectangle2d( // middle left zone
-          new Translation2d(1, 23), new Translation2d(20, 45)),
+      new Rectangle2d( // forwards middle
+          new Translation2d(7.5, 25), new Translation2d(20, 40)),
       new SuperstructurePosition(30, 45)),
   BOX_5(
       5,
-      new Rectangle2d( // top left zone
-          new Translation2d(0, 45), new Translation2d(20, 86)),
+      new Rectangle2d( // forwards top
+          new Translation2d(7.5, 40), new Translation2d(20, 86)),
       new SuperstructurePosition(67, 45)),
   BOX_6(
       6,
-      new Rectangle2d( // top right zone
-          new Translation2d(-20, 67), new Translation2d(0, 86)),
-      new SuperstructurePosition(67, 135));
+      new Rectangle2d( // forwards Top
+          new Translation2d(-20, 56.5), new Translation2d(7.5, 86)),
+      new SuperstructurePosition(67, 135)),
+      ;
 
   public final int id;
   public final Rectangle2d bounds;
   public final SuperstructurePosition safeZone;
+
+  public boolean shortCutPossible(CollisionBox goal) {
+    if(this==goal){
+      return false;
+    }
+    return switch(goal) {
+      case BOX_3, BOX_4, BOX_5-> switch(this) {
+        case BOX_3, BOX_4, BOX_5 -> true;
+        default -> false;
+      };
+      default -> false;
+    };
+  }
 
   public static CollisionBox getById(int id) {
     return switch (id) {
