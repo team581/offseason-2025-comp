@@ -1,7 +1,7 @@
 package frc.robot.wrist;
 
 public enum WristState {
-  STOWED(60.0),
+  STOWED(50.0),
   UNJAM(0.0),
   PRE_MATCH_HOMING(0.0),
   MID_MATCH_HOMING(0.0),
