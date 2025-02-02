@@ -86,6 +86,8 @@ public class RobotCommands {
   }
 
   public Command rehomeRollCommand() {
-    return Commands.runOnce(robot::rehomeRollRequest, requirements).withName("RehomeRollCommand");
+    return Commands.runOnce(robot::rehomeRollRequest, requirements)
+    .andThen(robot.waitForState(RobotState.IDLE_NO_GP))
+    .withName("RehomeRollCommand");
   }
 }
