@@ -2,8 +2,10 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.controller.RumbleControllerSubsystem;
@@ -90,6 +92,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private Pose2d nearestReefSidePose = new Pose2d();
+  private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -182,7 +185,10 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L1_4_RELEASE -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
       case CORAL_L2_4_RELEASE, CORAL_L3_4_RELEASE, CORAL_L4_4_RELEASE -> {
-        var done = wrist.atGoal() && elevator.atGoal() && cameraOnlineAndFarEnoughFromReef();
+        var done =
+            wrist.atGoal()
+                && elevator.atGoal()
+                && (DriverStation.isTeleop() ? cameraOnlineAndFarEnoughFromReef() : timeout(0.5));
 
         if (done) {
           rumbleController.rumbleRequest();
@@ -773,6 +779,17 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSidePose = AutoAlign.getClosestReefSide(localization.getPose()).getPose();
     reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
+    scoringLevel =
+        switch (getState()) {
+          case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
+          case CORAL_L2_1_APPROACH, CORAL_L2_2_LINEUP, CORAL_L2_3_PLACE, CORAL_L2_4_RELEASE ->
+              ReefPipeLevel.L2;
+          case CORAL_L3_1_APPROACH, CORAL_L3_2_LINEUP, CORAL_L3_3_PLACE, CORAL_L3_4_RELEASE ->
+              ReefPipeLevel.L3;
+          case CORAL_L4_1_APPROACH, CORAL_L4_2_LINEUP, CORAL_L4_3_PLACE, CORAL_L4_4_RELEASE ->
+              ReefPipeLevel.L4;
+          default -> ReefPipeLevel.BASE;
+        };
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
@@ -1058,6 +1075,14 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void preloadCoralRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      default -> setStateFromRequest(RobotState.IDLE_CORAL);
+    }
+  }
+
   public void confirmScoreRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
@@ -1176,6 +1201,7 @@ public class RobotManager extends StateMachine<RobotState> {
     return AutoAlign.getReefAlignState(
         localization.getPose(),
         purple.getPurpleState(),
+        scoringLevel,
         frontCoralLimelight
             .getInterpolatedTagResult()
             .or(backTagLimelight::getInterpolatedTagResult),

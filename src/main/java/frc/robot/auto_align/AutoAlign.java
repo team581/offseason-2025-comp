@@ -29,11 +29,12 @@ public class AutoAlign {
     return reefSide;
   }
 
-  public static Pose2d getClosestReefPipe(Pose2d robotPose) {
-    return getClosestReefPipe(robotPose, FmsSubsystem.isRedAlliance());
+  public static ReefSide getClosestReefSide(Pose2d robotPose) {
+    return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
   }
 
-  public static Pose2d getClosestReefPipe(Pose2d robotPose, boolean isRedAlliance) {
+  public static Pose2d getClosestReefPipe(
+      Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
     var reefPipe =
         ALL_REEF_PIPES.stream()
             .min(
@@ -41,19 +42,17 @@ public class AutoAlign {
                     Double.compare(
                         robotPose
                             .getTranslation()
-                            .getDistance(
-                                a.getPose(ReefPipeLevel.BASE, isRedAlliance).getTranslation()),
+                            .getDistance(a.getPose(level, isRedAlliance).getTranslation()),
                         robotPose
                             .getTranslation()
-                            .getDistance(
-                                b.getPose(ReefPipeLevel.BASE, isRedAlliance).getTranslation())))
+                            .getDistance(b.getPose(level, isRedAlliance).getTranslation())))
             .get();
 
-    return reefPipe.getPose(ReefPipeLevel.BASE, isRedAlliance);
+    return reefPipe.getPose(level, isRedAlliance);
   }
 
-  public static ReefSide getClosestReefSide(Pose2d robotPose) {
-    return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
+  public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
+    return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
   }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
@@ -95,9 +94,10 @@ public class AutoAlign {
   public static ReefAlignState getReefAlignState(
       Pose2d robotPose,
       PurpleState purpleState,
+      ReefPipeLevel scoringLevel,
       Optional<TagResult> tagResult,
       CameraHealth tagCameraHealth) {
-    var reefPipe = getClosestReefPipe(robotPose);
+    var reefPipe = getClosestReefPipe(robotPose, scoringLevel);
     var closeToReefPipe = isCloseToReefPipe(robotPose, reefPipe);
 
     if (closeToReefPipe) {
