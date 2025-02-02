@@ -96,6 +96,7 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(Optional.empty(), result);
   }
+
   @Test
   void testSkip345() {
     SuperstructurePosition current = new SuperstructurePosition(0, 45);
