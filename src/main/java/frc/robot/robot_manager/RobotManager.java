@@ -775,13 +775,17 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSidePose = AutoAlign.getClosestReefSide(localization.getPose()).getPose();
     reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
-    scoringLevel = switch (getState()) {
-      case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
-      case CORAL_L2_1_APPROACH, CORAL_L2_2_LINEUP, CORAL_L2_3_PLACE, CORAL_L2_4_RELEASE -> ReefPipeLevel.L2;
-      case CORAL_L3_1_APPROACH, CORAL_L3_2_LINEUP, CORAL_L3_3_PLACE, CORAL_L3_4_RELEASE -> ReefPipeLevel.L3;
-      case CORAL_L4_1_APPROACH, CORAL_L4_2_LINEUP, CORAL_L4_3_PLACE, CORAL_L4_4_RELEASE -> ReefPipeLevel.L4;
-      default -> ReefPipeLevel.BASE;
-    };
+    scoringLevel =
+        switch (getState()) {
+          case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
+          case CORAL_L2_1_APPROACH, CORAL_L2_2_LINEUP, CORAL_L2_3_PLACE, CORAL_L2_4_RELEASE ->
+              ReefPipeLevel.L2;
+          case CORAL_L3_1_APPROACH, CORAL_L3_2_LINEUP, CORAL_L3_3_PLACE, CORAL_L3_4_RELEASE ->
+              ReefPipeLevel.L3;
+          case CORAL_L4_1_APPROACH, CORAL_L4_2_LINEUP, CORAL_L4_3_PLACE, CORAL_L4_4_RELEASE ->
+              ReefPipeLevel.L4;
+          default -> ReefPipeLevel.BASE;
+        };
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {

@@ -33,7 +33,8 @@ public class AutoAlign {
     return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
   }
 
-  public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
+  public static Pose2d getClosestReefPipe(
+      Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
     var reefPipe =
         ALL_REEF_PIPES.stream()
             .min(
@@ -41,21 +42,18 @@ public class AutoAlign {
                     Double.compare(
                         robotPose
                             .getTranslation()
-                            .getDistance(
-                                a.getPose(level, isRedAlliance).getTranslation()),
+                            .getDistance(a.getPose(level, isRedAlliance).getTranslation()),
                         robotPose
                             .getTranslation()
-                            .getDistance(
-                                b.getPose(level, isRedAlliance).getTranslation())))
+                            .getDistance(b.getPose(level, isRedAlliance).getTranslation())))
             .get();
 
     return reefPipe.getPose(level, isRedAlliance);
   }
 
-    public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
-      return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
-    }
-
+  public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
+    return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
+  }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
     double robotX = robotPose.getX();
