@@ -19,22 +19,27 @@ public class TestAuto extends BaseAuto {
   }
 
   @Override
+  protected Pose2d getBlueStartingPose() {
+    return Pose2d.kZero;
+  }
+
+  @Override
   protected Command getBlueAutoCommand() {
     return Commands.none();
   }
 
   @Override
+  protected Pose2d getRedStartingPose() {
+    return new Pose2d(10.289, 1.903, Rotation2d.kZero);
+  }
+
+  @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print(""),
-        Commands.runOnce(
-            () ->
-                robotManager.localization.resetPose(
-                    new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(getRedStartingPose()),
                 new AutoPoint(new Pose2d(12.493, 2.965, Rotation2d.fromDegrees(58.45))))),
         trailblazer.followSegment(
             new AutoSegment(

@@ -20,28 +20,34 @@ public class PushPartnerAuto extends BaseAuto {
   }
 
   @Override
+  protected Pose2d getBlueStartingPose() {
+    return Pose2d.kZero;
+  }
+
+  @Override
   protected Command getBlueAutoCommand() {
     return Commands.none();
+  }
+
+  @Override
+  protected Pose2d getRedStartingPose() {
+    return new Pose2d(9.57, 2.893, Rotation2d.kZero);
   }
 
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
         Commands.print("Red Push Partner Auto"),
-        Commands.runOnce(
-            () ->
-                robotManager.localization.resetPose(
-                    new Pose2d(9.57, 2.893, Rotation2d.fromDegrees(0.0)))),
         actions.rehomeRollCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(9.57, 2.893, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.fromDegrees(0.0))))),
+                new AutoPoint(getRedStartingPose()),
+                new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.kZero)))),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.kZero)),
                 new AutoPoint(new Pose2d(12.529, 2.892, Rotation2d.fromDegrees(56.63))))),
         Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
         trailblazer.followSegment(

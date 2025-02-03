@@ -19,24 +19,30 @@ public class FourPiece2IJKLAuto extends BaseAuto {
   }
 
   @Override
+  protected Pose2d getBlueStartingPose() {
+    return Pose2d.kZero;
+  }
+
+  @Override
   protected Command getBlueAutoCommand() {
     return Commands.none();
+  }
+
+  @Override
+  protected Pose2d getRedStartingPose() {
+    return new Pose2d(10.289, 1.903, Rotation2d.kZero);
   }
 
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
         Commands.print("Red Three Piece 2 IJK Auto"),
-        Commands.runOnce(
-            () ->
-                robotManager.localization.resetPose(
-                    new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0)))),
         actions.rehomeRollCommand(),
         autoCommands.preloadCoralCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(10.289, 1.903, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(getRedStartingPose()),
                 new AutoPoint(
                     new Pose2d(11.171, 2.443, Rotation2d.fromDegrees(23.844)),
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
@@ -67,7 +73,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(
-                    new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(0)),
+                    new Pose2d(14.506, 1.903, Rotation2d.kZero),
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 new AutoPoint(
                     // REEF PIPE K

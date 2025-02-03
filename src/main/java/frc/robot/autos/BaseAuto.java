@@ -1,6 +1,7 @@
 package frc.robot.autos;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,6 +23,10 @@ public abstract class BaseAuto {
     this.autoCommands = new AutoCommands(actions, robotManager);
   }
 
+  protected abstract Pose2d getRedStartingPose();
+
+  protected abstract Pose2d getBlueStartingPose();
+
   protected abstract Command getRedAutoCommand();
 
   protected abstract Command getBlueAutoCommand();
@@ -30,9 +35,14 @@ public abstract class BaseAuto {
     var className = this.getClass().getSimpleName();
     className = className.substring(className.lastIndexOf('.') + 1);
 
+    // TODO: Continuously reset pose before auto starts
     return Commands.either(
-            getRedAutoCommand().withName(className + "RedCommand"),
-            getBlueAutoCommand().withName(className + "BlueCommand"),
+            Commands.runOnce(() -> robotManager.localization.resetPose(getRedStartingPose()))
+                .andThen(getRedAutoCommand())
+                .withName(className + "RedCommand"),
+            Commands.runOnce(() -> robotManager.localization.resetPose(getBlueStartingPose()))
+                .andThen(getBlueAutoCommand())
+                .withName(className + "BlueCommand"),
             FmsSubsystem::isRedAlliance)
         .withName(className + "Command")
         .finallyDo(
