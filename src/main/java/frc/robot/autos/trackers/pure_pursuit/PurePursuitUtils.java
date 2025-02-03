@@ -86,11 +86,11 @@ public class PurePursuitUtils {
       int currentPointIndex,
       double lookaheadDistance,
       Pose2d startingRobotPose) {
-    var lastTargetWaypoint = new Pose2d();
-    var currentTargetWaypoint = new Pose2d();
+    var lastTargetWaypoint = Pose2d.kZero;
+    var currentTargetWaypoint = Pose2d.kZero;
     DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
-      return new Pose2d();
+      return Pose2d.kZero;
     }
     if (currentPointIndex == 0) {
       lastTargetWaypoint = startingRobotPose;

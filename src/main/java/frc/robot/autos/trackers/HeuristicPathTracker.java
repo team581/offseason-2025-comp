@@ -9,7 +9,7 @@ import java.util.List;
 // TODO: Implement https://github.com/team581/2024-offseason-bot/issues/94
 public class HeuristicPathTracker implements PathTracker {
   private List<AutoPoint> points = List.of();
-  private Pose2d currentPose = new Pose2d();
+  private Pose2d currentPose = Pose2d.kZero;
   private double proximityRadius = 0.5;
   private int currentPointIndex = 0;
 

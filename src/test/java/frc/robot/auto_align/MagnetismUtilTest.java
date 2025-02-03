@@ -25,8 +25,8 @@ public class MagnetismUtilTest {
   void testMagnetizedMagnitudeSameAsInputMagnitude() {
     /* Verify input magnitude is the same as the output magnitude. */
     ChassisSpeeds robotSpeed = new ChassisSpeeds(20.56, 11.14, 0.0);
-    Pose2d robotPose = new Pose2d();
-    Pose2d goalPose = new Pose2d();
+    Pose2d robotPose = Pose2d.kZero;
+    Pose2d goalPose = Pose2d.kZero;
 
     ChassisSpeeds magnetizedSpeed =
         MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPose, goalPose);

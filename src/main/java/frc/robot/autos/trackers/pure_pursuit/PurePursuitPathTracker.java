@@ -24,18 +24,18 @@ public class PurePursuitPathTracker implements PathTracker {
   private double lastStartTime = 0.0;
 
   private List<AutoPoint> points = List.of();
-  private Pose2d currentRobotPose = new Pose2d();
-  private Pose2d startingRobotPose = new Pose2d();
+  private Pose2d currentRobotPose = Pose2d.kZero;
+  private Pose2d startingRobotPose = Pose2d.kZero;
   private boolean startingRobotPoseUpdated = false;
-  private Pose2d lastTargetWaypoint = new Pose2d();
-  private Pose2d currentTargetWaypoint = new Pose2d();
+  private Pose2d lastTargetWaypoint = Pose2d.kZero;
+  private Pose2d currentTargetWaypoint = Pose2d.kZero;
   private int currentLookaheadPointIndex = 0;
   private int currentRobotFollowedPointIndex = 0;
   private Rotation2d currentInterpolatedRotation = new Rotation2d();
 
   @Override
   public void resetAndSetPoints(List<AutoPoint> points) {
-    startingRobotPose = new Pose2d();
+    startingRobotPose = Pose2d.kZero;
     startingRobotPoseUpdated = false;
     currentLookaheadPointIndex = 0;
     currentRobotFollowedPointIndex = 0;
@@ -68,7 +68,7 @@ public class PurePursuitPathTracker implements PathTracker {
     updateRotation();
     DogLog.log("Autos/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
-      return new Pose2d();
+      return Pose2d.kZero;
     }
     if (getCurrentLookaheadPointIndex() == 0) {
       lastTargetWaypoint = startingRobotPose;
@@ -132,7 +132,7 @@ public class PurePursuitPathTracker implements PathTracker {
   }
 
   private void updateRotation() {
-    var lastTargetWaypoint = new Pose2d();
+    var lastTargetWaypoint = Pose2d.kZero;
     if (currentRobotFollowedPointIndex == 0) {
       lastTargetWaypoint = startingRobotPose;
     } else {
