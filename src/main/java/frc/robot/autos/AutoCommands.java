@@ -32,7 +32,7 @@ public class AutoCommands {
 
   public Command l4ScoreAndReleaseCommand() {
     return Commands.runOnce(robotManager::l4coralPlaceAndReleaseRequest, requirements)
-        .andThen(robotManager.waitForState(RobotState.IDLE_NO_GP).withTimeout(4))
+        .andThen(robotManager.waitForState(RobotState.IDLE_NO_GP).withTimeout(4), robotCommands.stowCommand())
         .withName("L4ScoreAndReleaseCommand");
   }
 
