@@ -61,7 +61,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new Pose2d(13.982, 1.637, Rotation2d.fromDegrees(135.878)),
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 // REEF PIPE J
-                new AutoPoint(new Pose2d(12.497, 2.768, Rotation2d.fromDegrees(59.1))))),
+                new AutoPoint(new Pose2d(12.497, 2.668, Rotation2d.fromDegrees(59.1))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
@@ -77,12 +77,12 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 new AutoPoint(
                     // REEF PIPE K
-                    new Pose2d(13.593, 2.760, Rotation2d.fromDegrees(121.252))))),
+                    new Pose2d(13.566, 2.812, Rotation2d.fromDegrees(121.252))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
+                new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819))))),
         autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
@@ -92,11 +92,11 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
                 // REEF PIPE L
-                new AutoPoint(new Pose2d(13.877, 2.932, Rotation2d.fromDegrees(120.471))))),
+                new AutoPoint(new Pose2d(13.922, 2.842, Rotation2d.fromDegrees(120.471))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(13.877, 2.932, Rotation2d.fromDegrees(120.471))))));
+                new AutoPoint(new Pose2d(13.922, 2.842, Rotation2d.fromDegrees(120.471))))));
   }
 }
