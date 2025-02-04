@@ -44,9 +44,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(getRedStartingPose()),
                 new AutoPoint(
-                    new Pose2d(11.171, 2.443, Rotation2d.fromDegrees(23.844)),
+                    new Pose2d(11.785, 2.622, Rotation2d.fromDegrees(40)),
                     Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
-                new AutoPoint(new Pose2d(12.212, 2.932, Rotation2d.fromDegrees(58.446))))),
+                new AutoPoint(new Pose2d(12.246, 2.952, Rotation2d.fromDegrees(58.446))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
