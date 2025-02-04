@@ -222,7 +222,10 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case INTAKE_CORAL_STATION -> intake.getHasGP() ? RobotState.IDLE_CORAL : currentState;
+      case INTAKE_CORAL_STATION -> intake.getHasGP() ? RobotState.SMART_STOW_1 : currentState;
+      case SMART_STOW_1 ->
+          elevator.atGoal() && roll.atGoal() ? RobotState.SMART_STOW_2 : currentState;
+      case SMART_STOW_2 -> wrist.atGoal() ? RobotState.IDLE_CORAL : currentState;
       case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
     };
   }
@@ -311,6 +314,30 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.STOWED);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()));
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        backTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+        climber.setState(ClimberState.STOWED);
+      }
+      case SMART_STOW_1 -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.STOWED, WristState.INTAKING_CORAL_STATION);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        roll.setState(RollState.SMART_STOW);
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        backTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+        climber.setState(ClimberState.STOWED);
+      }
+      case SMART_STOW_2 -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        roll.setState(RollState.SMART_STOW);
         frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
@@ -638,9 +665,8 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.HANGING);
       }
       case UNJAM -> {
-        wrist.setState(WristState.UNJAM);
         intake.setState(IntakeState.OUTTAKING);
-        elevator.setState(ElevatorState.UNJAM);
+        moveSuperstructure(ElevatorState.UNJAM, WristState.UNJAM);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -651,9 +677,8 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_ELEVATOR -> {
-        wrist.setState(WristState.STOWED);
         intake.setState(IntakeState.IDLE_NO_GP);
-        elevator.setState(ElevatorState.MID_MATCH_HOMING);
+        moveSuperstructure(ElevatorState.MID_MATCH_HOMING, WristState.STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -664,9 +689,8 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_WRIST -> {
-        wrist.setState(WristState.MID_MATCH_HOMING);
         intake.setState(IntakeState.IDLE_NO_GP);
-        elevator.setState(ElevatorState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.MID_MATCH_HOMING);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -677,9 +701,8 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_ROLL -> {
-        wrist.setState(WristState.STOWED);
         intake.setState(IntakeState.IDLE_NO_GP);
-        elevator.setState(ElevatorState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.HOMING);

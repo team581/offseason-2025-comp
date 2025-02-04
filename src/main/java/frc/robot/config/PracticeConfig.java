@@ -83,7 +83,7 @@ class PracticeConfig {
                                       * (2.0 / 1.0)
                                       * (Math.PI * 1.274)))),
               0,
-              20,
+              25,
               0,
               58,
               0.5),
@@ -192,7 +192,7 @@ class PracticeConfig {
                           .withStatorCurrentLimit(10)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
-              10,
+              9,
               101),
           new ClimberConfig(
               CANIVORE_NAME,

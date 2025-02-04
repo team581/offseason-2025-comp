@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,6 +17,10 @@ public class RollSubsystem extends StateMachine<RollState> {
   private final TalonFX motor;
   private double motorAngle;
   private double motorCurrent;
+  private double averageMotorCurrent;
+  private double smartStowAngle;
+
+  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
 
   private final IntakeSubsystem intake;
 
@@ -41,6 +46,10 @@ public class RollSubsystem extends StateMachine<RollState> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(getScoreDirection())));
       }
+      case SMART_STOW -> {
+        smartStowAngle = getSmartStowDirection();
+        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(smartStowAngle)));
+      }
       case UNHOMED -> motor.disable();
       default -> {
         motor.setControl(
@@ -50,9 +59,16 @@ public class RollSubsystem extends StateMachine<RollState> {
   }
 
   @Override
+  protected void collectInputs() {
+    motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
+    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
+    averageMotorCurrent = linearFilter.calculate(motorCurrent);
+  }
+
+  @Override
   protected RollState getNextState(RollState currentState) {
     if (currentState == RollState.HOMING
-        && motorCurrent > RobotConfig.get().roll().homingCurrentThreshold()) {
+        && averageMotorCurrent > RobotConfig.get().roll().homingCurrentThreshold()) {
       motor.setPosition(Units.degreesToRotations(RobotConfig.get().roll().homingPosition()));
       return RollState.STOWED;
     }
@@ -61,18 +77,21 @@ public class RollSubsystem extends StateMachine<RollState> {
     return currentState;
   }
 
-  @Override
-  protected void collectInputs() {
-    motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
-  }
-
   private double getScoreDirection() {
     if (intake.getLeftSensor()) {
       return 90;
     }
-
     return -90;
+  }
+
+  private double getSmartStowDirection() {
+    if (intake.getLeftSensor() && intake.getRightSensor()) {
+      return 0;
+    } else if (intake.getLeftSensor()) {
+      return -90;
+    } else {
+      return 90;
+    }
   }
 
   public void setState(RollState newState) {
@@ -89,6 +108,7 @@ public class RollSubsystem extends StateMachine<RollState> {
     return switch (getState()) {
       case HOMING -> false;
       case CORAL_SCORE -> MathUtil.isNear(getScoreDirection(), motorAngle, 1);
+      case SMART_STOW -> MathUtil.isNear(smartStowAngle, motorAngle, 2);
       default -> MathUtil.isNear(getState().angle, motorAngle, 1);
     };
   }
@@ -96,9 +116,11 @@ public class RollSubsystem extends StateMachine<RollState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Roll/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Roll/StatorCurrent", motorCurrent);
+    DogLog.log("Roll/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Roll/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Roll/Position", motorAngle);
+    DogLog.log("Roll/Angle", motorAngle);
+    DogLog.log("Roll/AtGoal", atGoal());
     if (DriverStation.isEnabled()) {
       if (getState() == RollState.HOMING) {
         DogLog.logFault("Roll Unhomed", AlertType.kWarning);

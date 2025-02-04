@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -20,6 +21,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
+  private double leftMotorCurrent;
+  private double rightMotorCurrent;
+
+  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
+
   private final MotionMagicVoltage positionRequest =
       new MotionMagicVoltage(ElevatorState.STOWED.height);
 
@@ -33,7 +39,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double collisionAvoidanceGoal = ElevatorState.STOWED.height;
 
   // Mid-match homing
-  private double averageStatorCurrent;
+  private double averageMotorCurrent;
 
   public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
@@ -46,7 +52,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   public void setState(ElevatorState newState) {
     if (getState() != ElevatorState.PRE_MATCH_HOMING
-        || newState == ElevatorState.MID_MATCH_HOMING) {
+        && getState() != ElevatorState.MID_MATCH_HOMING) {
       setStateFromRequest(newState);
     }
   }
@@ -68,10 +74,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
     averageMeasuredHeight = (leftHeight + rightHeight) / 2.0;
 
-    averageStatorCurrent =
-        (leftMotor.getStatorCurrent().getValueAsDouble()
-                + rightMotor.getStatorCurrent().getValueAsDouble())
-            / 2.0;
+    leftMotorCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
+    rightMotorCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
+
+    averageMotorCurrent = linearFilter.calculate((leftMotorCurrent + rightMotorCurrent) / 2.0);
 
     if (DriverStation.isDisabled()) {
       lowestSeenHeightLeft = Math.min(lowestSeenHeightLeft, leftHeight);
@@ -100,8 +106,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Elevator/Left/StatorCurrent", leftMotor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Elevator/Right/StatorCurrent", rightMotor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Elevator/Left/StatorCurrent", leftMotorCurrent);
+    DogLog.log("Elevator/Right/StatorCurrent", rightMotorCurrent);
+    DogLog.log("Elevator/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Left/Height", leftHeight);
@@ -137,7 +144,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
             ? collisionAvoidanceGoal
             : getState().height;
 
-    if (MathUtil.isNear(0, usedHeight, 1.0) && MathUtil.isNear(0, getHeight(), 1.0)) {
+    if (MathUtil.isNear(0, usedHeight, 1.0)
+        && MathUtil.isNear(0, getHeight(), 1.0)
+        && getState() != ElevatorState.MID_MATCH_HOMING) {
       leftMotor.disable();
       rightMotor.disable();
     }
@@ -146,7 +155,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected ElevatorState getNextState(ElevatorState currentState) {
     if (currentState == ElevatorState.MID_MATCH_HOMING
-        && averageStatorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
+        && averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
       leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
       rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
       return ElevatorState.STOWED;
