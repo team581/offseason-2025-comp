@@ -37,7 +37,8 @@ public class MagnetismUtilTest {
   // TODO: Fix this failing test
   // @Test
   // void testMagnetizedAngleBetweenInputAngleAndStraightLineAngle() {
-  //   /* Verify that the magnetized angle is between the input angle and the angle between robot and goal. */
+  //   /* Verify that the magnetized angle is between the input angle and the angle between robot
+  // and goal. */
   //   ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
   //   Pose2d robotPose = new Pose2d(2.0, 2.0, new Rotation2d());
   //   Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
