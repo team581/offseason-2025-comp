@@ -44,7 +44,7 @@ public enum ReefPipe {
 
   private static final Pose2d L1Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
   private static final Pose2d L2Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
-      // -0.8382 might be a good idea
+  // -0.8382 might be a good idea
   private static final Pose2d L3Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
   private static final Pose2d L4Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
 
