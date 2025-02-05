@@ -629,7 +629,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_BACK_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGEA_NET);
+        intake.setState(IntakeState.SCORE_ALGAE_NET);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getBackwardNetDirection());
@@ -653,7 +653,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_FORWARD_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGEA_NET);
+        intake.setState(IntakeState.SCORE_ALGAE_NET);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getForwardNetDirection());
@@ -677,7 +677,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case PROCESSOR_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGEA_PROCESSOR);
+        intake.setState(IntakeState.SCORE_ALGAE_PROCESSOR);
         moveSuperstructure(ElevatorState.PROCESSOR, WristState.ALGAE_PROCESSOR);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
