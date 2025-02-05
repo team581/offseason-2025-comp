@@ -49,7 +49,9 @@ public class MagnetismUtil {
             fieldRelativeSpeeds.omegaRadiansPerSecond);
     DogLog.log("Debug/RobotVector", fieldRelativeSpeeds);
     DogLog.log("Debug/MagnetismWeight", magnetismWeight);
-    DogLog.log("Debug/UnnormalizedVector", MathHelpers.translation2dToChassisSpeeds(unnormalizedTransform));
+    DogLog.log(
+        "Debug/UnnormalizedVector",
+        MathHelpers.translation2dToChassisSpeeds(unnormalizedTransform));
     DogLog.log("Debug/IdealVector", MathHelpers.translation2dToChassisSpeeds(idealSpeeds));
     DogLog.log("Debug/RobotPose", robotPose);
     DogLog.log("Debug/RobotPoseRelativeToGoal", robotRelativeToGoal);
