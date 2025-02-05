@@ -6,13 +6,14 @@ import com.ctre.phoenix6.signals.S1StateValue;
 import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
   private static final double ALGAE_INTAKE_CURRENT = 20;
-  private static final double CORAL_INTAKE_CURRENT = 20;
+  private static final double CORAL_INTAKE_CURRENT = 45;
 
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
@@ -27,6 +28,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean rightSensorDebounced = false;
   private boolean leftSensorDebounced = false;
   private boolean sensorsHaveGP = false;
+  private LinearFilter linearFilter = LinearFilter.movingAverage(7);
+  private double calculateTopIntakeMotorCurrent;
+  private double calculateBottomIntakeMotorCurrent;
 
   public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
@@ -48,6 +52,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
 
     sensorsHaveGP = rightSensorDebounced || leftSensorDebounced;
+
+    calculateTopIntakeMotorCurrent = linearFilter.calculate(topMotorCurrent);
+    calculateBottomIntakeMotorCurrent = linearFilter.calculate(bottomMotorCurrent);
   }
 
   public boolean getRightSensor() {
@@ -127,5 +134,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
     DogLog.log("Intake/SensorsHaveGP", sensorsHaveGP);
+    DogLog.log("Intake/AverageTopMotorCurrent", calculateTopIntakeMotorCurrent);
+    DogLog.log("Intake/AverageBottomMotorCurrent", calculateBottomIntakeMotorCurrent);
   }
 }
