@@ -2,6 +2,7 @@ package frc.robot.auto_align;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.util.MathHelpers;
@@ -9,6 +10,13 @@ import frc.robot.util.MathHelpers;
 public class MagnetismUtil {
   private static final double IDEAL_MAGNITUDE = 1.0;
   private static final double ASSIST_RADIUS = 2.0;
+  private static final Rotation2d MAX_ASSIST_ANGLE = Rotation2d.fromDegrees(30.0);
+  private static final Rotation2d MIN_ASSIST_ANGLE = Rotation2d.kZero;
+
+  private static Rotation2d clampAngle(Rotation2d angle) {
+    return MathHelpers.angleMax(
+        MathHelpers.angleMin(MathHelpers.angleAbs(angle), MAX_ASSIST_ANGLE), MIN_ASSIST_ANGLE);
+  }
 
   public static ChassisSpeeds getMagnetizedChassisSpeeds(
       ChassisSpeeds fieldRelativeSpeeds, Pose2d robotPose, Pose2d goalPose) {
@@ -18,7 +26,12 @@ public class MagnetismUtil {
       return fieldRelativeSpeeds;
     }
     var robotSpeeds = MathHelpers.chassisSpeedsToTranslation2d(fieldRelativeSpeeds).unaryMinus();
-    var idealSpeeds = new Translation2d(IDEAL_MAGNITUDE, robotRelativeToGoal.getAngle());
+    var idealSpeeds =
+        new Translation2d(
+            IDEAL_MAGNITUDE,
+            robotSpeeds
+                .getAngle()
+                .plus(clampAngle(robotRelativeToGoal.getAngle().minus(robotSpeeds.getAngle()))));
 
     var magnetismWeight =
         (1 - MathHelpers.nonZeroDivide(robotRelativeToGoal.getNorm(), ASSIST_RADIUS));
@@ -34,15 +47,14 @@ public class MagnetismUtil {
             normalizedTransform.getX(),
             normalizedTransform.getY(),
             fieldRelativeSpeeds.omegaRadiansPerSecond);
-    DogLog.log("Debug/RobotVectorAngle", robotSpeeds.plus(new Translation2d(0.001, 0)).getAngle());
-    DogLog.log("Debug/IdealVectorAngle", idealSpeeds.getAngle());
-    DogLog.log("Debug/IdealSpeeds", MathHelpers.translation2dToChassisSpeeds(idealSpeeds));
-    DogLog.log("Debug/RobotSpeeds", MathHelpers.translation2dToChassisSpeeds(robotSpeeds));
+    DogLog.log("Debug/RobotVector", fieldRelativeSpeeds);
+    DogLog.log("Debug/MagnetismWeight", magnetismWeight);
+    DogLog.log("Debug/UnnormalizedVector", MathHelpers.translation2dToChassisSpeeds(unnormalizedTransform));
+    DogLog.log("Debug/IdealVector", MathHelpers.translation2dToChassisSpeeds(idealSpeeds));
     DogLog.log("Debug/RobotPose", robotPose);
+    DogLog.log("Debug/RobotPoseRelativeToGoal", robotRelativeToGoal);
     DogLog.log("Debug/GoalPose", goalPose);
-    DogLog.log("Debug/OutputVectorAngle", normalizedTransform.getAngle());
     DogLog.log("Debug/MagnetizedSpeeds", magnetizedSpeeds);
-
     return magnetizedSpeeds;
   }
 

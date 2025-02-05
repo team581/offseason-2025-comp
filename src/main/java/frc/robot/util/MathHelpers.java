@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -35,6 +36,18 @@ public class MathHelpers {
 
   public static double nonZeroDivide(double a, double b) {
     return b == 0 ? 0 : a / b;
+  }
+
+  public static Rotation2d angleMin(Rotation2d a, Rotation2d b) {
+    return Rotation2d.fromDegrees(Math.min(a.getDegrees(), b.getDegrees()));
+  }
+
+  public static Rotation2d angleMax(Rotation2d a, Rotation2d b) {
+    return Rotation2d.fromDegrees(Math.max(a.getDegrees(), b.getDegrees()));
+  }
+
+  public static Rotation2d angleAbs(Rotation2d a) {
+    return Rotation2d.fromDegrees(Math.abs(a.getDegrees()));
   }
 
   private MathHelpers() {}
