@@ -1,9 +1,11 @@
 package frc.robot.auto_align;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.purple.PurpleState;
+import frc.robot.swerve.SnapUtil;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.results.TagResult;
 import java.util.List;
@@ -69,6 +71,13 @@ public class AutoAlign {
 
     // Robot is on red side
     return theta > 90 && theta < 270;
+  }
+
+  public static boolean shouldIntakeStationForward(Pose2d robotPose) {
+    double theta = robotPose.getRotation().getDegrees();
+    var coralStationBackwardAngle = SnapUtil.getCoralStationAngle(robotPose);
+
+    return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
   public static boolean isCloseToReefSide(
