@@ -19,6 +19,7 @@ public class RollSubsystem extends StateMachine<RollState> {
   private double motorCurrent;
   private double averageMotorCurrent;
   private double smartStowAngle;
+  private double coralScoreDirection;
 
   private LinearFilter linearFilter = LinearFilter.movingAverage(5);
 
@@ -43,8 +44,9 @@ public class RollSubsystem extends StateMachine<RollState> {
         motor.setVoltage(1);
       }
       case CORAL_SCORE -> {
+        coralScoreDirection = getCoralScoreDirection();
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(getScoreDirection())));
+            motionMagicRequest.withPosition(Units.degreesToRotations(coralScoreDirection)));
       }
       case SMART_STOW -> {
         smartStowAngle = getSmartStowDirection();
@@ -77,7 +79,7 @@ public class RollSubsystem extends StateMachine<RollState> {
     return currentState;
   }
 
-  private double getScoreDirection() {
+  private double getCoralScoreDirection() {
     if (intake.getLeftSensor()) {
       return 90;
     }
@@ -107,7 +109,7 @@ public class RollSubsystem extends StateMachine<RollState> {
   public boolean atGoal() {
     return switch (getState()) {
       case HOMING -> false;
-      case CORAL_SCORE -> MathUtil.isNear(getScoreDirection(), motorAngle, 1);
+      case CORAL_SCORE -> MathUtil.isNear(coralScoreDirection, motorAngle, 1);
       case SMART_STOW -> MathUtil.isNear(smartStowAngle, motorAngle, 2);
       default -> MathUtil.isNear(getState().angle, motorAngle, 1);
     };
