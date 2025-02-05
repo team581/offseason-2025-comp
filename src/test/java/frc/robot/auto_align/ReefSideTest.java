@@ -2,9 +2,8 @@ package frc.robot.auto_align;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import frc.robot.util.MathHelpers;
+import org.junit.jupiter.api.Test;
 
 public class ReefSideTest {
   private static void assertSidePoseCorect(boolean isRed, ReefSide side) {
@@ -19,7 +18,8 @@ public class ReefSideTest {
             .getTranslation()
             .getDistance(side.getPose(isRed).getTranslation());
 
-    assertEquals(MathHelpers.roundTo(pipe1Distance, 0.01), MathHelpers.roundTo(pipe2Distance, 0.01));
+    assertEquals(
+        MathHelpers.roundTo(pipe1Distance, 0.01), MathHelpers.roundTo(pipe2Distance, 0.01));
   }
 
   @Test
