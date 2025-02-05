@@ -3,6 +3,7 @@ package frc.robot.auto_align;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.purple.PurpleState;
 import frc.robot.swerve.SnapUtil;
@@ -12,10 +13,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class AutoAlign {
+  private static Optional<ReefSide> autoReefSideOverride = Optional.empty();
   private static final List<ReefSide> ALL_REEF_SIDES = List.of(ReefSide.values());
   private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
+  public static void setAutoReefSideOverride(ReefSide override) {
+    autoReefSideOverride = Optional.of(override);
+  }
+
   public static ReefSide getClosestReefSide(Pose2d robotPose, boolean isRedAlliance) {
+    if (DriverStation.isAutonomous() && autoReefSideOverride.isPresent()) {
+      return autoReefSideOverride.orElseThrow();
+    }
+
     var reefSide =
         ALL_REEF_SIDES.stream()
             .min(
