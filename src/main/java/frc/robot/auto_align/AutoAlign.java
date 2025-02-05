@@ -87,7 +87,7 @@ public class AutoAlign {
   }
 
   public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
-    return isCloseToReefSide(robotPose, nearestReefSide, Units.feetToMeters(3));
+    return isCloseToReefSide(robotPose, nearestReefSide, Units.feetToMeters(5));
   }
 
   public static boolean isCloseToReefPipe(
