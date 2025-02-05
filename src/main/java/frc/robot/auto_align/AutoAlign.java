@@ -73,7 +73,7 @@ public class AutoAlign {
     return theta > 90 && theta < 270;
   }
 
-  public static boolean shouldIntakeStationForward(Pose2d robotPose) {
+  public static boolean shouldIntakeStationFront(Pose2d robotPose) {
     double theta = robotPose.getRotation().getDegrees();
     var coralStationBackwardAngle = SnapUtil.getCoralStationAngle(robotPose);
 

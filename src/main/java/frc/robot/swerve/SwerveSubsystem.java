@@ -192,6 +192,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
             : teleopSpeeds;
   }
 
+  public ChassisSpeeds getTeleopSpeeds() {
+    return teleopSpeeds;
+  }
+
   private ChassisSpeeds calculateFieldRelativeSpeeds() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(
         robotRelativeSpeeds, drivetrainState.Pose.getRotation());
