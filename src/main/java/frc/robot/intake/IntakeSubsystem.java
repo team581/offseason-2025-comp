@@ -20,11 +20,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final Debouncer rightDebouncer = RobotConfig.get().intake().rightDebouncer();
   private final Debouncer leftDebouncer = RobotConfig.get().intake().leftDebouncer();
 
+  private double topMotorCurrent;
+  private double bottomMotorCurrent;
   private boolean rightSensorRaw = false;
   private boolean leftSensorRaw = false;
   private boolean rightSensorDebounced = false;
   private boolean leftSensorDebounced = false;
-  private boolean hasGP = false;
+  private boolean sensorsHaveGP = false;
 
   public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
@@ -38,12 +40,14 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
+    topMotorCurrent = topMotor.getStatorCurrent().getValueAsDouble();
+    bottomMotorCurrent = bottomMotor.getStatorCurrent().getValueAsDouble();
     rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
     rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
 
-    hasGP = rightSensorDebounced || leftSensorDebounced;
+    sensorsHaveGP = rightSensorDebounced || leftSensorDebounced;
   }
 
   public boolean getRightSensor() {
@@ -55,7 +59,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   }
 
   public boolean getHasGP() {
-    return hasGP;
+    return switch (getState()) {
+      case INTAKING_CORAL ->
+          topMotorCurrent > CORAL_INTAKE_CURRENT && bottomMotorCurrent > CORAL_INTAKE_CURRENT;
+      case INTAKING_ALGAE ->
+          topMotorCurrent > ALGAE_INTAKE_CURRENT && bottomMotorCurrent > ALGAE_INTAKE_CURRENT;
+      default -> sensorsHaveGP;
+    };
   }
 
   public void setState(IntakeState newState) {
@@ -107,19 +117,15 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Intake/TopMotor/StatorCurrent", topMotor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Intake/TopMotor/SupplyCurrent", topMotor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/TopMotor/StatorCurrent", topMotorCurrent);
     DogLog.log("Intake/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log(
-        "Intake/BottomMotor/StatorCurrent", bottomMotor.getStatorCurrent().getValueAsDouble());
-    DogLog.log(
-        "Intake/BottomMotor/SupplyCurrent", bottomMotor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/BottomMotor/StatorCurrent", bottomMotorCurrent);
     DogLog.log(
         "Intake/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Intake/Sensors/RightSensorRaw", rightSensorRaw);
     DogLog.log("Intake/Sensors/LeftSensorRaw", leftSensorRaw);
     DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
-    DogLog.log("Intake/HasGP", hasGP);
+    DogLog.log("Intake/SensorsHaveGP", sensorsHaveGP);
   }
 }
