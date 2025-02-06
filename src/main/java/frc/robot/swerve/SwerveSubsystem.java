@@ -24,10 +24,11 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
-  // TODO: Remove this once magnetism is stable
+  // TODO: Remove this once magnetism is stable, with current way robot manager is, having both of these enabled doesn't work
   private static final boolean MAGNETISM_ENABLED = false;
-  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
   private static final boolean PURPLE_ALIGN_ENABLED = false;
+
+  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
 
   public static final double MaxSpeed = 4.75;
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
