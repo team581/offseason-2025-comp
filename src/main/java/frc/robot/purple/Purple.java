@@ -85,7 +85,7 @@ public class Purple {
     if (maybeResult.isEmpty()) {
       return new ChassisSpeeds();
     }
-    var rawAngle = purpleCamera.getPurpleResult().get().ty();
+    var rawAngle = maybeResult.get().ty();
     DogLog.log("PurpleAlignment/Purple/RawAngleTY", rawAngle);
     var rawAngleRadians = Units.degreesToRadians(rawAngle);
     var rawAngleTranslation = new Translation2d(0, rawAngleRadians);
