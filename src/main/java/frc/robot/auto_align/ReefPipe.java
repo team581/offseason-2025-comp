@@ -5,42 +5,34 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.fms.FmsSubsystem;
 
 public enum ReefPipe {
-  PIPE_A(
-      new Pose2d(3.6982, 3.8616, Rotation2d.kZero),
-      new Pose2d(13.8254, 4.1901, Rotation2d.fromDegrees(180.0))),
-  PIPE_B(
-      new Pose2d(3.6982, 4.1902, Rotation2d.kZero),
-      new Pose2d(13.8254, 3.8617, Rotation2d.fromDegrees(180.0))),
+  PIPE_A(new Pose2d(3.71, 4.19, Rotation2d.kZero), new Pose2d(13.84, 3.86, Rotation2d.k180deg)),
+  PIPE_B(new Pose2d(3.71, 3.86, Rotation2d.kZero), new Pose2d(13.84, 4.19, Rotation2d.k180deg)),
   PIPE_C(
-      new Pose2d(3.9463, 4.6199, Rotation2d.fromDegrees(300.000281)),
-      new Pose2d(13.5774, 3.4320, Rotation2d.fromDegrees(119.99986))),
+      new Pose2d(3.96, 3.43, Rotation2d.fromDegrees(60)),
+      new Pose2d(13.59, 4.62, Rotation2d.fromDegrees((240)))),
   PIPE_D(
-      new Pose2d(4.2309, 4.7842, Rotation2d.fromDegrees(300.000281)),
-      new Pose2d(13.2928, 3.2677, Rotation2d.fromDegrees(119.99986))),
+      new Pose2d(4.24, 3.27, Rotation2d.fromDegrees(60)),
+      new Pose2d(13.31, 4.78, Rotation2d.fromDegrees(240))),
   PIPE_E(
-      new Pose2d(4.7270, 4.7842, Rotation2d.fromDegrees(240.00014)),
-      new Pose2d(12.7966, 3.2677, Rotation2d.fromDegrees(59.999719))),
+      new Pose2d(4.74, 3.27, Rotation2d.fromDegrees(120)),
+      new Pose2d(12.81, 4.78, Rotation2d.fromDegrees(300))),
   PIPE_F(
-      new Pose2d(5.0116, 4.6199, Rotation2d.fromDegrees(240.00014)),
-      new Pose2d(12.5120, 3.4320, Rotation2d.fromDegrees(59.999719))),
-  PIPE_G(
-      new Pose2d(5.2597, 4.1902, Rotation2d.fromDegrees(180.0)),
-      new Pose2d(12.2640, 3.8617, Rotation2d.fromDegrees(180.0))),
-  PIPE_H(
-      new Pose2d(5.2597, 3.8616, Rotation2d.fromDegrees(180.0)),
-      new Pose2d(12.2640, 4.1903, Rotation2d.kZero)),
+      new Pose2d(5.02, 3.43, Rotation2d.fromDegrees(120)),
+      new Pose2d(12.53, 4.62, Rotation2d.fromDegrees(300))),
+  PIPE_G(new Pose2d(5.27, 3.86, Rotation2d.k180deg), new Pose2d(12.29, 4.19, Rotation2d.kZero)),
+  PIPE_H(new Pose2d(5.27, 4.19, Rotation2d.k180deg), new Pose2d(12.29, 3.86, Rotation2d.kZero)),
   PIPE_I(
-      new Pose2d(5.0116, 3.4319, Rotation2d.fromDegrees(119.99986)),
-      new Pose2d(12.5120, 4.6200, Rotation2d.fromDegrees(300.000281))),
+      new Pose2d(5.02, 4.62, Rotation2d.fromDegrees(240)),
+      new Pose2d(12.53, 3.43, Rotation2d.fromDegrees(60))),
   PIPE_J(
-      new Pose2d(4.7270, 3.2676, Rotation2d.fromDegrees(119.99986)),
-      new Pose2d(12.7966, 4.7843, Rotation2d.fromDegrees(300.000281))),
+      new Pose2d(4.74, 4.78, Rotation2d.fromDegrees(240)),
+      new Pose2d(12.81, 3.27, Rotation2d.fromDegrees(60))),
   PIPE_K(
-      new Pose2d(4.2309, 3.2676, Rotation2d.fromDegrees(59.999719)),
-      new Pose2d(13.2928, 4.7843, Rotation2d.fromDegrees(240.00014))),
+      new Pose2d(4.24, 4.78, Rotation2d.fromDegrees(300)),
+      new Pose2d(13.31, 3.27, Rotation2d.fromDegrees(120))),
   PIPE_L(
-      new Pose2d(3.9463, 3.4319, Rotation2d.fromDegrees(59.999719)),
-      new Pose2d(13.5774, 4.62008, Rotation2d.fromDegrees((240.00014))));
+      new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
+      new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120)));
 
   private static final Pose2d L1Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
   private static final Pose2d L2Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
@@ -48,8 +40,8 @@ public enum ReefPipe {
   private static final Pose2d L3Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
   private static final Pose2d L4Offset = new Pose2d(-0.6, 0, Rotation2d.kZero);
 
-  public final Pose2d redPose;
-  public final Pose2d bluePose;
+  private final Pose2d redPose;
+  private final Pose2d bluePose;
 
   ReefPipe(Pose2d bluePose, Pose2d redPose) {
     this.redPose = redPose;
@@ -58,6 +50,10 @@ public enum ReefPipe {
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
     var basePipePose = isRedAlliance ? redPose : bluePose;
+
+    if (level == ReefPipeLevel.BASE) {
+      return basePipePose;
+    }
 
     var offset =
         switch (level) {

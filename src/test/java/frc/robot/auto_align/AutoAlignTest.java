@@ -70,7 +70,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideCDRed() {
-    var robotPose = new Pose2d(13.475, 3.306, Rotation2d.fromRadians(2.0944));
+    var robotPose = ReefSide.SIDE_CD.redPose;
 
     var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
 
@@ -79,8 +79,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideCDBlue() {
-
-    var robotPose = new Pose2d(4.073, 4.746, Rotation2d.fromRadians(-1.0472));
+    var robotPose = ReefSide.SIDE_CD.bluePose;
 
     var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
 
@@ -89,7 +88,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideEFRed() {
-    var robotPose = new Pose2d(12.643, 3.306, Rotation2d.fromRadians(1.0472));
+    var robotPose = ReefSide.SIDE_EF.redPose;
 
     var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
 
@@ -98,7 +97,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideEFBlue() {
-    var robotPose = new Pose2d(4.905, 4.746, Rotation2d.fromRadians(-2.0944));
+    var robotPose = ReefSide.SIDE_EF.bluePose;
 
     var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
 
@@ -125,7 +124,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideIJRed() {
-    var robotPose = new Pose2d(12.643, 4.746, Rotation2d.fromRadians(-1.0472));
+    var robotPose = ReefSide.SIDE_IJ.redPose;
 
     var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
 
@@ -134,7 +133,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideIJBlue() {
-    var robotPose = new Pose2d(4.905, 3.306, Rotation2d.fromRadians(2.0944));
+    var robotPose = ReefSide.SIDE_IJ.bluePose;
 
     var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
 
@@ -143,7 +142,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideKLRed() {
-    var robotPose = new Pose2d(13.474, 4.746, Rotation2d.fromRadians(-2.0944));
+    var robotPose = ReefSide.SIDE_KL.redPose;
 
     var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
 
@@ -152,7 +151,7 @@ public class AutoAlignTest {
 
   @Test
   void scoreSideKLBlue() {
-    var robotPose = new Pose2d(4.074, 3.306, Rotation2d.fromRadians(1.0472));
+    var robotPose = ReefSide.SIDE_KL.bluePose;
 
     var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
 
