@@ -920,8 +920,12 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     purpleSpeeds =
-        purple.getCombinedTagAndPurpleChassisSpeeds(localization.getPose(), scoringLevel);
-    swerve.setPurpleSpeeds(purpleSpeeds);
+        purple.getPoseAlignmentChassisSpeeds(localization.getPose(), scoringLevel, false);
+    if (vision.isAnyTagLimelightOnline()) {
+      swerve.setPurpleSpeeds(purpleSpeeds);
+    } else {
+      swerve.setPurpleSpeeds(new ChassisSpeeds());
+    }
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
