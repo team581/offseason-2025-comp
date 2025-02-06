@@ -51,6 +51,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                           AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
                           robotManager.l4CoralLineupRequest();
                         })),
+                // REEF PIPE I
                 new AutoPoint(new Pose2d(12.246, 2.952, Rotation2d.fromDegrees(58.446))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
@@ -106,7 +107,11 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(
                     new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
-                    Commands.runOnce(() -> robotManager.l4CoralLineupRequest())),
+                    Commands.runOnce(
+                        () -> {
+                          AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
+                          robotManager.l4CoralLineupRequest();
+                        })),
                 // REEF PIPE L
                 new AutoPoint(new Pose2d(13.922, 2.842, Rotation2d.fromDegrees(120.471))))),
         autoCommands.l4ScoreAndReleaseCommand(),
