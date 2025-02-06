@@ -26,6 +26,7 @@ import frc.robot.util.state_machines.StateMachine;
 public class SwerveSubsystem extends StateMachine<SwerveState> {
   // TODO: Remove this once magnetism is stable
   private static final boolean MAGNETISM_ENABLED = false;
+  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
 
   public static final double MaxSpeed = 4.75;
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
@@ -80,6 +81,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   private ChassisSpeeds autoSpeeds = new ChassisSpeeds();
 
+  private ChassisSpeeds coralAssistSpeedsOffset = new ChassisSpeeds();
+
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
   }
@@ -124,6 +127,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     setFieldRelativeAutoSpeeds(
         ChassisSpeeds.fromRobotRelativeSpeeds(
             speeds, Rotation2d.fromDegrees(drivetrainPigeon.getYaw().getValueAsDouble())));
+  }
+
+  public void setFieldRelativeCoralAssistSpeedsOffset(ChassisSpeeds speeds) {
+    if (INTAKE_ASSIST_CORAL_ENABLED) {
+      coralAssistSpeedsOffset = speeds;
+    } else {
+      coralAssistSpeedsOffset = new ChassisSpeeds();
+    }
   }
 
   @Override
@@ -246,6 +257,18 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
+      case INTAKE_ASSIST_CORAL_TELEOP -> {
+        drivetrain.setControl(
+            drive
+                .withVelocityX(
+                    teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
+                .withVelocityY(
+                    teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
+                .withRotationalRate(
+                    teleopSpeeds.omegaRadiansPerSecond
+                        + coralAssistSpeedsOffset.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+      }
       case AUTO ->
           drivetrain.setControl(
               drive
@@ -275,6 +298,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       setSnapsEnabled(true);
     } else {
       setStateFromRequest(SwerveState.REEF_MAGNETISM_TELEOP);
+    }
+  }
+
+  public void enableCoralIntakeAssist() {
+    if (DriverStation.isTeleop()) {
+      setStateFromRequest(SwerveState.INTAKE_ASSIST_CORAL_TELEOP);
     }
   }
 

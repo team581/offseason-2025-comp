@@ -20,6 +20,11 @@ public class RobotCommands {
     return Commands.runOnce(robot::intakeFloorRequest, requirements).withName("FloorIntakeCommand");
   }
 
+  public Command floorAssistIntakeCommand() {
+    return Commands.runOnce(robot::intakeAssistFloorRequest, requirements)
+        .withName("FloorIntakeCommand");
+  }
+
   public Command confirmScoreCommand() {
     return Commands.runOnce(robot::confirmScoreRequest, requirements)
         .withName("ConfirmScoreCommand");

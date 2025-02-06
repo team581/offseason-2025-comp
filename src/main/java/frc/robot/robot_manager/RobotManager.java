@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
@@ -15,6 +16,7 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
+import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -214,7 +216,9 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case INTAKE_CORAL_FLOOR_HORIZONTAL, INTAKE_CORAL_FLOOR_UPRIGHT -> {
+      case INTAKE_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_CORAL_FLOOR_UPRIGHT -> {
         if (intake.getHasGP()) {
           rumbleController.rumbleRequest();
           yield RobotState.IDLE_CORAL;
@@ -409,6 +413,18 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
         swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        roll.setState(RollState.INTAKING_CORAL_HORIZONTAL);
+        frontCoralLimelight.setState(LimelightState.CORAL);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        backTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+        climber.setState(ClimberState.STOWED);
+      }
+      case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
+        intake.setState(IntakeState.INTAKING_CORAL);
+        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
+        swerve.enableCoralIntakeAssist();
         swerve.setSnapToAngle(0);
         roll.setState(RollState.INTAKING_CORAL_HORIZONTAL);
         frontCoralLimelight.setState(LimelightState.CORAL);
@@ -872,6 +888,15 @@ public class RobotManager extends StateMachine<RobotState> {
               ReefPipeLevel.L4;
           default -> ReefPipeLevel.BASE;
         };
+
+    if (getState() == RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL) {
+      ChassisSpeeds coralAssistSpeeds =
+          IntakeAssistUtil.getCoralAssistSpeeds(
+              frontCoralLimelight.getCoralResult(), imu.getRobotHeading(), true);
+      DogLog.log("IntakeAssist/XSpeeds", coralAssistSpeeds.vxMetersPerSecond);
+      DogLog.log("IntakeAssist/YSpeeds", coralAssistSpeeds.vyMetersPerSecond);
+      swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
+    }
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
@@ -927,7 +952,9 @@ public class RobotManager extends StateMachine<RobotState> {
           stowRequest();
         }
       }
-      case INTAKE_CORAL_FLOOR_UPRIGHT, INTAKE_CORAL_FLOOR_HORIZONTAL -> {
+      case INTAKE_CORAL_FLOOR_UPRIGHT,
+          INTAKE_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         if (newMode == GamePieceMode.ALGAE) {
           intakeFloorAlgaeRequest();
         }
@@ -996,6 +1023,14 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void intakeAssistFloorRequest() {
+    if (gamePieceMode == GamePieceMode.ALGAE) {
+      intakeFloorAlgaeRequest();
+    } else {
+      intakeAssistFloorCoralHorizontalRequest();
+    }
+  }
+
   public void intakeFloorAlgaeRequest() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
@@ -1009,6 +1044,14 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL);
+    }
+  }
+
+  public void intakeAssistFloorCoralHorizontalRequest() {
+    gamePieceMode = GamePieceMode.CORAL;
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      default -> setStateFromRequest(RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL);
     }
   }
 
@@ -1185,6 +1228,7 @@ public class RobotManager extends StateMachine<RobotState> {
           DISLODGE_ALGAE_L2_PUSHING,
           DISLODGE_ALGAE_L3_PUSHING,
           INTAKE_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
           INTAKE_CORAL_FLOOR_UPRIGHT,
           INTAKE_CORAL_STATION_BACK,
           INTAKE_CORAL_STATION_FRONT,
