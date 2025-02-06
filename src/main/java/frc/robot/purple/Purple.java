@@ -43,9 +43,10 @@ public class Purple {
 
   private boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
     var scoringTranslationFieldRelative =
-    AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
+        AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
 
-    return robotPose.getTranslation().getDistance(scoringTranslationFieldRelative)<=TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
+    return robotPose.getTranslation().getDistance(scoringTranslationFieldRelative)
+        <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
 
   public static ChassisSpeeds getPoseAlignmentChassisSpeeds(
@@ -108,13 +109,12 @@ public class Purple {
     if (Timer.getFPGATimestamp() - lastTimeSeen >= SEEN_PURPLE_TIMEOUT) {
       seenPurple = false;
     }
-    if (!seenPurple&&!isTagAligned(robotPose, reefPipeLevel)) {
+    if (!seenPurple && !isTagAligned(robotPose, reefPipeLevel)) {
       return getPoseAlignmentChassisSpeeds(robotPose, reefPipeLevel, seenPurple);
     }
     var speeds =
         switch (getPurpleState()) {
           case NO_PURPLE -> {
-
             yield getPoseAlignmentChassisSpeeds(robotPose, reefPipeLevel, seenPurple);
           }
           case VISIBLE_NOT_CENTERED -> {
