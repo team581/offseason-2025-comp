@@ -13,7 +13,7 @@ import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
   private static final double ALGAE_INTAKE_CURRENT = 20;
-  private static final double CORAL_INTAKE_CURRENT = 45;
+  private static final double CORAL_INTAKE_CURRENT = 20;
 
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
@@ -28,7 +28,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean rightSensorDebounced = false;
   private boolean leftSensorDebounced = false;
   private boolean sensorsHaveGP = false;
-  private LinearFilter linearFilter = LinearFilter.movingAverage(7);
+  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
   private double calculateTopIntakeMotorCurrent;
   private double calculateBottomIntakeMotorCurrent;
 
@@ -67,10 +67,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   public boolean getHasGP() {
     return switch (getState()) {
-      case INTAKING_CORAL ->
-          topMotorCurrent > CORAL_INTAKE_CURRENT && bottomMotorCurrent > CORAL_INTAKE_CURRENT;
-      case INTAKING_ALGAE ->
-          topMotorCurrent > ALGAE_INTAKE_CURRENT && bottomMotorCurrent > ALGAE_INTAKE_CURRENT;
+      // case INTAKING_CORAL ->
+      //   topMotorCurrent > CORAL_INTAKE_CURRENT && bottomMotorCurrent > CORAL_INTAKE_CURRENT;
+      //  case INTAKING_ALGAE ->
+      //  topMotorCurrent > ALGAE_INTAKE_CURRENT && bottomMotorCurrent > ALGAE_INTAKE_CURRENT;
       default -> sensorsHaveGP;
     };
   }
@@ -134,7 +134,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
     DogLog.log("Intake/SensorsHaveGP", sensorsHaveGP);
-    DogLog.log("Intake/AverageTopMotorCurrent", calculateTopIntakeMotorCurrent);
-    DogLog.log("Intake/AverageBottomMotorCurrent", calculateBottomIntakeMotorCurrent);
+//    DogLog.log("Intake/TopMotor/CalulatedMotorCurrent", calculateTopIntakeMotorCurrent);
+//    DogLog.log("Intake/BottomMotor/CalculateMotorCurrent", calculateBottomIntakeMotorCurrent);
   }
 }
