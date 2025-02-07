@@ -148,12 +148,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
       case INTAKE_ASSIST_ALGAE_TELEOP, INTAKE_ASSIST_CORAL_TELEOP ->
           DriverStation.isAutonomous() ? SwerveState.AUTO : currentState;
-      case PURPLE_ALIGN_TELEOP, PURPLE_ALIGN_AUTO ->
+      case REEF_ALIGN_TELEOP, REEF_ALIGN_AUTO ->
           DriverStation.isAutonomous()
-              ? SwerveState.PURPLE_ALIGN_AUTO
-              : SwerveState.PURPLE_ALIGN_TELEOP;
-      case REEF_MAGNETISM_TELEOP ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.REEF_MAGNETISM_TELEOP;
+              ? SwerveState.REEF_ALIGN_AUTO
+              : SwerveState.REEF_ALIGN_TELEOP;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
     };
@@ -247,24 +245,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
-      case REEF_MAGNETISM_TELEOP -> {
-        if (magnetizedSpeeds.omegaRadiansPerSecond == 0) {
-          drivetrain.setControl(
-              driveToAngle
-                  .withVelocityX(magnetizedSpeeds.vxMetersPerSecond)
-                  .withVelocityY(magnetizedSpeeds.vyMetersPerSecond)
-                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-
-        } else {
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(magnetizedSpeeds.vxMetersPerSecond)
-                  .withVelocityY(magnetizedSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(magnetizedSpeeds.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-        }
-      }
       case INTAKE_ASSIST_CORAL_TELEOP -> {
         drivetrain.setControl(
             drive
@@ -277,12 +257,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                         + coralAssistSpeedsOffset.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
-      case PURPLE_ALIGN_TELEOP -> {
+      case REEF_ALIGN_TELEOP -> {
+        var alignSpeeds = getScoringAlignChassisSpeeds();
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + purpleSpeeds.vxMetersPerSecond)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + purpleSpeeds.vyMetersPerSecond)
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
 
@@ -290,28 +271,30 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
           drivetrain.setControl(
               drive
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + purpleSpeeds.vxMetersPerSecond)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + purpleSpeeds.vyMetersPerSecond)
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
                   .withRotationalRate(
-                      teleopSpeeds.omegaRadiansPerSecond + purpleSpeeds.omegaRadiansPerSecond)
+                      teleopSpeeds.omegaRadiansPerSecond + alignSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
-      case PURPLE_ALIGN_AUTO -> {
-        if (purpleSpeeds.omegaRadiansPerSecond == 0) {
+      case REEF_ALIGN_AUTO -> {
+        var alignSpeeds = getScoringAlignChassisSpeeds();
+
+        if (alignSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond + purpleSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond + purpleSpeeds.vyMetersPerSecond)
+                  .withVelocityX(autoSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(autoSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
         } else {
           drivetrain.setControl(
               drive
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond + purpleSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond + purpleSpeeds.vyMetersPerSecond)
+                  .withVelocityX(autoSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(autoSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
                   .withRotationalRate(
-                      autoSpeeds.omegaRadiansPerSecond + purpleSpeeds.omegaRadiansPerSecond)
+                      autoSpeeds.omegaRadiansPerSecond + alignSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.Velocity));
         }
       }
@@ -336,19 +319,26 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     setStateFromRequest(newState);
   }
 
-  public void enableReefMagnetism() {
-    // Helper function to enable magnetism in teleop, but not during auto
-    // Since auto will have its own Trailblazer-y way of doing alignment
-    if (MAGNETISM_ENABLED) {
+  public void enableScoringAlignment() {
+    if (MAGNETISM_ENABLED||PURPLE_ALIGN_ENABLED) {
       if (DriverStation.isAutonomous()) {
         // No magnetism in auto, use regular snaps
-        setSnapsEnabled(true);
+        setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
+
       } else {
-        setStateFromRequest(SwerveState.REEF_MAGNETISM_TELEOP);
+        setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
       }
-    } else {
-      setSnapsEnabled(true);
+  }
+}
+
+  public ChassisSpeeds getScoringAlignChassisSpeeds() {
+    if (MAGNETISM_ENABLED) {
+      return magnetizedSpeeds;
+    } else if (PURPLE_ALIGN_ENABLED){
+      return purpleSpeeds;
     }
+
+    return new ChassisSpeeds();
   }
 
   public void enableCoralIntakeAssist() {
@@ -359,26 +349,16 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
-  public void enablePurpleAlign() {
-    if (PURPLE_ALIGN_ENABLED) {
-      if (DriverStation.isTeleop()) {
-        setStateFromRequest(SwerveState.PURPLE_ALIGN_TELEOP);
-      } else {
-        setState(SwerveState.PURPLE_ALIGN_AUTO);
-      }
-    }
-  }
 
   public void setSnapsEnabled(boolean newValue) {
     switch (getState()) {
       case TELEOP,
               TELEOP_SNAPS,
               INTAKE_ASSIST_CORAL_TELEOP,
-              PURPLE_ALIGN_TELEOP,
-              INTAKE_ASSIST_ALGAE_TELEOP,
-              REEF_MAGNETISM_TELEOP ->
+              REEF_ALIGN_TELEOP,
+              INTAKE_ASSIST_ALGAE_TELEOP ->
           setStateFromRequest(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
-      case AUTO, AUTO_SNAPS, PURPLE_ALIGN_AUTO ->
+      case AUTO, AUTO_SNAPS, REEF_ALIGN_AUTO ->
           setStateFromRequest(newValue ? SwerveState.AUTO_SNAPS : SwerveState.AUTO);
     }
   }
