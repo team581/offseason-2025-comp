@@ -47,7 +47,8 @@ public abstract class BaseAuto {
         .withName(className + "Command")
         .finallyDo(
             interrupted -> {
-              if (interrupted && DriverStation.isAutonomous()) {
+              // Check if we are enabled, since auto commands are cancelled during disable
+              if (interrupted && DriverStation.isAutonomousEnabled()) {
                 DogLog.logFault("Auto command interrupted outside teleop");
 
                 if (RobotConfig.IS_DEVELOPMENT) {
