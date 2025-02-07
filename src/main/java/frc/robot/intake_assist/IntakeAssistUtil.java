@@ -9,7 +9,7 @@ import frc.robot.vision.results.GamePieceResult;
 import java.util.Optional;
 
 public class IntakeAssistUtil {
-  private static final double INITIAL_LINEUP_DISTANCE_THRESHOLD = 0.07;
+  private static final double INITIAL_LINEUP_DISTANCE_THRESHOLD = 0.1;
   private static final double INITIAL_LINEUP_DISTANCE_FROM_CORAL = 0.9;
   private static final double FINAL_SHOVE_DISTANCE_FROM_CORAL = 0.5;
   private static final double CORAL_ASSIST_KP = 3.0;
