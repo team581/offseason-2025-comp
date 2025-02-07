@@ -34,25 +34,24 @@ public class MagnetismUtilTest {
         getMagnitudeFromChassisSpeeds(robotSpeed), getMagnitudeFromChassisSpeeds(magnetizedSpeed));
   }
 
-  // TODO: Fix this failing test
-  // @Test
-  // void testMagnetizedAngleBetweenInputAngleAndStraightLineAngle() {
-  //   /* Verify that the magnetized angle is between the input angle and the angle between robot
-  // and goal. */
-  //   ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
-  //   Pose2d robotPose = new Pose2d(2.0, 2.0, new Rotation2d());
-  //   Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
-  //   Rotation2d robotToGoal = Rotation2d.fromDegrees(90);
+  @Test
+  void testMagnetizedAngleBetweenInputAngleAndStraightLineAngle() {
+    /* Verify that the magnetized angle is between the input angle and the angle between robot
+    and goal. */
+    ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
+    Pose2d robotPose = new Pose2d(2.0, 2.0, new Rotation2d());
+    Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
+    Rotation2d robotToGoal = Rotation2d.fromDegrees(90);
 
-  //   ChassisSpeeds magnetizedSpeed =
-  //       MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPose, goalPose);
+    ChassisSpeeds magnetizedSpeed =
+        MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPose, goalPose);
 
-  //   Assertions.assertTrue(
-  //       robotToGoal.getDegrees() > getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees());
-  //   Assertions.assertTrue(
-  //       getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees()
-  //           > getAngleFromChassisSpeeds(robotSpeed).getDegrees());
-  // }
+    Assertions.assertTrue(
+        robotToGoal.getDegrees() > getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees());
+    Assertions.assertTrue(
+        getAngleFromChassisSpeeds(magnetizedSpeed).getDegrees()
+            > getAngleFromChassisSpeeds(robotSpeed).getDegrees());
+  }
 
   @Test
   void testMagnetismAngleGetsStrongerCloserToGoal() {
