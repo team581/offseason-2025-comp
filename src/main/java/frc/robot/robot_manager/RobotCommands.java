@@ -33,7 +33,8 @@ public class RobotCommands {
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, requirements)
         .andThen(
-            Commands.waitUntil(() -> robot.elevator.atGoal() && robot.wrist.atGoal() && robot.roll.atGoal()))
+            Commands.waitUntil(
+                () -> robot.elevator.atGoal() && robot.wrist.atGoal() && robot.roll.atGoal()))
         .withName("StowCommand");
   }
 

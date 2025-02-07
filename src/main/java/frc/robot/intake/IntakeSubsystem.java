@@ -69,7 +69,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   public boolean getHasGP() {
     return switch (getState()) {
-     // case INTAKING_CORAL, INTAKING_ALGAE -> topMotorHasGp && bottomMotorHasGp;
+      // case INTAKING_CORAL, INTAKING_ALGAE -> topMotorHasGp && bottomMotorHasGp;
       default -> sensorsHaveGP;
     };
   }
