@@ -16,28 +16,31 @@ public enum CollisionBox {
   BOX_2(
       2,
       new Rectangle2d( // bottom backwards
-          new Translation2d(-20, -20), new Translation2d(7.5, 30)),
+          new Translation2d(-20, -20), new Translation2d(13, 30)),
       new SuperstructurePosition(0, 180)), // 0 and angle of station intake
   BOX_3(
       3,
       new Rectangle2d( // forwards bottom
-          new Translation2d(7.5, -20), new Translation2d(20, 25)),
+          new Translation2d(13, -20),
+          new Translation2d(
+              20, 25)), // TODO: test the x of 13 that was Tuned so that it does not skip if the arm
+      // angle is too in
       new SuperstructurePosition(0, 40)),
 
   BOX_4(
       4,
       new Rectangle2d( // forwards middle
-          new Translation2d(7.5, 25), new Translation2d(20, 40)),
+          new Translation2d(13, 25), new Translation2d(20, 40)),
       new SuperstructurePosition(30, 40)),
   BOX_5(
       5,
       new Rectangle2d( // forwards top
-          new Translation2d(7.5, 40), new Translation2d(20, 86)),
+          new Translation2d(13, 40), new Translation2d(20, 86)),
       new SuperstructurePosition(67, 40)),
   BOX_6(
       6,
       new Rectangle2d( // forwards Top
-          new Translation2d(-20, 56.5), new Translation2d(7.5, 86)),
+          new Translation2d(-20, 56.5), new Translation2d(13, 86)),
       new SuperstructurePosition(67, 135)),
   ;
 

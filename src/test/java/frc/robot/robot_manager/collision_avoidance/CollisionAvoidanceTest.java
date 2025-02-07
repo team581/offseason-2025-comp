@@ -104,4 +104,13 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     assertEquals(Optional.empty(), result);
   }
+
+  @Test
+  void testHighToLowNoSkip() {
+    SuperstructurePosition current = new SuperstructurePosition(65, 50);
+    SuperstructurePosition goal = new SuperstructurePosition(0, 50);
+    var result = CollisionAvoidance.plan(current, goal);
+    var expectedResult = new SuperstructurePosition(67, 40);
+    assertEquals(expectedResult, result.get());
+  }
 }
