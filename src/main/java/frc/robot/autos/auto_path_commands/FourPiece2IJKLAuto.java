@@ -61,6 +61,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
+        autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
@@ -81,6 +82,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
+        autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
@@ -102,6 +104,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819))))),
+        autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
