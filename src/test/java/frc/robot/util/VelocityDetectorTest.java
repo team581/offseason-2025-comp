@@ -11,7 +11,8 @@ public class VelocityDetectorTest {
     var detector = new VelocityDetector(0.8, 1.0);
     // motor velocity is under the minimum intaking threshold
     var velocityUnderMinThreshold = 0.7;
-    // motor velocity has crossed the minimum intaking threshold, now waiting to go below max threshold
+    // motor velocity has crossed the minimum intaking threshold, now waiting to go below max
+    // threshold
     var velocityAboveMinThreshold = 1.1;
     // motor velocity under max threshold while holding gamepiece, return true
     var velocityUnderMaxThreshold = 0.7;

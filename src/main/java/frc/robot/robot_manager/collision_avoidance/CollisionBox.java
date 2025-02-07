@@ -21,9 +21,7 @@ public enum CollisionBox {
   BOX_3(
       3,
       new Rectangle2d( // forwards bottom
-          new Translation2d(13, -20),
-          new Translation2d(
-              20, 25)),
+          new Translation2d(13, -20), new Translation2d(20, 25)),
       // angle is too in
       new SuperstructurePosition(0, 40)),
 

@@ -26,7 +26,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean leftSensorDebounced = false;
   private boolean sensorsHaveGP = false;
 
-  //TODO: add minimum velocities
+  // TODO: add minimum velocities
   private final VelocityDetector topMotorDetection = new VelocityDetector(0.0, 0.0);
   private final VelocityDetector bottomMotorDetection = new VelocityDetector(0.0, 0.0);
   private boolean topMotorHasGp = false;

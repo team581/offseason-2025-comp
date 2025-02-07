@@ -530,7 +530,6 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CORAL_L2_PLACE, WristState.CORAL_SCORE_PLACING_L2);
         swerve.enableScoringAlignment();
 
-
         backTagLimelight.setState(LimelightState.REEF_TAGS);
         lights.setState(getLightStateForScoring());
       }
@@ -538,7 +537,6 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.SCORE_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L2_RELEASE, WristState.CORAL_SCORE_PLACING_L2);
         swerve.enableScoringAlignment();
-
 
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -553,7 +551,6 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CORAL_L3_LINEUP, WristState.CORAL_SCORE_LINEUP_L3);
         swerve.enableScoringAlignment();
 
-
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
@@ -566,7 +563,6 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L3_PLACE, WristState.CORAL_SCORE_PLACING_L3);
         swerve.enableScoringAlignment();
-
 
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -606,7 +602,6 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L4_PLACE, WristState.CORAL_SCORE_PLACING_L4);
         swerve.enableScoringAlignment();
-
 
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);

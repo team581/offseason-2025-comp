@@ -4,6 +4,7 @@ public class VelocityDetector {
   private boolean hasSeenMinVelocity = false;
   private final double minVelocity;
   private final double maxVelocity;
+
   /**
    * @param minVelocity Minimum velocity while intaking
    * @param maxVelocity The maximum velocity that is possible if you are holding a game piece.

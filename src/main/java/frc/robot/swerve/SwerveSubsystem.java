@@ -320,7 +320,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void enableScoringAlignment() {
-    if (MAGNETISM_ENABLED||PURPLE_ALIGN_ENABLED) {
+    if (MAGNETISM_ENABLED || PURPLE_ALIGN_ENABLED) {
       if (DriverStation.isAutonomous()) {
         // No magnetism in auto, use regular snaps
         setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
@@ -328,13 +328,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       } else {
         setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
       }
+    }
   }
-}
 
   public ChassisSpeeds getScoringAlignChassisSpeeds() {
     if (MAGNETISM_ENABLED) {
       return magnetizedSpeeds;
-    } else if (PURPLE_ALIGN_ENABLED){
+    } else if (PURPLE_ALIGN_ENABLED) {
       return purpleSpeeds;
     }
 
@@ -348,7 +348,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
     }
   }
-
 
   public void setSnapsEnabled(boolean newValue) {
     switch (getState()) {
