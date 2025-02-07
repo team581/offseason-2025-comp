@@ -23,7 +23,7 @@ public enum CollisionBox {
       new Rectangle2d( // forwards bottom
           new Translation2d(13, -20),
           new Translation2d(
-              20, 25)), // TODO: test the x of 13 that was Tuned so that it does not skip if the arm
+              20, 25)),
       // angle is too in
       new SuperstructurePosition(0, 40)),
 
