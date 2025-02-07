@@ -70,4 +70,10 @@ public class MagnetismUtilTest {
         getAngleFromChassisSpeeds(magnetizedSpeedClose).getDegrees()
             > getAngleFromChassisSpeeds(magnetizedSpeedFar).getDegrees());
   }
+
+  @Test
+  void testMagnetizedSpeedsMovingTowardsGoal() {
+    var robotSpeed = new ChassisSpeeds();
+    Pose2d robotPose = new Pose2d();
+  }
 }
