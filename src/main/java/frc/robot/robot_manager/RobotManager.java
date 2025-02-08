@@ -912,18 +912,15 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
     var tagCameraOnline = vision.isAnyTagLimelightOnline();
-    var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.5);
 
-    if (tagCameraOnline == false) {
+    if (!tagCameraOnline) {
       return timeout(0.5);
     }
 
-    if ((tagCameraOnline && isFarEnoughFromReefSide) || timeout(15.0)) {
-      return true;
-    }
+    var isFarEnoughFromReefSide =
+        !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.75);
 
-    return false;
+    return isFarEnoughFromReefSide;
   }
 
   public void setGamePieceMode(GamePieceMode newMode) {
