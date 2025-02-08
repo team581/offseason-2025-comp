@@ -58,9 +58,15 @@ public class Robot extends TimedRobot {
           "back",
           LimelightState.TAGS,
           RobotConfig.get().vision().interpolatedVisionSet().backTagSet);
+  private final Limelight baseTagLimelight =
+      new Limelight(
+          "base",
+          LimelightState.TAGS,
+          RobotConfig.get().vision().interpolatedVisionSet().baseTagSet);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight);
+      new VisionSubsystem(
+          imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final Purple purple = new Purple(elevatorPurpleLimelight);
 
@@ -90,6 +96,7 @@ public class Robot extends TimedRobot {
           elevatorPurpleLimelight,
           frontCoralLimelight,
           backTagLimelight,
+          baseTagLimelight,
           lights,
           purple,
           climber,
