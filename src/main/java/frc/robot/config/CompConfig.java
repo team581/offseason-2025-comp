@@ -175,17 +175,18 @@ class CompConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -80,
-              217,
+              -58.7,
+              156.5,
               18,
-              -80),
+              -58.7),
           new RollConfig(
               RIO_CAN_NAME,
               23,
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
@@ -196,7 +197,7 @@ class CompConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               9,
-              101),
+              92.4),
           new ClimberConfig(
               CANIVORE_NAME,
               24,

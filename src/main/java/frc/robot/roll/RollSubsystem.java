@@ -81,18 +81,18 @@ public class RollSubsystem extends StateMachine<RollState> {
 
   private double getCoralScoreDirection() {
     if (intake.getLeftSensor()) {
-      return 90;
+      return -90;
     }
-    return -90;
+    return 90;
   }
 
   private double getSmartStowDirection() {
     if (intake.getLeftSensor() && intake.getRightSensor()) {
       return 0;
     } else if (intake.getLeftSensor()) {
-      return -90;
-    } else {
       return 90;
+    } else {
+      return -90;
     }
   }
 

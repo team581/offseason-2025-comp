@@ -53,6 +53,14 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
+
+    // Sensors are switched around on practice bot
+    if (RobotConfig.IS_PRACTICE_BOT) {
+      var temp = rightSensorRaw;
+      rightSensorRaw = leftSensorRaw;
+      leftSensorRaw = temp;
+    }
+
     rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
 

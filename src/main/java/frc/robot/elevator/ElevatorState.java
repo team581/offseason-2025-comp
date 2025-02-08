@@ -23,7 +23,7 @@ public enum ElevatorState {
   CORAL_L1_PLACE(0.0),
   CORAL_L1_RELEASE(0.0),
 
-  CORAL_L2_LINEUP(13.0),
+  CORAL_L2_LINEUP(8.75),
   CORAL_L2_PLACE(7.0),
   CORAL_L2_RELEASE(0.0),
 
