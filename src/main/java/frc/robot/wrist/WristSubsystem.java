@@ -21,7 +21,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   private double lowestSeenAngle = Double.MAX_VALUE;
   private double highestSeenAngle = Double.MIN_VALUE;
   private double collisionAvoidanceGoal;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 180.0;
+  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 120.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
