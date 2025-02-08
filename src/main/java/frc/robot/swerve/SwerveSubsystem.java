@@ -13,7 +13,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.MagnetismUtil;
+import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -86,6 +88,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private ChassisSpeeds magnetizedSpeeds = new ChassisSpeeds();
   private ChassisSpeeds coralAssistSpeedsOffset = new ChassisSpeeds();
   private ChassisSpeeds purpleSpeeds = new ChassisSpeeds();
+
+  private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
+  private double previousTimestamp = 0.0;
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
@@ -280,23 +285,32 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
       case REEF_ALIGN_AUTO -> {
         var alignSpeeds = getScoringAlignChassisSpeeds();
+        var wantedSpeeds = alignSpeeds.plus(teleopSpeeds);
+        var currentTimestamp = Timer.getFPGATimestamp();
+    if (previousTimestamp == 0.0) {
+      previousTimestamp = currentTimestamp - 0.02;
+    }
+        var constrainedWantedSpeeds = AutoConstraintCalculator.constrainVelocityGoal(wantedSpeeds, previousSpeeds, currentTimestamp-previousTimestamp, AutoConstraintCalculator.getLastUsedConstraints());
 
         if (alignSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
+                  .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
+                  .withVelocityY(constrainedWantedSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
         } else {
           drivetrain.setControl(
               drive
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
+                  .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
+                  .withVelocityY(constrainedWantedSpeeds.vyMetersPerSecond)
                   .withRotationalRate(
-                      autoSpeeds.omegaRadiansPerSecond + alignSpeeds.omegaRadiansPerSecond)
+                      constrainedWantedSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.Velocity));
         }
+
+        previousSpeeds = getFieldRelativeSpeeds();
+        previousTimestamp = currentTimestamp;
       }
       case AUTO ->
           drivetrain.setControl(

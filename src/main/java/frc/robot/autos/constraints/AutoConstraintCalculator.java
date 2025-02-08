@@ -4,11 +4,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AutoConstraintCalculator {
 
+  private static AutoConstraintOptions lastUsedConstraints = new AutoConstraintOptions(0,0,0,0);
+
   public static ChassisSpeeds constrainVelocityGoal(
       ChassisSpeeds inputSpeeds,
       ChassisSpeeds previousSpeeds,
       double timeBetweenPreviousAndInputSpeeds,
       AutoConstraintOptions options) {
+    lastUsedConstraints = options;
     ChassisSpeeds constrainedSpeeds = inputSpeeds;
 
     if (options.maxLinearVelocity() != 0) {
@@ -32,6 +35,10 @@ public class AutoConstraintCalculator {
     }
 
     return constrainedSpeeds;
+  }
+
+  public static AutoConstraintOptions getLastUsedConstraints() {
+    return lastUsedConstraints;
   }
 
   public static ChassisSpeeds constrainLinearVelocity(
