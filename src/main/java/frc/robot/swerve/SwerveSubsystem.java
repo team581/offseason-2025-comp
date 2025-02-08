@@ -33,7 +33,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final boolean MAGNETISM_ENABLED = false;
   private static final boolean PURPLE_ALIGN_ENABLED = false;
 
-  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = true;
+  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
 
   public static final double MaxSpeed = 4.75;
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
@@ -370,10 +370,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void enableCoralIntakeAssist() {
-    if (INTAKE_ASSIST_CORAL_ENABLED) {
-      if (DriverStation.isTeleop()) {
+    if (DriverStation.isTeleop()) {
+      if (INTAKE_ASSIST_CORAL_ENABLED) {
         setStateFromRequest(SwerveState.INTAKE_ASSIST_CORAL_TELEOP);
+      } else {
+        setStateFromRequest(SwerveState.TELEOP);
       }
+    } else {
+      setStateFromRequest(SwerveState.AUTO);
     }
   }
 
