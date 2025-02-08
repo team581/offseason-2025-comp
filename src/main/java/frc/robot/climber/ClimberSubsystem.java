@@ -1,10 +1,6 @@
 package frc.robot.climber;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
-import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -14,7 +10,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   // private final CANcoder encoder;
   private double currentAngle;
 
-  public ClimberSubsystem(/* TalonFX motor, CANcoder encoder */) {
+  public ClimberSubsystem(/* TalonFX motor, CANcoder encoder */ ) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOWED);
 
     // motor.getConfigurator().apply(RobotConfig.get().climber().motorConfig());

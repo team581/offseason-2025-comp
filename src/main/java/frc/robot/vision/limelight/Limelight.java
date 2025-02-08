@@ -34,7 +34,8 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<PurpleResult> purpleResult = Optional.empty();
 
   public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
-    // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just singleton
+    // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
+    // singleton
     super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;

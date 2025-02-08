@@ -182,7 +182,8 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
