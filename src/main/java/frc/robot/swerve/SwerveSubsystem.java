@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.NativeSwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,6 +25,7 @@ import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.ControllerHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
   // TODO: Remove this once magnetism is stable, with current way robot manager is, having both of
@@ -42,6 +44,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final double leftYDeadband = 0.05;
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+
+  private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
+      InterpolatingDoubleTreeMap.ofEntries(Map.entry(40.0, 1.0), Map.entry(40.1, 0.5));
 
   public final TunerSwerveDrivetrain drivetrain =
       RobotConfig.IS_PRACTICE_BOT
@@ -116,6 +121,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
     }
   }
+
+  private double elevatorHeight;
 
   public SwerveSubsystem() {
     super(SubsystemPriority.SWERVE, SwerveState.TELEOP);
@@ -194,10 +201,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     double mappedX = mappedpose.getX();
     double mappedY = mappedpose.getY();
 
+    var slowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
+
     teleopSpeeds =
         new ChassisSpeeds(
-            -1.0 * mappedY * MaxSpeed,
-            mappedX * MaxSpeed,
+            -1.0 * mappedY * MaxSpeed * slowModePercent,
+            mappedX * MaxSpeed * slowModePercent,
             rightX * TELEOP_MAX_ANGULAR_RATE.getRadians());
 
     sendSwerveRequest();
@@ -419,5 +428,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               drivetrain.updateSimState(deltaTime, RobotController.getBatteryVoltage());
             });
     simNotifier.startPeriodic(SIM_LOOP_PERIOD);
+  }
+
+  public void setElevatorHeight(double height) {
+    elevatorHeight = height;
   }
 }

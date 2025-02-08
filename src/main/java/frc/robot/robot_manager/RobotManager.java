@@ -897,6 +897,8 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       swerve.setPurpleSpeeds(new ChassisSpeeds());
     }
+
+    swerve.setElevatorHeight(elevator.getHeight());
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
