@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
   private final LightsSubsystem lights =
       new LightsSubsystem(hardware.candle, elevatorPurpleLimelight);
   private final ClimberSubsystem climber =
-      new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+      new ClimberSubsystem(/* hardware.climberMotor, hardware.climberCANcoder */);
   private final RobotManager robotManager =
       new RobotManager(
           intake,

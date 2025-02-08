@@ -36,10 +36,11 @@ public class Hardware {
   public final CANdle candle =
       new CANdle(RobotConfig.get().lights().candleID(), RobotConfig.get().lights().canBusName());
 
-  public final TalonFX climberMotor =
-      new TalonFX(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
+  // TODO: Uncomment all the climber code
+  // public final TalonFX climberMotor =
+  //     new TalonFX(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
 
-  public final CANcoder climberCANcoder =
-      new CANcoder(
-          RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
+  // public final CANcoder climberCANcoder =
+  //     new CANcoder(
+  //         RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
 }
