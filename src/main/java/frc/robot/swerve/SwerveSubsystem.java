@@ -287,10 +287,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
         var alignSpeeds = getScoringAlignChassisSpeeds();
         var wantedSpeeds = alignSpeeds.plus(teleopSpeeds);
         var currentTimestamp = Timer.getFPGATimestamp();
-    if (previousTimestamp == 0.0) {
-      previousTimestamp = currentTimestamp - 0.02;
-    }
-        var constrainedWantedSpeeds = AutoConstraintCalculator.constrainVelocityGoal(wantedSpeeds, previousSpeeds, currentTimestamp-previousTimestamp, AutoConstraintCalculator.getLastUsedConstraints());
+        if (previousTimestamp == 0.0) {
+          previousTimestamp = currentTimestamp - 0.02;
+        }
+        var constrainedWantedSpeeds =
+            AutoConstraintCalculator.constrainVelocityGoal(
+                wantedSpeeds,
+                previousSpeeds,
+                currentTimestamp - previousTimestamp,
+                AutoConstraintCalculator.getLastUsedConstraints());
 
         if (alignSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
@@ -304,8 +309,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               drive
                   .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
                   .withVelocityY(constrainedWantedSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(
-                      constrainedWantedSpeeds.omegaRadiansPerSecond)
+                  .withRotationalRate(constrainedWantedSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.Velocity));
         }
 
