@@ -42,10 +42,9 @@ public class Purple {
   }
 
   private boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
-    var scoringTranslationFieldRelative =
-        AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
+    var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
 
-    return robotPose.getTranslation().getDistance(scoringTranslationFieldRelative)
+    return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
 
@@ -54,9 +53,7 @@ public class Purple {
     var scoringTranslationFieldRelative =
         AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
 
-    DogLog.log(
-        "PurpleAlignment/Tag/TargetPose",
-        new Pose2d(scoringTranslationFieldRelative, new Rotation2d()));
+    DogLog.log("PurpleAlignment/Tag/TargetPose", scoringTranslationFieldRelative);
     var scoringTranslationRobotRelative =
         scoringTranslationFieldRelative
             .minus(robotPose.getTranslation())

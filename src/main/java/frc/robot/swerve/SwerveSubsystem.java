@@ -285,7 +285,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
       case REEF_ALIGN_AUTO -> {
         var alignSpeeds = getScoringAlignChassisSpeeds();
-        var wantedSpeeds = alignSpeeds.plus(teleopSpeeds);
+        var wantedSpeeds = alignSpeeds.plus(autoSpeeds);
         var currentTimestamp = Timer.getFPGATimestamp();
         if (previousTimestamp == 0.0) {
           previousTimestamp = currentTimestamp - 0.02;
@@ -351,6 +351,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public ChassisSpeeds getScoringAlignChassisSpeeds() {
     if (MAGNETISM_ENABLED) {
+      // TODO: Magnetism should be a no-op in auto >:(
       return magnetizedSpeeds;
     } else if (PURPLE_ALIGN_ENABLED) {
       return purpleSpeeds;
