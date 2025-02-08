@@ -598,23 +598,11 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOWED);
       }
-      case CORAL_L4_3_PLACE -> {
+      case CORAL_L4_3_PLACE_THEN_RELEASE, CORAL_L4_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L4_PLACE, WristState.CORAL_SCORE_PLACING_L4);
         swerve.enableScoringAlignment();
 
-        swerve.setSnapToAngle(reefSnapAngle);
-        roll.setState(RollState.CORAL_SCORE);
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
-        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
-        backTagLimelight.setState(LimelightState.REEF_TAGS);
-        lights.setState(getLightStateForScoring());
-        climber.setState(ClimberState.STOWED);
-      }
-      case CORAL_L4_3_PLACE_THEN_RELEASE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.CORAL_L4_PLACE, WristState.CORAL_SCORE_PLACING_L4);
-        swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
