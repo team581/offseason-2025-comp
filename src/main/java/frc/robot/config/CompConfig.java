@@ -46,14 +46,14 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(1.0)
                           .withKV(0)
-                          .withKG(0.0)
+                          .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(250.0)
+                          .withMotionMagicCruiseVelocity(250.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -66,14 +66,14 @@ class CompConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(1.0)
                           .withKV(0)
-                          .withKG(0.0)
+                          .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(250)
+                          .withMotionMagicCruiseVelocity(250.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -83,17 +83,17 @@ class CompConfig {
                                       * (2.0 / 1.0)
                                       * (Math.PI * 1.274)))),
               0,
-              20,
+              25,
               0,
               58,
-              0.4),
+              0.5),
           new IntakeConfig(
               RIO_CAN_NAME,
               20,
               21,
               26,
-              new Debouncer(0.0, DebounceType.kBoth),
-              new Debouncer(0.0, DebounceType.kBoth),
+              new Debouncer(0.1, DebounceType.kBoth),
+              new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
@@ -154,15 +154,15 @@ class CompConfig {
                           .withInverted(InvertedValue.Clockwise_Positive))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(100.0)
                           .withKV(0.0)
-                          .withKD(0.0)
-                          .withKG(0.0)
+                          .withKD(3.0)
+                          .withKG(0.3)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(5)
-                          .withMotionMagicCruiseVelocity(10))
+                          .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))
@@ -183,7 +183,7 @@ class CompConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(
                       new FeedbackConfigs().withSensorToMechanismRatio((60 / 8) * (60 / 15)))
-                  .withSlot0(new Slot0Configs().withKP(0).withKV(0))
+                  .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
                   .withCurrentLimits(
@@ -192,7 +192,7 @@ class CompConfig {
                           .withStatorCurrentLimit(10)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
-              10,
+              9,
               101),
           new ClimberConfig(
               CANIVORE_NAME,
