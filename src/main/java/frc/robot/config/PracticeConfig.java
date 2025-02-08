@@ -165,7 +165,7 @@ class PracticeConfig {
                           .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))
+                          .withSensorToMechanismRatio((64.0 / 8.0) * (50.0 / 18.0) * (36.0 / 12.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
@@ -182,7 +182,7 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio((60 / 8) * (60 / 15)))
+                      new FeedbackConfigs().withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))

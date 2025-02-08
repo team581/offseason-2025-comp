@@ -63,7 +63,10 @@ class CompConfig {
                                       * (2.0 / 1.0)
                                       * (Math.PI * 1.274)))),
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(1.0)
@@ -165,24 +168,24 @@ class CompConfig {
                           .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64 / 8) * (50 / 18) * (36 / 12)))
+                          .withSensorToMechanismRatio((64.0 / 8.0) * (50.0 / 18.0) * (36.0 / 12.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -85.0,
-              200,
+              -80,
+              217,
               18,
-              -85),
+              -80),
           new RollConfig(
               RIO_CAN_NAME,
               23,
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(
-                      new FeedbackConfigs().withSensorToMechanismRatio((60 / 8) * (60 / 15)))
+                      new FeedbackConfigs().withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
