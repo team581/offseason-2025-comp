@@ -172,8 +172,8 @@ class PracticeConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -85.0,
-              200,
+              -54.0,
+              155,
               18,
               -85),
           new RollConfig(
@@ -193,7 +193,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               9,
-              110),
+              95),
           new ClimberConfig(
               CANIVORE_NAME,
               24,
