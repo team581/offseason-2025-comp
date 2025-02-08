@@ -15,7 +15,7 @@ import frc.robot.vision.limelight.Limelight;
 public class Purple {
   private final Limelight purpleCamera;
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
-  private static final double TAG_KP = 0.5;
+  private static final double TAG_KP = 2.0;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.1;
 
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
@@ -42,10 +42,9 @@ public class Purple {
   }
 
   private boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
-    var scoringTranslationFieldRelative =
-        AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
+    var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
 
-    return robotPose.getTranslation().getDistance(scoringTranslationFieldRelative)
+    return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
 
@@ -54,9 +53,7 @@ public class Purple {
     var scoringTranslationFieldRelative =
         AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
 
-    DogLog.log(
-        "PurpleAlignment/Tag/TargetPose",
-        new Pose2d(scoringTranslationFieldRelative, new Rotation2d()));
+    DogLog.log("PurpleAlignment/Tag/TargetPose", scoringTranslationFieldRelative);
     var scoringTranslationRobotRelative =
         scoringTranslationFieldRelative
             .minus(robotPose.getTranslation())
@@ -110,8 +107,11 @@ public class Purple {
       seenPurple = false;
     }
     if (!seenPurple && !isTagAligned(robotPose, reefPipeLevel)) {
+      DogLog.log("PurpleAlignment/TagAligned", false);
       return getPoseAlignmentChassisSpeeds(robotPose, reefPipeLevel, seenPurple);
     }
+    DogLog.log("PurpleAlignment/TagAligned", true);
+
     var speeds =
         switch (getPurpleState()) {
           case NO_PURPLE -> {

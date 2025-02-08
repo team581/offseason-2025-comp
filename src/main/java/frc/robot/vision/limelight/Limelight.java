@@ -17,6 +17,7 @@ import java.util.Optional;
 public class Limelight extends StateMachine<LimelightState> {
   private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
   private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
+
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
   private final String limelightTableName;
@@ -33,6 +34,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<PurpleResult> purpleResult = Optional.empty();
 
   public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
+    // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just singleton
     super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;
@@ -168,7 +170,10 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/State", getState());
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
-      case TAGS -> updateHealth(interpolatedResult);
+      case TAGS -> {
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, new int[] {});
+        updateHealth(interpolatedResult);
+      }
       case CORAL -> updateHealth(coralResult);
       case PURPLE -> updateHealth(purpleResult);
       case REEF_TAGS -> {

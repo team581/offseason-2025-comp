@@ -33,8 +33,8 @@ public class RobotCommands {
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, requirements)
         .andThen(
-            robot.waitForStates(
-                RobotState.IDLE_ALGAE, RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP))
+            Commands.waitUntil(
+                () -> robot.elevator.atGoal() && robot.wrist.atGoal() && robot.roll.atGoal()))
         .withName("StowCommand");
   }
 

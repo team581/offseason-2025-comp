@@ -180,7 +180,7 @@ class PracticeConfig {
               RIO_CAN_NAME,
               23,
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                   .withFeedback(
                       new FeedbackConfigs().withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
@@ -193,7 +193,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               9,
-              101),
+              110),
           new ClimberConfig(
               CANIVORE_NAME,
               24,
