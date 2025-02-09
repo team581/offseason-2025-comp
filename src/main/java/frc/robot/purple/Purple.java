@@ -16,9 +16,12 @@ public class Purple {
   private final Limelight purpleCamera;
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
   private static final double TAG_KP = 2.0;
+  private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.3;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.1;
-
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
+
+  private static boolean beforeRaisedOffset = false;
+
   private double lastTimeSeen = 0.0;
   private boolean seenPurple = false;
 
@@ -43,9 +46,12 @@ public class Purple {
 
   private boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
     var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
-
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
+  }
+
+  public void setBeforeRaisedOffset(boolean offsetOn) {
+    beforeRaisedOffset = offsetOn;
   }
 
   public static ChassisSpeeds getPoseAlignmentChassisSpeeds(
@@ -54,10 +60,18 @@ public class Purple {
         AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
 
     DogLog.log("PurpleAlignment/Tag/TargetPose", scoringTranslationFieldRelative);
-    var scoringTranslationRobotRelative =
+    var scoringTranslationRobotRelative = new Translation2d();
+    if (beforeRaisedOffset) {
+       scoringTranslationRobotRelative =
         scoringTranslationFieldRelative
             .minus(robotPose.getTranslation())
-            .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
+            .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees())).minus(new Translation2d(BEFORE_RAISED_INITIAL_DISTANCE_OFFSET, 0));
+    } else {
+       scoringTranslationRobotRelative =
+          scoringTranslationFieldRelative
+              .minus(robotPose.getTranslation())
+              .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
+    }
     var goalTranslationUnrotated = new Translation2d();
     if (forwardOnly) {
       goalTranslationUnrotated = new Translation2d(0, scoringTranslationRobotRelative.getX());

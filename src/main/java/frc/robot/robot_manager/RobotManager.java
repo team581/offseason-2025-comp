@@ -505,6 +505,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
         swerve.setSnapToAngle(reefSnapAngle);
         swerve.setSnapsEnabled(true);
+        purple.setBeforeRaisedOffset(true);
         roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.REEF_TAGS);
@@ -901,6 +902,20 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       default -> {}
     }
+
+    // Update purple to finish aligning after elevator is raised
+    switch (getState()) {
+      case
+          CORAL_L2_2_LINEUP,
+          CORAL_L3_2_LINEUP,
+          CORAL_L4_2_LINEUP -> {
+            if (elevator.atGoal()) {
+              purple.setBeforeRaisedOffset(false);
+            }
+          }
+      default -> {}
+    }
+
 
     if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
