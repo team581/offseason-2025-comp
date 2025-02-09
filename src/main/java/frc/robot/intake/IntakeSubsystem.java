@@ -6,7 +6,6 @@ import com.ctre.phoenix6.signals.S1StateValue;
 import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.util.VelocityDetector;
@@ -83,7 +82,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   public boolean getHasGP() {
     return switch (getState()) {
-      // case INTAKING_CORAL, INTAKING_ALGAE -> topMotorHasGp && bottomMotorHasGp;
+      case INTAKING_CORAL, INTAKING_ALGAE -> topMotorHasGp && bottomMotorHasGp;
       default -> sensorsHaveGP;
     };
   }
@@ -110,14 +109,14 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
       case INTAKING_ALGAE -> {
         topMotor.setVoltage(4.0);
         bottomMotor.setVoltage(4.0);
-        topMotorDetection.reset();
-        bottomMotorDetection.reset();
+        topMotorDetection.reset(1);
+        bottomMotorDetection.reset(1);
       }
       case INTAKING_CORAL -> {
         topMotor.setVoltage(10.0);
         bottomMotor.setVoltage(10.0);
-        topMotorDetection.reset();
-        bottomMotorDetection.reset();
+        topMotorDetection.reset(0);
+        bottomMotorDetection.reset(0);
       }
       case SCORE_ALGAE_NET -> {
         topMotor.setVoltage(-1.0);
@@ -143,10 +142,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     super.robotPeriodic();
     DogLog.log("Intake/Debug/TopMotor/RPS", topMotorVelocity);
     DogLog.log("Intake/Debug/BottomMotor/RPS", bottomMotorVelocity);
-    DogLog.log("Intake/Debug/TopMotor/MinimumThreshold", topMotorDetection.minVelocity);
-    DogLog.log("Intake/Debug/BottomMotor/MinimumThreshold", bottomMotorDetection.minVelocity);
-    DogLog.log("Intake/Debug/TopMotor/MaximumThreshold", topMotorDetection.maxVelocity);
-    DogLog.log("Intake/Debug/BottomMotor/MaximumThreshold", bottomMotorDetection.maxVelocity);
+    DogLog.log("Intake/Debug/TopMotor/MinimumThreshold", topMotorDetection.getMin(topMotorDetection.currentSlot));
+    DogLog.log("Intake/Debug/BottomMotor/MinimumThreshold", bottomMotorDetection.getMin(bottomMotorDetection.currentSlot));
+    DogLog.log("Intake/Debug/TopMotor/MaximumThreshold", topMotorDetection.getMax(topMotorDetection.currentSlot));
+    DogLog.log("Intake/Debug/BottomMotor/MaximumThreshold", bottomMotorDetection.getMax(bottomMotorDetection.currentSlot));
     DogLog.log("Intake/Debug/TopMotor/HasGp", topMotorHasGp);
     DogLog.log("Intake/Debug/BottomMotor/HasGp", bottomMotorHasGp);
 

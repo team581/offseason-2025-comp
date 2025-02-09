@@ -98,8 +98,8 @@ class CompConfig {
               26,
               new Debouncer(0.1, DebounceType.kBoth),
               new Debouncer(0.1, DebounceType.kBoth),
-              new VelocityDetector(50.0, 70.0),
-              new VelocityDetector(50.0, 70.0),
+              new VelocityDetector(71.0, 70.0, 0).inSlot(1, 21.0, 20.0),
+              new VelocityDetector(71.0, 70.0, 0).inSlot(1, 21.0, 20.0),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))

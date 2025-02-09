@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class VelocityDetectorTest {
   @Test
   void testDetectionSequence() {
-    var detector = new VelocityDetector(0.8, 1.0);
+    var detector = new VelocityDetector(0.8, 1.0, 0);
     // motor velocity is under the minimum intaking threshold
     var velocityUnderMinThreshold = 0.7;
     // motor velocity has crossed the minimum intaking threshold, now waiting to go below max
