@@ -46,81 +46,79 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 new AutoPoint(getRedStartingPose()),
                 new AutoPoint(
                     new Pose2d(11.785, 2.622, Rotation2d.fromDegrees(58.446)),
-                    Commands.runOnce(
-                        () -> {
-                          AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
-                          robotManager.l4CoralLineupRequest();
-                        })),
+                    Commands.waitSeconds(0.75)
+                        .andThen(
+                            Commands.runOnce(
+                                () -> {
+                                  AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
+                                  robotManager.l4CoralLineupRequest();
+                                }))),
                 // REEF PIPE I
                 new AutoPoint(new Pose2d(12.246, 2.952, Rotation2d.fromDegrees(58.446))))),
         autoCommands.l4ScoreAndReleaseCommand(),
+        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88)),
-                    Commands.runOnce(() -> robotManager.intakeStationRequest())),
+                new AutoPoint(new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
         autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
+                new AutoPoint(new Pose2d(13.842, 1.288, Rotation2d.fromDegrees(137.35))),
                 new AutoPoint(
-                    new Pose2d(13.982, 1.637, Rotation2d.fromDegrees(135.878)),
+                    new Pose2d(12.246, 1.903, Rotation2d.fromDegrees(59.1)),
                     Commands.runOnce(
                         () -> {
                           AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
                           robotManager.l4CoralLineupRequest();
                         })),
                 // REEF PIPE J
-                new AutoPoint(new Pose2d(12.497, 2.668, Rotation2d.fromDegrees(59.1))))),
+                new AutoPoint(new Pose2d(12.497, 2.818, Rotation2d.fromDegrees(59.1))))),
         autoCommands.l4ScoreAndReleaseCommand(),
+        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88)),
-                    Commands.runOnce(() -> robotManager.intakeStationRequest())),
+                new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
         autoCommands.intakeStationWithTimeoutCommand(),
+        Commands.runOnce(
+            () -> {
+              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
+              robotManager.l4CoralLineupRequest();
+            }),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(14.506, 1.903, Rotation2d.kZero),
-                    Commands.runOnce(
-                        () -> {
-                          AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
-                          robotManager.l4CoralLineupRequest();
-                        })),
+                new AutoPoint(new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
                 new AutoPoint(
                     // REEF PIPE K
-                    new Pose2d(13.566, 2.812, Rotation2d.fromDegrees(121.252))))),
+                    new Pose2d(13.636, 2.812, Rotation2d.fromDegrees(121.252))))),
         autoCommands.l4ScoreAndReleaseCommand(),
+        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277)),
-                    Commands.runOnce(() -> robotManager.intakeStationRequest())),
+                new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
                 new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819))))),
         autoCommands.intakeStationWithTimeoutCommand(),
+        Commands.runOnce(
+            () -> {
+              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
+              robotManager.l4CoralLineupRequest();
+            }),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
-                    Commands.runOnce(
-                        () -> {
-                          AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
-                          robotManager.l4CoralLineupRequest();
-                        })),
+                new AutoPoint(new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931))),
                 // REEF PIPE L
-                new AutoPoint(new Pose2d(13.922, 2.842, Rotation2d.fromDegrees(120.471))))),
+                new AutoPoint(new Pose2d(13.842, 2.922, Rotation2d.fromDegrees(120.471))))),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(13.922, 2.842, Rotation2d.fromDegrees(120.471))))));
+                new AutoPoint(new Pose2d(13.842, 2.922, Rotation2d.fromDegrees(120.471))))));
   }
 }
