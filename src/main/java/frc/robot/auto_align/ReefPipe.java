@@ -9,7 +9,7 @@ public enum ReefPipe {
   PIPE_B(new Pose2d(3.71, 3.86, Rotation2d.kZero), new Pose2d(13.84, 4.19, Rotation2d.k180deg)),
   PIPE_C(
       new Pose2d(3.96, 3.43, Rotation2d.fromDegrees(60)),
-      new Pose2d(13.59, 4.62, Rotation2d.fromDegrees((240)))),
+      new Pose2d(13.59, 4.62, Rotation2d.fromDegrees(240))),
   PIPE_D(
       new Pose2d(4.24, 3.27, Rotation2d.fromDegrees(60)),
       new Pose2d(13.31, 4.78, Rotation2d.fromDegrees(240))),

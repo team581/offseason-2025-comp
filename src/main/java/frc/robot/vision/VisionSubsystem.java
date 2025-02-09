@@ -148,7 +148,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     if (topStatus == CameraHealth.GOOD
         || bottomStatus == CameraHealth.GOOD
-        || backStatus == CameraHealth.GOOD && baseStatus == CameraHealth.GOOD) {
+        || backStatus == CameraHealth.GOOD
+        || baseStatus == CameraHealth.GOOD) {
       return CameraHealth.GOOD;
     }
 

@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public class CollisionAvoidance {
   private static final List<CollisionBox> ALL_COLLISION_BOXES = List.of(CollisionBox.values());
-  private static final double WRIST_LENGTH = 19.0;
+  private static final double WRIST_LENGTH = 23.092038;
+  private static final Rotation2d offsetAngle = new Rotation2d().fromDegrees(-33.0);
 
   public static Optional<SuperstructurePosition> plan(
       SuperstructurePosition current, SuperstructurePosition goal) {
@@ -47,7 +48,7 @@ public class CollisionAvoidance {
   static Translation2d positionToTranslation(SuperstructurePosition position) {
     var wristAngle = Rotation2d.fromDegrees(position.wristAngle());
     return new Translation2d(0, position.elevatorHeight())
-        .plus(new Translation2d(WRIST_LENGTH, wristAngle));
+        .plus(new Translation2d(WRIST_LENGTH, wristAngle.minus(offsetAngle)));
   }
 
   private static Optional<SuperstructurePosition> getGoalPoint(

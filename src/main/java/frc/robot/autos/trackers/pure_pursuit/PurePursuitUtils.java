@@ -53,11 +53,11 @@ public class PurePursuitUtils {
     var xLookahead =
         x
             + lookaheadDistance
-                * ((x2 - x1) / (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
+                * ((x2 - x1) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
     var yLookahead =
         y
             + lookaheadDistance
-                * ((y2 - y1) / (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
+                * ((y2 - y1) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
     var lookahead = new Pose2d(xLookahead, yLookahead, new Rotation2d());
     var distanceToStart = lookahead.getTranslation().getDistance(startPoint.getTranslation());
     var distanceToEnd = lookahead.getTranslation().getDistance(endPoint.getTranslation());
@@ -229,14 +229,6 @@ public class PurePursuitUtils {
     return Math.abs(area) < 0.001;
   }
 
-  /**
-   * Checks if a Pose2d is collinear and between two other Pose2ds.
-   *
-   * @param startPose The starting Pose2d.
-   * @param endPose The ending Pose2d.
-   * @param poseOnPath The Pose2d to check if it lies collinear and between startPose and endPose.
-   * @return True if poseOnPath lies collinear and between startPose and endPose
-   */
   public static boolean isBetweenAndCollinearWithAnyPoints(
       Pose2d startingRobotPose, List<AutoPoint> points, Pose2d poseOnPath) {
     if (isBetween(startingRobotPose, points.get(0).poseSupplier.get(), poseOnPath)

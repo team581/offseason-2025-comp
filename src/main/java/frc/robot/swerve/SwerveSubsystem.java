@@ -4,7 +4,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest.NativeSwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -65,15 +65,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public final Pigeon2 drivetrainPigeon = drivetrain.getPigeon2();
 
-  private final NativeSwerveRequest.FieldCentric drive =
-      new NativeSwerveRequest.FieldCentric()
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.03)
           .withRotationalDeadband(MaxAngularRate * 0.03);
 
-  private final NativeSwerveRequest.FieldCentricFacingAngle driveToAngle =
-      new NativeSwerveRequest.FieldCentricFacingAngle()
+  private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
+      new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.03);
 

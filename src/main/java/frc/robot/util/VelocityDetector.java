@@ -20,8 +20,9 @@ public class VelocityDetector {
   }
 
   /**
+   * Returns whether the motor is holding a game piece.
+   *
    * @param motorVelocity Current motor velocity.
-   * @return Whether the motor is holding a game piece.
    */
   public boolean hasGamePiece(double motorVelocity) {
     if (hasSeenMinVelocity) {

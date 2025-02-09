@@ -11,35 +11,40 @@ public enum CollisionBox {
   BOX_1(
       1,
       new Rectangle2d( // zone where the station intake happens
-          new Translation2d(-20, 12), new Translation2d(-14, 30)),
-      new SuperstructurePosition(13, 180)), // whatever it is for station intake
+          new Translation2d(-24, 17.0), new Translation2d(-20, 25.0)),
+      new SuperstructurePosition(11, 120)), // whatever it is for station intake
   BOX_2(
       2,
       new Rectangle2d( // bottom backwards
-          new Translation2d(-20, -20), new Translation2d(13, 30)),
-      new SuperstructurePosition(0, 180)), // 0 and angle of station intake
+          new Translation2d(-24, -4.0), new Translation2d(-10, 25.0)),
+      new SuperstructurePosition(0, 120)), // 0 and angle of station intake
   BOX_3(
       3,
-      new Rectangle2d( // forwards bottom
-          new Translation2d(13, -20), new Translation2d(20, 25)),
-      // angle is too in
-      new SuperstructurePosition(0, 40)),
-
+      new Rectangle2d( // middle
+          new Translation2d(-10, -4.0), new Translation2d(6, 25.0)),
+      new SuperstructurePosition(0, 65)),
   BOX_4(
       4,
-      new Rectangle2d( // forwards middle
-          new Translation2d(13, 25), new Translation2d(20, 40)),
-      new SuperstructurePosition(30, 40)),
+      new Rectangle2d( // forwards bottom
+          new Translation2d(6, -11), new Translation2d(24, 27)),
+      // angle is too in
+      new SuperstructurePosition(0, 40)),
+  // 54 is the straight out top // 80 max
   BOX_5(
       5,
-      new Rectangle2d( // forwards top
-          new Translation2d(13, 40), new Translation2d(20, 86)),
-      new SuperstructurePosition(67, 40)),
+      new Rectangle2d( // forwards middle
+          new Translation2d(6, 27), new Translation2d(24, 60)),
+      new SuperstructurePosition(30, 40)),
   BOX_6(
       6,
+      new Rectangle2d( // forwards top
+          new Translation2d(6, 60), new Translation2d(24, 80)),
+      new SuperstructurePosition(56, 40)),
+  BOX_7(
+      7,
       new Rectangle2d( // forwards Top
-          new Translation2d(-20, 56.5), new Translation2d(13, 86)),
-      new SuperstructurePosition(67, 135)),
+          new Translation2d(-24, 54), new Translation2d(6, 80)),
+      new SuperstructurePosition(56, 135)),
   ;
 
   public final int id;
@@ -47,6 +52,7 @@ public enum CollisionBox {
   public final SuperstructurePosition safeZone;
 
   public boolean shortCutPossible(CollisionBox goal) {
+
     if (this == goal) {
       return false;
     }
