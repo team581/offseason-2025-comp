@@ -47,8 +47,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   protected void collectInputs() {
     topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
     bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
-    topMotorHasGp = topMotorDetection.hasGamePiece(topMotorVelocity);
-    bottomMotorHasGp = bottomMotorDetection.hasGamePiece(bottomMotorVelocity);
+    topMotorHasGp = topMotorDetection.hasGamePiece(topMotorVelocity, timeout(0.5));
+    bottomMotorHasGp = bottomMotorDetection.hasGamePiece(bottomMotorVelocity, timeout(0.5));
 
     rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;

@@ -55,12 +55,12 @@ public class VelocityDetector {
    *
    * @param motorVelocity Current motor velocity.
    */
-  public boolean hasGamePiece(double motorVelocity) {
+  public boolean hasGamePiece(double motorVelocity, boolean timeoutPassed) {
     if (hasSeenMinVelocity) {
       return motorVelocity < maxVelocities[currentSlot];
     }
 
     hasSeenMinVelocity = motorVelocity > minVelocities[currentSlot];
-    return false;
+    return motorVelocity < maxVelocities[currentSlot] && timeoutPassed;
   }
 }

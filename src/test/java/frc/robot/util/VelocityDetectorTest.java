@@ -18,9 +18,9 @@ public class VelocityDetectorTest {
     var velocityUnderMaxThreshold = 0.7;
     // motor velocity above max threshold while holding gamepiece, return false
     var velocityAboveMaxThreshold = 1.1;
-    assertFalse(detector.hasGamePiece(velocityUnderMinThreshold));
-    assertFalse(detector.hasGamePiece(velocityAboveMinThreshold));
-    assertTrue(detector.hasGamePiece(velocityUnderMaxThreshold));
-    assertFalse(detector.hasGamePiece(velocityAboveMaxThreshold));
+    assertFalse(detector.hasGamePiece(velocityUnderMinThreshold, false));
+    assertFalse(detector.hasGamePiece(velocityAboveMinThreshold, false));
+    assertTrue(detector.hasGamePiece(velocityUnderMaxThreshold, false));
+    assertFalse(detector.hasGamePiece(velocityAboveMaxThreshold, false));
   }
 }
