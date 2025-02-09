@@ -47,10 +47,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   protected void collectInputs() {
     topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
     bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
-    topMotorHasGp =
-        topMotorDetection.hasGamePiece(topMotorVelocity);
-    bottomMotorHasGp =
-        bottomMotorDetection.hasGamePiece(bottomMotorVelocity);
+    topMotorHasGp = topMotorDetection.hasGamePiece(topMotorVelocity);
+    bottomMotorHasGp = bottomMotorDetection.hasGamePiece(bottomMotorVelocity);
 
     rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
@@ -142,10 +140,18 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     super.robotPeriodic();
     DogLog.log("Intake/Debug/TopMotor/RPS", topMotorVelocity);
     DogLog.log("Intake/Debug/BottomMotor/RPS", bottomMotorVelocity);
-    DogLog.log("Intake/Debug/TopMotor/MinimumThreshold", topMotorDetection.getMin(topMotorDetection.currentSlot));
-    DogLog.log("Intake/Debug/BottomMotor/MinimumThreshold", bottomMotorDetection.getMin(bottomMotorDetection.currentSlot));
-    DogLog.log("Intake/Debug/TopMotor/MaximumThreshold", topMotorDetection.getMax(topMotorDetection.currentSlot));
-    DogLog.log("Intake/Debug/BottomMotor/MaximumThreshold", bottomMotorDetection.getMax(bottomMotorDetection.currentSlot));
+    DogLog.log(
+        "Intake/Debug/TopMotor/MinimumThreshold",
+        topMotorDetection.getMin(topMotorDetection.currentSlot));
+    DogLog.log(
+        "Intake/Debug/BottomMotor/MinimumThreshold",
+        bottomMotorDetection.getMin(bottomMotorDetection.currentSlot));
+    DogLog.log(
+        "Intake/Debug/TopMotor/MaximumThreshold",
+        topMotorDetection.getMax(topMotorDetection.currentSlot));
+    DogLog.log(
+        "Intake/Debug/BottomMotor/MaximumThreshold",
+        bottomMotorDetection.getMax(bottomMotorDetection.currentSlot));
     DogLog.log("Intake/Debug/TopMotor/HasGp", topMotorHasGp);
     DogLog.log("Intake/Debug/BottomMotor/HasGp", bottomMotorHasGp);
 

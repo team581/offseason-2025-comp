@@ -20,6 +20,7 @@ public class VelocityDetector {
 
   /**
    * Sets values to a slot
+   *
    * @param minVelocity Minimum velocity while intaking
    * @param maxVelocity The maximum velocity that is possible if you are holding a game piece.
    * @param slot The slot in which these values will be placed in.
