@@ -248,10 +248,20 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Intaking
-      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+      case INTAKE_ALGAE_FLOOR -> {
         if (intake.getHasGP()) {
           rumbleController.rumbleRequest();
           yield RobotState.IDLE_ALGAE;
+        }
+
+        yield currentState;
+      }
+      case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          if (cameraOnlineAndFarEnoughFromReef()) {
+            yield RobotState.IDLE_ALGAE;
+          }
         }
 
         yield currentState;
