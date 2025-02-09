@@ -1,6 +1,5 @@
 package frc.robot.autos.trackers.pure_pursuit;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,23 +49,12 @@ public class PurePursuitPathTracker implements PathTracker {
       startingRobotPose = currentPose;
       startingRobotPoseUpdated = true;
     }
-    DogLog.log("Autos/PurePursuitPathTracker/CurrentPointIndex", getCurrentPointIndex());
-
-    DogLog.log(
-        "Autos/PurePursuitPathTracker/CurrentLookaheadPointIndex", getCurrentLookaheadPointIndex());
-    DogLog.log("Autos/PurePursuitPathTracker/StartingRobotPose/Point", startingRobotPose);
-    DogLog.log("Autos/PurePursuitPathTracker/StartingRobotPose/Updated", startingRobotPoseUpdated);
-    DogLog.log("Autos/PurePursuitPathTracker/LookaheadDistance", lookaheadDistance);
-    DogLog.log("Autos/PurePursuitPathTracker/Waypoints/Start", lastTargetWaypoint);
-    DogLog.log("Autos/PurePursuitPathTracker/Waypoints/End", currentTargetWaypoint);
   }
 
   @Override
   public Pose2d getTargetPose() {
-    DogLog.log("Autos/PurePursuitPathTracker/Size", points.size());
     updateLookahead();
     updateRotation();
-    DogLog.log("Autos/PurePursuitPathTracker/Size", points.size());
     if (points.isEmpty()) {
       return Pose2d.kZero;
     }

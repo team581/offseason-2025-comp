@@ -1,6 +1,5 @@
 package frc.robot.intake_assist;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,7 +36,6 @@ public class IntakeAssistUtil {
     var gamePiecePoseRobotRelative =
         GamePieceDetectionUtil.calculateRobotRelativePoseToIntake(
             visionResult.get(), INITIAL_LINEUP_DISTANCE_FROM_CORAL);
-    DogLog.log("IntakeAssist/InitialPose", gamePiecePoseRobotRelative);
 
     if (greedyIntake
         && gamePiecePoseRobotRelative.getDistance(new Translation2d(0, 0))
@@ -45,7 +43,7 @@ public class IntakeAssistUtil {
       var gamePiecePoseForwardRobotRelative =
           GamePieceDetectionUtil.calculateRobotRelativePoseToIntake(
               visionResult.get(), FINAL_SHOVE_DISTANCE_FROM_CORAL);
-      DogLog.log("IntakeAssist/ForcedForwardPose", gamePiecePoseForwardRobotRelative);
+
       var gamePiecePoseForwardRotatedRobot =
           gamePiecePoseForwardRobotRelative.rotateBy(Rotation2d.fromDegrees(robotHeading));
       var forwardXError = gamePiecePoseForwardRotatedRobot.getX();
@@ -53,9 +51,6 @@ public class IntakeAssistUtil {
 
       var forwardXEffort = forwardXError * kP;
       var forwardYEffort = forwardYError * kP;
-      DogLog.log("IntakeAssist/XEffort", forwardXEffort);
-
-      DogLog.log("IntakeAssist/YEffort", forwardYEffort);
 
       return new ChassisSpeeds(forwardXEffort, forwardYEffort, 0.0);
     }
@@ -67,8 +62,6 @@ public class IntakeAssistUtil {
 
     var xEffort = xError * kP;
     var yEffort = yError * kP;
-    DogLog.log("IntakeAssist/XEffort", xEffort);
-    DogLog.log("IntakeAssist/YEffort", yEffort);
 
     return new ChassisSpeeds(xEffort, yEffort, 0.0);
   }

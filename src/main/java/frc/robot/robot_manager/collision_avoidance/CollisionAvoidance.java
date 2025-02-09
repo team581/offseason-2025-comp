@@ -16,13 +16,7 @@ public class CollisionAvoidance {
   public static Optional<SuperstructurePosition> plan(
       SuperstructurePosition current, SuperstructurePosition goal) {
     var goalPoint = getGoalPoint(current, goal);
-    if (goalPoint.isPresent()) {
-      DogLog.log("CollisionAvoidance/NextMovePresent", true);
 
-      DogLog.log("CollisionAvoidance/NextMove/elevatorHeight", goalPoint.get().elevatorHeight());
-      DogLog.log("CollisionAvoidance/NextMove/wristAngle", goalPoint.get().wristAngle());
-    }
-    DogLog.log("CollisionAvoidance/NextMovePresent", false);
     return goalPoint;
   }
 

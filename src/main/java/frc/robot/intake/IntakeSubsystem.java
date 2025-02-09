@@ -138,22 +138,6 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("Intake/Debug/TopMotor/RPS", topMotorVelocity);
-    DogLog.log("Intake/Debug/BottomMotor/RPS", bottomMotorVelocity);
-    DogLog.log(
-        "Intake/Debug/TopMotor/MinimumThreshold",
-        topMotorDetection.getMin(topMotorDetection.currentSlot));
-    DogLog.log(
-        "Intake/Debug/BottomMotor/MinimumThreshold",
-        bottomMotorDetection.getMin(bottomMotorDetection.currentSlot));
-    DogLog.log(
-        "Intake/Debug/TopMotor/MaximumThreshold",
-        topMotorDetection.getMax(topMotorDetection.currentSlot));
-    DogLog.log(
-        "Intake/Debug/BottomMotor/MaximumThreshold",
-        bottomMotorDetection.getMax(bottomMotorDetection.currentSlot));
-    DogLog.log("Intake/Debug/TopMotor/HasGp", topMotorHasGp);
-    DogLog.log("Intake/Debug/BottomMotor/HasGp", bottomMotorHasGp);
 
     DogLog.log("Intake/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log(
@@ -163,7 +147,5 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
     DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
     DogLog.log("Intake/SensorsHaveGP", sensorsHaveGP);
-    //    DogLog.log("Intake/TopMotor/CalulatedMotorCurrent", calculateTopIntakeMotorCurrent);
-    //    DogLog.log("Intake/BottomMotor/CalculateMotorCurrent", calculateBottomIntakeMotorCurrent);
   }
 }

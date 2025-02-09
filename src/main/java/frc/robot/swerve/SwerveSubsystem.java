@@ -402,19 +402,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
-
-    DogLog.log(
-        "Swerve/OutputVoltageModule0",
-        drivetrain.getModule(0).getDriveMotor().getMotorVoltage().getValueAsDouble());
-    DogLog.log(
-        "Swerve/OutputVoltageModule1",
-        drivetrain.getModule(1).getDriveMotor().getMotorVoltage().getValueAsDouble());
-    DogLog.log(
-        "Swerve/OutputVoltageModule2",
-        drivetrain.getModule(2).getDriveMotor().getMotorVoltage().getValueAsDouble());
-    DogLog.log(
-        "Swerve/OutputVoltageModule3",
-        drivetrain.getModule(3).getDriveMotor().getMotorVoltage().getValueAsDouble());
   }
 
   private void startSimThread() {

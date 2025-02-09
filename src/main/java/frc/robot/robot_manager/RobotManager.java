@@ -248,10 +248,20 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Intaking
-      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+      case INTAKE_ALGAE_FLOOR -> {
         if (intake.getHasGP()) {
           rumbleController.rumbleRequest();
           yield RobotState.IDLE_ALGAE;
+        }
+
+        yield currentState;
+      }
+      case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          if (cameraOnlineAndFarEnoughFromReef()) {
+            yield RobotState.IDLE_ALGAE;
+          }
         }
 
         yield currentState;
@@ -996,17 +1006,15 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSidePose);
-    DogLog.log(
-        "RobotManager/TeleopJoystickPercent",
-        Units.radiansToDegrees(Math.abs(swerve.getTeleopSpeeds().omegaRadiansPerSecond)));
     DogLog.log(
         "RobotManager/ShouldIntakeForward",
         AutoAlign.shouldIntakeStationFront(localization.getPose()));
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
 
-    moveSuperstructure(latestElevatorGoal, latestWristGoal, latestUnsafe);
     // Continuous state actions
+    moveSuperstructure(latestElevatorGoal, latestWristGoal, latestUnsafe);
 
     // Update snaps
     switch (getState()) {
@@ -1111,11 +1119,6 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       lights.setDisabledState(LightsState.HEALTHY);
     }
-
-    // Superstructure collision avoidance logging
-    // var currentSuperstructurePosition =
-    //     new SuperstructurePosition(elevator.getHeight(), wrist.getAngle());
-    // CollisionAvoidance.plan(currentSuperstructurePosition, new SuperstructurePosition(54, 91));
   }
 
   @Override
@@ -1157,8 +1160,6 @@ public class RobotManager extends StateMachine<RobotState> {
       ChassisSpeeds coralAssistSpeeds =
           IntakeAssistUtil.getCoralAssistSpeeds(
               frontCoralLimelight.getCoralResult(), imu.getRobotHeading(), true);
-      DogLog.log("IntakeAssist/XSpeeds", coralAssistSpeeds.vxMetersPerSecond);
-      DogLog.log("IntakeAssist/YSpeeds", coralAssistSpeeds.vyMetersPerSecond);
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
 
