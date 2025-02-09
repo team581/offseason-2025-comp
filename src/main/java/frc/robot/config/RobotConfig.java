@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import frc.robot.util.VelocityDetector;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 public record RobotConfig(
@@ -35,6 +36,8 @@ public record RobotConfig(
       int candiID,
       Debouncer rightDebouncer,
       Debouncer leftDebouncer,
+      VelocityDetector topDetector,
+      VelocityDetector bottomDetector,
       TalonFXConfiguration topMotorConfig,
       TalonFXConfiguration bottomMotorConfig) {}
 

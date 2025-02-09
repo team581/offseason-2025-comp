@@ -2,8 +2,8 @@ package frc.robot.util;
 
 public class VelocityDetector {
   private boolean hasSeenMinVelocity = false;
-  private final double minVelocity;
-  private final double maxVelocity;
+  public final double minVelocity;
+  public final double maxVelocity;
 
   /**
    * @param minVelocity Minimum velocity while intaking

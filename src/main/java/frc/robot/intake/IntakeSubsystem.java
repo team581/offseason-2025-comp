@@ -8,17 +8,18 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
+import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.util.VelocityDetector;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-
+  private IntakeConfig CONFIG = RobotConfig.get().intake();
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
   private final CANdi candi;
-  private final Debouncer rightDebouncer = RobotConfig.get().intake().rightDebouncer();
-  private final Debouncer leftDebouncer = RobotConfig.get().intake().leftDebouncer();
+  private final Debouncer rightDebouncer = CONFIG.rightDebouncer();
+  private final Debouncer leftDebouncer = CONFIG.leftDebouncer();
 
   private boolean rightSensorRaw = false;
   private boolean leftSensorRaw = false;
@@ -26,17 +27,18 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean leftSensorDebounced = false;
   private boolean sensorsHaveGP = false;
 
-  // TODO: add minimum velocities
-  private final VelocityDetector topMotorDetection = new VelocityDetector(0.0, 0.0);
-  private final VelocityDetector bottomMotorDetection = new VelocityDetector(0.0, 0.0);
+  private final VelocityDetector topMotorDetection = CONFIG.topDetector();
+  private final VelocityDetector bottomMotorDetection = CONFIG.bottomDetector();
+  private double topMotorVelocity = 0.0;
+  private double bottomMotorVelocity = 0.0;
   private boolean topMotorHasGp = false;
   private boolean bottomMotorHasGp = false;
 
   public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
-    topMotor.getConfigurator().apply(RobotConfig.get().intake().topMotorConfig());
-    bottomMotor.getConfigurator().apply(RobotConfig.get().intake().bottomMotorConfig());
+    topMotor.getConfigurator().apply(CONFIG.topMotorConfig());
+    bottomMotor.getConfigurator().apply(CONFIG.bottomMotorConfig());
     this.topMotor = topMotor;
     this.bottomMotor = bottomMotor;
     this.candi = candi;
@@ -44,12 +46,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
+    topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
+    bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
     topMotorHasGp =
-        topMotorDetection.hasGamePiece(
-            Units.rotationsToDegrees(topMotor.getVelocity().getValueAsDouble()));
+        topMotorDetection.hasGamePiece(topMotorVelocity);
     bottomMotorHasGp =
-        bottomMotorDetection.hasGamePiece(
-            Units.rotationsToDegrees(bottomMotor.getVelocity().getValueAsDouble()));
+        bottomMotorDetection.hasGamePiece(bottomMotorVelocity);
 
     rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
@@ -139,6 +141,15 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    DogLog.log("Intake/Debug/TopMotor/RPS", topMotorVelocity);
+    DogLog.log("Intake/Debug/BottomMotor/RPS", bottomMotorVelocity);
+    DogLog.log("Intake/Debug/TopMotor/MinimumThreshold", topMotorDetection.minVelocity);
+    DogLog.log("Intake/Debug/BottomMotor/MinimumThreshold", bottomMotorDetection.minVelocity);
+    DogLog.log("Intake/Debug/TopMotor/MaximumThreshold", topMotorDetection.maxVelocity);
+    DogLog.log("Intake/Debug/BottomMotor/MaximumThreshold", bottomMotorDetection.maxVelocity);
+    DogLog.log("Intake/Debug/TopMotor/HasGp", topMotorHasGp);
+    DogLog.log("Intake/Debug/BottomMotor/HasGp", bottomMotorHasGp);
+
     DogLog.log("Intake/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log(
         "Intake/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
