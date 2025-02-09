@@ -139,7 +139,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var backStatus = backTagLimelight.getCameraHealth();
     var baseStatus = baseTagLimelight.getCameraHealth();
 
-
     if (topStatus == CameraHealth.OFFLINE
         && bottomStatus == CameraHealth.OFFLINE
         && backStatus == CameraHealth.OFFLINE
@@ -149,8 +148,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     if (topStatus == CameraHealth.GOOD
         || bottomStatus == CameraHealth.GOOD
-        || backStatus == CameraHealth.GOOD
-        &&baseStatus == CameraHealth.GOOD) {
+        || backStatus == CameraHealth.GOOD && baseStatus == CameraHealth.GOOD) {
       return CameraHealth.GOOD;
     }
 
