@@ -1,15 +1,14 @@
 package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.interpolation.CameraDataset;
-import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
@@ -56,7 +55,7 @@ public class Limelight extends StateMachine<LimelightState> {
       double rollRate) {
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-        this.robotHeading = robotHeading;
+    this.robotHeading = robotHeading;
   }
 
   public void setState(LimelightState state) {
@@ -82,11 +81,12 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
 
-        if (MathUtil.isNear(robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
-          DogLog.log("Debug/" + name + "/Garbage", true);
-          return Optional.empty();
-        }
-        DogLog.log("Debug/" + name + "/Garbage", false);
+    if (MathUtil.isNear(
+        robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
+      DogLog.log("Debug/" + name + "/Garbage", true);
+      return Optional.empty();
+    }
+    DogLog.log("Debug/" + name + "/Garbage", false);
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
