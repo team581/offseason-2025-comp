@@ -1,7 +1,6 @@
 {"recommendations": [
-  "wpilibsuite.vscode-wpilib",
   "editorconfig.editorconfig",
   "vscjava.vscode-java-pack",
   "richardwillis.vscode-spotless-gradle",
-  "ms-python.black-formatter"
+  "eamodio.gitlens"
 ]}
