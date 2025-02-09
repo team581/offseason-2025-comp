@@ -124,7 +124,7 @@ public class WristSubsystem extends StateMachine<WristState> {
                 Units.degreesToRotations(
                     RobotConfig.get().wrist().minAngle() + (motorAngle - lowestSeenAngle)));
 
-            setStateFromRequest(WristState.STOWED);
+            setStateFromRequest(WristState.CORAL_STOWED);
           } else {
             motor.setControl(brakeNeutralRequest);
           }
@@ -145,7 +145,7 @@ public class WristSubsystem extends StateMachine<WristState> {
     if (currentState == WristState.MID_MATCH_HOMING
         && averageMotorCurrent > RobotConfig.get().wrist().homingCurrentThreshold()) {
       motor.setPosition(Units.degreesToRotations(RobotConfig.get().wrist().homingPosition()));
-      return WristState.STOWED;
+      return WristState.CORAL_STOWED;
     }
 
     // Don't do anything

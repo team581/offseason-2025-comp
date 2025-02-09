@@ -133,7 +133,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
       case REHOME_WRIST ->
-          wrist.getState() == WristState.STOWED ? RobotState.IDLE_NO_GP : currentState;
+          wrist.getState() == WristState.CORAL_STOWED ? RobotState.IDLE_NO_GP : currentState;
       case REHOME_ROLL ->
           roll.getState() == RollState.STOWED ? RobotState.IDLE_NO_GP : currentState;
       case PROCESSOR_PREPARE_TO_SCORE ->
@@ -303,7 +303,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (newState) {
       case IDLE_NO_GP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.CORAL_SCORE);
@@ -318,7 +318,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case IDLE_ALGAE -> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.ALGAE_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -331,7 +331,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case IDLE_CORAL -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.CORAL_SCORE);
@@ -385,7 +385,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case INTAKE_STATION_APPROACH -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -439,7 +439,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case SMART_STOW_2 -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.SMART_STOW);
@@ -539,7 +539,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L1_1_APPROACH, CORAL_L2_1_APPROACH, CORAL_L3_1_APPROACH, CORAL_L4_1_APPROACH -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapToAngle(reefSnapAngle);
         swerve.setSnapsEnabled(true);
         purple.setBeforeRaisedOffset(true);
@@ -914,7 +914,7 @@ public class RobotManager extends StateMachine<RobotState> {
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -927,7 +927,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_2_HANGING -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -953,7 +953,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case REHOME_ELEVATOR -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.MID_MATCH_HOMING, WristState.STOWED);
+        moveSuperstructure(ElevatorState.MID_MATCH_HOMING, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.STOWED);
@@ -979,7 +979,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case REHOME_ROLL -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.HOMING);
@@ -1287,6 +1287,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void stowRequest() {
     DogLog.timestamp("Debug/StowRequest");
+
     if (intake.getHasGP()) {
       if (gamePieceMode == GamePieceMode.CORAL) {
         setStateFromRequest(RobotState.IDLE_CORAL);
@@ -1294,7 +1295,12 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_ALGAE);
       }
     } else {
-      setStateFromRequest(RobotState.IDLE_NO_GP);
+
+      if (gamePieceMode == GamePieceMode.CORAL) {
+        setStateFromRequest(RobotState.IDLE_NO_GP);
+      } else {
+        setStateFromRequest(RobotState.IDLE_ALGAE);
+      }
 
       if (gamePieceMode == GamePieceMode.CORAL) {
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
