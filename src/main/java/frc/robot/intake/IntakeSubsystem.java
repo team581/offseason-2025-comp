@@ -67,6 +67,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     sensorsHaveGP = rightSensorDebounced || leftSensorDebounced;
   }
 
+  public boolean isCoralCentered() {
+    return leftSensorDebounced && rightSensorDebounced;
+  }
+
   public boolean getRightSensor() {
     return rightSensorDebounced;
   }
