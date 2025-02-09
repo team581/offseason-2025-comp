@@ -10,11 +10,11 @@ public class SnapUtil {
   }
 
   public static double getForwardNetDirection() {
-    return FmsSubsystem.isRedAlliance() ? 0 : 180;
+    return FmsSubsystem.isRedAlliance() ? 180 : 0;
   }
 
   public static double getBackwardNetDirection() {
-    return FmsSubsystem.isRedAlliance() ? 180 : 0;
+    return FmsSubsystem.isRedAlliance() ? 0 : 180;
   }
 
   public static double getCoralStationAngle(Pose2d robotPose) {
