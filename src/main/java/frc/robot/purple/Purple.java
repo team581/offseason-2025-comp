@@ -15,8 +15,8 @@ import frc.robot.vision.limelight.Limelight;
 public class Purple {
   private final Limelight purpleCamera;
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
-  private static final double TAG_KP = 2.0;
-  private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.3;
+  private static final double TAG_KP = 2.5;
+  private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.1;
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
 
