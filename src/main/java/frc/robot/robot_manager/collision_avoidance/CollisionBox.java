@@ -57,9 +57,9 @@ public enum CollisionBox {
       return false;
     }
     return switch (goal) {
-      case BOX_3, BOX_4, BOX_5 ->
+      case BOX_4, BOX_5, BOX_6 ->
           switch (this) {
-            case BOX_3, BOX_4, BOX_5 -> true;
+            case BOX_4, BOX_5, BOX_6 -> true;
             default -> false;
           };
       default -> false;
@@ -74,7 +74,8 @@ public enum CollisionBox {
       case 4 -> BOX_4;
       case 5 -> BOX_5;
       case 6 -> BOX_6;
-      default -> BOX_3;
+      case 7 -> BOX_7;
+      default -> BOX_4;
     };
   }
 
