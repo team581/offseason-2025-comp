@@ -153,12 +153,11 @@ public class PracticeBotTunerConstants {
 
   private static final Distance kFrontRightXPos = Inches.of(12);
   private static final Distance kFrontRightYPos = Inches.of(-12);
-
   // Back Left
   private static final int kBackLeftDriveMotorId = 7;
   private static final int kBackLeftSteerMotorId = 8;
   private static final int kBackLeftEncoderId = 13;
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(0.387451171875);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.109863 + 0.5);
   private static final boolean kBackLeftSteerMotorInverted = true;
   private static final boolean kBackLeftEncoderInverted = false;
 
