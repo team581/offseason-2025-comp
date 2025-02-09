@@ -31,7 +31,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   // TODO: Remove this once magnetism is stable, with current way robot manager is, having both of
   // these enabled doesn't work
   private static final boolean MAGNETISM_ENABLED = false;
-  private static final boolean PURPLE_ALIGN_ENABLED = false;
+  private static final boolean PURPLE_ALIGN_ENABLED = true;
 
   private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
 
