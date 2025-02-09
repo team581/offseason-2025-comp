@@ -33,7 +33,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final boolean MAGNETISM_ENABLED = false;
   private static final boolean PURPLE_ALIGN_ENABLED = true;
 
-  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = false;
+  private static final boolean INTAKE_ASSIST_CORAL_ENABLED = true;
 
   public static final double MaxSpeed = 4.75;
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
