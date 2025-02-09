@@ -1003,6 +1003,9 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log(
         "RobotManager/ShouldIntakeForward",
         AutoAlign.shouldIntakeStationFront(localization.getPose()));
+        DogLog.log(
+        "CollisionAvoidance/latestUnsafe",
+        latestUnsafe);
 
     moveSuperstructure(latestElevatorGoal, latestWristGoal, latestUnsafe);
     // Continuous state actions
