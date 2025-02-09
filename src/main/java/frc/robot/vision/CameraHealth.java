@@ -14,4 +14,8 @@ public enum CameraHealth {
     }
     return CameraHealth.NO_TARGETS;
   }
+
+  public static CameraHealth combine(CameraHealth a, CameraHealth b, CameraHealth c) {
+    return combine(combine(a, b), c);
+  }
 }

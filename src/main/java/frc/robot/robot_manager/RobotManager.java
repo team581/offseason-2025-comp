@@ -1689,10 +1689,12 @@ public class RobotManager extends StateMachine<RobotState> {
         localization.getPose(),
         purple.getPurpleState(),
         scoringLevel,
-        frontCoralLimelight
-            .getInterpolatedTagResult()
-            .or(backTagLimelight::getInterpolatedTagResult),
-        CameraHealth.combine(
+        baseTagLimelight
+            .getTagResult()
+            .or(frontCoralLimelight::getTagResult)
+            .or(backTagLimelight::getTagResult),
+       CameraHealth.combine (baseTagLimelight.getCameraHealth(),
+
             frontCoralLimelight.getCameraHealth(), backTagLimelight.getCameraHealth()));
   }
 
