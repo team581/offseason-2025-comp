@@ -13,11 +13,11 @@ import java.util.List;
 public class PurePursuitPathTracker implements PathTracker {
   private static final boolean USE_DYNAMIC_LOOKAHEAD = true;
   private static final double NON_DYNAMIC_LOOKAHEAD_DISTANCE = 1.5;
+  private static final double DYNAMIC_LOOKAHEAD_TRANSITION_TIME = 0.5;
+
   private static final double AT_END_OF_SEGMENT_DISTANCE_THRESHOLD = 0.1;
   private static final double AT_END_OF_SEGMENT_ROTATION_THRESHOLD = 5;
-  private static final double DYNAMIC_LOOKAHEAD_TRANSITION_TIME = 0.5;
-  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.45;
-  private static final double DYNAMIC_LOOKAHEAD_MAX = 2.0;
+
   private double lookaheadDistance = 1.5;
   private double lastRequestedLookaheadDistance = Double.MAX_VALUE;
   private double transitionStartTime = 0.0;
@@ -77,11 +77,12 @@ public class PurePursuitPathTracker implements PathTracker {
     }
     currentTargetWaypoint = points.get(getCurrentLookaheadPointIndex()).poseSupplier.get();
     var perpendicularPoint =
-        getPerpendicularPoint(lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
+        PurePursuitUtils.getPerpendicularPoint(
+            lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
 
     var lookaheadPoint =
         new Pose2d(
-            getLookaheadPoint(
+            PurePursuitUtils.getLookaheadPoint(
                     lastTargetWaypoint,
                     currentTargetWaypoint,
                     perpendicularPoint,
@@ -108,7 +109,7 @@ public class PurePursuitPathTracker implements PathTracker {
             perpendicularPoint.getTranslation().getDistance(currentTargetWaypoint.getTranslation());
         var newLookaheadPoint =
             new Pose2d(
-                getLookaheadPoint(
+                PurePursuitUtils.getLookaheadPoint(
                         currentTargetWaypoint,
                         futurePoint,
                         currentTargetWaypoint,
@@ -141,7 +142,8 @@ public class PurePursuitPathTracker implements PathTracker {
     var currentTargetPoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
 
     var perpendicularPoint =
-        getPerpendicularPoint(lastTargetWaypoint, currentTargetPoint, currentRobotPose);
+        PurePursuitUtils.getPerpendicularPoint(
+            lastTargetWaypoint, currentTargetPoint, currentRobotPose);
     if (currentRobotFollowedPointIndex < points.size() - 1
         && perpendicularPoint.getTranslation().getDistance(lastTargetWaypoint.getTranslation())
                 / lastTargetWaypoint
@@ -154,7 +156,7 @@ public class PurePursuitPathTracker implements PathTracker {
       lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
     }
     currentInterpolatedRotation =
-        getPointToPointInterpolatedRotation(
+        PurePursuitUtils.getPointToPointInterpolatedRotation(
             lastTargetWaypoint, currentTargetPoint, perpendicularPoint);
   }
 
@@ -190,14 +192,14 @@ public class PurePursuitPathTracker implements PathTracker {
 
       if (points.size() == 2) {
         requestNewLookaheadDistance(
-            getDynamicLookaheadDistance(
+            PurePursuitUtils.getDynamicLookaheadDistance(
                 startingRobotPose,
                 points.get(0).poseSupplier.get(),
                 points.get(1).poseSupplier.get()),
             false);
       } else if (getCurrentPointIndex() == points.size() - 1) {
         requestNewLookaheadDistance(
-            getDynamicLookaheadDistance(
+            PurePursuitUtils.getDynamicLookaheadDistance(
                 points.get(getCurrentPointIndex() - 2).poseSupplier.get(),
                 lastTargetWaypoint,
                 currentTargetWaypoint),
@@ -205,126 +207,13 @@ public class PurePursuitPathTracker implements PathTracker {
       } else {
         var thirdPoint = points.get(getCurrentPointIndex() + 1).poseSupplier.get();
         requestNewLookaheadDistance(
-            getDynamicLookaheadDistance(lastTargetWaypoint, currentTargetWaypoint, thirdPoint),
+            PurePursuitUtils.getDynamicLookaheadDistance(
+                lastTargetWaypoint, currentTargetWaypoint, thirdPoint),
             false);
       }
     } else {
       requestNewLookaheadDistance(NON_DYNAMIC_LOOKAHEAD_DISTANCE, true);
     }
-  }
-
-  private Rotation2d getPointToPointInterpolatedRotation(
-      Pose2d startPoint, Pose2d endPoint, Pose2d pointOnPath) {
-    var totalDistance = startPoint.getTranslation().getDistance(endPoint.getTranslation());
-    var pointToStart = pointOnPath.getTranslation().getDistance(startPoint.getTranslation());
-    var pointToEnd = pointOnPath.getTranslation().getDistance(endPoint.getTranslation());
-
-    if (!((pointOnPath.getX() - startPoint.getX()) * (pointOnPath.getX() - endPoint.getX()) <= 0
-        && (pointOnPath.getY() - startPoint.getY()) * (pointOnPath.getY() - endPoint.getY())
-            <= 0)) {
-      if (pointToEnd > pointToStart) {
-        return startPoint.getRotation();
-      } else {
-        return endPoint.getRotation();
-      }
-    }
-    var progressPercent = Math.abs((pointToStart / totalDistance));
-    if (progressPercent > 0.9) {
-      progressPercent = 1.0;
-    }
-
-    var interpolatedRotation =
-        startPoint.getRotation().interpolate(endPoint.getRotation(), progressPercent);
-
-    return interpolatedRotation;
-  }
-
-  private double getDynamicLookaheadDistance(
-      Pose2d firstPoint, Pose2d secondPoint, Pose2d thirdPoint) {
-    var x1 = firstPoint.getX();
-    var y1 = firstPoint.getY();
-    var x2 = secondPoint.getX();
-    var y2 = secondPoint.getY();
-    var x3 = thirdPoint.getX();
-    var y3 = thirdPoint.getY();
-
-    var AB = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    var BC = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
-    var AC = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1));
-    var s = (AB + BC + AC) / 2;
-    var area = Math.sqrt(s * (s - AB) * (s - BC) * (s - AC));
-    if (area == 0) {
-      return DYNAMIC_LOOKAHEAD_MAX;
-    }
-    var curvature = (AB * BC * AC) / (4 * area);
-    double value = curvature * DYNAMIC_LOOKAHEAD_SCALE;
-    Pose2d[] curvaturepoints = {firstPoint, secondPoint, thirdPoint};
-    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/CurvaturePoints", curvaturepoints);
-    return Math.min(value, DYNAMIC_LOOKAHEAD_MAX);
-  }
-
-  private Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
-    var x1 = startPoint.getX();
-    var y1 = startPoint.getY();
-
-    var x2 = endPoint.getX();
-    var y2 = endPoint.getY();
-
-    var x3 = robotPose.getX();
-    var y3 = robotPose.getY();
-
-    if (y1 == y2) {
-      return new Pose2d(x3, y1, new Rotation2d());
-    }
-    if (x1 == x2) {
-      return new Pose2d(x1, y3, new Rotation2d());
-    }
-    // Find the slope of the path and y-int
-    double pathSlope = (y2 - y1) / (x2 - x1);
-    double yInt = y1 - pathSlope * x1;
-
-    // Find the slope and y-int of the perpendicular line
-    double perpSlope = -1 / pathSlope;
-    double perpYInt = y3 - perpSlope * x3;
-
-    // Calculate the perpendicular intersection
-    double perpX = (perpYInt - yInt) / (pathSlope - perpSlope);
-    double perpY = pathSlope * perpX + yInt;
-
-    return new Pose2d(perpX, perpY, new Rotation2d());
-  }
-
-  private Pose2d getLookaheadPoint(
-      Pose2d startPoint, Pose2d endPoint, Pose2d pointOnPath, double lookaheadDistance) {
-    var x1 = startPoint.getX();
-    var y1 = startPoint.getY();
-
-    var x2 = endPoint.getX();
-    var y2 = endPoint.getY();
-
-    var x = pointOnPath.getX();
-    var y = pointOnPath.getY();
-
-    var xLookahead =
-        x
-            + lookaheadDistance
-                * ((x2 - x1) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
-    var yLookahead =
-        y
-            + lookaheadDistance
-                * ((y2 - y1) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
-    var lookahead = new Pose2d(xLookahead, yLookahead, new Rotation2d());
-    var distanceToStart = lookahead.getTranslation().getDistance(startPoint.getTranslation());
-    var distanceToEnd = lookahead.getTranslation().getDistance(endPoint.getTranslation());
-    var lookaheadOutside =
-        !((lookahead.getX() - startPoint.getX()) * (lookahead.getX() - endPoint.getX()) <= 0
-            && (lookahead.getY() - startPoint.getY()) * (lookahead.getY() - endPoint.getY()) <= 0);
-    if (lookaheadOutside) {
-      if (distanceToEnd > distanceToStart) {
-        return startPoint;
-      }
-    }
-    return getPerpendicularPoint(startPoint, endPoint, lookahead);
   }
 
   public void requestNewLookaheadDistance(double targetLookahead, boolean immediateChnage) {

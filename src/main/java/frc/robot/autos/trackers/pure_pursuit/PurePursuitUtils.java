@@ -7,6 +7,8 @@ import frc.robot.autos.AutoPoint;
 import java.util.List;
 
 public class PurePursuitUtils {
+  private static final double DYNAMIC_LOOKAHEAD_MAX = 2.0;
+  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.45;
 
   public static Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
     var x1 = startPoint.getX();
@@ -37,6 +39,30 @@ public class PurePursuitUtils {
     double perpY = pathSlope * perpX + yInt;
 
     return new Pose2d(perpX, perpY, new Rotation2d());
+  }
+
+  public static double getDynamicLookaheadDistance(
+      Pose2d firstPoint, Pose2d secondPoint, Pose2d thirdPoint) {
+    var x1 = firstPoint.getX();
+    var y1 = firstPoint.getY();
+    var x2 = secondPoint.getX();
+    var y2 = secondPoint.getY();
+    var x3 = thirdPoint.getX();
+    var y3 = thirdPoint.getY();
+
+    var AB = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    var BC = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
+    var AC = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1));
+    var s = (AB + BC + AC) / 2;
+    var area = Math.sqrt(s * (s - AB) * (s - BC) * (s - AC));
+    if (area == 0) {
+      return DYNAMIC_LOOKAHEAD_MAX;
+    }
+    var curvature = (AB * BC * AC) / (4 * area);
+    double value = curvature * DYNAMIC_LOOKAHEAD_SCALE;
+    Pose2d[] curvaturepoints = {firstPoint, secondPoint, thirdPoint};
+    DogLog.log("Autos/Trailblazer/PurePursuitPathTracker/CurvaturePoints", curvaturepoints);
+    return Math.min(value, DYNAMIC_LOOKAHEAD_MAX);
   }
 
   public static Pose2d getLookaheadPoint(
