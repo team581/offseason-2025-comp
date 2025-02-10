@@ -86,7 +86,6 @@ public class Limelight extends StateMachine<LimelightState> {
         robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
       DogLog.log("Debug/" + name + "/Garbage", true);
 
-
       return Optional.empty();
     }
     DogLog.log("Debug/" + name + "/Garbage", false);
