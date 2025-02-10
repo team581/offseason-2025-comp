@@ -34,7 +34,6 @@ public enum ReefPipe {
       new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
       new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120)));
 
-  // -0.8382 might be a good idea
   private static final Pose2d L1Offset = new Pose2d(-0.56, 0, Rotation2d.kZero);
   private static final Pose2d L2Offset = new Pose2d(-0.56, 0, Rotation2d.kZero);
   private static final Pose2d L3Offset = new Pose2d(-0.56, 0, Rotation2d.kZero);
