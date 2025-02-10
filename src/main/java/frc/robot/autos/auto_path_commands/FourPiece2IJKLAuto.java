@@ -68,9 +68,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(13.842, 1.288, Rotation2d.fromDegrees(137.35))),
+                new AutoPoint(new Pose2d(13.842, 0.771, Rotation2d.fromDegrees(137.35))),
                 new AutoPoint(
-                    new Pose2d(12.246, 1.903, Rotation2d.fromDegrees(59.1)),
+                    new Pose2d(11.785, 1.332, Rotation2d.fromDegrees(59.1)),
                     Commands.runOnce(
                         () -> {
                           AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);

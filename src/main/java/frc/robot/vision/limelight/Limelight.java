@@ -1,6 +1,7 @@
 package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.fms.FmsSubsystem;
@@ -8,7 +9,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.interpolation.CameraDataset;
-import frc.robot.vision.interpolation.InterpolatedVision;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
@@ -30,8 +30,11 @@ public class Limelight extends StateMachine<LimelightState> {
   private double limelightHeartbeat = -1;
 
   private Optional<TagResult> interpolatedResult = Optional.empty();
+  private Optional<TagResult> tagResult = Optional.empty();
+
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
+  private double robotHeading = 0.0;
 
   public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
@@ -52,16 +55,11 @@ public class Limelight extends StateMachine<LimelightState> {
       double rollRate) {
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    this.robotHeading = robotHeading;
   }
 
   public void setState(LimelightState state) {
     setStateFromRequest(state);
-  }
-
-  public Optional<TagResult> getInterpolatedTagResult() {
-    return getState() == LimelightState.TAGS || getState() == LimelightState.REEF_TAGS
-        ? interpolatedResult
-        : Optional.empty();
   }
 
   public Optional<GamePieceResult> getCoralResult() {
@@ -72,18 +70,7 @@ public class Limelight extends StateMachine<LimelightState> {
     return getState() == LimelightState.PURPLE ? purpleResult : Optional.empty();
   }
 
-  private Optional<TagResult> calculateInterpolatedTagResult(Optional<TagResult> rawTagResult) {
-    if (rawTagResult.isEmpty()) {
-      return Optional.empty();
-    }
-
-    return Optional.of(
-        new TagResult(
-            InterpolatedVision.interpolatePose(rawTagResult.get().pose(), cameraDataset),
-            rawTagResult.get().timestamp()));
-  }
-
-  private Optional<TagResult> calculateRawTagResult() {
+  public Optional<TagResult> getTagResult() {
     if (getState() != LimelightState.TAGS && getState() != LimelightState.REEF_TAGS) {
       return Optional.empty();
     }
@@ -93,13 +80,21 @@ public class Limelight extends StateMachine<LimelightState> {
     if (estimatePose == null) {
       return Optional.empty();
     }
+    DogLog.log("Debug/" + name + "/RobotHeading", robotHeading);
+    DogLog.log("Debug/" + name + "/PoseHeading", estimatePose.pose.getRotation().getDegrees());
+    if (MathUtil.isNear(
+        robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
+      DogLog.log("Debug/" + name + "/Garbage", true);
+
+      return Optional.empty();
+    }
+    DogLog.log("Debug/" + name + "/Garbage", false);
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
     if (estimatePose.tagCount == 0) {
       return Optional.empty();
     }
-
     // This prevents pose estimator from having crazy poses if the Limelight loses power
     if (estimatePose.pose.getX() == 0.0 && estimatePose.pose.getY() == 0.0) {
       return Optional.empty();
@@ -160,7 +155,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   protected void collectInputs() {
-    interpolatedResult = calculateInterpolatedTagResult(calculateRawTagResult());
+    tagResult = getTagResult();
     coralResult = getRawCoralResult();
     purpleResult = getRawPurpleResult();
   }
