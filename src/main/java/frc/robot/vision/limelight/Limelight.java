@@ -23,6 +23,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
   private final CameraDataset cameraDataset;
+  private final LimelightModel limelightModel;
 
   private final Timer limelightTimer = new Timer();
   private final Timer seedIMUTimer = new Timer();
@@ -36,13 +37,14 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
 
-  public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset) {
+  public Limelight(String name, LimelightState initialState, CameraDataset cameraDataset, LimelightModel limelightModel) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;
     limelightTimer.start();
+    this.limelightModel = limelightModel;
     this.cameraDataset = cameraDataset;
   }
 
@@ -82,7 +84,7 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     DogLog.log("Debug/" + name + "/RobotHeading", robotHeading);
     DogLog.log("Debug/" + name + "/PoseHeading", estimatePose.pose.getRotation().getDegrees());
-    if (MathUtil.isNear(
+    if (!MathUtil.isNear(
         robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
       DogLog.log("Debug/" + name + "/Garbage", true);
 
@@ -179,8 +181,10 @@ public class Limelight extends StateMachine<LimelightState> {
       }
       default -> {}
     }
+    if (limelightModel == LimelightModel.FOUR) {
 
-    LimelightHelpers.SetIMUMode(limelightTableName, seedIMUTimer.hasElapsed(2.0) ? 2 : 1);
+      LimelightHelpers.SetIMUMode(limelightTableName, seedIMUTimer.hasElapsed(2.0) ? 2 : 1);
+    }
   }
 
   @Override
