@@ -58,12 +58,11 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 // REEF PIPE I
                 new AutoPoint(ReefPipe.PIPE_I.getPose(ReefPipeLevel.L4)))),
         autoCommands.l4ScoreAndReleaseCommand(),
-        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88))),
-                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
+                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71)), Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
         trailblazer.followSegment(
             new AutoSegment(
@@ -79,12 +78,11 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 // REEF PIPE J
                 new AutoPoint(ReefPipe.PIPE_J.getPose(ReefPipeLevel.L4)))),
         autoCommands.l4ScoreAndReleaseCommand(),
-        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
-                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71))))),
+                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71)),  Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
         Commands.runOnce(
             () -> {
@@ -99,12 +97,11 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     // REEF PIPE K
                     ReefPipe.PIPE_K.getPose(ReefPipeLevel.L4)))),
         autoCommands.l4ScoreAndReleaseCommand(),
-        Commands.runOnce(() -> robotManager.intakeStationRequest()),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
-                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819))))),
+                new AutoPoint(new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819)),         Commands.runOnce(() -> robotManager.intakeStationRequest())                ))),
         autoCommands.intakeStationWithTimeoutCommand(),
         Commands.runOnce(
             () -> {
