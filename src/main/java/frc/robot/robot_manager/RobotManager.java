@@ -148,11 +148,14 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       case CORAL_L1_1_APPROACH ->
-          AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose)
+          AutoAlign.isCloseToReefSide(
+                  localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds())
               ? RobotState.CORAL_L1_3_PLACE
               : currentState;
       case CORAL_L2_1_APPROACH -> {
-        var isClose = AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose);
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -177,7 +180,9 @@ public class RobotManager extends StateMachine<RobotState> {
           shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L4_3_PLACE : currentState;
 
       case CORAL_L3_1_APPROACH -> {
-        var isClose = AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose);
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -188,7 +193,9 @@ public class RobotManager extends StateMachine<RobotState> {
             : RobotState.CORAL_DISPLACED_L3_2_LINEUP;
       }
       case CORAL_L4_1_APPROACH -> {
-        var isClose = AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose);
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -1199,7 +1206,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     purpleSpeeds =
-        purple.getPoseAlignmentChassisSpeeds(localization.getPose(), scoringLevel, false);
+        Purple.getPoseAlignmentChassisSpeeds(localization.getPose(), scoringLevel, false);
     if (vision.isAnyScoringTagLimelightOnline()) {
 
       swerve.setPurpleSpeeds(purpleSpeeds);
