@@ -1,8 +1,8 @@
 package frc.robot.auto_align;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -12,10 +12,7 @@ import frc.robot.swerve.SnapUtil;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.results.TagResult;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import dev.doglog.DogLog;
 
 public class AutoAlign {
   private static Optional<ReefPipe> autoReefPipeOverride = Optional.empty();
@@ -114,7 +111,10 @@ public class AutoAlign {
     var linearVelocity = Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
     DogLog.log("Swerve/LinearVelocity", linearVelocity);
     return isCloseToReefSide(
-        robotPose, nearestReefSide, LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
+        robotPose,
+        nearestReefSide,
+        LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS
+            + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
   }
 
   public static boolean isCloseToReefPipe(
