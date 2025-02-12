@@ -312,7 +312,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 previousSpeeds,
                 currentTimestamp - previousTimestamp,
                 AutoConstraintCalculator.getLastUsedConstraints());
-                DogLog.log("AutoDebug/Alignment/ConstrainedWantedSpeeds", constrainedWantedSpeeds);
+        DogLog.log("AutoDebug/Alignment/ConstrainedWantedSpeeds", constrainedWantedSpeeds);
 
         if (constrainedWantedSpeeds.omegaRadiansPerSecond == 0) {
           DogLog.timestamp("AutoDebug/Alignment/ConstrainedWantedSpeedsZeroOmega");
