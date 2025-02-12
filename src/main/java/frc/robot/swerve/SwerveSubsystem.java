@@ -313,8 +313,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 currentTimestamp - previousTimestamp,
                 // Our acceleration limit math is slightly wonky
                 // So we turn it off here since velocity limiting is the good enough
-                AutoConstraintCalculator.getLastUsedConstraints().withMaxAngularAcceleration(0).withMaxLinearAcceleration(0));
-                DogLog.log("AutoDebug/Alignment/ConstrainedWantedSpeeds", constrainedWantedSpeeds);
+                AutoConstraintCalculator.getLastUsedConstraints()
+                    .withMaxAngularAcceleration(0)
+                    .withMaxLinearAcceleration(0));
+        DogLog.log("AutoDebug/Alignment/ConstrainedWantedSpeeds", constrainedWantedSpeeds);
 
         if (constrainedWantedSpeeds.omegaRadiansPerSecond == 0) {
           DogLog.timestamp("AutoDebug/Alignment/ConstrainedWantedSpeedsZeroOmega");
