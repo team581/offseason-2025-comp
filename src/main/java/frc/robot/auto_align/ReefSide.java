@@ -70,6 +70,17 @@ public enum ReefSide {
     this.pipe2 = pipe2;
   }
 
+  public static ReefSide fromPipe(ReefPipe pipe) {
+    return switch (pipe) {
+      case PIPE_A, PIPE_B -> SIDE_AB;
+      case PIPE_C, PIPE_D -> SIDE_CD;
+      case PIPE_E, PIPE_F -> SIDE_EF;
+      case PIPE_G, PIPE_H -> SIDE_GH;
+      case PIPE_I, PIPE_J -> SIDE_IJ;
+      case PIPE_K, PIPE_L -> SIDE_KL;
+    };
+  }
+
   public Pose2d getPose(boolean isRedAlliance) {
     return isRedAlliance ? redPose : bluePose;
   }

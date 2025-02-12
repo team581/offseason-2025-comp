@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.auto_align.ReefSide;
 import frc.robot.autos.AutoPoint;
 import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
@@ -54,7 +53,6 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
                         Commands.runOnce(
                             () -> {
-                              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
                               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I);
                               robotManager.highApproachRequest();
                             })),
@@ -81,7 +79,6 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         new Pose2d(11.785, 1.4, Rotation2d.fromDegrees(60.0)),
                         Commands.runOnce(
                             () -> {
-                              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
                               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_J);
                               robotManager.highApproachRequest();
                             })),
@@ -102,7 +99,6 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         // SCORE L4 ON K
         Commands.runOnce(
             () -> {
-              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_K);
               robotManager.highApproachRequest();
             }),
@@ -130,7 +126,6 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         // SCORE L4 ON L
         Commands.runOnce(
             () -> {
-              AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_KL);
               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_L);
               robotManager.highApproachRequest();
             }),
