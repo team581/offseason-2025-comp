@@ -112,7 +112,7 @@ class CompConfig {
                           .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new SwerveConfig(
-              new PhoenixPIDController(10, 0, 1),
+              new PhoenixPIDController(5.75, 0, 0),
               true,
               true,
               true,
