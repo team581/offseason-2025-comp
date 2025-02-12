@@ -1151,9 +1151,11 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_CENTERED_L4_2_LINEUP,
                   CORAL_CENTERED_L4_3_PLACE,
                   CORAL_CENTERED_L4_4_RELEASE,
+                  CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE,
                   CORAL_DISPLACED_L4_2_LINEUP,
                   CORAL_DISPLACED_L4_3_PLACE,
-                  CORAL_DISPLACED_L4_4_RELEASE ->
+                  CORAL_DISPLACED_L4_4_RELEASE,
+                  CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE ->
               ReefPipeLevel.L4;
           default -> ReefPipeLevel.BASE;
         };
