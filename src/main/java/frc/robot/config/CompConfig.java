@@ -25,7 +25,6 @@ import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.CompBotTunerConstants;
-import frc.robot.util.VelocityDetector;
 import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 class CompConfig {
@@ -98,8 +97,6 @@ class CompConfig {
               26,
               new Debouncer(0.1, DebounceType.kBoth),
               new Debouncer(0.1, DebounceType.kBoth),
-              new VelocityDetector(71.0, 70.0, 0).inSlot(1, 21.0, 20.0),
-              new VelocityDetector(71.0, 70.0, 0).inSlot(1, 21.0, 20.0),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))

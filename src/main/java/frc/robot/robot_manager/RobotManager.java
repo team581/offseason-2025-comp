@@ -1151,9 +1151,11 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_CENTERED_L4_2_LINEUP,
                   CORAL_CENTERED_L4_3_PLACE,
                   CORAL_CENTERED_L4_4_RELEASE,
+                  CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE,
                   CORAL_DISPLACED_L4_2_LINEUP,
                   CORAL_DISPLACED_L4_3_PLACE,
-                  CORAL_DISPLACED_L4_4_RELEASE ->
+                  CORAL_DISPLACED_L4_4_RELEASE,
+                  CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE ->
               ReefPipeLevel.L4;
           default -> ReefPipeLevel.BASE;
         };
@@ -1188,6 +1190,13 @@ public class RobotManager extends StateMachine<RobotState> {
         !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.75);
 
     return isFarEnoughFromReefSide;
+  }
+
+  // TODO: Combine with getReefAlignState, this is just a hacky solution for auto
+  public boolean purpleAligned() {
+    var aligned = purple.isTagAligned(localization.getPose(), scoringLevel);
+    DogLog.log("PurpleAlignment/Aligned", aligned);
+    return aligned;
   }
 
   public void setGamePieceMode(GamePieceMode newMode) {
@@ -1287,8 +1296,6 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    DogLog.timestamp("Debug/StowRequest");
-
     if (intake.getHasGP()) {
       if (gamePieceMode == GamePieceMode.CORAL) {
         setStateFromRequest(RobotState.IDLE_CORAL);
@@ -1296,18 +1303,7 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_ALGAE);
       }
     } else {
-
-      if (gamePieceMode == GamePieceMode.CORAL) {
-        setStateFromRequest(RobotState.IDLE_NO_GP);
-      } else {
-        setStateFromRequest(RobotState.IDLE_ALGAE);
-      }
-
-      if (gamePieceMode == GamePieceMode.CORAL) {
-        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
-      } else {
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
-      }
+      setStateFromRequest(RobotState.IDLE_NO_GP);
     }
   }
 
