@@ -15,7 +15,7 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
 public class FourPiece2IJKLAuto extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 55, 4, 30);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(3, 57, 4, 30);
 
   public FourPiece2IJKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -67,7 +67,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(
-                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(127.71)),
+                    new Pose2d(16.01, 0.9, Rotation2d.fromDegrees(127.71)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
         // SCORE L4 ON J
@@ -75,9 +75,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
             .followSegment(
                 new AutoSegment(
                     CONSTRAINTS,
-                    new AutoPoint(new Pose2d(13.872, 1.009, Rotation2d.fromDegrees(137.35))),
+                    new AutoPoint(new Pose2d(14.103, 1.0, Rotation2d.fromDegrees(90.5))),
                     new AutoPoint(
-                        new Pose2d(11.785, 1.4, Rotation2d.fromDegrees(60.0)),
+                        new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0)),
                         Commands.runOnce(
                             () -> {
                               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_J);
@@ -94,7 +94,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(
-                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(127.71)),
+                    new Pose2d(16.01, 0.9, Rotation2d.fromDegrees(127.71)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
 
@@ -122,7 +122,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
                 new AutoPoint(
-                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(123.819)),
+                    new Pose2d(16.01, 0.9, Rotation2d.fromDegrees(123.819)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
 
