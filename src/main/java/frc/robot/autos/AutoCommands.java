@@ -39,10 +39,12 @@ public class AutoCommands {
 
   public Command intakeStationWithTimeoutCommand() {
     return Commands.runOnce(robotManager::intakeStationRequest, requirements)
-    .andThen(robotManager.waitForStates(RobotState.SMART_STOW_1, RobotState.SMART_STOW_2, RobotState.IDLE_CORAL))
-    .withTimeout(3)
-    .withName("IntakeStationWithTimeoutCommand");
-}
+        .andThen(
+            robotManager.waitForStates(
+                RobotState.SMART_STOW_1, RobotState.SMART_STOW_2, RobotState.IDLE_CORAL))
+        .withTimeout(3)
+        .withName("IntakeStationWithTimeoutCommand");
+  }
 
   public Command preloadCoralCommand() {
     return Commands.runOnce(robotManager::preloadCoralRequest, requirements)
