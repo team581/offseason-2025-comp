@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
@@ -225,7 +226,20 @@ public class Robot extends TimedRobot {
               }
             }));
 
-    hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
+    hardware
+        .driverController
+        .rightTrigger()
+        .onTrue(
+            Commands.runOnce(
+                    () -> {
+                      robotManager.setConfirmScoreActive(true);
+                    })
+                .alongWith(robotCommands.confirmScoreCommand()))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  robotManager.setConfirmScoreActive(false);
+                }));
     hardware
         .driverController
         .leftTrigger()

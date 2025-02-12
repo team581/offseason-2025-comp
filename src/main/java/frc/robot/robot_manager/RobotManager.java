@@ -100,6 +100,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private Pose2d nearestReefSidePose = Pose2d.kZero;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
   private ChassisSpeeds purpleSpeeds = new ChassisSpeeds();
+  private boolean confirmScoreActive = false;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -111,17 +112,11 @@ public class RobotManager extends StateMachine<RobotState> {
               NET_BACK_WAITING,
               NET_FORWARD_WAITING,
               CORAL_L1_3_PLACE,
-              CORAL_CENTERED_L2_2_LINEUP,
               CORAL_CENTERED_L2_3_PLACE,
-              CORAL_CENTERED_L3_2_LINEUP,
               CORAL_CENTERED_L3_3_PLACE,
-              CORAL_CENTERED_L4_2_LINEUP,
               CORAL_CENTERED_L4_3_PLACE,
-              CORAL_DISPLACED_L2_2_LINEUP,
               CORAL_DISPLACED_L2_3_PLACE,
-              CORAL_DISPLACED_L3_2_LINEUP,
               CORAL_DISPLACED_L3_3_PLACE,
-              CORAL_DISPLACED_L4_2_LINEUP,
               CORAL_DISPLACED_L4_3_PLACE,
               CLIMBING_1_LINEUP,
               CLIMBING_2_HANGING,
@@ -129,6 +124,9 @@ public class RobotManager extends StateMachine<RobotState> {
               DISLODGE_ALGAE_L3_WAIT,
               UNJAM ->
           currentState;
+
+      // in auto: keep transition the same
+      // in teleop: if right trigger is pressed, go 2 -> 3. else, stay in 2
 
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
@@ -164,6 +162,20 @@ public class RobotManager extends StateMachine<RobotState> {
             ? RobotState.CORAL_CENTERED_L2_2_LINEUP
             : RobotState.CORAL_DISPLACED_L2_2_LINEUP;
       }
+      case CORAL_CENTERED_L2_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L2_3_PLACE : currentState;
+      case CORAL_CENTERED_L3_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L3_3_PLACE : currentState;
+      case CORAL_CENTERED_L4_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L4_3_PLACE : currentState;
+
+      case CORAL_DISPLACED_L2_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L2_3_PLACE : currentState;
+      case CORAL_DISPLACED_L3_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L3_3_PLACE : currentState;
+      case CORAL_DISPLACED_L4_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L4_3_PLACE : currentState;
+
       case CORAL_L3_1_APPROACH -> {
         var isClose = AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose);
 
@@ -306,6 +318,12 @@ public class RobotManager extends StateMachine<RobotState> {
       case SMART_STOW_2 -> wrist.atGoal() ? RobotState.IDLE_CORAL : currentState;
       case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
     };
+  }
+
+  private boolean shouldProgressTeleopScore() {
+    return DriverStation.isTeleop()
+        && confirmScoreActive
+        && getReefAlignState() == ReefAlignState.HAS_TAGS_IN_POSITION;
   }
 
   @Override
@@ -1702,5 +1720,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case HAS_TAGS_IN_POSITION, HAS_PURPLE_ALIGNED -> LightsState.SCORE_ALIGN_READY;
       default -> LightsState.SCORE_ALIGN_NOT_READY;
     };
+  }
+
+  public void setConfirmScoreActive(boolean newValue) {
+    confirmScoreActive = newValue;
   }
 }
