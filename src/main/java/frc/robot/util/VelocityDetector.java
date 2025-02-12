@@ -1,53 +1,22 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class VelocityDetector {
+  private final double minVelocity;
+  private final double minVelocityTimeout;
+  private final Timer timeout = new Timer();
   private boolean hasSeenMinVelocity = false;
-  private double[] minVelocities = new double[3];
-  private double[] maxVelocities = new double[3];
-  public int currentSlot = 0;
 
-  /**
-   * @param minVelocity Minimum velocity while intaking
-   * @param maxVelocity The maximum velocity that is possible if you are holding a game piece.
-   * @param slot The slot in which these values will be placed in.
-   * @return VelocityDetector class
-   */
-  public VelocityDetector(double minVelocity, double maxVelocity, int slot) {
-    this.currentSlot = slot;
-    this.minVelocities[slot] = minVelocity;
-    this.maxVelocities[slot] = maxVelocity;
+  public VelocityDetector(double minVelocity, double minVelocityTimeout) {
+    this.minVelocity = minVelocity;
+    this.minVelocityTimeout = minVelocityTimeout;
+    timeout.start();
   }
 
-  /**
-   * Sets values to a slot
-   *
-   * @param minVelocity Minimum velocity while intaking
-   * @param maxVelocity The maximum velocity that is possible if you are holding a game piece.
-   * @param slot The slot in which these values will be placed in.
-   */
-  public VelocityDetector inSlot(int slot, double minVelocity, double maxVelocity) {
-    this.currentSlot = slot;
-    this.minVelocities[slot] = minVelocity;
-    this.maxVelocities[slot] = maxVelocity;
-    return this;
-  }
-
-  public double getMax(int slot) {
-    return maxVelocities[slot];
-  }
-
-  public double getMin(int slot) {
-    return minVelocities[slot];
-  }
-
-  /**
-   * Resets the detection sequence
-   *
-   * @param slot Set the current used max and min values slot.
-   */
-  public void reset(int slot) {
+  public void reset() {
     hasSeenMinVelocity = false;
-    this.currentSlot = slot;
+    timeout.reset();
   }
 
   /**
@@ -55,12 +24,10 @@ public class VelocityDetector {
    *
    * @param motorVelocity Current motor velocity.
    */
-  public boolean hasGamePiece(double motorVelocity, boolean timeoutPassed) {
-    if (hasSeenMinVelocity) {
-      return motorVelocity < maxVelocities[currentSlot];
-    }
+  public boolean hasGamePiece(double motorVelocity, double maxVelocity) {
+    hasSeenMinVelocity =
+        hasSeenMinVelocity || timeout.hasElapsed(minVelocityTimeout) || motorVelocity > minVelocity;
 
-    hasSeenMinVelocity = motorVelocity > minVelocities[currentSlot];
-    return motorVelocity < maxVelocities[currentSlot] && timeoutPassed;
+    return hasSeenMinVelocity && motorVelocity < maxVelocity;
   }
 }
