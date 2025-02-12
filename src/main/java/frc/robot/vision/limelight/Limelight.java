@@ -186,7 +186,9 @@ public class Limelight extends StateMachine<LimelightState> {
       default -> {}
     }
 
-    LimelightHelpers.SetIMUMode(limelightTableName, seedIMUTimer.hasElapsed(2.0) && limelightModel == LimelightModel.FOUR ? 2 : 1);
+    LimelightHelpers.SetIMUMode(
+        limelightTableName,
+        seedIMUTimer.hasElapsed(2.0) && limelightModel == LimelightModel.FOUR ? 2 : 1);
   }
 
   @Override
