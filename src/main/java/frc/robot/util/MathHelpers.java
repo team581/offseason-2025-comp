@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -48,6 +49,17 @@ public class MathHelpers {
 
   public static Rotation2d angleAbs(Rotation2d a) {
     return Rotation2d.fromDegrees(Math.abs(a.getDegrees()));
+  }
+
+  public static Pose2d poseLookahead(Pose2d current, ChassisSpeeds velocity, double lookahead) {
+    var x = current.getX() + velocity.vxMetersPerSecond * lookahead;
+    var y = current.getY() + velocity.vyMetersPerSecond * lookahead;
+    var theta =
+        current
+            .getRotation()
+            .plus(Rotation2d.fromRadians(velocity.omegaRadiansPerSecond * lookahead));
+
+    return new Pose2d(x, y, theta);
   }
 
   private MathHelpers() {}
