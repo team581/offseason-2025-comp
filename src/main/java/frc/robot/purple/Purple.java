@@ -17,7 +17,7 @@ public class Purple {
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
   private static final double TAG_KP = 2.5;
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
-  private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.1;
+  private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
 
   private static boolean beforeRaisedOffset = false;
@@ -44,7 +44,7 @@ public class Purple {
     return PurpleState.VISIBLE_NOT_CENTERED;
   }
 
-  private boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
+  public boolean isTagAligned(Pose2d robotPose, ReefPipeLevel level) {
     var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
@@ -56,20 +56,21 @@ public class Purple {
 
   public static ChassisSpeeds getPoseAlignmentChassisSpeeds(
       Pose2d robotPose, ReefPipeLevel level, boolean forwardOnly) {
-    var scoringTranslationFieldRelative =
-        AutoAlign.getClosestReefPipe(robotPose, level).getTranslation();
+    var scoringTranslationFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
 
     DogLog.log("PurpleAlignment/Tag/TargetPose", scoringTranslationFieldRelative);
     var scoringTranslationRobotRelative = new Translation2d();
     if (beforeRaisedOffset) {
       scoringTranslationRobotRelative =
           scoringTranslationFieldRelative
+              .getTranslation()
               .minus(robotPose.getTranslation())
               .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()))
               .minus(new Translation2d(BEFORE_RAISED_INITIAL_DISTANCE_OFFSET, 0));
     } else {
       scoringTranslationRobotRelative =
           scoringTranslationFieldRelative
+              .getTranslation()
               .minus(robotPose.getTranslation())
               .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
     }

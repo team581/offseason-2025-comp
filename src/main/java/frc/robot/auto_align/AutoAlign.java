@@ -14,11 +14,17 @@ import java.util.Optional;
 
 public class AutoAlign {
   private static Optional<ReefSide> autoReefSideOverride = Optional.empty();
+  private static Optional<ReefPipe> autoReefPipeOverride = Optional.empty();
+
   private static final List<ReefSide> ALL_REEF_SIDES = List.of(ReefSide.values());
   private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
   public static void setAutoReefSideOverride(ReefSide override) {
     autoReefSideOverride = Optional.of(override);
+  }
+
+  public static void setAutoReefPipeOverride(ReefPipe override) {
+    autoReefPipeOverride = Optional.of(override);
   }
 
   public static ReefSide getClosestReefSide(Pose2d robotPose, boolean isRedAlliance) {
@@ -47,6 +53,10 @@ public class AutoAlign {
 
   public static Pose2d getClosestReefPipe(
       Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
+    if (DriverStation.isAutonomous() && autoReefSideOverride.isPresent()) {
+      return autoReefPipeOverride.orElseThrow().getPose(level);
+    }
+
     var reefPipe =
         ALL_REEF_PIPES.stream()
             .min(

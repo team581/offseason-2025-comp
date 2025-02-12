@@ -1190,6 +1190,13 @@ public class RobotManager extends StateMachine<RobotState> {
     return isFarEnoughFromReefSide;
   }
 
+  // TODO: Combine with getReefAlignState, this is just a hacky solution for auto
+  public boolean purpleAligned() {
+    var aligned = purple.isTagAligned(localization.getPose(), scoringLevel);
+    DogLog.log("PurpleAlignment/Aligned", aligned);
+    return aligned;
+  }
+
   public void setGamePieceMode(GamePieceMode newMode) {
     gamePieceMode = newMode;
 
