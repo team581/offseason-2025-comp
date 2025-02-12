@@ -298,19 +298,25 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
       case REEF_ALIGN_AUTO -> {
         var wantedSpeeds = getScoringAlignChassisSpeeds();
+        DogLog.log("AutoDebug/Alignment/RawWantedSpeeds", wantedSpeeds);
         //  var wantedSpeeds = alignSpeeds.plus(autoSpeeds);
         var currentTimestamp = Timer.getFPGATimestamp();
         if (previousTimestamp == 0.0) {
           previousTimestamp = currentTimestamp - 0.02;
         }
+        DogLog.log("AutoDebug/Alignment/CurrentTimestamp", currentTimestamp);
+        DogLog.log("AutoDebug/Alignment/PreviousTimestamp", previousTimestamp);
         var constrainedWantedSpeeds =
             AutoConstraintCalculator.constrainVelocityGoal(
                 wantedSpeeds,
                 previousSpeeds,
                 currentTimestamp - previousTimestamp,
                 AutoConstraintCalculator.getLastUsedConstraints());
+                DogLog.log("AutoDebug/Alignment/ConstrainedWantedSpeeds", constrainedWantedSpeeds);
 
         if (constrainedWantedSpeeds.omegaRadiansPerSecond == 0) {
+          DogLog.timestamp("AutoDebug/Alignment/ConstrainedWantedSpeedsZeroOmega");
+
           drivetrain.setControl(
               driveToAngle
                   .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
@@ -318,6 +324,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
         } else {
+          DogLog.timestamp("AutoDebug/Alignment/ConstrainedWantedSpeedsNonZeroOmega");
+
           drivetrain.setControl(
               drive
                   .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)

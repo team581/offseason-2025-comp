@@ -61,6 +61,7 @@ public class Purple {
     DogLog.log("PurpleAlignment/Tag/TargetPose", scoringTranslationFieldRelative);
     var scoringTranslationRobotRelative = new Translation2d();
     if (beforeRaisedOffset) {
+      DogLog.log("AutoDebug/BeforeRaisedOffset", true);
       scoringTranslationRobotRelative =
           scoringTranslationFieldRelative
               .getTranslation()
@@ -68,6 +69,7 @@ public class Purple {
               .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()))
               .minus(new Translation2d(BEFORE_RAISED_INITIAL_DISTANCE_OFFSET, 0));
     } else {
+      DogLog.log("AutoDebug/BeforeRaisedOffset", false);
       scoringTranslationRobotRelative =
           scoringTranslationFieldRelative
               .getTranslation()
