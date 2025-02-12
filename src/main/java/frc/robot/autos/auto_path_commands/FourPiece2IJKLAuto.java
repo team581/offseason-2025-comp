@@ -68,18 +68,17 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.701, 1.795, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(
-                    new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71)),
+                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(127.71)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
-
         // SCORE L4 ON J
         trailblazer
             .followSegment(
                 new AutoSegment(
                     CONSTRAINTS,
-                    new AutoPoint(new Pose2d(13.842, 0.771, Rotation2d.fromDegrees(137.35))),
+                    new AutoPoint(new Pose2d(13.872, 1.009, Rotation2d.fromDegrees(137.35))),
                     new AutoPoint(
-                        new Pose2d(11.785, 1.332, Rotation2d.fromDegrees(59.1)),
+                        new Pose2d(11.785, 1.4, Rotation2d.fromDegrees(60.0)),
                         Commands.runOnce(
                             () -> {
                               AutoAlign.setAutoReefSideOverride(ReefSide.SIDE_IJ);
@@ -96,7 +95,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
                 new AutoPoint(
-                    new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(127.71)),
+                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(127.71)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
 
@@ -124,7 +123,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
                 new AutoPoint(
-                    new Pose2d(15.81, 0.6, Rotation2d.fromDegrees(123.819)),
+                    new Pose2d(16.21, 0.9, Rotation2d.fromDegrees(123.819)),
                     Commands.runOnce(() -> robotManager.intakeStationRequest())))),
         autoCommands.intakeStationWithTimeoutCommand(),
 
