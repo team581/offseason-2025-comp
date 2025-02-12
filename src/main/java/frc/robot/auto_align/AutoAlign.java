@@ -76,11 +76,11 @@ public class AutoAlign {
 
     // Robot is on blue side
     if (robotX < halfFieldLength) {
-      return theta < 90 || theta > 270;
+      return Math.abs(theta) < 90;
     }
 
     // Robot is on red side
-    return theta > 90 && theta < 270;
+    return Math.abs(theta) > 90;
   }
 
   public static boolean shouldIntakeStationFront(Pose2d robotPose) {
