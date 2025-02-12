@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.MagnetismUtil;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
+import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -44,6 +45,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final double leftYDeadband = 0.05;
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+
+  private static final double MAX_SCORING_SPEED = 2.5;
+  private static final AutoConstraintOptions SCORING_VELOCITY_CONSTRAINTS =
+      new AutoConstraintOptions()
+          .withCollisionAvoidance(false)
+          .withMaxAngularAcceleration(0)
+          .withMaxAngularVelocity(0)
+          .withMaxLinearAcceleration(0)
+          .withMaxLinearVelocity(MAX_SCORING_SPEED);
 
   private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
       InterpolatingDoubleTreeMap.ofEntries(Map.entry(40.0, 1.0), Map.entry(40.1, 0.5));
@@ -175,11 +185,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void driveTeleop(double x, double y, double theta) {
     double leftY =
         -1.0
-            * ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(y, leftYDeadband), 1.5);
+            * ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(y, leftYDeadband), 2.0);
     double leftX =
-        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(x, leftXDeadband), 1.5);
+        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(x, leftXDeadband), 2.0);
     double rightX =
-        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(theta, rightXDeadband), 2);
+        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(theta, rightXDeadband), 2.0);
 
     if (RobotConfig.get().swerve().invertRotation()) {
       rightX *= -1.0;
@@ -277,11 +287,19 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       }
       case REEF_ALIGN_TELEOP -> {
         var alignSpeeds = getScoringAlignChassisSpeeds();
+        var wantedSpeeds = teleopSpeeds.plus(alignSpeeds);
+        var constrained =
+            AutoConstraintCalculator.constrainLinearVelocity(
+                wantedSpeeds, SCORING_VELOCITY_CONSTRAINTS);
+        // var clampedWantedSpeedsX = MathUtil.clamp(wantedSpeeds.vxMetersPerSecond,
+        // -MAX_SCORING_SPEED, MAX_SCORING_SPEED);
+        // var clampedWantedSpeedsY = MathUtil.clamp(wantedSpeeds.vyMetersPerSecond,
+        // -MAX_SCORING_SPEED, MAX_SCORING_SPEED);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
+                  .withVelocityX(constrained.vxMetersPerSecond)
+                  .withVelocityY(constrained.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
 
@@ -289,10 +307,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
           drivetrain.setControl(
               drive
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond + alignSpeeds.vxMetersPerSecond)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond + alignSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(
-                      teleopSpeeds.omegaRadiansPerSecond + alignSpeeds.omegaRadiansPerSecond)
+                  .withVelocityX(constrained.vxMetersPerSecond)
+                  .withVelocityY(constrained.vyMetersPerSecond)
+                  .withRotationalRate(constrained.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
