@@ -151,6 +151,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public void setPurpleSpeeds(ChassisSpeeds speeds) {
     purpleSpeeds = speeds;
+    if (PURPLE_ALIGN_ENABLED) {
+      sendSwerveRequest();
+    }
   }
 
   @Override
