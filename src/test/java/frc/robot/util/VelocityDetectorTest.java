@@ -8,19 +8,16 @@ import org.junit.jupiter.api.Test;
 public class VelocityDetectorTest {
   @Test
   void testDetectionSequence() {
-    var detector = new VelocityDetector(0.8, 1.0, 0);
-    // motor velocity is under the minimum intaking threshold
-    var velocityUnderMinThreshold = 0.7;
-    // motor velocity has crossed the minimum intaking threshold, now waiting to go below max
-    // threshold
-    var velocityAboveMinThreshold = 1.1;
-    // motor velocity under max threshold while holding gamepiece, return true
-    var velocityUnderMaxThreshold = 0.7;
-    // motor velocity above max threshold while holding gamepiece, return false
-    var velocityAboveMaxThreshold = 1.1;
-    assertFalse(detector.hasGamePiece(velocityUnderMinThreshold, false));
-    assertFalse(detector.hasGamePiece(velocityAboveMinThreshold, false));
-    assertTrue(detector.hasGamePiece(velocityUnderMaxThreshold, false));
-    assertFalse(detector.hasGamePiece(velocityAboveMaxThreshold, false));
+    var detector = new VelocityDetector(10, Double.MAX_VALUE);
+
+    // Velocity is below the min threshold
+    assertFalse(detector.hasGamePiece(0, 5));
+    // Velocity is above the min threshold
+    assertFalse(detector.hasGamePiece(15, 5));
+    // Velocity has reached the min, and now is below max
+    assertTrue(detector.hasGamePiece(3, 5));
+    detector.reset();
+    // Velocity is below max, but detector was reset
+    assertFalse(detector.hasGamePiece(3, 5));
   }
 }
