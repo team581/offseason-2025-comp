@@ -1294,8 +1294,6 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    DogLog.timestamp("Debug/StowRequest");
-
     if (intake.getHasGP()) {
       if (gamePieceMode == GamePieceMode.CORAL) {
         setStateFromRequest(RobotState.IDLE_CORAL);
@@ -1303,18 +1301,7 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_ALGAE);
       }
     } else {
-
-      if (gamePieceMode == GamePieceMode.CORAL) {
-        setStateFromRequest(RobotState.IDLE_NO_GP);
-      } else {
-        setStateFromRequest(RobotState.IDLE_ALGAE);
-      }
-
-      if (gamePieceMode == GamePieceMode.CORAL) {
-        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
-      } else {
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
-      }
+      setStateFromRequest(RobotState.IDLE_NO_GP);
     }
   }
 
