@@ -10,7 +10,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.localization.LocalizationState;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.limelight.Limelight;
 
@@ -50,15 +49,16 @@ public class Purple {
     return PurpleState.VISIBLE_NOT_CENTERED;
   }
 
-    public void setBeforeRaisedOffset(boolean offsetOn) {
-      beforeRaisedOffset = offsetOn;
-    }
-    public void setLevel(ReefPipeLevel level) {
-      this.level = level;
-    }
+  public void setBeforeRaisedOffset(boolean offsetOn) {
+    beforeRaisedOffset = offsetOn;
+  }
+
+  public void setLevel(ReefPipeLevel level) {
+    this.level = level;
+  }
 
   public boolean isTagAligned() {
-    var robotPose  = localization.getPose();
+    var robotPose = localization.getPose();
     var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
@@ -67,7 +67,10 @@ public class Purple {
   public Pose2d getUsedScoringPose() {
     var rawPose = AutoAlign.getClosestReefPipe(localization.getPose(), level);
     if (beforeRaisedOffset) {
-      return new Pose2d(rawPose.getX()-BEFORE_RAISED_INITIAL_DISTANCE_OFFSET, rawPose.getY(), rawPose.getRotation());
+      return new Pose2d(
+          rawPose.getX() - BEFORE_RAISED_INITIAL_DISTANCE_OFFSET,
+          rawPose.getY(),
+          rawPose.getRotation());
     }
     return rawPose;
   }
@@ -76,11 +79,11 @@ public class Purple {
     var robotPose = localization.getPose();
     var scoringTranslationFieldRelative = getUsedScoringPose();
 
-     var scoringTranslationRobotRelative =
-          scoringTranslationFieldRelative
-              .getTranslation()
-              .minus(robotPose.getTranslation())
-              .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
+    var scoringTranslationRobotRelative =
+        scoringTranslationFieldRelative
+            .getTranslation()
+            .minus(robotPose.getTranslation())
+            .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
     var goalTranslationUnrotated = new Translation2d();
     if (forwardOnly) {
@@ -133,7 +136,7 @@ public class Purple {
     }
     if (!seenPurple && !isTagAligned()) {
       DogLog.log("PurpleAlignment/TagAligned", false);
-      return getPoseAlignmentChassisSpeeds( seenPurple);
+      return getPoseAlignmentChassisSpeeds(seenPurple);
     }
     DogLog.log("PurpleAlignment/TagAligned", true);
 
@@ -145,8 +148,7 @@ public class Purple {
           case VISIBLE_NOT_CENTERED -> {
             seenPurple = true;
             lastTimeSeen = Timer.getFPGATimestamp();
-            yield getPoseAlignmentChassisSpeeds(seenPurple)
-                .plus(getPurpleAlignChassisSpeeds());
+            yield getPoseAlignmentChassisSpeeds(seenPurple).plus(getPurpleAlignChassisSpeeds());
           }
           case CENTERED -> {
             seenPurple = true;
