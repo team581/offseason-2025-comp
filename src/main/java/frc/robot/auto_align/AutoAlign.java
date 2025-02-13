@@ -103,7 +103,7 @@ public class AutoAlign {
         < thresholdMeters;
   }
 
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 5;
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
   private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
 
   public static boolean isCloseToReefSide(
