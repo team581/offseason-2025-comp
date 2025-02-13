@@ -56,7 +56,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private final LightsSubsystem lights;
 
-  private final Purple purple;
+  public final Purple purple;
 
   private GamePieceMode gamePieceMode;
 
@@ -1205,11 +1205,9 @@ public class RobotManager extends StateMachine<RobotState> {
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
 
-    purpleSpeeds =
-        Purple.getPoseAlignmentChassisSpeeds(localization.getPose(), scoringLevel, false);
+    purple.setLevel(scoringLevel);
     if (vision.isAnyScoringTagLimelightOnline()) {
-
-      swerve.setPurpleSpeeds(purpleSpeeds);
+      swerve.setPurpleSpeeds(purple.getPoseAlignmentChassisSpeeds(false));
     } else {
       swerve.setPurpleSpeeds(new ChassisSpeeds());
     }
@@ -1228,13 +1226,6 @@ public class RobotManager extends StateMachine<RobotState> {
         !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.75);
 
     return isFarEnoughFromReefSide;
-  }
-
-  // TODO: Combine with getReefAlignState, this is just a hacky solution for auto
-  public boolean purpleAligned() {
-    var aligned = purple.isTagAligned(localization.getPose(), scoringLevel);
-    DogLog.log("PurpleAlignment/Aligned", aligned);
-    return aligned;
   }
 
   public void setGamePieceMode(GamePieceMode newMode) {

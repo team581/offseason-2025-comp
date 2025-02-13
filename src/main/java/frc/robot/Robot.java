@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
       new VisionSubsystem(
           imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
-  private final Purple purple = new Purple(elevatorPurpleLimelight);
+  private final Purple purple = new Purple(elevatorPurpleLimelight, localization);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =
