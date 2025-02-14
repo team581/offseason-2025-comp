@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -172,10 +173,10 @@ class PracticeConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -54.0,
-              155,
+              -58.7,
+              156.5,
               18,
-              -85),
+              -58.7),
           new RollConfig(
               RIO_CAN_NAME,
               23,
@@ -208,7 +209,10 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               new CANcoderConfiguration()
-                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0))),
+                  .withMagnetSensor(
+                      new MagnetSensorConfigs()
+                          .withMagnetOffset(0.076416)
+                          .withSensorDirection(SensorDirectionValue.Clockwise_Positive))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}
