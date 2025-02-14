@@ -130,44 +130,59 @@ public class AutoAlign {
     return isCloseToReefPipe(robotPose, nearestReefPipe, Units.feetToMeters(1.5));
   }
 
-  public static ChassisSpeeds calculateTeleopAndAlignSpeeds(ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds, double baseTeleopSpeed, double minConstraint) {
-    double teleopVelocity = Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
+  public static ChassisSpeeds calculateTeleopAndAlignSpeeds(
+      ChassisSpeeds teleopSpeeds,
+      ChassisSpeeds alignSpeeds,
+      double baseTeleopSpeed,
+      double minConstraint) {
+    double teleopVelocity =
+        Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
     double alignVelocity = Math.hypot(alignSpeeds.vxMetersPerSecond, alignSpeeds.vyMetersPerSecond);
     var wantedSpeeds = teleopSpeeds.plus(alignSpeeds);
 
     var teleopVelocityMax = Math.max(baseTeleopSpeed, teleopVelocity);
 
     var minSpeed = Math.min(alignVelocity, teleopVelocityMax);
-    if (alignVelocity<minConstraint) {
+    if (alignVelocity < minConstraint) {
       minSpeed = teleopVelocityMax;
     }
     DogLog.log("PurpleAlignment/Constraint", minSpeed);
-    var options =  new AutoConstraintOptions()
-    .withCollisionAvoidance(false)
-    .withMaxAngularAcceleration(0)
-    .withMaxAngularVelocity(0)
-    .withMaxLinearAcceleration(0)
-    .withMaxLinearVelocity(minSpeed);
-    return
-        AutoConstraintCalculator.constrainLinearVelocity(
-            wantedSpeeds, options);
-          }
+    var options =
+        new AutoConstraintOptions()
+            .withCollisionAvoidance(false)
+            .withMaxAngularAcceleration(0)
+            .withMaxAngularVelocity(0)
+            .withMaxLinearAcceleration(0)
+            .withMaxLinearVelocity(minSpeed);
+    return AutoConstraintCalculator.constrainLinearVelocity(wantedSpeeds, options);
+  }
 
-    public static ChassisSpeeds calculateConstrainedAndWeightedSpeeds(Pose2d robotPose, ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds, double baseTeleopSpeed, double minConstraint) {
-      var constrainedSpeeds = calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed, minConstraint);
-      var distanceToReef = robotPose.getTranslation().getDistance(getClosestReefPipe(robotPose, ReefPipeLevel.L1).getTranslation());
-      if (distanceToReef>REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
-        return constrainedSpeeds;
-      }
-
-      var progress = MathUtil.clamp(distanceToReef/REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, 0.1, 1.0);
-      DogLog.log("Debug/Progress", progress);
-      var newTeleopSpeeds = teleopSpeeds.times(progress);
-      var newAlignSpeeds = alignSpeeds.times(1-progress);
-      var newConstrainedSpeeds = calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds, baseTeleopSpeed, minConstraint);
-      DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
-      return newConstrainedSpeeds;
+  public static ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
+      Pose2d robotPose,
+      ChassisSpeeds teleopSpeeds,
+      ChassisSpeeds alignSpeeds,
+      double baseTeleopSpeed,
+      double minConstraint) {
+    var constrainedSpeeds =
+        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed, minConstraint);
+    var distanceToReef =
+        robotPose
+            .getTranslation()
+            .getDistance(getClosestReefPipe(robotPose, ReefPipeLevel.L1).getTranslation());
+    if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
+      return constrainedSpeeds;
     }
+
+    var progress = MathUtil.clamp(distanceToReef / REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, 0.1, 1.0);
+    DogLog.log("Debug/Progress", progress);
+    var newTeleopSpeeds = teleopSpeeds.times(progress);
+    var newAlignSpeeds = alignSpeeds.times(1 - progress);
+    var newConstrainedSpeeds =
+        calculateTeleopAndAlignSpeeds(
+            newTeleopSpeeds, newAlignSpeeds, baseTeleopSpeed, minConstraint);
+    DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
+    return newConstrainedSpeeds;
+  }
 
   public static ReefAlignState getReefAlignState(
       Pose2d robotPose,

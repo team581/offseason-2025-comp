@@ -1182,7 +1182,8 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected void collectInputs() {
     super.collectInputs();
-    var lookaheadRobotPose = MathHelpers.poseLookahead(localization.getPose(), swerve.getFieldRelativeSpeeds(), 0.9);
+    var lookaheadRobotPose =
+        MathHelpers.poseLookahead(localization.getPose(), swerve.getFieldRelativeSpeeds(), 0.9);
     DogLog.log("RobotManager/LookaheadPose", lookaheadRobotPose);
     nearestReefSidePose = AutoAlign.getClosestReefSide(lookaheadRobotPose).getPose();
     reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
@@ -1231,7 +1232,6 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       swerve.setPurpleSpeeds(new ChassisSpeeds());
     }
-
 
     swerve.setElevatorHeight(elevator.getHeight());
   }

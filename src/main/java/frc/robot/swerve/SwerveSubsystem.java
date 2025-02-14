@@ -28,8 +28,6 @@ import frc.robot.util.ControllerHelpers;
 import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-
-import java.security.AlgorithmConstraints;
 import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
@@ -290,7 +288,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
       case REEF_ALIGN_TELEOP -> {
-        var constrained = AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0, 0.75);
+        var constrained =
+            AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0, 0.75);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
