@@ -24,6 +24,7 @@ import frc.robot.generated.CompBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.ControllerHelpers;
+import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import java.util.Map;
@@ -185,11 +186,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void driveTeleop(double x, double y, double theta) {
     double leftY =
         -1.0
-            * ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(y, leftYDeadband), 2.0);
+            * MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(y, leftYDeadband), 2.0);
     double leftX =
-        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(x, leftXDeadband), 2.0);
+        MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, leftXDeadband), 2.0);
     double rightX =
-        ControllerHelpers.getExponent(ControllerHelpers.getDeadbanded(theta, rightXDeadband), 2.0);
+        MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(theta, rightXDeadband), 2.0);
 
     if (RobotConfig.get().swerve().invertRotation()) {
       rightX *= -1.0;
