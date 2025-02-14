@@ -44,7 +44,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    topMotorVelocity = MathHelpers.roundTo(topMotor.getVelocity().getValueAsDouble(),0.1);
+    topMotorVelocity = MathHelpers.roundTo(topMotor.getVelocity().getValueAsDouble(), 0.1);
     bottomMotorVelocity = MathHelpers.roundTo(bottomMotor.getVelocity().getValueAsDouble(), 0.1);
     topMotorAlgaeVelocityGp = topMotorDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorAlgaeVelocityGp = bottomMotorDetection.hasGamePiece(bottomMotorVelocity, 20);

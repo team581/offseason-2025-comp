@@ -26,7 +26,9 @@ public class VelocityDetector {
    */
   public boolean hasGamePiece(double motorVelocity, double maxVelocity) {
     hasSeenMinVelocity =
-        hasSeenMinVelocity || timeout.hasElapsed(minVelocityTimeout) || motorVelocity >= minVelocity;
+        hasSeenMinVelocity
+            || timeout.hasElapsed(minVelocityTimeout)
+            || motorVelocity >= minVelocity;
 
     return hasSeenMinVelocity && motorVelocity <= maxVelocity;
   }
