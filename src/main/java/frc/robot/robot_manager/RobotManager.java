@@ -26,6 +26,7 @@ import frc.robot.roll.RollState;
 import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
@@ -584,7 +585,6 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapToAngle(reefSnapAngle);
         swerve.setSnapsEnabled(true);
-        purple.setBeforeRaisedOffset(true);
         roll.setState(RollState.CORAL_SCORE);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.REEF_TAGS);
@@ -1142,32 +1142,31 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     // Update purple to finish aligning after elevator is raised
-    switch (getState()) {
-      case CORAL_CENTERED_L2_2_LINEUP,
-          CORAL_CENTERED_L2_3_PLACE,
-          CORAL_CENTERED_L2_4_RELEASE,
-          CORAL_CENTERED_L3_2_LINEUP,
-          CORAL_CENTERED_L3_3_PLACE,
-          CORAL_CENTERED_L3_4_RELEASE,
-          CORAL_CENTERED_L4_2_LINEUP,
-          CORAL_CENTERED_L4_3_PLACE,
-          CORAL_CENTERED_L4_4_RELEASE,
-          CORAL_DISPLACED_L2_2_LINEUP,
-          CORAL_DISPLACED_L2_3_PLACE,
-          CORAL_DISPLACED_L2_4_RELEASE,
-          CORAL_DISPLACED_L3_2_LINEUP,
-          CORAL_DISPLACED_L3_3_PLACE,
-          CORAL_DISPLACED_L3_4_RELEASE,
-          CORAL_DISPLACED_L4_2_LINEUP,
-          CORAL_DISPLACED_L4_3_PLACE,
-          CORAL_DISPLACED_L4_4_RELEASE -> {
-        if (elevator.atGoal()) {
-          DogLog.timestamp("AutoDebug/SetDisplacedToFalse");
-          purple.setBeforeRaisedOffset(false);
-        }
-      }
-      default -> {}
-    }
+    // switch (getState()) {
+    //   case CORAL_CENTERED_L2_2_LINEUP,
+    //       CORAL_CENTERED_L2_3_PLACE,
+    //       CORAL_CENTERED_L2_4_RELEASE,
+    //       CORAL_CENTERED_L3_2_LINEUP,
+    //       CORAL_CENTERED_L3_3_PLACE,
+    //       CORAL_CENTERED_L3_4_RELEASE,
+    //       CORAL_CENTERED_L4_2_LINEUP,
+    //       CORAL_CENTERED_L4_3_PLACE,
+    //       CORAL_CENTERED_L4_4_RELEASE,
+    //       CORAL_DISPLACED_L2_2_LINEUP,
+    //       CORAL_DISPLACED_L2_3_PLACE,
+    //       CORAL_DISPLACED_L2_4_RELEASE,
+    //       CORAL_DISPLACED_L3_2_LINEUP,
+    //       CORAL_DISPLACED_L3_3_PLACE,
+    //       CORAL_DISPLACED_L3_4_RELEASE,
+    //       CORAL_DISPLACED_L4_2_LINEUP,
+    //       CORAL_DISPLACED_L4_3_PLACE,
+    //       CORAL_DISPLACED_L4_4_RELEASE -> {
+    //     if (elevator.atGoal()) {
+    //       purple.setBeforeRaisedOffset(false);
+    //     }
+    //   }
+    //   default -> {}
+    // }
 
     if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
@@ -1183,7 +1182,9 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected void collectInputs() {
     super.collectInputs();
-    nearestReefSidePose = AutoAlign.getClosestReefSide(localization.getPose()).getPose();
+    var lookaheadRobotPose = MathHelpers.poseLookahead(localization.getPose(), swerve.getFieldRelativeSpeeds(), 0.9);
+    DogLog.log("RobotManager/LookaheadPose", lookaheadRobotPose);
+    nearestReefSidePose = AutoAlign.getClosestReefSide(lookaheadRobotPose).getPose();
     reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
@@ -1223,13 +1224,14 @@ public class RobotManager extends StateMachine<RobotState> {
               frontCoralLimelight.getCoralResult(), imu.getRobotHeading(), true);
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
-
+    DogLog.log("PurpleAlignment/UsedPose", purple.getUsedScoringPose());
     purple.setLevel(scoringLevel);
     if (vision.isAnyScoringTagLimelightOnline()) {
       swerve.setPurpleSpeeds(purple.getPoseAlignmentChassisSpeeds(false));
     } else {
       swerve.setPurpleSpeeds(new ChassisSpeeds());
     }
+
 
     swerve.setElevatorHeight(elevator.getHeight());
   }
