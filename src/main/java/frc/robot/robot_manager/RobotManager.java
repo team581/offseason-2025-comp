@@ -346,9 +346,10 @@ public class RobotManager extends StateMachine<RobotState> {
         frontCoralLimelight.setState(LimelightState.TAGS);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
-
-        // Game piece mode can change without a state transition, so we update lights when the game
-        // piece mode is updated
+        lights.setState(
+            gamePieceMode == GamePieceMode.CORAL
+                ? LightsState.IDLE_NO_GP_CORAL_MODE
+                : LightsState.IDLE_NO_GP_ALGAE_MODE);
         climber.setState(ClimberState.STOWED);
       }
       case IDLE_ALGAE -> {
