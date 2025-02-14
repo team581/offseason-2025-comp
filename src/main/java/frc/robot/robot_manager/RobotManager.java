@@ -236,6 +236,12 @@ public class RobotManager extends StateMachine<RobotState> {
         rumbleController.rumbleRequest();
         yield RobotState.IDLE_NO_GP;
       }
+      case ALGAE_OUTTAKE -> {
+        if (timeout(0.5)) {
+          yield RobotState.IDLE_NO_GP;
+        }
+        yield currentState;
+      }
       case CORAL_L1_4_RELEASE -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
       case CORAL_CENTERED_L2_4_RELEASE,
           CORAL_CENTERED_L3_4_RELEASE,
@@ -949,6 +955,18 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.SCORING);
         climber.setState(ClimberState.STOWED);
       }
+      case ALGAE_OUTTAKE -> {
+        intake.setState(IntakeState.SCORE_ALGAE_PROCESSOR);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0.0);
+        roll.setState(RollState.STOWED);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.SCORING);
+        climber.setState(ClimberState.STOWED);
+      }
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
@@ -1243,6 +1261,7 @@ public class RobotManager extends StateMachine<RobotState> {
           NET_BACK_SCORING,
           NET_FORWARD_SCORING,
           PROCESSOR_SCORING,
+          ALGAE_OUTTAKE,
           CLIMBING_2_HANGING,
           UNJAM,
           REHOME_ELEVATOR -> {}
@@ -1326,14 +1345,14 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    if (intake.getHasGP()) {
-      if (gamePieceMode == GamePieceMode.CORAL) {
+    if (gamePieceMode == GamePieceMode.CORAL) {
+      if (intake.getHasGP()) {
         setStateFromRequest(RobotState.IDLE_CORAL);
       } else {
-        setStateFromRequest(RobotState.IDLE_ALGAE);
+        setStateFromRequest(RobotState.IDLE_NO_GP);
       }
     } else {
-      setStateFromRequest(RobotState.IDLE_NO_GP);
+      setStateFromRequest(RobotState.IDLE_ALGAE);
     }
   }
 
@@ -1572,7 +1591,9 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_CORAL_STATION_FRONT,
           INTAKE_STATION_APPROACH -> {}
 
-      case IDLE_ALGAE -> setStateFromRequest(RobotState.PROCESSOR_WAITING);
+      case IDLE_ALGAE -> {
+        setStateFromRequest(RobotState.ALGAE_OUTTAKE);
+      }
       case PROCESSOR_WAITING -> setStateFromRequest(RobotState.PROCESSOR_PREPARE_TO_SCORE);
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
