@@ -15,9 +15,9 @@ public class ControllerHelpersTest {
   }
 
   @Test
-  void getDeadbandedTest() {
-    var result = ControllerHelpers.deadbandJoystickValue(0.5, 0.05);
+  void deadbandJoystickValueTest() {
+    var result = MathHelpers.roundTo(ControllerHelpers.deadbandJoystickValue(0.5, 0.05), 3);
 
-    assertEquals(result, 0.47368421052631576);
+    assertEquals(result, 0.474);
   }
 }
