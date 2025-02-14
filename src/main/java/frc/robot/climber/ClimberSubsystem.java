@@ -35,7 +35,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       if (currentAngle < getState().angle) {
         motor.setVoltage(0);
       } else {
-        motor.setVoltage(-0);
+        motor.setVoltage(-0.0);
       }
     }
   }
