@@ -1,5 +1,6 @@
 package frc.robot.intake;
 
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
@@ -17,6 +18,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final CANdi candi;
   private final Debouncer rightDebouncer = RobotConfig.get().intake().rightDebouncer();
   private final Debouncer leftDebouncer = RobotConfig.get().intake().leftDebouncer();
+
+  private TorqueCurrentFOC torqueRequest = new TorqueCurrentFOC(65).withMaxAbsDutyCycle(0.66);
 
   private boolean rightSensorRaw = false;
   private boolean leftSensorRaw = false;
@@ -95,16 +98,16 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotor.disable();
       }
       case IDLE_W_ALGAE -> {
-        topMotor.setVoltage(2.0);
-        bottomMotor.setVoltage(2.0);
+        topMotor.setControl(torqueRequest);
+        bottomMotor.setControl(torqueRequest);
       }
       case IDLE_W_CORAL -> {
         topMotor.setVoltage(0.25);
         bottomMotor.setVoltage(0.25);
       }
       case INTAKING_ALGAE -> {
-        topMotor.setVoltage(4.0);
-        bottomMotor.setVoltage(4.0);
+        topMotor.setVoltage(6.0);
+        bottomMotor.setVoltage(6.0);
         topMotorDetection.reset();
         bottomMotorDetection.reset();
       }
