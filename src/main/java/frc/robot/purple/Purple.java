@@ -67,10 +67,11 @@ public class Purple {
   public Pose2d getUsedScoringPose() {
     var rawPose = AutoAlign.getClosestReefPipe(localization.getPose(), level);
     if (beforeRaisedOffset) {
+      var robotRelative = rawPose.rotateBy(Rotation2d.fromDegrees(360-localization.getPose().getRotation().getDegrees()));
       return new Pose2d(
-          rawPose.getX() - BEFORE_RAISED_INITIAL_DISTANCE_OFFSET,
-          rawPose.getY(),
-          rawPose.getRotation());
+          robotRelative.getX() - BEFORE_RAISED_INITIAL_DISTANCE_OFFSET,
+          robotRelative.getY(),
+          robotRelative.getRotation()).rotateBy(localization.getPose().getRotation());
     }
     return rawPose;
   }
