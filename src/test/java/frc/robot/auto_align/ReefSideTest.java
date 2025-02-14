@@ -19,8 +19,7 @@ public class ReefSideTest {
             .getTranslation()
             .getDistance(side.getPose(isRed).getTranslation());
 
-    assertEquals(
-        MathHelpers.roundTo(pipe1Distance, 0.01), MathHelpers.roundTo(pipe2Distance, 0.01));
+    assertEquals(MathHelpers.roundTo(pipe1Distance, 2), MathHelpers.roundTo(pipe2Distance, 2));
   }
 
   private static Pair<ReefSide, ReefSide> getNeighbors(ReefSide side) {
@@ -45,7 +44,7 @@ public class ReefSideTest {
         sideTranslation.getDistance(neighbors.getSecond().getPose(isRed).getTranslation());
 
     assertEquals(
-        MathHelpers.roundTo(distanceToPrevious, 0.01), MathHelpers.roundTo(distanceToNext, 0.01));
+        MathHelpers.roundTo(distanceToPrevious, 2), MathHelpers.roundTo(distanceToNext, 2));
   }
 
   @Test

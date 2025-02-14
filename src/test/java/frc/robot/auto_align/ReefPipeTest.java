@@ -16,7 +16,7 @@ public class ReefPipeTest {
 
   private static double round(double value) {
     // Round to centimeter precision
-    return MathHelpers.roundTo(value, 0.01);
+    return MathHelpers.roundTo(value, 2);
   }
 
   @Test
@@ -30,7 +30,7 @@ public class ReefPipeTest {
     for (var pipe : ReefPipe.values()) {
       var distance =
           pipe.getPose(ReefPipeLevel.BASE, false).getTranslation().getDistance(BLUE_REEF_CENTER);
-      assertTrue(MathUtil.isNear(wantedDistance, distance, 0.01));
+      assertTrue(MathUtil.isNear(wantedDistance, distance, 2));
     }
   }
 

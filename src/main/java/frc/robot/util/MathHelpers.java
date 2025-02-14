@@ -7,8 +7,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class MathHelpers {
-  public static double roundTo(double value, double precision) {
-    return Math.round(value / precision) * precision;
+  private static final double EPSILON = Math.ulp(1.0);
+
+  /**
+   * Returns a value rounded to the specified number of decimal places.
+   *
+   * @param value The value
+   * @param numDigits The number of digits after the decimal point to include
+   */
+  public static double roundTo(double value, double numDigits) {
+    var factor = Math.pow(10, numDigits);
+
+    return Math.round(value * factor * (1 + EPSILON)) / factor;
   }
 
   public static Translation2d roundTo(Translation2d input, double precision) {
