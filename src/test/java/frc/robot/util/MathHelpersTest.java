@@ -12,4 +12,18 @@ public class MathHelpersTest {
 
     assertEquals(expected, result);
   }
+
+  @Test
+  void signedExpTest() {
+    var result = MathHelpers.signedExp(-4, 2);
+
+    assertEquals(-16, result);
+  }
+
+  @Test
+  void signedSqrtTest() {
+    var result = MathHelpers.signedSqrt(-36);
+
+    assertEquals(-6, result);
+  }
 }

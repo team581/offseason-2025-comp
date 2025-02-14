@@ -1,9 +1,9 @@
 package frc.robot.climber;
 
 public enum ClimberState {
-  STOWED(0.0),
-  LINEUP(0.0),
-  HANGING(0.0);
+  STOWED(167.0),
+  LINEUP(-20),
+  HANGING(120.0);
 
   public final double angle;
 
