@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,12 +36,10 @@ public class Hardware {
   public final CANdle candle =
       new CANdle(RobotConfig.get().lights().candleID(), RobotConfig.get().lights().canBusName());
 
-  // TODO: Uncomment all the climber code
-  // public final TalonFX climberMotor =
-  //     new TalonFX(RobotConfig.get().climber().motorID(),
-  // RobotConfig.get().climber().canBusName());
+  public final TalonFX climberMotor =
+      new TalonFX(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
 
-  // public final CANcoder climberCANcoder =
-  //     new CANcoder(
-  //         RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
+  public final CANcoder climberCANcoder =
+      new CANcoder(
+          RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
 }
