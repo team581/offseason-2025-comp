@@ -1405,8 +1405,10 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.IDLE_CORAL);
       } else {
         setStateFromRequest(RobotState.IDLE_NO_GP);
+        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
       }
     } else {
+      // Can't use intake.getHasGP() because algae doesn't trigger the sensors
       setStateFromRequest(RobotState.IDLE_ALGAE);
     }
   }
