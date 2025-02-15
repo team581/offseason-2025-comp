@@ -58,6 +58,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private final LightsSubsystem lights;
 
   public final Purple purple;
+  public final AutoAlign autoAlign;
 
   private GamePieceMode gamePieceMode;
 
@@ -76,6 +77,7 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight baseTagLimelight,
       LightsSubsystem lights,
       Purple purple,
+      AutoAlign autoAlign,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.IDLE_NO_GP);
@@ -94,6 +96,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.lights = lights;
     this.purple = purple;
     this.climber = climber;
+    this.autoAlign = autoAlign;
     this.rumbleController = rumbleController;
   }
 
@@ -337,7 +340,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private boolean shouldProgressTeleopScore() {
     return DriverStation.isTeleop()
         && confirmScoreActive
-        && getReefAlignState() == ReefAlignState.HAS_TAGS_IN_POSITION;
+        && autoAlign.getReefAlignState() == ReefAlignState.HAS_TAGS_IN_POSITION;
   }
 
   @Override
@@ -580,9 +583,48 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
         climber.setState(ClimberState.STOWED);
       }
-      case CORAL_L1_1_APPROACH, CORAL_L2_1_APPROACH, CORAL_L3_1_APPROACH, CORAL_L4_1_APPROACH -> {
+      case CORAL_L1_1_APPROACH -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L2_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L2_APPROACH, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L3_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L3_APPROACH, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L4_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L4_APPROACH, WristState.CORAL_STOWED);
         swerve.setSnapToAngle(reefSnapAngle);
         swerve.setSnapsEnabled(true);
         roll.setState(RollState.CORAL_SCORE);
@@ -1169,7 +1211,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
     if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
+        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || baseTagLimelight.getCameraHealth() == CameraHealth.OFFLINE) {
       lights.setDisabledState(LightsState.ERROR);
     } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
       lights.setDisabledState(LightsState.UNHOMED);
@@ -1732,24 +1775,9 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private ReefAlignState getReefAlignState() {
-    return AutoAlign.getReefAlignState(
-        localization.getPose(),
-        purple.getPurpleState(),
-        scoringLevel,
-        baseTagLimelight
-            .getTagResult()
-            .or(frontCoralLimelight::getTagResult)
-            .or(backTagLimelight::getTagResult),
-        CameraHealth.combine(
-            baseTagLimelight.getCameraHealth(),
-            frontCoralLimelight.getCameraHealth(),
-            backTagLimelight.getCameraHealth()));
-  }
-
   private LightsState getLightStateForScoring() {
-    return switch (getReefAlignState()) {
-      case CAMERA_DEAD -> LightsState.ERROR;
+    return switch (autoAlign.getReefAlignState()) {
+      case TAG_CAMERAS_DEAD, PURPLE_CAMERA_DEAD -> LightsState.ERROR;
       // TODO: Once purple is implemented, only say we're ready once purple is aligned
       case HAS_TAGS_IN_POSITION, HAS_PURPLE_ALIGNED -> LightsState.SCORE_ALIGN_READY;
       default -> LightsState.SCORE_ALIGN_NOT_READY;

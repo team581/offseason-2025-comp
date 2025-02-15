@@ -165,4 +165,9 @@ public class Purple {
     DogLog.log("PurpleAlignment/CombinedSpeeds/omega", speeds.omegaRadiansPerSecond);
     return speeds;
   }
+
+  public boolean canUsePurple() {
+    // TODO: Implement
+    return false;
+  }
 }
