@@ -50,25 +50,21 @@ public class Robot extends TimedRobot {
       new Limelight(
           "elev",
           LimelightState.PURPLE,
-          RobotConfig.get().vision().interpolatedVisionSet().elevatorPurpleSet,
           LimelightModel.THREE);
   private final Limelight frontCoralLimelight =
       new Limelight(
           "front",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().frontCoralSet,
           LimelightModel.FOUR);
   private final Limelight backTagLimelight =
       new Limelight(
           "back",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().backTagSet,
           LimelightModel.THREEG);
   private final Limelight baseTagLimelight =
       new Limelight(
           "base",
           LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().baseTagSet,
           LimelightModel.THREEG);
 
   private final VisionSubsystem vision =

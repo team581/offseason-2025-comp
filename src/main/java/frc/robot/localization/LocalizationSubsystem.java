@@ -42,7 +42,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
   @Override
   protected void collectInputs() {
-    latestResult = vision.getInterpolatedVisionResult();
+    latestResult = vision.getTagResult();
   }
 
   public Pose2d getPose() {
