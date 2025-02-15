@@ -1,7 +1,6 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -32,8 +31,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   // private final MotionMagicVoltage motionMagicRequest =
   //     new MotionMagicVoltage(0.0).withEnableFOC(false);
 
-  private final PositionVoltage pidRequest =
-   new PositionVoltage(0).withEnableFOC(false);
+  private final PositionVoltage pidRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -86,15 +84,13 @@ public class WristSubsystem extends StateMachine<WristState> {
       }
       case COLLISION_AVOIDANCE -> {
         motor.setControl(
-            pidRequest.withPosition(
-                Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+            pidRequest.withPosition(Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
       }
       case PRE_MATCH_HOMING -> {
         motor.setControl(coastNeutralRequest);
       }
       default -> {
-        motor.setControl(
-            pidRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
       }
     }
   }
@@ -133,8 +129,7 @@ public class WristSubsystem extends StateMachine<WristState> {
       }
       case COLLISION_AVOIDANCE -> {
         motor.setControl(
-            pidRequest.withPosition(
-                Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+            pidRequest.withPosition(Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
       }
 
       default -> {}
