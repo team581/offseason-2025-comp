@@ -480,7 +480,7 @@ public class RobotManager extends StateMachine<RobotState> {
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
-        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+        lights.setState(LightsState.IDLE_WITH_CORAL);
         climber.setState(ClimberState.STOWED);
       }
       case SMART_STOW_2 -> {
@@ -493,7 +493,7 @@ public class RobotManager extends StateMachine<RobotState> {
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
-        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+        lights.setState(LightsState.IDLE_WITH_CORAL);
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_CORAL_FLOOR_UPRIGHT -> {
