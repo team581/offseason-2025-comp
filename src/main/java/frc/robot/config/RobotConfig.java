@@ -46,9 +46,7 @@ public record RobotConfig(
       TalonFXConfiguration steerMotorConfig) {}
 
   public record VisionConfig(
-      int translationHistoryArraySize,
-      double xyStdDev,
-      double thetaStdDev) {}
+      int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
 
   public record WristConfig(
       String canBusName,

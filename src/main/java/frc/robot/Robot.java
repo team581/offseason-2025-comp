@@ -47,25 +47,13 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight elevatorPurpleLimelight =
-      new Limelight(
-          "elev",
-          LimelightState.PURPLE,
-          LimelightModel.THREE);
+      new Limelight("elev", LimelightState.PURPLE, LimelightModel.THREE);
   private final Limelight frontCoralLimelight =
-      new Limelight(
-          "front",
-          LimelightState.TAGS,
-          LimelightModel.FOUR);
+      new Limelight("front", LimelightState.TAGS, LimelightModel.FOUR);
   private final Limelight backTagLimelight =
-      new Limelight(
-          "back",
-          LimelightState.TAGS,
-          LimelightModel.THREEG);
+      new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG);
   private final Limelight baseTagLimelight =
-      new Limelight(
-          "base",
-          LimelightState.TAGS,
-          LimelightModel.THREEG);
+      new Limelight("base", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
       new VisionSubsystem(

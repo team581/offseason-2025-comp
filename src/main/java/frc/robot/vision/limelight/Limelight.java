@@ -34,10 +34,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
 
-  public Limelight(
-      String name,
-      LimelightState initialState,
-      LimelightModel limelightModel) {
+  public Limelight(String name, LimelightState initialState, LimelightModel limelightModel) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
