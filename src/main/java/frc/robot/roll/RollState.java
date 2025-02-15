@@ -3,8 +3,9 @@ package frc.robot.roll;
 public enum RollState {
   UNHOMED(0.0),
   HOMING(0.0),
-  INTAKING_CORAL_HORIZONTAL(0.0),
-  STOWED(90.0),
+  CORAL_HORIZONTAL(0.0),
+  CORAL_UPRIGHT(90),
+  ALGAE(90.0),
   SMART_STOW(0.0),
   CORAL_SCORE(0.0);
 

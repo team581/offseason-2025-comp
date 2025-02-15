@@ -26,7 +26,7 @@ public class RollSubsystem extends StateMachine<RollState> {
   private final IntakeSubsystem intake;
 
   private final PositionVoltage motionMagicRequest =
-      new PositionVoltage(RollState.STOWED.angle).withEnableFOC(false);
+      new PositionVoltage(RollState.CORAL_HORIZONTAL.angle).withEnableFOC(false);
 
   public RollSubsystem(TalonFX motor, IntakeSubsystem intake) {
     super(SubsystemPriority.ROLL, RollState.UNHOMED);
@@ -72,7 +72,7 @@ public class RollSubsystem extends StateMachine<RollState> {
     if (currentState == RollState.HOMING
         && averageMotorCurrent > RobotConfig.get().roll().homingCurrentThreshold()) {
       motor.setPosition(Units.degreesToRotations(RobotConfig.get().roll().homingPosition()));
-      return RollState.STOWED;
+      return RollState.CORAL_HORIZONTAL;
     }
 
     // Don't do anything
