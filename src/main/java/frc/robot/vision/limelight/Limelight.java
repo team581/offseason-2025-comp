@@ -8,7 +8,6 @@ import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
-import frc.robot.vision.interpolation.CameraDataset;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.PurpleResult;
 import frc.robot.vision.results.TagResult;
@@ -22,7 +21,6 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private final String limelightTableName;
   private final String name;
-  private final CameraDataset cameraDataset;
   private final LimelightModel limelightModel;
 
   private final Timer limelightTimer = new Timer();
@@ -30,18 +28,13 @@ public class Limelight extends StateMachine<LimelightState> {
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
 
-  private Optional<TagResult> interpolatedResult = Optional.empty();
   private Optional<TagResult> tagResult = Optional.empty();
 
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
 
-  public Limelight(
-      String name,
-      LimelightState initialState,
-      CameraDataset cameraDataset,
-      LimelightModel limelightModel) {
+  public Limelight(String name, LimelightState initialState, LimelightModel limelightModel) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
@@ -49,7 +42,6 @@ public class Limelight extends StateMachine<LimelightState> {
     this.name = name;
     limelightTimer.start();
     this.limelightModel = limelightModel;
-    this.cameraDataset = cameraDataset;
   }
 
   public void sendImuData(
@@ -174,14 +166,14 @@ public class Limelight extends StateMachine<LimelightState> {
     switch (getState()) {
       case TAGS -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, new int[] {});
-        updateHealth(interpolatedResult);
+        updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
       case PURPLE -> updateHealth(purpleResult);
       case REEF_TAGS -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(
             limelightTableName, getAllianceBasedReefTagIDs());
-        updateHealth(interpolatedResult);
+        updateHealth(tagResult);
       }
       default -> {}
     }

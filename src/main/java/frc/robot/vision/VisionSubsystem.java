@@ -17,7 +17,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight backTagLimelight;
   private final Limelight baseTagLimelight;
 
-  private final List<TagResult> interpolatedVisionResult = new ArrayList<>();
+  private final List<TagResult> tagResult = new ArrayList<>();
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
@@ -49,34 +49,34 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     roll = imu.getRoll();
     rollRate = imu.getRollRate();
 
-    interpolatedVisionResult.clear();
+    tagResult.clear();
     var maybeTopResult = elevatorPurpleLimelight.getTagResult();
     var maybeBottomResult = frontCoralLimelight.getTagResult();
     var maybeBackResult = backTagLimelight.getTagResult();
     var maybeBaseResult = baseTagLimelight.getTagResult();
 
     if (maybeTopResult.isPresent()) {
-      interpolatedVisionResult.add(maybeTopResult.get());
+      tagResult.add(maybeTopResult.get());
     }
 
     if (maybeBottomResult.isPresent()) {
 
-      interpolatedVisionResult.add(maybeBottomResult.get());
+      tagResult.add(maybeBottomResult.get());
     }
 
     if (maybeBackResult.isPresent()) {
 
-      interpolatedVisionResult.add(maybeBackResult.get());
+      tagResult.add(maybeBackResult.get());
     }
 
     if (maybeBaseResult.isPresent()) {
 
-      interpolatedVisionResult.add(maybeBaseResult.get());
+      tagResult.add(maybeBaseResult.get());
     }
   }
 
-  public List<TagResult> getInterpolatedVisionResult() {
-    return interpolatedVisionResult;
+  public List<TagResult> getTagResult() {
+    return tagResult;
   }
 
   @Override

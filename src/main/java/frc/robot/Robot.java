@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
@@ -46,29 +47,13 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight elevatorPurpleLimelight =
-      new Limelight(
-          "elev",
-          LimelightState.PURPLE,
-          RobotConfig.get().vision().interpolatedVisionSet().elevatorPurpleSet,
-          LimelightModel.THREE);
+      new Limelight("elev", LimelightState.PURPLE, LimelightModel.THREE);
   private final Limelight frontCoralLimelight =
-      new Limelight(
-          "front",
-          LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().frontCoralSet,
-          LimelightModel.FOUR);
+      new Limelight("front", LimelightState.TAGS, LimelightModel.FOUR);
   private final Limelight backTagLimelight =
-      new Limelight(
-          "back",
-          LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().backTagSet,
-          LimelightModel.THREEG);
+      new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG);
   private final Limelight baseTagLimelight =
-      new Limelight(
-          "base",
-          LimelightState.TAGS,
-          RobotConfig.get().vision().interpolatedVisionSet().baseTagSet,
-          LimelightModel.THREEG);
+      new Limelight("base", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
       new VisionSubsystem(
@@ -89,6 +74,8 @@ public class Robot extends TimedRobot {
       new LightsSubsystem(hardware.candle, elevatorPurpleLimelight);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+  private final AutoAlign autoAlign =
+      new AutoAlign(purple, elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -105,6 +92,7 @@ public class Robot extends TimedRobot {
           baseTagLimelight,
           lights,
           purple,
+          autoAlign,
           climber,
           rumbleController);
 

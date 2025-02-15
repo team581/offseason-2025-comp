@@ -26,7 +26,6 @@ import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.PracticeBotTunerConstants;
-import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 class PracticeConfig {
   private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
@@ -144,7 +143,7 @@ class PracticeConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.4, Double.MAX_VALUE, InterpolatedVisionDataset.HOME),
+          new VisionConfig(4, 0.4, Double.MAX_VALUE),
           new WristConfig(
               RIO_CAN_NAME,
               22,
@@ -205,9 +204,9 @@ class PracticeConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(10)
+                          .withStatorCurrentLimit(60)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(10)),
+                          .withSupplyCurrentLimit(60)),
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()

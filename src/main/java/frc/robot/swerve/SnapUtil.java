@@ -9,6 +9,10 @@ public class SnapUtil {
     return FmsSubsystem.isRedAlliance() ? 90 : 270;
   }
 
+  public static double getCageAngle() {
+    return FmsSubsystem.isRedAlliance() ? 0 : 180;
+  }
+
   public static double getForwardNetDirection() {
     return 180;
   }

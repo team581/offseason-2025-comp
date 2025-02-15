@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 public record RobotConfig(
     String robotName,
@@ -47,10 +46,7 @@ public record RobotConfig(
       TalonFXConfiguration steerMotorConfig) {}
 
   public record VisionConfig(
-      int translationHistoryArraySize,
-      double xyStdDev,
-      double thetaStdDev,
-      InterpolatedVisionDataset interpolatedVisionSet) {}
+      int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
 
   public record WristConfig(
       String canBusName,

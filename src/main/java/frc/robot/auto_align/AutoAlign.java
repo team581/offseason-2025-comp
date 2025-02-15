@@ -4,15 +4,15 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
+import frc.robot.purple.Purple;
 import frc.robot.purple.PurpleState;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.vision.CameraHealth;
-import frc.robot.vision.results.TagResult;
+import frc.robot.vision.limelight.Limelight;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +51,7 @@ public class AutoAlign {
     return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
   }
 
+  // TODO: Return the ReefPipe instead of the raw pose
   public static Pose2d getClosestReefPipe(
       Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
     if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
@@ -73,6 +74,7 @@ public class AutoAlign {
     return reefPipe.getPose(level, isRedAlliance);
   }
 
+  // TODO: Return the ReefPipe instead of the raw pose
   public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
     return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
   }
@@ -118,16 +120,6 @@ public class AutoAlign {
         nearestReefSide,
         LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS
             + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
-  }
-
-  public static boolean isCloseToReefPipe(
-      Pose2d robotPose, Pose2d nearestReefPipe, double thresholdMeters) {
-    return robotPose.getTranslation().getDistance(nearestReefPipe.getTranslation())
-        < thresholdMeters;
-  }
-
-  public static boolean isCloseToReefPipe(Pose2d robotPose, Pose2d nearestReefPipe) {
-    return isCloseToReefPipe(robotPose, nearestReefPipe, Units.feetToMeters(1.5));
   }
 
   public static ChassisSpeeds calculateTeleopAndAlignSpeeds(
@@ -184,20 +176,40 @@ public class AutoAlign {
     return newConstrainedSpeeds;
   }
 
-  public static ReefAlignState getReefAlignState(
-      Pose2d robotPose,
-      PurpleState purpleState,
-      ReefPipeLevel scoringLevel,
-      Optional<TagResult> tagResult,
-      CameraHealth tagCameraHealth) {
-    var reefPipe = getClosestReefPipe(robotPose, scoringLevel);
-    var closeToReefPipe = isCloseToReefPipe(robotPose, reefPipe);
+  private final Purple purple;
+  private final Limelight purpleLimelight;
+  private final Limelight frontLimelight;
+  private final Limelight baseLimelight;
 
-    if (closeToReefPipe) {
-      // We can't trust purple unless we are near the reef, to avoid false positives
-      if (tagCameraHealth == CameraHealth.OFFLINE) {
-        return ReefAlignState.CAMERA_DEAD;
+  public AutoAlign(
+      Purple purple, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight) {
+    this.purple = purple;
+    this.purpleLimelight = purpleLimelight;
+    this.frontLimelight = frontLimelight;
+    this.baseLimelight = baseLimelight;
+  }
+
+  public ReefAlignState getReefAlignState() {
+
+    var tagResult = frontLimelight.getTagResult().or(baseLimelight::getTagResult);
+    var purpleState = purple.getPurpleState();
+    var purpleHealth = purpleLimelight.getCameraHealth();
+    var combinedTagHealth =
+        CameraHealth.combine(frontLimelight.getCameraHealth(), baseLimelight.getCameraHealth());
+
+    if (combinedTagHealth == CameraHealth.OFFLINE) {
+      if (purpleHealth == CameraHealth.OFFLINE) {
+        return ReefAlignState.ALL_CAMERAS_DEAD;
       }
+      return ReefAlignState.TAG_CAMERAS_DEAD;
+    }
+
+    if (purpleHealth == CameraHealth.OFFLINE) {
+      return ReefAlignState.PURPLE_CAMERA_DEAD;
+    }
+
+    if (purple.canUsePurple()) {
+      // We can't trust purple unless we are near the reef, to avoid false positives
       if (purpleState == PurpleState.CENTERED) {
         return ReefAlignState.HAS_PURPLE_ALIGNED;
       }
@@ -207,13 +219,13 @@ public class AutoAlign {
     }
 
     if (tagResult.isEmpty()) {
-      if (closeToReefPipe) {
+      if (purple.isTagAligned()) {
         return ReefAlignState.NO_TAGS_IN_POSITION;
       }
       return ReefAlignState.NO_TAGS_WRONG_POSITION;
     }
 
-    if (closeToReefPipe) {
+    if (purple.isTagAligned()) {
       return ReefAlignState.HAS_TAGS_IN_POSITION;
     }
 

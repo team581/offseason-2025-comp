@@ -25,7 +25,6 @@ import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.CompBotTunerConstants;
-import frc.robot.vision.interpolation.InterpolatedVisionDataset;
 
 class CompConfig {
   private static final String CANIVORE_NAME = CompBotTunerConstants.kCANBus.getName();
@@ -148,7 +147,7 @@ class CompConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.4, Double.MAX_VALUE, InterpolatedVisionDataset.HOME),
+          new VisionConfig(4, 0.4, Double.MAX_VALUE),
           new WristConfig(
               RIO_CAN_NAME,
               22,
