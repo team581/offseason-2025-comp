@@ -369,7 +369,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.ALGAE_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
-        roll.setState(RollState.ALGAE);
+        roll.setState(RollState.FLOOR_ALGAE);
         frontCoralLimelight.setState(LimelightState.TAGS);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         backTagLimelight.setState(LimelightState.TAGS);
