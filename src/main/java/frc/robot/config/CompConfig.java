@@ -40,6 +40,8 @@ class CompConfig {
               16,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
+                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(60))
+                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(40))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -52,8 +54,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(250.0)
-                          .withMotionMagicCruiseVelocity(250.0))
+                          .withMotionMagicAcceleration(275.0)
+                          .withMotionMagicCruiseVelocity(275.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -75,8 +77,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(250)
-                          .withMotionMagicCruiseVelocity(250.0))
+                          .withMotionMagicAcceleration(275)
+                          .withMotionMagicCruiseVelocity(275.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -162,10 +164,10 @@ class CompConfig {
                           .withKD(3.0)
                           .withKG(0.3)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
-                  .withMotionMagic(
-                      new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(5)
-                          .withMotionMagicCruiseVelocity(10.0))
+                  // .withMotionMagic(
+                  //     new MotionMagicConfigs()
+                  //         .withMotionMagicAcceleration(10.0)
+                  //         .withMotionMagicCruiseVelocity(150.0 / 7.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64.0 / 8.0) * (50.0 / 18.0) * (36.0 / 12.0)))
@@ -173,8 +175,8 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(25.0)
-                          .withStatorCurrentLimit(40.0)),
+                          .withSupplyCurrentLimit(30.0)
+                          .withStatorCurrentLimit(60.0)),
               -58.7,
               156.5,
               18,
