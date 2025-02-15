@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
@@ -14,7 +13,6 @@ import frc.robot.purple.PurpleState;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.results.TagResult;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,36 +176,37 @@ public class AutoAlign {
     return newConstrainedSpeeds;
   }
 
-
   private final Purple purple;
   private final Limelight purpleLimelight;
   private final Limelight frontLimelight;
   private final Limelight baseLimelight;
-  public AutoAlign(Purple purple, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight) {
+
+  public AutoAlign(
+      Purple purple, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight) {
     this.purple = purple;
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
     this.baseLimelight = baseLimelight;
   }
 
-
   public ReefAlignState getReefAlignState() {
 
-  var tagResult = frontLimelight.getTagResult().or(baseLimelight::getTagResult  );
-  var purpleState = purple.getPurpleState();
-  var purpleHealth = purpleLimelight.getCameraHealth();
-  var combinedTagHealth = CameraHealth.combine(frontLimelight.getCameraHealth(), baseLimelight.getCameraHealth());
+    var tagResult = frontLimelight.getTagResult().or(baseLimelight::getTagResult);
+    var purpleState = purple.getPurpleState();
+    var purpleHealth = purpleLimelight.getCameraHealth();
+    var combinedTagHealth =
+        CameraHealth.combine(frontLimelight.getCameraHealth(), baseLimelight.getCameraHealth());
 
-  if (combinedTagHealth == CameraHealth.OFFLINE) {
-    if (purpleHealth == CameraHealth.OFFLINE) {
-      return ReefAlignState.ALL_CAMERAS_DEAD;
+    if (combinedTagHealth == CameraHealth.OFFLINE) {
+      if (purpleHealth == CameraHealth.OFFLINE) {
+        return ReefAlignState.ALL_CAMERAS_DEAD;
+      }
+      return ReefAlignState.TAG_CAMERAS_DEAD;
     }
-    return ReefAlignState.TAG_CAMERAS_DEAD;
-  }
 
-  if (purpleHealth == CameraHealth.OFFLINE) {
-    return ReefAlignState.PURPLE_CAMERA_DEAD;
-  }
+    if (purpleHealth == CameraHealth.OFFLINE) {
+      return ReefAlignState.PURPLE_CAMERA_DEAD;
+    }
 
     if (purple.canUsePurple()) {
       // We can't trust purple unless we are near the reef, to avoid false positives

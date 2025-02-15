@@ -1736,7 +1736,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-
   private LightsState getLightStateForScoring() {
     return switch (autoAlign.getReefAlignState()) {
       case TAG_CAMERAS_DEAD, PURPLE_CAMERA_DEAD -> LightsState.ERROR;
