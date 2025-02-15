@@ -583,9 +583,48 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
         climber.setState(ClimberState.STOWED);
       }
-      case CORAL_L1_1_APPROACH, CORAL_L2_1_APPROACH, CORAL_L3_1_APPROACH, CORAL_L4_1_APPROACH -> {
+      case CORAL_L1_1_APPROACH -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L2_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L2_APPROACH, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L3_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L3_APPROACH, WristState.CORAL_STOWED);
+        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.setSnapsEnabled(true);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_L4_1_APPROACH -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_L4_APPROACH, WristState.CORAL_STOWED);
         swerve.setSnapToAngle(reefSnapAngle);
         swerve.setSnapsEnabled(true);
         roll.setState(RollState.CORAL_SCORE);

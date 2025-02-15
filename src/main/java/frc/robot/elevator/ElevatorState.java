@@ -23,6 +23,11 @@ public enum ElevatorState {
   CORAL_L1_PLACE(0.0),
   CORAL_L1_RELEASE(0.0),
 
+  // Approach coral positions (maximum height without tipping)
+  CORAL_L2_APPROACH(7.5),
+  CORAL_L3_APPROACH(20.0),
+  CORAL_L4_APPROACH(20.0),
+
   // Centered coral positions
   CORAL_CENTERED_L2_LINEUP(8.75),
   CORAL_CENTERED_L2_PLACE(7.0),
