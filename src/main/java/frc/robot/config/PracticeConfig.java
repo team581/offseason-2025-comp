@@ -205,9 +205,9 @@ class PracticeConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(10)
+                          .withStatorCurrentLimit(60)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(10)),
+                          .withSupplyCurrentLimit(60)),
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()

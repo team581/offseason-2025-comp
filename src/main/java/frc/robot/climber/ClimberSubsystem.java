@@ -33,9 +33,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       motor.disable();
     } else {
       if (currentAngle < getState().angle) {
-        motor.setVoltage(0);
+        motor.setVoltage(12.0);
       } else {
-        motor.setVoltage(-0.0);
+        motor.setVoltage(-12.0);
       }
     }
   }
@@ -48,6 +48,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     DogLog.log("Climber/CurrentAngle", currentAngle);
+    DogLog.log("Climber/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+
+
   }
 
   public boolean atGoal() {

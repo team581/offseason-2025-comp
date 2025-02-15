@@ -181,6 +181,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               : SwerveState.REEF_ALIGN_TELEOP;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
+      case CLIMBING -> SwerveState.CLIMBING;
     };
   }
 
@@ -359,6 +360,23 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withVelocityY(autoSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
+      case CLIMBING ->{
+        if (teleopSpeeds.omegaRadiansPerSecond == 0) {
+          drivetrain.setControl(
+              driveToAngle
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond /2)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond/2)
+                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+        } else {
+          drivetrain.setControl(
+              drive
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond/2)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond/2)
+                  .withRotationalRate(teleopSpeeds.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+        }
+      }
     }
   }
 
@@ -407,11 +425,17 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               TELEOP_SNAPS,
               INTAKE_ASSIST_CORAL_TELEOP,
               REEF_ALIGN_TELEOP,
-              INTAKE_ASSIST_ALGAE_TELEOP ->
+              INTAKE_ASSIST_ALGAE_TELEOP,
+              CLIMBING ->
           setStateFromRequest(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
       case AUTO, AUTO_SNAPS, REEF_ALIGN_AUTO ->
           setStateFromRequest(newValue ? SwerveState.AUTO_SNAPS : SwerveState.AUTO);
     }
+  }
+
+  public void climbRequest() {
+    setSnapToAngle(SnapUtil.getCageAngle());
+    setState(SwerveState.CLIMBING);
   }
 
   @Override

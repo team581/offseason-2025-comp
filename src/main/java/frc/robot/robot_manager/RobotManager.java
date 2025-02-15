@@ -971,8 +971,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLIMBING_1_LINEUP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
-        swerve.setSnapsEnabled(false);
-        swerve.setSnapToAngle(0);
+        swerve.climbRequest();
         roll.setState(RollState.STOWED);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.TAGS);
