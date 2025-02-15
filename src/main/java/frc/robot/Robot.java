@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
       new LightsSubsystem(hardware.candle, elevatorPurpleLimelight);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+      private final AutoAlign autoAlign = new AutoAlign(purple, elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -105,8 +107,10 @@ public class Robot extends TimedRobot {
           baseTagLimelight,
           lights,
           purple,
+          autoAlign,
           climber,
           rumbleController);
+
 
   private final RobotCommands robotCommands = new RobotCommands(robotManager);
 
