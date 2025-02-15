@@ -360,19 +360,19 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withVelocityY(autoSpeeds.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.Velocity));
-      case CLIMBING ->{
+      case CLIMBING -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond /2)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond/2)
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond / 2)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond / 2)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         } else {
           drivetrain.setControl(
               drive
-                  .withVelocityX(teleopSpeeds.vxMetersPerSecond/2)
-                  .withVelocityY(teleopSpeeds.vyMetersPerSecond/2)
+                  .withVelocityX(teleopSpeeds.vxMetersPerSecond / 2)
+                  .withVelocityY(teleopSpeeds.vyMetersPerSecond / 2)
                   .withRotationalRate(teleopSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
