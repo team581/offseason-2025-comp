@@ -1,13 +1,13 @@
 package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
+import frc.robot.auto_align.ReefSide;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.controller.RumbleControllerSubsystem;
@@ -98,7 +98,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private double reefSnapAngle = 0.0;
-  private Pose2d nearestReefSidePose = Pose2d.kZero;
+  private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
   private ChassisSpeeds purpleSpeeds = new ChassisSpeeds();
   private boolean confirmScoreActive = false;
@@ -150,13 +150,15 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CORAL_L1_1_APPROACH ->
           AutoAlign.isCloseToReefSide(
-                  localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds())
+                  localization.getPose(),
+                  nearestReefSide.getPose(),
+                  swerve.getFieldRelativeSpeeds())
               ? RobotState.CORAL_L1_3_PLACE
               : currentState;
       case CORAL_L2_1_APPROACH -> {
         var isClose =
             AutoAlign.isCloseToReefSide(
-                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -183,7 +185,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L3_1_APPROACH -> {
         var isClose =
             AutoAlign.isCloseToReefSide(
-                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -196,7 +198,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L4_1_APPROACH -> {
         var isClose =
             AutoAlign.isCloseToReefSide(
-                localization.getPose(), nearestReefSidePose, swerve.getFieldRelativeSpeeds());
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
 
         if (!isClose) {
           yield currentState;
@@ -1053,7 +1055,8 @@ public class RobotManager extends StateMachine<RobotState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("RobotManager/NearestReefSidePose", nearestReefSidePose);
+    DogLog.log("RobotManager/GamePieceMode", gamePieceMode);
+    DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose());
     DogLog.log(
         "RobotManager/ShouldIntakeForward",
         AutoAlign.shouldIntakeStationFront(localization.getPose()));
@@ -1185,8 +1188,8 @@ public class RobotManager extends StateMachine<RobotState> {
     var lookaheadRobotPose =
         MathHelpers.poseLookahead(localization.getPose(), swerve.getFieldRelativeSpeeds(), 0.9);
     DogLog.log("RobotManager/LookaheadPose", lookaheadRobotPose);
-    nearestReefSidePose = AutoAlign.getClosestReefSide(lookaheadRobotPose).getPose();
-    reefSnapAngle = nearestReefSidePose.getRotation().getDegrees();
+    nearestReefSide = AutoAlign.getClosestReefSide(lookaheadRobotPose);
+    reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
@@ -1244,7 +1247,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSidePose, 0.75);
+        !AutoAlign.isCloseToReefSide(localization.getPose(), nearestReefSide.getPose(), 0.75);
 
     return isFarEnoughFromReefSide;
   }
@@ -1340,6 +1343,15 @@ public class RobotManager extends StateMachine<RobotState> {
       case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
         if (newMode == GamePieceMode.CORAL) {
           l1CoralLineupRequest();
+        }
+      }
+      case CORAL_CENTERED_L4_4_RELEASE, CORAL_DISPLACED_L4_4_RELEASE -> {
+        if (newMode == GamePieceMode.ALGAE) {
+          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+            intakeAlgaeL3Request();
+          } else {
+            intakeAlgaeL2Request();
+          }
         }
       }
       default -> {}
