@@ -104,7 +104,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
 
         // SCORE L4 ON K
         robotManager
-        .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
+            .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
             .andThen(
                 Commands.runOnce(
                     () -> {
@@ -137,7 +137,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
 
         // SCORE L4 ON L
         robotManager
-        .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
+            .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
             .andThen(
                 Commands.runOnce(
                     () -> {

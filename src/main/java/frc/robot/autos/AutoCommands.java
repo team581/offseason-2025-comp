@@ -37,7 +37,7 @@ public class AutoCommands {
                 .waitForStates(
                     RobotState.CORAL_DISPLACED_L4_4_RELEASE, RobotState.CORAL_CENTERED_L4_4_RELEASE)
                 .withTimeout(1))
-                .andThen(Commands.waitSeconds(0.5))
+        .andThen(Commands.waitSeconds(0.5))
         .finallyDo(robotManager::stowRequest)
         .withName("L4ScoreAndReleaseCommand");
   }
