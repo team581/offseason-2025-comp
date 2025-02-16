@@ -8,7 +8,8 @@ public enum RollState {
   ALGAE(90.0),
   FLOOR_ALGAE(0.0),
   SMART_STOW(0.0),
-  CORAL_SCORE(0.0);
+  CORAL_SCORE(0.0),
+  CORAL_SCORE_L1(0.0);
 
   public final double angle;
 
