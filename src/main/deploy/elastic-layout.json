@@ -1,0 +1,144 @@
+{
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "containers": [
+          {
+            "x": 0,
+            "width": 384,
+            "y": 0,
+            "title": "SelectedAuto",
+            "type": "ComboBox Chooser",
+            "properties": {
+              "period": 0.06,
+              "topic": "/SmartDashboard/Autos/SelectedAuto",
+              "sort_options": false
+            },
+            "height": 256
+          },
+          {
+            "x": 512,
+            "width": 768,
+            "y": 0,
+            "title": "Alerts",
+            "type": "Alerts",
+            "properties": {
+              "period": 0.06,
+              "topic": "/SmartDashboard/Alerts"
+            },
+            "height": 384
+          },
+          {
+            "x": 256,
+            "width": 1152,
+            "y": 384,
+            "title": "State",
+            "type": "Large Text Display",
+            "properties": {
+              "period": 0.06,
+              "data_type": "string",
+              "topic": "/Robot/RobotManager/State"
+            },
+            "height": 256
+          }
+        ],
+        "layouts": []
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "containers": [],
+        "layouts": []
+      }
+    },
+    {
+      "name": "Cameras",
+      "grid_layout": {
+        "containers": [
+          {
+            "x": 0,
+            "width": 768,
+            "y": 512,
+            "title": "limelight-back",
+            "type": "Camera Stream",
+            "properties": {
+              "period": 0.06,
+              "topic": "/CameraPublisher/limelight-back",
+              "rotation_turns": 0
+            },
+            "height": 384
+          },
+          {
+            "x": 1024,
+            "width": 640,
+            "y": 0,
+            "title": "limelight-base",
+            "type": "Camera Stream",
+            "properties": {
+              "period": 0.06,
+              "topic": "/CameraPublisher/limelight-base",
+              "rotation_turns": 0
+            },
+            "height": 512
+          },
+          {
+            "x": 1280,
+            "width": 384,
+            "y": 512,
+            "title": "limelight-elev",
+            "type": "Camera Stream",
+            "properties": {
+              "period": 0.06,
+              "topic": "/CameraPublisher/limelight-elev",
+              "rotation_turns": 0
+            },
+            "height": 384
+          },
+          {
+            "x": 0,
+            "width": 768,
+            "y": 0,
+            "title": "limelight-front",
+            "type": "Camera Stream",
+            "properties": {
+              "period": 0.06,
+              "topic": "/CameraPublisher/limelight-front",
+              "rotation_turns": 0
+            },
+            "height": 512
+          },
+          {
+            "x": 768,
+            "width": 512,
+            "y": 512,
+            "title": "State",
+            "type": "Large Text Display",
+            "properties": {
+              "period": 0.06,
+              "data_type": "string",
+              "topic": "/Robot/RobotManager/State"
+            },
+            "height": 384
+          },
+          {
+            "x": 768,
+            "width": 256,
+            "y": 0,
+            "title": "Alerts",
+            "type": "Alerts",
+            "properties": {
+              "period": 0.06,
+              "topic": "/SmartDashboard/Alerts"
+            },
+            "height": 512
+          }
+        ],
+        "layouts": []
+      }
+    }
+  ],
+  "version": 1
+}

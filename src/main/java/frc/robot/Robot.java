@@ -31,6 +31,7 @@ import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionBox;
 import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.ElasticLayoutUtil;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
 import frc.robot.vision.VisionSubsystem;
@@ -145,6 +146,8 @@ public class Robot extends TimedRobot {
     configureBindings();
 
     CollisionBox.visualize();
+
+    ElasticLayoutUtil.onBoot();
   }
 
   @Override
@@ -164,7 +167,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    ElasticLayoutUtil.onDisable();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -179,6 +184,8 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    ElasticLayoutUtil.onEnable();
   }
 
   @Override
@@ -192,6 +199,8 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    ElasticLayoutUtil.onEnable();
   }
 
   @Override
