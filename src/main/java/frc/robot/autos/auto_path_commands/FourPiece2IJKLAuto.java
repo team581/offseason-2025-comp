@@ -15,7 +15,7 @@ import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 
 public class FourPiece2IJKLAuto extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(3, 57, 4, 30);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
 
   public FourPiece2IJKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -80,7 +80,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0)),
                         robotManager
-                            .waitForState(RobotState.IDLE_CORAL)
+                            .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
                             .andThen(
                                 Commands.runOnce(
                                     () -> {
@@ -104,7 +104,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
 
         // SCORE L4 ON K
         robotManager
-            .waitForState(RobotState.IDLE_CORAL)
+        .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
             .andThen(
                 Commands.runOnce(
                     () -> {
@@ -137,7 +137,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
 
         // SCORE L4 ON L
         robotManager
-            .waitForState(RobotState.IDLE_CORAL)
+        .waitForStates(RobotState.IDLE_CORAL, RobotState.IDLE_NO_GP)
             .andThen(
                 Commands.runOnce(
                     () -> {
