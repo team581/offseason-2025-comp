@@ -26,11 +26,15 @@ import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.ControllerHelpers;
 import frc.robot.util.MathHelpers;
+import frc.robot.util.ProfiledPhoenixPIDController;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
+  private static final ProfiledPhoenixPIDController SNAP_CONTROLLER =
+      RobotConfig.get().swerve().snapController();
+
   // TODO: Remove this once magnetism is stable, with current way robot manager is, having both of
   // these enabled doesn't work
   private static final boolean MAGNETISM_ENABLED = false;
@@ -138,7 +142,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public SwerveSubsystem() {
     super(SubsystemPriority.SWERVE, SwerveState.TELEOP);
-    driveToAngle.HeadingController = RobotConfig.get().swerve().snapController();
+    driveToAngle.HeadingController = SNAP_CONTROLLER;
     driveToAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
     if (Utils.isSimulation()) {
@@ -260,6 +264,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       case TELEOP_SNAPS -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
+          // TODO: Use SNAP_CONTROLLER.setMaxOutput() to constrain angular velocity
           drivetrain.setControl(
               driveToAngle
                   .withVelocityX(teleopSpeeds.vxMetersPerSecond)
@@ -289,6 +294,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
       case REEF_ALIGN_TELEOP -> {
+        // TODO: Use SNAP_CONTROLLER.setMaxOutput() to constrain angular velocity
         var constrained =
             AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0, 0.75);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
