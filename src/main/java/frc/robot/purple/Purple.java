@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.util.MathHelpers;
 import frc.robot.vision.limelight.Limelight;
 
 public class Purple {
@@ -18,7 +19,7 @@ public class Purple {
   private final LocalizationSubsystem localization;
 
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
-  private static final double TAG_KP = 2.5;
+  private static final double TAG_KP = 3.7;
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
@@ -28,6 +29,7 @@ public class Purple {
   private double lastTimeSeen = 0.0;
   private boolean seenPurple = false;
   private ReefPipeLevel level = ReefPipeLevel.L1;
+  private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
 
   public Purple(Limelight purpleCamera, LocalizationSubsystem localization) {
     this.purpleCamera = purpleCamera;
@@ -65,7 +67,10 @@ public class Purple {
   }
 
   public Pose2d getUsedScoringPose() {
-    var rawPose = AutoAlign.getClosestReefPipe(localization.getPose(), level);
+    var rawRobotPose = localization.getPose();
+    var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.7);
+    DogLog.log("PurpleAlignment/LookaheadPose", lookaheadPose);
+    var rawPose = AutoAlign.getClosestReefPipe(lookaheadPose, level);
     if (beforeRaisedOffset) {
       var robotRelative =
           rawPose.rotateBy(
@@ -106,6 +111,10 @@ public class Purple {
     DogLog.log("PurpleAlignment/Tag/ForwardOnly", forwardOnly);
 
     return new ChassisSpeeds(xEffort, yEffort, 0.0);
+  }
+
+  public void setRawTeleopSpeeds(ChassisSpeeds speeds) {
+    rawTeleopSpeeds = speeds;
   }
 
   public ChassisSpeeds getPurpleAlignChassisSpeeds() {

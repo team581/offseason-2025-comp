@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.MagnetismUtil;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
-import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -26,11 +26,15 @@ import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.ControllerHelpers;
 import frc.robot.util.MathHelpers;
+import frc.robot.util.ProfiledPhoenixPIDController;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
+  private static final ProfiledPhoenixPIDController SNAP_CONTROLLER =
+      RobotConfig.get().swerve().snapController();
+
   // TODO: Remove this once magnetism is stable, with current way robot manager is, having both of
   // these enabled doesn't work
   private static final boolean MAGNETISM_ENABLED = false;
@@ -48,17 +52,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
 
-  private static final double MAX_SCORING_SPEED = 2.5;
-  private static final AutoConstraintOptions SCORING_VELOCITY_CONSTRAINTS =
-      new AutoConstraintOptions()
-          .withCollisionAvoidance(false)
-          .withMaxAngularAcceleration(0)
-          .withMaxAngularVelocity(0)
-          .withMaxLinearAcceleration(0)
-          .withMaxLinearVelocity(MAX_SCORING_SPEED);
+  private static final PhoenixPIDController ORIGINAL_HEADING_PID =
+      RobotConfig.get().swerve().snapController();
 
   private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
-      InterpolatingDoubleTreeMap.ofEntries(Map.entry(40.0, 1.0), Map.entry(40.1, 0.5));
+      InterpolatingDoubleTreeMap.ofEntries(Map.entry(40.0, 1.0), Map.entry(40.1, 0.4));
 
   public final TunerSwerveDrivetrain drivetrain =
       RobotConfig.IS_PRACTICE_BOT
@@ -87,7 +85,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.03);
+          .withDeadband(MaxSpeed * 0.01)
+          .withHeadingPID(
+              ORIGINAL_HEADING_PID.getP(),
+              ORIGINAL_HEADING_PID.getI(),
+              ORIGINAL_HEADING_PID.getD());
 
   private double lastSimTime;
   private Notifier simNotifier = null;
@@ -138,9 +140,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public SwerveSubsystem() {
     super(SubsystemPriority.SWERVE, SwerveState.TELEOP);
-    driveToAngle.HeadingController = RobotConfig.get().swerve().snapController();
+    driveToAngle.HeadingController = SNAP_CONTROLLER;
     driveToAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-
     if (Utils.isSimulation()) {
       startSimThread();
     }
@@ -260,6 +261,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       case TELEOP_SNAPS -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
+          // TODO: Use SNAP_CONTROLLER.setMaxOutput() to constrain angular velocity
           drivetrain.setControl(
               driveToAngle
                   .withVelocityX(teleopSpeeds.vxMetersPerSecond)
@@ -289,8 +291,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
       case REEF_ALIGN_TELEOP -> {
-        var constrained =
-            AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0, 0.75);
+        // TODO: Use SNAP_CONTROLLER.setMaxOutput() to constrain angular velocity
+        var constrained = AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
@@ -446,6 +448,18 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
+
+    // if (getState() == SwerveState.TELEOP_SNAPS || getState() == SwerveState.REEF_ALIGN_TELEOP) {
+    //   var slowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
+
+    //   if (slowModePercent < 1) {
+    //     driveToAngle.HeadingController.setP(ORIGINAL_HEADING_PID.getP() * slowModePercent);
+    //   } else {
+    //     driveToAngle.HeadingController.setP(ORIGINAL_HEADING_PID.getP());
+    //   }
+    // } else {
+    //   driveToAngle.HeadingController.setP(ORIGINAL_HEADING_PID.getP());
+    // }
   }
 
   private void startSimThread() {

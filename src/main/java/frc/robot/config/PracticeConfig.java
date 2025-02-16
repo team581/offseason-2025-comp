@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -26,6 +25,7 @@ import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.PracticeBotTunerConstants;
+import frc.robot.util.ProfiledPhoenixPIDController;
 
 class PracticeConfig {
   private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
@@ -109,7 +109,7 @@ class PracticeConfig {
                           .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new SwerveConfig(
-              new PhoenixPIDController(10, 0, 1),
+              new ProfiledPhoenixPIDController(10, 0, 1, Double.MAX_VALUE),
               true,
               true,
               true,
