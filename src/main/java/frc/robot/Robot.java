@@ -1,7 +1,5 @@
 package frc.robot;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.TagAction;
-
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -79,7 +77,13 @@ public class Robot extends TimedRobot {
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
-      new AutoAlign(purpleAlign,tagAlign, elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight, localization);
+      new AutoAlign(
+          purpleAlign,
+          tagAlign,
+          elevatorPurpleLimelight,
+          frontCoralLimelight,
+          baseTagLimelight,
+          localization);
   private final RobotManager robotManager =
       new RobotManager(
           intake,

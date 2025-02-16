@@ -2,16 +2,11 @@ package frc.robot.auto_align.purple_align;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.util.MathHelpers;
 import frc.robot.vision.limelight.Limelight;
 
 public class PurpleAlign {
@@ -19,8 +14,6 @@ public class PurpleAlign {
 
   private static final double PURPLE_SIDEWAYS_KP = 1.0;
   private static final double SEEN_PURPLE_TIMEOUT = 3.0;
-
-
 
   private double lastTimeSeen = 0.0;
   private boolean seenPurple = false;
@@ -76,7 +69,6 @@ public class PurpleAlign {
     DogLog.log("PurpleAlignment/Purple/YEffort", yEffort);
     return new ChassisSpeeds(xEffort, yEffort, 0.0);
   }
-
 
   public boolean canUsePurple() {
     // TODO: Implement

@@ -17,17 +17,13 @@ public class TagAlign {
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
 
-
-
   private ReefPipeLevel level = ReefPipeLevel.L1;
   private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
   private static boolean beforeRaisedOffset = false;
 
-
   public TagAlign(LocalizationSubsystem localization) {
     this.localization = localization;
   }
-
 
   public void setBeforeRaisedOffset(boolean offsetOn) {
     beforeRaisedOffset = offsetOn;
@@ -94,8 +90,4 @@ public class TagAlign {
 
     return new ChassisSpeeds(xEffort, yEffort, 0.0);
   }
-
-
-
 }
-

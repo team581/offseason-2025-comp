@@ -5,7 +5,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.purple_align.PurpleAlign;
 import frc.robot.auto_align.purple_align.PurpleAlignState;
 import frc.robot.auto_align.tag_align.TagAlign;
@@ -159,7 +158,12 @@ public class AutoAlign {
   private final TagAlign tagAlign;
 
   public AutoAlign(
-      PurpleAlign purple, TagAlign tagAlign, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight, LocalizationSubsystem localization) {
+      PurpleAlign purple,
+      TagAlign tagAlign,
+      Limelight purpleLimelight,
+      Limelight frontLimelight,
+      Limelight baseLimelight,
+      LocalizationSubsystem localization) {
     this.purple = purple;
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
@@ -196,7 +200,6 @@ public class AutoAlign {
     return newConstrainedSpeeds;
   }
 
-
   public ChassisSpeeds getCombinedTagAndPurpleChassisSpeeds() {
     var seenPurple = purple.seenPurple();
     var isTagAligned = tagAlign.isTagAligned();
@@ -215,7 +218,11 @@ public class AutoAlign {
             yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
           }
           case VISIBLE_NOT_CENTERED -> {
-            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple).plus(purple.getPurpleAlignChassisSpeeds(localization.getPose().getRotation().getDegrees()));
+            yield tagAlign
+                .getPoseAlignmentChassisSpeeds(seenPurple)
+                .plus(
+                    purple.getPurpleAlignChassisSpeeds(
+                        localization.getPose().getRotation().getDegrees()));
           }
           case CENTERED -> {
             yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
