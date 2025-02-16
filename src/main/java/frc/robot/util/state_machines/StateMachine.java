@@ -77,7 +77,8 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
    * @param goalStates An array of the states to wait for.
    * @return A command that waits until the state is equal to any of the goal states.
    */
-  public Command waitForStates(S... goalStates) {
+  @SafeVarargs
+  public final Command waitForStates(S... goalStates) {
     return waitForStates(Set.of(goalStates));
   }
 
