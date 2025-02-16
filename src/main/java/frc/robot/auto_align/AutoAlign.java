@@ -5,11 +5,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.auto_align.purple_align.PurpleAlign;
+import frc.robot.auto_align.purple_align.PurpleAlignState;
+import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
-import frc.robot.purple.Purple;
-import frc.robot.purple.PurpleState;
+import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
@@ -148,17 +151,21 @@ public class AutoAlign {
     return AutoConstraintCalculator.constrainLinearVelocity(wantedSpeeds, options);
   }
 
-  private final Purple purple;
+  private final PurpleAlign purple;
   private final Limelight purpleLimelight;
   private final Limelight frontLimelight;
   private final Limelight baseLimelight;
+  private final LocalizationSubsystem localization;
+  private final TagAlign tagAlign;
 
   public AutoAlign(
-      Purple purple, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight) {
+      PurpleAlign purple, TagAlign tagAlign, Limelight purpleLimelight, Limelight frontLimelight, Limelight baseLimelight, LocalizationSubsystem localization) {
     this.purple = purple;
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
     this.baseLimelight = baseLimelight;
+    this.tagAlign = tagAlign;
+    this.localization = localization;
   }
 
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
@@ -169,7 +176,7 @@ public class AutoAlign {
     var constrainedSpeeds =
         calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed);
     var distanceToReef =
-        robotPose.getTranslation().getDistance(purple.getUsedScoringPose().getTranslation());
+        robotPose.getTranslation().getDistance(tagAlign.getUsedScoringPose().getTranslation());
     if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
       return constrainedSpeeds;
     }
@@ -189,9 +196,41 @@ public class AutoAlign {
     return newConstrainedSpeeds;
   }
 
+
+  public ChassisSpeeds getCombinedTagAndPurpleChassisSpeeds() {
+    var seenPurple = purple.seenPurple();
+    var isTagAligned = tagAlign.isTagAligned();
+    var purpleState = purple.getPurpleState();
+    DogLog.log("PurpleAlignment/SeenPurple", seenPurple);
+    DogLog.log("PurpleAlignment/PurpleState", purpleState);
+    if (!seenPurple && !isTagAligned) {
+      DogLog.log("PurpleAlignment/TagAligned", false);
+      return tagAlign.getPoseAlignmentChassisSpeeds(purple.seenPurple());
+    }
+    DogLog.log("PurpleAlignment/TagAligned", true);
+
+    var speeds =
+        switch (purpleState) {
+          case NO_PURPLE -> {
+            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
+          }
+          case VISIBLE_NOT_CENTERED -> {
+            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple).plus(purple.getPurpleAlignChassisSpeeds(localization.getPose().getRotation().getDegrees()));
+          }
+          case CENTERED -> {
+            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
+          }
+        };
+    DogLog.log("PurpleAlignment/CombinedSpeeds/x", speeds.vxMetersPerSecond);
+    DogLog.log("PurpleAlignment/CombinedSpeeds/y", speeds.vyMetersPerSecond);
+    DogLog.log("PurpleAlignment/CombinedSpeeds/omega", speeds.omegaRadiansPerSecond);
+    return speeds;
+  }
+
   public ReefAlignState getReefAlignState() {
 
     var tagResult = frontLimelight.getTagResult().or(baseLimelight::getTagResult);
+    var tagAligned = tagAlign.isTagAligned();
     var purpleState = purple.getPurpleState();
     var purpleHealth = purpleLimelight.getCameraHealth();
     var combinedTagHealth =
@@ -210,22 +249,22 @@ public class AutoAlign {
 
     if (purple.canUsePurple()) {
       // We can't trust purple unless we are near the reef, to avoid false positives
-      if (purpleState == PurpleState.CENTERED) {
+      if (purpleState == PurpleAlignState.CENTERED) {
         return ReefAlignState.HAS_PURPLE_ALIGNED;
       }
-      if (purpleState == PurpleState.VISIBLE_NOT_CENTERED) {
+      if (purpleState == PurpleAlignState.VISIBLE_NOT_CENTERED) {
         return ReefAlignState.HAS_PURPLE_NOT_ALIGNED;
       }
     }
 
     if (tagResult.isEmpty()) {
-      if (purple.isTagAligned()) {
+      if (tagAligned) {
         return ReefAlignState.NO_TAGS_IN_POSITION;
       }
       return ReefAlignState.NO_TAGS_WRONG_POSITION;
     }
 
-    if (purple.isTagAligned()) {
+    if (tagAligned) {
       return ReefAlignState.HAS_TAGS_IN_POSITION;
     }
 

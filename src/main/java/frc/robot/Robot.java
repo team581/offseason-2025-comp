@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.TagAction;
+
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -11,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.purple_align.PurpleAlign;
+import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
@@ -23,7 +27,6 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.purple.Purple;
 import frc.robot.robot_manager.GamePieceMode;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
@@ -59,7 +62,8 @@ public class Robot extends TimedRobot {
       new VisionSubsystem(
           imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
-  private final Purple purple = new Purple(elevatorPurpleLimelight, localization);
+  private final PurpleAlign purpleAlign = new PurpleAlign(elevatorPurpleLimelight);
+  private final TagAlign tagAlign = new TagAlign(localization);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =
@@ -75,7 +79,7 @@ public class Robot extends TimedRobot {
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
-      new AutoAlign(purple, elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight);
+      new AutoAlign(purpleAlign,tagAlign, elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight, localization);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -91,7 +95,8 @@ public class Robot extends TimedRobot {
           backTagLimelight,
           baseTagLimelight,
           lights,
-          purple,
+          purpleAlign,
+          tagAlign,
           autoAlign,
           climber,
           rumbleController);

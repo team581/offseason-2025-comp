@@ -8,6 +8,8 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
+import frc.robot.auto_align.purple_align.PurpleAlign;
+import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.controller.RumbleControllerSubsystem;
@@ -20,7 +22,6 @@ import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.purple.Purple;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.roll.RollState;
 import frc.robot.roll.RollSubsystem;
@@ -57,7 +58,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private final LightsSubsystem lights;
 
-  public final Purple purple;
+  public final PurpleAlign purpleAlign;
+  public final TagAlign tagAlign;
   public final AutoAlign autoAlign;
 
   private GamePieceMode gamePieceMode;
@@ -76,7 +78,8 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight backTagLimelight,
       Limelight baseTagLimelight,
       LightsSubsystem lights,
-      Purple purple,
+      PurpleAlign purple,
+      TagAlign tagAlign,
       AutoAlign autoAlign,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
@@ -94,7 +97,8 @@ public class RobotManager extends StateMachine<RobotState> {
     this.backTagLimelight = backTagLimelight;
     this.baseTagLimelight = baseTagLimelight;
     this.lights = lights;
-    this.purple = purple;
+    this.purpleAlign = purple;
+    this.tagAlign = tagAlign;
     this.climber = climber;
     this.autoAlign = autoAlign;
     this.rumbleController = rumbleController;
@@ -1267,11 +1271,11 @@ public class RobotManager extends StateMachine<RobotState> {
               frontCoralLimelight.getCoralResult(), imu.getRobotHeading(), true);
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
-    DogLog.log("PurpleAlignment/UsedPose", purple.getUsedScoringPose());
-    purple.setLevel(scoringLevel);
-    purple.setRawTeleopSpeeds(swerve.getTeleopSpeeds());
+    DogLog.log("PurpleAlignment/UsedPose", tagAlign.getUsedScoringPose());
+    tagAlign.setLevel(scoringLevel);
+    tagAlign.setRawTeleopSpeeds(swerve.getTeleopSpeeds());
     if (vision.isAnyScoringTagLimelightOnline()) {
-      swerve.setPurpleSpeeds(purple.getPoseAlignmentChassisSpeeds(false));
+      swerve.setPurpleSpeeds(tagAlign.getPoseAlignmentChassisSpeeds(false));
     } else {
       swerve.setPurpleSpeeds(new ChassisSpeeds());
     }

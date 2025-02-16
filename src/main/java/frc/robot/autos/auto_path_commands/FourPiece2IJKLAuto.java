@@ -56,9 +56,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                               AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I);
                               robotManager.l4CoralApproachRequest();
                             })),
-                    new AutoPoint(() -> robotManager.purple.getUsedScoringPose())),
+                    new AutoPoint(() -> robotManager.tagAlign.getUsedScoringPose())),
                 false)
-            .until(() -> robotManager.purple.isTagAligned()),
+            .until(() -> robotManager.tagAlign.isTagAligned()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -87,9 +87,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                                       AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_J);
                                       robotManager.l4CoralApproachRequest();
                                     }))),
-                    new AutoPoint(() -> robotManager.purple.getUsedScoringPose())),
+                    new AutoPoint(() -> robotManager.tagAlign.getUsedScoringPose())),
                 false)
-            .until(() -> robotManager.purple.isTagAligned()),
+            .until(() -> robotManager.tagAlign.isTagAligned()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -120,9 +120,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                                 new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
                             new AutoPoint(
                                 // REEF PIPE K
-                                () -> robotManager.purple.getUsedScoringPose())),
+                                () -> robotManager.tagAlign.getUsedScoringPose())),
                         false)
-                    .until(() -> robotManager.purple.isTagAligned())),
+                    .until(() -> robotManager.tagAlign.isTagAligned())),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -152,9 +152,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931))),
                             // REEF PIPE L
-                            new AutoPoint(() -> robotManager.purple.getUsedScoringPose())),
+                            new AutoPoint(() -> robotManager.tagAlign.getUsedScoringPose())),
                         false)
-                    .until(() -> robotManager.purple.isTagAligned())),
+                    .until(() -> robotManager.tagAlign.isTagAligned())),
         autoCommands.l4ScoreAndReleaseCommand());
   }
 }
