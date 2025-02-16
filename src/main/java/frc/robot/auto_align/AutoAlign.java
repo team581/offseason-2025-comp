@@ -22,6 +22,9 @@ public class AutoAlign {
   private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
+  private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.4;
+  private static final double MIN_CONSTRAINT = 0.2;
+  private static final double MAX_CONSTRAINT = 3.5;
 
   public static void setAutoReefPipeOverride(ReefPipe override) {
     autoReefPipeOverride = Optional.of(override);
@@ -123,10 +126,7 @@ public class AutoAlign {
   }
 
   public static ChassisSpeeds calculateTeleopAndAlignSpeeds(
-      ChassisSpeeds teleopSpeeds,
-      ChassisSpeeds alignSpeeds,
-      double baseTeleopSpeed,
-      double minConstraint) {
+      ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds, double baseTeleopSpeed) {
     double teleopVelocity =
         Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
     double alignVelocity = Math.hypot(alignSpeeds.vxMetersPerSecond, alignSpeeds.vyMetersPerSecond);
@@ -135,10 +135,9 @@ public class AutoAlign {
     var teleopVelocityMax = Math.max(baseTeleopSpeed, teleopVelocity);
 
     var minSpeed = Math.min(alignVelocity, teleopVelocityMax);
-    if (alignVelocity < minConstraint) {
-      minSpeed = teleopVelocityMax;
-    }
-    DogLog.log("PurpleAlignment/Constraint", minSpeed);
+    var clampedConstraint = MathUtil.clamp(minSpeed, MIN_CONSTRAINT, MAX_CONSTRAINT);
+
+    DogLog.log("PurpleAlignment/Constraint", clampedConstraint);
     var options =
         new AutoConstraintOptions()
             .withCollisionAvoidance(false)
@@ -147,33 +146,6 @@ public class AutoAlign {
             .withMaxLinearAcceleration(0)
             .withMaxLinearVelocity(minSpeed);
     return AutoConstraintCalculator.constrainLinearVelocity(wantedSpeeds, options);
-  }
-
-  public static ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
-      Pose2d robotPose,
-      ChassisSpeeds teleopSpeeds,
-      ChassisSpeeds alignSpeeds,
-      double baseTeleopSpeed,
-      double minConstraint) {
-    var constrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed, minConstraint);
-    var distanceToReef =
-        robotPose
-            .getTranslation()
-            .getDistance(getClosestReefPipe(robotPose, ReefPipeLevel.L1).getTranslation());
-    if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
-      return constrainedSpeeds;
-    }
-
-    var progress = MathUtil.clamp(distanceToReef / REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, 0.1, 1.0);
-    DogLog.log("Debug/Progress", progress);
-    var newTeleopSpeeds = teleopSpeeds.times(progress);
-    var newAlignSpeeds = alignSpeeds.times(1 - progress);
-    var newConstrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(
-            newTeleopSpeeds, newAlignSpeeds, baseTeleopSpeed, minConstraint);
-    DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
-    return newConstrainedSpeeds;
   }
 
   private final Purple purple;
@@ -187,6 +159,34 @@ public class AutoAlign {
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
     this.baseLimelight = baseLimelight;
+  }
+
+  public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
+      Pose2d robotPose,
+      ChassisSpeeds teleopSpeeds,
+      ChassisSpeeds alignSpeeds,
+      double baseTeleopSpeed) {
+    var constrainedSpeeds =
+        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed);
+    var distanceToReef =
+        robotPose.getTranslation().getDistance(purple.getUsedScoringPose().getTranslation());
+    if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
+      return constrainedSpeeds;
+    }
+
+    var progress =
+        MathUtil.clamp(
+            distanceToReef / REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, LOWEST_TELEOP_SPEED_SCALAR, 1.0);
+    DogLog.log("Debug/Progress", progress);
+    var newTeleopSpeeds = teleopSpeeds.times(progress);
+    if (progress <= LOWEST_TELEOP_SPEED_SCALAR) {
+      progress = 0.0;
+    }
+    var newAlignSpeeds = alignSpeeds.times(1.0 - progress);
+    var newConstrainedSpeeds =
+        calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds, baseTeleopSpeed);
+    DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
+    return newConstrainedSpeeds;
   }
 
   public ReefAlignState getReefAlignState() {

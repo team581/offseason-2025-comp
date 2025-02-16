@@ -1270,6 +1270,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
     DogLog.log("PurpleAlignment/UsedPose", purple.getUsedScoringPose());
     purple.setLevel(scoringLevel);
+    purple.setRawTeleopSpeeds(swerve.getTeleopSpeeds());
     if (vision.isAnyScoringTagLimelightOnline()) {
       swerve.setPurpleSpeeds(purple.getPoseAlignmentChassisSpeeds(false));
     } else {
