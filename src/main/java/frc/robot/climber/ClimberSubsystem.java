@@ -31,6 +31,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     this.motor = motor;
     this.encoder = encoder;
+    DogLog.log("Climber/DirectionBad", climberDirectionBad);
   }
 
   @Override
@@ -39,6 +40,8 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     if (cancoderDirection != motorDirection) {
       climberDirectionBad = true;
+      DogLog.logFault("Climber Direction Bad", AlertType.kError);
+      DogLog.log("Climber/DirectionBad", climberDirectionBad);
     }
 
     if (climberDirectionBad || atGoal() || !CLIMBER_ENABLED) {
@@ -59,14 +62,8 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
 
-    // TODO: This actually does need to use velocity
     cancoderDirection = Math.signum(motor.getVelocity().getValueAsDouble());
     motorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
-
-    DogLog.log("Climber/DirectionBad", climberDirectionBad);
-    if (climberDirectionBad) {
-      DogLog.logFault("Climber Direction Bad", AlertType.kWarning);
-    }
 
     DogLog.log("Climber/Cancoder/Direction", cancoderDirection);
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
