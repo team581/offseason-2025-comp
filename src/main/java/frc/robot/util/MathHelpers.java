@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class MathHelpers {
+  private static final Translation2d FIELD_CENTER = new Translation2d(17.55 / 2.0, 8.05 / 2.0);
   private static final double EPSILON = Math.ulp(1.0);
 
   /**
@@ -91,6 +92,15 @@ public class MathHelpers {
   public static ChassisSpeeds interpolate(
       ChassisSpeeds startValue, ChassisSpeeds endValue, double t) {
     return startValue.plus(endValue.minus(startValue).times(MathUtil.clamp(t, 0, 1)));
+  }
+
+  /**
+   * Returns the input pose flipped from red to blue (or vice versa).
+   *
+   * @param input Pose to transform
+   */
+  public static Pose2d pathflip(Pose2d input) {
+    return input.rotateAround(FIELD_CENTER, Rotation2d.k180deg);
   }
 
   private MathHelpers() {}

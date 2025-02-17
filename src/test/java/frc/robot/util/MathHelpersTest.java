@@ -2,6 +2,8 @@ package frc.robot.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +38,16 @@ public class MathHelpersTest {
     var expected = new ChassisSpeeds(2.5, 12.5, 0);
 
     var result = MathHelpers.interpolate(a, b, t);
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void pathflipTest() {
+    var input = new Pose2d(0, 0, Rotation2d.kZero);
+    var expected = new Pose2d(17.55, 8.05, Rotation2d.k180deg);
+
+    var result = MathHelpers.pathflip(input);
 
     assertEquals(expected, result);
   }
