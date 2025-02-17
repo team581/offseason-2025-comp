@@ -3,7 +3,6 @@ package frc.robot.config;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.util.ProfiledPhoenixPIDController;
 
 public record RobotConfig(
