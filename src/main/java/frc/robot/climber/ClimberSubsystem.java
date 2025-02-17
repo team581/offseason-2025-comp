@@ -42,7 +42,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     super.robotPeriodic();
 
     if (!climberDirectionBad) {
-      climberDirectionBad = motorDirectionDebouncer.calculate(cancoderDirection != motorDirection);
+      climberDirectionBad =
+          motorDirectionDebouncer.calculate(
+              cancoderDirection != 0 && motorDirection != 0 && cancoderDirection != motorDirection);
     }
 
     if (climberDirectionBad) {
