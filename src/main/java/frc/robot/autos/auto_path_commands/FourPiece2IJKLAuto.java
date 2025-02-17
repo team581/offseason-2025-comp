@@ -48,8 +48,8 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new AutoPoint(getRedStartingPose()),
                     new AutoPoint(
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
-                        actions
-                            .rehomeRollCommand()
+                        robotManager
+                            .waitForRollHomedCommand()
                             .andThen(
                                 Commands.runOnce(
                                     () -> {
