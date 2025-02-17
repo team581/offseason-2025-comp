@@ -112,7 +112,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private double previousTimestamp = 0.0;
   private double teleopSlowModePercent = 0.0;
 
-
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
   }
@@ -262,8 +261,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       case TELEOP_SNAPS -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
-          SNAP_CONTROLLER.setMaxOutput(TELEOP_MAX_ANGULAR_RATE.getRadians()*teleopSlowModePercent);
-            drivetrain.setControl(
+          SNAP_CONTROLLER.setMaxOutput(
+              TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
+          drivetrain.setControl(
               driveToAngle
                   .withVelocityX(teleopSpeeds.vxMetersPerSecond)
                   .withVelocityY(teleopSpeeds.vyMetersPerSecond)
@@ -294,7 +294,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       case REEF_ALIGN_TELEOP -> {
         var constrained = AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
-          SNAP_CONTROLLER.setMaxOutput(TELEOP_MAX_ANGULAR_RATE.getRadians()*teleopSlowModePercent);
+          SNAP_CONTROLLER.setMaxOutput(
+              TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
           drivetrain.setControl(
               driveToAngle
                   .withVelocityX(constrained.vxMetersPerSecond)
@@ -359,15 +360,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.Velocity));
       case AUTO_SNAPS -> {
         SNAP_CONTROLLER.setMaxOutput(Double.POSITIVE_INFINITY);
-            drivetrain.setControl(
-                driveToAngle
-                    .withVelocityX(autoSpeeds.vxMetersPerSecond)
-                    .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                    .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                    .withDriveRequestType(DriveRequestType.Velocity));
+        drivetrain.setControl(
+            driveToAngle
+                .withVelocityX(autoSpeeds.vxMetersPerSecond)
+                .withVelocityY(autoSpeeds.vyMetersPerSecond)
+                .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
-        SNAP_CONTROLLER.setMaxOutput(TELEOP_MAX_ANGULAR_RATE.getRadians()*teleopSlowModePercent);
+        SNAP_CONTROLLER.setMaxOutput(TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           drivetrain.setControl(
               driveToAngle
@@ -453,7 +454,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
-
   }
 
   private void startSimThread() {
