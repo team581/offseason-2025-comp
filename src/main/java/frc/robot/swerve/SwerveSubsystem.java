@@ -292,7 +292,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
       case REEF_ALIGN_TELEOP -> {
-        var constrained = AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds, 2.0);
+        var constrained = AutoAlign.calculateTeleopAndAlignSpeeds(teleopSpeeds, purpleSpeeds);
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           SNAP_CONTROLLER.setMaxOutput(
               TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);

@@ -25,8 +25,9 @@ public class AutoAlign {
 
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.4;
-  private static final double MIN_CONSTRAINT = 0.2;
+  private static final double MIN_CONSTRAINT = 1.5;
   private static final double MAX_CONSTRAINT = 3.5;
+  private static final double BASE_TELEOP_SPEED = 2.0;
 
   public static void setAutoReefPipeOverride(ReefPipe override) {
     autoReefPipeOverride = Optional.of(override);
@@ -128,13 +129,13 @@ public class AutoAlign {
   }
 
   public static ChassisSpeeds calculateTeleopAndAlignSpeeds(
-      ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds, double baseTeleopSpeed) {
+      ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds) {
     double teleopVelocity =
         Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
     double alignVelocity = Math.hypot(alignSpeeds.vxMetersPerSecond, alignSpeeds.vyMetersPerSecond);
     var wantedSpeeds = teleopSpeeds.plus(alignSpeeds);
 
-    var teleopVelocityMax = Math.max(baseTeleopSpeed, teleopVelocity);
+    var teleopVelocityMax = Math.max(BASE_TELEOP_SPEED, teleopVelocity);
 
     var minSpeed = Math.min(alignVelocity, teleopVelocityMax);
     var clampedConstraint = MathUtil.clamp(minSpeed, MIN_CONSTRAINT, MAX_CONSTRAINT);
@@ -175,10 +176,9 @@ public class AutoAlign {
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
       Pose2d robotPose,
       ChassisSpeeds teleopSpeeds,
-      ChassisSpeeds alignSpeeds,
-      double baseTeleopSpeed) {
+      ChassisSpeeds alignSpeeds) {
     var constrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds, baseTeleopSpeed);
+        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds);
     var distanceToReef =
         robotPose.getTranslation().getDistance(tagAlign.getUsedScoringPose().getTranslation());
     if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
@@ -195,7 +195,7 @@ public class AutoAlign {
     }
     var newAlignSpeeds = alignSpeeds.times(1.0 - progress);
     var newConstrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds, baseTeleopSpeed);
+        calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds);
     DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
     return newConstrainedSpeeds;
   }
