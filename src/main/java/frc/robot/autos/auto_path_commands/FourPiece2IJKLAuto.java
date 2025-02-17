@@ -39,10 +39,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        // HOME AND PRELOAD
-        actions.rehomeRollCommand(),
-        autoCommands.preloadCoralCommand(),
-
+        Commands.runOnce(robotManager::rehomeRollRequest),
         // SCORE L4 ON I
         trailblazer
             .followSegment(
@@ -51,11 +48,15 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new AutoPoint(getRedStartingPose()),
                     new AutoPoint(
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
-                        Commands.runOnce(
-                            () -> {
-                              AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I);
-                              robotManager.l4CoralApproachRequest();
-                            })),
+                        actions
+                            .rehomeRollCommand()
+                            .andThen(
+                                Commands.runOnce(
+                                    () -> {
+                                      robotManager.preloadCoralRequest();
+                                      AutoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I);
+                                      robotManager.l4CoralApproachRequest();
+                                    }))),
                     new AutoPoint(() -> robotManager.tagAlign.getUsedScoringPose())),
                 false)
             .until(() -> robotManager.tagAlign.isTagAligned()),
