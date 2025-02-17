@@ -210,7 +210,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(60)),
               new CANcoderConfiguration()
-                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(-0.3798828125))),
+                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0.3798828125))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}
