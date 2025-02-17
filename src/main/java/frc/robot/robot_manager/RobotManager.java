@@ -64,7 +64,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public final TagAlign tagAlign;
   public final AutoAlign autoAlign;
 
-  private GamePieceMode gamePieceMode;
+  private GamePieceMode gamePieceMode = GamePieceMode.CORAL;
 
   public RobotManager(
       IntakeSubsystem intake,
