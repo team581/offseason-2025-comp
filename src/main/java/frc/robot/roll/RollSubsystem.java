@@ -88,11 +88,11 @@ public class RollSubsystem extends StateMachine<RollState> {
 
   private double getSmartStowDirection() {
     if (intake.getLeftSensor() && intake.getRightSensor()) {
-      return 0;
+      return 45;
     } else if (intake.getLeftSensor()) {
-      return 90;
+      return 50;
     } else {
-      return -90;
+      return -50;
     }
   }
 
