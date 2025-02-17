@@ -213,8 +213,7 @@ class PracticeConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.3798828125)
-                          .withSensorDirection(SensorDirectionValue.Clockwise_Positive))),
+                          .withMagnetOffset(-0.3798828125))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}
