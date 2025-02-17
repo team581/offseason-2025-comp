@@ -483,7 +483,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case SMART_STOW_1 -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.INTAKING_CORAL_STATION_BACK);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
@@ -496,7 +496,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case SMART_STOW_2 -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
