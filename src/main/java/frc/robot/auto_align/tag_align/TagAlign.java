@@ -13,7 +13,7 @@ import frc.robot.util.MathHelpers;
 public class TagAlign {
   private final LocalizationSubsystem localization;
 
-  private static final double TAG_KP = 3.7;
+  private static final double TAG_KP = 3.2;
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
 
