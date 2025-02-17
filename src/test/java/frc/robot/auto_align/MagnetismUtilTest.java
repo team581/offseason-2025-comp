@@ -39,8 +39,8 @@ public class MagnetismUtilTest {
     /* Verify that the magnetized angle is between the input angle and the angle between robot
     and goal. */
     ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
-    Pose2d robotPose = new Pose2d(2.0, 2.0, new Rotation2d());
-    Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
+    Pose2d robotPose = new Pose2d(2.0, 2.0, Rotation2d.kZero);
+    Pose2d goalPose = new Pose2d(2.0, 3.0, Rotation2d.kZero);
     Rotation2d robotToGoal = Rotation2d.fromDegrees(90);
 
     ChassisSpeeds magnetizedSpeed =
@@ -57,9 +57,9 @@ public class MagnetismUtilTest {
   void testMagnetismAngleGetsStrongerCloserToGoal() {
     /* Test angle when robot is closer to goal is stronger than when farther. */
     ChassisSpeeds robotSpeed = new ChassisSpeeds(2.0, 3.0, 0.0);
-    Pose2d robotPoseFar = new Pose2d(2.0, 2.0, new Rotation2d());
-    Pose2d robotPoseClose = new Pose2d(2.0, 2.5, new Rotation2d());
-    Pose2d goalPose = new Pose2d(2.0, 3.0, new Rotation2d());
+    Pose2d robotPoseFar = new Pose2d(2.0, 2.0, Rotation2d.kZero);
+    Pose2d robotPoseClose = new Pose2d(2.0, 2.5, Rotation2d.kZero);
+    Pose2d goalPose = new Pose2d(2.0, 3.0, Rotation2d.kZero);
 
     ChassisSpeeds magnetizedSpeedClose =
         MagnetismUtil.getMagnetizedChassisSpeeds(robotSpeed, robotPoseClose, goalPose);

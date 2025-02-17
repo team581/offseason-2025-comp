@@ -29,7 +29,7 @@ public class GamePieceDetectionUtil {
     var gamePiecePose =
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
     return LocalizationSubsystem.distanceAngleToTarget(
-            new Pose2d(gamePiecePose, new Rotation2d()), robotPoseAtCapture)
+            new Pose2d(gamePiecePose, Rotation2d.kZero), robotPoseAtCapture)
         .targetAngle();
   }
 
@@ -69,7 +69,7 @@ public class GamePieceDetectionUtil {
   public static double getRobotRelativeAngleToGamePiece(GamePieceResult visionResult) {
     var gamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
     return LocalizationSubsystem.distanceAngleToTarget(
-            new Pose2d(gamePiecePose, new Rotation2d()), Pose2d.kZero)
+            new Pose2d(gamePiecePose, Rotation2d.kZero), Pose2d.kZero)
         .targetAngle();
   }
 

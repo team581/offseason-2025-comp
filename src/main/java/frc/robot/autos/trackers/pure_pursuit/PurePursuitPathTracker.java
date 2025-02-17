@@ -30,7 +30,7 @@ public class PurePursuitPathTracker implements PathTracker {
   private Pose2d currentTargetWaypoint = Pose2d.kZero;
   private int currentLookaheadPointIndex = 0;
   private int currentRobotFollowedPointIndex = 0;
-  private Rotation2d currentInterpolatedRotation = new Rotation2d();
+  private Rotation2d currentInterpolatedRotation = Rotation2d.kZero;
 
   @Override
   public void resetAndSetPoints(List<AutoPoint> points) {

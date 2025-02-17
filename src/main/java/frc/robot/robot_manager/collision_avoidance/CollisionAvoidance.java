@@ -11,7 +11,7 @@ import java.util.Optional;
 public class CollisionAvoidance {
   private static final List<CollisionBox> ALL_COLLISION_BOXES = List.of(CollisionBox.values());
   private static final double WRIST_LENGTH = 23.092038;
-  private static final Rotation2d offsetAngle = new Rotation2d().fromDegrees(-33.0);
+  private static final Rotation2d offsetAngle = Rotation2d.fromDegrees(-33.0);
 
   public static Optional<SuperstructurePosition> plan(
       SuperstructurePosition current, SuperstructurePosition goal) {

@@ -21,10 +21,10 @@ public class PurePursuitUtils {
     var y3 = robotPose.getY();
 
     if (y1 == y2) {
-      return new Pose2d(x3, y1, new Rotation2d());
+      return new Pose2d(x3, y1, Rotation2d.kZero);
     }
     if (x1 == x2) {
-      return new Pose2d(x1, y3, new Rotation2d());
+      return new Pose2d(x1, y3, Rotation2d.kZero);
     }
     // Find the slope of the path and y-int
     double pathSlope = (y2 - y1) / (x2 - x1);
@@ -38,7 +38,7 @@ public class PurePursuitUtils {
     double perpX = (perpYInt - yInt) / (pathSlope - perpSlope);
     double perpY = pathSlope * perpX + yInt;
 
-    return new Pose2d(perpX, perpY, new Rotation2d());
+    return new Pose2d(perpX, perpY, Rotation2d.kZero);
   }
 
   public static double getDynamicLookaheadDistance(
@@ -84,7 +84,7 @@ public class PurePursuitUtils {
         y
             + lookaheadDistance
                 * ((y2 - y1) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
-    var lookahead = new Pose2d(xLookahead, yLookahead, new Rotation2d());
+    var lookahead = new Pose2d(xLookahead, yLookahead, Rotation2d.kZero);
     var distanceToStart = lookahead.getTranslation().getDistance(startPoint.getTranslation());
     var distanceToEnd = lookahead.getTranslation().getDistance(endPoint.getTranslation());
     var lookaheadOutside =
@@ -103,7 +103,7 @@ public class PurePursuitUtils {
   }
 
   public static Pose2d generateRandomPose() {
-    return new Pose2d(randomBetween(0, 15), randomBetween(0, 8), new Rotation2d());
+    return new Pose2d(randomBetween(0, 15), randomBetween(0, 8), Rotation2d.kZero);
   }
 
   public static Pose2d getTargetPose(
@@ -280,7 +280,7 @@ public class PurePursuitUtils {
               + ", "
               + point.poseSupplier.get().getY()
               + ", "
-              + "new Rotation2d()),");
+              + "Rotation2d.kZero),");
     }
 
     System.out.println("});");
@@ -290,13 +290,13 @@ public class PurePursuitUtils {
             + poseOnPath.getX()
             + ", "
             + poseOnPath.getY()
-            + ", new Rotation2d()));");
+            + ", Rotation2d.kZero));");
     System.out.println(
         "DogLog.log(\"PurePursuitUtils/CollinearAndBetweenTest/StartingRobotPose\", new Pose2d("
             + startingRobotPose.getX()
             + ", "
             + startingRobotPose.getY()
-            + ", new Rotation2d()));");
+            + ", Rotation2d.kZero));");
 
     return false;
   }
