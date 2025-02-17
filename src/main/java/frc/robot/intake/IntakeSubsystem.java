@@ -61,8 +61,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 20);
 
-    leftSensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
-    rightSensorRaw = candi.getS1State().getValue() == S1StateValue.Low;
+    if (RobotConfig.get().intake().sensorFlipped()) {
+      leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
+    rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
+    } else {
+      leftSensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
+      rightSensorRaw = candi.getS1State().getValue() == S1StateValue.Low;
+    }
 
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
     rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);

@@ -32,6 +32,7 @@ public record RobotConfig(
       int topMotorID,
       int bottomMotorID,
       int candiID,
+      boolean sensorFlipped,
       Debouncer rightDebouncer,
       Debouncer leftDebouncer,
       TalonFXConfiguration topMotorConfig,

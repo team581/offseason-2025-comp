@@ -91,6 +91,7 @@ class PracticeConfig {
               20,
               21,
               26,
+              true,
               new Debouncer(0.1, DebounceType.kBoth),
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
