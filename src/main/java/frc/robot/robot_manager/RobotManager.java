@@ -131,13 +131,12 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_DISPLACED_L4_3_PLACE,
               CLIMBING_1_LINEUP,
               CLIMBING_2_HANGING,
+              CLIMBING_3_HANGING_2,
+              CLIMBING_4_HANGING_3,
               DISLODGE_ALGAE_L2_WAIT,
               DISLODGE_ALGAE_L3_WAIT,
               UNJAM ->
           currentState;
-
-      // in auto: keep transition the same
-      // in teleop: if right trigger is pressed, go 2 -> 3. else, stay in 2
 
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
@@ -1048,6 +1047,32 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.HANGING);
       }
+      case CLIMBING_3_HANGING_2 -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        roll.setState(RollState.CORAL_HORIZONTAL);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.HANGING_2);
+      }
+      case CLIMBING_4_HANGING_3 -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.setSnapsEnabled(false);
+        swerve.setSnapToAngle(0);
+        roll.setState(RollState.CORAL_HORIZONTAL);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.HANGING_3);
+      }
       case UNJAM -> {
         intake.setState(IntakeState.OUTTAKING);
         moveSuperstructure(ElevatorState.UNJAM, WristState.UNJAM);
@@ -1444,7 +1469,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorAlgaeRequest() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_ALGAE_FLOOR);
     }
   }
@@ -1452,7 +1483,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorCoralHorizontalRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL);
     }
   }
@@ -1460,7 +1497,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeAssistFloorCoralHorizontalRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL);
     }
   }
@@ -1468,7 +1511,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeStationRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_STATION_APPROACH);
     }
   }
@@ -1484,7 +1533,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void processorWaitingRequest() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.PROCESSOR_WAITING);
     }
   }
@@ -1492,7 +1547,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l1CoralLineupRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L1_1_APPROACH);
     }
   }
@@ -1508,7 +1569,13 @@ public class RobotManager extends StateMachine<RobotState> {
   private void intakeAlgaeL2Request() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L2);
     }
   }
@@ -1516,7 +1583,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l2CoralApproachRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L2_1_APPROACH);
     }
   }
@@ -1532,7 +1605,13 @@ public class RobotManager extends StateMachine<RobotState> {
   private void intakeAlgaeL3Request() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.INTAKE_ALGAE_L3);
     }
   }
@@ -1540,7 +1619,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l3CoralApproachRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L3_1_APPROACH);
     }
   }
@@ -1548,7 +1633,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l4CoralScoreRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
           setStateFromRequest(
               intake.isCoralCentered()
@@ -1560,7 +1645,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l4coralPlaceAndReleaseRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
           setStateFromRequest(
               intake.isCoralCentered()
@@ -1572,7 +1657,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l4CoralReleaseRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
           setStateFromRequest(
               intake.isCoralCentered()
@@ -1601,7 +1686,13 @@ public class RobotManager extends StateMachine<RobotState> {
   private void algaeNetForwardRequest() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.NET_FORWARD_WAITING);
     }
   }
@@ -1609,7 +1700,13 @@ public class RobotManager extends StateMachine<RobotState> {
   private void algaeNetBackRequest() {
     gamePieceMode = GamePieceMode.ALGAE;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.NET_BACK_WAITING);
     }
   }
@@ -1617,7 +1714,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l4CoralApproachRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.CORAL_L4_1_APPROACH);
     }
   }
@@ -1625,7 +1728,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l4CoralLineupRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default ->
           setStateFromRequest(
               intake.isCoralCentered()
@@ -1637,7 +1746,13 @@ public class RobotManager extends StateMachine<RobotState> {
   public void preloadCoralRequest() {
     gamePieceMode = GamePieceMode.CORAL;
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.IDLE_CORAL);
     }
   }
@@ -1646,6 +1761,8 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
           INTAKE_ALGAE_FLOOR,
           INTAKE_ALGAE_L2,
           INTAKE_ALGAE_L3,
@@ -1722,13 +1839,17 @@ public class RobotManager extends StateMachine<RobotState> {
   public void nextClimbStateRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
-      case CLIMBING_2_HANGING -> {}
+      case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_3_HANGING_2);
+      case CLIMBING_3_HANGING_2 -> setStateFromRequest(RobotState.CLIMBING_4_HANGING_3);
+      case CLIMBING_4_HANGING_3 -> {}
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
 
   public void previousClimbStateRequest() {
     switch (getState()) {
+      case CLIMBING_4_HANGING_3 -> setStateFromRequest(RobotState.CLIMBING_3_HANGING_2);
+      case CLIMBING_3_HANGING_2 -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> {
         setStateFromRequest(RobotState.IDLE_NO_GP);
@@ -1739,28 +1860,49 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void unjamRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.UNJAM);
     }
   }
 
   public void rehomeElevatorRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ROLL, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ROLL,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
   }
 
   public void rehomeWristRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ROLL -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_ROLL -> {}
       default -> setStateFromRequest(RobotState.REHOME_WRIST);
     }
   }
 
   public void rehomeRollRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_WRIST -> {}
+      case CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CLIMBING_3_HANGING_2,
+          CLIMBING_4_HANGING_3,
+          REHOME_ELEVATOR,
+          REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.REHOME_ROLL);
     }
   }
