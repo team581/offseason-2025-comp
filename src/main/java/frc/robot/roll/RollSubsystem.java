@@ -90,9 +90,9 @@ public class RollSubsystem extends StateMachine<RollState> {
     if (intake.getLeftSensor() && intake.getRightSensor()) {
       return 45;
     } else if (intake.getLeftSensor()) {
-      return 50;
+      return 45;
     } else {
-      return -50;
+      return -45;
     }
   }
 
