@@ -11,6 +11,9 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
+  // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
+  // again
+  private static final boolean CLIMBER_ENABLED = false;
   private static final double TOLERANCE = 3;
   private final TalonFX motor;
   private final CANcoder encoder;
@@ -30,6 +33,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
+    if (!CLIMBER_ENABLED) {
+      motor.disable();
+      return;
+    }
+
     if (atGoal()) {
       motor.disable();
     } else {
@@ -48,7 +56,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   @Override
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
-    DogLog.log("Climber/CurrentAngle", currentAngle);
+    DogLog.log(
+        "Climber/MotorAngle", Units.rotationsToDegrees(motor.getPosition().getValueAsDouble()));
+    DogLog.log("Climber/CancoderAngle", currentAngle);
     DogLog.log("Climber/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());

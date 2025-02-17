@@ -50,9 +50,4 @@ public class AutoCommands {
         .withTimeout(2)
         .withName("IntakeStationWithTimeoutCommand");
   }
-
-  public Command preloadCoralCommand() {
-    return Commands.runOnce(robotManager::preloadCoralRequest, requirements)
-        .withName("PreloadCoralCommand");
-  }
 }

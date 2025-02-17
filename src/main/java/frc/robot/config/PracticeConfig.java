@@ -204,6 +204,7 @@ class PracticeConfig {
               170.0,
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(125.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)

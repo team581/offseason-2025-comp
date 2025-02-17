@@ -80,5 +80,18 @@ public class MathHelpers {
     return Math.copySign(Math.sqrt(Math.abs(value)), value);
   }
 
+  /**
+   * Perform linear interpolation between two ChassisSpeeds.
+   *
+   * @param startValue The ChassisSpeeds to start at.
+   * @param endValue The ChassisSpeeds to end at.
+   * @param t How far between the two ChassisSpeeds to interpolate. This is clamped to [0, 1].
+   * @return The interpolated ChassisSpeeds.
+   */
+  public static ChassisSpeeds interpolate(
+      ChassisSpeeds startValue, ChassisSpeeds endValue, double t) {
+    return startValue.plus(endValue.minus(startValue).times(MathUtil.clamp(t, 0, 1)));
+  }
+
   private MathHelpers() {}
 }
