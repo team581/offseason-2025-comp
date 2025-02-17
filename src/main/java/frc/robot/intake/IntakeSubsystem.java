@@ -63,7 +63,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     if (RobotConfig.get().intake().sensorFlipped()) {
       leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
-    rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
+      rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     } else {
       leftSensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
       rightSensorRaw = candi.getS1State().getValue() == S1StateValue.Low;
