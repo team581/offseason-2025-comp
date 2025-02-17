@@ -4,6 +4,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.config.RobotConfig;
@@ -17,6 +19,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private static final double TOLERANCE = 3;
   private final TalonFX motor;
   private final CANcoder encoder;
+  private final Debouncer motorDirectionDebouncer = new Debouncer(1.0, DebounceType.kBoth);
   private double motorDirection = 0;
   private double cancoderDirection = 0;
   private boolean climberDirectionBad = false;
@@ -38,8 +41,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    if (cancoderDirection != motorDirection) {
-      climberDirectionBad = true;
+    if (!climberDirectionBad) {
+      climberDirectionBad = motorDirectionDebouncer.calculate(cancoderDirection != motorDirection);
+    }
+
+    if (climberDirectionBad) {
       DogLog.logFault("Climber Direction Bad", AlertType.kError);
       DogLog.log("Climber/DirectionBad", climberDirectionBad);
     }
