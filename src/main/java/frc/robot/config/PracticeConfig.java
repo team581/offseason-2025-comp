@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
@@ -199,6 +200,8 @@ class PracticeConfig {
               CANIVORE_NAME,
               24,
               25,
+              -20.0,
+              170.0,
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withCurrentLimits(

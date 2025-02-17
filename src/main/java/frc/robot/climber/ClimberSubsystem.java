@@ -6,6 +6,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
+import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -32,7 +33,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     if (atGoal()) {
       motor.disable();
     } else {
-      if (currentAngle < getState().angle) {
+      if (currentAngle < clamp(getState().angle)) {
         motor.setVoltage(12.0);
       } else {
         motor.setVoltage(-12.0);
@@ -54,6 +55,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   public boolean atGoal() {
-    return MathUtil.isNear(getState().angle, currentAngle, TOLERANCE);
+    return MathUtil.isNear(clamp(getState().angle), currentAngle, TOLERANCE);
+  }
+
+  private double clamp(double angle) {
+    return MathUtil.clamp(angle, RobotConfig.get().climber().minAngle(), RobotConfig.get().climber().maxAngle());
   }
 }
