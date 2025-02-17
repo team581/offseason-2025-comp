@@ -27,4 +27,9 @@ public class AutoSegment {
   public AutoSegment(AutoPoint... points) {
     this(new AutoConstraintOptions(), points);
   }
+
+  public AutoSegment pathflipped() {
+    return new AutoSegment(
+        defaultConstraints, points.stream().map(AutoPoint::pathflipped).toList());
+  }
 }

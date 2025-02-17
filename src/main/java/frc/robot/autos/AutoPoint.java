@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.util.MathHelpers;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -55,5 +56,9 @@ public class AutoPoint {
 
   public AutoPoint(Pose2d pose) {
     this(pose, emptyCommand());
+  }
+
+  public AutoPoint pathflipped() {
+    return new AutoPoint(() -> MathHelpers.pathflip(poseSupplier.get()), command, constraints);
   }
 }
