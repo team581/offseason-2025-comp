@@ -214,7 +214,7 @@ class CompConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
               new CANcoderConfiguration()
-                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0))),
+                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0.425537109375))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private CompConfig() {}
