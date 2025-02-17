@@ -52,18 +52,11 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     topMotorAlgaeVelocityGp = topMotorDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorAlgaeVelocityGp = bottomMotorDetection.hasGamePiece(bottomMotorVelocity, 20);
 
-    rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
-    leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
+    leftSensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
+    rightSensorRaw = candi.getS1State().getValue() == S1StateValue.Low;
 
-    // Sensors are switched around on practice bot
-    if (RobotConfig.IS_PRACTICE_BOT) {
-      var temp = rightSensorRaw;
-      rightSensorRaw = leftSensorRaw;
-      leftSensorRaw = temp;
-    }
-
-    rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
     leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
+    rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
 
     sensorsHaveGP = rightSensorDebounced || leftSensorDebounced;
   }
