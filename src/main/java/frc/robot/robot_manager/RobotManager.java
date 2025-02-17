@@ -4,6 +4,8 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
@@ -107,6 +109,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private double reefSnapAngle = 0.0;
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
+  private boolean isRollHomed = false;
   private ChassisSpeeds purpleSpeeds = new ChassisSpeeds();
   private boolean confirmScoreActive = false;
 
@@ -140,8 +143,14 @@ public class RobotManager extends StateMachine<RobotState> {
           elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
       case REHOME_WRIST ->
           wrist.getState() == WristState.CORAL_STOWED ? RobotState.IDLE_NO_GP : currentState;
-      case REHOME_ROLL ->
-          roll.getState() == RollState.CORAL_HORIZONTAL ? RobotState.IDLE_NO_GP : currentState;
+      case REHOME_ROLL -> {
+        if (roll.getState() == RollState.CORAL_HORIZONTAL) {
+          isRollHomed = true;
+          yield RobotState.IDLE_NO_GP;
+        }
+        isRollHomed = false;
+        yield currentState;
+      }
       case PROCESSOR_PREPARE_TO_SCORE ->
           wrist.atGoal() && elevator.atGoal() && roll.atGoal()
               ? RobotState.PROCESSOR_SCORING
@@ -1754,6 +1763,10 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_WRIST -> {}
       default -> setStateFromRequest(RobotState.REHOME_ROLL);
     }
+  }
+
+  public Command waitForRollHomedCommand() {
+    return Commands.waitUntil(() -> isRollHomed);
   }
 
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
