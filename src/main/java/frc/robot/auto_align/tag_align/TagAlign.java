@@ -19,14 +19,14 @@ public class TagAlign {
 
   private ReefPipeLevel level = ReefPipeLevel.L1;
   private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
-  private static boolean beforeRaisedOffset = false;
+  private static boolean beforeRaisedOffsetEnabled = false;
 
   public TagAlign(LocalizationSubsystem localization) {
     this.localization = localization;
   }
 
-  public void setBeforeRaisedOffset(boolean offsetOn) {
-    beforeRaisedOffset = offsetOn;
+  public void setBeforeRaisedOffsetEnabled(boolean offsetOn) {
+    beforeRaisedOffsetEnabled = offsetOn;
   }
 
   public void setLevel(ReefPipeLevel level) {
@@ -46,10 +46,10 @@ public class TagAlign {
 
   public Pose2d getUsedScoringPose() {
     var rawRobotPose = localization.getPose();
-    var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.7);
+    var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.4);
     DogLog.log("PurpleAlignment/LookaheadPose", lookaheadPose);
     var rawPose = AutoAlign.getClosestReefPipe(lookaheadPose, level);
-    if (beforeRaisedOffset) {
+    if (beforeRaisedOffsetEnabled) {
       var robotRelative =
           rawPose.rotateBy(
               Rotation2d.fromDegrees(360 - localization.getPose().getRotation().getDegrees()));
