@@ -47,7 +47,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   @Override
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
-    DogLog.log("Climber/CurrentAngle", currentAngle);
+    DogLog.log(
+        "Climber/MotorAngle", Units.rotationsToDegrees(motor.getPosition().getValueAsDouble()));
+    DogLog.log("Climber/CancoderAngle", currentAngle);
     DogLog.log("Climber/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
