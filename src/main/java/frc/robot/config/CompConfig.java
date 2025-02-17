@@ -203,10 +203,11 @@ class CompConfig {
               CANIVORE_NAME,
               24,
               25,
-              -20.0, // TODO: verify it is correct
+              -17.0,
               170.0,
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(125.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
