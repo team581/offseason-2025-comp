@@ -1962,4 +1962,8 @@ public class RobotManager extends StateMachine<RobotState> {
   public void setConfirmScoreActive(boolean newValue) {
     confirmScoreActive = newValue;
   }
+
+  public boolean notSmartStowing() {
+    return getState() != RobotState.SMART_STOW_1 && getState() != RobotState.SMART_STOW_2;
+  }
 }

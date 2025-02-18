@@ -45,19 +45,27 @@ public class RobotCommands {
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, requirements).withName("LowLineupCommand");
+    return Commands.waitUntil(robot::notSmartStowing)
+        .andThen(Commands.runOnce(robot::lowLineupRequest, requirements))
+        .withName("LowLineupCommand");
   }
 
   public Command l2LineupCommand() {
-    return Commands.runOnce(robot::l2LineupRequest, requirements).withName("L2LineupCommand");
+    return Commands.waitUntil(robot::notSmartStowing)
+        .andThen(Commands.runOnce(robot::l2LineupRequest, requirements))
+        .withName("L2LineupCommand");
   }
 
   public Command l3LineupCommand() {
-    return Commands.runOnce(robot::l3LineupRequest, requirements).withName("L3LineupCommand");
+    return Commands.waitUntil(robot::notSmartStowing)
+        .andThen(Commands.runOnce(robot::l3LineupRequest, requirements))
+        .withName("L3LineupCommand");
   }
 
   public Command highLineupCommand() {
-    return Commands.runOnce(robot::highApproachRequest, requirements).withName("HighLineupCommand");
+    return Commands.waitUntil(robot::notSmartStowing)
+        .andThen(Commands.runOnce(robot::highApproachRequest, requirements))
+        .withName("HighLineupCommand");
   }
 
   public Command setGamepieceModeCommand(GamePieceMode newMode) {
