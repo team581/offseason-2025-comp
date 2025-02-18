@@ -13,6 +13,7 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
+import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
 import java.util.List;
@@ -157,6 +158,9 @@ public class AutoAlign {
   private final Limelight baseLimelight;
   private final LocalizationSubsystem localization;
   private final TagAlign tagAlign;
+  private final SwerveSubsystem swerve;
+
+  private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
 
   public AutoAlign(
       PurpleAlign purple,
@@ -164,20 +168,40 @@ public class AutoAlign {
       Limelight purpleLimelight,
       Limelight frontLimelight,
       Limelight baseLimelight,
-      LocalizationSubsystem localization) {
+      LocalizationSubsystem localization,
+      SwerveSubsystem swerve) {
     this.purple = purple;
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
     this.baseLimelight = baseLimelight;
     this.tagAlign = tagAlign;
     this.localization = localization;
+    this.swerve = swerve;
   }
 
-  public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
-      Pose2d robotPose, ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds) {
-    var constrainedSpeeds = calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds);
+  public void setTeleopSpeeds(ChassisSpeeds speeds) {
+    teleopSpeeds = speeds;
+  }
+
+  private ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
+    var options =
+        new AutoConstraintOptions()
+            .withCollisionAvoidance(false)
+            .withMaxAngularAcceleration(0)
+            .withMaxAngularVelocity(0)
+            .withMaxLinearAcceleration(0)
+            .withMaxLinearVelocity(maxSpeed);
+    return AutoConstraintCalculator.constrainLinearVelocity(speeds, options);
+  }
+
+  public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
+    var addedSpeeds = teleopSpeeds.plus(alignSpeeds);
+    var constrainedSpeeds = constrainLinearVelocity(addedSpeeds, MAX_CONSTRAINT);
+
+    var robotPose = localization.getPose();
     var distanceToReef =
         robotPose.getTranslation().getDistance(tagAlign.getUsedScoringPose().getTranslation());
+
     if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
       return constrainedSpeeds;
     }
@@ -187,11 +211,12 @@ public class AutoAlign {
             distanceToReef / REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, LOWEST_TELEOP_SPEED_SCALAR, 1.0);
     DogLog.log("Debug/Progress", progress);
     var newTeleopSpeeds = teleopSpeeds.times(progress);
-    if (progress <= LOWEST_TELEOP_SPEED_SCALAR) {
+    if (progress == LOWEST_TELEOP_SPEED_SCALAR) {
       progress = 0.0;
     }
     var newAlignSpeeds = alignSpeeds.times(1.0 - progress);
-    var newConstrainedSpeeds = calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds);
+    var newAddedSpeeds = newTeleopSpeeds.plus(newAlignSpeeds);
+    var newConstrainedSpeeds = constrainLinearVelocity(newAddedSpeeds, MAX_CONSTRAINT);
     DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
     return newConstrainedSpeeds;
   }
@@ -210,23 +235,16 @@ public class AutoAlign {
 
     var speeds =
         switch (purpleState) {
-          case NO_PURPLE -> {
-            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
-          }
-          case VISIBLE_NOT_CENTERED -> {
-            yield tagAlign
-                .getPoseAlignmentChassisSpeeds(seenPurple)
-                .plus(
-                    purple.getPurpleAlignChassisSpeeds(
-                        localization.getPose().getRotation().getDegrees()));
-          }
-          case CENTERED -> {
-            yield tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
-          }
+          case NO_PURPLE -> tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
+          case VISIBLE_NOT_CENTERED ->
+              tagAlign
+                  .getPoseAlignmentChassisSpeeds(seenPurple)
+                  .plus(
+                      purple.getPurpleAlignChassisSpeeds(
+                          localization.getPose().getRotation().getDegrees()));
+          case CENTERED -> tagAlign.getPoseAlignmentChassisSpeeds(seenPurple);
         };
-    DogLog.log("PurpleAlignment/CombinedSpeeds/x", speeds.vxMetersPerSecond);
-    DogLog.log("PurpleAlignment/CombinedSpeeds/y", speeds.vyMetersPerSecond);
-    DogLog.log("PurpleAlignment/CombinedSpeeds/omega", speeds.omegaRadiansPerSecond);
+    DogLog.log("PurpleAlignment/CombinedSpeeds", speeds);
     return speeds;
   }
 

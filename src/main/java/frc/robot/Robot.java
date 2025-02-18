@@ -84,7 +84,8 @@ public class Robot extends TimedRobot {
           elevatorPurpleLimelight,
           frontCoralLimelight,
           baseTagLimelight,
-          localization);
+          localization,
+          swerve);
   private final RobotManager robotManager =
       new RobotManager(
           intake,

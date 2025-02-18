@@ -1305,13 +1305,18 @@ public class RobotManager extends StateMachine<RobotState> {
               frontCoralLimelight.getCoralResult(), imu.getRobotHeading(), true);
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
+
     DogLog.log("PurpleAlignment/UsedPose", tagAlign.getUsedScoringPose());
+
     tagAlign.setLevel(scoringLevel);
-    tagAlign.setRawTeleopSpeeds(swerve.getTeleopSpeeds());
+    autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
+
     if (vision.isAnyScoringTagLimelightOnline()) {
-      swerve.setPurpleSpeeds(tagAlign.getPoseAlignmentChassisSpeeds(false));
+      var idealAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(false);
+      swerve.setAutoAlignAutoSpeeds(idealAlignSpeeds);
+      swerve.setAutoAlignSpeeds(autoAlign.calculateConstrainedAndWeightedSpeeds(idealAlignSpeeds));
     } else {
-      swerve.setPurpleSpeeds(new ChassisSpeeds());
+      swerve.setAutoAlignAutoSpeeds(new ChassisSpeeds());
     }
 
     swerve.setElevatorHeight(elevator.getHeight());
