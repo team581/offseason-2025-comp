@@ -174,11 +174,8 @@ public class AutoAlign {
   }
 
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(
-      Pose2d robotPose,
-      ChassisSpeeds teleopSpeeds,
-      ChassisSpeeds alignSpeeds) {
-    var constrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds);
+      Pose2d robotPose, ChassisSpeeds teleopSpeeds, ChassisSpeeds alignSpeeds) {
+    var constrainedSpeeds = calculateTeleopAndAlignSpeeds(teleopSpeeds, alignSpeeds);
     var distanceToReef =
         robotPose.getTranslation().getDistance(tagAlign.getUsedScoringPose().getTranslation());
     if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
@@ -194,8 +191,7 @@ public class AutoAlign {
       progress = 0.0;
     }
     var newAlignSpeeds = alignSpeeds.times(1.0 - progress);
-    var newConstrainedSpeeds =
-        calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds);
+    var newConstrainedSpeeds = calculateTeleopAndAlignSpeeds(newTeleopSpeeds, newAlignSpeeds);
     DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
     return newConstrainedSpeeds;
   }

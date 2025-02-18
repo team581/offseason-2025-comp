@@ -49,7 +49,7 @@ public class TagAlign {
     var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.4);
     DogLog.log("PurpleAlignment/LookaheadPose", lookaheadPose);
     var rawPose = AutoAlign.getClosestReefPipe(rawRobotPose, level);
-    if (rawRobotPose.getTranslation().getDistance(rawPose.getTranslation())<0.2) {
+    if (rawRobotPose.getTranslation().getDistance(rawPose.getTranslation()) < 0.2) {
       rawPose = AutoAlign.getClosestReefPipe(lookaheadPose, level);
     }
     if (beforeRaisedOffsetEnabled) {
