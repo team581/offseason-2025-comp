@@ -115,7 +115,7 @@ public class Robot extends TimedRobot {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
 
     DogLog.setOptions(
-        new DogLogOptions().withCaptureNt(false).withNtPublish(RobotConfig.IS_DEVELOPMENT));
+        new DogLogOptions().withCaptureDs(true).withNtPublish(RobotConfig.IS_DEVELOPMENT));
     // DogLog.setPdh(hardware.pdh);
 
     // Record metadata
