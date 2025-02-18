@@ -779,7 +779,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE, CORAL_CENTERED_L4_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
-
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L4_PLACE, WristState.CORAL_SCORE_CENTERED_LINEUP_L4, true);
         swerve.enableScoringAlignment();
@@ -1935,7 +1934,11 @@ public class RobotManager extends StateMachine<RobotState> {
             new SuperstructurePosition(elevator.getHeight(), wrist.getAngle()),
             new SuperstructurePosition(elevatorGoal.height, wristGoal.angle));
 
-    if (!unsafe && maybeIntermediaryPosition.isPresent()) {
+    if (unsafe || maybeIntermediaryPosition.isEmpty()) {
+      // No collision, go straight to goal state or unsafe mode
+      elevator.setState(elevatorGoal);
+      wrist.setState(wristGoal);
+    } else {
       var intermediaryPosition = maybeIntermediaryPosition.get();
 
       // A collision was detected, so we need to go to an intermediary point
@@ -1944,10 +1947,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
       wrist.setCollisionAvoidanceGoal(intermediaryPosition.wristAngle());
       wrist.setState(WristState.COLLISION_AVOIDANCE);
-    } else {
-      // No collision, go straight to goal state or unsafe mode
-      elevator.setState(elevatorGoal);
-      wrist.setState(wristGoal);
     }
   }
 
