@@ -42,14 +42,18 @@ public enum CollisionBox {
       7,
       new Rectangle2d( // forwards Top
           new Translation2d(-24, 54), new Translation2d(6, 80)),
-      new SuperstructurePosition(56, 135)),
-  ;
+      new SuperstructurePosition(56, 135));
+
+  private static final boolean BOX_SHORTCUTS_ENABLED = true;
 
   public final int id;
   public final Rectangle2d bounds;
   public final SuperstructurePosition safeZone;
 
   public boolean shortCutPossible(CollisionBox goal) {
+    if (!BOX_SHORTCUTS_ENABLED) {
+      return false;
+    }
 
     if (this == goal) {
       return false;
