@@ -1295,6 +1295,7 @@ public class RobotManager extends StateMachine<RobotState> {
       swerve.setAutoAlignSpeeds(autoAlign.calculateConstrainedAndWeightedSpeeds(idealAlignSpeeds));
     } else {
       swerve.setAutoAlignAutoSpeeds(new ChassisSpeeds());
+      swerve.setAutoAlignSpeeds(swerve.getTeleopSpeeds());
     }
 
     swerve.setElevatorHeight(elevator.getHeight());
