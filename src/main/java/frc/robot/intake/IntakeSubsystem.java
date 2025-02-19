@@ -33,8 +33,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   private final VelocityDetector topMotorAlgaeDetection = new VelocityDetector(32, 0.2);
   private final VelocityDetector bottomMotorAlgaeDetection = new VelocityDetector(30, 0.2);
-  private final VelocityDetector topMotorCoralDetection = new VelocityDetector(32, 0.2);
-  private final VelocityDetector bottomMotorCoralDetection = new VelocityDetector(30, 0.2);
+  private final VelocityDetector topMotorCoralDetection = new VelocityDetector(90, 0.2);
+  private final VelocityDetector bottomMotorCoralDetection = new VelocityDetector(90, 0.2);
   private double topMotorVelocity = 0.0;
   private double bottomMotorVelocity = 0.0;
   private boolean topMotorAlgaeVelocityGp = false;
@@ -60,8 +60,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     topMotorAlgaeVelocityGp = topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorAlgaeVelocityGp = bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20);
 
-    topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 20);
-    bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 20);
+    topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 75);
+    bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 70);
 
     if (RobotConfig.get().intake().sensorFlipped()) {
       leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
