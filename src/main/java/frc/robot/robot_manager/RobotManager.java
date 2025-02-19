@@ -1023,7 +1023,7 @@ public class RobotManager extends StateMachine<RobotState> {
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.climbRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
         elevatorPurpleLimelight.setState(LimelightState.PURPLE);
@@ -1035,7 +1035,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_2_HANGING -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -1048,7 +1048,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_3_HANGING_2 -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -1061,7 +1061,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_4_HANGING_3 -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.CORAL_HORIZONTAL);
