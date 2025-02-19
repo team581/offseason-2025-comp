@@ -51,7 +51,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
   public Pose2d getPose(double timestamp) {
     var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
-    return swerve.drivetrain.samplePoseAt(newTimestamp).orElse(getPose());
+    return swerve.drivetrain.samplePoseAt(newTimestamp).orElseGet(this::getPose);
   }
 
   @Override
