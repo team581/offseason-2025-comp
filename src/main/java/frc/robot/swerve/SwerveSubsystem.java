@@ -191,7 +191,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               : SwerveState.REEF_ALIGN_TELEOP;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
-      case CLIMBING -> SwerveState.CLIMBING;
+      case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
     };
   }
 
