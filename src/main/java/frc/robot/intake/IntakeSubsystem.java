@@ -21,7 +21,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final Debouncer rightDebouncer = RobotConfig.get().intake().rightDebouncer();
   private final Debouncer leftDebouncer = RobotConfig.get().intake().leftDebouncer();
 
-  private final TorqueCurrentFOC torqueRequest = new TorqueCurrentFOC(80).withMaxAbsDutyCycle(0.66);
+  private final TorqueCurrentFOC algaeHoldRequest =
+      new TorqueCurrentFOC(RobotConfig.get().intake().algaeHoldCurrent())
+          .withMaxAbsDutyCycle(RobotConfig.get().intake().algaeHoldMaxDutyCycle());
 
   private boolean rightSensorRaw = false;
   private boolean leftSensorRaw = false;
@@ -110,8 +112,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotor.disable();
       }
       case IDLE_W_ALGAE -> {
-        topMotor.setControl(torqueRequest);
-        bottomMotor.setControl(torqueRequest);
+        topMotor.setControl(algaeHoldRequest);
+        bottomMotor.setControl(algaeHoldRequest);
       }
       case IDLE_W_CORAL -> {
         topMotor.setVoltage(0.25);

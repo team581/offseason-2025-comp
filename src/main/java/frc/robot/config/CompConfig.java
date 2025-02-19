@@ -121,7 +121,9 @@ class CompConfig {
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0))),
+                          .withPeakReverseTorqueCurrent(70.0)),
+              65,
+              0.66),
           new SwerveConfig(
               new ProfiledPhoenixPIDController(5.75, 0, 0, Double.MAX_VALUE),
               true,

@@ -116,7 +116,9 @@ class PracticeConfig {
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0))),
+                          .withPeakReverseTorqueCurrent(70.0)),
+              68,
+              0.66),
           new SwerveConfig(
               new ProfiledPhoenixPIDController(10, 0, 1, Double.MAX_VALUE),
               true,
