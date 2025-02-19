@@ -85,6 +85,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.01)
+          .withRotationalDeadband(MaxAngularRate * 0.015)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(),
               ORIGINAL_HEADING_PID.getI(),
