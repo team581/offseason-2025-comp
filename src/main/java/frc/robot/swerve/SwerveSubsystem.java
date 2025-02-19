@@ -157,8 +157,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public void setRobotRelativeAutoSpeeds(ChassisSpeeds speeds) {
     setFieldRelativeAutoSpeeds(
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            speeds, Rotation2d.fromDegrees(drivetrainPigeon.getYaw().getValueAsDouble())));
+        ChassisSpeeds.fromRobotRelativeSpeeds(speeds, drivetrainState.Pose.getRotation()));
   }
 
   public void setFieldRelativeCoralAssistSpeedsOffset(ChassisSpeeds speeds) {
