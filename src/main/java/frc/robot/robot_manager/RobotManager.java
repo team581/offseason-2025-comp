@@ -822,7 +822,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L2_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_DISPLACED_L2_PLACE, WristState.CORAL_SCORE_DISPLACED_PLACING_L2);
+            ElevatorState.CORAL_DISPLACED_L2_PLACE,
+            WristState.CORAL_SCORE_DISPLACED_PLACING_L2,
+            true);
         swerve.enableScoringAlignment();
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -862,7 +864,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L3_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_DISPLACED_L3_PLACE, WristState.CORAL_SCORE_DISPLACED_PLACING_L3);
+            ElevatorState.CORAL_DISPLACED_L3_PLACE,
+            WristState.CORAL_SCORE_DISPLACED_PLACING_L3,
+            true);
         swerve.enableScoringAlignment();
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -904,7 +908,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE, CORAL_DISPLACED_L4_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_DISPLACED_L4_PLACE, WristState.CORAL_SCORE_DISPLACED_PLACING_L4);
+            ElevatorState.CORAL_DISPLACED_L4_PLACE,
+            WristState.CORAL_SCORE_DISPLACED_PLACING_L4,
+            true);
         swerve.enableScoringAlignment();
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
