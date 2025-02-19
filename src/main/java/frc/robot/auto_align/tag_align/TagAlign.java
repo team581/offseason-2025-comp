@@ -85,7 +85,6 @@ public class TagAlign {
 
     var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
 
-
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
     var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
