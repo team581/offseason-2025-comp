@@ -15,12 +15,16 @@ public abstract class BaseAuto {
   protected final Trailblazer trailblazer;
   protected final RobotCommands actions;
   protected final AutoCommands autoCommands;
+  private final String autoName;
 
   protected BaseAuto(RobotManager robotManager, Trailblazer trailblazer) {
     this.robotManager = robotManager;
     this.trailblazer = trailblazer;
     this.actions = new RobotCommands(robotManager);
     this.autoCommands = new AutoCommands(actions, robotManager);
+
+    var className = this.getClass().getSimpleName();
+    autoName = className.substring(className.lastIndexOf('.') + 1);
   }
 
   protected abstract Pose2d getRedStartingPose();
@@ -31,20 +35,22 @@ public abstract class BaseAuto {
 
   protected abstract Command getBlueAutoCommand();
 
-  public Command getAutoCommand() {
-    var className = this.getClass().getSimpleName();
-    className = className.substring(className.lastIndexOf('.') + 1);
+  /** Returns the name of this auto. */
+  public String name() {
+    return autoName;
+  }
 
+  public Command getAutoCommand() {
     // TODO: Continuously reset pose before auto starts
     return Commands.either(
             Commands.runOnce(() -> robotManager.localization.resetPose(getRedStartingPose()))
                 .andThen(getRedAutoCommand())
-                .withName(className + "RedCommand"),
+                .withName(autoName + "RedCommand"),
             Commands.runOnce(() -> robotManager.localization.resetPose(getBlueStartingPose()))
                 .andThen(getBlueAutoCommand())
-                .withName(className + "BlueCommand"),
+                .withName(autoName + "BlueCommand"),
             FmsSubsystem::isRedAlliance)
-        .withName(className + "Command")
+        .withName(autoName + "Command")
         .finallyDo(
             interrupted -> {
               // Check if we are enabled, since auto commands are cancelled during disable

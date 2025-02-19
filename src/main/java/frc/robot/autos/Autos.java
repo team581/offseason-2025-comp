@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.scheduling.LifecycleSubsystem;
@@ -15,6 +16,7 @@ public class Autos extends LifecycleSubsystem {
   }
 
   public Command getAutoCommand() {
+    DogLog.log("Autos/CreatedAutoCommand", autoChooser.getSelectedAuto().name());
     return autoChooser.getSelectedAuto().getAutoCommand();
   }
 }

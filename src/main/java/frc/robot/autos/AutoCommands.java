@@ -3,6 +3,8 @@ package frc.robot.autos;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.ReefPipe;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
@@ -49,5 +51,28 @@ public class AutoCommands {
                 RobotState.SMART_STOW_1, RobotState.SMART_STOW_2, RobotState.IDLE_CORAL))
         .withTimeout(2)
         .withName("IntakeStationWithTimeoutCommand");
+  }
+
+  public Command l4WarmupCommand(ReefPipe pipe) {
+    return Commands.waitUntil(
+            () ->
+                robotManager.getState() != RobotState.SMART_STOW_1
+                    && robotManager.getState() != RobotState.SMART_STOW_2)
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                  AutoAlign.setAutoReefPipeOverride(pipe);
+                  robotManager.l4CoralApproachRequest();
+                }));
+  }
+
+  public Command intakeStationWarmupCommand() {
+    return Commands.runOnce(robotManager::intakeStationRequest);
+  }
+
+  public Command preloadCoralAfterRollHomed() {
+    return robotManager
+        .waitForRollHomedCommand()
+        .andThen(Commands.runOnce(robotManager::preloadCoralRequest));
   }
 }
