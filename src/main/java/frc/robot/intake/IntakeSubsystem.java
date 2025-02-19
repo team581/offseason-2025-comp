@@ -8,7 +8,6 @@ import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.RobotConfig;
-import frc.robot.util.MathHelpers;
 import frc.robot.util.VelocityDetector;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -54,8 +53,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    topMotorVelocity = MathHelpers.roundTo(topMotor.getVelocity().getValueAsDouble(), 0.1);
-    bottomMotorVelocity = MathHelpers.roundTo(bottomMotor.getVelocity().getValueAsDouble(), 0.1);
+    topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
+    bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
 
     topMotorAlgaeVelocityGp = topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorAlgaeVelocityGp = bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20);
