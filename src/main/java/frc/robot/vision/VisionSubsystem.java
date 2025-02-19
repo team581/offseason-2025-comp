@@ -93,7 +93,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public boolean isAnyScoringTagLimelightOnline() {
-
     if ((frontCoralLimelight.getState() == LimelightState.TAGS
             || frontCoralLimelight.getState() == LimelightState.REEF_TAGS)
         && (frontCoralLimelight.getCameraHealth() == CameraHealth.NO_TARGETS

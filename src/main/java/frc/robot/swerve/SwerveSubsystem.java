@@ -311,7 +311,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
 
         } else {
-
           drivetrain.setControl(
               drive
                   .withVelocityX(autoAlignSpeeds.vxMetersPerSecond)
