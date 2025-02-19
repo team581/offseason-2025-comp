@@ -44,7 +44,7 @@ public enum CollisionBox {
           new Translation2d(-24, 54), new Translation2d(6, 80)),
       new SuperstructurePosition(56, 135));
 
-  public static final boolean BOX_SHORTCUTS_ENABLED = false;
+  public static final boolean BOX_SHORTCUTS_ENABLED = true;
 
   public final int id;
   public final Rectangle2d bounds;
