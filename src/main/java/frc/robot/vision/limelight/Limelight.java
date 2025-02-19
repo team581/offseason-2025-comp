@@ -177,9 +177,12 @@ public class Limelight extends StateMachine<LimelightState> {
       }
     }
 
-    LimelightHelpers.SetIMUMode(
-        limelightTableName,
-        seedIMUTimer.hasElapsed(2.0) && limelightModel == LimelightModel.FOUR ? 2 : 1);
+    if (limelightModel == LimelightModel.FOUR) {
+      LimelightHelpers.SetIMUMode(limelightTableName, seedIMUTimer.hasElapsed(2.0) ? 4 : 3);
+    } else {
+      // TODO: Can remove once we have upgraded all the Limelights
+      LimelightHelpers.SetIMUMode(limelightTableName, 0);
+    }
   }
 
   @Override
