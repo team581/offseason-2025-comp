@@ -1219,33 +1219,6 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> {}
     }
 
-    // Update purple to finish aligning after elevator is raised
-    // switch (getState()) {
-    //   case CORAL_CENTERED_L2_2_LINEUP,
-    //       CORAL_CENTERED_L2_3_PLACE,
-    //       CORAL_CENTERED_L2_4_RELEASE,
-    //       CORAL_CENTERED_L3_2_LINEUP,
-    //       CORAL_CENTERED_L3_3_PLACE,
-    //       CORAL_CENTERED_L3_4_RELEASE,
-    //       CORAL_CENTERED_L4_2_LINEUP,
-    //       CORAL_CENTERED_L4_3_PLACE,
-    //       CORAL_CENTERED_L4_4_RELEASE,
-    //       CORAL_DISPLACED_L2_2_LINEUP,
-    //       CORAL_DISPLACED_L2_3_PLACE,
-    //       CORAL_DISPLACED_L2_4_RELEASE,
-    //       CORAL_DISPLACED_L3_2_LINEUP,
-    //       CORAL_DISPLACED_L3_3_PLACE,
-    //       CORAL_DISPLACED_L3_4_RELEASE,
-    //       CORAL_DISPLACED_L4_2_LINEUP,
-    //       CORAL_DISPLACED_L4_3_PLACE,
-    //       CORAL_DISPLACED_L4_4_RELEASE -> {
-    //     if (elevator.atGoal()) {
-    //       purple.setBeforeRaisedOffset(false);
-    //     }
-    //   }
-    //   default -> {}
-    // }
-
     if (elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE

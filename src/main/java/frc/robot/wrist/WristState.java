@@ -12,9 +12,6 @@ public enum WristState {
   CORAL_SCORE_PLACING_L1(0.0),
   CORAL_SCORE_RELEASE_L1(0.0),
 
-  // TODO: Check why CORAL_SCORE_CENTERED_PLACING_L2 and CORAL_SCORE_CENTERED_PLACING_L3 have
-  // different angles when theoretically they could be the same, and find out if it matters
-
   // Centered coral positions
   CORAL_SCORE_CENTERED_LINEUP_L2(25.6),
   CORAL_SCORE_CENTERED_PLACING_L2(10),
