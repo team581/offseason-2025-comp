@@ -131,7 +131,6 @@ public class WristSubsystem extends StateMachine<WristState> {
         motor.setControl(
             pidRequest.withPosition(Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
       }
-
       default -> {}
     }
   }

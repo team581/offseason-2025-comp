@@ -175,7 +175,6 @@ public class Limelight extends StateMachine<LimelightState> {
             limelightTableName, getAllianceBasedReefTagIDs());
         updateHealth(tagResult);
       }
-      default -> {}
     }
 
     LimelightHelpers.SetIMUMode(

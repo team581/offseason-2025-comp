@@ -1436,7 +1436,6 @@ public class RobotManager extends StateMachine<RobotState> {
           }
         }
       }
-      default -> {}
     }
   }
 

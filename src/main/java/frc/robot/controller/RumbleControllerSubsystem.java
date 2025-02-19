@@ -54,7 +54,7 @@ public class RumbleControllerSubsystem extends StateMachine<RumbleControllerStat
   protected RumbleControllerState getNextState(RumbleControllerState currentState) {
     return switch (currentState) {
       case ON -> timeout(0.5) ? RumbleControllerState.OFF : currentState;
-      default -> currentState;
+      case OFF -> currentState;
     };
   }
 
@@ -67,7 +67,6 @@ public class RumbleControllerSubsystem extends StateMachine<RumbleControllerStat
       case OFF -> {
         controller.setRumble(RumbleType.kBothRumble, 0);
       }
-      default -> {}
     }
   }
 }
