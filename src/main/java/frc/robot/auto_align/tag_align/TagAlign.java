@@ -1,6 +1,7 @@
 package frc.robot.auto_align.tag_align;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,7 +14,7 @@ import frc.robot.util.MathHelpers;
 public class TagAlign {
   private final LocalizationSubsystem localization;
 
-  private static final double TAG_KP = 3.2;
+  private static final PIDController TAG_PID = new PIDController(3.2, 0.0, 0.03);
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
 
@@ -84,8 +85,9 @@ public class TagAlign {
 
     var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
 
-    var xEffort = goalTranslation.getX() * TAG_KP;
-    var yEffort = goalTranslation.getY() * TAG_KP;
+
+    var xEffort = TAG_PID.calculate(-goalTranslation.getX());
+    var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
     DogLog.log("PurpleAlignment/Tag/XEffort", xEffort);
     DogLog.log("PurpleAlignment/Tag/YEffort", yEffort);
