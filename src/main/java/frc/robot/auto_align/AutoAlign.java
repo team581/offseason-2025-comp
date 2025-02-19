@@ -25,7 +25,7 @@ public class AutoAlign {
   private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
-  private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.4;
+  private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
   private static final double MIN_CONSTRAINT = 1.5;
   private static final double MAX_CONSTRAINT = 3.5;
   private static final double BASE_TELEOP_SPEED = 2.0;

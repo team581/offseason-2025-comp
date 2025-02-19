@@ -98,8 +98,8 @@ class CompConfig {
               21,
               26,
               false,
-              new Debouncer(0.1, DebounceType.kBoth),
-              new Debouncer(0.1, DebounceType.kBoth),
+              new Debouncer(0.1, DebounceType.kFalling),
+              new Debouncer(0.1, DebounceType.kFalling),
               new TalonFXConfiguration()
                   .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
