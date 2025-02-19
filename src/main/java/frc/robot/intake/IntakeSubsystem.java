@@ -14,7 +14,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
-  private static final boolean CORAL_CURRENT_DETECTION = false;
+  private static final boolean CORAL_VELOCITY_DETECTION = true;
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
   private final CANdi candi;
@@ -90,7 +90,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   public boolean getHasGP() {
     return switch (getState()) {
       case INTAKING_CORAL ->
-          CORAL_CURRENT_DETECTION
+          CORAL_VELOCITY_DETECTION
               ? topMotorCoralVelocityGp && bottomMotorCoralVelocityGp
               : sensorsHaveGP;
       case INTAKING_ALGAE -> topMotorAlgaeVelocityGp && bottomMotorAlgaeVelocityGp;
