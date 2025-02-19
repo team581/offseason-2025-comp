@@ -15,7 +15,7 @@ import frc.robot.util.state_machines.StateMachine;
 public class ClimberSubsystem extends StateMachine<ClimberState> {
   // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
   // again
-  private static final boolean CLIMBER_ENABLED = !RobotConfig.IS_PRACTICE_BOT;
+  private static final boolean CLIMBER_ENABLED = false;
   private static final double TOLERANCE = 3;
   private final TalonFX motor;
   private final CANcoder encoder;
