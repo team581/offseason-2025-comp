@@ -40,7 +40,7 @@ public class TagAlign {
 
   public boolean isTagAligned() {
     var robotPose = localization.getPose();
-    var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level);
+    var scoringPoseFieldRelative = AutoAlign.getClosestReefPipe(robotPose, level).getPose(level);
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
@@ -49,9 +49,9 @@ public class TagAlign {
     var rawRobotPose = localization.getPose();
     var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.4);
     DogLog.log("PurpleAlignment/LookaheadPose", lookaheadPose);
-    var rawPose = AutoAlign.getClosestReefPipe(rawRobotPose, level);
+    var rawPose = AutoAlign.getClosestReefPipe(rawRobotPose, level).getPose(level);
     if (rawRobotPose.getTranslation().getDistance(rawPose.getTranslation()) < 0.2) {
-      rawPose = AutoAlign.getClosestReefPipe(lookaheadPose, level);
+      rawPose = AutoAlign.getClosestReefPipe(lookaheadPose, level).getPose(level);
     }
     if (beforeRaisedOffsetEnabled) {
       var robotRelative =

@@ -58,11 +58,10 @@ public class AutoAlign {
     return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
   }
 
-  // TODO: Return the ReefPipe instead of the raw pose
-  public static Pose2d getClosestReefPipe(
+  public static ReefPipe getClosestReefPipe(
       Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
     if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
-      return autoReefPipeOverride.orElseThrow().getPose(level);
+      return autoReefPipeOverride.orElseThrow();
     }
 
     var reefPipe =
@@ -78,11 +77,10 @@ public class AutoAlign {
                             .getDistance(b.getPose(level, isRedAlliance).getTranslation())))
             .get();
 
-    return reefPipe.getPose(level, isRedAlliance);
+    return reefPipe;
   }
 
-  // TODO: Return the ReefPipe instead of the raw pose
-  public static Pose2d getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
+  public static ReefPipe getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
     return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
   }
 
