@@ -12,15 +12,14 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.util.MathHelpers;
 
 public class TagAlign {
-  private final LocalizationSubsystem localization;
-
   private static final PIDController TAG_PID = new PIDController(3.2, 0.0, 0.03);
   private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
 
+  private final LocalizationSubsystem localization;
+  private boolean beforeRaisedOffsetEnabled = false;
   private ReefPipeLevel level = ReefPipeLevel.L1;
   private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
-  private static boolean beforeRaisedOffsetEnabled = false;
 
   public TagAlign(LocalizationSubsystem localization) {
     this.localization = localization;
