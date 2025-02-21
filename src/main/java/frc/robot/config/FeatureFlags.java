@@ -15,6 +15,8 @@ public class FeatureFlags {
 
   public static final BooleanSupplier REEF_ALIGN_FINE_ADJUSTMENTS =
       FeatureFlag.of("ReefAlignment/FineAdjustments", false);
+  public static final BooleanSupplier REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN =
+      FeatureFlag.of("ReefAlignment/LookaheadDistanceCostFn", false);
 
   // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
   // again

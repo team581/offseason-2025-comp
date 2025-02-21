@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
+import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.MathHelpers;
@@ -14,7 +15,6 @@ import java.util.Comparator;
 public class AlignmentCostUtil {
   private static final double LOOKAHEAD = 0.5;
   private static final double ANGLE_DIFFERENCE_SCALAR = 0.15;
-  private static final boolean USE_LOOKAHEAD_COST_FN = false;
 
   /**
    * Returns the "cost" (a dimensionless number) of aligning to a given pose based on the robot's
@@ -25,7 +25,7 @@ public class AlignmentCostUtil {
    * @param robotVelocity The robot's current velocity (field relative)
    */
   private static double getAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
-    if (USE_LOOKAHEAD_COST_FN) {
+    if (FeatureFlags.REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN.getAsBoolean()) {
       var lookahead = MathHelpers.poseLookahead(robotPose, robotVelocity, LOOKAHEAD);
       return lookahead.getTranslation().getDistance(target.getTranslation());
     }
