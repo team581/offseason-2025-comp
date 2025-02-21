@@ -60,7 +60,7 @@ public class PushPartnerAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_J))),
                     new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.tagAlign::isTagAligned),
+            .until(robotManager.tagAlign::isAligned),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -84,7 +84,7 @@ public class PushPartnerAuto extends BaseAuto {
                                 new Pose2d(14.532, 1.794, Rotation2d.fromDegrees(128.33))),
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned),
+                    .until(robotManager.tagAlign::isAligned),
                 autoCommands.l4ScoreAndReleaseCommand()),
 
         // INTAKE STATION
@@ -108,7 +108,7 @@ public class PushPartnerAuto extends BaseAuto {
                                 new Pose2d(14.939, 2.046, Rotation2d.fromDegrees(132.26))),
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned)),
+                    .until(robotManager.tagAlign::isAligned)),
         autoCommands.l4ScoreAndReleaseCommand());
   }
 }
