@@ -51,8 +51,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.960, 1.903, Rotation2d.fromDegrees(60)))
-                .pathflipped(),
+                new AutoPoint(new Pose2d(11.960, 1.903, Rotation2d.fromDegrees(60))).pathflipped(),
                 new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88)))
                     .pathflipped(),
                 new AutoPoint(
@@ -80,8 +79,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60)))
-                .pathflipped(),
+                new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60))).pathflipped(),
                 new AutoPoint(new Pose2d(13.842, 1.582, Rotation2d.fromDegrees(135.88)))
                     .pathflipped(),
                 new AutoPoint(
