@@ -44,7 +44,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         .pathflipped(),
                     new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.tagAlign::isTagAligned),
+            .until(robotManager.tagAlign::isAligned),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -71,7 +71,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         .pathflipped(),
                     new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.tagAlign::isTagAligned),
+            .until(robotManager.tagAlign::isAligned),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -99,7 +99,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE K
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned)),
+                    .until(robotManager.tagAlign::isAligned)),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -128,7 +128,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE L
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned)),
+                    .until(robotManager.tagAlign::isAligned)),
         autoCommands.l4ScoreAndReleaseCommand());
   }
 
@@ -154,7 +154,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
                     new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.tagAlign::isTagAligned),
+            .until(robotManager.tagAlign::isAligned),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -177,7 +177,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         autoCommands.l4WarmupCommand(ReefPipe.PIPE_J)),
                     new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.tagAlign::isTagAligned),
+            .until(robotManager.tagAlign::isAligned),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -202,7 +202,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE K
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned)),
+                    .until(robotManager.tagAlign::isAligned)),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -227,7 +227,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE L
                             new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.tagAlign::isTagAligned)),
+                    .until(robotManager.tagAlign::isAligned)),
         autoCommands.l4ScoreAndReleaseCommand());
   }
 }

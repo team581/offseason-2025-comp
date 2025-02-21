@@ -1,9 +1,7 @@
 package frc.robot.auto_align;
 
-import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -46,115 +44,5 @@ public class AutoAlignTest {
     var result = AutoAlign.shouldNetScoreForwards(robotPose);
 
     Assertions.assertEquals(false, result);
-  }
-
-  @Test
-  void scoreSideABRed() {
-    var robotPose = new Pose2d(15.0, 5.0, Rotation2d.fromRadians(-Math.PI));
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_AB.redPose, result);
-  }
-
-  @Test
-  void scoreSideABBlue() {
-    DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
-
-    var robotPose = new Pose2d(3.658, 4.026, Rotation2d.fromRadians(0.0));
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_AB.bluePose, result);
-  }
-
-  @Test
-  void scoreSideCDRed() {
-    var robotPose = ReefSide.SIDE_CD.redPose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_CD.redPose, result);
-  }
-
-  @Test
-  void scoreSideCDBlue() {
-    var robotPose = ReefSide.SIDE_CD.bluePose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_CD.bluePose, result);
-  }
-
-  @Test
-  void scoreSideEFRed() {
-    var robotPose = ReefSide.SIDE_EF.redPose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_EF.redPose, result);
-  }
-
-  @Test
-  void scoreSideEFBlue() {
-    var robotPose = ReefSide.SIDE_EF.bluePose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_EF.bluePose, result);
-  }
-
-  @Test
-  void scoreSideGHRed() {
-    var robotPose = new Pose2d(12.227, 4.026, Rotation2d.fromRadians(0.0));
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_GH.redPose, result);
-  }
-
-  @Test
-  void scoreSideGHBlue() {
-    var robotPose = new Pose2d(5.321, 4.026, Rotation2d.fromRadians(Math.PI));
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_GH.bluePose, result);
-  }
-
-  @Test
-  void scoreSideIJRed() {
-    var robotPose = ReefSide.SIDE_IJ.redPose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_IJ.redPose, result);
-  }
-
-  @Test
-  void scoreSideIJBlue() {
-    var robotPose = ReefSide.SIDE_IJ.bluePose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_IJ.bluePose, result);
-  }
-
-  @Test
-  void scoreSideKLRed() {
-    var robotPose = ReefSide.SIDE_KL.redPose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose).getPose(true);
-
-    Assertions.assertEquals(ReefSide.SIDE_KL.redPose, result);
-  }
-
-  @Test
-  void scoreSideKLBlue() {
-    var robotPose = ReefSide.SIDE_KL.bluePose;
-
-    var result = AutoAlign.getClosestReefSide(robotPose, false).getPose(false);
-
-    Assertions.assertEquals(ReefSide.SIDE_KL.bluePose, result);
   }
 }

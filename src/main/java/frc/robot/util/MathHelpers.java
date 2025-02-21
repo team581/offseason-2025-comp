@@ -103,5 +103,9 @@ public class MathHelpers {
     return input.rotateAround(FIELD_CENTER, Rotation2d.k180deg);
   }
 
+  public static Rotation2d vectorDirection(ChassisSpeeds vector) {
+    return new Translation2d(vector.vxMetersPerSecond, vector.vyMetersPerSecond).getAngle();
+  }
+
   private MathHelpers() {}
 }

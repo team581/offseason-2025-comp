@@ -38,9 +38,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final double MaxAngularRate = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
-  private static final double leftXDeadband = 0.05;
-  private static final double rightXDeadband = 0.15;
-  private static final double leftYDeadband = 0.05;
+  /** Ratio from joystick percentage to scoring pose offset in meters. */
+  private static final double FINE_ADJUST_CONTROLLER_SCALAR = 0.3;
+
+  private static final double LEFT_X_DEADBAND = 0.05;
+  private static final double LEFT_Y_DEADBAND = 0.05;
+  private static final double RIGHT_X_DEADBAND = 0.15;
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
 
@@ -105,6 +108,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
   private double previousTimestamp = 0.0;
   private double teleopSlowModePercent = 0.0;
+  private double rawControllerXValue = 0.0;
+  private double rawControllerYValue = 0.0;
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
@@ -177,6 +182,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
           DriverStation.isAutonomous()
               ? SwerveState.REEF_ALIGN_AUTO
               : SwerveState.REEF_ALIGN_TELEOP;
+      case REEF_ALIGN_TELEOP_FINE_ADJUST ->
+          DriverStation.isAutonomous()
+              ? SwerveState.REEF_ALIGN_AUTO
+              : SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
       case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
@@ -184,13 +193,17 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void driveTeleop(double x, double y, double theta) {
+    rawControllerXValue = x;
+    rawControllerYValue = y;
     double leftY =
         -1.0
-            * MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(y, leftYDeadband), 2.0);
+            * MathHelpers.signedExp(
+                ControllerHelpers.deadbandJoystickValue(y, LEFT_Y_DEADBAND), 2.0);
     double leftX =
-        MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, leftXDeadband), 2.0);
+        MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, LEFT_X_DEADBAND), 2.0);
     double rightX =
-        MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(theta, rightXDeadband), 2.0);
+        MathHelpers.signedExp(
+            ControllerHelpers.deadbandJoystickValue(theta, RIGHT_X_DEADBAND), 2.0);
 
     if (RobotConfig.get().swerve().invertRotation()) {
       rightX *= -1.0;
@@ -383,11 +396,27 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void enableScoringAlignment() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
-    } else {
-      setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
+      if (DriverStation.isAutonomous()) {
+        setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
+
+      } else {
+        setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
     }
+  }
+
+  public Translation2d getPoseOffset() {
+    if (getState() != SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+      return Translation2d.kZero;
+    }
+
+    var mappedValues =
+        ControllerHelpers.fromCircularDiscCoordinates(rawControllerXValue, rawControllerYValue);
+    var deadbandX = ControllerHelpers.deadbandJoystickValue(mappedValues.getX(), LEFT_X_DEADBAND);
+    var deadbandY = ControllerHelpers.deadbandJoystickValue(mappedValues.getY(), LEFT_Y_DEADBAND);
+    var scaledX = deadbandX * FINE_ADJUST_CONTROLLER_SCALAR;
+    var scaledY = deadbandY * FINE_ADJUST_CONTROLLER_SCALAR;
+
+    return new Translation2d(scaledY, scaledX);
   }
 
   public void enableCoralIntakeAssist() {

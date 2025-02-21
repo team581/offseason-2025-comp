@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
           imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final PurpleAlign purpleAlign = new PurpleAlign(elevatorPurpleLimelight);
-  private final TagAlign tagAlign = new TagAlign(localization);
+  private final TagAlign tagAlign = new TagAlign(swerve, localization);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =

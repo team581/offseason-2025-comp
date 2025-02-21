@@ -10,19 +10,15 @@ import frc.robot.auto_align.purple_align.PurpleAlignState;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
-import java.util.List;
 import java.util.Optional;
 
 public class AutoAlign {
   private static Optional<ReefPipe> autoReefPipeOverride = Optional.empty();
-  private static final List<ReefSide> ALL_REEF_SIDES = List.of(ReefSide.values());
-  private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
@@ -32,56 +28,6 @@ public class AutoAlign {
 
   public static void setAutoReefPipeOverride(ReefPipe override) {
     autoReefPipeOverride = Optional.of(override);
-  }
-
-  public static ReefSide getClosestReefSide(Pose2d robotPose, boolean isRedAlliance) {
-    if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
-      return ReefSide.fromPipe(autoReefPipeOverride.orElseThrow());
-    }
-
-    var reefSide =
-        ALL_REEF_SIDES.stream()
-            .min(
-                (a, b) ->
-                    Double.compare(
-                        robotPose
-                            .getTranslation()
-                            .getDistance(a.getPose(isRedAlliance).getTranslation()),
-                        robotPose
-                            .getTranslation()
-                            .getDistance(b.getPose(isRedAlliance).getTranslation())))
-            .get();
-    return reefSide;
-  }
-
-  public static ReefSide getClosestReefSide(Pose2d robotPose) {
-    return getClosestReefSide(robotPose, FmsSubsystem.isRedAlliance());
-  }
-
-  public static ReefPipe getClosestReefPipe(
-      Pose2d robotPose, ReefPipeLevel level, boolean isRedAlliance) {
-    if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
-      return autoReefPipeOverride.orElseThrow();
-    }
-
-    var reefPipe =
-        ALL_REEF_PIPES.stream()
-            .min(
-                (a, b) ->
-                    Double.compare(
-                        robotPose
-                            .getTranslation()
-                            .getDistance(a.getPose(level, isRedAlliance).getTranslation()),
-                        robotPose
-                            .getTranslation()
-                            .getDistance(b.getPose(level, isRedAlliance).getTranslation())))
-            .get();
-
-    return reefPipe;
-  }
-
-  public static ReefPipe getClosestReefPipe(Pose2d robotPose, ReefPipeLevel level) {
-    return getClosestReefPipe(robotPose, level, FmsSubsystem.isRedAlliance());
   }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
@@ -177,6 +123,14 @@ public class AutoAlign {
     this.swerve = swerve;
   }
 
+  public ReefSide getClosestReefSide() {
+    if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
+      return ReefSide.fromPipe(autoReefPipeOverride.orElseThrow());
+    }
+
+    return ReefSide.fromPipe(tagAlign.getBestPipe());
+  }
+
   public void setTeleopSpeeds(ChassisSpeeds speeds) {
     teleopSpeeds = speeds;
   }
@@ -221,7 +175,7 @@ public class AutoAlign {
 
   public ChassisSpeeds getCombinedTagAndPurpleChassisSpeeds() {
     var seenPurple = purple.seenPurple();
-    var isTagAligned = tagAlign.isTagAligned();
+    var isTagAligned = tagAlign.isAligned();
     var purpleState = purple.getPurpleState();
     DogLog.log("PurpleAlignment/SeenPurple", seenPurple);
     DogLog.log("PurpleAlignment/PurpleState", purpleState);
@@ -249,7 +203,7 @@ public class AutoAlign {
   public ReefAlignState getReefAlignState() {
 
     var tagResult = frontLimelight.getTagResult().or(baseLimelight::getTagResult);
-    var tagAligned = tagAlign.isTagAligned();
+    var tagAligned = tagAlign.isAligned();
     var purpleState = purple.getPurpleState();
     var purpleHealth = purpleLimelight.getCameraHealth();
     var combinedTagHealth =
