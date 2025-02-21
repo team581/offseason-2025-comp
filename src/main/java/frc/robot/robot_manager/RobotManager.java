@@ -220,6 +220,13 @@ public class RobotManager extends StateMachine<RobotState> {
           yield currentState;
         }
 
+        // Temporary workaround for avoiding tipping into the reef during auto
+        if (DriverStation.isAutonomous()) {
+          yield intake.isCoralCentered()
+              ? RobotState.CORAL_CENTERED_L4_2_LINEUP
+              : RobotState.CORAL_DISPLACED_L4_2_LINEUP;
+        }
+
         yield intake.isCoralCentered()
             ? RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST
             : RobotState.CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST;
