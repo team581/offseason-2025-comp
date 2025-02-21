@@ -69,7 +69,9 @@ public class FourPiece2IJKLAuto extends BaseAuto {
             .followSegment(
                 new AutoSegment(
                     SCORING_CONSTRAINTS,
-                    new AutoPoint(new Pose2d(14.103, 1.0, Rotation2d.fromDegrees(90.5)), INTAKING_CONSTRAINTS)
+                    new AutoPoint(
+                            new Pose2d(14.103, 1.0, Rotation2d.fromDegrees(90.5)),
+                            INTAKING_CONSTRAINTS)
                         .pathflipped(),
                     new AutoPoint(
                             new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0)),
@@ -145,7 +147,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
-              SCORING_CONSTRAINTS,
+                SCORING_CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.998, 2.812, Rotation2d.fromDegrees(134.931)))
                     .pathflipped(),
                 new AutoPoint(
@@ -270,10 +272,10 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
-              SCORING_CONSTRAINTS,
+                SCORING_CONSTRAINTS,
                 new AutoPoint(new Pose2d(13.998, 2.812, Rotation2d.fromDegrees(134.931))),
                 new AutoPoint(
-                  new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
+                    new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
                     Commands.runOnce(robotManager::stowRequest)))));
   }
 }
