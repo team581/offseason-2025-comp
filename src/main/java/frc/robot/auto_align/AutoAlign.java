@@ -5,13 +5,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.purple_align.PurpleAlign;
 import frc.robot.auto_align.purple_align.PurpleAlignState;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
-import frc.robot.config.RobotConfig;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
@@ -20,14 +18,13 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
 
-
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
   private static final double MIN_CONSTRAINT = 0.7;
   private static final double MAX_CONSTRAINT = 1.5;
   private static final double BASE_TELEOP_SPEED = 2.0;
-    private final Debouncer isAlignedDebouncer = new Debouncer(1.0);
+  private final Debouncer isAlignedDebouncer = new Debouncer(1.0);
 
   public void setAutoReefPipeOverride(ReefPipe override) {
     tagAlign.setPipeOveride(override);

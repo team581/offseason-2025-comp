@@ -12,7 +12,6 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
-import frc.robot.util.MathHelpers;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +72,9 @@ public class TagAlign {
 
     if (DriverStation.isTeleop()) {
       var offsetPose =
-      new Pose2d(theoreticalScoringPose.getTranslation().plus(driverPoseOffset), theoreticalScoringPose.getRotation());
+          new Pose2d(
+              theoreticalScoringPose.getTranslation().plus(driverPoseOffset),
+              theoreticalScoringPose.getRotation());
       return offsetPose;
     }
 
