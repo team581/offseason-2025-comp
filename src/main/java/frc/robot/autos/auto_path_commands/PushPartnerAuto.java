@@ -4,9 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.auto_align.ReefPipe;
 import frc.robot.autos.AutoPoint;
 import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
+import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
@@ -37,46 +39,76 @@ public class PushPartnerAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-        Commands.print("Red Push Partner Auto"),
-        actions.rehomeRollCommand(),
+        Commands.runOnce(robotManager::rehomeRollRequest),
+        // PUSH PARTNER
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(getRedStartingPose()),
+                new AutoPoint(Points.AUTO_START_1.redPose),
                 new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.kZero)))),
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.kZero)),
-                new AutoPoint(new Pose2d(12.529, 2.892, Rotation2d.fromDegrees(56.63))))),
-        Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
+
+        // SCORE L4 ON J
+        trailblazer
+            .followSegment(
+                new AutoSegment(
+                    CONSTRAINTS,
+                    new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.kZero)),
+                    new AutoPoint(
+                        new Pose2d(12.017, 2.207, Rotation2d.fromDegrees(60)),
+                        autoCommands
+                            .preloadCoralAfterRollHomed()
+                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_J))),
+                    new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                false)
+            .until(robotManager.tagAlign::isTagAligned),
+        autoCommands.l4ScoreAndReleaseCommand(),
+
+        // INTAKE STATION
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97))),
-                new AutoPoint(new Pose2d(15.862, 0.552, Rotation2d.fromDegrees(128.18))))),
-        actions.intakeStationCommand(),
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.532, 1.794, Rotation2d.fromDegrees(128.33))),
-                new AutoPoint(new Pose2d(13.572, 2.892, Rotation2d.fromDegrees(121.86))))),
-        Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
+                new AutoPoint(
+                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
+        autoCommands.intakeStationWithTimeoutCommand(),
+
+        // SCORE L4 ON K
+        autoCommands
+            .l4WarmupCommand(ReefPipe.PIPE_K)
+            .alongWith(
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            CONSTRAINTS,
+                            new AutoPoint(
+                                new Pose2d(14.532, 1.794, Rotation2d.fromDegrees(128.33))),
+                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                        false)
+                    .until(robotManager.tagAlign::isTagAligned),
+                autoCommands.l4ScoreAndReleaseCommand()),
+
+        // INTAKE STATION
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(new Pose2d(14.817, 1.794, Rotation2d.fromDegrees(133.48))),
-                new AutoPoint(new Pose2d(15.862, 0.552, Rotation2d.fromDegrees(126.25))))),
+                new AutoPoint(
+                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
         actions.intakeStationCommand(),
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.939, 2.046, Rotation2d.fromDegrees(132.26))),
-                new AutoPoint(new Pose2d(13.868, 3.005, Rotation2d.fromDegrees(123.81))))),
-        Commands.sequence(autoCommands.l4LineupCommand(), actions.confirmScoreCommand()),
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.052, 3.161, Rotation2d.fromDegrees(123.81))))));
+
+        // SCORE L4 ON L
+        autoCommands
+            .l4WarmupCommand(ReefPipe.PIPE_L)
+            .alongWith(
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            CONSTRAINTS,
+                            new AutoPoint(
+                                new Pose2d(14.939, 2.046, Rotation2d.fromDegrees(132.26))),
+                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                        false)
+                    .until(robotManager.tagAlign::isTagAligned)),
+        autoCommands.l4ScoreAndReleaseCommand());
   }
 }
