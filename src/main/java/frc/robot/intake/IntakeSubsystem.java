@@ -62,6 +62,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 27);
     bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 27);
+    DogLog.log("Intake/TopMotor/Velocity", topMotorVelocity);
+    DogLog.log("Intake/BottomMotor/Velocity", bottomMotorVelocity);
+
 
     if (RobotConfig.get().intake().sensorFlipped()) {
       leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
