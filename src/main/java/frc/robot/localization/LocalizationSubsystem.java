@@ -2,12 +2,14 @@ package frc.robot.localization;
 
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
@@ -75,7 +77,14 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   public void resetPose(Pose2d estimatedPose) {
-    imu.setAngle(estimatedPose.getRotation().getDegrees());
+    // Reset the gyro when requested in teleop
+    // Otherwise, if we are in auto, only reset it if we aren't already at the correct heading
+    if (DriverStation.isTeleop()
+        || !MathUtil.isNear(
+            estimatedPose.getRotation().getDegrees(), imu.getRobotHeading(), 1.5, -180, 180)) {
+      imu.setAngle(estimatedPose.getRotation().getDegrees());
+    }
+
     swerve.drivetrain.resetPose(estimatedPose);
   }
 
