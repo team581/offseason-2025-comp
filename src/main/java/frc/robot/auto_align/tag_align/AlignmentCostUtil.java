@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 public class AlignmentCostUtil {
   private static final double LOOKAHEAD = 0.5;
-  private static final double ANGLE_DIFFERENCE_SCALAR = 0.3;
+  private static final double ANGLE_DIFFERENCE_SCALAR = 0.15;
   private static final boolean USE_LOOKAHEAD_COST_FN = false;
 
   /**
@@ -86,6 +86,6 @@ public class AlignmentCostUtil {
     return Comparator.comparingDouble(
         pipe ->
             getAlignCost(pipe.getPose(level), localization.getPose(), swerve.getTeleopSpeeds())
-                + (reefState.isScored(pipe, level) ? 1.0 : 0));
+                + (reefState.isScored(pipe, level) ? 0.3 : 0));
   }
 }
