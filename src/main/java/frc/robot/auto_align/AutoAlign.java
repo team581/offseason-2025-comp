@@ -2,6 +2,7 @@ package frc.robot.auto_align;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,24 +11,26 @@ import frc.robot.auto_align.purple_align.PurpleAlignState;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.config.RobotConfig;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
-import java.util.Optional;
 
-public class AutoAlign {
-  private static Optional<ReefPipe> autoReefPipeOverride = Optional.empty();
 
+public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
   private static final double MIN_CONSTRAINT = 0.7;
   private static final double MAX_CONSTRAINT = 1.5;
   private static final double BASE_TELEOP_SPEED = 2.0;
+    private final Debouncer isAlignedDebouncer = new Debouncer(1.0);
 
-  public static void setAutoReefPipeOverride(ReefPipe override) {
-    autoReefPipeOverride = Optional.of(override);
+  public void setAutoReefPipeOverride(ReefPipe override) {
+    tagAlign.setPipeOveride(override);
   }
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
@@ -105,6 +108,7 @@ public class AutoAlign {
   private final SwerveSubsystem swerve;
 
   private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
+  private boolean isAlignedDebounced = false;
 
   public AutoAlign(
       PurpleAlign purple,
@@ -114,6 +118,7 @@ public class AutoAlign {
       Limelight baseLimelight,
       LocalizationSubsystem localization,
       SwerveSubsystem swerve) {
+    super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.DEFAULT_STATE);
     this.purple = purple;
     this.purpleLimelight = purpleLimelight;
     this.frontLimelight = frontLimelight;
@@ -124,10 +129,6 @@ public class AutoAlign {
   }
 
   public ReefSide getClosestReefSide() {
-    if (DriverStation.isAutonomous() && autoReefPipeOverride.isPresent()) {
-      return ReefSide.fromPipe(autoReefPipeOverride.orElseThrow());
-    }
-
     return ReefSide.fromPipe(tagAlign.getBestPipe());
   }
 
@@ -198,6 +199,15 @@ public class AutoAlign {
         };
     DogLog.log("PurpleAlignment/CombinedSpeeds", speeds);
     return speeds;
+  }
+
+  @Override
+  protected void collectInputs() {
+    isAlignedDebounced = isAlignedDebouncer.calculate(tagAlign.isAligned());
+  }
+
+  public boolean isTagAlignedDebounced() {
+    return isAlignedDebounced;
   }
 
   public ReefAlignState getReefAlignState() {

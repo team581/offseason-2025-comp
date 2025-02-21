@@ -61,7 +61,7 @@ public class AutoCommands {
         .andThen(
             Commands.runOnce(
                 () -> {
-                  AutoAlign.setAutoReefPipeOverride(pipe);
+                  robotManager.autoAlign.setAutoReefPipeOverride(pipe);
                   robotManager.l4CoralApproachRequest();
                 }));
   }
