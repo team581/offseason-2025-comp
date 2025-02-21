@@ -14,7 +14,7 @@ import java.util.Comparator;
 
 public class AlignmentCostUtil {
   private static final double LOOKAHEAD = 0.5;
-  private static final double ANGLE_DIFFERENCE_SCALAR = 0.15;
+  private static final double ANGLE_DIFFERENCE_SCALAR = 0.02;
 
   /**
    * Returns the "cost" (a dimensionless number) of aligning to a given pose based on the robot's
@@ -86,6 +86,6 @@ public class AlignmentCostUtil {
     return Comparator.comparingDouble(
         pipe ->
             getAlignCost(pipe.getPose(level), localization.getPose(), swerve.getTeleopSpeeds())
-                + (reefState.isScored(pipe, level) ? 0.15 : 0));
+                + (reefState.isScored(pipe, level) ? 0.2 : 0));
   }
 }

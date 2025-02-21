@@ -22,8 +22,8 @@ public class AutoAlign {
 
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
-  private static final double MIN_CONSTRAINT = 1.5;
-  private static final double MAX_CONSTRAINT = 3.5;
+  private static final double MIN_CONSTRAINT = 0.7;
+  private static final double MAX_CONSTRAINT = 1.5;
   private static final double BASE_TELEOP_SPEED = 2.0;
 
   public static void setAutoReefPipeOverride(ReefPipe override) {
