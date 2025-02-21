@@ -57,6 +57,10 @@ public class TagAlign {
     reefState.markScored(getBestPipe(), level);
   }
 
+  public void clearReefState() {
+    reefState.clear();
+  }
+
   public Pose2d getUsedScoringPose() {
     var rawRobotPose = localization.getPose();
     var lookaheadPose = MathHelpers.poseLookahead(rawRobotPose, rawTeleopSpeeds, 0.4);

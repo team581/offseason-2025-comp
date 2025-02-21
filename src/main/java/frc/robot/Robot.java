@@ -181,12 +181,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = autos.getAutoCommand();
-
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
 
     ElasticLayoutUtil.onEnable();
+    tagAlign.clearReefState();
   }
 
   @Override
@@ -200,8 +200,10 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
     ElasticLayoutUtil.onEnable();
+    if (RobotConfig.IS_DEVELOPMENT) {
+      tagAlign.clearReefState();
+    }
   }
 
   @Override
