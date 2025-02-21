@@ -78,15 +78,11 @@ public class Limelight extends StateMachine<LimelightState> {
     if (estimatePose == null) {
       return Optional.empty();
     }
-    DogLog.log("Debug/" + name + "/RobotHeading", robotHeading);
-    DogLog.log("Debug/" + name + "/PoseHeading", estimatePose.pose.getRotation().getDegrees());
     if (!MathUtil.isNear(
         robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
-      DogLog.log("Debug/" + name + "/Garbage", true);
 
       return Optional.empty();
     }
-    DogLog.log("Debug/" + name + "/Garbage", false);
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
 
