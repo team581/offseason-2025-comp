@@ -42,7 +42,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                                 .preloadCoralAfterRollHomed()
                                 .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)))
                         .pathflipped(),
-                    new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(robotManager.autoAlign::isTagAlignedDebounced),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -72,7 +72,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0)),
                             autoCommands.l4WarmupCommand(ReefPipe.PIPE_J))
                         .pathflipped(),
-                    new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(robotManager.autoAlign::isTagAlignedDebounced),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -103,7 +103,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                                     new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277)))
                                 .pathflipped(),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(robotManager.autoAlign::isTagAlignedDebounced)),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -136,7 +136,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                                     new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)))
                                 .pathflipped(),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(robotManager.autoAlign::isTagAlignedDebounced)),
         autoCommands.l4ScoreAndReleaseCommand());
@@ -162,7 +162,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         autoCommands
                             .preloadCoralAfterRollHomed()
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
-                    new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(robotManager.autoAlign::isTagAlignedDebounced),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -188,7 +188,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0)),
                         autoCommands.l4WarmupCommand(ReefPipe.PIPE_J)),
-                    new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(robotManager.autoAlign::isTagAlignedDebounced),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -220,7 +220,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(robotManager.autoAlign::isTagAlignedDebounced)),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -252,7 +252,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931))),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.tagAlign::getUsedScoringPose)),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(robotManager.autoAlign::isTagAlignedDebounced)),
         autoCommands.l4ScoreAndReleaseCommand());

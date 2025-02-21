@@ -10,8 +10,6 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
-import frc.robot.auto_align.purple_align.PurpleAlign;
-import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
@@ -61,8 +59,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private final LightsSubsystem lights;
 
-  public final PurpleAlign purpleAlign;
-  public final TagAlign tagAlign;
   public final AutoAlign autoAlign;
 
   private GamePieceMode gamePieceMode = GamePieceMode.CORAL;
@@ -81,8 +77,6 @@ public class RobotManager extends StateMachine<RobotState> {
       Limelight backTagLimelight,
       Limelight baseTagLimelight,
       LightsSubsystem lights,
-      PurpleAlign purple,
-      TagAlign tagAlign,
       AutoAlign autoAlign,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
@@ -100,8 +94,6 @@ public class RobotManager extends StateMachine<RobotState> {
     this.backTagLimelight = backTagLimelight;
     this.baseTagLimelight = baseTagLimelight;
     this.lights = lights;
-    this.purpleAlign = purple;
-    this.tagAlign = tagAlign;
     this.climber = climber;
     this.autoAlign = autoAlign;
     this.rumbleController = rumbleController;
@@ -111,7 +103,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
   private boolean isRollHomed = false;
-  private ChassisSpeeds purpleSpeeds = new ChassisSpeeds();
   private boolean confirmScoreActive = false;
 
   @Override
@@ -291,7 +282,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
         if (done) {
           rumbleController.rumbleRequest();
-          tagAlign.markScored();
+          autoAlign.markPipeScored();
           yield RobotState.IDLE_NO_GP;
         }
 
@@ -1284,10 +1275,10 @@ public class RobotManager extends StateMachine<RobotState> {
       lights.setDisabledState(LightsState.HEALTHY);
     }
     if (FeatureFlags.REEF_ALIGN_FINE_ADJUSTMENTS.getAsBoolean()) {
-      tagAlign.setDriverPoseOffset(swerve.getPoseOffset());
+      autoAlign.setDriverPoseOffset(swerve.getPoseOffset());
       switch (swerve.getState()) {
         case REEF_ALIGN_TELEOP -> {
-          if (tagAlign.isAligned()) {
+          if (autoAlign.isTagAligned()) {
             swerve.setState(SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST);
           }
         }
@@ -1344,13 +1335,13 @@ public class RobotManager extends StateMachine<RobotState> {
 
     // TODO: RobotManager should not interact with TagAlign or PurpleAlign directly ever, only via
     // AutoAlign
-    DogLog.log("PurpleAlignment/UsedPose", tagAlign.getUsedScoringPose());
+    DogLog.log("PurpleAlignment/UsedPose", autoAlign.getUsedScoringPose());
 
-    tagAlign.setLevel(scoringLevel);
+    autoAlign.setScoringLevel(scoringLevel);
     autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
 
     if (vision.isAnyScoringTagLimelightOnline()) {
-      var idealAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(false);
+      var idealAlignSpeeds = autoAlign.getTagAlignSpeeds();
       swerve.setAutoAlignAutoSpeeds(idealAlignSpeeds);
       swerve.setAutoAlignSpeeds(autoAlign.calculateConstrainedAndWeightedSpeeds(idealAlignSpeeds));
     } else {

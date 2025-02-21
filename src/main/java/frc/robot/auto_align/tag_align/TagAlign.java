@@ -52,23 +52,23 @@ public class TagAlign {
     driverPoseOffset = offset;
   }
 
-  public boolean isAligned() {
+  public boolean isAligned(ReefPipe pipe) {
     var robotPose = localization.getPose();
-    var scoringPoseFieldRelative = getBestPipe().getPose(level);
+    var scoringPoseFieldRelative = pipe.getPose(level);
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
 
-  public void markScored() {
-    reefState.markScored(getBestPipe(), level);
+  public void markScored(ReefPipe pipe) {
+    reefState.markScored(pipe, level);
   }
 
   public void clearReefState() {
     reefState.clear();
   }
 
-  public Pose2d getUsedScoringPose() {
-    var theoreticalScoringPose = getBestPipe().getPose(level);
+  public Pose2d getUsedScoringPose(ReefPipe pipe) {
+    var theoreticalScoringPose = pipe.getPose(level);
 
     if (DriverStation.isTeleop()) {
       var offsetPose =
@@ -92,12 +92,11 @@ public class TagAlign {
         .orElseThrow();
   }
 
-  public ChassisSpeeds getPoseAlignmentChassisSpeeds(boolean forwardOnly) {
+  public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose, boolean forwardOnly) {
     var robotPose = localization.getPose();
-    var scoringTranslationFieldRelative = getUsedScoringPose();
 
     var scoringTranslationRobotRelative =
-        scoringTranslationFieldRelative
+        usedScoringPose
             .getTranslation()
             .minus(robotPose.getTranslation())
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));

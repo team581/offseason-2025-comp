@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.purple_align.PurpleAlign;
-import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
@@ -61,8 +59,6 @@ public class Robot extends TimedRobot {
       new VisionSubsystem(
           imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
-  private final PurpleAlign purpleAlign = new PurpleAlign(elevatorPurpleLimelight);
-  private final TagAlign tagAlign = new TagAlign(swerve, localization);
 
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =
@@ -79,13 +75,7 @@ public class Robot extends TimedRobot {
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
       new AutoAlign(
-          purpleAlign,
-          tagAlign,
-          elevatorPurpleLimelight,
-          frontCoralLimelight,
-          baseTagLimelight,
-          localization,
-          swerve);
+          elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight, localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -101,8 +91,6 @@ public class Robot extends TimedRobot {
           backTagLimelight,
           baseTagLimelight,
           lights,
-          purpleAlign,
-          tagAlign,
           autoAlign,
           climber,
           rumbleController);
@@ -186,7 +174,7 @@ public class Robot extends TimedRobot {
     }
 
     ElasticLayoutUtil.onEnable();
-    tagAlign.clearReefState();
+    autoAlign.clearReefState();
   }
 
   @Override
@@ -202,7 +190,7 @@ public class Robot extends TimedRobot {
     }
     ElasticLayoutUtil.onEnable();
     if (RobotConfig.IS_DEVELOPMENT) {
-      tagAlign.clearReefState();
+      autoAlign.clearReefState();
     }
   }
 
