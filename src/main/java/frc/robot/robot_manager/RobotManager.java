@@ -14,6 +14,7 @@ import frc.robot.auto_align.purple_align.PurpleAlign;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.FeatureFlags;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -28,7 +29,9 @@ import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.roll.RollState;
 import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SnapUtil;
+import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.FeatureFlag;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
@@ -1274,16 +1277,17 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       lights.setDisabledState(LightsState.HEALTHY);
     }
-
-    // tagAlign.setDriverPoseOffset(swerve.getPoseOffset());
-    // switch (swerve.getState()) {
-    //   case REEF_ALIGN_TELEOP -> {
-    //     if (tagAlign.isAligned()) {
-    //       swerve.setState(SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST);
-    //     }
-    //   }
-    //   default -> {}
-    // }
+    if (FeatureFlags.REEF_ALIGN_FINE_ADJUSTMENTS.getAsBoolean()) {
+      tagAlign.setDriverPoseOffset(swerve.getPoseOffset());
+      switch (swerve.getState()) {
+        case REEF_ALIGN_TELEOP -> {
+          if (tagAlign.isAligned()) {
+            swerve.setState(SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST);
+          }
+        }
+        default -> {}
+      }
+    }
   }
 
   @Override

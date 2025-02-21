@@ -97,7 +97,7 @@ class CompConfig {
               20,
               21,
               26,
-              false,
+              true,
               new Debouncer(0.1, DebounceType.kFalling),
               new Debouncer(0.1, DebounceType.kFalling),
               new TalonFXConfiguration()
