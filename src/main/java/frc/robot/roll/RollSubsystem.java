@@ -96,12 +96,25 @@ public class RollSubsystem extends StateMachine<RollState> {
   }
 
   public void setState(RollState newState) {
-    if (getState() == RollState.UNHOMED) {
-      if (newState == RollState.HOMING) {
-        setStateFromRequest(RollState.HOMING);
+    setState(newState, false);
+  }
+
+  public void setState(RollState newState, boolean recheckSensors) {
+    switch (getState()) {
+      case HOMING -> {}
+      case UNHOMED -> {
+        if (newState == RollState.HOMING) {
+          setStateFromRequest(RollState.HOMING);
+        }
       }
-    } else if (getState() != RollState.HOMING) {
-      setStateFromRequest(newState);
+      case CORAL_SCORE, SMART_STOW -> {
+        if (newState == getState() && recheckSensors) {
+          afterTransition(newState);
+        } else {
+          setStateFromRequest(newState);
+        }
+      }
+      default -> setStateFromRequest(newState);
     }
   }
 
