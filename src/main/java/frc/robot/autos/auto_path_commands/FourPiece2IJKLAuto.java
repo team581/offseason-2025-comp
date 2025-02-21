@@ -83,17 +83,19 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         Commands.waitSeconds(0.5)
             .andThen(robotManager::stowRequest)
             .alongWith(
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60))).pathflipped(),
-                new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60))).pathflipped(),
-                new AutoPoint(new Pose2d(13.842, 1.582, Rotation2d.fromDegrees(135.88)))
-                    .pathflipped(),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.bluePose,
-                    autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand()),
+                trailblazer.followSegment(
+                    new AutoSegment(
+                        CONSTRAINTS,
+                        new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60)))
+                            .pathflipped(),
+                        new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60)))
+                            .pathflipped(),
+                        new AutoPoint(new Pose2d(13.842, 1.582, Rotation2d.fromDegrees(135.88)))
+                            .pathflipped(),
+                        new AutoPoint(
+                            Points.LEFT_CORAL_STATION.bluePose,
+                            autoCommands.intakeStationWarmupCommand()))),
+                autoCommands.intakeStationWithTimeoutCommand()),
 
         // SCORE L4 ON K
         autoCommands
@@ -116,15 +118,15 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         Commands.waitSeconds(0.5)
             .andThen(robotManager::stowRequest)
             .alongWith(
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277)))
-                    .pathflipped(),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.bluePose,
-                    autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand()),
+                trailblazer.followSegment(
+                    new AutoSegment(
+                        CONSTRAINTS,
+                        new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277)))
+                            .pathflipped(),
+                        new AutoPoint(
+                            Points.LEFT_CORAL_STATION.bluePose,
+                            autoCommands.intakeStationWarmupCommand()))),
+                autoCommands.intakeStationWithTimeoutCommand()),
 
         // SCORE L4 ON L
         robotManager
@@ -174,14 +176,15 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         Commands.waitSeconds(0.5)
             .andThen(robotManager::stowRequest)
             .alongWith(
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.960, 1.903, Rotation2d.fromDegrees(60))),
-                new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88))),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand()),
+                trailblazer.followSegment(
+                    new AutoSegment(
+                        CONSTRAINTS,
+                        new AutoPoint(new Pose2d(11.960, 1.903, Rotation2d.fromDegrees(60))),
+                        new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88))),
+                        new AutoPoint(
+                            Points.LEFT_CORAL_STATION.redPose,
+                            autoCommands.intakeStationWarmupCommand()))),
+                autoCommands.intakeStationWithTimeoutCommand()),
 
         // SCORE L4 ON J
         trailblazer
@@ -201,14 +204,15 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         Commands.waitSeconds(0.5)
             .andThen(robotManager::stowRequest)
             .alongWith(
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60))),
-                new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand()),
+                trailblazer.followSegment(
+                    new AutoSegment(
+                        CONSTRAINTS,
+                        new AutoPoint(new Pose2d(12.246, 2.087, Rotation2d.fromDegrees(60))),
+                        new AutoPoint(new Pose2d(13.872, 1.903, Rotation2d.fromDegrees(135.88))),
+                        new AutoPoint(
+                            Points.LEFT_CORAL_STATION.redPose,
+                            autoCommands.intakeStationWarmupCommand()))),
+                autoCommands.intakeStationWithTimeoutCommand()),
 
         // SCORE L4 ON K
         autoCommands
@@ -230,13 +234,14 @@ public class FourPiece2IJKLAuto extends BaseAuto {
         Commands.waitSeconds(0.5)
             .andThen(robotManager::stowRequest)
             .alongWith(
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand()),
+                trailblazer.followSegment(
+                    new AutoSegment(
+                        CONSTRAINTS,
+                        new AutoPoint(new Pose2d(14.506, 1.795, Rotation2d.fromDegrees(133.277))),
+                        new AutoPoint(
+                            Points.LEFT_CORAL_STATION.redPose,
+                            autoCommands.intakeStationWarmupCommand()))),
+                autoCommands.intakeStationWithTimeoutCommand()),
 
         // SCORE L4 ON L
         autoCommands
