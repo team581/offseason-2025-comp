@@ -21,7 +21,7 @@ public class FeatureFlags {
   public static final BooleanSupplier CLIMBER_ENABLED = FeatureFlag.of("Climber/Enabled", false);
 
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
-      FeatureFlag.of("Intake/CoralVelocityDetection", true);
+      FeatureFlag.of("Intake/CoralVelocityDetection", false);
 
   private FeatureFlags() {}
 }
