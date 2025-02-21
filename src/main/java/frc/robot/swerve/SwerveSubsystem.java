@@ -316,6 +316,26 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
+      case REEF_ALIGN_TELEOP_FINE_ADJUST -> {
+        if (teleopSpeeds.omegaRadiansPerSecond == 0) {
+          SNAP_CONTROLLER.setMaxOutput(
+              TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
+          drivetrain.setControl(
+              driveToAngle
+                  .withVelocityX(autoAlignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(autoAlignSpeeds.vyMetersPerSecond)
+                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+
+        } else {
+          drivetrain.setControl(
+              drive
+                  .withVelocityX(autoAlignSpeeds.vxMetersPerSecond)
+                  .withVelocityY(autoAlignSpeeds.vyMetersPerSecond)
+                  .withRotationalRate(autoAlignSpeeds.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+        }
+      }
       case REEF_ALIGN_AUTO -> {
         SNAP_CONTROLLER.setMaxOutput(Double.POSITIVE_INFINITY);
         var wantedSpeeds = autoAlignAutoSpeeds;
@@ -437,6 +457,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
               TELEOP_SNAPS,
               INTAKE_ASSIST_CORAL_TELEOP,
               REEF_ALIGN_TELEOP,
+              REEF_ALIGN_TELEOP_FINE_ADJUST,
               INTAKE_ASSIST_ALGAE_TELEOP,
               CLIMBING ->
           setStateFromRequest(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
