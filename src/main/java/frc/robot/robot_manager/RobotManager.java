@@ -219,9 +219,18 @@ public class RobotManager extends StateMachine<RobotState> {
         }
 
         yield intake.isCoralCentered()
-            ? RobotState.CORAL_CENTERED_L4_2_LINEUP
-            : RobotState.CORAL_DISPLACED_L4_2_LINEUP;
+            ? RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST
+            : RobotState.CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST;
       }
+
+      case CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_CENTERED_L4_2_LINEUP
+              : currentState;
+      case CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
+              : currentState;
 
       // Dislodging
       case DISLODGE_ALGAE_L2_PUSHING -> {
@@ -763,6 +772,19 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.SCORING);
         climber.setState(ClimberState.STOWED);
       }
+      case CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_CENTERED_L4_RAISE_WRIST, WristState.CORAL_STOWED);
+        swerve.enableScoringAlignment();
+        swerve.setSnapToAngle(reefSnapAngle);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
+        climber.setState(ClimberState.STOWED);
+      }
       case CORAL_CENTERED_L4_2_LINEUP -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(
@@ -890,6 +912,19 @@ public class RobotManager extends StateMachine<RobotState> {
         frontCoralLimelight.setState(LimelightState.REEF_TAGS);
         backTagLimelight.setState(LimelightState.REEF_TAGS);
         lights.setState(LightsState.SCORING);
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST -> {
+        intake.setState(IntakeState.IDLE_W_CORAL);
+        moveSuperstructure(ElevatorState.CORAL_DISPLACED_L4_RAISE_WRIST, WristState.CORAL_STOWED);
+        swerve.enableScoringAlignment();
+        swerve.setSnapToAngle(reefSnapAngle);
+        roll.setState(RollState.CORAL_SCORE);
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+        lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L4_2_LINEUP -> {
@@ -1169,6 +1204,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_CENTERED_L3_2_LINEUP,
           CORAL_CENTERED_L3_3_PLACE,
           CORAL_CENTERED_L3_4_RELEASE,
+          CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_CENTERED_L4_2_LINEUP,
           CORAL_CENTERED_L4_3_PLACE,
           CORAL_CENTERED_L4_4_RELEASE,
@@ -1178,6 +1214,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_DISPLACED_L3_2_LINEUP,
           CORAL_DISPLACED_L3_3_PLACE,
           CORAL_DISPLACED_L3_4_RELEASE,
+          CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_DISPLACED_L4_2_LINEUP,
           CORAL_DISPLACED_L4_3_PLACE,
           CORAL_DISPLACED_L4_4_RELEASE -> {
@@ -1208,6 +1245,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_CENTERED_L3_2_LINEUP,
           CORAL_CENTERED_L3_3_PLACE,
           CORAL_CENTERED_L3_4_RELEASE,
+          CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_CENTERED_L4_2_LINEUP,
           CORAL_CENTERED_L4_3_PLACE,
           CORAL_CENTERED_L4_4_RELEASE,
@@ -1217,6 +1255,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_DISPLACED_L3_2_LINEUP,
           CORAL_DISPLACED_L3_3_PLACE,
           CORAL_DISPLACED_L3_4_RELEASE,
+          CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_DISPLACED_L4_2_LINEUP,
           CORAL_DISPLACED_L4_3_PLACE,
           CORAL_DISPLACED_L4_4_RELEASE -> {
@@ -1272,10 +1311,12 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_DISPLACED_L3_4_RELEASE ->
               ReefPipeLevel.L3;
           case CORAL_L4_1_APPROACH,
+                  CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
                   CORAL_CENTERED_L4_2_LINEUP,
                   CORAL_CENTERED_L4_3_PLACE,
                   CORAL_CENTERED_L4_4_RELEASE,
                   CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE,
+                  CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST,
                   CORAL_DISPLACED_L4_2_LINEUP,
                   CORAL_DISPLACED_L4_3_PLACE,
                   CORAL_DISPLACED_L4_4_RELEASE,
@@ -1349,12 +1390,14 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_CENTERED_L3_2_LINEUP,
           CORAL_CENTERED_L3_3_PLACE,
           CORAL_CENTERED_L3_4_RELEASE,
+          CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_CENTERED_L4_2_LINEUP,
           CORAL_CENTERED_L4_3_PLACE,
           CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE,
           CORAL_DISPLACED_L3_2_LINEUP,
           CORAL_DISPLACED_L3_3_PLACE,
           CORAL_DISPLACED_L3_4_RELEASE,
+          CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST,
           CORAL_DISPLACED_L4_2_LINEUP,
           CORAL_DISPLACED_L4_3_PLACE,
           CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE -> {}
@@ -1777,7 +1820,9 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_CORAL_FLOOR_UPRIGHT,
           INTAKE_CORAL_STATION_BACK,
           INTAKE_CORAL_STATION_FRONT,
-          INTAKE_STATION_APPROACH -> {}
+          INTAKE_STATION_APPROACH,
+          CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
+          CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST -> {}
 
       case IDLE_ALGAE -> {
         setStateFromRequest(RobotState.ALGAE_OUTTAKE);
