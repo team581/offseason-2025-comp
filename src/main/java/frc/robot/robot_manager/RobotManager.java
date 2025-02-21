@@ -31,7 +31,6 @@ import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
-import frc.robot.util.FeatureFlag;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
