@@ -3,6 +3,7 @@ package frc.robot.robot_manager.collision_avoidance;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.config.FeatureFlags;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +45,12 @@ public enum CollisionBox {
           new Translation2d(-24, 54), new Translation2d(6, 80)),
       new SuperstructurePosition(56, 135));
 
-  public static final boolean BOX_SHORTCUTS_ENABLED = true;
-
   public final int id;
   public final Rectangle2d bounds;
   public final SuperstructurePosition safeZone;
 
   public boolean shortCutPossible(CollisionBox goal) {
-    if (!BOX_SHORTCUTS_ENABLED) {
+    if (!FeatureFlags.COLLISION_AVOIDANCE_BOX_SHORTCUTS.getAsBoolean()) {
       return false;
     }
 

@@ -8,14 +8,12 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
-  // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
-  // again
-  private static final boolean CLIMBER_ENABLED = false;
   private static final double TOLERANCE = 3;
   private final TalonFX motor;
   private final CANcoder encoder;
@@ -52,7 +50,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       DogLog.log("Climber/DirectionBad", climberDirectionBad);
     }
 
-    if (climberDirectionBad || atGoal() || !CLIMBER_ENABLED) {
+    if (climberDirectionBad || atGoal() || !FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
       motor.disable();
     } else if (currentAngle < clamp(getState().angle)) {
       motor.setVoltage(getState().forwardsVoltage);
