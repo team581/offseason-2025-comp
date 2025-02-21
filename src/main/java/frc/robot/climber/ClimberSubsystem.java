@@ -27,9 +27,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public ClimberSubsystem(TalonFX motor, CANcoder encoder) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOWED);
 
-    motor.getConfigurator().apply(RobotConfig.get().climber().motorConfig());
-    encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
-
+    if (FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+      motor.getConfigurator().apply(RobotConfig.get().climber().motorConfig());
+      encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
+    }
     this.motor = motor;
     this.encoder = encoder;
     DogLog.log("Climber/DirectionBad", climberDirectionBad);
@@ -50,12 +51,14 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       DogLog.log("Climber/DirectionBad", climberDirectionBad);
     }
 
-    if (climberDirectionBad || atGoal() || !FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
-      motor.disable();
-    } else if (currentAngle < clamp(getState().angle)) {
-      motor.setVoltage(getState().forwardsVoltage);
-    } else {
-      motor.setVoltage(getState().backwardsVoltage);
+    if (FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+      if (climberDirectionBad || atGoal() || !FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+        motor.disable();
+      } else if (currentAngle < clamp(getState().angle)) {
+        motor.setVoltage(getState().forwardsVoltage);
+      } else {
+        motor.setVoltage(getState().backwardsVoltage);
+      }
     }
   }
 
@@ -65,21 +68,23 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
   @Override
   protected void collectInputs() {
-    currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
-    motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
+    if (FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+      currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
+      motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
 
-    cancoderDirection = Math.signum(motor.getVelocity().getValueAsDouble());
-    motorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
+      cancoderDirection = Math.signum(motor.getVelocity().getValueAsDouble());
+      motorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
 
-    DogLog.log("Climber/Cancoder/Direction", cancoderDirection);
-    DogLog.log("Climber/Cancoder/Angle", currentAngle);
+      DogLog.log("Climber/Cancoder/Direction", cancoderDirection);
+      DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
-    DogLog.log("Climber/Motor/Direction", motorDirection);
-    DogLog.log("Climber/Motor/Angle", motorAngle);
+      DogLog.log("Climber/Motor/Direction", motorDirection);
+      DogLog.log("Climber/Motor/Angle", motorAngle);
 
-    DogLog.log("Climber/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+      DogLog.log("Climber/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+      DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+      DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    }
   }
 
   public boolean atGoal() {
