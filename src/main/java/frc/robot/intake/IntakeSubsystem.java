@@ -65,7 +65,6 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     DogLog.log("Intake/TopMotor/Velocity", topMotorVelocity);
     DogLog.log("Intake/BottomMotor/Velocity", bottomMotorVelocity);
 
-
     if (RobotConfig.get().intake().sensorFlipped()) {
       leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
       rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
