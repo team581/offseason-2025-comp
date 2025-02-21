@@ -1,7 +1,5 @@
 package frc.robot.autos;
 
-import java.sql.Driver;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
