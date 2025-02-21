@@ -396,11 +396,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void enableScoringAlignment() {
-      if (DriverStation.isAutonomous()) {
-        setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
 
-      } else {
-        setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
+    } else {
+      setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
     }
   }
 
