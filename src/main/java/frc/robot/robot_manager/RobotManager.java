@@ -249,6 +249,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_OUTTAKE -> {
         if (timeout(0.5)) {
+          setGamePieceMode(GamePieceMode.CORAL);
           yield RobotState.IDLE_NO_GP;
         }
         yield currentState;
