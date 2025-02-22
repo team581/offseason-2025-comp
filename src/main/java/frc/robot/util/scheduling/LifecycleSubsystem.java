@@ -66,34 +66,34 @@ public class LifecycleSubsystem extends SubsystemBase {
     robotPeriodic();
 
     switch (stage) {
-      case DISABLED:
+      case DISABLED -> {
         if (isInit) {
           disabledInit();
         }
 
         disabledPeriodic();
-        break;
-      case TELEOP:
+      }
+      case TELEOP -> {
         if (isInit) {
           teleopInit();
         }
 
         teleopPeriodic();
-        break;
-      case AUTONOMOUS:
+      }
+      case AUTONOMOUS -> {
         if (isInit) {
           autonomousInit();
         }
 
         autonomousPeriodic();
-        break;
-      case TEST:
+      }
+      case TEST -> {
         if (isInit) {
           testInit();
         }
 
         testPeriodic();
-        break;
+      }
     }
 
     stopwatch.stop(loggerName);

@@ -113,15 +113,9 @@ public class Robot extends TimedRobot {
     DogLog.log("Metadata/GitBranch", BuildConstants.GIT_BRANCH);
 
     switch (BuildConstants.DIRTY) {
-      case 0:
-        DogLog.log("Metadata/GitDirty", "All changes committed");
-        break;
-      case 1:
-        DogLog.log("Metadata/GitDirty", "Uncomitted changes");
-        break;
-      default:
-        DogLog.log("Metadata/GitDirty", "Unknown");
-        break;
+      case 0 -> DogLog.log("Metadata/GitDirty", "All changes committed");
+      case 1 -> DogLog.log("Metadata/GitDirty", "Uncomitted changes");
+      default -> DogLog.log("Metadata/GitDirty", "Unknown");
     }
 
     // This must be run before any commands are scheduled
