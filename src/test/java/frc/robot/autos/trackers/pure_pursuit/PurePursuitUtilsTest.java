@@ -120,7 +120,9 @@ public class PurePursuitUtilsTest {
     var startPose = PurePursuitUtils.generateRandomPose();
     var endPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getRotation());
     var pointOnPath = new Pose2d(startPose.getX(), startPose.getY(), startPose.getRotation());
-    var result = PurePursuitUtils.getPointToPointInterpolatedRotation(startPose, endPose, pointOnPath).getDegrees();
+    var result =
+        PurePursuitUtils.getPointToPointInterpolatedRotation(startPose, endPose, pointOnPath)
+            .getDegrees();
     var expected = endPose.getRotation().getDegrees();
     assertTrue(expected == result);
   }
