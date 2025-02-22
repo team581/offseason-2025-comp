@@ -5,7 +5,7 @@ public enum RollState {
   HOMING(0.0),
   CORAL_HORIZONTAL(0.0),
   CORAL_UPRIGHT(90),
-  ALGAE(90.0),
+  ALGAE(0.0),
   FLOOR_ALGAE(0.0),
   SMART_STOW(0.0),
   CORAL_SCORE(0.0),
