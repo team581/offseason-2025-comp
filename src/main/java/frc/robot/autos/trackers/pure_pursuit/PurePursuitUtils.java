@@ -103,7 +103,7 @@ public class PurePursuitUtils {
   }
 
   public static Pose2d generateRandomPose() {
-    return new Pose2d(randomBetween(0, 15), randomBetween(0, 8), Rotation2d.kZero);
+    return new Pose2d(randomBetween(0, 15), randomBetween(0, 8), Rotation2d.fromRadians(randomBetween(0, Math.PI*2)));
   }
 
   public static Pose2d getTargetPose(
@@ -185,6 +185,9 @@ public class PurePursuitUtils {
   public static Rotation2d getPointToPointInterpolatedRotation(
       Pose2d startPoint, Pose2d endPoint, Pose2d pointOnPath) {
     var totalDistance = startPoint.getTranslation().getDistance(endPoint.getTranslation());
+    if (totalDistance<0.0001) {
+      return endPoint.getRotation();
+    }
     var pointToStart = pointOnPath.getTranslation().getDistance(startPoint.getTranslation());
     var pointToEnd = pointOnPath.getTranslation().getDistance(endPoint.getTranslation());
 

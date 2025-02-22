@@ -114,4 +114,14 @@ public class PurePursuitUtilsTest {
       assertTrue(PurePursuitUtils.isCollinear(startPose, endPose, result));
     }
   }
+
+  @Test
+  void getInterpolatedRotation() {
+    var startPose = PurePursuitUtils.generateRandomPose();
+    var endPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getRotation());
+    var pointOnPath = new Pose2d(startPose.getX(), startPose.getY(), startPose.getRotation());
+    var result = PurePursuitUtils.getPointToPointInterpolatedRotation(startPose, endPose, pointOnPath).getDegrees();
+    var expected = endPose.getRotation().getDegrees();
+    assertTrue(expected == result);
+  }
 }
