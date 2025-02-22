@@ -22,7 +22,7 @@ public class LifecycleSubsystem extends SubsystemBase {
   public LifecycleSubsystem(SubsystemPriority priority) {
     this.priority = priority;
 
-    LifecycleSubsystemManager.getInstance().registerSubsystem(this);
+    LifecycleSubsystemManager.registerSubsystem(this);
 
     String name = this.getClass().getSimpleName();
     name = name.substring(name.lastIndexOf('.') + 1);
@@ -66,34 +66,34 @@ public class LifecycleSubsystem extends SubsystemBase {
     robotPeriodic();
 
     switch (stage) {
-      case DISABLED:
+      case DISABLED -> {
         if (isInit) {
           disabledInit();
         }
 
         disabledPeriodic();
-        break;
-      case TELEOP:
+      }
+      case TELEOP -> {
         if (isInit) {
           teleopInit();
         }
 
         teleopPeriodic();
-        break;
-      case AUTONOMOUS:
+      }
+      case AUTONOMOUS -> {
         if (isInit) {
           autonomousInit();
         }
 
         autonomousPeriodic();
-        break;
-      case TEST:
+      }
+      case TEST -> {
         if (isInit) {
           testInit();
         }
 
         testPeriodic();
-        break;
+      }
     }
 
     stopwatch.stop(loggerName);

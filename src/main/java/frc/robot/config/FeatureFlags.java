@@ -25,5 +25,8 @@ public class FeatureFlags {
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
       FeatureFlag.of("Intake/CoralVelocityDetection", true);
 
+  public static final BooleanSupplier LIVE_WINDOW_TELEMETRY_ENABLED =
+      FeatureFlag.of("LiveWindow/TelemetryEnabled", true);
+
   private FeatureFlags() {}
 }

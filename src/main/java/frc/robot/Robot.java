@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,6 +14,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -112,27 +113,23 @@ public class Robot extends TimedRobot {
     DogLog.log("Metadata/GitBranch", BuildConstants.GIT_BRANCH);
 
     switch (BuildConstants.DIRTY) {
-      case 0:
-        DogLog.log("Metadata/GitDirty", "All changes committed");
-        break;
-      case 1:
-        DogLog.log("Metadata/GitDirty", "Uncomitted changes");
-        break;
-      default:
-        DogLog.log("Metadata/GitDirty", "Unknown");
-        break;
+      case 0 -> DogLog.log("Metadata/GitDirty", "All changes committed");
+      case 1 -> DogLog.log("Metadata/GitDirty", "Uncomitted changes");
+      default -> DogLog.log("Metadata/GitDirty", "Unknown");
     }
 
     // This must be run before any commands are scheduled
-    LifecycleSubsystemManager.getInstance().ready();
-
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    LifecycleSubsystemManager.ready();
 
     configureBindings();
 
     CollisionBox.visualize();
 
     ElasticLayoutUtil.onBoot();
+
+    if (!FeatureFlags.LIVE_WINDOW_TELEMETRY_ENABLED.getAsBoolean()) {
+      LiveWindow.disableAllTelemetry();
+    }
   }
 
   @Override
@@ -143,6 +140,7 @@ public class Robot extends TimedRobot {
     Stopwatch.getInstance().start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
+    LifecycleSubsystemManager.log();
 
     if (RobotController.getBatteryVoltage() < 12.5) {
       DogLog.logFault("Battery voltage low", AlertType.kWarning);
