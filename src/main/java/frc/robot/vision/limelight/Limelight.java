@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
@@ -14,8 +13,8 @@ import frc.robot.vision.results.TagResult;
 import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
-  // TODO: Include every tag ID except barge tags
-  private static final int[] VALID_APRILTAGS = new int[] {};
+  private static final int[] VALID_APRILTAGS =
+      new int[] {1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22};
 
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
@@ -200,8 +199,7 @@ public class Limelight extends StateMachine<LimelightState> {
       case ALGAE -> updateHealth(algaeResult);
       case PURPLE -> updateHealth(purpleResult);
       case CLOSEST_REEF_TAG -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(
-            limelightTableName, closestScoringReefTag);
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);
       }
     }
