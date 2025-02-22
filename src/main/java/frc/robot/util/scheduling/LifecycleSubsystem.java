@@ -22,7 +22,7 @@ public class LifecycleSubsystem extends SubsystemBase {
   public LifecycleSubsystem(SubsystemPriority priority) {
     this.priority = priority;
 
-    LifecycleSubsystemManager.getInstance().registerSubsystem(this);
+    LifecycleSubsystemManager.registerSubsystem(this);
 
     String name = this.getClass().getSimpleName();
     name = name.substring(name.lastIndexOf('.') + 1);

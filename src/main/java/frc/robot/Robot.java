@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -124,9 +123,7 @@ public class Robot extends TimedRobot {
     }
 
     // This must be run before any commands are scheduled
-    LifecycleSubsystemManager.getInstance().ready();
-
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    LifecycleSubsystemManager.ready();
 
     configureBindings();
 
@@ -143,6 +140,7 @@ public class Robot extends TimedRobot {
     Stopwatch.getInstance().start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
+    LifecycleSubsystemManager.log();
 
     if (RobotController.getBatteryVoltage() < 12.5) {
       DogLog.logFault("Battery voltage low", AlertType.kWarning);

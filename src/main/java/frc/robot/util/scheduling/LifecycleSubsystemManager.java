@@ -2,21 +2,26 @@ package frc.robot.util.scheduling;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class LifecycleSubsystemManager {
-  private static LifecycleSubsystemManager instance;
+  @SuppressWarnings("unchecked")
+  private static Set<Command> getScheduledCommands() {
+    try {
+      var field = CommandScheduler.class.getDeclaredField("m_scheduledCommands");
+      field.setAccessible(true);
+      var rawResult = field.get(CommandScheduler.getInstance());
 
-  public static LifecycleSubsystemManager getInstance() {
-    if (instance == null) {
-      instance = new LifecycleSubsystemManager();
+      return (Set<Command>) rawResult;
+    } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
+      DogLog.logFault("Failed to do reflection for scheduled commands");
+      return Set.of();
     }
-
-    return instance;
   }
 
   public static LifecycleStage getStage() {
@@ -32,14 +37,12 @@ public class LifecycleSubsystemManager {
     }
   }
 
-  private final List<LifecycleSubsystem> subsystems = new ArrayList<>();
-  private final CommandScheduler commandScheduler = CommandScheduler.getInstance();
+  private static final List<LifecycleSubsystem> subsystems = new ArrayList<>();
+  private static final CommandScheduler commandScheduler = CommandScheduler.getInstance();
+  private static final Set<Command> scheduledCommands = getScheduledCommands();
 
-  private LifecycleSubsystemManager() {}
-
-  public void ready() {
-    Collections.sort(
-        subsystems,
+  public static void ready() {
+    subsystems.sort(
         Comparator.comparingInt((LifecycleSubsystem subsystem) -> subsystem.priority.value)
             .reversed());
 
@@ -48,11 +51,13 @@ public class LifecycleSubsystemManager {
     }
   }
 
-  public void log() {
-    DogLog.log("Scheduler/Stage", getStage().toString());
+  public static void log() {
+    DogLog.log(
+        "Scheduler/ScheduledCommands",
+        scheduledCommands.stream().map(command -> command.getName()).toArray(String[]::new));
   }
 
-  void registerSubsystem(LifecycleSubsystem subsystem) {
+  static void registerSubsystem(LifecycleSubsystem subsystem) {
     subsystems.add(subsystem);
     commandScheduler.unregisterSubsystem(subsystem);
   }
