@@ -1029,7 +1029,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, WristState.MID_MATCH_HOMING);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
-        roll.setState(RollState.CORAL_HORIZONTAL);
+        roll.setState(RollState.CORAL_UPRIGHT);
         vision.setState(VisionState.TAGS);
 
         lights.setState(LightsState.PLACEHOLDER);
