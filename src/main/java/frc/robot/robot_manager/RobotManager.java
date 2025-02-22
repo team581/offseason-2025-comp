@@ -466,7 +466,10 @@ public class RobotManager extends StateMachine<RobotState> {
       case INTAKE_CORAL_STATION_BACK -> {
         intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(
-            ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
+            AutoAlign.isStationIntakeProcessorSide(localization.getPose())
+                ? ElevatorState.INTAKING_CORAL_STATION_BACK_PROCESSOR_SIDE
+                : ElevatorState.INTAKING_CORAL_STATION_BACK,
+            WristState.INTAKING_CORAL_STATION_BACK);
         roll.setState(RollState.CORAL_HORIZONTAL);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()));
@@ -480,7 +483,10 @@ public class RobotManager extends StateMachine<RobotState> {
       case INTAKE_CORAL_STATION_FRONT -> {
         intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(
-            ElevatorState.INTAKING_CORAL_STATION_FRONT, WristState.INTAKING_CORAL_STATION_FRONT);
+            AutoAlign.isStationIntakeProcessorSide(localization.getPose())
+                ? ElevatorState.INTAKING_CORAL_STATION_FRONT_PROCESSOR_SIDE
+                : ElevatorState.INTAKING_CORAL_STATION_FRONT,
+            WristState.INTAKING_CORAL_STATION_FRONT);
         roll.setState(RollState.CORAL_HORIZONTAL);
         swerve.setSnapsEnabled(true);
         swerve.setSnapToAngle(SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0);

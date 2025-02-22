@@ -12,6 +12,7 @@ import frc.robot.auto_align.purple_align.PurpleAlignState;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
@@ -48,6 +49,25 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     var coralStationBackwardAngle = SnapUtil.getCoralStationAngle(robotPose);
 
     return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
+  }
+
+  public static boolean isStationIntakeProcessorSide(Pose2d robotPose) {
+    if (robotPose.getY() > 4.025) {
+      if (FmsSubsystem.isRedAlliance()) {
+        // Coral station red, processor side
+        return true;
+      }
+
+      // Coral station blue, non processor side
+      return false;
+    } else {
+      if (FmsSubsystem.isRedAlliance()) {
+        // Coral station red, non processor side
+        return false;
+      }
+      // Coral station blue, processor side
+      return true;
+    }
   }
 
   public static boolean isCloseToReefSide(
