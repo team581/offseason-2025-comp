@@ -37,8 +37,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final VelocityDetector bottomMotorAlgaeDetection = new VelocityDetector(30, 0.2);
   private boolean topMotorAlgaeVelocityGp = false;
   private boolean bottomMotorAlgaeVelocityGp = false;
-  private final VelocityDetector topMotorCoralDetection = new VelocityDetector(90, 0.2);
-  private final VelocityDetector bottomMotorCoralDetection = new VelocityDetector(90, 0.2);
+  private final VelocityDetector topMotorCoralDetection = new VelocityDetector(78, 0.2);
+  private final VelocityDetector bottomMotorCoralDetection = new VelocityDetector(78, 0.2);
   private boolean topMotorCoralVelocityGp = false;
   private boolean bottomMotorCoralVelocityGp = false;
 
@@ -60,8 +60,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     topMotorAlgaeVelocityGp = topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20);
     bottomMotorAlgaeVelocityGp = bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20);
 
-    topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 27);
-    bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 27);
+    topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 65);
+    bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 65);
     DogLog.log("Intake/TopMotor/Velocity", topMotorVelocity);
     DogLog.log("Intake/BottomMotor/Velocity", bottomMotorVelocity);
 
