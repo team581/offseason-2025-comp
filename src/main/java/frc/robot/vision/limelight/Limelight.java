@@ -14,8 +14,8 @@ import frc.robot.vision.results.TagResult;
 import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
-  private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
-  private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
+  // TODO: Include every tag ID except barge tags
+  private static final int[] VALID_APRILTAGS = new int[] {};
 
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
@@ -32,6 +32,8 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<GamePieceResult> algaeResult = Optional.empty();
+
+  private final int[] closestScoringReefTag = {0};
 
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
@@ -75,7 +77,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public Optional<TagResult> getTagResult() {
-    if (getState() != LimelightState.TAGS && getState() != LimelightState.REEF_TAGS) {
+    if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
       return Optional.empty();
     }
 
@@ -172,8 +174,8 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
-  private int[] getAllianceBasedReefTagIDs() {
-    return FmsSubsystem.isRedAlliance() ? RED_REEF_TAGS : BLUE_REEF_TAGS;
+  public void setClosestScoringReefTag(int tagID) {
+    closestScoringReefTag[0] = tagID;
   }
 
   @Override
@@ -191,15 +193,15 @@ public class Limelight extends StateMachine<LimelightState> {
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, new int[] {});
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
         updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
       case ALGAE -> updateHealth(algaeResult);
       case PURPLE -> updateHealth(purpleResult);
-      case REEF_TAGS -> {
+      case CLOSEST_REEF_TAG -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(
-            limelightTableName, getAllianceBasedReefTagIDs());
+            limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);
       }
     }
