@@ -1209,8 +1209,6 @@ public class RobotManager extends StateMachine<RobotState> {
       swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
     }
 
-    // TODO: RobotManager should not interact with TagAlign or PurpleAlign directly ever, only via
-    // AutoAlign
     DogLog.log("PurpleAlignment/UsedPose", autoAlign.getUsedScoringPose());
 
     vision.setClosestScoringReefTag(nearestReefSide.getTagID());
