@@ -50,7 +50,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     rightMotor.getConfigurator().apply(RobotConfig.get().elevator().rightMotorConfig());
   }
 
-    public void setState(ElevatorState newState) {
+  public void setState(ElevatorState newState) {
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
         if (newState == ElevatorState.MID_MATCH_HOMING) {
