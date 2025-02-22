@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
@@ -14,8 +13,10 @@ import frc.robot.vision.results.TagResult;
 import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
-  private static final int[] RED_REEF_TAGS = {6, 7, 8, 9, 10, 11};
-  private static final int[] BLUE_REEF_TAGS = {17, 18, 19, 20, 21, 22};
+  private static final int[] VALID_APRILTAGS =
+      new int[] {1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22};
+
+  private static final int[] STATION_TAGS = new int[] {1, 2, 12, 13};
 
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
@@ -31,6 +32,10 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<TagResult> tagResult = Optional.empty();
 
   private Optional<GamePieceResult> coralResult = Optional.empty();
+  private Optional<GamePieceResult> algaeResult = Optional.empty();
+
+  private final int[] closestScoringReefTag = {0};
+
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
 
@@ -64,12 +69,18 @@ public class Limelight extends StateMachine<LimelightState> {
     return getState() == LimelightState.CORAL ? coralResult : Optional.empty();
   }
 
+  public Optional<GamePieceResult> getAlgaeResult() {
+    return getState() == LimelightState.ALGAE ? algaeResult : Optional.empty();
+  }
+
   public Optional<PurpleResult> getPurpleResult() {
     return getState() == LimelightState.PURPLE ? purpleResult : Optional.empty();
   }
 
   public Optional<TagResult> getTagResult() {
-    if (getState() != LimelightState.TAGS && getState() != LimelightState.REEF_TAGS) {
+    if (getState() != LimelightState.TAGS
+        && getState() != LimelightState.CLOSEST_REEF_TAG
+        && getState() != LimelightState.STATION_TAGS) {
       return Optional.empty();
     }
 
@@ -120,6 +131,29 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
   }
 
+  private Optional<GamePieceResult> getRawAlgaeResult() {
+    if (getState() != LimelightState.CORAL) {
+      return Optional.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return Optional.empty();
+    }
+    var coralTX = t2d[4];
+    var coralTY = t2d[5];
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+    if (coralTX == 0.0 || coralTY == 0.0) {
+      return Optional.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
+
+    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
+  }
+
   private Optional<PurpleResult> getRawPurpleResult() {
     if (getState() != LimelightState.PURPLE) {
       return Optional.empty();
@@ -143,14 +177,15 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new PurpleResult(purpleTX, purpleTY, timestamp));
   }
 
-  private int[] getAllianceBasedReefTagIDs() {
-    return FmsSubsystem.isRedAlliance() ? RED_REEF_TAGS : BLUE_REEF_TAGS;
+  public void setClosestScoringReefTag(int tagID) {
+    closestScoringReefTag[0] = tagID;
   }
 
   @Override
   protected void collectInputs() {
     tagResult = getTagResult();
     coralResult = getRawCoralResult();
+    algaeResult = getRawAlgaeResult();
     purpleResult = getRawPurpleResult();
   }
 
@@ -161,14 +196,18 @@ public class Limelight extends StateMachine<LimelightState> {
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, new int[] {});
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
         updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
+      case ALGAE -> updateHealth(algaeResult);
       case PURPLE -> updateHealth(purpleResult);
-      case REEF_TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(
-            limelightTableName, getAllianceBasedReefTagIDs());
+      case CLOSEST_REEF_TAG -> {
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
+        updateHealth(tagResult);
+      }
+      case STATION_TAGS -> {
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, STATION_TAGS);
         updateHealth(tagResult);
       }
     }
