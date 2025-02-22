@@ -31,6 +31,8 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<TagResult> tagResult = Optional.empty();
 
   private Optional<GamePieceResult> coralResult = Optional.empty();
+  private Optional<GamePieceResult> algaeResult = Optional.empty();
+
   private Optional<PurpleResult> purpleResult = Optional.empty();
   private double robotHeading = 0.0;
 
@@ -62,6 +64,10 @@ public class Limelight extends StateMachine<LimelightState> {
 
   public Optional<GamePieceResult> getCoralResult() {
     return getState() == LimelightState.CORAL ? coralResult : Optional.empty();
+  }
+
+  public Optional<GamePieceResult> getAlgaeResult() {
+    return getState() == LimelightState.ALGAE ? algaeResult : Optional.empty();
   }
 
   public Optional<PurpleResult> getPurpleResult() {
@@ -120,6 +126,29 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
   }
 
+  private Optional<GamePieceResult> getRawAlgaeResult() {
+    if (getState() != LimelightState.CORAL) {
+      return Optional.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return Optional.empty();
+    }
+    var coralTX = t2d[4];
+    var coralTY = t2d[5];
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+    if (coralTX == 0.0 || coralTY == 0.0) {
+      return Optional.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
+
+    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
+  }
+
   private Optional<PurpleResult> getRawPurpleResult() {
     if (getState() != LimelightState.PURPLE) {
       return Optional.empty();
@@ -151,6 +180,7 @@ public class Limelight extends StateMachine<LimelightState> {
   protected void collectInputs() {
     tagResult = getTagResult();
     coralResult = getRawCoralResult();
+    algaeResult = getRawAlgaeResult();
     purpleResult = getRawPurpleResult();
   }
 
@@ -165,6 +195,7 @@ public class Limelight extends StateMachine<LimelightState> {
         updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
+      case ALGAE -> updateHealth(algaeResult);
       case PURPLE -> updateHealth(purpleResult);
       case REEF_TAGS -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(

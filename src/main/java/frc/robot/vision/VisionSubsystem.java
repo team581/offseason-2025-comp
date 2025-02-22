@@ -5,9 +5,11 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
+import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
@@ -30,7 +32,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       Limelight frontCoralLimelight,
       Limelight backTagLimelight,
       Limelight baseTagLimelight) {
-    super(SubsystemPriority.VISION, VisionState.DEFAULT_STATE);
+    super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.elevatorPurpleLimelight = elevatorPurpleLimelight;
     this.frontCoralLimelight = frontCoralLimelight;
@@ -74,6 +76,40 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return tagResult;
   }
 
+  public void setState(VisionState state) {
+    setStateFromRequest(state);
+  }
+
+  @Override
+  protected void afterTransition(VisionState newState) {
+    switch (newState) {
+      case TAGS -> {
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.TAGS);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+      }
+      case REEF_TAGS -> {
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.REEF_TAGS);
+        backTagLimelight.setState(LimelightState.REEF_TAGS);
+        baseTagLimelight.setState(LimelightState.REEF_TAGS);
+      }
+      case CORAL_DETECTION -> {
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.CORAL);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+      }
+      case ALGAE_DETECTION -> {
+        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
+        frontCoralLimelight.setState(LimelightState.ALGAE);
+        backTagLimelight.setState(LimelightState.TAGS);
+        baseTagLimelight.setState(LimelightState.TAGS);
+      }
+    }
+  }
+
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
@@ -83,6 +119,17 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     baseTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+  }
+
+  public Optional<GamePieceResult> getCoralResult() {
+    return frontCoralLimelight.getCoralResult();
+  }
+
+  public boolean isAnyCameraOffline() {
+    return elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || baseTagLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
   public boolean isAnyScoringTagLimelightOnline() {

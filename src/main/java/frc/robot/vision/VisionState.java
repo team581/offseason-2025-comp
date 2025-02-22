@@ -1,5 +1,8 @@
 package frc.robot.vision;
 
 public enum VisionState {
-  DEFAULT_STATE;
+  TAGS,
+  REEF_TAGS,
+  CORAL_DETECTION,
+  ALGAE_DETECTION;
 }
