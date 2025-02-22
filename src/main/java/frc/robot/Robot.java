@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,6 +14,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -130,6 +132,10 @@ public class Robot extends TimedRobot {
     CollisionBox.visualize();
 
     ElasticLayoutUtil.onBoot();
+
+    if (!FeatureFlags.LIVE_WINDOW_TELEMETRY_ENABLED.getAsBoolean()) {
+      LiveWindow.disableAllTelemetry();
+    }
   }
 
   @Override
