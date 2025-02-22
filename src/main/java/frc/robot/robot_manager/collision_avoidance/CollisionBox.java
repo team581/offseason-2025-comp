@@ -1,6 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.config.FeatureFlags;
@@ -49,13 +50,19 @@ public enum CollisionBox {
   public final Rectangle2d bounds;
   public final SuperstructurePosition safeZone;
 
-  public boolean shortCutPossible(CollisionBox goal) {
+  public boolean shortCutPossible(
+      CollisionBox goal,
+      SuperstructurePosition currentPosition,
+      SuperstructurePosition goalPosition) {
     if (!FeatureFlags.COLLISION_AVOIDANCE_BOX_SHORTCUTS.getAsBoolean()) {
       return false;
     }
 
     if (this == goal) {
       return false;
+    }
+    if (MathUtil.isNear(goalPosition.elevatorHeight(), currentPosition.elevatorHeight(), 0.5)) {
+      return true;
     }
     return switch (goal) {
       case BOX_4, BOX_5, BOX_6 ->

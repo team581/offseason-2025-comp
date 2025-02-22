@@ -162,4 +162,22 @@ public class CollisionAvoidanceTest {
     var expectedResult = CollisionBox.BOX_4.safeZone;
     assertEquals(expectedResult, result.get());
   }
+
+  @Test
+  void shortCutPossibleElevator0NoShortcut() {
+    SuperstructurePosition current = new SuperstructurePosition(15, 120);
+    SuperstructurePosition goal = new SuperstructurePosition(0, -40);
+    var result = CollisionAvoidance.plan(current, goal);
+    var expectedResult = CollisionBox.BOX_2.safeZone;
+    assertEquals(expectedResult, result.get());
+  }
+
+  @Test
+  void shortCutPossibleElevator0YesShortcut() {
+    SuperstructurePosition current = new SuperstructurePosition(0, 120);
+    SuperstructurePosition goal = new SuperstructurePosition(0, -40);
+    var result = CollisionAvoidance.plan(current, goal);
+    var expectedResult = Optional.empty();
+    assertEquals(expectedResult, result);
+  }
 }

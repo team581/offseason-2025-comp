@@ -57,9 +57,14 @@ public class CollisionAvoidance {
         "CollisionAvoidance/CurrentPosition", positionToTranslation(currentSuperstructurePosition));
 
     // if(currentZone.id==3||currentZone.id==4||currentZone.id==5&&goalZone.id==3||goalZone.id==4||goalZone.id==5){
-    if (currentZone.shortCutPossible(goalZone)) {
+    if (currentZone.shortCutPossible(
+        goalZone, currentSuperstructurePosition, goalSuperstructurePosition)) {
+      DogLog.log("CollisionAvoidance/ShortCutActive", true);
       return Optional.empty();
+    } else {
+      DogLog.log("CollisionAvoidance/ShortCutActive", false);
     }
+
     if (currentZone.id < goalZone.id) {
       return Optional.of(CollisionBox.getById(currentZone.id + 1).safeZone);
     }
