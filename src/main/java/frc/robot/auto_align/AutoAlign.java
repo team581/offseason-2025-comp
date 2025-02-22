@@ -3,6 +3,7 @@ package frc.robot.auto_align;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -69,7 +70,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
   }
 
-  private final Debouncer isAlignedDebouncer = new Debouncer(0.5);
+  private final Debouncer isAlignedDebouncer = new Debouncer(0.5, DebounceType.kRising);
   private final PurpleAlign purple;
   private final Limelight purpleLimelight;
   private final Limelight frontLimelight;
