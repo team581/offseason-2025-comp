@@ -44,7 +44,7 @@ public class PushPartnerAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(Points.AUTO_START_1.redPose),
+                new AutoPoint(Points.START_3_AND_4.redPose),
                 new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.kZero)))),
 
         // SCORE L4 ON J
