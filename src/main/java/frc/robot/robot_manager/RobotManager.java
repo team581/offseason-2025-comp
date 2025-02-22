@@ -1154,7 +1154,7 @@ public class RobotManager extends StateMachine<RobotState> {
       autoAlign.setDriverPoseOffset(swerve.getPoseOffset());
       switch (swerve.getState()) {
         case REEF_ALIGN_TELEOP -> {
-          if (autoAlign.isTagAligned()) {
+          if (autoAlign.isTagAlignedDebounced()) {
             swerve.setState(SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST);
           }
         }

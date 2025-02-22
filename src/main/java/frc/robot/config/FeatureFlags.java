@@ -14,7 +14,7 @@ public class FeatureFlags {
       FeatureFlag.of("CollisionAvoidance/BoxShortcuts", true);
 
   public static final BooleanSupplier REEF_ALIGN_FINE_ADJUSTMENTS =
-      FeatureFlag.of("ReefAlignment/FineAdjustments", false);
+      FeatureFlag.of("ReefAlignment/FineAdjustments", true);
   public static final BooleanSupplier REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN =
       FeatureFlag.of("ReefAlignment/LookaheadDistanceCostFn", false);
 
