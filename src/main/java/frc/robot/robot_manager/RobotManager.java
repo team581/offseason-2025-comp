@@ -652,7 +652,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_CENTERED_L2_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L2,
             true);
-            autoAlign.markPipeScored();
+        autoAlign.markPipeScored();
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -692,7 +692,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_CENTERED_L3_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L3,
             true);
-            autoAlign.markPipeScored();
+        autoAlign.markPipeScored();
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
