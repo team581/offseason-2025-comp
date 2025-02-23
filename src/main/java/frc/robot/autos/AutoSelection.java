@@ -1,8 +1,8 @@
 package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.DoNothingAuto;
-import frc.robot.autos.auto_path_commands.FourPiece5FEDC;
 import frc.robot.autos.auto_path_commands.FourPiece2IJKLAuto;
+import frc.robot.autos.auto_path_commands.FourPiece5FEDC;
 import frc.robot.autos.auto_path_commands.PushPartnerAuto;
 import frc.robot.autos.auto_path_commands.StraightLineAuto;
 import frc.robot.autos.auto_path_commands.TestAuto;
