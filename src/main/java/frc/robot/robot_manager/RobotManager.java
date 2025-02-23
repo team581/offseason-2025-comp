@@ -40,7 +40,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
 
   private final VisionSubsystem vision;
-  private final ImuSubsystem imu;
+  public final ImuSubsystem imu;
 
   private final SwerveSubsystem swerve;
   public final IntakeSubsystem intake;

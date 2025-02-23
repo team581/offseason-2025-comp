@@ -180,7 +180,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.autoAlign::isTagAlignedDebounced),
+            .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -208,7 +208,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                         autoCommands.l4WarmupCommand(ReefPipe.PIPE_J)),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.autoAlign::isTagAlignedDebounced),
+            .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -236,7 +236,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE K
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.autoAlign::isTagAlignedDebounced)),
+                    .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced())),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -265,7 +265,7 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE L
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.autoAlign::isTagAlignedDebounced)),
+                    .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced())),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(

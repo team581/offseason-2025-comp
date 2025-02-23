@@ -3,10 +3,14 @@ package frc.robot.imu;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ImuSubsystem extends StateMachine<ImuState> {
+  private static final double IS_TILTED_THRESHOLD = 5.0;
+  private static final Debouncer IS_TILTED_DEBOUNCE = new Debouncer(0.5, DebounceType.kRising);
   private final Pigeon2 imu;
   private double robotHeading = 0;
   private double pitch;
@@ -52,6 +56,10 @@ public class ImuSubsystem extends StateMachine<ImuState> {
 
   public double getRollRate() {
     return rollRate;
+  }
+
+  public boolean isFlatDebounced() {
+      return IS_TILTED_DEBOUNCE.calculate(MathUtil.isNear(pitch, 0, IS_TILTED_THRESHOLD) && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD));
   }
 
   public void setAngle(double zeroAngle) {
