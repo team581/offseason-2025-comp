@@ -88,7 +88,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
   }
 
-  private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
+  private final Debouncer isAlignedDebouncer = new Debouncer(0.75, DebounceType.kRising);
   private final PurpleAlign purple;
   private final Limelight purpleLimelight;
   private final Limelight frontLimelight;
