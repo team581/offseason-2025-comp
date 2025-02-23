@@ -128,17 +128,11 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       case PROCESSOR_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal()
-              ? RobotState.PROCESSOR_SCORING
-              : currentState;
+          wrist.atGoal() && elevator.atGoal() ? RobotState.PROCESSOR_SCORING : currentState;
       case NET_BACK_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal()
-              ? RobotState.NET_BACK_SCORING
-              : currentState;
+          wrist.atGoal() && elevator.atGoal() ? RobotState.NET_BACK_SCORING : currentState;
       case NET_FORWARD_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal()
-              ? RobotState.NET_FORWARD_SCORING
-              : currentState;
+          wrist.atGoal() && elevator.atGoal() ? RobotState.NET_FORWARD_SCORING : currentState;
 
       case CORAL_L1_1_APPROACH ->
           AutoAlign.isCloseToReefSide(
