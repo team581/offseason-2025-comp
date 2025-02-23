@@ -224,15 +224,14 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                 new AutoSegment(
                     new AutoPoint(
                         new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(60)),
-                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest),
-                        new AutoConstraintOptions(4, 57, 4, 30)),
+                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                //        new AutoConstraintOptions(4, 57, 4, 30)),
                     new AutoPoint(
-                        new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88)),
-                        new AutoConstraintOptions(2, 57, 4, 30)),
+                        new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88))),
+                //        new AutoConstraintOptions(2, 57, 4, 30)),
                     new AutoPoint(
                         Points.LEFT_CORAL_STATION.redPose,
-                        autoCommands.intakeStationWarmupCommand(),
-                        new AutoConstraintOptions(1, 57, 4, 30))),
+                        autoCommands.intakeStationWarmupCommand())),
                 false)
             .until(
                 () ->
