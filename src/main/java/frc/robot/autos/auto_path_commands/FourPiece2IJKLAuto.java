@@ -16,7 +16,6 @@ import frc.robot.robot_manager.RobotState;
 
 public class FourPiece2IJKLAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
-
       new AutoConstraintOptions(4.75, 57, 1, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       new AutoConstraintOptions(2, 57, 1, 30);
