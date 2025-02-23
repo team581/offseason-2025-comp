@@ -188,10 +188,10 @@ class CompConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(30.0)
                           .withStatorCurrentLimit(60.0)),
-              -58.7,
+              -56.4,
               156.5,
               18,
-              -58.7),
+              -56.4),
           new RollConfig(
               RIO_CAN_NAME,
               23,
