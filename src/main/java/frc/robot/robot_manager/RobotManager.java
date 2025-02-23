@@ -128,15 +128,15 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       case PROCESSOR_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
+          wrist.atGoal() && elevator.atGoal()
               ? RobotState.PROCESSOR_SCORING
               : currentState;
       case NET_BACK_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
+          wrist.atGoal() && elevator.atGoal()
               ? RobotState.NET_BACK_SCORING
               : currentState;
       case NET_FORWARD_PREPARE_TO_SCORE ->
-          wrist.atGoal() && elevator.atGoal() && roll.atGoal()
+          wrist.atGoal() && elevator.atGoal()
               ? RobotState.NET_FORWARD_SCORING
               : currentState;
 
@@ -219,7 +219,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       // Dislodging
       case DISLODGE_ALGAE_L2_PUSHING -> {
-        if (wrist.atGoal() && elevator.atGoal() && roll.atGoal()) {
+        if (wrist.atGoal() && elevator.atGoal()) {
           if (intake.getHasGP()) {
             yield RobotState.CORAL_CENTERED_L2_2_LINEUP;
           } else if (cameraOnlineAndFarEnoughFromReef()) {
@@ -229,7 +229,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       case DISLODGE_ALGAE_L3_PUSHING -> {
-        if (wrist.atGoal() && elevator.atGoal() && roll.atGoal()) {
+        if (wrist.atGoal() && elevator.atGoal()) {
           if (intake.getHasGP()) {
             yield RobotState.CORAL_CENTERED_L3_2_LINEUP;
           } else if (cameraOnlineAndFarEnoughFromReef()) {
@@ -1757,7 +1757,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_DISPLACED_L4_4_RELEASE ->
           setStateFromRequest(RobotState.IDLE_NO_GP);
 
-      default -> setStateFromRequest(RobotState.CORAL_L1_1_APPROACH);
+      default -> {}
     }
   }
 
