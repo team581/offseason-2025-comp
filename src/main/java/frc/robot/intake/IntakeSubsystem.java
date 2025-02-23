@@ -95,7 +95,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     return switch (getState()) {
       case INTAKING_CORAL ->
           FeatureFlags.INTAKE_VELOCITY_CORAL_DETECTION.getAsBoolean()
-              ? topMotorCoralVelocityGp && bottomMotorCoralVelocityGp
+              ? topMotorCoralVelocityGp && bottomMotorCoralVelocityGp && sensorsHaveGP
               : sensorsHaveGP;
       case INTAKING_ALGAE -> topMotorAlgaeVelocityGp && bottomMotorAlgaeVelocityGp;
       default -> sensorsHaveGP;
