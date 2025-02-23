@@ -523,7 +523,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_1_APPROACH -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE_L1);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -559,7 +559,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_PLACE, WristState.CORAL_SCORE_PLACING_L1, true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE_L1);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -568,7 +568,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_4_RELEASE -> {
         intake.setState(IntakeState.SCORE_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_RELEASE, WristState.CORAL_SCORE_PLACING_L1, true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE_L1);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
