@@ -78,13 +78,13 @@ public class PracticeBotTunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = FeetPerSecond.of(18.47);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.76);
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 0;
 
-  private static final double kDriveGearRatio = (5.67 / 1.0);
+  private static final double kDriveGearRatio = (6.48 / 1.0);
   private static final double kSteerGearRatio = (12.1 / 1.0);
   private static final Distance kWheelRadius = Inches.of(2);
 
