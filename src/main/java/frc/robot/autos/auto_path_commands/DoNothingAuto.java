@@ -30,12 +30,12 @@ public class DoNothingAuto extends BaseAuto {
   @Override
   protected Command getBlueAutoCommand() {
     return Commands.sequence(
-      Commands.runOnce(robotManager::rehomeRollRequest),
-      trailblazer.followSegment(
-        new AutoSegment(
-          SCORING_CONSTRAINTS,
-          new AutoPoint(Points.START_1_AND_6.bluePose),
-          new AutoPoint(new Pose2d(10.626, 0.758, Rotation2d.kZero)))));
+        Commands.runOnce(robotManager::rehomeRollRequest),
+        trailblazer.followSegment(
+            new AutoSegment(
+                SCORING_CONSTRAINTS,
+                new AutoPoint(Points.START_1_AND_6.bluePose),
+                new AutoPoint(new Pose2d(10.626, 0.758, Rotation2d.kZero)))));
   }
 
   @Override
@@ -46,11 +46,11 @@ public class DoNothingAuto extends BaseAuto {
   @Override
   protected Command getRedAutoCommand() {
     return Commands.sequence(
-      Commands.runOnce(robotManager::rehomeRollRequest),
-      trailblazer.followSegment(
-        new AutoSegment(
-          SCORING_CONSTRAINTS,
-          new AutoPoint(Points.START_1_AND_6.redPose),
-          new AutoPoint(new Pose2d(10.626, 0.758, Rotation2d.kZero)))));
+        Commands.runOnce(robotManager::rehomeRollRequest),
+        trailblazer.followSegment(
+            new AutoSegment(
+                SCORING_CONSTRAINTS,
+                new AutoPoint(Points.START_1_AND_6.redPose),
+                new AutoPoint(new Pose2d(10.626, 0.758, Rotation2d.kZero)))));
   }
 }
