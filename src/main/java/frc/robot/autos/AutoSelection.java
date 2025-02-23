@@ -1,7 +1,7 @@
 package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.DoNothingAuto;
-import frc.robot.autos.auto_path_commands.FourPiece1EDC;
+import frc.robot.autos.auto_path_commands.FourPiece5FEDC;
 import frc.robot.autos.auto_path_commands.FourPiece2IJKLAuto;
 import frc.robot.autos.auto_path_commands.PushPartnerAuto;
 import frc.robot.autos.auto_path_commands.StraightLineAuto;
@@ -13,7 +13,7 @@ public enum AutoSelection {
   DO_NOTHING(DoNothingAuto::new),
   FOUR_PIECE_2IJK(FourPiece2IJKLAuto::new),
   PUSH_PARTNER(PushPartnerAuto::new),
-  FOUR_PIECE_1EDC(FourPiece1EDC::new),
+  FOUR_PIECE_5FEDC(FourPiece5FEDC::new),
   STRAIGHT_LINE(StraightLineAuto::new),
   TEST_AUTO(TestAuto::new);
 
