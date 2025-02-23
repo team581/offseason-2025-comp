@@ -6,6 +6,7 @@ import frc.robot.autos.auto_path_commands.FourPiece5FEDC;
 import frc.robot.autos.auto_path_commands.PushPartnerAuto;
 import frc.robot.autos.auto_path_commands.StraightLineAuto;
 import frc.robot.autos.auto_path_commands.TestAuto;
+import frc.robot.autos.auto_path_commands.ThreePiece2IKLAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
@@ -14,6 +15,7 @@ public enum AutoSelection {
   FOUR_PIECE_2IJK(FourPiece2IJKLAuto::new),
   PUSH_PARTNER(PushPartnerAuto::new),
   FOUR_PIECE_5FEDC(FourPiece5FEDC::new),
+  THREE_PIECE_2IKL(ThreePiece2IKLAuto::new),
   STRAIGHT_LINE(StraightLineAuto::new),
   TEST_AUTO(TestAuto::new);
 
