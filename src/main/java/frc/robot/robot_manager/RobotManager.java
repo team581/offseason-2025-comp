@@ -883,7 +883,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
 
-        lights.setState(getLightStateForScoring());
+        lights.setState(LightsState.IDLE_WITH_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case NET_BACK_SCORING -> {
@@ -894,7 +894,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
 
-        lights.setState(LightsState.SCORING);
+        lights.setState(LightsState.IDLE_WITH_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
@@ -905,7 +905,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
 
-        lights.setState(getLightStateForScoring());
+        lights.setState(LightsState.IDLE_WITH_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case NET_FORWARD_SCORING -> {
@@ -916,7 +916,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
 
-        lights.setState(LightsState.SCORING);
+        lights.setState(LightsState.IDLE_WITH_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
