@@ -81,15 +81,15 @@
     {
       "anchor": {
         "x": 16.1,
-        "y": 0.7
+        "y": 0.71
       },
       "prevControl": {
         "x": 15.875880681818183,
-        "y": 0.8701685175619828
+        "y": 0.8801685175619829
       },
       "nextControl": {
         "x": 16.322593284120877,
-        "y": 0.5309901641438415
+        "y": 0.5409901641438415
       },
       "isLocked": false,
       "linkedName": null
@@ -177,15 +177,15 @@
     {
       "anchor": {
         "x": 16.1,
-        "y": 0.7
+        "y": 0.71
       },
       "prevControl": {
         "x": 15.760545401260162,
-        "y": 0.8650071948631154
+        "y": 0.8750071948631151
       },
       "nextControl": {
         "x": 16.439454598739836,
-        "y": 0.5349928051368849
+        "y": 0.5449928051368849
       },
       "isLocked": false,
       "linkedName": null
@@ -257,15 +257,15 @@
     {
       "anchor": {
         "x": 16.1,
-        "y": 0.7
+        "y": 0.71
       },
       "prevControl": {
         "x": 16.283700116812962,
-        "y": 0.5304291679477081
+        "y": 0.5404291679477081
       },
       "nextControl": {
         "x": 15.59465179572581,
-        "y": 1.1664793738925936
+        "y": 1.1764793738925943
       },
       "isLocked": false,
       "linkedName": null
@@ -293,7 +293,7 @@
       },
       "prevControl": {
         "x": 14.201368517954599,
-        "y": 2.666405411351929
+        "y": 2.6664054113519287
       },
       "nextControl": {
         "x": 13.794909586418342,
@@ -387,7 +387,7 @@
     },
     {
       "waypointRelativePos": 16,
-      "rotationDegrees": 123.81859843346801
+      "rotationDegrees": 125.30942910477154
     },
     {
       "waypointRelativePos": 17,
@@ -421,7 +421,7 @@
   "folder": "Auto Path Coords",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
