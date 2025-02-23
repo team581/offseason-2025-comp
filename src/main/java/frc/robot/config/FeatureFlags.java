@@ -20,7 +20,7 @@ public class FeatureFlags {
 
   // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
   // again
-  public static final BooleanSupplier CLIMBER_ENABLED = FeatureFlag.of("Climber/Enabled", false);
+  public static final BooleanSupplier CLIMBER_ENABLED = FeatureFlag.of("Climber/Enabled", true);
 
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
       FeatureFlag.of("Intake/CoralVelocityDetection", true);

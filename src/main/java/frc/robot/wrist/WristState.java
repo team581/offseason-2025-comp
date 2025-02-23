@@ -3,7 +3,7 @@ package frc.robot.wrist;
 public enum WristState {
   UNTUNED(0),
 
-  CORAL_STOWED(35.0),
+  CORAL_STOWED(57.0),
   ALGAE_STOWED(30.0),
   UNJAM(UNTUNED),
   PRE_MATCH_HOMING(0.0),
