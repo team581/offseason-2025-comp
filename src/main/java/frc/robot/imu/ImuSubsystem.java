@@ -59,7 +59,9 @@ public class ImuSubsystem extends StateMachine<ImuState> {
   }
 
   public boolean isFlatDebounced() {
-      return IS_TILTED_DEBOUNCE.calculate(MathUtil.isNear(pitch, 0, IS_TILTED_THRESHOLD) && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD));
+    return IS_TILTED_DEBOUNCE.calculate(
+        MathUtil.isNear(pitch, 0, IS_TILTED_THRESHOLD)
+            && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD));
   }
 
   public void setAngle(double zeroAngle) {

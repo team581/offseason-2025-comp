@@ -180,7 +180,10 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
-            .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced()),
+            .until(
+                () ->
+                    robotManager.autoAlign.isTagAlignedDebounced()
+                        && robotManager.imu.isFlatDebounced()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -216,7 +219,10 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                     new AutoPoint(new Pose2d(12.246, 1.244, Rotation2d.fromDegrees(60.0))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
-            .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced()),
+            .until(
+                () ->
+                    robotManager.autoAlign.isTagAlignedDebounced()
+                        && robotManager.imu.isFlatDebounced()),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -250,7 +256,10 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE K
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced())),
+                    .until(
+                        () ->
+                            robotManager.autoAlign.isTagAlignedDebounced()
+                                && robotManager.imu.isFlatDebounced())),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
@@ -284,7 +293,10 @@ public class FourPiece2IJKLAuto extends BaseAuto {
                             // REEF PIPE L
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(() -> robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced())),
+                    .until(
+                        () ->
+                            robotManager.autoAlign.isTagAlignedDebounced()
+                                && robotManager.imu.isFlatDebounced())),
         autoCommands.l4ScoreAndReleaseCommand(),
         trailblazer.followSegment(
             new AutoSegment(
