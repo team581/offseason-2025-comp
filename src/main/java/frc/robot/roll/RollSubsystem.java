@@ -121,9 +121,9 @@ public class RollSubsystem extends StateMachine<RollState> {
   public boolean atGoal() {
     return switch (getState()) {
       case HOMING -> false;
-      case CORAL_SCORE -> MathUtil.isNear(coralScoreDirection, motorAngle, 1);
+      case CORAL_SCORE -> MathUtil.isNear(coralScoreDirection, motorAngle, 3);
       case SMART_STOW -> MathUtil.isNear(smartStowAngle, motorAngle, 2);
-      default -> MathUtil.isNear(getState().angle, motorAngle, 1);
+      default -> MathUtil.isNear(getState().angle, motorAngle, 3);
     };
   }
 
