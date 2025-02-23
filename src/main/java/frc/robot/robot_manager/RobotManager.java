@@ -459,7 +459,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case SMART_STOW_1 -> {
         intake.setState(IntakeState.INTAKING_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, WristState.INTAKING_CORAL_STATION_BACK);
+        moveSuperstructure(ElevatorState.STOWED, WristState.SMART_STOW_1);
         swerve.setSnapsEnabled(false);
         swerve.setSnapToAngle(0);
         roll.setState(RollState.SMART_STOW);

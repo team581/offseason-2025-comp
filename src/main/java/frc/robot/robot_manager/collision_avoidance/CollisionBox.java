@@ -13,13 +13,13 @@ public enum CollisionBox {
   BOX_1(
       1,
       new Rectangle2d( // zone where the station intake happens
-          new Translation2d(-24, 17.0), new Translation2d(-20, 25.0)),
-      new SuperstructurePosition(11, 120)), // whatever it is for station intake
+          new Translation2d(-24, 17.0), new Translation2d(-15, 25.0)),
+      new SuperstructurePosition(11, 100)), // whatever it is for station intake
   BOX_2(
       2,
       new Rectangle2d( // bottom backwards
           new Translation2d(-24, -4.0), new Translation2d(-10, 25.0)),
-      new SuperstructurePosition(0, 120)), // 0 and angle of station intake
+      new SuperstructurePosition(0, 100)), // 0 and angle of station intake
   BOX_3(
       3,
       new Rectangle2d( // middle
@@ -83,7 +83,10 @@ public enum CollisionBox {
       case 5 -> BOX_5;
       case 6 -> BOX_6;
       case 7 -> BOX_7;
-      default -> BOX_4;
+      default -> {
+        DogLog.logFault("Tried to get box by ID " + id);
+        yield BOX_4;
+      }
     };
   }
 

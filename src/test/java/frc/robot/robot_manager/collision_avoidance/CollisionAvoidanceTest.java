@@ -36,7 +36,7 @@ public class CollisionAvoidanceTest {
 
   @Test
   void testGetZone1() {
-    SuperstructurePosition current = new SuperstructurePosition(12, 130);
+    SuperstructurePosition current = new SuperstructurePosition(11, 100);
     var result = CollisionAvoidance.getZone(current);
     var expectedResult = CollisionBox.BOX_1;
     assertEquals(expectedResult, result);
@@ -179,5 +179,14 @@ public class CollisionAvoidanceTest {
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = Optional.empty();
     assertEquals(expectedResult, result);
+  }
+
+  @Test
+  void stationIntakeToStow() {
+    SuperstructurePosition current = new SuperstructurePosition(10.5, 120);
+    SuperstructurePosition goal = new SuperstructurePosition(0, 33);
+    var result = CollisionAvoidance.plan(current, goal);
+    var expectedResult = CollisionBox.BOX_2.safeZone;
+    assertEquals(expectedResult, result.get());
   }
 }

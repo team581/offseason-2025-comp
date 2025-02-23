@@ -57,7 +57,9 @@ public enum WristState {
   INTAKING_CORAL_STATION_FRONT(50),
 
   COLLISION_AVOIDANCE(0.0),
-  CLIMBING(-10.0);
+  CLIMBING(-10.0),
+
+  SMART_STOW_1(100.0);
 
   public final double angle;
 

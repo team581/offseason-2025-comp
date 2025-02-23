@@ -66,10 +66,12 @@ public class CollisionAvoidance {
     }
 
     if (currentZone.id < goalZone.id) {
+      DogLog.log("DEBUG/NextZone", currentZone.id + 1);
       return Optional.of(CollisionBox.getById(currentZone.id + 1).safeZone);
     }
 
     if (currentZone.id > goalZone.id) {
+      DogLog.log("DEBUG/NextZone", currentZone.id - 1);
       return Optional.of(CollisionBox.getById(currentZone.id - 1).safeZone);
     }
 
