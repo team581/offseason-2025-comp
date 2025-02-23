@@ -100,7 +100,7 @@ class PracticeConfig {
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
@@ -111,7 +111,7 @@ class PracticeConfig {
                   .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
