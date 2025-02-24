@@ -8,7 +8,7 @@ public enum ReefPipeLevel {
   L1(new Pose2d(-0.60, 0, Rotation2d.kZero)),
   L2(new Pose2d(-0.60, 0, Rotation2d.kZero)),
   L3(new Pose2d(-0.60, 0, Rotation2d.kZero)),
-  L4(new Pose2d(-0.64, 0, Rotation2d.kZero));
+  L4(new Pose2d(-0.64635, 0, Rotation2d.kZero));
 
   public final Pose2d offset;
 
