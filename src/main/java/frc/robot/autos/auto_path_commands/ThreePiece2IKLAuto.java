@@ -16,9 +16,9 @@ import frc.robot.robot_manager.RobotState;
 
 public class ThreePiece2IKLAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 57, 1, 30);
+      new AutoConstraintOptions(4.75, 57, 2, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      new AutoConstraintOptions(2, 57, 1, 30);
+      new AutoConstraintOptions(2, 57, 2, 30);
 
   public ThreePiece2IKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
