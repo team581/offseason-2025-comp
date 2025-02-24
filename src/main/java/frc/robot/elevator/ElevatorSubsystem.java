@@ -7,6 +7,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
+import frc.robot.fms.FmsSubsystem;
+import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -18,13 +20,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
+  private final LocalizationSubsystem localization;
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
   private double leftMotorCurrent;
   private double rightMotorCurrent;
 
-  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
+  private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
 
   private final MotionMagicVoltage positionRequest =
       new MotionMagicVoltage(ElevatorState.STOWED.height);
@@ -41,10 +44,12 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   // Mid-match homing
   private double averageMotorCurrent;
 
-  public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
+  public ElevatorSubsystem(
+      TalonFX leftMotor, TalonFX rightMotor, LocalizationSubsystem localization) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.leftMotor = leftMotor;
     this.rightMotor = rightMotor;
+    this.localization = localization;
     // Motor Configs
     leftMotor.getConfigurator().apply(RobotConfig.get().elevator().leftMotorConfig());
     rightMotor.getConfigurator().apply(RobotConfig.get().elevator().rightMotorConfig());
@@ -84,7 +89,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     leftMotorCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
     rightMotorCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
 
-    averageMotorCurrent = linearFilter.calculate((leftMotorCurrent + rightMotorCurrent) / 2.0);
+    averageMotorCurrent = currentFilter.calculate((leftMotorCurrent + rightMotorCurrent) / 2.0);
 
     if (DriverStation.isDisabled()) {
       lowestSeenHeightLeft = Math.min(lowestSeenHeightLeft, leftHeight);
@@ -95,10 +100,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
-      default -> {
-        leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
-        rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
-      }
       case MID_MATCH_HOMING -> {
         leftMotor.setVoltage(-0.5);
         rightMotor.setVoltage(-0.5);
@@ -106,6 +107,17 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
+      }
+      case INTAKING_CORAL_STATION_BACK, INTAKING_CORAL_STATION_FRONT -> {
+        var station = getStationIntakeSide();
+        leftMotor.setControl(
+            positionRequest.withPosition(clampHeight(newState.height + station.offset)));
+        rightMotor.setControl(
+            positionRequest.withPosition(clampHeight(newState.height + station.offset)));
+      }
+      default -> {
+        leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
+        rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
       }
     }
   }
@@ -179,11 +191,32 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
       // This state is only used when it's safe to cancel the move partway
       // Since the next state is same setpoint, different wrist angle
-      case CORAL_CENTERED_L4_RAISE_WRIST ->
-          averageMeasuredHeight > ElevatorState.CORAL_CENTERED_L4_RAISE_WRIST.height - 8;
-      case CORAL_DISPLACED_L4_RAISE_WRIST ->
-          averageMeasuredHeight > ElevatorState.CORAL_DISPLACED_L4_RAISE_WRIST.height - 8;
+      case CORAL_CENTERED_L4_RAISE_WRIST, CORAL_DISPLACED_L4_RAISE_WRIST ->
+          averageMeasuredHeight > getState().height - 8;
+      case INTAKING_CORAL_STATION_BACK, INTAKING_CORAL_STATION_FRONT ->
+          MathUtil.isNear(
+              getState().height + getStationIntakeSide().offset, averageMeasuredHeight, TOLERANCE);
       default -> MathUtil.isNear(getState().height, averageMeasuredHeight, TOLERANCE);
     };
+  }
+
+  private CoralStation getStationIntakeSide() {
+    if (localization.getPose().getY() > 4.025) {
+      if (FmsSubsystem.isRedAlliance()) {
+        // Coral station red, processor side
+        return CoralStation.PROCESSOR_SIDE_RED;
+      }
+
+      // Coral station blue, non processor side
+      return CoralStation.NON_PROCESSOR_SIDE_BLUE;
+    }
+
+    if (FmsSubsystem.isRedAlliance()) {
+      // Coral station red, non processor side
+      return CoralStation.NON_PROCESSOR_SIDE_RED;
+    }
+
+    // Coral station blue, processor side
+    return CoralStation.PROCESSOR_SIDE_BLUE;
   }
 }
