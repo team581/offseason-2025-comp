@@ -43,7 +43,7 @@ public class FourPiece5FEDC extends BaseAuto {
                             new Pose2d(11.785, 5.428, Rotation2d.fromDegrees(-60)),
                             autoCommands
                                 .preloadCoralAfterRollHomed()
-                                .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)))
+                                .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_E)))
                         .pathflipped(),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose).pathflipped()),
                 false)
@@ -208,7 +208,7 @@ public class FourPiece5FEDC extends BaseAuto {
                         new Pose2d(11.785, 5.428, Rotation2d.fromDegrees(-60)),
                         autoCommands
                             .preloadCoralAfterRollHomed()
-                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
+                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_F))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(
@@ -245,7 +245,7 @@ public class FourPiece5FEDC extends BaseAuto {
                     SCORING_CONSTRAINTS,
                     new AutoPoint(
                         new Pose2d(14.119, 6.943, Rotation2d.fromDegrees(-90.5)),
-                        autoCommands.l4WarmupCommand(ReefPipe.PIPE_J),
+                        autoCommands.l4WarmupCommand(ReefPipe.PIPE_E),
                         INTAKING_CONSTRAINTS),
                     new AutoPoint(new Pose2d(12.246, 6.4974, Rotation2d.fromDegrees(-60.0))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
@@ -276,7 +276,7 @@ public class FourPiece5FEDC extends BaseAuto {
 
         // SCORE L4 ON K
         autoCommands
-            .l4WarmupCommand(ReefPipe.PIPE_K)
+            .l4WarmupCommand(ReefPipe.PIPE_D)
             .alongWith(
                 trailblazer
                     .followSegment(
@@ -313,7 +313,7 @@ public class FourPiece5FEDC extends BaseAuto {
 
         // SCORE L4 ON L
         autoCommands
-            .l4WarmupCommand(ReefPipe.PIPE_L)
+            .l4WarmupCommand(ReefPipe.PIPE_C)
             .alongWith(
                 trailblazer
                     .followSegment(
