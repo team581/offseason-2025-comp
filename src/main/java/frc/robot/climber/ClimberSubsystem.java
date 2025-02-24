@@ -1,17 +1,16 @@
 package frc.robot.climber;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -27,25 +26,16 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private boolean climberDirectionBad = false;
   private double currentAngle;
   private double motorAngle;
-  private TempClimberState tempState = TempClimberState.STOPPED;
+  private final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private final CoastOut coastNeutralRequest = new CoastOut();
 
   public ClimberSubsystem(TalonFX motor, CANcoder encoder) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOWED);
 
-    motor
-        .getConfigurator()
-        .apply(
-            new TalonFXConfiguration()
-                .withCurrentLimits(
-                    new CurrentLimitsConfigs()
-                        .withStatorCurrentLimit(70)
-                        .withSupplyCurrentLimit(50))
-                .withMotorOutput(
-                    new MotorOutputConfigs()
-                        .withInverted(InvertedValue.Clockwise_Positive)
-                        .withNeutralMode(NeutralModeValue.Brake)));
-    encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
-
+    if (FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+      motor.getConfigurator().apply(RobotConfig.get().climber().motorConfig());
+      encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
+    }
     this.motor = motor;
     this.encoder = encoder;
     DogLog.log("Climber/DirectionBad", climberDirectionBad);
@@ -55,24 +45,46 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    switch (tempState) {
-      case STOPPED -> motor.disable();
-      case UP -> motor.setVoltage(12);
-      case DOWN -> motor.setVoltage(-12);
+    if (!climberDirectionBad) {
+      climberDirectionBad =
+          motorDirectionDebouncer.calculate(
+              cancoderDirection != 0 && motorDirection != 0 && cancoderDirection != motorDirection);
     }
 
-    DogLog.log("Climber/TempState", tempState);
-    DogLog.log("Climber/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Climber/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
-    DogLog.log("Climber/OutputVoltage", motor.getMotorVoltage().getValueAsDouble());
+    if (climberDirectionBad) {
+      DogLog.logFault("Climber Direction Bad", AlertType.kError);
+      DogLog.log("Climber/DirectionBad", climberDirectionBad);
+    }
+
+    if (FeatureFlags.CLIMBER_ENABLED.getAsBoolean()) {
+      if (DriverStation.isDisabled()) {
+        if (getState() == ClimberState.STOWED) {
+          motor.setControl(coastNeutralRequest);
+        } else {
+          motor.setControl(brakeNeutralRequest);
+        }
+      } else if (climberDirectionBad || atGoal()) {
+        motor.disable();
+      } else if (currentAngle < clamp(getState().angle)) {
+        motor.setVoltage(getState().forwardsVoltage);
+      } else {
+        motor.setVoltage(getState().backwardsVoltage);
+      }
+    }
+
+    if (RobotConfig.IS_DEVELOPMENT) {
+      if (atGoal()) {
+        DogLog.log("Climber/Status", "At goal");
+      } else if (currentAngle < clamp(getState().angle)) {
+        DogLog.log("Climber/Status", "Too low");
+      } else {
+        DogLog.log("Climber/Status", "Too high");
+      }
+    }
   }
 
   public void setState(ClimberState newState) {
     setStateFromRequest(newState);
-  }
-
-  public void setState(TempClimberState newState) {
-    tempState = newState;
   }
 
   @Override
