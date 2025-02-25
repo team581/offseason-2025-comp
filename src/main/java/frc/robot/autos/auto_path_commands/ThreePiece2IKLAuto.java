@@ -168,9 +168,10 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                         autoCommands
                             .preloadCoralAfterRollHomed()
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)),
-                    new AutoConstraintOptions(2, 57, 1, 30)),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                    new AutoConstraintOptions(2, 57, 1, 30))),
+                        new AutoConstraintOptions(2, 57, 1, 30)),
+                    new AutoPoint(
+                        robotManager.autoAlign::getUsedScoringPose,
+                        new AutoConstraintOptions(2, 57, 1, 30))),
                 false)
             .until(
                 () ->
@@ -209,8 +210,9 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                                 new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277)),
                                 new AutoConstraintOptions(2, 57, 1, 30)),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                            new AutoConstraintOptions(2, 57, 1, 30))),
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(2, 57, 1, 30))),
                         false)
                     .until(
                         () ->
@@ -248,8 +250,9 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                                 new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
                                 new AutoConstraintOptions(2, 57, 1, 30)),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                            new AutoConstraintOptions(2, 57, 1, 30))),
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(2, 57, 1, 30))),
                         false)
                     .until(
                         () ->
