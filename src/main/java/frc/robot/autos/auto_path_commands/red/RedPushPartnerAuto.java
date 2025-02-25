@@ -1,4 +1,4 @@
-package frc.robot.autos.auto_path_commands;
+package frc.robot.autos.auto_path_commands.red;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,31 +13,21 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class PushPartnerAuto extends BaseAuto {
+public class RedPushPartnerAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
-  public PushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public RedPushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
   @Override
-  protected Pose2d getBlueStartingPose() {
-    return Pose2d.kZero;
-  }
-
-  @Override
-  protected Command getBlueAutoCommand() {
-    return Commands.none();
-  }
-
-  @Override
-  protected Pose2d getRedStartingPose() {
+  protected Pose2d getStartingPose() {
     return new Pose2d(9.57, 2.893, Rotation2d.kZero);
   }
 
   @Override
-  protected Command getRedAutoCommand() {
+  protected Command createAutoCommand() {
     return Commands.sequence(
         Commands.runOnce(robotManager::rehomeRollRequest),
         // PUSH PARTNER

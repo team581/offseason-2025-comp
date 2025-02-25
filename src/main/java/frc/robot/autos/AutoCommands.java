@@ -22,15 +22,6 @@ public class AutoCommands {
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
-  public Command doNothingCommand() {
-    return Commands.none().withName("DoNothingCommand");
-  }
-
-  public Command l4LineupCommand() {
-    return Commands.runOnce(robotManager::l4CoralLineupRequest, requirements)
-        .withName("L4LineupCommand");
-  }
-
   public Command l4ScoreAndReleaseCommand() {
     return Commands.runOnce(robotManager::l4coralPlaceAndReleaseRequest, requirements)
         .andThen(
@@ -41,6 +32,7 @@ public class AutoCommands {
         .withName("L4ScoreAndReleaseCommand");
   }
 
+  @Deprecated
   public Command intakeStationWithTimeoutCommand() {
     return Commands.runOnce(robotManager::intakeStationRequest, requirements)
         .andThen(
@@ -71,5 +63,18 @@ public class AutoCommands {
     return robotManager
         .waitForRollHomedCommand()
         .andThen(Commands.runOnce(robotManager::preloadCoralRequest));
+  }
+
+  public boolean isSmartStowing() {
+    return robotManager.getState() == RobotState.SMART_STOW_1
+        || robotManager.getState() == RobotState.SMART_STOW_2;
+  }
+
+  public Command stowRequest() {
+    return Commands.runOnce(robotManager::stowRequest);
+  }
+
+  public boolean alignedForScore() {
+    return robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced();
   }
 }

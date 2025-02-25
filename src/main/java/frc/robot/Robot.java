@@ -40,7 +40,7 @@ import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends TimedRobot {
-  private Command autonomousCommand;
+  private Command autonomousCommand = Commands.none();
   private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
 
@@ -163,9 +163,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = autos.getAutoCommand();
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+    autonomousCommand.schedule();
 
     ElasticLayoutUtil.onEnable();
     autoAlign.clearReefState();
@@ -179,9 +177,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
+    autonomousCommand.cancel();
+
     ElasticLayoutUtil.onEnable();
     if (RobotConfig.IS_DEVELOPMENT) {
       autoAlign.clearReefState();
