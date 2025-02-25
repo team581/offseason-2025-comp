@@ -167,11 +167,8 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
                         autoCommands
                             .preloadCoralAfterRollHomed()
-                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)),
-                        new AutoConstraintOptions(2, 57, 1, 30)),
-                    new AutoPoint(
-                        robotManager.autoAlign::getUsedScoringPose,
-                        new AutoConstraintOptions(2, 57, 1, 30))),
+                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
+                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
             .until(
                 () ->
@@ -184,11 +181,13 @@ public class ThreePiece2IKLAuto extends BaseAuto {
             .followSegment(
                 new AutoSegment(
                     new AutoPoint(
-                        new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(60)),
+                        new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
                     //        new AutoConstraintOptions(4, 57, 4, 30)),
                     new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88))),
-                    //        new AutoConstraintOptions(2, 57, 4, 30)),
+                    new AutoPoint(
+                        new Pose2d(15.241, 1.107, Rotation2d.fromDegrees(135.88)),
+                        new AutoConstraintOptions(2.75, 57, 4, 30)),
                     new AutoPoint(
                         Points.LEFT_CORAL_STATION.redPose,
                         autoCommands.intakeStationWarmupCommand())),
@@ -207,12 +206,9 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                         new AutoSegment(
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
-                                new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277)),
-                                new AutoConstraintOptions(2, 57, 1, 30)),
+                                new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277))),
                             // REEF PIPE K
-                            new AutoPoint(
-                                robotManager.autoAlign::getUsedScoringPose,
-                                new AutoConstraintOptions(2, 57, 1, 30))),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(
                         () ->
@@ -228,7 +224,9 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    new AutoPoint(new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(133.277))),
+                    new AutoPoint(
+                        new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(133.277)),
+                        new AutoConstraintOptions(2.75, 57, 4, 30)),
                     new AutoPoint(
                         Points.LEFT_CORAL_STATION.redPose,
                         autoCommands.intakeStationWarmupCommand())),
@@ -247,12 +245,9 @@ public class ThreePiece2IKLAuto extends BaseAuto {
                         new AutoSegment(
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
-                                new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
-                                new AutoConstraintOptions(2, 57, 1, 30)),
+                                new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931))),
                             // REEF PIPE L
-                            new AutoPoint(
-                                robotManager.autoAlign::getUsedScoringPose,
-                                new AutoConstraintOptions(2, 57, 1, 30))),
+                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
                     .until(
                         () ->
