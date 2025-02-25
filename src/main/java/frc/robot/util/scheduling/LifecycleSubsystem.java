@@ -12,7 +12,6 @@ import frc.robot.util.Stopwatch;
 public class LifecycleSubsystem extends SubsystemBase {
   final SubsystemPriority priority;
 
-  private final Stopwatch stopwatch = Stopwatch.getInstance();
   private final String loggerName;
 
   protected final String subsystemName;
@@ -56,7 +55,7 @@ public class LifecycleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    stopwatch.start(loggerName);
+    Stopwatch.start(loggerName);
     LifecycleStage stage;
 
     stage = LifecycleSubsystemManager.getStage();
@@ -96,7 +95,7 @@ public class LifecycleSubsystem extends SubsystemBase {
       }
     }
 
-    stopwatch.stop(loggerName);
+    Stopwatch.stop(loggerName);
 
     previousStage = stage;
   }

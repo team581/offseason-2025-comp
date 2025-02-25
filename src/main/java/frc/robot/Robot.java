@@ -137,9 +137,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    Stopwatch.getInstance().start("Scheduler/CommandSchedulerPeriodic");
+    Stopwatch.start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
-    Stopwatch.getInstance().stop("Scheduler/CommandSchedulerPeriodic");
+    Stopwatch.stop("Scheduler/CommandSchedulerPeriodic");
     LifecycleSubsystemManager.log();
 
     if (RobotController.getBatteryVoltage() < 12.5) {
