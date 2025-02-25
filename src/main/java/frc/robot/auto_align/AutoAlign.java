@@ -211,6 +211,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return tagAlignSpeeds;
   }
 
+  /**
+   * @deprecated Use {@link #isTagAlignedDebounced()} instead.
+   */
+  @Deprecated
   public boolean isTagAligned() {
     return isAligned;
   }
