@@ -16,6 +16,7 @@ public abstract class BaseAuto {
   protected final RobotCommands actions;
   protected final AutoCommands autoCommands;
   private final String autoName;
+  private final Command autoCommand;
 
   protected BaseAuto(RobotManager robotManager, Trailblazer trailblazer) {
     this.robotManager = robotManager;
@@ -25,6 +26,7 @@ public abstract class BaseAuto {
 
     var className = this.getClass().getSimpleName();
     autoName = className.substring(className.lastIndexOf('.') + 1);
+    autoCommand = createAutoCommand();
   }
 
   protected abstract Pose2d getRedStartingPose();
@@ -41,6 +43,10 @@ public abstract class BaseAuto {
   }
 
   public Command getAutoCommand() {
+    return autoCommand;
+  }
+
+  private Command createAutoCommand() {
     // We continuously reset the pose anyway, but doing it here should be fine
     // It's basically free as long as we aren't updating the IMU
     return Commands.either(
@@ -51,7 +57,6 @@ public abstract class BaseAuto {
                 .andThen(getBlueAutoCommand())
                 .withName(autoName + "BlueCommand"),
             FmsSubsystem::isRedAlliance)
-        .withName(autoName + "Command")
         .finallyDo(
             interrupted -> {
               // Check if we are enabled, since auto commands are cancelled during disable
@@ -63,6 +68,7 @@ public abstract class BaseAuto {
                       "The auto command was interrupted while still in auto mode, is there a command requirements conflict?");
                 }
               }
-            });
+            })
+        .withName(autoName + "Command");
   }
 }
