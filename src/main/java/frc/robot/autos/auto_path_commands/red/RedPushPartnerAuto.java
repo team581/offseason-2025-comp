@@ -50,17 +50,17 @@ public class RedPushPartnerAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_J))),
                     new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                 false)
-            .until(robotManager.autoAlign::isTagAligned),
+            .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97))),
+                new AutoPoint(new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97)),
+                autoCommands.intakeStationWarmupCommand()),
                 new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
-        autoCommands.intakeStationWithTimeoutCommand(),
+                    Points.LEFT_CORAL_STATION.redPose))),
 
         // SCORE L4 ON K
         autoCommands
@@ -74,7 +74,7 @@ public class RedPushPartnerAuto extends BaseAuto {
                                 new Pose2d(14.532, 1.794, Rotation2d.fromDegrees(128.33))),
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.autoAlign::isTagAligned),
+                    .until(autoCommands::alignedForScore),
                 autoCommands.l4ScoreAndReleaseCommand()),
 
         // INTAKE STATION
@@ -98,7 +98,7 @@ public class RedPushPartnerAuto extends BaseAuto {
                                 new Pose2d(14.939, 2.046, Rotation2d.fromDegrees(132.26))),
                             new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
                         false)
-                    .until(robotManager.autoAlign::isTagAligned)),
+                    .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand());
   }
 }
