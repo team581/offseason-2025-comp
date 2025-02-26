@@ -165,7 +165,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return newConstrainedSpeeds;
   }
 
-
   @Override
   protected void collectInputs() {
     bestReefPipe = tagAlign.getBestPipe();
@@ -173,7 +172,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
-      }
+  }
 
   public ChassisSpeeds getTagAlignSpeeds() {
     return tagAlignSpeeds;

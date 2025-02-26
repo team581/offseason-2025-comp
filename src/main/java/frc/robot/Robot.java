@@ -54,8 +54,7 @@ public class Robot extends TimedRobot {
       new Limelight("base", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(
-          imu, frontCoralLimelight, backTagLimelight, baseTagLimelight);
+      new VisionSubsystem(imu, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);
@@ -68,13 +67,11 @@ public class Robot extends TimedRobot {
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
-  private final LightsSubsystem lights =
-      new LightsSubsystem(hardware.candle);
+  private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
-      new AutoAlign(
-           frontCoralLimelight, baseTagLimelight, localization, swerve);
+      new AutoAlign(frontCoralLimelight, baseTagLimelight, localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
           intake,

@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-import frc.robot.vision.limelight.Limelight;
 
 public class LightsSubsystem extends StateMachine<LightsState> {
   private final CANdle candle;
