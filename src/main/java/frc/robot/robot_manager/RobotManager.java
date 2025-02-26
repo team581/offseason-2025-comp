@@ -111,7 +111,6 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_4_HANGING_3,
               DISLODGE_ALGAE_L2_WAIT,
               DISLODGE_ALGAE_L3_WAIT,
-
               UNJAM_CORAL_STATION,
               UNJAM,
               DEMO_ELEVATOR_1,
@@ -158,7 +157,8 @@ public class RobotManager extends StateMachine<RobotState> {
             ? RobotState.CORAL_CENTERED_L2_2_LINEUP
             : RobotState.CORAL_DISPLACED_L2_2_LINEUP;
       }
-      case PREPARE_UNJAM_CORAL_STATION -> elevator.atGoal()&&wrist.atGoal()?RobotState.UNJAM_CORAL_STATION:currentState;
+      case PREPARE_UNJAM_CORAL_STATION ->
+          elevator.atGoal() && wrist.atGoal() ? RobotState.UNJAM_CORAL_STATION : currentState;
       case CORAL_CENTERED_L2_2_LINEUP ->
           shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L2_3_PLACE : currentState;
       case CORAL_CENTERED_L3_2_LINEUP ->
@@ -940,7 +940,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case PREPARE_UNJAM_CORAL_STATION -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
+        moveSuperstructure(
+            ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
         vision.setState(VisionState.STATION_TAGS);
@@ -949,7 +950,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case UNJAM_CORAL_STATION -> {
         intake.setState(IntakeState.OUTTAKING);
-        moveSuperstructure(ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
+        moveSuperstructure(
+            ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
         vision.setState(VisionState.STATION_TAGS);
