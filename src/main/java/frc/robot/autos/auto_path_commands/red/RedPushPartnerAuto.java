@@ -57,10 +57,10 @@ public class RedPushPartnerAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97)),
-                autoCommands.intakeStationWarmupCommand()),
                 new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose))),
+                    new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97)),
+                    autoCommands.intakeStationWarmupCommand()),
+                new AutoPoint(Points.LEFT_CORAL_STATION.redPose))),
 
         // SCORE L4 ON K
         autoCommands
