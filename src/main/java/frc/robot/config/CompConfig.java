@@ -14,6 +14,7 @@ import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -215,19 +216,23 @@ class CompConfig {
               CANIVORE_NAME,
               24,
               25,
-              -17.0,
-              170.0,
+              -55.0,
+              215.0,
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(10)
+                          .withStatorCurrentLimit(60)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(10)),
+                          .withSupplyCurrentLimit(60)),
               new CANcoderConfiguration()
-                  .withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(0.425537109375))),
+                  .withMagnetSensor(
+                      new MagnetSensorConfigs()
+                          .withMagnetOffset(-0.368896484375)
+                          .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                          .withAbsoluteSensorDiscontinuityPoint(0.7))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private CompConfig() {}

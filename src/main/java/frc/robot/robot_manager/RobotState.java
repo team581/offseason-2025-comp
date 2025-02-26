@@ -87,5 +87,9 @@ public enum RobotState {
 
   REHOME_ELEVATOR,
   REHOME_WRIST,
-  REHOME_ROLL;
+  REHOME_ROLL,
+
+  DEMO_ELEVATOR_1,
+  DEMO_ROLL_1,
+  DEMO_ROLL_2;
 }

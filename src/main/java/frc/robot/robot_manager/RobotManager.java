@@ -111,7 +111,10 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_4_HANGING_3,
               DISLODGE_ALGAE_L2_WAIT,
               DISLODGE_ALGAE_L3_WAIT,
-              UNJAM ->
+              UNJAM,
+              DEMO_ELEVATOR_1,
+              DEMO_ROLL_1,
+              DEMO_ROLL_2 ->
           currentState;
 
       case REHOME_ELEVATOR ->
@@ -344,9 +347,48 @@ public class RobotManager extends StateMachine<RobotState> {
         && autoAlign.getReefAlignState() == ReefAlignState.HAS_TAGS_IN_POSITION;
   }
 
+  public void demoElevatorRequest() {
+    setStateFromRequest(RobotState.DEMO_ELEVATOR_1);
+  }
+
+  public void demoRollRequest() {
+    switch (getState()) {
+      case DEMO_ROLL_1 -> setStateFromRequest(RobotState.DEMO_ROLL_2);
+      case DEMO_ROLL_2 -> setStateFromRequest(RobotState.DEMO_ROLL_1);
+      default -> setStateFromRequest(RobotState.DEMO_ROLL_1);
+    }
+  }
+
   @Override
   protected void afterTransition(RobotState newState) {
     switch (newState) {
+      case DEMO_ELEVATOR_1 -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.CORAL_CENTERED_L3_LINEUP, WristState.CORAL_STOWED);
+        swerve.normalDriveRequest();
+        roll.setState(RollState.CORAL_SCORE);
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
+      case DEMO_ROLL_1 -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.normalDriveRequest();
+        roll.setState(RollState.DEMO_1);
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
+      case DEMO_ROLL_2 -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
+        swerve.normalDriveRequest();
+        roll.setState(RollState.DEMO_2);
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
       case IDLE_NO_GP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
