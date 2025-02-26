@@ -3,7 +3,7 @@ package frc.robot.climber;
 public enum ClimberState {
   STOWED(210, 2, -2),
   LINEUP(0, 12, -12),
-  HANGING(155.0, 12, -12),
+  HANGING(160.0, 12, -12),
   HANGING_2(152.0, 12, -12),
   HANGING_3(149.0, 12, -12);
 
