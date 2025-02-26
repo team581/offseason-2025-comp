@@ -1697,15 +1697,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L4_3_PLACE ->
           setStateFromRequest(RobotState.CORAL_DISPLACED_L4_4_RELEASE);
 
-      case CORAL_L1_4_RELEASE,
-              CORAL_CENTERED_L2_4_RELEASE,
-              CORAL_DISPLACED_L2_4_RELEASE,
-              CORAL_CENTERED_L3_4_RELEASE,
-              CORAL_DISPLACED_L3_4_RELEASE,
-              CORAL_CENTERED_L4_4_RELEASE,
-              CORAL_DISPLACED_L4_4_RELEASE ->
-          setStateFromRequest(RobotState.IDLE_NO_GP);
-
       default -> {}
     }
   }
