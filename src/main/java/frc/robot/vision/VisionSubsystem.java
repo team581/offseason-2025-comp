@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
-  private final Limelight elevatorPurpleLimelight;
   private final Limelight frontCoralLimelight;
   private final Limelight backTagLimelight;
   private final Limelight baseTagLimelight;
@@ -28,13 +27,11 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
   public VisionSubsystem(
       ImuSubsystem imu,
-      Limelight elevatorPurpleLimelight,
       Limelight frontCoralLimelight,
       Limelight backTagLimelight,
       Limelight baseTagLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
-    this.elevatorPurpleLimelight = elevatorPurpleLimelight;
     this.frontCoralLimelight = frontCoralLimelight;
     this.backTagLimelight = backTagLimelight;
     this.baseTagLimelight = baseTagLimelight;
@@ -50,14 +47,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     tagResult.clear();
-    var maybeTopResult = elevatorPurpleLimelight.getTagResult();
     var maybeBottomResult = frontCoralLimelight.getTagResult();
     var maybeBackResult = backTagLimelight.getTagResult();
     var maybeBaseResult = baseTagLimelight.getTagResult();
-
-    if (maybeTopResult.isPresent()) {
-      tagResult.add(maybeTopResult.get());
-    }
 
     if (maybeBottomResult.isPresent()) {
       tagResult.add(maybeBottomResult.get());
@@ -84,31 +76,26 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   protected void afterTransition(VisionState newState) {
     switch (newState) {
       case TAGS -> {
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.TAGS);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
       }
       case CLOSEST_REEF_TAG -> {
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         backTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         baseTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
       }
       case STATION_TAGS -> {
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.STATION_TAGS);
         backTagLimelight.setState(LimelightState.STATION_TAGS);
         baseTagLimelight.setState(LimelightState.STATION_TAGS);
       }
       case CORAL_DETECTION -> {
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
       }
       case ALGAE_DETECTION -> {
-        elevatorPurpleLimelight.setState(LimelightState.PURPLE);
         frontCoralLimelight.setState(LimelightState.ALGAE);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
@@ -119,8 +106,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    elevatorPurpleLimelight.sendImuData(
-        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+
     frontCoralLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
@@ -131,7 +117,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     frontCoralLimelight.setClosestScoringReefTag(tagID);
     baseTagLimelight.setClosestScoringReefTag(tagID);
     backTagLimelight.setClosestScoringReefTag(tagID);
-    elevatorPurpleLimelight.setClosestScoringReefTag(tagID);
   }
 
   public Optional<GamePieceResult> getCoralResult() {
@@ -139,8 +124,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public boolean isAnyCameraOffline() {
-    return elevatorPurpleLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        || frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
+    return frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || baseTagLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }

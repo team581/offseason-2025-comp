@@ -46,8 +46,6 @@ public class Robot extends TimedRobot {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight elevatorPurpleLimelight =
-      new Limelight("elev", LimelightState.PURPLE, LimelightModel.THREE);
   private final Limelight frontCoralLimelight =
       new Limelight("front", LimelightState.TAGS, LimelightModel.FOUR);
   private final Limelight backTagLimelight =
@@ -57,7 +55,7 @@ public class Robot extends TimedRobot {
 
   private final VisionSubsystem vision =
       new VisionSubsystem(
-          imu, elevatorPurpleLimelight, frontCoralLimelight, backTagLimelight, baseTagLimelight);
+          imu, frontCoralLimelight, backTagLimelight, baseTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);
@@ -71,12 +69,12 @@ public class Robot extends TimedRobot {
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
   private final LightsSubsystem lights =
-      new LightsSubsystem(hardware.candle, elevatorPurpleLimelight);
+      new LightsSubsystem(hardware.candle);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
       new AutoAlign(
-          elevatorPurpleLimelight, frontCoralLimelight, baseTagLimelight, localization, swerve);
+           frontCoralLimelight, baseTagLimelight, localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
