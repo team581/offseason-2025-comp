@@ -43,9 +43,10 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                         autoCommands
                             .preloadCoralAfterRollHomed()
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)),
-                        new AutoConstraintOptions(1.5, 57,4,30)),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                    new AutoConstraintOptions(1.5, 57,4,30))),
+                        new AutoConstraintOptions(1.5, 57, 4, 30)),
+                    new AutoPoint(
+                        robotManager.autoAlign::getUsedScoringPose,
+                        new AutoConstraintOptions(1.5, 57, 4, 30))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -63,9 +64,7 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                         new Pose2d(15.241, 1.107, Rotation2d.fromDegrees(135.88)),
                         autoCommands.intakeStationWarmupCommand(),
                         new AutoConstraintOptions(2.75, 57, 4, 30)),
-                    new AutoPoint(
-                        Points.LEFT_CORAL_STATION.redPose
-                        )),
+                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
                 false)
             .until(autoCommands::isSmartStowing),
 
@@ -79,10 +78,11 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
                                 new Pose2d(14.506, 1.903, Rotation2d.fromDegrees(133.277)),
-                                new AutoConstraintOptions(1.5, 57,4,30)),
+                                new AutoConstraintOptions(1.5, 57, 4, 30)),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                            new AutoConstraintOptions(1.5, 57,4,30))),
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -99,8 +99,7 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                         new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(133.277)),
                         autoCommands.intakeStationWarmupCommand(),
                         new AutoConstraintOptions(2.75, 57, 4, 30)),
-                    new AutoPoint(
-                        Points.LEFT_CORAL_STATION.redPose)),
+                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
                 false)
             .until(autoCommands::isSmartStowing),
 
@@ -114,10 +113,11 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
                                 new Pose2d(14.954, 1.971, Rotation2d.fromDegrees(134.931)),
-                                new AutoConstraintOptions(1.5, 57,4,30)),
+                                new AutoConstraintOptions(1.5, 57, 4, 30)),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose,
-                            new AutoConstraintOptions(1.5, 57,4,30))),
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
