@@ -89,6 +89,10 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
   }
 
+  public Command unjamStationCommand() {
+    return Commands.runOnce(robot::unjamStationRequest, requirements).withName("UnjamStationCommand");
+  }
+
   public Command rehomeElevatorCommand() {
     return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
         .withName("RehomeElevatorCommand");
