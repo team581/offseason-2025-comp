@@ -14,8 +14,10 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
 public class RedPushPartnerAuto extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
+  private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
+      new AutoConstraintOptions(4.75, 57, 4, 30);
+  private static final AutoConstraintOptions SCORING_CONSTRAINTS =
+      new AutoConstraintOptions(2.3, 57, 4, 30);
 
   public RedPushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
@@ -23,44 +25,51 @@ public class RedPushPartnerAuto extends BaseAuto {
 
   @Override
   protected Pose2d getStartingPose() {
-    return new Pose2d(9.57, 2.893, Rotation2d.kZero);
+    return Points.START_2_AND_5.redPose;
   }
 
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
         Commands.runOnce(robotManager::rehomeRollRequest),
-        // PUSH PARTNER
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(Points.START_3_AND_4.redPose),
-                new AutoPoint(new Pose2d(10.31, 2.892, Rotation2d.kZero)))),
-
-        // SCORE L4 ON J
+        // SCORE L4 ON I
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    CONSTRAINTS,
-                    new AutoPoint(new Pose2d(11.146, 1.921, Rotation2d.kZero)),
+                    SCORING_CONSTRAINTS,
+                    new AutoPoint(Points.START_2_AND_5.redPose, INTAKING_CONSTRAINTS),
+                    // PUSH PARTNER
+                    new AutoPoint(new Pose2d(9.963, 1.903, Rotation2d.fromDegrees(0.0)), INTAKING_CONSTRAINTS),
                     new AutoPoint(
-                        new Pose2d(12.017, 2.207, Rotation2d.fromDegrees(60)),
+                        new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
                         autoCommands
                             .preloadCoralAfterRollHomed()
-                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_J))),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                            .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)),
+                        new AutoConstraintOptions(1.75, 57, 4, 30)),
+                    new AutoPoint(
+                        robotManager.autoAlign::getUsedScoringPose,
+                        new AutoConstraintOptions(1.5, 57, 4, 30))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(
-                    new Pose2d(14.296, 1.669, Rotation2d.fromDegrees(146.97)),
-                    autoCommands.intakeStationWarmupCommand()),
-                new AutoPoint(Points.LEFT_CORAL_STATION.redPose))),
+        trailblazer
+            .followSegment(
+                new AutoSegment(
+                  INTAKING_CONSTRAINTS,
+                    new AutoPoint(
+                        new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88)),
+                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                    //        new AutoConstraintOptions(4, 57, 4, 30)),
+                    new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(135.88))),
+                    new AutoPoint(
+                        new Pose2d(15.241, 1.107, Rotation2d.fromDegrees(135.88)),
+                        autoCommands.intakeStationWarmupCommand(),
+                        new AutoConstraintOptions(3, 57, 4, 30)),
+                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
+                false)
+            .until(autoCommands::isSmartStowing),
 
         // SCORE L4 ON K
         autoCommands
@@ -69,22 +78,33 @@ public class RedPushPartnerAuto extends BaseAuto {
                 trailblazer
                     .followSegment(
                         new AutoSegment(
-                            CONSTRAINTS,
+                            SCORING_CONSTRAINTS,
                             new AutoPoint(
-                                new Pose2d(14.532, 1.794, Rotation2d.fromDegrees(128.33))),
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                                new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
+                                new AutoConstraintOptions(2, 57, 4, 30)),
+                            // REEF PIPE K
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
-                    .until(autoCommands::alignedForScore),
-                autoCommands.l4ScoreAndReleaseCommand()),
+                    .until(autoCommands::alignedForScore)),
+        autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE STATION
-        trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(new Pose2d(14.817, 1.794, Rotation2d.fromDegrees(133.48))),
-                new AutoPoint(
-                    Points.LEFT_CORAL_STATION.redPose, autoCommands.intakeStationWarmupCommand()))),
-        actions.intakeStationCommand(),
+        trailblazer
+            .followSegment(
+                new AutoSegment(
+                    INTAKING_CONSTRAINTS,
+                    new AutoPoint(
+                        new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
+                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                    new AutoPoint(
+                        new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(133.277)),
+                        autoCommands.intakeStationWarmupCommand(),
+                        new AutoConstraintOptions(3, 57, 4, 30)),
+                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
+                false)
+            .until(autoCommands::isSmartStowing),
 
         // SCORE L4 ON L
         autoCommands
@@ -93,12 +113,25 @@ public class RedPushPartnerAuto extends BaseAuto {
                 trailblazer
                     .followSegment(
                         new AutoSegment(
-                            CONSTRAINTS,
+                            SCORING_CONSTRAINTS,
                             new AutoPoint(
-                                new Pose2d(14.939, 2.046, Rotation2d.fromDegrees(132.26))),
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                                new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
+                                new AutoConstraintOptions(1.75, 57, 4, 30)),
+                            // REEF PIPE L
+                            new AutoPoint(
+                                robotManager.autoAlign::getUsedScoringPose,
+                                new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
                     .until(autoCommands::alignedForScore)),
-        autoCommands.l4ScoreAndReleaseCommand());
+        autoCommands.l4ScoreAndReleaseCommand(),
+
+        // DRIVE BACK & STOW
+        trailblazer.followSegment(
+            new AutoSegment(
+                INTAKING_CONSTRAINTS,
+                new AutoPoint(new Pose2d(13.998, 2.812, Rotation2d.fromDegrees(134.931))),
+                new AutoPoint(
+                    new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
+                    autoCommands.stowRequest()))));
   }
 }
