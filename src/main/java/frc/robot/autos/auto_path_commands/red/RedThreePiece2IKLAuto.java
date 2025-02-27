@@ -55,7 +55,7 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                  INTAKING_CONSTRAINTS,
+                    INTAKING_CONSTRAINTS,
                     new AutoPoint(
                         new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),

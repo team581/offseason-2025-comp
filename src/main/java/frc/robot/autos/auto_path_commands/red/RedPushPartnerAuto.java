@@ -39,7 +39,9 @@ public class RedPushPartnerAuto extends BaseAuto {
                     SCORING_CONSTRAINTS,
                     new AutoPoint(Points.START_2_AND_5.redPose, INTAKING_CONSTRAINTS),
                     // PUSH PARTNER
-                    new AutoPoint(new Pose2d(9.963, 1.903, Rotation2d.fromDegrees(0.0)), INTAKING_CONSTRAINTS),
+                    new AutoPoint(
+                        new Pose2d(9.963, 1.903, Rotation2d.fromDegrees(0.0)),
+                        INTAKING_CONSTRAINTS),
                     new AutoPoint(
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
                         autoCommands
@@ -57,7 +59,7 @@ public class RedPushPartnerAuto extends BaseAuto {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                  INTAKING_CONSTRAINTS,
+                    INTAKING_CONSTRAINTS,
                     new AutoPoint(
                         new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
