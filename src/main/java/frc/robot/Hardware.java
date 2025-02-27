@@ -5,7 +5,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 
 public class Hardware {
@@ -38,14 +37,9 @@ public class Hardware {
       new CANdle(RobotConfig.get().lights().candleID(), RobotConfig.get().lights().canBusName());
 
   public final TalonFX climberMotor =
-      FeatureFlags.CLIMBER_ENABLED.getAsBoolean()
-          ? new TalonFX(
-              RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName())
-          : null;
+      new TalonFX(RobotConfig.get().climber().motorID(), RobotConfig.get().climber().canBusName());
 
   public final CANcoder climberCANcoder =
-      FeatureFlags.CLIMBER_ENABLED.getAsBoolean()
-          ? new CANcoder(
-              RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName())
-          : null;
+      new CANcoder(
+          RobotConfig.get().climber().cancoderID(), RobotConfig.get().climber().canBusName());
 }

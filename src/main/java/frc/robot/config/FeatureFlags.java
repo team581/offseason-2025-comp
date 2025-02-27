@@ -18,10 +18,6 @@ public class FeatureFlags {
   public static final BooleanSupplier REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN =
       FeatureFlag.of("ReefAlignment/LookaheadDistanceCostFn", false);
 
-  // TODO: Only enable this with adult supervision or else the climber will genuinely destroy itself
-  // again
-  public static final BooleanSupplier CLIMBER_ENABLED = FeatureFlag.of("Climber/Enabled", true);
-
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
       FeatureFlag.of("Intake/CoralVelocityDetection", true);
 
