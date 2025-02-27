@@ -16,6 +16,7 @@ public class Autos extends LifecycleSubsystem {
   private boolean hasEnabledAuto = false;
   private Pair<AutoSelection, BaseAuto> selectedRed;
   private Pair<AutoSelection, BaseAuto> selectedBlue;
+  private Command autoCommand;
 
   public Autos(RobotManager robotManager, Trailblazer trailblazer) {
     super(SubsystemPriority.AUTOS);
@@ -32,19 +33,18 @@ public class Autos extends LifecycleSubsystem {
         Pair.of(
             AutoSelection.DO_NOTHING,
             AutoSelection.DO_NOTHING.blueAuto.apply(robotManager, trailblazer));
+    autoCommand = createAutoCommand();
   }
 
   public Command getAutoCommand() {
-    return Commands.either(
-            selectedRed.getSecond().getAutoCommand(),
-            selectedBlue.getSecond().getAutoCommand(),
-            FmsSubsystem::isRedAlliance)
-        .withName(selectedRed.getSecond().name() + "_or_" + selectedBlue.getSecond().name());
+    return autoCommand;
   }
 
   @Override
   public void robotPeriodic() {
-    updateSelection();
+    if (DriverStation.isDisabled()) {
+      updateSelection();
+    }
 
     if (DriverStation.isAutonomousEnabled()) {
       hasEnabledAuto = true;
@@ -63,18 +63,29 @@ public class Autos extends LifecycleSubsystem {
   }
 
   private void updateSelection() {
-    if (selectedRed.getFirst() != autoChooser.getSelectedAuto()) {
+    // If anything about the auto selection has changed, fully recreate all the commands
+    // This avoids potential errors from composed commands being used in multiple compositions
+    if (selectedRed.getFirst() != autoChooser.getSelectedAuto()
+        || selectedBlue.getFirst() != autoChooser.getSelectedAuto()) {
       selectedRed =
           Pair.of(
               autoChooser.getSelectedAuto(),
               autoChooser.getSelectedAuto().redAuto.apply(robotManager, trailblazer));
-    }
 
-    if (selectedBlue.getFirst() != autoChooser.getSelectedAuto()) {
       selectedBlue =
           Pair.of(
               autoChooser.getSelectedAuto(),
               autoChooser.getSelectedAuto().blueAuto.apply(robotManager, trailblazer));
+
+      autoCommand = createAutoCommand();
     }
+  }
+
+  private Command createAutoCommand() {
+    return Commands.either(
+            selectedRed.getSecond().getAutoCommand(),
+            selectedBlue.getSecond().getAutoCommand(),
+            FmsSubsystem::isRedAlliance)
+        .withName(selectedRed.getSecond().name() + "_or_" + selectedBlue.getSecond().name());
   }
 }
