@@ -71,11 +71,17 @@ public class FieldCalibrationUtil {
   private static ElevatorState branchToElevator(ReefPipeLevel level, boolean centered) {
     return switch (level) {
       case L2 ->
-          centered ? ElevatorState.CORAL_CENTERED_L2_PLACE : ElevatorState.CORAL_DISPLACED_L2_PLACE;
+          centered
+              ? ElevatorState.CORAL_CENTERED_L2_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
       case L3 ->
-          centered ? ElevatorState.CORAL_CENTERED_L3_PLACE : ElevatorState.CORAL_DISPLACED_L3_PLACE;
+          centered
+              ? ElevatorState.CORAL_CENTERED_L3_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
       case L4 ->
-          centered ? ElevatorState.CORAL_CENTERED_L4_PLACE : ElevatorState.CORAL_DISPLACED_L4_PLACE;
+          centered
+              ? ElevatorState.CORAL_CENTERED_L4_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
       default -> ElevatorState.UNTUNED;
     };
   }
@@ -84,16 +90,16 @@ public class FieldCalibrationUtil {
     return switch (level) {
       case L2 ->
           centered
-              ? WristState.CORAL_SCORE_CENTERED_PLACING_L2
-              : WristState.CORAL_SCORE_DISPLACED_PLACING_L2;
+              ? WristState.CORAL_SCORE_CENTERED_LINEUP_L2
+              : WristState.CORAL_SCORE_DISPLACED_LINEUP_L2;
       case L3 ->
           centered
-              ? WristState.CORAL_SCORE_CENTERED_PLACING_L3
-              : WristState.CORAL_SCORE_DISPLACED_PLACING_L3;
+              ? WristState.CORAL_SCORE_CENTERED_LINEUP_L3
+              : WristState.CORAL_SCORE_DISPLACED_LINEUP_L3;
       case L4 ->
           centered
-              ? WristState.CORAL_SCORE_CENTERED_PLACING_L4
-              : WristState.CORAL_SCORE_DISPLACED_PLACING_L4;
+              ? WristState.CORAL_SCORE_CENTERED_LINEUP_L4
+              : WristState.CORAL_SCORE_DISPLACED_LINEUP_L4;
       default -> WristState.UNTUNED;
     };
   }
