@@ -54,15 +54,15 @@ public class FieldCalibrationUtil {
     var alignOk = MathUtil.isNear(0, alignError, TRANSLATION_TOLERANCE);
 
     if (elevatorError > ELEVATOR_TOLERANCE) {
-      elevatorState = MechanismState.TOO_HIGH;
-    } else if (elevatorError < -ELEVATOR_TOLERANCE) {
       elevatorState = MechanismState.TOO_LOW;
+    } else if (elevatorError < -ELEVATOR_TOLERANCE) {
+      elevatorState = MechanismState.TOO_HIGH;
     }
 
     if (wristError > WRIST_TOLERANCE) {
-      wristState = MechanismState.TOO_HIGH;
-    } else if (wristError < -WRIST_TOLERANCE) {
       wristState = MechanismState.TOO_LOW;
+    } else if (wristError < -WRIST_TOLERANCE) {
+      wristState = MechanismState.TOO_HIGH;
     }
 
     return new Summary(elevatorState, wristState, alignOk);
