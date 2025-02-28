@@ -42,6 +42,7 @@ public abstract class BaseAuto {
   }
 
   private Command createFullAutoCommand() {
+    TrailblazerPathLogger.markAuto(this);
     // We continuously reset the pose anyway, but doing it here should be fine
     // It's basically free as long as we aren't updating the IMU
     return Commands.runOnce(() -> robotManager.localization.resetPose(getStartingPose()))
