@@ -6,7 +6,7 @@ public enum ElevatorState {
   PRE_MATCH_HOMING(0),
   MID_MATCH_HOMING(0),
 
-  INTAKING_CORAL_STATION_BACK(9),
+  INTAKING_CORAL_STATION_BACK(8),
   INTAKING_CORAL_STATION_FRONT(3),
 
   GROUND_CORAL_INTAKE(0),
@@ -30,7 +30,7 @@ public enum ElevatorState {
 
   // Centered coral positions
   // TODO: Measured 13.36" during field calibration
-  CORAL_CENTERED_L2_LINEUP(8.75),
+  CORAL_CENTERED_L2_LINEUP(9.75),
   CORAL_CENTERED_L2_PLACE(7.0),
   CORAL_CENTERED_L2_RELEASE(0.0),
 
