@@ -42,7 +42,7 @@ public class WristSubsystem extends StateMachine<WristState> {
 
     // In field calibration mode, boot wrist to lower hardstop angle
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-      motor.setPosition(RobotConfig.get().wrist().homingPosition());
+      motor.setPosition(Units.degreesToRotations(RobotConfig.get().wrist().homingPosition()));
     }
   }
 
