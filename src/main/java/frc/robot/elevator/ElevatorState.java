@@ -29,6 +29,7 @@ public enum ElevatorState {
   CORAL_L4_APPROACH(20.0),
 
   // Centered coral positions
+  // TODO: Measured 13.36" during field calibration
   CORAL_CENTERED_L2_LINEUP(8.75),
   CORAL_CENTERED_L2_PLACE(7.0),
   CORAL_CENTERED_L2_RELEASE(0.0),
