@@ -78,8 +78,8 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                         new AutoSegment(
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
-                              new Pose2d(14.914, 1.553, Rotation2d.fromDegrees(133.277)),
-                              new AutoConstraintOptions(2.3, 57, 4, 30)),
+                                new Pose2d(14.914, 1.553, Rotation2d.fromDegrees(133.277)),
+                                new AutoConstraintOptions(2.3, 57, 4, 30)),
                             new AutoPoint(
                                 new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
                                 new AutoConstraintOptions(1.5, 57, 4, 30)),
@@ -116,8 +116,8 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
                         new AutoSegment(
                             SCORING_CONSTRAINTS,
                             new AutoPoint(
-                              new Pose2d(14.914, 1.801, Rotation2d.fromDegrees(133.277)),
-                              new AutoConstraintOptions(2.3, 57, 4, 30)),
+                                new Pose2d(14.914, 1.801, Rotation2d.fromDegrees(133.277)),
+                                new AutoConstraintOptions(2.3, 57, 4, 30)),
                             new AutoPoint(
                                 new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
                                 new AutoConstraintOptions(1.5, 57, 4, 30)),

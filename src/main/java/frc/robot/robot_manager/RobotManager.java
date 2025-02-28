@@ -978,11 +978,9 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_ALGAE_L3 -> {
         swerve.snapsDriveRequest(reefSnapAngle);
       }
-      case 
-          CORAL_L2_1_APPROACH,
+      case CORAL_L2_1_APPROACH,
           CORAL_L3_1_APPROACH,
           CORAL_L4_1_APPROACH,
-
           CORAL_CENTERED_L2_2_LINEUP,
           CORAL_CENTERED_L2_3_PLACE,
           CORAL_CENTERED_L2_4_RELEASE,
