@@ -203,7 +203,7 @@ class CompConfig {
                           .withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
                   .withSlot0(new Slot0Configs().withKP(50).withKV(0))
                   .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(4).withPeakReverseVoltage(-4))
+                      new VoltageConfigs().withPeakForwardVoltage(6.0).withPeakReverseVoltage(-6.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
