@@ -12,7 +12,6 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
-import frc.robot.config.FeatureFlags;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -1052,16 +1051,15 @@ public class RobotManager extends StateMachine<RobotState> {
     } else {
       lights.setDisabledState(LightsState.HEALTHY);
     }
-    if (FeatureFlags.REEF_ALIGN_FINE_ADJUSTMENTS.getAsBoolean()) {
-      autoAlign.setDriverPoseOffset(swerve.getPoseOffset());
-      switch (swerve.getState()) {
-        case REEF_ALIGN_TELEOP -> {
-          if (autoAlign.isTagAlignedDebounced()) {
-            swerve.reefAlignTeleopFineAdjustRequest();
-          }
+
+    autoAlign.setDriverPoseOffset(swerve.getPoseOffset());
+    switch (swerve.getState()) {
+      case REEF_ALIGN_TELEOP -> {
+        if (autoAlign.isTagAlignedDebounced()) {
+          swerve.reefAlignTeleopFineAdjustRequest();
         }
-        default -> {}
       }
+      default -> {}
     }
   }
 
