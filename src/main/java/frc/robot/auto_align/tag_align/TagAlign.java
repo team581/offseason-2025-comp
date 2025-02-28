@@ -24,7 +24,7 @@ public class TagAlign {
 
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
-  private ReefPipeLevel level = ReefPipeLevel.L1;
+  private ReefPipeLevel level = ReefPipeLevel.BASE;
   private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
   private Translation2d driverPoseOffset = Translation2d.kZero;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
