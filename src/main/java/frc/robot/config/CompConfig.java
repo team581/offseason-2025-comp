@@ -230,7 +230,7 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.368896484375)
+                          .withMagnetOffset(0.120849609375)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.7))),
           new LightsConfig(RIO_CAN_NAME, 18));
