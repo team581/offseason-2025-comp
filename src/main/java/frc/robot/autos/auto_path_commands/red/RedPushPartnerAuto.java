@@ -34,14 +34,17 @@ public class RedPushPartnerAuto extends BaseAuto {
         Commands.runOnce(robotManager::rehomeRollRequest),
         // SCORE L4 ON I
         trailblazer
+
             .followSegment(
+              // PUSH PARTNER
                 new AutoSegment(
-                    SCORING_CONSTRAINTS,
-                    new AutoPoint(Points.START_2_AND_5.redPose, INTAKING_CONSTRAINTS),
-                    // PUSH PARTNER
+                    INTAKING_CONSTRAINTS,
+                    new AutoPoint(Points.START_2_AND_5.redPose),
                     new AutoPoint(
-                        new Pose2d(9.963, 1.903, Rotation2d.fromDegrees(0.0)),
-                        INTAKING_CONSTRAINTS),
+                        new Pose2d(9.963, 1.903, Rotation2d.fromDegrees(0.0))))),
+            trailblazer.followSegment(
+              new AutoSegment(
+                SCORING_CONSTRAINTS,
                     new AutoPoint(
                         new Pose2d(11.785, 2.0, Rotation2d.fromDegrees(60)),
                         autoCommands
