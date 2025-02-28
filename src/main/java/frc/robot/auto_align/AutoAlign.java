@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
-import frc.robot.config.FeatureFlags;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SnapUtil;
@@ -19,7 +18,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.Limelight;
-import java.util.List;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
@@ -174,22 +172,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
-
-    if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-      // Loop through all L2-4 pipes and log the scoring poses for each
-      for (var pipe : ReefPipe.values()) {
-        for (var level : List.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4)) {
-          var branchSlug = pipe.toString() + "/" + level.toString();
-          DogLog.log("FieldCalibration/Red/" + branchSlug, pipe.getPose(level, true));
-          DogLog.log("FieldCalibration/Blue/" + branchSlug, pipe.getPose(level, false));
-        }
-      }
-
-      DogLog.log("FieldCalibration/Closest/Name", bestReefPipe);
-      DogLog.log("FieldCalibration/Closest/L2", bestReefPipe.getPose(ReefPipeLevel.L2));
-      DogLog.log("FieldCalibration/Closest/L3", bestReefPipe.getPose(ReefPipeLevel.L3));
-      DogLog.log("FieldCalibration/Closest/L4", bestReefPipe.getPose(ReefPipeLevel.L4));
-    }
   }
 
   public ChassisSpeeds getTagAlignSpeeds() {
@@ -202,6 +184,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   @Deprecated
   public boolean isTagAligned() {
     return isAligned;
+  }
+
+  public ReefPipe getBestReefPipe() {
+    return bestReefPipe;
   }
 
   public void markPipeScored() {

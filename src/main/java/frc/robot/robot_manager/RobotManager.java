@@ -12,6 +12,7 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.FeatureFlags;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -1044,12 +1045,15 @@ public class RobotManager extends StateMachine<RobotState> {
       default -> {}
     }
 
-    if (vision.isAnyCameraOffline()) {
-      lights.setDisabledState(LightsState.ERROR);
-    } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
-      lights.setDisabledState(LightsState.UNHOMED);
-    } else {
-      lights.setDisabledState(LightsState.HEALTHY);
+    // Prevent this from interfering with the lights for field calibration
+    if (!FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+      if (vision.isAnyCameraOffline()) {
+        lights.setDisabledState(LightsState.ERROR);
+      } else if (wrist.getState() == WristState.PRE_MATCH_HOMING && !wrist.rangeOfMotionGood()) {
+        lights.setDisabledState(LightsState.UNHOMED);
+      } else {
+        lights.setDisabledState(LightsState.HEALTHY);
+      }
     }
 
     autoAlign.setDriverPoseOffset(swerve.getPoseOffset());

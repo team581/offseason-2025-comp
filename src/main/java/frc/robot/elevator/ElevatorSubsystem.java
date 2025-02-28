@@ -1,11 +1,13 @@
 package frc.robot.elevator;
 
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -43,6 +45,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   // Mid-match homing
   private double averageMotorCurrent;
+  private final CoastOut coastRequest = new CoastOut();
 
   public ElevatorSubsystem(
       TalonFX leftMotor, TalonFX rightMotor, LocalizationSubsystem localization) {
@@ -156,6 +159,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
       }
       default -> {}
+    }
+
+    if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+      leftMotor.setControl(coastRequest);
+      rightMotor.setControl(coastRequest);
     }
 
     var usedHeight =

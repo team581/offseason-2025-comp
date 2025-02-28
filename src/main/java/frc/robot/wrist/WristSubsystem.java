@@ -10,6 +10,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -38,6 +39,11 @@ public class WristSubsystem extends StateMachine<WristState> {
     motor.getConfigurator().apply(RobotConfig.get().wrist().motorConfig());
 
     this.motor = motor;
+
+    // In field calibration mode, boot wrist to lower hardstop angle
+    if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+      motor.setPosition(RobotConfig.get().wrist().homingPosition());
+    }
   }
 
   public void setState(WristState newState) {
