@@ -10,11 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.field_calibration.FieldCalibrationUtil;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
 import frc.robot.climber.ClimberSubsystem;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -86,8 +84,8 @@ public class Robot extends TimedRobot {
           autoAlign,
           climber,
           rumbleController);
-  private final FieldCalibrationUtil fieldCalibrationUtil =
-      new FieldCalibrationUtil(elevator, wrist, lights, localization);
+  // private final FieldCalibrationUtil fieldCalibrationUtil =
+  //     new FieldCalibrationUtil(elevator, wrist, lights, localization);
 
   private final RobotCommands robotCommands = new RobotCommands(robotManager);
 
@@ -141,9 +139,9 @@ public class Robot extends TimedRobot {
       DogLog.clearFault("Battery voltage low");
     }
 
-    if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-      fieldCalibrationUtil.log();
-    }
+    // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+    //   fieldCalibrationUtil.log();
+    // }
   }
 
   @Override

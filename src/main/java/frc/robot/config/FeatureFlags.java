@@ -19,7 +19,8 @@ public class FeatureFlags {
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
       FeatureFlag.of("Intake/CoralVelocityDetection", true);
 
-  public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
+  // public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration",
+  // false);
 
   private FeatureFlags() {}
 }

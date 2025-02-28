@@ -10,10 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
@@ -43,12 +41,12 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     this.imu = imu;
     this.vision = vision;
 
-    if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-      SmartDashboard.putData(
-          "Debug/ResetGyroTo180", Commands.runOnce(() -> resetGyro(180)).ignoringDisable(true));
-      SmartDashboard.putData(
-          "Debug/ResetGyroTo0", Commands.runOnce(() -> resetGyro(0)).ignoringDisable(true));
-    }
+    // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+    //   SmartDashboard.putData(
+    //       "Debug/ResetGyroTo180", Commands.runOnce(() -> resetGyro(180)).ignoringDisable(true));
+    //   SmartDashboard.putData(
+    //       "Debug/ResetGyroTo0", Commands.runOnce(() -> resetGyro(0)).ignoringDisable(true));
+    // }
   }
 
   @Override
