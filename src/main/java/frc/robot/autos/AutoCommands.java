@@ -70,6 +70,10 @@ public class AutoCommands {
         || robotManager.getState() == RobotState.SMART_STOW_2;
   }
 
+  public boolean hasCoral() {
+    return robotManager.getState() == RobotState.IDLE_CORAL;
+  }
+
   public Command stowRequest() {
     return Commands.runOnce(robotManager::stowRequest);
   }
