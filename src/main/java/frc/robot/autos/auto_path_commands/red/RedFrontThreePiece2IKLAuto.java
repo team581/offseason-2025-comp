@@ -50,24 +50,27 @@ public class RedFrontThreePiece2IKLAuto extends BaseAuto {
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
+        autoCommands
+            .waitThenStow()
+            .alongWith(
 
-        // INTAKE STATION
-        trailblazer
-            .followSegment(
-                new AutoSegment(
-                    INTAKING_CONSTRAINTS,
-                    new AutoPoint(
-                        new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88)),
-                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    //        new AutoConstraintOptions(4, 57, 4, 30)),
-                    new AutoPoint(new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(-45.88))),
-                    new AutoPoint(
-                        new Pose2d(15.241, 1.107, Rotation2d.fromDegrees(-45.88)),
-                        autoCommands.intakeStationWarmupCommand(),
-                        new AutoConstraintOptions(3, 57, 4, 30)),
-                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
-                false)
-            .until(autoCommands::hasCoral),
+                // INTAKE STATION
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            INTAKING_CONSTRAINTS,
+                            new AutoPoint(
+                                new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(135.88))),
+                            //        new AutoConstraintOptions(4, 57, 4, 30)),
+                            new AutoPoint(
+                                new Pose2d(13.636, 1.439, Rotation2d.fromDegrees(-45.88))),
+                            new AutoPoint(
+                                new Pose2d(15.241, 1.107, Rotation2d.fromDegrees(-45.88)),
+                                autoCommands.intakeStationWarmupCommand(),
+                                new AutoConstraintOptions(3, 57, 4, 30)),
+                            new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
+                        false)
+                    .until(autoCommands::hasCoral)),
 
         // SCORE L4 ON K
         autoCommands
@@ -90,22 +93,24 @@ public class RedFrontThreePiece2IKLAuto extends BaseAuto {
                         false)
                     .until(autoCommands::hasCoral)),
         autoCommands.l4ScoreAndReleaseCommand(),
+        autoCommands
+            .waitThenStow()
+            .alongWith(
 
-        // INTAKE STATION
-        trailblazer
-            .followSegment(
-                new AutoSegment(
-                    INTAKING_CONSTRAINTS,
-                    new AutoPoint(
-                        new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
-                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    new AutoPoint(
-                        new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(-47.277)),
-                        autoCommands.intakeStationWarmupCommand(),
-                        new AutoConstraintOptions(3, 57, 4, 30)),
-                    new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
-                false)
-            .until(autoCommands::hasCoral),
+                // INTAKE STATION
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            INTAKING_CONSTRAINTS,
+                            new AutoPoint(
+                                new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277))),
+                            new AutoPoint(
+                                new Pose2d(15.083, 1.439, Rotation2d.fromDegrees(-47.277)),
+                                autoCommands.intakeStationWarmupCommand(),
+                                new AutoConstraintOptions(3, 57, 4, 30)),
+                            new AutoPoint(Points.LEFT_CORAL_STATION.redPose)),
+                        false)
+                    .until(autoCommands::hasCoral)),
 
         // SCORE L4 ON L
         autoCommands
@@ -139,4 +144,3 @@ public class RedFrontThreePiece2IKLAuto extends BaseAuto {
                     autoCommands.stowRequest()))));
   }
 }
-

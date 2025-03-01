@@ -50,24 +50,24 @@ public class BlueFrontThreePiece2IKLAuto extends BaseAuto {
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
-
-        // INTAKE STATION
-        trailblazer
-            .followSegment(
-                new AutoSegment(
-                    INTAKING_CONSTRAINTS,
-                    new AutoPoint(
-                        new Pose2d(5.418, 5.807, Rotation2d.fromDegrees(-44.12)),
-                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    //        new AutoConstraintOptions(4, 57, 4, 30)),
-                    new AutoPoint(new Pose2d(3.914, 6.611, Rotation2d.fromDegrees(134.12))),
-                    new AutoPoint(
-                        new Pose2d(2.309, 6.943, Rotation2d.fromDegrees(134.12)),
-                        autoCommands.intakeStationWarmupCommand(),
-                        new AutoConstraintOptions(3, 57, 4, 30)),
-                    new AutoPoint(Points.LEFT_CORAL_STATION.bluePose)),
-                false)
-            .until(autoCommands::hasCoral),
+        autoCommands
+            .waitThenStow()
+            .alongWith(
+                // INTAKE STATION
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            INTAKING_CONSTRAINTS,
+                            new AutoPoint(new Pose2d(5.418, 5.807, Rotation2d.fromDegrees(-44.12))),
+                            //        new AutoConstraintOptions(4, 57, 4, 30)),
+                            new AutoPoint(new Pose2d(3.914, 6.611, Rotation2d.fromDegrees(134.12))),
+                            new AutoPoint(
+                                new Pose2d(2.309, 6.943, Rotation2d.fromDegrees(134.12)),
+                                autoCommands.intakeStationWarmupCommand(),
+                                new AutoConstraintOptions(3, 57, 4, 30)),
+                            new AutoPoint(Points.LEFT_CORAL_STATION.bluePose)),
+                        false)
+                    .until(autoCommands::hasCoral)),
 
         // SCORE L4 ON K
         autoCommands
@@ -90,22 +90,24 @@ public class BlueFrontThreePiece2IKLAuto extends BaseAuto {
                         false)
                     .until(autoCommands::hasCoral)),
         autoCommands.l4ScoreAndReleaseCommand(),
+        autoCommands
+            .waitThenStow()
+            .alongWith(
 
-        // INTAKE STATION
-        trailblazer
-            .followSegment(
-                new AutoSegment(
-                    INTAKING_CONSTRAINTS,
-                    new AutoPoint(
-                        new Pose2d(3.266, 5.963, Rotation2d.fromDegrees(-46.723)),
-                        Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    new AutoPoint(
-                        new Pose2d(2.467, 6.611, Rotation2d.fromDegrees(132.723)),
-                        autoCommands.intakeStationWarmupCommand(),
-                        new AutoConstraintOptions(3, 57, 4, 30)),
-                    new AutoPoint(Points.LEFT_CORAL_STATION.bluePose)),
-                false)
-            .until(autoCommands::hasCoral),
+                // INTAKE STATION
+                trailblazer
+                    .followSegment(
+                        new AutoSegment(
+                            INTAKING_CONSTRAINTS,
+                            new AutoPoint(
+                                new Pose2d(3.266, 5.963, Rotation2d.fromDegrees(-46.723))),
+                            new AutoPoint(
+                                new Pose2d(2.467, 6.611, Rotation2d.fromDegrees(132.723)),
+                                autoCommands.intakeStationWarmupCommand(),
+                                new AutoConstraintOptions(3, 57, 4, 30)),
+                            new AutoPoint(Points.LEFT_CORAL_STATION.bluePose)),
+                        false)
+                    .until(autoCommands::hasCoral)),
 
         // SCORE L4 ON L
         autoCommands
@@ -139,4 +141,3 @@ public class BlueFrontThreePiece2IKLAuto extends BaseAuto {
                     autoCommands.stowRequest()))));
   }
 }
-

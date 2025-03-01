@@ -32,6 +32,11 @@ public class AutoCommands {
         .withName("L4ScoreAndReleaseCommand");
   }
 
+  public Command waitThenStow() {
+    return Commands.sequence(
+        Commands.waitSeconds(0.25), Commands.runOnce(robotManager::forceIdleNoGp));
+  }
+
   @Deprecated
   public Command intakeStationWithTimeoutCommand() {
     return Commands.runOnce(robotManager::intakeStationRequest, requirements)
