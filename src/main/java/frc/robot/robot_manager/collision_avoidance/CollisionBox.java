@@ -14,8 +14,7 @@ public enum CollisionBox {
       1,
       new Rectangle2d( // zone where the station intake happens
           new Translation2d(-24, 17.0), new Translation2d(-15, 25.0)),
-      new SuperstructurePosition(11, 114
-      )), // whatever it is for station intake
+      new SuperstructurePosition(11, 114)), // whatever it is for station intake
   BOX_2(
       2,
       new Rectangle2d( // bottom backwards
