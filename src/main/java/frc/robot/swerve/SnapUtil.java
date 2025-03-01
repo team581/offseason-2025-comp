@@ -15,29 +15,29 @@ public class SnapUtil {
 
   public static double getForwardNetDirection(Pose2d robotPose) {
     var robotX = robotPose.getX();
-     // entire field length is 17.55m
-     double halfFieldLength = 17.55 / 2.0;
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
 
-     // Robot is on blue side
-     if (robotX < halfFieldLength) {
-       return 0.0;
-     }
+    // Robot is on blue side
+    if (robotX < halfFieldLength) {
+      return 0.0;
+    }
 
-     // Robot is on red side
+    // Robot is on red side
     return 180;
   }
 
   public static double getBackwardNetDirection(Pose2d robotPose) {
     var robotX = robotPose.getX();
-     // entire field length is 17.55m
-     double halfFieldLength = 17.55 / 2.0;
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
 
-     // Robot is on blue side
-     if (robotX < halfFieldLength) {
-       return 180.0;
-     }
+    // Robot is on blue side
+    if (robotX < halfFieldLength) {
+      return 180.0;
+    }
 
-     // Robot is on red side
+    // Robot is on red side
     return 0.0;
   }
 
