@@ -799,7 +799,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE -> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
-        swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection());
+        swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -808,7 +808,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_SCORING -> {
         intake.setState(IntakeState.SCORE_ALGAE_NET_BACK);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
-        swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection());
+        swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -817,7 +817,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
         intake.setState(IntakeState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
-        swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection());
+        swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -826,7 +826,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_FORWARD_SCORING -> {
         intake.setState(IntakeState.SCORE_ALGAE_NET_FORWARD);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
-        swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection());
+        swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);

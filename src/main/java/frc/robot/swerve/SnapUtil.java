@@ -13,12 +13,32 @@ public class SnapUtil {
     return FmsSubsystem.isRedAlliance() ? 0 : 180;
   }
 
-  public static double getForwardNetDirection() {
+  public static double getForwardNetDirection(Pose2d robotPose) {
+    var robotX = robotPose.getX();
+     // entire field length is 17.55m
+     double halfFieldLength = 17.55 / 2.0;
+
+     // Robot is on blue side
+     if (robotX < halfFieldLength) {
+       return 0.0;
+     }
+
+     // Robot is on red side
     return 180;
   }
 
-  public static double getBackwardNetDirection() {
-    return 0;
+  public static double getBackwardNetDirection(Pose2d robotPose) {
+    var robotX = robotPose.getX();
+     // entire field length is 17.55m
+     double halfFieldLength = 17.55 / 2.0;
+
+     // Robot is on blue side
+     if (robotX < halfFieldLength) {
+       return 180.0;
+     }
+
+     // Robot is on red side
+    return 0.0;
   }
 
   public static double getCoralStationAngle(Pose2d robotPose) {
