@@ -249,8 +249,8 @@ public class RobotManager extends StateMachine<RobotState> {
         }
         yield currentState;
       }
-      case CORAL_L1_4_RELEASE -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
-      case CORAL_CENTERED_L2_4_RELEASE,
+      case CORAL_L1_4_RELEASE,
+          CORAL_CENTERED_L2_4_RELEASE,
           CORAL_CENTERED_L3_4_RELEASE,
           CORAL_CENTERED_L4_4_RELEASE,
           CORAL_DISPLACED_L2_4_RELEASE,
@@ -861,7 +861,7 @@ public class RobotManager extends StateMachine<RobotState> {
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
+        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.climbRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
         vision.setState(VisionState.TAGS);
@@ -1262,6 +1262,10 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       }
     }
+  }
+
+  public void forceIdleNoGp() {
+    setStateFromRequest(RobotState.IDLE_NO_GP);
   }
 
   public void stowRequest() {
