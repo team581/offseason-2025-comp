@@ -92,6 +92,27 @@ public class TagAlign {
         .orElseThrow();
   }
 
+  public ChassisSpeeds getAlgaeAlignmentSpeeds(Pose2d usedScoringPose) {
+    var robotPose = localization.getPose();
+    var scoringTranslationRobotRelative =
+    usedScoringPose
+        .getTranslation()
+        .minus(robotPose.getTranslation())
+        .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
+
+var goalTranslationUnrotated = new Translation2d();
+  goalTranslationUnrotated = new Translation2d(scoringTranslationRobotRelative.getX(), 0.0);
+  var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
+
+  var xEffort = TAG_PID.calculate(-goalTranslation.getX());
+  var yEffort = TAG_PID.calculate(-goalTranslation.getY());
+
+  DogLog.log("AutoAlign/ReefAlgae/XEffort", xEffort);
+  DogLog.log("AutoAlign/ReefAlgae/YEffort", yEffort);
+
+  return new ChassisSpeeds(xEffort, yEffort, 0.0);
+  }
+
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose, boolean forwardOnly) {
     var robotPose = localization.getPose();
 

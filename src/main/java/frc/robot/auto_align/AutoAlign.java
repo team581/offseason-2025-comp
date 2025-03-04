@@ -95,7 +95,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
   private ChassisSpeeds tagAlignSpeeds = new ChassisSpeeds();
-  private ChassisSpeeds tagAlignSpeedsForwardForPurple = new ChassisSpeeds();
+  private ChassisSpeeds algaeAlignSpeeds = new ChassisSpeeds();
   private boolean isAligned = false;
   private boolean isAlignedDebounced = false;
   private ReefPipe bestReefPipe = ReefPipe.PIPE_A;
@@ -172,10 +172,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
+    algaeAlignSpeeds = tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose());
   }
 
   public ChassisSpeeds getTagAlignSpeeds() {
     return tagAlignSpeeds;
+  }
+
+  public ChassisSpeeds getAlgaeAlignSpeeds() {
+    return algaeAlignSpeeds;
   }
 
   /**
