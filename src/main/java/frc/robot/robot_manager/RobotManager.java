@@ -599,7 +599,7 @@ public class RobotManager extends StateMachine<RobotState> {
             WristState.CORAL_SCORE_CENTERED_PLACING_L2,
             true);
         autoAlign.markPipeScored();
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
@@ -634,7 +634,7 @@ public class RobotManager extends StateMachine<RobotState> {
             WristState.CORAL_SCORE_CENTERED_PLACING_L3,
             true);
         autoAlign.markPipeScored();
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
@@ -675,7 +675,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_CENTERED_L4_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L4,
             true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
@@ -710,7 +710,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L2_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L2,
             true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         autoAlign.markPipeScored();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -745,7 +745,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L3_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L3,
             true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
@@ -789,7 +789,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L4_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L4,
             true);
-        swerve.scoringAlignmentRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
