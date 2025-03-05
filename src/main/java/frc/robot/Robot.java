@@ -32,6 +32,7 @@ import frc.robot.util.ElasticLayoutUtil;
 import frc.robot.util.Stopwatch;
 import frc.robot.util.scheduling.LifecycleSubsystemManager;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
@@ -70,6 +71,7 @@ public class Robot extends TimedRobot {
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
       new AutoAlign(frontCoralLimelight, baseTagLimelight, localization, swerve);
+  private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
           intake,
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
           imu,
           swerve,
           localization,
+          coralMap,
           lights,
           autoAlign,
           climber,
@@ -88,7 +91,6 @@ public class Robot extends TimedRobot {
   //     new FieldCalibrationUtil(elevator, wrist, lights, localization);
 
   private final RobotCommands robotCommands = new RobotCommands(robotManager);
-
   private final Autos autos = new Autos(robotManager, trailblazer);
 
   public Robot() {

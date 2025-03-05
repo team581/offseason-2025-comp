@@ -118,9 +118,6 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     var coralTX = t2d[4];
     var coralTY = t2d[5];
-    var latency = t2d[2] + t2d[3];
-    var latencySeconds = latency / 1000.0;
-    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
       return Optional.empty();
     }
@@ -128,7 +125,7 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
 
-    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
+    return Optional.of(new GamePieceResult(coralTX, coralTY));
   }
 
   private Optional<GamePieceResult> getRawAlgaeResult() {
@@ -141,9 +138,6 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     var coralTX = t2d[4];
     var coralTY = t2d[5];
-    var latency = t2d[2] + t2d[3];
-    var latencySeconds = latency / 1000.0;
-    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
     if (coralTX == 0.0 || coralTY == 0.0) {
       return Optional.empty();
     }
@@ -151,7 +145,7 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
 
-    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
+    return Optional.of(new GamePieceResult(coralTX, coralTY));
   }
 
   private Optional<PurpleResult> getRawPurpleResult() {

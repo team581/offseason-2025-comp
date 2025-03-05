@@ -1,8 +1,10 @@
 package frc.robot.intake_assist;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import frc.robot.vision.game_piece_detection.GamePieceDetectionUtil;
 import frc.robot.vision.results.GamePieceResult;
 import java.util.Optional;
@@ -64,5 +66,10 @@ public class IntakeAssistUtil {
     var yEffort = yError * kP;
 
     return new ChassisSpeeds(xEffort, yEffort, 0.0);
+  }
+
+  public static double getIntakeAssistAngle(Translation2d target, Pose2d robotPose) {
+    return Units.radiansToDegrees(
+        Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
   }
 }

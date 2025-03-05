@@ -1,6 +1,8 @@
 package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,8 +33,10 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.wrist.WristState;
 import frc.robot.wrist.WristSubsystem;
+import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
@@ -40,6 +44,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private final VisionSubsystem vision;
   public final ImuSubsystem imu;
 
+  public final CoralMap coralMap;
   private final SwerveSubsystem swerve;
   public final IntakeSubsystem intake;
   public final WristSubsystem wrist;
@@ -63,6 +68,7 @@ public class RobotManager extends StateMachine<RobotState> {
       ImuSubsystem imu,
       SwerveSubsystem swerve,
       LocalizationSubsystem localization,
+      CoralMap coralMap,
       LightsSubsystem lights,
       AutoAlign autoAlign,
       ClimberSubsystem climber,
@@ -76,6 +82,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.imu = imu;
     this.swerve = swerve;
     this.localization = localization;
+    this.coralMap = coralMap;
     this.lights = lights;
     this.climber = climber;
     this.autoAlign = autoAlign;
@@ -83,6 +90,8 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private double reefSnapAngle = 0.0;
+  private double coralIntakeAssistAngle = 0.0;
+  private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
   private boolean isRollHomed = false;
@@ -474,7 +483,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         intake.setState(IntakeState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
-        swerve.intakeAssistCoralTeleopRequest();
+        // Enable assist in periodic if there's coral in map
+        swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -1008,6 +1018,13 @@ public class RobotManager extends StateMachine<RobotState> {
       case INTAKE_CORAL_STATION_FRONT -> {
         swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0);
       }
+      case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
+        if (maybeBestCoralMapTranslation.isPresent()) {
+          swerve.snapsDriveRequest(coralIntakeAssistAngle);
+        } else {
+          swerve.normalDriveRequest();
+        }
+      }
       default -> {}
     }
 
@@ -1070,6 +1087,10 @@ public class RobotManager extends StateMachine<RobotState> {
   protected void collectInputs() {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
+    maybeBestCoralMapTranslation = coralMap.getBestCoral();
+    if (maybeBestCoralMapTranslation.isPresent()) {
+      coralIntakeAssistAngle = IntakeAssistUtil.getIntakeAssistAngle(maybeBestCoralMapTranslation.get().getTranslation(), localization.getPose());
+    }
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
@@ -1104,13 +1125,6 @@ public class RobotManager extends StateMachine<RobotState> {
               ReefPipeLevel.L4;
           default -> ReefPipeLevel.BASE;
         };
-
-    if (getState() == RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL) {
-      ChassisSpeeds coralAssistSpeeds =
-          IntakeAssistUtil.getCoralAssistSpeeds(
-              vision.getCoralResult(), imu.getRobotHeading(), true);
-      swerve.setFieldRelativeCoralAssistSpeedsOffset(coralAssistSpeeds);
-    }
 
     DogLog.log("PurpleAlignment/UsedPose", autoAlign.getUsedScoringPose());
 

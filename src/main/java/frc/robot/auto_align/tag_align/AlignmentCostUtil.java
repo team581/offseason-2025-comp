@@ -24,7 +24,7 @@ public class AlignmentCostUtil {
    * @param robotPose The robot's current pose
    * @param robotVelocity The robot's current velocity (field relative)
    */
-  private static double getAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
+  public static double getAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
     if (FeatureFlags.REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN.getAsBoolean()) {
       var lookahead = MathHelpers.poseLookahead(robotPose, robotVelocity, LOOKAHEAD);
       return lookahead.getTranslation().getDistance(target.getTranslation());

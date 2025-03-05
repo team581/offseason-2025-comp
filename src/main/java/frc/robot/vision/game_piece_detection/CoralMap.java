@@ -1,0 +1,188 @@
+package frc.robot.vision.game_piece_detection;
+
+import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.auto_align.tag_align.AlignmentCostUtil;
+import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.util.state_machines.StateMachine;
+import frc.robot.vision.limelight.LimelightHelpers;
+import frc.robot.vision.results.GamePieceResult;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+public class CoralMap extends StateMachine<CoralMapState> {
+  private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
+  private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
+
+  private static final double CORAL_LIFETIME_SECONDS = 3.0;
+
+  // TODO: UPDATE THESE TO REAL NUMBERS
+  private static final double CAMERA_IMAGE_HEIGHT = 800.0;
+  private static final double CAMERA_IMAGE_WIDTH = 1280.0;
+  private static final double FOV_VERTICAL = 56.2;
+  private static final double FOV_HORIZONTAL = 82.0;
+  private static final double HORIZONTAL_LEFT_VIEW = 82.0 / 2.0;
+  private static final double VERTICAL_TOP_VIEW = 56.2 / 2.0;
+
+  // TODO: UPDATE NAME
+  private static final String LIMELIGHT_NAME = "limelight-front";
+  private static final NetworkTableEntry LL_TCORNXY =
+      NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
+
+  private ArrayList<CoralMapElement> coralMap = new ArrayList<>();
+  private double[] previousCornersArray = new double[0];
+  private boolean staleCoralCorners = false;
+  private ChassisSpeeds swerveSpeeds = new ChassisSpeeds();
+  private LocalizationSubsystem localization;
+  private SwerveSubsystem swerve;
+  private Comparator<Pose2d> bestCoralComparator = Comparator.comparingDouble(
+    target -> AlignmentCostUtil.getAlignCost(target, localization.getPose(), swerve.getFieldRelativeSpeeds())
+  );
+
+  public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
+    super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
+    this.localization = localization;
+    this.swerve = swerve;
+  }
+
+  private List<Translation2d> getRawCoralPoses() {
+    List<Translation2d> coralTranslations = new ArrayList<>();
+    double[] corners = LL_TCORNXY.getDoubleArray(new double[0]);
+
+    // Check if the result array has changed
+    staleCoralCorners = Arrays.equals(previousCornersArray, corners);
+    previousCornersArray = corners;
+
+    if (staleCoralCorners) {
+      DogLog.timestamp("CoralMap/SkipStaleCorners");
+
+      return List.of();
+    }
+
+    double latency =
+        (LimelightHelpers.getLatency_Capture(LIMELIGHT_NAME)
+                + LimelightHelpers.getLatency_Pipeline(LIMELIGHT_NAME))
+            / 1000.0;
+    double timestamp = Timer.getFPGATimestamp() - latency;
+    var robotPoseAtCapture = localization.getPose(timestamp);
+
+    // Loop through 4 points
+    // Delete 3 point data
+    if (corners.length >= 8 && corners[0] != 0.0 && corners.length % 8 == 0) {
+
+      for (int i = 0; i < corners.length; i = i + 8) {
+        var centerX = (corners[i] + corners[i + 2]) / 2.0;
+        var centerY = (corners[i + 1] + corners[i + 5]) / 2.0;
+
+        double angleX = (((centerX / CAMERA_IMAGE_WIDTH) * FOV_HORIZONTAL) - HORIZONTAL_LEFT_VIEW);
+        double angleY =
+            -1.0 * (((centerY / CAMERA_IMAGE_HEIGHT) * FOV_VERTICAL) - VERTICAL_TOP_VIEW);
+        var maybeCoralPose =
+            GamePieceDetectionUtil.calculateFieldRelativeTranslationFromCamera(
+                robotPoseAtCapture, new GamePieceResult(angleX, angleY));
+
+        coralTranslations.add(maybeCoralPose);
+      }
+    }
+
+    return coralTranslations;
+  }
+
+  public Optional<Pose2d> getBestCoral() {
+    if (coralMap.isEmpty()){
+      return Optional.empty();
+    }
+
+    var bestCoral = coralMap.stream()
+        .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
+        .min(bestCoralComparator);
+
+    if (bestCoral.isPresent()) {
+      DogLog.log("CoralMap/BestCoral", bestCoral.get());
+    }
+
+    return bestCoral;
+  }
+
+  private List<Translation2d> getFilteredCoralPoses() {
+
+    return safeToTrack() ? getRawCoralPoses() : List.of();
+  }
+
+  private boolean safeToTrack() {
+    return swerveSpeeds.vxMetersPerSecond < SWERVE_MAX_LINEAR_SPEED_TRACKING
+        && swerveSpeeds.vyMetersPerSecond < SWERVE_MAX_LINEAR_SPEED_TRACKING
+        && swerveSpeeds.omegaRadiansPerSecond
+            < Units.degreesToRadians(SWERVE_MAX_ANGULAR_SPEED_TRACKING);
+  }
+
+  private void updateMap() {
+    List<Translation2d> filteredCoralPoses = getFilteredCoralPoses();
+
+    coralMap.removeIf(
+        element -> {
+          return (element.expiresAt() < Timer.getFPGATimestamp());
+        });
+
+    if (staleCoralCorners) {
+      return;
+    }
+
+    double newCoralExpiry = Timer.getFPGATimestamp() + CORAL_LIFETIME_SECONDS;
+
+    for (var visionCoral : filteredCoralPoses) {
+      Optional<CoralMapElement> match =
+          coralMap.stream()
+              .filter(
+                  rememberedCoral -> {
+                    return rememberedCoral.expiresAt() != newCoralExpiry
+                        && (rememberedCoral.coralTranslation().getDistance(visionCoral) < 0.8);
+                  })
+              .min(
+                  (a, b) ->
+                      Double.compare(
+                          a.coralTranslation().getDistance(visionCoral),
+                          b.coralTranslation().getDistance(visionCoral)));
+
+      if (match.isPresent()) {
+        coralMap.remove(match.get());
+      }
+
+      coralMap.add(new CoralMapElement(newCoralExpiry, visionCoral));
+    }
+  }
+
+  @Override
+  protected void collectInputs() {
+    swerveSpeeds = swerve.getRobotRelativeSpeeds();
+    updateMap();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    updateMap();
+    try {
+      DogLog.log(
+          "CoralMap/Map",
+          coralMap.stream()
+              .map(element -> new Pose2d(element.coralTranslation(), Rotation2d.kZero))
+              .toArray(Pose2d[]::new));
+    } catch (Exception error) {
+      DogLog.logFault("CoralMapLoggingError");
+      System.err.println(error);
+    }
+  }
+}

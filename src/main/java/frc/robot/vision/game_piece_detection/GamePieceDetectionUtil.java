@@ -12,8 +12,11 @@ import frc.robot.vision.results.GamePieceResult;
 public class GamePieceDetectionUtil {
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
       new Pose3d(
+          // Positive-Forward
           0.2741422,
+          // Positive-Left
           0.2809748,
+          // Positive-Up
           0.399542,
           new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(-15)));
 
@@ -22,15 +25,6 @@ public class GamePieceDetectionUtil {
     var robotRelative =
         calculateRobotRelativeTranslationFromCamera(visionResult, LIMELIGHT_POSE_TO_ROBOT);
     return robotRelativeToFieldRelativeGamePiecePose(robotPoseAtCapture, robotRelative);
-  }
-
-  public static double getFieldRelativeAngleToGamePiece(
-      Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
-    var gamePiecePose =
-        calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
-    return LocalizationSubsystem.distanceAngleToTarget(
-            new Pose2d(gamePiecePose, Rotation2d.kZero), robotPoseAtCapture)
-        .targetAngle();
   }
 
   private static Translation2d calculateRobotRelativeTranslationFromCamera(
