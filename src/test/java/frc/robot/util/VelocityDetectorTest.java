@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class VelocityDetectorTest {
   @Test
   void testDetectionSequence() {
-    var detector = new VelocityDetector(10, Double.MAX_VALUE);
+    var detector = new VelocityDetector(10, Double.MAX_VALUE, 0.0);
 
     // Velocity is below the min threshold
     assertFalse(detector.hasGamePiece(0, 5));
