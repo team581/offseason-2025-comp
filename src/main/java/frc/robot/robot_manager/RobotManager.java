@@ -982,10 +982,12 @@ public class RobotManager extends StateMachine<RobotState> {
       case DISLODGE_ALGAE_L2_WAIT,
           DISLODGE_ALGAE_L3_WAIT,
           DISLODGE_ALGAE_L2_PUSHING,
-          DISLODGE_ALGAE_L3_PUSHING,
+          DISLODGE_ALGAE_L3_PUSHING->
+         { swerve.snapsDriveRequest(reefSnapAngle);}
+          case
           INTAKE_ALGAE_L2,
           INTAKE_ALGAE_L3 -> {
-        swerve.snapsDriveRequest(reefSnapAngle);
+            swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case CORAL_L2_1_APPROACH,
           CORAL_L3_1_APPROACH,

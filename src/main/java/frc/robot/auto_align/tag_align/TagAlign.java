@@ -101,7 +101,7 @@ public class TagAlign {
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
     var goalTranslationUnrotated = new Translation2d();
-    goalTranslationUnrotated = new Translation2d(scoringTranslationRobotRelative.getX(), 0.0);
+    goalTranslationUnrotated = new Translation2d(0.0, scoringTranslationRobotRelative.getY());
     var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
 
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
