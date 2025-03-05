@@ -76,7 +76,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   protected void afterTransition(VisionState newState) {
     switch (newState) {
       case TAGS -> {
-        frontCoralLimelight.setState(LimelightState.TAGS);
+        frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.TAGS);
         baseTagLimelight.setState(LimelightState.TAGS);
       }
