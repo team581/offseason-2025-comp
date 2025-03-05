@@ -54,6 +54,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       DogLog.logFault("Climber Direction Bad", AlertType.kError);
       DogLog.log("Climber/DirectionBad", climberDirectionBad);
     }
+    if (getState() == ClimberState.STOWED && !atGoal()) {
+      DogLog.logFault("Climber stowed and not at goal", AlertType.kWarning);
+    } else {
+      DogLog.clearFault("Climber stowed and not at goal");
+    }
 
     if (DriverStation.isDisabled()) {
       if (getState() == ClimberState.STOWED) {
