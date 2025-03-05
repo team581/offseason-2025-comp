@@ -1,7 +1,5 @@
 package frc.robot.intake;
 
-import java.util.Timer;
-
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -63,8 +61,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
     bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
 
-    topMotorAlgaeVelocityGp = topAlgaeVelocityDebouncer.calculate(topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20));
-    bottomMotorAlgaeVelocityGp = bottomAlgaeVelocityDebouncer.calculate(bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20));
+    topMotorAlgaeVelocityGp =
+        topAlgaeVelocityDebouncer.calculate(
+            topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20));
+    bottomMotorAlgaeVelocityGp =
+        bottomAlgaeVelocityDebouncer.calculate(
+            bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20));
 
     topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 65);
     bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 65);
