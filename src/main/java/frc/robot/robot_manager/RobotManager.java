@@ -2,7 +2,6 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -982,12 +981,11 @@ public class RobotManager extends StateMachine<RobotState> {
       case DISLODGE_ALGAE_L2_WAIT,
           DISLODGE_ALGAE_L3_WAIT,
           DISLODGE_ALGAE_L2_PUSHING,
-          DISLODGE_ALGAE_L3_PUSHING->
-         { swerve.snapsDriveRequest(reefSnapAngle);}
-          case
-          INTAKE_ALGAE_L2,
-          INTAKE_ALGAE_L3 -> {
-            swerve.scoringAlignmentRequest(reefSnapAngle);
+          DISLODGE_ALGAE_L3_PUSHING -> {
+        swerve.snapsDriveRequest(reefSnapAngle);
+      }
+      case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case CORAL_L2_1_APPROACH,
           CORAL_L3_1_APPROACH,
@@ -1091,7 +1089,9 @@ public class RobotManager extends StateMachine<RobotState> {
     nearestReefSide = autoAlign.getClosestReefSide();
     maybeBestCoralMapTranslation = coralMap.getBestCoral();
     if (maybeBestCoralMapTranslation.isPresent()) {
-      coralIntakeAssistAngle = IntakeAssistUtil.getIntakeAssistAngle(maybeBestCoralMapTranslation.get().getTranslation(), localization.getPose());
+      coralIntakeAssistAngle =
+          IntakeAssistUtil.getIntakeAssistAngle(
+              maybeBestCoralMapTranslation.get().getTranslation(), localization.getPose());
     }
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
@@ -1305,7 +1305,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorRequest() {
     if (gamePieceMode == GamePieceMode.ALGAE) {
       intakeFloorAlgaeRequest();
-    } else  if (!(intake.getLeftSensor() || intake.getRightSensor())) {
+    } else if (!(intake.getLeftSensor() || intake.getRightSensor())) {
       intakeFloorCoralHorizontalRequest();
     }
   }

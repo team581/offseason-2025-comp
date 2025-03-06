@@ -47,9 +47,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private ChassisSpeeds swerveSpeeds = new ChassisSpeeds();
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
-  private Comparator<Pose2d> bestCoralComparator = Comparator.comparingDouble(
-    target -> AlignmentCostUtil.getAlignCost(target, localization.getPose(), swerve.getFieldRelativeSpeeds())
-  );
+  private Comparator<Pose2d> bestCoralComparator =
+      Comparator.comparingDouble(
+          target ->
+              AlignmentCostUtil.getAlignCost(
+                  target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
@@ -101,13 +103,14 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public Optional<Pose2d> getBestCoral() {
-    if (coralMap.isEmpty()){
+    if (coralMap.isEmpty()) {
       return Optional.empty();
     }
 
-    var bestCoral = coralMap.stream()
-        .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
-        .min(bestCoralComparator);
+    var bestCoral =
+        coralMap.stream()
+            .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
+            .min(bestCoralComparator);
 
     if (bestCoral.isPresent()) {
       DogLog.log("CoralMap/BestCoral", bestCoral.get());
