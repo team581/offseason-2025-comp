@@ -1175,11 +1175,7 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       }
       // Switch back and forth from station intaking and reef algae intaking
-      case INTAKE_STATION_APPROACH,
-          INTAKE_CORAL_STATION_BACK,
-          INTAKE_CORAL_STATION_FRONT,
-          INTAKE_ALGAE_L2,
-          INTAKE_ALGAE_L3 -> {
+      case INTAKE_STATION_APPROACH, INTAKE_CORAL_STATION_BACK, INTAKE_CORAL_STATION_FRONT -> {
         algaeMode = newAlgaeActive;
         if (algaeMode) {
           intakeReefAlgaeRequest();
