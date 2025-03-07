@@ -1174,6 +1174,19 @@ public class RobotManager extends StateMachine<RobotState> {
           l4CoralReleaseRequest();
         }
       }
+      // Switch back and forth from station intaking and reef algae intaking
+      case INTAKE_STATION_APPROACH,
+          INTAKE_CORAL_STATION_BACK,
+          INTAKE_CORAL_STATION_FRONT,
+          INTAKE_ALGAE_L2,
+          INTAKE_ALGAE_L3 -> {
+        algaeMode = newAlgaeActive;
+        if (algaeMode) {
+          intakeReefAlgaeRequest();
+        } else {
+          setStateFromRequest(RobotState.INTAKE_STATION_APPROACH);
+        }
+      }
       default -> {}
     }
   }
