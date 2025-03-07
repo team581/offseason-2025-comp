@@ -235,15 +235,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       // Scoring
-      case PROCESSOR_SCORING, NET_FORWARD_SCORING -> {
-        if (intake.getHasGP()) {
-          yield currentState;
-        }
-
-        rumbleController.rumbleRequest();
-        yield RobotState.IDLE_NO_GP;
-      }
-      case ALGAE_OUTTAKE -> {
+      case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
         if (timeout(0.5)) {
           setGamePieceMode(GamePieceMode.CORAL);
           yield RobotState.IDLE_NO_GP;

@@ -55,6 +55,9 @@ public class CollisionAvoidance {
     DogLog.log("CollisionAvoidance/GoalZone", goalZone);
     DogLog.log(
         "CollisionAvoidance/CurrentPosition", positionToTranslation(currentSuperstructurePosition));
+    DogLog.log(
+        "CollisionAvoidance/CurrentElevatorPosition",
+        new Translation2d(0, currentSuperstructurePosition.elevatorHeight()));
 
     // if(currentZone.id==3||currentZone.id==4||currentZone.id==5&&goalZone.id==3||goalZone.id==4||goalZone.id==5){
     if (currentZone.shortCutPossible(
