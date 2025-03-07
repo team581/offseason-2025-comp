@@ -26,18 +26,18 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
 
-  private static final double CORAL_LIFETIME_SECONDS = 3.0;
+  private static final double CORAL_LIFETIME_SECONDS = 1.5;
 
   // TODO: UPDATE THESE TO REAL NUMBERS
   private static final double CAMERA_IMAGE_HEIGHT = 800.0;
   private static final double CAMERA_IMAGE_WIDTH = 1280.0;
-  private static final double FOV_VERTICAL = 56.2;
-  private static final double FOV_HORIZONTAL = 82.0;
-  private static final double HORIZONTAL_LEFT_VIEW = 82.0 / 2.0;
-  private static final double VERTICAL_TOP_VIEW = 56.2 / 2.0;
+  private static final double FOV_VERTICAL = 56.268;
+  private static final double FOV_HORIZONTAL = 82.197;
+  private static final double HORIZONTAL_LEFT_VIEW = 39.693;
+  private static final double VERTICAL_TOP_VIEW = 28.520;
 
   // TODO: UPDATE NAME
-  private static final String LIMELIGHT_NAME = "limelight-front";
+  private static final String LIMELIGHT_NAME = "limelight-coral";
   private static final NetworkTableEntry LL_TCORNXY =
       NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
 
@@ -50,7 +50,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
           target ->
-              AlignmentCostUtil.getAlignCost(
+              AlignmentCostUtil.getCoralAlignCost(
                   target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {

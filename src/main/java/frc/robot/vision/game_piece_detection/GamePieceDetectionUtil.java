@@ -13,12 +13,14 @@ public class GamePieceDetectionUtil {
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
       new Pose3d(
           // Positive-Forward
-          0.2741422,
+          Units.inchesToMeters(10.41),
           // Positive-Left
-          0.2809748,
+          Units.inchesToMeters(10.22),
+
           // Positive-Up
-          0.399542,
-          new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(-15)));
+          Units.inchesToMeters(36.09),
+
+          new Rotation3d(0, Units.degreesToRadians(32.5), Units.degreesToRadians(-15)));
 
   public static Translation2d calculateFieldRelativeTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {

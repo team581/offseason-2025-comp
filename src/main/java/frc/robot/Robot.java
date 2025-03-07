@@ -46,14 +46,16 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight frontCoralLimelight =
-      new Limelight("front", LimelightState.TAGS, LimelightModel.FOUR);
+      new Limelight("coral", LimelightState.TAGS, LimelightModel.FOUR);
   private final Limelight backTagLimelight =
       new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG);
-  private final Limelight baseTagLimelight =
-      new Limelight("base", LimelightState.TAGS, LimelightModel.THREEG);
+  private final Limelight frontRightLimelight =
+      new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG);
+      private final Limelight frontLeftLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, frontCoralLimelight, backTagLimelight, baseTagLimelight);
+      new VisionSubsystem(imu, frontCoralLimelight, backTagLimelight, frontRightLimelight, frontLeftLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);
@@ -70,7 +72,7 @@ public class Robot extends TimedRobot {
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final AutoAlign autoAlign =
-      new AutoAlign(frontCoralLimelight, baseTagLimelight, localization, swerve);
+      new AutoAlign(frontLeftLimelight, frontRightLimelight, localization, swerve);
   private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
