@@ -18,7 +18,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight frontRightLimelight;
   private final Limelight frontLeftLimelight;
 
-
   private final List<TagResult> tagResult = new ArrayList<>();
   private double robotHeading;
   private double pitch;
@@ -32,15 +31,13 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       Limelight frontCoralLimelight,
       Limelight backTagLimelight,
       Limelight frontRightLimelight,
-      Limelight frontLeftLimelight
-      ) {
+      Limelight frontLeftLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.frontCoralLimelight = frontCoralLimelight;
     this.backTagLimelight = backTagLimelight;
     this.frontRightLimelight = frontRightLimelight;
     this.frontLeftLimelight = frontLeftLimelight;
-
   }
 
   @Override
@@ -97,28 +94,24 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         backTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         frontRightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         frontLeftLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
-
       }
       case STATION_TAGS -> {
         frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.STATION_TAGS);
         frontRightLimelight.setState(LimelightState.STATION_TAGS);
         frontLeftLimelight.setState(LimelightState.STATION_TAGS);
-
       }
       case CORAL_DETECTION -> {
         frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.TAGS);
         frontRightLimelight.setState(LimelightState.TAGS);
         frontLeftLimelight.setState(LimelightState.TAGS);
-
       }
       case ALGAE_DETECTION -> {
         frontCoralLimelight.setState(LimelightState.ALGAE);
         backTagLimelight.setState(LimelightState.TAGS);
         frontRightLimelight.setState(LimelightState.TAGS);
         frontLeftLimelight.setState(LimelightState.TAGS);
-
       }
     }
   }
@@ -130,9 +123,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     frontCoralLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    frontRightLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    frontRightLimelight.sendImuData(
+        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     frontLeftLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-
   }
 
   public void setClosestScoringReefTag(int tagID) {

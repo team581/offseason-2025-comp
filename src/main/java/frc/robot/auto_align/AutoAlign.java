@@ -224,7 +224,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     var tagResult = frontLeftLimelight.getTagResult().or(frontRightLimelight::getTagResult);
 
     var combinedTagHealth =
-        CameraHealth.combine(frontLeftLimelight.getCameraHealth(), frontRightLimelight.getCameraHealth());
+        CameraHealth.combine(
+            frontLeftLimelight.getCameraHealth(), frontRightLimelight.getCameraHealth());
 
     if (combinedTagHealth == CameraHealth.OFFLINE) {
 

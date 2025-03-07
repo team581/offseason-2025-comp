@@ -76,13 +76,11 @@ public class AutoCommands {
   }
 
   /**
-   *
    * @deprecated Use {@link #hasCoral()} instead
    */
   @Deprecated
-  public boolean isIdleCoral(){
-      return robotManager.getState() == RobotState.IDLE_CORAL;
-
+  public boolean isIdleCoral() {
+    return robotManager.getState() == RobotState.IDLE_CORAL;
   }
 
   public boolean hasCoral() {

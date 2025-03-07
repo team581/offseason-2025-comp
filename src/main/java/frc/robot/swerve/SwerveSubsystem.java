@@ -285,12 +285,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
           SNAP_CONTROLLER.setMaxOutput(
               TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
-              drivetrain.setControl(
-                driveToAngle
-                    .withVelocityX(
-                        teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
-                    .withVelocityY(
-                        teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
+          drivetrain.setControl(
+              driveToAngle
+                  .withVelocityX(
+                      teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
+                  .withVelocityY(
+                      teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
                   .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
 
@@ -471,7 +471,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST);
     }
   }
-
 
   public void intakeAssistAlgaeTeleopRequest() {
     if (DriverStation.isTeleop()) {

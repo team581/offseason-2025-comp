@@ -19,7 +19,6 @@ public class GamePieceDetectionUtil {
 
           // Positive-Up
           Units.inchesToMeters(36.09),
-
           new Rotation3d(0, Units.degreesToRadians(32.5), Units.degreesToRadians(-15)));
 
   public static Translation2d calculateFieldRelativeTranslationFromCamera(

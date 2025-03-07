@@ -51,11 +51,12 @@ public class Robot extends TimedRobot {
       new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG);
   private final Limelight frontRightLimelight =
       new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG);
-      private final Limelight frontLeftLimelight =
+  private final Limelight frontLeftLimelight =
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, frontCoralLimelight, backTagLimelight, frontRightLimelight, frontLeftLimelight);
+      new VisionSubsystem(
+          imu, frontCoralLimelight, backTagLimelight, frontRightLimelight, frontLeftLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);

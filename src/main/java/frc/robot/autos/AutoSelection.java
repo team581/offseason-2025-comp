@@ -18,7 +18,7 @@ public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
   // FOUR_PIECE_2IJK(RedFourPiece2IJKLAuto::new, BlueFourPiece2IJKLAuto::new),
   PUSH_PARTNER(RedPushPartnerAuto::new, BluePushPartnerAuto::new),
-  //TODO: MAKE BLUE VERSION
+  // TODO: MAKE BLUE VERSION
   FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IKLGroundAuto::new, BlueThreePiece2IKLAuto::new),
   // FOUR_PIECE_5FEDC(RedFourPiece5FEDC::new, BlueFourPiece5FEDC::new),
   THREE_PIECE_2IKL(RedThreePiece2IKLAuto::new, BlueThreePiece2IKLAuto::new),

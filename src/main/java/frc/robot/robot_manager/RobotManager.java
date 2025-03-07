@@ -251,7 +251,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       case CORAL_L1_4_RELEASE,
-         CORAL_CENTERED_L2_4_RELEASE,
+          CORAL_CENTERED_L2_4_RELEASE,
           CORAL_CENTERED_L3_4_RELEASE,
           CORAL_CENTERED_L4_4_RELEASE,
           CORAL_DISPLACED_L2_4_RELEASE,
@@ -1004,7 +1004,9 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         if (maybeBestCoralMapTranslation.isPresent()) {
-          swerve.setFieldRelativeCoralAssistSpeedsOffset(IntakeAssistUtil.getAssistSpeedsFromPose(maybeBestCoralMapTranslation.get(), localization.getPose()));
+          swerve.setFieldRelativeCoralAssistSpeedsOffset(
+              IntakeAssistUtil.getAssistSpeedsFromPose(
+                  maybeBestCoralMapTranslation.get(), localization.getPose()));
           swerve.coralAlignmentDriveRequest(coralIntakeAssistAngle);
         } else {
           swerve.normalDriveRequest();

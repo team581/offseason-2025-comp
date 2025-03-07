@@ -64,7 +64,11 @@ public abstract class BaseAuto {
   }
 
   public Command waitForGroundIntakeDone() {
-return robotManager.waitForStates(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL, RobotState.INTAKE_CORAL_FLOOR_UPRIGHT, RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL).andThen(
-  robotManager.waitForState(RobotState.IDLE_CORAL));
+    return robotManager
+        .waitForStates(
+            RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL,
+            RobotState.INTAKE_CORAL_FLOOR_UPRIGHT,
+            RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
   }
 }
