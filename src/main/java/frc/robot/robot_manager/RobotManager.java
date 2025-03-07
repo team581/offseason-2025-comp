@@ -1207,9 +1207,7 @@ public class RobotManager extends StateMachine<RobotState> {
         // We are cancelling intaking and want to stow instead
         // Because we are using algae, we can't rely on the sensors to detect a game piece
 
-        if (getState() == RobotState.INTAKE_ALGAE_FLOOR) {
-          forceIdleNoGp();
-        }
+        forceIdleNoGp();
       }
       default -> {
         if (algaeMode) {
