@@ -88,7 +88,7 @@ public class BlueFrontThreePiece2IKLAuto extends BaseAuto {
                                 robotManager.autoAlign::getUsedScoringPose,
                                 new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
-                    .until(autoCommands::hasCoral)),
+                    .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
         autoCommands
             .waitThenStow()
