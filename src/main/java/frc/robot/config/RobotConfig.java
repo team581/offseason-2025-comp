@@ -73,6 +73,8 @@ public record RobotConfig(
       String canBusName,
       int motorID,
       TalonFXConfiguration motorConfig,
+      double minAngle,
+      double maxAngle,
       double homingCurrentThreshold,
       double homingPosition) {}
 

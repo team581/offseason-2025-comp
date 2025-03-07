@@ -45,16 +45,17 @@ public class RollSubsystem extends StateMachine<RollState> {
       case CORAL_SCORE -> {
         coralScoreDirection = getCoralScoreDirection();
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(coralScoreDirection)));
+            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(coralScoreDirection))));
       }
       case SMART_STOW -> {
         smartStowAngle = getSmartStowDirection();
-        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(smartStowAngle)));
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(smartStowAngle))));
       }
       case UNHOMED -> motor.disable();
       default -> {
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(getState().angle)));
+            motionMagicRequest.withPosition(Units.degreesToRotations(clamp(getState().angle))));
       }
     }
   }
@@ -141,5 +142,10 @@ public class RollSubsystem extends StateMachine<RollState> {
     } else {
       DogLog.clearFault("Roll Unhomed");
     }
+  }
+
+  private static double clamp(double rollAngle) {
+    return MathUtil.clamp(
+        rollAngle, RobotConfig.get().roll().minAngle(), RobotConfig.get().roll().maxAngle());
   }
 }

@@ -210,6 +210,8 @@ class CompConfig {
                           .withStatorCurrentLimit(20)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(20)),
+              -96.5,
+              91,
               9,
               92.4),
           new ClimberConfig(
