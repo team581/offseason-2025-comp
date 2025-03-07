@@ -141,13 +141,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_FORWARD_PREPARE_TO_SCORE ->
           wrist.atGoal() && elevator.atGoal() ? RobotState.NET_FORWARD_SCORING : currentState;
 
-      case CORAL_L1_1_APPROACH ->
-          AutoAlign.isCloseToReefSide(
-                  localization.getPose(),
-                  nearestReefSide.getPose(),
-                  swerve.getFieldRelativeSpeeds())
-              ? RobotState.CORAL_L1_3_PLACE
-              : currentState;
       case CORAL_L2_1_APPROACH -> {
         var isClose =
             AutoAlign.isCloseToReefSide(
@@ -258,7 +251,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
       case CORAL_L1_4_RELEASE,
-          CORAL_CENTERED_L2_4_RELEASE,
+         CORAL_CENTERED_L2_4_RELEASE,
           CORAL_CENTERED_L3_4_RELEASE,
           CORAL_CENTERED_L4_4_RELEASE,
           CORAL_DISPLACED_L2_4_RELEASE,
@@ -525,15 +518,6 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
         climber.setState(ClimberState.STOWED);
       }
-      case CORAL_L1_1_APPROACH -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
-        swerve.snapsDriveRequest(reefSnapAngle);
-        roll.setState(RollState.CORAL_SCORE_L1);
-        vision.setState(VisionState.TAGS);
-        lights.setState(getLightStateForScoring());
-        climber.setState(ClimberState.STOWED);
-      }
       case CORAL_L2_1_APPROACH -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L2_APPROACH, WristState.CORAL_STOWED);
@@ -564,7 +548,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_3_PLACE -> {
         intake.setState(IntakeState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_PLACE, WristState.CORAL_SCORE_PLACING_L1, true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE_L1);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -573,7 +557,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_4_RELEASE -> {
         intake.setState(IntakeState.SCORE_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_RELEASE, WristState.CORAL_SCORE_PLACING_L1, true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE_L1);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
@@ -1030,8 +1014,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     // Update lights
     switch (getState()) {
-      case CORAL_L1_1_APPROACH,
-          CORAL_L2_1_APPROACH,
+      case CORAL_L2_1_APPROACH,
           CORAL_L3_1_APPROACH,
           CORAL_L4_1_APPROACH,
           CORAL_L1_3_PLACE,
@@ -1096,7 +1079,7 @@ public class RobotManager extends StateMachine<RobotState> {
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
-          case CORAL_L1_1_APPROACH, CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
+          case CORAL_L1_3_PLACE, CORAL_L1_4_RELEASE -> ReefPipeLevel.L1;
           case CORAL_L2_1_APPROACH,
                   CORAL_CENTERED_L2_2_LINEUP,
                   CORAL_CENTERED_L2_3_PLACE,
@@ -1182,7 +1165,6 @@ public class RobotManager extends StateMachine<RobotState> {
           REHOME_ELEVATOR,
           REHOME_WRIST,
           REHOME_ROLL,
-          CORAL_L1_3_PLACE,
           CORAL_L1_4_RELEASE,
           CORAL_CENTERED_L2_2_LINEUP,
           CORAL_DISPLACED_L2_2_LINEUP,
@@ -1239,7 +1221,7 @@ public class RobotManager extends StateMachine<RobotState> {
           intakeFloorAlgaeRequest();
         }
       }
-      case CORAL_L1_1_APPROACH -> {
+      case CORAL_L1_3_PLACE -> {
         if (newMode == GamePieceMode.ALGAE) {
           processorWaitingRequest();
         }
@@ -1406,7 +1388,7 @@ public class RobotManager extends StateMachine<RobotState> {
           REHOME_ELEVATOR,
           REHOME_ROLL,
           REHOME_WRIST -> {}
-      default -> setStateFromRequest(RobotState.CORAL_L1_1_APPROACH);
+      default -> setStateFromRequest(RobotState.CORAL_L1_3_PLACE);
     }
   }
 
@@ -1638,7 +1620,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case NET_BACK_WAITING -> setStateFromRequest(RobotState.NET_BACK_PREPARE_TO_SCORE);
       case NET_FORWARD_WAITING -> setStateFromRequest(RobotState.NET_FORWARD_PREPARE_TO_SCORE);
 
-      case CORAL_L1_1_APPROACH -> setStateFromRequest(RobotState.CORAL_L1_3_PLACE);
       case CORAL_L1_3_PLACE -> setStateFromRequest(RobotState.CORAL_L1_4_RELEASE);
 
       case CORAL_L2_1_APPROACH ->
