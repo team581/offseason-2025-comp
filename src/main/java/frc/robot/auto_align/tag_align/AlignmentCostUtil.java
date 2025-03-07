@@ -15,6 +15,8 @@ import java.util.Comparator;
 public class AlignmentCostUtil {
   private static final double LOOKAHEAD = 0.5;
   private static final double ANGLE_DIFFERENCE_SCALAR = 0.02;
+  private static final double ANGLE_DIFFERENCE_SCALAR_CORAL = 0.07;
+
 
   /**
    * Returns the "cost" (a dimensionless number) of aligning to a given pose based on the robot's
@@ -45,6 +47,32 @@ public class AlignmentCostUtil {
 
     var driveAngleCost =
         ANGLE_DIFFERENCE_SCALAR
+            * Math.abs(
+                targetDirection.minus(MathHelpers.vectorDirection(robotVelocity)).getRadians());
+    return distanceCost + driveAngleCost;
+  }
+
+  public static double getCoralAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
+    if (FeatureFlags.REEF_ALIGN_LOOKAHEAD_DISTANCE_COST_FN.getAsBoolean()) {
+      var lookahead = MathHelpers.poseLookahead(robotPose, robotVelocity, LOOKAHEAD);
+      return lookahead.getTranslation().getDistance(target.getTranslation());
+    }
+
+    var distanceCost = target.getTranslation().getDistance(robotPose.getTranslation());
+    if (target.getTranslation().equals(Translation2d.kZero)
+        || robotPose.getTranslation().equals(Translation2d.kZero)) {
+      return distanceCost;
+    }
+
+    if (Math.hypot(robotVelocity.vxMetersPerSecond, robotVelocity.vyMetersPerSecond) == 0.0) {
+      return distanceCost;
+    }
+
+    var targetRobotRelative = target.getTranslation().minus(robotPose.getTranslation());
+    var targetDirection = targetRobotRelative.getAngle();
+
+    var driveAngleCost =
+        ANGLE_DIFFERENCE_SCALAR_CORAL
             * Math.abs(
                 targetDirection.minus(MathHelpers.vectorDirection(robotVelocity)).getRadians());
     return distanceCost + driveAngleCost;

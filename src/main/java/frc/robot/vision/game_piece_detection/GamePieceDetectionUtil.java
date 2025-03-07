@@ -13,7 +13,7 @@ public class GamePieceDetectionUtil {
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
       new Pose3d(
           // Positive-Forward
-          Units.inchesToMeters(10.41),
+          Units.inchesToMeters(11.41),
           // Positive-Left
           Units.inchesToMeters(10.22),
 

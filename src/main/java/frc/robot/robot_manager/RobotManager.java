@@ -1004,7 +1004,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         if (maybeBestCoralMapTranslation.isPresent()) {
-          swerve.snapsDriveRequest(coralIntakeAssistAngle);
+          swerve.setFieldRelativeCoralAssistSpeedsOffset(IntakeAssistUtil.getAssistSpeedsFromPose(maybeBestCoralMapTranslation.get(), localization.getPose()));
+          swerve.coralAlignmentDriveRequest(coralIntakeAssistAngle);
         } else {
           swerve.normalDriveRequest();
         }
