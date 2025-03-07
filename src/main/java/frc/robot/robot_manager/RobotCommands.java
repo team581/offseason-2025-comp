@@ -68,12 +68,12 @@ public class RobotCommands {
         .withName("HighLineupCommand");
   }
 
-  public Command setGamepieceModeCommand(GamePieceMode newMode) {
+  public Command setAlgaeModeCommand(boolean algaeActive) {
     return Commands.runOnce(
             () -> {
-              robot.setGamePieceMode(newMode);
+              robot.setAlgaeMode(algaeActive);
             })
-        .withName("SetGamepieceModeCommand");
+        .withName("SetAlgaeModeCommand");
   }
 
   public Command climbUpCommand() {

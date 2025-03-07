@@ -56,7 +56,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public final AutoAlign autoAlign;
 
-  private GamePieceMode gamePieceMode = GamePieceMode.CORAL;
+  private boolean algaeMode = false;
 
   public RobotManager(
       IntakeSubsystem intake,
@@ -237,7 +237,7 @@ public class RobotManager extends StateMachine<RobotState> {
       // Scoring
       case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
         if (timeout(0.5)) {
-          setGamePieceMode(GamePieceMode.CORAL);
+          algaeMode = false;
           yield RobotState.IDLE_NO_GP;
         }
         yield currentState;
@@ -349,9 +349,7 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.TAGS);
         lights.setState(
-            gamePieceMode == GamePieceMode.CORAL
-                ? LightsState.IDLE_NO_GP_CORAL_MODE
-                : LightsState.IDLE_NO_GP_ALGAE_MODE);
+            algaeMode ? LightsState.IDLE_NO_GP_ALGAE_MODE : LightsState.IDLE_NO_GP_CORAL_MODE);
         climber.setState(ClimberState.STOWED);
       }
       case IDLE_ALGAE -> {
@@ -1141,146 +1139,85 @@ public class RobotManager extends StateMachine<RobotState> {
     return isFarEnoughFromReefSide;
   }
 
-  public void setGamePieceMode(GamePieceMode newMode) {
-    gamePieceMode = newMode;
-
+  public void setAlgaeMode(boolean newAlgaeActive) {
     switch (getState()) {
-      // If we are actively placing a game piece, or climbing, etc. then don't change mode
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          NET_BACK_SCORING,
-          NET_FORWARD_SCORING,
-          PROCESSOR_SCORING,
-          ALGAE_OUTTAKE,
-          UNJAM,
-          UNJAM_CORAL_STATION,
-          PREPARE_UNJAM_CORAL_STATION,
-          REHOME_ELEVATOR,
-          REHOME_WRIST,
-          REHOME_ROLL,
-          CORAL_L1_4_RELEASE,
-          CORAL_CENTERED_L2_2_LINEUP,
-          CORAL_DISPLACED_L2_2_LINEUP,
-          CORAL_CENTERED_L2_3_PLACE,
-          CORAL_DISPLACED_L2_3_PLACE,
-          CORAL_CENTERED_L2_4_RELEASE,
-          CORAL_DISPLACED_L2_4_RELEASE,
-          CORAL_CENTERED_L3_2_LINEUP,
-          CORAL_CENTERED_L3_3_PLACE,
-          CORAL_CENTERED_L3_4_RELEASE,
-          CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST,
-          CORAL_CENTERED_L4_2_LINEUP,
-          CORAL_CENTERED_L4_3_PLACE,
-          CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE,
-          CORAL_DISPLACED_L3_2_LINEUP,
-          CORAL_DISPLACED_L3_3_PLACE,
-          CORAL_DISPLACED_L3_4_RELEASE,
-          CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST,
-          CORAL_DISPLACED_L4_2_LINEUP,
-          CORAL_DISPLACED_L4_3_PLACE,
-          CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE -> {}
-      case IDLE_NO_GP,
-          IDLE_ALGAE,
-          IDLE_CORAL,
-          INTAKE_STATION_APPROACH,
-          SMART_STOW_1,
-          SMART_STOW_2 -> {
-        stowRequest();
-      }
-      case INTAKE_ALGAE_FLOOR -> {
-        if (newMode == GamePieceMode.CORAL) {
-          intakeFloorCoralHorizontalRequest();
+      // Can change from holding coral to algae, but not the other way around
+      case IDLE_CORAL -> {
+        algaeMode = newAlgaeActive;
+        if (algaeMode) {
+          forceIdleNoGp();
         }
       }
-      case INTAKE_ALGAE_L2, DISLODGE_ALGAE_L2_WAIT, DISLODGE_ALGAE_L2_PUSHING -> {
-        if (newMode == GamePieceMode.CORAL) {
-          l2CoralApproachRequest();
+      // Update light states when staying in IDLE_NO_GP, but changing algae mode
+      case IDLE_NO_GP -> {
+        algaeMode = newAlgaeActive;
+        forceIdleNoGp();
+      }
+      // Switch between floor intaking coral and algae
+      case INTAKE_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_CORAL_FLOOR_UPRIGHT,
+          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_ALGAE_FLOOR -> {
+        algaeMode = newAlgaeActive;
+        if (newAlgaeActive) {
+          setStateFromRequest(RobotState.INTAKE_ALGAE_FLOOR);
+        } else {
+          setStateFromRequest(RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL);
         }
       }
-      case INTAKE_ALGAE_L3, DISLODGE_ALGAE_L3_WAIT, DISLODGE_ALGAE_L3_PUSHING -> {
-        if (newMode == GamePieceMode.CORAL) {
-          l3CoralApproachRequest();
-        }
-      }
-      case INTAKE_CORAL_STATION_BACK, INTAKE_CORAL_STATION_FRONT -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          stowRequest();
-        }
-      }
-      case INTAKE_CORAL_FLOOR_UPRIGHT,
-          INTAKE_CORAL_FLOOR_HORIZONTAL,
-          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          intakeFloorAlgaeRequest();
-        }
-      }
-      case CORAL_L1_3_PLACE -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          processorWaitingRequest();
-        }
-      }
-      case CORAL_L2_1_APPROACH -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          intakeAlgaeL2Request();
-        }
-      }
-      case CORAL_L3_1_APPROACH -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          intakeAlgaeL3Request();
-        }
-      }
-      case CORAL_L4_1_APPROACH -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          algaeNetRequest();
-        }
-      }
-      case NET_BACK_WAITING,
-          NET_BACK_PREPARE_TO_SCORE,
-          NET_FORWARD_WAITING,
-          NET_FORWARD_PREPARE_TO_SCORE -> {
-        if (newMode == GamePieceMode.CORAL) {
-          l4CoralApproachRequest();
-        }
-      }
-      case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
-        if (newMode == GamePieceMode.CORAL) {
-          l1CoralLineupRequest();
-        }
-      }
+      // Switch straight from L4 coral scoring to intaking reef algae
       case CORAL_CENTERED_L4_4_RELEASE, CORAL_DISPLACED_L4_4_RELEASE -> {
-        if (newMode == GamePieceMode.ALGAE) {
-          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
-            intakeAlgaeL3Request();
-          } else {
-            intakeAlgaeL2Request();
-          }
+        algaeMode = newAlgaeActive;
+        if (algaeMode) {
+          intakeReefAlgaeRequest();
+        } else {
+          l4CoralReleaseRequest();
         }
       }
+      default -> {}
     }
   }
 
   public void forceIdleNoGp() {
     setStateFromRequest(RobotState.IDLE_NO_GP);
+    lights.setState(LightsState.idleNoGp(algaeMode));
+  }
+
+  public void intakeReefAlgaeRequest() {
+    algaeMode = true;
+    if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+      setStateFromRequest(RobotState.INTAKE_ALGAE_L3);
+    } else {
+      setStateFromRequest(RobotState.INTAKE_ALGAE_L2);
+    }
   }
 
   public void stowRequest() {
-    if (gamePieceMode == GamePieceMode.CORAL) {
-      if (intake.getHasGP()) {
-        setStateFromRequest(RobotState.IDLE_CORAL);
-      } else {
-        setStateFromRequest(RobotState.IDLE_NO_GP);
-        lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
+    switch (getState()) {
+      case INTAKE_ALGAE_FLOOR, INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        // We are cancelling intaking and want to stow instead
+        // Because we are using algae, we can't rely on the sensors to detect a game piece
+
+        if (getState() == RobotState.INTAKE_ALGAE_FLOOR) {
+          forceIdleNoGp();
+        }
       }
-    } else {
-      // Can't use intake.getHasGP() because algae doesn't trigger the sensors
-      setStateFromRequest(RobotState.IDLE_ALGAE);
+      default -> {
+        if (algaeMode) {
+          // We know that if we're in this branch of the switch statement we are holding an algae
+          setStateFromRequest(RobotState.IDLE_ALGAE);
+        } else if (intake.getHasGP()) {
+          // We are holding a coral
+          setStateFromRequest(RobotState.IDLE_CORAL);
+        } else {
+          forceIdleNoGp();
+        }
+      }
     }
   }
 
   public void intakeFloorRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       intakeFloorAlgaeRequest();
     } else if (!(intake.getLeftSensor() || intake.getRightSensor())) {
       intakeFloorCoralHorizontalRequest();
@@ -1288,7 +1225,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeAssistFloorRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       intakeFloorAlgaeRequest();
     } else {
       intakeAssistFloorCoralHorizontalRequest();
@@ -1296,7 +1233,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeFloorAlgaeRequest() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1310,7 +1247,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeFloorCoralHorizontalRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1324,7 +1261,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeAssistFloorCoralHorizontalRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1338,21 +1275,24 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeStationRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ROLL,
-          REHOME_WRIST -> {}
-      default -> setStateFromRequest(RobotState.INTAKE_STATION_APPROACH);
+    if (algaeMode) {
+      intakeReefAlgaeRequest();
+    } else {
+      switch (getState()) {
+        case CLIMBING_1_LINEUP,
+            CLIMBING_2_HANGING,
+            CLIMBING_3_HANGING_2,
+            CLIMBING_4_HANGING_3,
+            REHOME_ELEVATOR,
+            REHOME_ROLL,
+            REHOME_WRIST -> {}
+        default -> setStateFromRequest(RobotState.INTAKE_STATION_APPROACH);
+      }
     }
   }
 
   public void lowLineupRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       processorWaitingRequest();
     } else {
       l1CoralLineupRequest();
@@ -1360,7 +1300,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void processorWaitingRequest() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1374,7 +1314,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l1CoralLineupRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1388,7 +1328,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l2LineupRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       intakeAlgaeL2Request();
     } else {
       l2CoralApproachRequest();
@@ -1396,7 +1336,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void intakeAlgaeL2Request() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1410,7 +1350,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l2CoralApproachRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1424,7 +1364,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l3LineupRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       intakeAlgaeL3Request();
     } else {
       l3CoralApproachRequest();
@@ -1432,7 +1372,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void intakeAlgaeL3Request() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1446,7 +1386,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l3CoralApproachRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1460,7 +1400,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l4CoralScoreRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
@@ -1472,7 +1412,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l4coralPlaceAndReleaseRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
@@ -1484,7 +1424,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l4CoralReleaseRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
       default ->
@@ -1496,7 +1436,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void highApproachRequest() {
-    if (gamePieceMode == GamePieceMode.ALGAE) {
+    if (algaeMode) {
       algaeNetRequest();
     } else {
       l4CoralApproachRequest();
@@ -1513,7 +1453,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void algaeNetForwardRequest() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1527,7 +1467,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void algaeNetBackRequest() {
-    gamePieceMode = GamePieceMode.ALGAE;
+    algaeMode = true;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1541,7 +1481,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l4CoralApproachRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1555,7 +1495,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l4CoralLineupRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
@@ -1573,7 +1513,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void preloadCoralRequest() {
-    gamePieceMode = GamePieceMode.CORAL;
+    algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,

@@ -22,7 +22,6 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.robot_manager.GamePieceMode;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionBox;
@@ -243,13 +242,9 @@ public class Robot extends TimedRobot {
     hardware.driverController.povDown().onTrue(robotCommands.climbDownCommand());
     hardware
         .driverController
-        .povLeft()
-        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.CORAL));
-    hardware
-        .driverController
         .povRight()
-        .onTrue(robotCommands.setGamepieceModeCommand(GamePieceMode.ALGAE))
-        .onFalse(robotCommands.setGamepieceModeCommand(GamePieceMode.CORAL));
+        .onTrue(robotCommands.setAlgaeModeCommand(true))
+        .onFalse(robotCommands.setAlgaeModeCommand(false));
     hardware.driverController.start().onTrue(robotCommands.unjamCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
