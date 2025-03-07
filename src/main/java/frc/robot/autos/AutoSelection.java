@@ -6,6 +6,7 @@ import frc.robot.autos.auto_path_commands.blue.BluePushPartnerAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece2IKLAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece5FDC;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
+import frc.robot.autos.auto_path_commands.red.RedFourPiece2IKLGroundAuto;
 import frc.robot.autos.auto_path_commands.red.RedFrontThreePiece2IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2IKLAuto;
@@ -17,6 +18,8 @@ public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
   // FOUR_PIECE_2IJK(RedFourPiece2IJKLAuto::new, BlueFourPiece2IJKLAuto::new),
   PUSH_PARTNER(RedPushPartnerAuto::new, BluePushPartnerAuto::new),
+  //TODO: MAKE BLUE VERSION
+  FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IKLGroundAuto::new, BlueThreePiece2IKLAuto::new),
   // FOUR_PIECE_5FEDC(RedFourPiece5FEDC::new, BlueFourPiece5FEDC::new),
   THREE_PIECE_2IKL(RedThreePiece2IKLAuto::new, BlueThreePiece2IKLAuto::new),
   FRONT_THREE_PIECE_2IKL(RedFrontThreePiece2IKLAuto::new, BlueFrontThreePiece2IKLAuto::new),

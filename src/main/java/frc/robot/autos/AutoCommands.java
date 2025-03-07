@@ -75,6 +75,16 @@ public class AutoCommands {
         || robotManager.getState() == RobotState.SMART_STOW_2;
   }
 
+  /**
+   *
+   * @deprecated Use {@link #hasCoral()} instead
+   */
+  @Deprecated
+  public boolean isIdleCoral(){
+      return robotManager.getState() == RobotState.IDLE_CORAL;
+
+  }
+
   public boolean hasCoral() {
     return robotManager.getState() == RobotState.IDLE_CORAL;
   }

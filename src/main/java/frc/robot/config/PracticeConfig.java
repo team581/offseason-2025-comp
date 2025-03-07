@@ -205,6 +205,8 @@ class PracticeConfig {
                           .withStatorCurrentLimit(10)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(10)),
+              -96.5,
+              91,
               9,
               95),
           new ClimberConfig(
