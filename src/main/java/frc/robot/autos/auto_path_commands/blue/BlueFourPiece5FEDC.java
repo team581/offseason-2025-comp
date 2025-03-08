@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.autos.AutoPoint;
 import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
@@ -32,7 +33,7 @@ public class BlueFourPiece5FEDC extends BaseAuto {
   protected Command createAutoCommand() {
     return Commands.sequence(
         Commands.runOnce(robotManager::rehomeRollRequest),
-        // SCORE L4 ON I
+        // SCORE L4 ON F
         trailblazer
             .followSegment(
                 new AutoSegment(
@@ -43,7 +44,10 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                         autoCommands
                             .preloadCoralAfterRollHomed()
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_F))),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                    new AutoPoint(
+                        () ->
+                            robotManager.autoAlign.getUsedScoringPose(
+                                ReefPipe.PIPE_F, ReefPipeLevel.L4))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -66,7 +70,7 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                 false)
             .until(autoCommands::isSmartStowing),
 
-        // SCORE L4 ON J
+        // SCORE L4 ON E
         trailblazer
             .followSegment(
                 new AutoSegment(
@@ -76,7 +80,10 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                         autoCommands.l4WarmupCommand(ReefPipe.PIPE_E),
                         INTAKING_CONSTRAINTS),
                     new AutoPoint(new Pose2d(5.304, 6.497, Rotation2d.fromDegrees(-60.0))),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                    new AutoPoint(
+                        () ->
+                            robotManager.autoAlign.getUsedScoringPose(
+                                ReefPipe.PIPE_E, ReefPipeLevel.L4))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -96,7 +103,7 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                 false)
             .until(autoCommands::isSmartStowing),
 
-        // SCORE L4 ON K
+        // SCORE L4 ON D
         autoCommands
             .l4WarmupCommand(ReefPipe.PIPE_D)
             .alongWith(
@@ -107,7 +114,10 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(3.044, 6.147, Rotation2d.fromDegrees(-133.277))),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                            new AutoPoint(
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_D, ReefPipeLevel.L4))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -127,7 +137,7 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                 false)
             .until(autoCommands::isSmartStowing),
 
-        // SCORE L4 ON L
+        // SCORE L4 ON C
         autoCommands
             .l4WarmupCommand(ReefPipe.PIPE_C)
             .alongWith(
@@ -138,7 +148,10 @@ public class BlueFourPiece5FEDC extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(2.596, 6.079, Rotation2d.fromDegrees(-134.931))),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                            new AutoPoint(
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_C, ReefPipeLevel.L4))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),

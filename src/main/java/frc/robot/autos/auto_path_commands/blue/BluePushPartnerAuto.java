@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.autos.AutoPoint;
 import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
@@ -52,7 +53,9 @@ public class BluePushPartnerAuto extends BaseAuto {
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I)),
                         new AutoConstraintOptions(1.5, 57, 4, 30)),
                     new AutoPoint(
-                        robotManager.autoAlign::getUsedScoringPose,
+                        () ->
+                            robotManager.autoAlign.getUsedScoringPose(
+                                ReefPipe.PIPE_I, ReefPipeLevel.L4),
                         new AutoConstraintOptions(1.5, 57, 4, 30))),
                 false)
             .until(autoCommands::alignedForScore),
@@ -92,7 +95,9 @@ public class BluePushPartnerAuto extends BaseAuto {
                                 new AutoConstraintOptions(1.5, 57, 4, 30)),
                             // REEF PIPE K
                             new AutoPoint(
-                                robotManager.autoAlign::getUsedScoringPose,
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_K, ReefPipeLevel.L4),
                                 new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
                     .until(autoCommands::alignedForScore)),
@@ -130,7 +135,9 @@ public class BluePushPartnerAuto extends BaseAuto {
                                 new AutoConstraintOptions(1.5, 57, 4, 30)),
                             // REEF PIPE L
                             new AutoPoint(
-                                robotManager.autoAlign::getUsedScoringPose,
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_L, ReefPipeLevel.L4),
                                 new AutoConstraintOptions(1.5, 57, 4, 30))),
                         false)
                     .until(autoCommands::alignedForScore)),

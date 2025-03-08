@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.autos.AutoPoint;
 import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
@@ -43,7 +44,10 @@ public class BlueFourPiece2IJKLAuto extends BaseAuto {
                         autoCommands
                             .preloadCoralAfterRollHomed()
                             .andThen(autoCommands.l4WarmupCommand(ReefPipe.PIPE_I))),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                    new AutoPoint(
+                        () ->
+                            robotManager.autoAlign.getUsedScoringPose(
+                                ReefPipe.PIPE_I, ReefPipeLevel.L4))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -74,7 +78,10 @@ public class BlueFourPiece2IJKLAuto extends BaseAuto {
                         autoCommands.l4WarmupCommand(ReefPipe.PIPE_J),
                         INTAKING_CONSTRAINTS),
                     new AutoPoint(new Pose2d(5.304, 1.244, Rotation2d.fromDegrees(120))),
-                    new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                    new AutoPoint(
+                        () ->
+                            robotManager.autoAlign.getUsedScoringPose(
+                                ReefPipe.PIPE_J, ReefPipeLevel.L4))),
                 false)
             .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -104,7 +111,10 @@ public class BlueFourPiece2IJKLAuto extends BaseAuto {
                             SCORING_CONSTRAINTS,
                             new AutoPoint(new Pose2d(3.044, 1.903, Rotation2d.fromDegrees(47))),
                             // REEF PIPE K
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                            new AutoPoint(
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_K, ReefPipeLevel.L4))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
@@ -134,7 +144,10 @@ public class BlueFourPiece2IJKLAuto extends BaseAuto {
                             SCORING_CONSTRAINTS,
                             new AutoPoint(new Pose2d(2.596, 1.971, Rotation2d.fromDegrees(46))),
                             // REEF PIPE L
-                            new AutoPoint(robotManager.autoAlign::getUsedScoringPose)),
+                            new AutoPoint(
+                                () ->
+                                    robotManager.autoAlign.getUsedScoringPose(
+                                        ReefPipe.PIPE_L, ReefPipeLevel.L4))),
                         false)
                     .until(autoCommands::alignedForScore)),
         autoCommands.l4ScoreAndReleaseCommand(),
