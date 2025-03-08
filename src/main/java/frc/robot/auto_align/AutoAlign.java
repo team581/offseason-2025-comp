@@ -214,6 +214,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return usedScoringPose;
   }
 
+  public Pose2d getUsedScoringPose(ReefPipe pipe) {
+    return tagAlign.getUsedScoringPose(pipe);
+  }
+
+  public Pose2d getUsedScoringPose(ReefPipe pipe, ReefPipeLevel level) {
+    setScoringLevel(level);
+    return getUsedScoringPose(pipe);
+  }
+
   public void setDriverPoseOffset(Translation2d offset) {
     tagAlign.setDriverPoseOffset(offset);
   }
