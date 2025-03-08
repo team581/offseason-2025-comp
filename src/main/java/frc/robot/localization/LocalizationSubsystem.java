@@ -16,6 +16,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.DistanceAngle;
@@ -56,6 +57,10 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
   public Pose2d getPose() {
     return swerve.getDrivetrainState().Pose;
+  }
+
+  public Pose2d getLookaheadPose(double lookahead) {
+    return MathHelpers.poseLookahead(getPose(), swerve.getFieldRelativeSpeeds(), lookahead);
   }
 
   public Pose2d getPose(double timestamp) {
