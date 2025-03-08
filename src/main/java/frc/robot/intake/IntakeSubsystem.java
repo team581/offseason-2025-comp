@@ -135,12 +135,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         bottomMotorCoralDetection.reset();
       }
       case SCORE_ALGAE_NET_FORWARD -> {
-        topMotor.setVoltage(-10.0);
-        bottomMotor.setVoltage(-10.0);
+        topMotor.setVoltage(-3.0);
+        bottomMotor.setVoltage(-3.0);
       }
       case SCORE_ALGAE_NET_BACK -> {
-        topMotor.setVoltage(-10.0);
-        bottomMotor.setVoltage(-10.0);
+        topMotor.setVoltage(-3.0);
+        bottomMotor.setVoltage(-3.0);
       }
       case SCORE_ALGAE_PROCESSOR -> {
         topMotor.setVoltage(-1.0);
