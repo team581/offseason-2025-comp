@@ -19,7 +19,10 @@ public class GamePieceDetectionUtil {
 
           // Positive-Up
           Units.inchesToMeters(36.09),
-          new Rotation3d(Units.degreesToRadians(-5), Units.degreesToRadians(32.5), Units.degreesToRadians(-15)));
+          new Rotation3d(
+              Units.degreesToRadians(-5),
+              Units.degreesToRadians(32.5),
+              Units.degreesToRadians(-15)));
 
   public static Translation2d calculateFieldRelativeTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
@@ -33,11 +36,12 @@ public class GamePieceDetectionUtil {
 
     double thetaX = Units.degreesToRadians(visionResult.tx());
     double thetaY = Units.degreesToRadians(visionResult.ty());
-    double hypot =Math.copySign(Math.hypot(thetaX, thetaY), thetaX) ;
+    double hypot = Math.copySign(Math.hypot(thetaX, thetaY), thetaX);
     double thetaRelativeToCenter = Math.atan(thetaY / thetaX);
-    double adjustedRelativeToCenter = thetaRelativeToCenter + LIMELIGHT_POSE_TO_ROBOT.getRotation().getX();
-    double newThetaX =  -1 * (hypot*Math.cos(adjustedRelativeToCenter));
-    double newThetaY = hypot*Math.sin(adjustedRelativeToCenter);
+    double adjustedRelativeToCenter =
+        thetaRelativeToCenter + LIMELIGHT_POSE_TO_ROBOT.getRotation().getX();
+    double newThetaX = -1 * (hypot * Math.cos(adjustedRelativeToCenter));
+    double newThetaY = hypot * Math.sin(adjustedRelativeToCenter);
 
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - newThetaY;
 

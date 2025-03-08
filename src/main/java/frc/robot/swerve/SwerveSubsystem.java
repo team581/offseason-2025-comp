@@ -282,18 +282,16 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
         }
       }
       case INTAKE_ASSIST_CORAL_TELEOP -> {
-
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(
-                      teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
-                  .withVelocityY(
-                      teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
-                  .withRotationalRate(
-                      teleopSpeeds.omegaRadiansPerSecond
-                          + coralAssistSpeedsOffset.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-        
+        drivetrain.setControl(
+            drive
+                .withVelocityX(
+                    teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
+                .withVelocityY(
+                    teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
+                .withRotationalRate(
+                    teleopSpeeds.omegaRadiansPerSecond
+                        + coralAssistSpeedsOffset.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
       }
       case REEF_ALIGN_TELEOP -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {

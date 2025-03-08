@@ -59,17 +59,17 @@ public class BlueFourPiece5FDCGround extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(5.418, 2.243, Rotation2d.fromDegrees(45)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                        new AutoPoint(
-                          () ->
-                              robotManager
-                                  .coralMap
-                                  .getBestCoral()
-                                  .orElse(new Pose2d(2.906, 2.031, Rotation2d.fromDegrees(-145.0))),
-                          Commands.runOnce(
-                              () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
-                          INTAKING_CONSTRAINTS)),
-                  false)
-              .raceWith(waitForGroundIntakeDone()),
+                    new AutoPoint(
+                        () ->
+                            robotManager
+                                .coralMap
+                                .getBestCoral()
+                                .orElse(new Pose2d(2.906, 2.031, Rotation2d.fromDegrees(-145.0))),
+                        Commands.runOnce(
+                            () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
+                        INTAKING_CONSTRAINTS)),
+                false)
+            .raceWith(waitForGroundIntakeDone()),
 
         // SCORE L4 ON D
         autoCommands
@@ -101,17 +101,17 @@ public class BlueFourPiece5FDCGround extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(3.266, 2.087, Rotation2d.fromDegrees(47)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                        new AutoPoint(
-                          () ->
-                              robotManager
-                                  .coralMap
-                                  .getBestCoral()
-                                  .orElse(new Pose2d(2.906, 2.031, Rotation2d.fromDegrees(-145.0))),
-                          Commands.runOnce(
-                              () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
-                          INTAKING_CONSTRAINTS)),
-                  false)
-              .raceWith(waitForGroundIntakeDone()),
+                    new AutoPoint(
+                        () ->
+                            robotManager
+                                .coralMap
+                                .getBestCoral()
+                                .orElse(new Pose2d(2.906, 2.031, Rotation2d.fromDegrees(-145.0))),
+                        Commands.runOnce(
+                            () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
+                        INTAKING_CONSTRAINTS)),
+                false)
+            .raceWith(waitForGroundIntakeDone()),
 
         // SCORE L4 ON C
         autoCommands
