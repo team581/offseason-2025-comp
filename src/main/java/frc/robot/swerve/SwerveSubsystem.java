@@ -282,19 +282,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
         }
       }
       case INTAKE_ASSIST_CORAL_TELEOP -> {
-        if (teleopSpeeds.omegaRadiansPerSecond == 0) {
-          SNAP_CONTROLLER.setMaxOutput(
-              TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
-          drivetrain.setControl(
-              driveToAngle
-                  .withVelocityX(
-                      teleopSpeeds.vxMetersPerSecond + coralAssistSpeedsOffset.vxMetersPerSecond)
-                  .withVelocityY(
-                      teleopSpeeds.vyMetersPerSecond + coralAssistSpeedsOffset.vyMetersPerSecond)
-                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-
-        } else {
 
           drivetrain.setControl(
               drive
@@ -306,7 +293,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                       teleopSpeeds.omegaRadiansPerSecond
                           + coralAssistSpeedsOffset.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-        }
+        
       }
       case REEF_ALIGN_TELEOP -> {
         if (teleopSpeeds.omegaRadiansPerSecond == 0) {
@@ -446,11 +433,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
-  public void coralAlignmentDriveRequest(double snapAngle) {
-    setSnapToAngle(snapAngle);
+  public void coralAlignmentDriveRequest() {
 
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO_SNAPS);
+      setStateFromRequest(SwerveState.AUTO);
     } else {
       setStateFromRequest(SwerveState.INTAKE_ASSIST_CORAL_TELEOP);
     }

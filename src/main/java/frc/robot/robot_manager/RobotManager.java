@@ -998,7 +998,7 @@ public class RobotManager extends StateMachine<RobotState> {
           swerve.setFieldRelativeCoralAssistSpeedsOffset(
               IntakeAssistUtil.getAssistSpeedsFromPose(
                   maybeBestCoralMapTranslation.get(), localization.getLookaheadPose(0.4)));
-          swerve.coralAlignmentDriveRequest(coralIntakeAssistAngle);
+          swerve.coralAlignmentDriveRequest();
         } else {
           swerve.normalDriveRequest();
         }
@@ -1065,12 +1065,7 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
     maybeBestCoralMapTranslation = coralMap.getBestCoral();
-    if (maybeBestCoralMapTranslation.isPresent()) {
-      coralIntakeAssistAngle =
-          IntakeAssistUtil.getIntakeAssistAngle(
-              maybeBestCoralMapTranslation.get().getTranslation(),
-              localization.getLookaheadPose(0.2));
-    }
+
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
