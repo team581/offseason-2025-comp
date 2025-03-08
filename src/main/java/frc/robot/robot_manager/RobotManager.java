@@ -994,13 +994,16 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0);
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
-        if (maybeBestCoralMapTranslation.isPresent()) {
+        if ( DriverStation.isTeleop()&&maybeBestCoralMapTranslation.isPresent()) {
           Pose2d lookaheadPose = localization.getLookaheadPose(0.5);
           DogLog.log("IntakeAssist/LookaheadPose", lookaheadPose);
           swerve.setFieldRelativeCoralAssistSpeedsOffset(
               IntakeAssistUtil.getAssistSpeedsFromPose(
                   maybeBestCoralMapTranslation.get(), lookaheadPose));
           swerve.coralAlignmentDriveRequest();
+        } else if (DriverStation.isAutonomous()) {
+          var coralSnapAngle = IntakeAssistUtil.getIntakeAssistAngle(maybeBestCoralMapTranslation.get().getTranslation(), localization.getPose());
+          swerve.snapsDriveRequest(coralSnapAngle);
         } else {
           swerve.normalDriveRequest();
         }
