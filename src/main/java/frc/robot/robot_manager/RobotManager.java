@@ -1112,7 +1112,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     autoAlign.setScoringLevel(scoringLevel);
     autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
-    if (vision.isAnyScoringTagLimelightOnline()) {
+    if (vision.isAnyScoringTagLimelightOnline() || DriverStation.isAutonomous()) {
       var idealAlignSpeeds =
           switch (getState()) {
             case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> autoAlign.getAlgaeAlignSpeeds();
