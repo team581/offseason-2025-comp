@@ -242,6 +242,7 @@ public class Robot extends TimedRobot {
     hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
     hardware.driverController.povDown().onTrue(robotCommands.climbDownCommand());
+    hardware.driverController.povLeft().onTrue(robotCommands.setAlgaeModeCommand(false));
     hardware
         .driverController
         .povRight()
