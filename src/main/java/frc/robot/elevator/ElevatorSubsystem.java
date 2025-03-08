@@ -7,6 +7,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -160,10 +161,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       default -> {}
     }
 
-    // if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-    //   leftMotor.setControl(coastRequest);
-    //   rightMotor.setControl(coastRequest);
-    // }
+    if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+      leftMotor.setControl(coastRequest);
+      rightMotor.setControl(coastRequest);
+    }
 
     var usedHeight =
         getState() == ElevatorState.COLLISION_AVOIDANCE
