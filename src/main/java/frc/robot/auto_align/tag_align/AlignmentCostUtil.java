@@ -6,7 +6,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
-import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.MathHelpers;
@@ -26,7 +25,7 @@ public class AlignmentCostUtil {
    * @param robotVelocity The robot's current velocity (field relative)
    */
   public static double getAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
-    
+
     var distanceCost = target.getTranslation().getDistance(robotPose.getTranslation());
     if (target.getTranslation().equals(Translation2d.kZero)
         || robotPose.getTranslation().equals(Translation2d.kZero)) {

@@ -1067,7 +1067,8 @@ public class RobotManager extends StateMachine<RobotState> {
     if (maybeBestCoralMapTranslation.isPresent()) {
       coralIntakeAssistAngle =
           IntakeAssistUtil.getIntakeAssistAngle(
-              maybeBestCoralMapTranslation.get().getTranslation(), localization.getLookaheadPose(0.2));
+              maybeBestCoralMapTranslation.get().getTranslation(),
+              localization.getLookaheadPose(0.2));
     }
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
