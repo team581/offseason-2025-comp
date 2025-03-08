@@ -995,9 +995,11 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         if (maybeBestCoralMapTranslation.isPresent()) {
+          Pose2d lookaheadPose = localization.getLookaheadPose(0.5);
+          DogLog.log("IntakeAssist/LookaheadPose", lookaheadPose);
           swerve.setFieldRelativeCoralAssistSpeedsOffset(
               IntakeAssistUtil.getAssistSpeedsFromPose(
-                  maybeBestCoralMapTranslation.get(), localization.getLookaheadPose(0.4)));
+                  maybeBestCoralMapTranslation.get(), lookaheadPose));
           swerve.coralAlignmentDriveRequest();
         } else {
           swerve.normalDriveRequest();
