@@ -131,7 +131,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
     var options =
         new AutoConstraintOptions()
-            .withCollisionAvoidance(false)
             .withMaxAngularAcceleration(0)
             .withMaxAngularVelocity(0)
             .withMaxLinearAcceleration(0)

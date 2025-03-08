@@ -14,14 +14,6 @@ public record AutoConstraintOptions(
     this(4.75, 71.5, 8.5, 35.2);
   }
 
-  public AutoConstraintOptions withCollisionAvoidance(boolean collisionAvoidance) {
-    return new AutoConstraintOptions(
-        maxLinearVelocity(),
-        maxAngularVelocity(),
-        maxLinearAcceleration(),
-        maxAngularAcceleration());
-  }
-
   public AutoConstraintOptions withMaxLinearVelocity(double maxLinearVelocity) {
     return new AutoConstraintOptions(
         maxLinearVelocity, maxAngularVelocity(), maxLinearAcceleration(), maxAngularAcceleration());
