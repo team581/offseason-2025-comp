@@ -51,7 +51,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
       Comparator.comparingDouble(
           target ->
               AlignmentCostUtil.getCoralAlignCost(
-                  target, localization.getLookaheadPose(0.4), swerve.getFieldRelativeSpeeds()));
+                  target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
