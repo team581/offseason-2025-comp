@@ -13,7 +13,6 @@ public enum WristState {
   CORAL_SCORE_RELEASE_L1(0.0),
 
   // Centered coral positions
-  // TODO: Measured 46.23° during field calibration
   CORAL_SCORE_CENTERED_LINEUP_L2(24.0),
   CORAL_SCORE_CENTERED_PLACING_L2(9.0),
   CORAL_SCORE_CENTERED_RELEASE_L2(4.0),
