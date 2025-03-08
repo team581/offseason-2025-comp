@@ -6,9 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 // computation
 record ReefPipePoses(Pose2d base, Pose2d L1, Pose2d L2, Pose2d L3, Pose2d L4) {
   private static Pose2d offset(Pose2d base, ReefPipeLevel level) {
-    return new Pose2d(
-        base.getTranslation().plus(level.offset.getTranslation().rotateBy(base.getRotation())),
-        base.getRotation());
+    return base.transformBy(level.offset);
   }
 
   public ReefPipePoses(Pose2d base) {
