@@ -93,12 +93,6 @@ public class GamePieceDetectionUtil {
     return robotRelativeTranslation;
   }
 
-  private static Translation2d calculateRobotRelativeLollipopTranslationFromCamera(
-      GamePieceResult visionResult) {
-    return calculateRobotRelativeLollipopTranslationFromCamera(
-        visionResult, LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET);
-  }
-
   private static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
 
@@ -146,26 +140,9 @@ public class GamePieceDetectionUtil {
         .plus(robotPose.getTranslation());
   }
 
-  private static Translation2d calculateFieldRelativePoseToIntake(
-      GamePieceResult visionResult, Pose2d robotPose) {
-    var robotRelativeGamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
-    var adjustedTranslationForIntake =
-        new Translation2d(
-            robotRelativeGamePiecePose.getX() - 0.762, robotRelativeGamePiecePose.getY());
-    return robotRelativeToFieldRelativeGamePiecePose(robotPose, adjustedTranslationForIntake);
-  }
-
   public static Translation2d calculateRobotRelativePoseToIntake(
       GamePieceResult visionResult, double offset) {
     var robotRelativeGamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
-    return new Translation2d(
-        robotRelativeGamePiecePose.getX() - offset, robotRelativeGamePiecePose.getY());
-  }
-
-  private static Translation2d calculateRobotRelativeLollipopPoseToIntake(
-      GamePieceResult visionResult, double offset) {
-    var robotRelativeGamePiecePose =
-        calculateRobotRelativeLollipopTranslationFromCamera(visionResult);
     return new Translation2d(
         robotRelativeGamePiecePose.getX() - offset, robotRelativeGamePiecePose.getY());
   }
