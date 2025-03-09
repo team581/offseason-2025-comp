@@ -8,7 +8,6 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +20,6 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-import frc.robot.vision.DistanceAngle;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
@@ -104,24 +102,5 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
   public Command getZeroCommand() {
     return Commands.runOnce(() -> resetGyro(FmsSubsystem.isRedAlliance() ? 180 : 0));
-  }
-
-  /**
-   * Get the field relative angle the robot should face in order to be looking directly at the
-   * target pose.
-   */
-  public DistanceAngle getFieldRelativeDistanceAngleToPose(Pose2d target) {
-    DistanceAngle distanceAngleToSpeaker = distanceAngleToTarget(target, getPose());
-
-    return distanceAngleToSpeaker;
-  }
-
-  public static DistanceAngle distanceAngleToTarget(Pose2d target, Pose2d current) {
-    double distance = target.getTranslation().getDistance(current.getTranslation());
-    double angle =
-        Units.radiansToDegrees(
-            Math.atan2(target.getY() - current.getY(), target.getX() - current.getX()));
-
-    return new DistanceAngle(distance, angle, false);
   }
 }

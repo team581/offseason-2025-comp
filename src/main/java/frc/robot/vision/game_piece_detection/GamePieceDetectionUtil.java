@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
@@ -69,13 +68,6 @@ public class GamePieceDetectionUtil {
   public static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult) {
     return calculateRobotRelativeTranslationFromCamera(visionResult, LIMELIGHT_POSE_TO_ROBOT);
-  }
-
-  public static double getRobotRelativeAngleToGamePiece(GamePieceResult visionResult) {
-    var gamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
-    return LocalizationSubsystem.distanceAngleToTarget(
-            new Pose2d(gamePiecePose, Rotation2d.kZero), Pose2d.kZero)
-        .targetAngle();
   }
 
   private static Translation2d robotRelativeToFieldRelativeGamePiecePose(
