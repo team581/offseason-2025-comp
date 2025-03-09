@@ -92,7 +92,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
             -1.0 * (((centerY / CAMERA_IMAGE_HEIGHT) * FOV_VERTICAL) - VERTICAL_TOP_VIEW);
         var maybeCoralPose =
             GamePieceDetectionUtil.calculateFieldRelativeTranslationFromCamera(
-                robotPoseAtCapture, new GamePieceResult(angleX, angleY));
+                robotPoseAtCapture, new GamePieceResult(angleX, angleY, 0));
 
         coralTranslations.add(maybeCoralPose);
       }

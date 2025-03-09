@@ -119,7 +119,11 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
 
-    return Optional.of(new GamePieceResult(coralTX, coralTY));
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+
+    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
   }
 
   private Optional<GamePieceResult> getRawAlgaeResult() {
@@ -139,7 +143,11 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
     DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
 
-    return Optional.of(new GamePieceResult(coralTX, coralTY));
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+
+    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
   }
 
   public void setClosestScoringReefTag(int tagID) {
