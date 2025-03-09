@@ -30,11 +30,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   // TODO: UPDATE THESE TO REAL NUMBERS
   private static final double CAMERA_IMAGE_HEIGHT = 240.0;
-  private static final double CAMERA_IMAGE_WIDTH =320.0;
+  private static final double CAMERA_IMAGE_WIDTH = 320.0;
   private static final double FOV_VERTICAL = 48.9;
   private static final double FOV_HORIZONTAL = 62.5;
-  private static final double HORIZONTAL_LEFT_VIEW = 62.5/2;
-  private static final double VERTICAL_TOP_VIEW = 48.9/2;
+  private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
+  private static final double VERTICAL_TOP_VIEW = 48.9 / 2;
 
   private static final String LIMELIGHT_NAME = "limelight-coral";
   private static final NetworkTableEntry LL_TCORNXY =
