@@ -41,7 +41,7 @@ import java.util.Optional;
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
 
-  private final VisionSubsystem vision;
+  public final VisionSubsystem vision;
   public final ImuSubsystem imu;
 
   public final CoralMap coralMap;
