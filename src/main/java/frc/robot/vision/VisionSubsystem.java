@@ -139,6 +139,10 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return frontCoralLimelight.getCoralResult();
   }
 
+  public Optional<GamePieceResult> getAlgaeResult() {
+    return frontCoralLimelight.getAlgaeResult();
+  }
+
   public boolean isAnyCameraOffline() {
     return frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE

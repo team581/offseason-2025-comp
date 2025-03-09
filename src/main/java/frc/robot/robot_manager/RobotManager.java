@@ -941,7 +941,6 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose());
     DogLog.log(
         "RobotManager/ShouldIntakeForward",

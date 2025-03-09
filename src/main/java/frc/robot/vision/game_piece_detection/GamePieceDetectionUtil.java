@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.intake_assist.IntakeAssistUtil;
+import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
@@ -23,11 +25,86 @@ public class GamePieceDetectionUtil {
               Units.degreesToRadians(32.5),
               Units.degreesToRadians(-15)));
 
+  private static final double CORAL_LENGTH = 11.875;
+  private static final double ALGAE_DIAMETER = 16.25;
+  private static final double algaeToGroundOffset =
+      (CORAL_LENGTH) + (ALGAE_DIAMETER / 2.0); // length of coral + half of diameter of algae
+
+  public static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET =
+      new Pose3d(
+          // Positive-Forward
+          Units.inchesToMeters(11.41),
+          // Positive-Left
+          Units.inchesToMeters(10.22),
+
+          // Positive-Up
+          Units.inchesToMeters(36.09 - algaeToGroundOffset),
+          new Rotation3d(
+              Units.degreesToRadians(-5),
+              Units.degreesToRadians(32.5),
+              Units.degreesToRadians(-15)));
+
   public static Translation2d calculateFieldRelativeTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var robotRelative =
         calculateRobotRelativeTranslationFromCamera(visionResult, LIMELIGHT_POSE_TO_ROBOT);
     return robotRelativeToFieldRelativeGamePiecePose(robotPoseAtCapture, robotRelative);
+  }
+
+  public static Translation2d calculateFieldRelativeLollipopTranslationFromCamera(
+      Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
+    var robotRelative =
+        calculateRobotRelativeLollipopTranslationFromCamera(
+            visionResult, LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET);
+    return robotRelativeToFieldRelativeGamePiecePose(robotPoseAtCapture, robotRelative);
+  }
+
+  public static double getFieldRelativeAngleToGamePiece(
+      Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
+    var gamePiecePose =
+        calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
+    return IntakeAssistUtil.getIntakeAssistAngle(gamePiecePose, robotPoseAtCapture);
+  }
+
+  public static Translation2d calculateRobotRelativeLollipopTranslationFromCamera(
+      GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
+
+    double thetaX = Units.degreesToRadians(visionResult.tx());
+    double thetaY = Units.degreesToRadians(visionResult.ty());
+    double hypot = Math.copySign(Math.hypot(thetaX, thetaY), thetaX);
+    double thetaRelativeToCenter = Math.atan(thetaY / thetaX);
+    double adjustedRelativeToCenter =
+        thetaRelativeToCenter + LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET.getRotation().getX();
+    double newThetaX = -1 * (hypot * Math.cos(adjustedRelativeToCenter));
+    double newThetaY = hypot * Math.sin(adjustedRelativeToCenter);
+
+    double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - newThetaY;
+
+    double yOffset = 0;
+    if (adjustedThetaY == 0) {
+      yOffset = Math.abs(limelightToRobotOffset.getY());
+    } else {
+      yOffset =
+          // .getZ() represents height from floor
+          (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
+              // .getX() is supposed to represent forward and backward distance from center of robot
+              + Math.abs(limelightToRobotOffset.getX());
+    }
+
+    double xOffset = yOffset * Math.tan(newThetaX);
+
+    var cameraRelativeTranslation = new Translation2d(yOffset, xOffset);
+    var robotRelativeTranslation =
+        cameraRelativeTranslation
+            .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))
+            .plus(limelightToRobotOffset.getTranslation().toTranslation2d());
+    return robotRelativeTranslation;
+  }
+
+  public static Translation2d calculateRobotRelativeLollipopTranslationFromCamera(
+      GamePieceResult visionResult) {
+    return calculateRobotRelativeLollipopTranslationFromCamera(
+        visionResult, LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET);
   }
 
   private static Translation2d calculateRobotRelativeTranslationFromCamera(
@@ -89,6 +166,14 @@ public class GamePieceDetectionUtil {
   public static Translation2d calculateRobotRelativePoseToIntake(
       GamePieceResult visionResult, double offset) {
     var robotRelativeGamePiecePose = calculateRobotRelativeTranslationFromCamera(visionResult);
+    return new Translation2d(
+        robotRelativeGamePiecePose.getX() - offset, robotRelativeGamePiecePose.getY());
+  }
+
+  public static Translation2d calculateRobotRelativeLollipopPoseToIntake(
+      GamePieceResult visionResult, double offset) {
+    var robotRelativeGamePiecePose =
+        calculateRobotRelativeLollipopTranslationFromCamera(visionResult);
     return new Translation2d(
         robotRelativeGamePiecePose.getX() - offset, robotRelativeGamePiecePose.getY());
   }
