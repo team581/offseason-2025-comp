@@ -15,8 +15,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -175,13 +173,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
       case INTAKE_ASSIST_ALGAE_TELEOP, INTAKE_ASSIST_CORAL_TELEOP ->
           DriverStation.isAutonomous() ? SwerveState.AUTO : currentState;
-      case REEF_ALIGN_TELEOP, REEF_ALIGN_AUTO ->
-          DriverStation.isAutonomous()
-              ? SwerveState.REEF_ALIGN_AUTO
-              : SwerveState.REEF_ALIGN_TELEOP;
+      case REEF_ALIGN_TELEOP ->
+          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.REEF_ALIGN_TELEOP;
       case REEF_ALIGN_TELEOP_FINE_ADJUST ->
           DriverStation.isAutonomous()
-              ? SwerveState.REEF_ALIGN_AUTO
+              ? SwerveState.AUTO
               : SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
@@ -333,44 +329,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
-      case REEF_ALIGN_AUTO -> {
-        SNAP_CONTROLLER.setMaxOutput(Double.POSITIVE_INFINITY);
-        var wantedSpeeds = autoAlignAutoSpeeds;
-        //  var wantedSpeeds = alignSpeeds.plus(autoSpeeds);
-        var currentTimestamp = Timer.getFPGATimestamp();
-        if (previousTimestamp == 0.0) {
-          previousTimestamp = currentTimestamp - 0.02;
-        }
-        var constrainedWantedSpeeds =
-            AutoConstraintCalculator.constrainVelocityGoal(
-                wantedSpeeds,
-                previousSpeeds,
-                currentTimestamp - previousTimestamp,
-                // Our acceleration limit math is slightly wonky
-                // So we turn it off here since velocity limiting is the good enough
-                AutoConstraintCalculator.getLastUsedConstraints()
-                    .withMaxAngularAcceleration(0)
-                    .withMaxLinearAcceleration(0));
-
-        if (constrainedWantedSpeeds.omegaRadiansPerSecond == 0) {
-          drivetrain.setControl(
-              driveToAngle
-                  .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
-                  .withVelocityY(constrainedWantedSpeeds.vyMetersPerSecond)
-                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                  .withDriveRequestType(DriveRequestType.Velocity));
-        } else {
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(constrainedWantedSpeeds.vxMetersPerSecond)
-                  .withVelocityY(constrainedWantedSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(constrainedWantedSpeeds.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
-        }
-
-        previousSpeeds = getFieldRelativeSpeeds();
-        previousTimestamp = currentTimestamp;
-      }
       case AUTO ->
           drivetrain.setControl(
               drive
@@ -444,7 +402,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     setSnapToAngle(snapAngle);
 
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.REEF_ALIGN_AUTO);
+      setStateFromRequest(SwerveState.AUTO);
     } else {
       setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
     }
