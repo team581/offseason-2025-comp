@@ -238,7 +238,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     if (combinedTagHealth == CameraHealth.OFFLINE) {
       return ReefAlignState.ALL_CAMERAS_DEAD;
     }
-    
+
     if (tagResult.isEmpty()) {
       if (isAligned) {
         return ReefAlignState.NO_TAGS_IN_POSITION;

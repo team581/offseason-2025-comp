@@ -107,7 +107,7 @@ public class TagAlign {
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
     var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
-    var goalSpeeds=  new ChassisSpeeds(xEffort, yEffort, 0.0);
+    var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
     DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
   }
@@ -123,14 +123,14 @@ public class TagAlign {
 
     var goalTranslationUnrotated = new Translation2d();
 
-      goalTranslationUnrotated = scoringTranslationRobotRelative;
+    goalTranslationUnrotated = scoringTranslationRobotRelative;
 
     var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
 
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
     var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
-     var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
+    var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
     DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
   }
