@@ -201,7 +201,7 @@ class CompConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
-                  .withSlot0(new Slot0Configs().withKP(50).withKV(0))
+                  .withSlot0(new Slot0Configs().withKP(50.0).withKV(0.0))
                   .withVoltage(
                       new VoltageConfigs().withPeakForwardVoltage(6.0).withPeakReverseVoltage(-6.0))
                   .withCurrentLimits(
@@ -210,10 +210,10 @@ class CompConfig {
                           .withStatorCurrentLimit(20)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(20)),
-              -96.5,
-              91,
+              -94.31,
+              97.91,
               9,
-              92.4),
+              97.91),
           new ClimberConfig(
               CANIVORE_NAME,
               24,
