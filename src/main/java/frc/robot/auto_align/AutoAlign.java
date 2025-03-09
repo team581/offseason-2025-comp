@@ -236,10 +236,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             frontLeftLimelight.getCameraHealth(), frontRightLimelight.getCameraHealth());
 
     if (combinedTagHealth == CameraHealth.OFFLINE) {
-
-      return ReefAlignState.TAG_CAMERAS_DEAD;
+      return ReefAlignState.ALL_CAMERAS_DEAD;
     }
-
+    
     if (tagResult.isEmpty()) {
       if (isAligned) {
         return ReefAlignState.NO_TAGS_IN_POSITION;

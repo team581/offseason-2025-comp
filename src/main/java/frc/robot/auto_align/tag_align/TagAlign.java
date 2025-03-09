@@ -107,10 +107,9 @@ public class TagAlign {
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
     var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
-    DogLog.log("AutoAlign/ReefAlgae/XEffort", xEffort);
-    DogLog.log("AutoAlign/ReefAlgae/YEffort", yEffort);
-
-    return new ChassisSpeeds(xEffort, yEffort, 0.0);
+    var goalSpeeds=  new ChassisSpeeds(xEffort, yEffort, 0.0);
+    DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
+    return goalSpeeds;
   }
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose, boolean forwardOnly) {
@@ -123,21 +122,16 @@ public class TagAlign {
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
     var goalTranslationUnrotated = new Translation2d();
-    if (forwardOnly) {
-      goalTranslationUnrotated = new Translation2d(scoringTranslationRobotRelative.getX(), 0.0);
-    } else {
+
       goalTranslationUnrotated = scoringTranslationRobotRelative;
-    }
 
     var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
 
     var xEffort = TAG_PID.calculate(-goalTranslation.getX());
     var yEffort = TAG_PID.calculate(-goalTranslation.getY());
 
-    DogLog.log("PurpleAlignment/Tag/XEffort", xEffort);
-    DogLog.log("PurpleAlignment/Tag/YEffort", yEffort);
-    DogLog.log("PurpleAlignment/Tag/ForwardOnly", forwardOnly);
-
-    return new ChassisSpeeds(xEffort, yEffort, 0.0);
+     var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
+    DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
+    return goalSpeeds;
   }
 }
