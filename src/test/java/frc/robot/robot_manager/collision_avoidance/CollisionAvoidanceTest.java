@@ -97,7 +97,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition expectedResult = CollisionBox.BOX_1.safeZone;
     var result = CollisionAvoidance.plan(current, goal);
 
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -114,7 +114,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(56, 135);
     var expectedResult = CollisionBox.BOX_7.safeZone;
     var result = CollisionAvoidance.plan(current, goal);
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -133,7 +133,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(0, 50);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_6.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -142,7 +142,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(100, 40);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_2.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -151,7 +151,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(100, 50);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_5.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -160,7 +160,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(100, 50);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_4.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -169,7 +169,7 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(0, -40);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_2.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 
   @Test
@@ -187,6 +187,6 @@ public class CollisionAvoidanceTest {
     SuperstructurePosition goal = new SuperstructurePosition(0, 33);
     var result = CollisionAvoidance.plan(current, goal);
     var expectedResult = CollisionBox.BOX_2.safeZone;
-    assertEquals(expectedResult, result.get());
+    assertEquals(expectedResult, result.orElseThrow());
   }
 }

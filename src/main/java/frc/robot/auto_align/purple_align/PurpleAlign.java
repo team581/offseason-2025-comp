@@ -32,7 +32,7 @@ public class PurpleAlign {
       return PurpleAlignState.VISIBLE_NOT_CENTERED;
     }
 
-    var result = maybeResult.get();
+    var result = maybeResult.orElseThrow();
 
     if (MathUtil.isNear(0, result.ty(), 0.5)) {
       lastTimeSeen = Timer.getFPGATimestamp();
@@ -54,7 +54,7 @@ public class PurpleAlign {
     if (maybeResult.isEmpty()) {
       return new ChassisSpeeds();
     }
-    var rawAngle = maybeResult.get().ty();
+    var rawAngle = maybeResult.orElseThrow().ty();
     DogLog.log("PurpleAlignment/Purple/RawAngleTY", rawAngle);
     var rawAngleRadians = Units.degreesToRadians(rawAngle);
     var rawAngleTranslation = new Translation2d(0, rawAngleRadians);

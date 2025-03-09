@@ -56,19 +56,19 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var maybeFrontLeftResult = frontLeftLimelight.getTagResult();
 
     if (maybeBottomResult.isPresent()) {
-      tagResult.add(maybeBottomResult.get());
+      tagResult.add(maybeBottomResult.orElseThrow());
     }
 
     if (maybeBackResult.isPresent()) {
-      tagResult.add(maybeBackResult.get());
+      tagResult.add(maybeBackResult.orElseThrow());
     }
 
     if (maybeFrontRightResult.isPresent()) {
-      tagResult.add(maybeFrontRightResult.get());
+      tagResult.add(maybeFrontRightResult.orElseThrow());
     }
 
     if (maybeFrontLeftResult.isPresent()) {
-      tagResult.add(maybeFrontLeftResult.get());
+      tagResult.add(maybeFrontLeftResult.orElseThrow());
     }
   }
 

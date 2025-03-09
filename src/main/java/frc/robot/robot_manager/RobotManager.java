@@ -1723,7 +1723,7 @@ public class RobotManager extends StateMachine<RobotState> {
       elevator.setState(elevatorGoal);
       wrist.setState(wristGoal);
     } else {
-      var intermediaryPosition = maybeIntermediaryPosition.get();
+      var intermediaryPosition = maybeIntermediaryPosition.orElseThrow();
 
       // A collision was detected, so we need to go to an intermediary point
       elevator.setCollisionAvoidanceGoal(intermediaryPosition.elevatorHeight());

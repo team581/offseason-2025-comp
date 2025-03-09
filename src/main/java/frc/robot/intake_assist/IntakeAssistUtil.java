@@ -37,14 +37,14 @@ public class IntakeAssistUtil {
 
     var gamePiecePoseRobotRelative =
         GamePieceDetectionUtil.calculateRobotRelativePoseToIntake(
-            visionResult.get(), INITIAL_LINEUP_DISTANCE_FROM_CORAL);
+            visionResult.orElseThrow(), INITIAL_LINEUP_DISTANCE_FROM_CORAL);
 
     if (greedyIntake
         && gamePiecePoseRobotRelative.getDistance(new Translation2d(0, 0))
             < INITIAL_LINEUP_DISTANCE_THRESHOLD) {
       var gamePiecePoseForwardRobotRelative =
           GamePieceDetectionUtil.calculateRobotRelativePoseToIntake(
-              visionResult.get(), FINAL_SHOVE_DISTANCE_FROM_CORAL);
+              visionResult.orElseThrow(), FINAL_SHOVE_DISTANCE_FROM_CORAL);
 
       var gamePiecePoseForwardRotatedRobot =
           gamePiecePoseForwardRobotRelative.rotateBy(Rotation2d.fromDegrees(robotHeading));

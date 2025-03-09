@@ -113,7 +113,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
             .min(bestCoralComparator);
 
     if (bestCoral.isPresent()) {
-      DogLog.log("CoralMap/BestCoral", bestCoral.get());
+      DogLog.log("CoralMap/BestCoral", bestCoral.orElseThrow());
     }
 
     return bestCoral;
@@ -160,7 +160,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
                           b.coralTranslation().getDistance(visionCoral)));
 
       if (match.isPresent()) {
-        coralMap.remove(match.get());
+        coralMap.remove(match.orElseThrow());
       }
 
       coralMap.add(new CoralMapElement(newCoralExpiry, visionCoral));
