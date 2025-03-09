@@ -5,7 +5,6 @@ public enum LimelightState {
   CLOSEST_REEF_TAG(1),
   STATION_TAGS(1),
   CORAL(2),
-  PURPLE(3),
   ALGAE(4);
 
   final int pipelineIndex;

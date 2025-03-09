@@ -1111,7 +1111,7 @@ public class RobotManager extends StateMachine<RobotState> {
           default -> ReefPipeLevel.BASE;
         };
 
-    DogLog.log("PurpleAlignment/UsedPose", autoAlign.getUsedScoringPose());
+    DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
 
     vision.setClosestScoringReefTag(nearestReefSide.getTagID());
 
@@ -1736,9 +1736,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private LightsState getLightStateForScoring() {
     return switch (autoAlign.getReefAlignState()) {
-      case TAG_CAMERAS_DEAD, PURPLE_CAMERA_DEAD -> LightsState.ERROR;
-      // TODO: Once purple is implemented, only say we're ready once purple is aligned
-      case HAS_TAGS_IN_POSITION, HAS_PURPLE_ALIGNED -> LightsState.SCORE_ALIGN_READY;
+      case ALL_CAMERAS_DEAD-> LightsState.ERROR;
+      case HAS_TAGS_IN_POSITION -> LightsState.SCORE_ALIGN_READY;
       default -> LightsState.SCORE_ALIGN_NOT_READY;
     };
   }

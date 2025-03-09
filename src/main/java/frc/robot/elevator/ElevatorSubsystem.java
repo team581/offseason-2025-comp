@@ -29,6 +29,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double leftMotorCurrent;
   private double rightMotorCurrent;
 
+  private final double RAISE_WRIST_EARLY_THRESHOLD = 25.0;
+
   private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
 
   private final MotionMagicVoltage positionRequest =
@@ -200,7 +202,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       // This state is only used when it's safe to cancel the move partway
       // Since the next state is same setpoint, different wrist angle
       case CORAL_CENTERED_L4_RAISE_WRIST, CORAL_DISPLACED_L4_RAISE_WRIST ->
-          averageMeasuredHeight > getState().height - 8;
+          averageMeasuredHeight > getState().height - RAISE_WRIST_EARLY_THRESHOLD;
       case INTAKING_CORAL_STATION_BACK, INTAKING_CORAL_STATION_FRONT ->
           MathUtil.isNear(
               getState().height + getStationIntakeSide().offset, averageMeasuredHeight, TOLERANCE);
