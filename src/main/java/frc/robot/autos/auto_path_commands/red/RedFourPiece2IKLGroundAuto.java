@@ -67,7 +67,7 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                             robotManager
                                 .coralMap
                                 .getBestCoral()
-                                .orElse(new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(-15.0))),
+                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
                         Commands.runOnce(
                             () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
                         INTAKING_CONSTRAINTS)),
@@ -111,7 +111,7 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                             robotManager
                                 .coralMap
                                 .getBestCoral()
-                                .orElse(new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(-15.0))),
+                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
                         Commands.runOnce(
                             () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
                         INTAKING_CONSTRAINTS)),
@@ -155,7 +155,7 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                             robotManager
                                 .coralMap
                                 .getBestCoral()
-                                .orElse(new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(-15.0))),
+                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
                         Commands.runOnce(
                             () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
                         INTAKING_CONSTRAINTS)),
