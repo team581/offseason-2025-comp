@@ -41,8 +41,10 @@ class CompConfig {
               16,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(60))
-                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(40))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(60)
+                          .withSupplyCurrentLimit(40))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -66,6 +68,10 @@ class CompConfig {
                                       * (2.0 / 1.0)
                                       * (Math.PI * 1.274)))),
               new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(60)
+                          .withSupplyCurrentLimit(40))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive)
@@ -102,8 +108,10 @@ class CompConfig {
               new Debouncer(0.1, DebounceType.kFalling),
               new Debouncer(0.1, DebounceType.kFalling),
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
-                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(15)
+                          .withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -113,8 +121,10 @@ class CompConfig {
                           .withPeakForwardTorqueCurrent(70.0)
                           .withPeakReverseTorqueCurrent(70.0)),
               new TalonFXConfiguration()
-                  .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(15))
-                  .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(15)
+                          .withSupplyCurrentLimit(20))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive)
