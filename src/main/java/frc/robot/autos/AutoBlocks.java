@@ -22,7 +22,7 @@ public class AutoBlocks {
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
   private static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 57, 4, 30);
+      new AutoConstraintOptions(3.5, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(1.5);
 
