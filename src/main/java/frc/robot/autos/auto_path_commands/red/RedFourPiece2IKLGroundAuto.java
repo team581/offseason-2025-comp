@@ -16,7 +16,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class RedFourPiece2IKLGroundAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
-      new AutoConstraintOptions(3.5, 57, 1.7, 30);
+      new AutoConstraintOptions(3.5, 57, 4.0, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       new AutoConstraintOptions(2, 57, 4, 30);
 
@@ -100,7 +100,7 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                 new AutoSegment(
                     INTAKING_CONSTRAINTS,
                     new AutoPoint(
-                        new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
+                        new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(100)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
                     new AutoPoint(new Pose2d(14.25, 2.0, Rotation2d.fromDegrees(-35))),
                     new AutoPoint(
@@ -139,7 +139,7 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                 new AutoSegment(
                     INTAKING_CONSTRAINTS,
                     new AutoPoint(
-                        new Pose2d(14.183, 2.385, Rotation2d.fromDegrees(133.277)),
+                        new Pose2d(14.183, 2.385, Rotation2d.fromDegrees(100)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
                     new AutoPoint(new Pose2d(14.188, 1.974, Rotation2d.fromDegrees(-40))),
                     new AutoPoint(
