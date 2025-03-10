@@ -22,6 +22,7 @@ public enum CoralStation {
   CoralStation(double measuredHeight, Pose2d pose) {
     offset = IDEAL_HEIGHT - measuredHeight;
     this.backLoadPose = pose;
-    this.frontLoadPose = new Pose2d(pose.getTranslation(), Rotation2d.k180deg);
+    this.frontLoadPose =
+        new Pose2d(pose.getTranslation(), pose.getRotation().plus(Rotation2d.k180deg));
   }
 }
