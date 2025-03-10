@@ -87,6 +87,12 @@ public class AutoCommands {
     return robotManager.getState() == RobotState.IDLE_CORAL;
   }
 
+  public Command waitForFrontIntakeDone() {
+    return robotManager
+        .waitForState(RobotState.INTAKE_CORAL_STATION_FRONT)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
+  }
+
   public Command stowRequest() {
     return Commands.runOnce(robotManager::stowRequest);
   }

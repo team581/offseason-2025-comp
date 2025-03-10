@@ -1304,6 +1304,16 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void intakeStationBackRequest() {
+    algaeMode = false;
+    setStateFromRequest(RobotState.INTAKE_CORAL_STATION_BACK);
+  }
+
+  public void intakeStationFrontRequest() {
+    algaeMode = false;
+    setStateFromRequest(RobotState.INTAKE_CORAL_STATION_FRONT);
+  }
+
   public void lowLineupRequest() {
     if (algaeMode) {
       processorWaitingRequest();

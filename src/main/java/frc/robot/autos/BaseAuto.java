@@ -15,14 +15,16 @@ public abstract class BaseAuto {
   protected final Trailblazer trailblazer;
   protected final RobotCommands actions;
   protected final AutoCommands autoCommands;
+  protected final AutoBlocks blocks;
   private final String autoName;
   private final Command autoCommand;
 
   protected BaseAuto(RobotManager robotManager, Trailblazer trailblazer) {
     this.robotManager = robotManager;
     this.trailblazer = trailblazer;
-    this.actions = new RobotCommands(robotManager);
-    this.autoCommands = new AutoCommands(actions, robotManager);
+    actions = new RobotCommands(robotManager);
+    autoCommands = new AutoCommands(actions, robotManager);
+    blocks = new AutoBlocks(trailblazer, robotManager, autoCommands);
 
     var className = this.getClass().getSimpleName();
     autoName = className.substring(className.lastIndexOf('.') + 1);
