@@ -16,7 +16,7 @@ import frc.robot.robot_manager.RobotManager;
 
 public class RedFourPiece2IKLGroundAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
-      new AutoConstraintOptions(2.5, 57, 4, 30);
+      new AutoConstraintOptions(3.5, 57, 1.7, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       new AutoConstraintOptions(2, 57, 4, 30);
 
@@ -63,11 +63,14 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                         new Pose2d(12.132, 2.243, Rotation2d.fromDegrees(60)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
                     new AutoPoint(
+                      new Pose2d(12.888, 1.871, Rotation2d.fromDegrees(-31.0))
+                    ),
+                    new AutoPoint(
                         () ->
                             robotManager
                                 .coralMap
                                 .getBestCoral()
-                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
+                                .orElse(new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
                         Commands.runOnce(
                             () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
                         INTAKING_CONSTRAINTS)),
@@ -75,27 +78,25 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
             .raceWith(waitForGroundIntakeDone()),
 
         // SCORE L4 ON K
-        autoCommands
-            .l4WarmupCommand(ReefPipe.PIPE_K)
-            .alongWith(
+
+
                 trailblazer
                     .followSegment(
                         new AutoSegment(
-                            SCORING_CONSTRAINTS,
                             new AutoPoint(
-                                new Pose2d(14.914, 1.553, Rotation2d.fromDegrees(133.277)),
-                                new AutoConstraintOptions(2.3, 57, 4, 30)),
-                            new AutoPoint(
-                                new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
-                                new AutoConstraintOptions(1.5, 57, 4, 30)),
+                                new Pose2d(14.038, 1.888, Rotation2d.fromDegrees(120.0)),
+                                new AutoConstraintOptions(3.5, 57, 2.0, 30)),
                             // REEF PIPE K
                             new AutoPoint(
                                 () ->
                                     robotManager.autoAlign.getUsedScoringPose(
                                         ReefPipe.PIPE_K, ReefPipeLevel.L4),
-                                new AutoConstraintOptions(1.5, 57, 4, 30))),
+                                        autoCommands
+                                        .l4WarmupCommand(ReefPipe.PIPE_K),
+                                new AutoConstraintOptions(1.5, 57, 2.0, 30))),
+
                         false)
-                    .until(autoCommands::alignedForScore)),
+                    .until(autoCommands::alignedForScore),
         autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE GROUND CORAL MAP
@@ -106,12 +107,13 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(14.284, 2.087, Rotation2d.fromDegrees(133.277)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                    new AutoPoint(new Pose2d(14.25, 2.0, Rotation2d.fromDegrees(-35))),
                     new AutoPoint(
                         () ->
                             robotManager
                                 .coralMap
                                 .getBestCoral()
-                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
+                                .orElse(new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
                         Commands.runOnce(
                             () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
                         INTAKING_CONSTRAINTS)),
@@ -119,28 +121,24 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
             .raceWith(waitForGroundIntakeDone()),
 
         // SCORE L4 ON L
-        autoCommands
-            .l4WarmupCommand(ReefPipe.PIPE_L)
-            .alongWith(
-                trailblazer
-                    .followSegment(
-                        new AutoSegment(
-                            SCORING_CONSTRAINTS,
-                            new AutoPoint(
-                                new Pose2d(14.914, 1.801, Rotation2d.fromDegrees(133.277)),
-                                new AutoConstraintOptions(2.3, 57, 4, 30)),
-                            new AutoPoint(
-                                new Pose2d(14.284, 2.435, Rotation2d.fromDegrees(134.931)),
-                                new AutoConstraintOptions(1.5, 57, 4, 30)),
-                            // REEF PIPE L
-                            new AutoPoint(
-                                () ->
-                                    robotManager.autoAlign.getUsedScoringPose(
-                                        ReefPipe.PIPE_L, ReefPipeLevel.L4),
-                                new AutoConstraintOptions(1.5, 57, 4, 30))),
-                        false)
-                    .until(autoCommands::alignedForScore)),
-        autoCommands.l4ScoreAndReleaseCommand(),
+        trailblazer
+        .followSegment(
+            new AutoSegment(
+                new AutoPoint(
+                    new Pose2d(14.517, 2.047, Rotation2d.fromDegrees(120.0)),
+                    new AutoConstraintOptions(3.5, 57, 2.0, 30)),
+                // REEF PIPE L
+                new AutoPoint(
+                    () ->
+                        robotManager.autoAlign.getUsedScoringPose(
+                            ReefPipe.PIPE_L, ReefPipeLevel.L4),
+                            autoCommands
+                            .l4WarmupCommand(ReefPipe.PIPE_L),
+                    new AutoConstraintOptions(1.5, 57, 2.0, 30))),
+
+            false)
+        .until(autoCommands::alignedForScore),
+autoCommands.l4ScoreAndReleaseCommand(),
 
         // INTAKE GROUND CORAL MAP
         trailblazer
@@ -150,41 +148,38 @@ public class RedFourPiece2IKLGroundAuto extends BaseAuto {
                     new AutoPoint(
                         new Pose2d(14.183, 2.385, Rotation2d.fromDegrees(133.277)),
                         Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
-                    new AutoPoint(
-                        () ->
-                            robotManager
-                                .coralMap
-                                .getBestCoral()
-                                .orElse(new Pose2d(13.7, 1.906, Rotation2d.fromDegrees(-45.0))),
-                        Commands.runOnce(
-                            () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
-                        INTAKING_CONSTRAINTS)),
-                false)
-            .raceWith(waitForGroundIntakeDone()),
+                        new AutoPoint(new Pose2d(14.188, 1.974, Rotation2d.fromDegrees(-40))),
+                        new AutoPoint(
+                            () ->
+                                robotManager
+                                    .coralMap
+                                    .getBestCoral()
+                                    .orElse(new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
+                            Commands.runOnce(
+                                () -> robotManager.intakeAssistFloorCoralHorizontalRequest()),
+                            INTAKING_CONSTRAINTS)),
+                    false)
+                .raceWith(waitForGroundIntakeDone()),
 
         // SCORE L4 ON A
-        autoCommands
-            .l4WarmupCommand(ReefPipe.PIPE_A)
-            .alongWith(
-                trailblazer
-                    .followSegment(
-                        new AutoSegment(
-                            SCORING_CONSTRAINTS,
-                            new AutoPoint(
-                                new Pose2d(15.354, 3.749, Rotation2d.fromDegrees(180.0)),
-                                new AutoConstraintOptions(2.3, 57, 4, 30)),
-                            new AutoPoint(
-                                new Pose2d(14.834, 3.788, Rotation2d.fromDegrees(180.0)),
-                                new AutoConstraintOptions(1.5, 57, 4, 30)),
-                            // REEF PIPE A
-                            new AutoPoint(
-                                () ->
-                                    robotManager.autoAlign.getUsedScoringPose(
-                                        ReefPipe.PIPE_A, ReefPipeLevel.L4),
-                                new AutoConstraintOptions(1.5, 57, 4, 30))),
-                        false)
-                    .until(autoCommands::alignedForScore)),
-        autoCommands.l4ScoreAndReleaseCommand(),
+         trailblazer
+         .followSegment(
+             new AutoSegment(
+                 new AutoPoint(
+                     new Pose2d(15.288, 3.858, Rotation2d.fromDegrees(180.0)),
+                     new AutoConstraintOptions(3.5, 57, 2.0, 30)),
+                 // REEF PIPE A
+                 new AutoPoint(
+                     () ->
+                         robotManager.autoAlign.getUsedScoringPose(
+                             ReefPipe.PIPE_A, ReefPipeLevel.L4),
+                             autoCommands
+                             .l4WarmupCommand(ReefPipe.PIPE_A),
+                     new AutoConstraintOptions(1.5, 57, 2.0, 30))),
+
+             false)
+         .until(autoCommands::alignedForScore),
+ autoCommands.l4ScoreAndReleaseCommand(),
 
         // DRIVE BACK & STOW
         trailblazer.followSegment(
