@@ -135,14 +135,14 @@ public class AutoBlocks {
         .withDeadline(autoCommands.waitForBackIntakeDone());
   }
 
-  public Command intakeStationGround(Pose2d searchPose) {
+  public Command intakeGround(Pose2d approachPoint, Pose2d defaultIntakingPose) {
     return trailblazer
         .followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
-                new AutoPoint(searchPose),
+                new AutoPoint(approachPoint),
                 new AutoPoint(
-                    () -> robotManager.coralMap.getBestCoral().orElse(searchPose),
+                    () -> robotManager.coralMap.getBestCoral().orElse(defaultIntakingPose),
                     Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest))),
             false)
         .withDeadline(autoCommands.waitForGroundIntakeDone());
