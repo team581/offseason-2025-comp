@@ -108,7 +108,7 @@ public class AutoCommands {
                     .anyMatch(
                         station ->
                             station
-                                    .frontLoadPose
+                                    .backLoadPose
                                     .getTranslation()
                                     .getDistance(robotPose.getTranslation())
                                 < 0.05);
