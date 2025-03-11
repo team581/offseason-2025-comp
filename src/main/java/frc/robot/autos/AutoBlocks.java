@@ -91,9 +91,6 @@ public class AutoBlocks {
                             .andThen(autoCommands.l4WarmupCommand(pipe)),
                         BASE_CONSTRAINTS),
                     new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
-                        SCORING_CONSTRAINTS),
-                    new AutoPoint(
                         () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET),
                         autoCommands.l4LineupCommand(pipe),
                         SCORING_CONSTRAINTS),
