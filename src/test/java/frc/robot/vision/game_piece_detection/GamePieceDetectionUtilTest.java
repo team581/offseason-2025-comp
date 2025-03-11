@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class GamePieceDetectionUtilTest {
   @Test
-  public void truffalaStraightOnPoseTest() {
+  public void lollipopStraightOnPoseTest() {
     var result =
         GamePieceDetectionUtil.calculateFieldRelativeLollipopTranslationFromCamera(
             new Pose2d(15.06, 3.81, Rotation2d.fromDegrees(-3.0)),
@@ -20,7 +20,7 @@ public class GamePieceDetectionUtilTest {
   }
 
   @Test
-  public void truffalaFromSidePoseTest() {
+  public void lollipopFromSidePoseTest() {
     var result =
         GamePieceDetectionUtil.calculateFieldRelativeLollipopTranslationFromCamera(
             new Pose2d(15.18, 2.85, Rotation2d.fromDegrees(35.58)),
