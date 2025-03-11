@@ -26,11 +26,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
 
-  private static final double CORAL_LIFETIME_SECONDS = 0.7;
+  private static final double CORAL_LIFETIME_SECONDS = 1.5;
 
   // TODO: UPDATE THESE TO REAL NUMBERS
-  private static final double CAMERA_IMAGE_HEIGHT = 240.0;
-  private static final double CAMERA_IMAGE_WIDTH = 320.0;
+  private static final double CAMERA_IMAGE_HEIGHT =480.0;
+  private static final double CAMERA_IMAGE_WIDTH = 640.0;
   private static final double FOV_VERTICAL = 48.9;
   private static final double FOV_HORIZONTAL = 62.5;
   private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
