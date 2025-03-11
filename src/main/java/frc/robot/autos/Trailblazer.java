@@ -33,7 +33,7 @@ public class Trailblazer {
   private final PathTracker pathTracker = new PurePursuitPathTracker();
   private final PathFollower pathFollower =
       new PidPathFollower(
-          new PIDController(5, 0, 0), new PIDController(5, 0, 0), new PIDController(12, 0, 0));
+          new PIDController(5, 0, 0), new PIDController(5, 0, 0), new PIDController(9, 0, 0));
   private int previousAutoPointIndex = -1;
   private TimestampedChassisSpeeds previousSpeeds = new TimestampedChassisSpeeds(0);
 
