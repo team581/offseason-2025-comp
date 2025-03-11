@@ -21,7 +21,7 @@ public class FeatureFlags {
   // Experiment to see if we can make auto motion smoother by avoiding snaps, since Trailblazer does
   // a good enough job maintaining heading on its own
   public static final BooleanSupplier DISABLE_AUTO_SNAPS =
-      FeatureFlag.of("Auto/DisableSnaps", false);
+      FeatureFlag.of("Auto/DisableSnaps", true);
 
   private FeatureFlags() {}
 }

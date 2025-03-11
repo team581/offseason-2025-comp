@@ -1,33 +1,23 @@
 package frc.robot.autos.auto_path_commands.red;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
-import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.autos.AutoPoint;
-import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
-import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.elevator.CoralStation;
 import frc.robot.robot_manager.RobotManager;
 
 public class RedFrontThreePiece2IKLBlocksAuto extends BaseAuto {
-  private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
-      new AutoConstraintOptions(4.75, 57, 4, 30);
-  private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      new AutoConstraintOptions(2, 57, 4, 30);
-
   public RedFrontThreePiece2IKLBlocksAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_2_AND_5.redPose;
+    return Points.START_3_AND_4.redPose;
   }
 
   @Override
@@ -35,7 +25,7 @@ public class RedFrontThreePiece2IKLBlocksAuto extends BaseAuto {
     return Commands.sequence(
         // Commands.runOnce(robotManager::rehomeRollRequest),
         // SCORE L4 ON I
-        blocks.scorePreloadL4(Points.START_2_AND_5.redPose, ReefPipe.PIPE_I),
+        blocks.scorePreloadL4(Points.START_3_AND_4.redPose, ReefPipe.PIPE_J),
 
         // INTAKE STATION
         blocks.intakeStationFront(CoralStation.NON_PROCESSOR_SIDE_RED),
@@ -64,7 +54,6 @@ public class RedFrontThreePiece2IKLBlocksAuto extends BaseAuto {
 
         //         // INTAKE STATION
         //         blocks.intakeStationFront(CoralStation.NON_PROCESSOR_SIDE_RED)),
-
 
         // SCORE L4 ON K
         blocks.scoreL4(ReefPipe.PIPE_K),

@@ -16,14 +16,15 @@ public class AutoBlocks {
    * The offset used to calculate the position to go to before PIDing to the lineup pose. Ensures we
    * don't strafe into the scoring position, just a straight-on movement.
    */
-  private static final Transform2d PIPE_APPROACH_OFFSET =
-      new Transform2d(-0.4, 0, Rotation2d.kZero);
+  private static final Transform2d PIPE_LINEUP_OFFSET = new Transform2d(-0.4, 0, Rotation2d.kZero);
+
+  private static final Transform2d PIPE_APPROACH_OFFSET = new Transform2d(-1, 0, Rotation2d.kZero);
 
   private static final Transform2d STATION_APPROACH_OFFSET =
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
   private static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(3.5, 57, 4, 30);
+      new AutoConstraintOptions(4.5, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(1.5);
 
@@ -42,12 +43,18 @@ public class AutoBlocks {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    SCORING_CONSTRAINTS,
+                    BASE_CONSTRAINTS,
                     new AutoPoint(
                         () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
-autoCommands.l4WarmupCommand(pipe)),
+                        autoCommands.l4WarmupCommand(pipe),
+                        BASE_CONSTRAINTS),
                     new AutoPoint(
-                        () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4))),
+                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET),
+                        autoCommands.l4WarmupCommand(pipe),
+                        SCORING_CONSTRAINTS),
+                    new AutoPoint(
+                        () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
+                        SCORING_CONSTRAINTS)),
                 false)
             .withDeadline(
                 Commands.waitUntil(robotManager.autoAlign::isTagAlignedDebounced)
@@ -59,7 +66,7 @@ autoCommands.l4WarmupCommand(pipe)),
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
                     Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
                 new AutoPoint(
-                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET)))));
+                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET)))));
   }
 
   public Command scorePreloadL4(Pose2d startingPose, ReefPipe pipe) {
@@ -68,15 +75,22 @@ autoCommands.l4WarmupCommand(pipe)),
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    SCORING_CONSTRAINTS,
-                    new AutoPoint(startingPose),
+                    BASE_CONSTRAINTS,
+                    // Start on auto line
+                    new AutoPoint(startingPose, BASE_CONSTRAINTS),
+                    // Go straight to lineup position
+                    // We don't need to do the approach offset since we already have pretty accurate
+                    // pose
                     new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
+                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET),
                         autoCommands
                             .preloadCoralAfterRollHomed()
-                            .andThen(autoCommands.l4WarmupCommand(pipe))),
+                            .andThen(autoCommands.l4WarmupCommand(pipe)),
+                        SCORING_CONSTRAINTS),
+                    // Actually align to score
                     new AutoPoint(
-                        () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4))),
+                        () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
+                        SCORING_CONSTRAINTS)),
                 false)
             .withDeadline(
                 Commands.waitUntil(robotManager.autoAlign::isTagAlignedDebounced)
@@ -84,11 +98,13 @@ autoCommands.l4WarmupCommand(pipe)),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
+                // Start at the scoring position
                 new AutoPoint(
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
                     Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                // Scoot back to the lineup position to finish the score
                 new AutoPoint(
-                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET)))));
+                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET)))));
   }
 
   public Command intakeStationFront(CoralStation station) {
