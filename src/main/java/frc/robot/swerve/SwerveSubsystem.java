@@ -15,7 +15,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -339,22 +338,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                   .withDriveRequestType(DriveRequestType.Velocity));
       case AUTO_SNAPS -> {
         SNAP_CONTROLLER.setMaxOutput(Double.POSITIVE_INFINITY);
-        if (FeatureFlags.DISABLE_AUTO_SNAPS.getAsBoolean()) {
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
-        } else {
 
-          drivetrain.setControl(
-              driveToAngle
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                  .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                  .withDriveRequestType(DriveRequestType.Velocity));
-        }
+        drivetrain.setControl(
+            driveToAngle
+                .withVelocityX(autoSpeeds.vxMetersPerSecond)
+                .withVelocityY(autoSpeeds.vyMetersPerSecond)
+                .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
         SNAP_CONTROLLER.setMaxOutput(TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
@@ -390,14 +380,22 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
-  public void snapsDriveRequest(double snapAngle) {
+  public void snapsDriveRequest(double snapAngle, boolean teleopOnly) {
     setSnapToAngle(snapAngle);
 
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO_SNAPS);
+      if (teleopOnly) {
+        normalDriveRequest();
+      } else {
+        setStateFromRequest(SwerveState.AUTO_SNAPS);
+      }
     } else {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
     }
+  }
+
+  public void snapsDriveRequest(double snapAngle) {
+    snapsDriveRequest(snapAngle, false);
   }
 
   public void coralAlignmentDriveRequest() {
@@ -410,11 +408,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void scoringAlignmentRequest(double snapAngle) {
-    setSnapToAngle(snapAngle);
-
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO);
+      normalDriveRequest();
     } else {
+      setSnapToAngle(snapAngle);
       setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
     }
   }

@@ -18,17 +18,12 @@ public class FeatureFlags {
 
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
 
-  // Experiment to see if we can make auto motion smoother by avoiding snaps, since Trailblazer does
-  // a good enough job maintaining heading on its own
-  public static final BooleanSupplier DISABLE_AUTO_SNAPS =
-      FeatureFlag.of("Auto/DisableSnaps", true);
-
   /**
    * Whether L4 approach state should automatically transition to L4 lineup when close enough to the
    * reef during autonomous. Doesn't alter teleop behavior.
    */
   public static final BooleanSupplier EXPLICIT_L4_LINEUP =
-      FeatureFlag.of("Auto/ExplicitL4Lineup", false);
+      FeatureFlag.of("Auto/ExplicitL4Lineup", true);
 
   private FeatureFlags() {}
 }
