@@ -11,6 +11,7 @@ import frc.robot.autos.auto_path_commands.red.RedFourPiece2IKLGroundAuto;
 import frc.robot.autos.auto_path_commands.red.RedFrontThreePiece2IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedFrontThreePiece2IKLBlocksAuto;
 import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
+import frc.robot.autos.auto_path_commands.red.RedStraightLineAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2IKLBlockAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece5FDC;
@@ -29,9 +30,11 @@ public enum AutoSelection {
   FRONT_THREE_PIECE_2IKL(RedFrontThreePiece2IKLAuto::new, BlueFrontThreePiece2IKLAuto::new),
   THREE_PIECE_5FDC(RedThreePiece5FDC::new, BlueThreePiece5FDC::new),
 
+  // TODO: MAKE BLUE VERSION
+  STRAIGHT_LINE(RedStraightLineAuto::new, BlueDoNothingAuto::new),
+
   BLOCK_THREE_PIECE_2IKL(RedThreePiece2IKLBlockAuto::new, BlueDoNothingAuto::new),
-  BLOCK_FRONT_THREE_PIECE_2IKL(RedFrontThreePiece2IKLBlocksAuto::new, BlueDoNothingAuto::new),
-  ;
+  BLOCK_FRONT_THREE_PIECE_2IKL(RedFrontThreePiece2IKLBlocksAuto::new, BlueDoNothingAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> blueAuto;

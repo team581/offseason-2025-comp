@@ -1,36 +1,69 @@
 package frc.robot.autos.constraints;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.util.TimestampedChassisSpeeds;
 
 public class AutoConstraintCalculator {
   private static AutoConstraintOptions lastUsedConstraints = new AutoConstraintOptions();
 
+  public static TimestampedChassisSpeeds constrainVelocityGoal(
+      TimestampedChassisSpeeds inputSpeeds,
+      TimestampedChassisSpeeds previousSpeeds,
+      AutoConstraintOptions options,
+      double distanceToSegmentEnd) {
+    ChassisSpeeds constrainedSpeeds = constrainVelocityGoal(inputSpeeds, previousSpeeds, options);
+
+    double newLinearVelocity =
+        getAccelerationBasedVelocityConstraint(
+            constrainedSpeeds,
+            distanceToSegmentEnd,
+            options.maxLinearAcceleration(),
+            options.maxLinearVelocity());
+    constrainedSpeeds =
+        constrainLinearVelocity(
+            constrainedSpeeds, options.withMaxLinearVelocity(newLinearVelocity));
+    DogLog.log(
+        "Debug/finalConstrainedSpeeds",
+        Math.hypot(constrainedSpeeds.vxMetersPerSecond, constrainedSpeeds.vyMetersPerSecond));
+    return new TimestampedChassisSpeeds(constrainedSpeeds, inputSpeeds.timestampSeconds);
+  }
+
   public static ChassisSpeeds constrainVelocityGoal(
-      ChassisSpeeds inputSpeeds,
-      ChassisSpeeds previousSpeeds,
-      double timeBetweenPreviousAndInputSpeeds,
+      TimestampedChassisSpeeds inputSpeeds,
+      TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
     lastUsedConstraints = options;
-    ChassisSpeeds constrainedSpeeds = inputSpeeds;
+    var constrainedSpeeds = inputSpeeds;
 
     if (options.maxLinearVelocity() != 0) {
-      constrainedSpeeds = constrainLinearVelocity(constrainedSpeeds, options);
+      constrainedSpeeds =
+          new TimestampedChassisSpeeds(
+              constrainLinearVelocity(constrainedSpeeds, options),
+              constrainedSpeeds.timestampSeconds);
     }
 
     if (options.maxAngularVelocity() != 0) {
-      constrainedSpeeds = constrainRotationalVelocity(constrainedSpeeds, options);
+      constrainedSpeeds =
+          new TimestampedChassisSpeeds(
+              constrainRotationalVelocity(constrainedSpeeds, options),
+              constrainedSpeeds.timestampSeconds);
     }
 
     if (options.maxLinearAcceleration() != 0) {
       constrainedSpeeds =
-          constrainLinearAcceleration(
-              constrainedSpeeds, previousSpeeds, timeBetweenPreviousAndInputSpeeds, options);
+          new TimestampedChassisSpeeds(
+              constrainLinearAcceleration(constrainedSpeeds, previousSpeeds, options),
+              constrainedSpeeds.timestampSeconds);
     }
 
     if (options.maxAngularAcceleration() != 0) {
       constrainedSpeeds =
-          constrainRotationalAcceleration(
-              constrainedSpeeds, previousSpeeds, timeBetweenPreviousAndInputSpeeds, options);
+          new TimestampedChassisSpeeds(
+              constrainRotationalAcceleration(constrainedSpeeds, previousSpeeds, options),
+              constrainedSpeeds.timestampSeconds);
     }
 
     return constrainedSpeeds;
@@ -72,21 +105,20 @@ public class AutoConstraintCalculator {
   }
 
   private static ChassisSpeeds constrainLinearAcceleration(
-      ChassisSpeeds inputSpeeds,
-      ChassisSpeeds previousSpeeds,
-      double timeBetweenPreviousAndInputSpeeds,
+      TimestampedChassisSpeeds inputSpeeds,
+      TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
 
     double deltaVx = inputSpeeds.vxMetersPerSecond - previousSpeeds.vxMetersPerSecond;
     double deltaVy = inputSpeeds.vyMetersPerSecond - previousSpeeds.vyMetersPerSecond;
-
     if (Math.abs(inputSpeeds.vxMetersPerSecond) - Math.abs(previousSpeeds.vxMetersPerSecond) < 0
         && Math.abs(inputSpeeds.vyMetersPerSecond) - Math.abs(previousSpeeds.vyMetersPerSecond)
             < 0.5) {
       return inputSpeeds;
     }
     double unconstrainedLinearAcceleration =
-        Math.sqrt(deltaVx * deltaVx + deltaVy * deltaVy) / timeBetweenPreviousAndInputSpeeds;
+        Math.sqrt(deltaVx * deltaVx + deltaVy * deltaVy)
+            / inputSpeeds.timestampDifference(previousSpeeds);
 
     double constrainedLinearAcceleration =
         Math.min(unconstrainedLinearAcceleration, options.maxLinearAcceleration());
@@ -104,21 +136,65 @@ public class AutoConstraintCalculator {
     return inputSpeeds;
   }
 
+  public static double getAccelerationBasedVelocityConstraint(
+      ChassisSpeeds currentSpeeds,
+      double distanceToSegmentEnd,
+      double accelerationLimit,
+      double velocityConstraint) {
+    double currentVelocity =
+        Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
+    double decelerationDistance =
+        (1.0 * (currentVelocity * currentVelocity)) / (2.0 * accelerationLimit);
+    double perfectVelocity =
+        Math.sqrt(0.0 - (-1.0 * 2.0 * (accelerationLimit * distanceToSegmentEnd)));
+    // TODO: Clean these logs up
+    DogLog.log("Debug/DistanceToSegmentEnd", distanceToSegmentEnd);
+    DogLog.log("Debug/currentVelocity", currentVelocity);
+    DogLog.log("Debug/perfectDecelerationVelocity", perfectVelocity);
+    DogLog.log("Debug/decelerationDistance", decelerationDistance);
+    if (distanceToSegmentEnd > decelerationDistance) {
+      return currentVelocity;
+    }
+    return Math.max(perfectVelocity, 0.05); // Allow you to go 2 inches per second
+  }
+
+  public static double getDynamicVelocityConstraint(
+      Pose2d currentPose,
+      Pose2d endWaypoint,
+      ChassisSpeeds currentSpeeds,
+      double oldVelocityConstraint,
+      double accelerationLimit) {
+    var distanceToEnd = currentPose.getTranslation().getDistance(endWaypoint.getTranslation());
+    DogLog.log("Debug/DistanceToEnd", distanceToEnd);
+    var currentVelocity =
+        Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
+    DogLog.log("Debug/CurrentVelocity", distanceToEnd);
+
+    var timeToTraverse = distanceToEnd / currentVelocity;
+    var acceleration = (accelerationLimit - currentVelocity) / timeToTraverse;
+    if (Math.abs(acceleration) < accelerationLimit) {
+      return oldVelocityConstraint;
+    }
+    var velocityConstraint = acceleration * timeToTraverse;
+    var clampedConstraint = MathUtil.clamp(Math.abs(velocityConstraint), 0.5, 5.0);
+    return clampedConstraint;
+  }
+
   private static ChassisSpeeds constrainRotationalAcceleration(
-      ChassisSpeeds inputSpeeds,
-      ChassisSpeeds previousSpeeds,
-      double timeBetweenPreviousAndInputSpeeds,
+      TimestampedChassisSpeeds inputSpeeds,
+      TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
 
     double currentAngularSpeed = inputSpeeds.omegaRadiansPerSecond;
     double previousAngularSpeed = previousSpeeds.omegaRadiansPerSecond;
 
     double currentAngularAcceleration =
-        currentAngularSpeed - previousAngularSpeed / timeBetweenPreviousAndInputSpeeds;
+        currentAngularSpeed
+            - previousAngularSpeed / inputSpeeds.timestampDifference(previousSpeeds);
     if (currentAngularAcceleration > options.maxAngularAcceleration()) {
       double constrainedAngularAcceleration =
           previousAngularSpeed
-              + options.maxAngularAcceleration() * timeBetweenPreviousAndInputSpeeds;
+              + options.maxAngularAcceleration() * inputSpeeds.timestampDifference(previousSpeeds);
       return new ChassisSpeeds(
           inputSpeeds.vxMetersPerSecond,
           inputSpeeds.vyMetersPerSecond,

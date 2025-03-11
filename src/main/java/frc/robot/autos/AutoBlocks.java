@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,6 +43,33 @@ public class AutoBlocks {
             .followSegment(
                 new AutoSegment(
                     SCORING_CONSTRAINTS,
+                    new AutoPoint(
+                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
+autoCommands.l4WarmupCommand(pipe)),
+                    new AutoPoint(
+                        () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4))),
+                false)
+            .withDeadline(
+                Commands.waitUntil(robotManager.autoAlign::isTagAlignedDebounced)
+                    .andThen(autoCommands.l4ScoreAndReleaseCommand())),
+        trailblazer.followSegment(
+            new AutoSegment(
+                BASE_CONSTRAINTS,
+                new AutoPoint(
+                    () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
+                    Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                new AutoPoint(
+                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET)))));
+  }
+
+  public Command scorePreloadL4(Pose2d startingPose, ReefPipe pipe) {
+    return Commands.sequence(
+        Commands.runOnce(robotManager::rehomeRollRequest),
+        trailblazer
+            .followSegment(
+                new AutoSegment(
+                    SCORING_CONSTRAINTS,
+                    new AutoPoint(startingPose),
                     new AutoPoint(
                         () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
                         autoCommands
