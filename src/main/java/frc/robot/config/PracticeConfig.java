@@ -125,7 +125,7 @@ class PracticeConfig {
               68,
               0.66),
           new SwerveConfig(
-              new ProfiledPhoenixPIDController(10, 0, 1, Double.MAX_VALUE),
+              new ProfiledPhoenixPIDController(5.75, 0, 0, Double.MAX_VALUE),
               true,
               true,
               true,
