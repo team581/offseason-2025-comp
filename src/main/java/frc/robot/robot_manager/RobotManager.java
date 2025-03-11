@@ -185,6 +185,10 @@ public class RobotManager extends StateMachine<RobotState> {
             : RobotState.CORAL_DISPLACED_L3_2_LINEUP;
       }
       case CORAL_L4_1_APPROACH -> {
+        // Require explicit transition in auto
+        if (FeatureFlags.EXPLICIT_L4_LINEUP.getAsBoolean() && DriverStation.isAutonomous()) {
+          yield currentState;
+        }
         var isClose =
             AutoAlign.isCloseToReefSide(
                 localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());

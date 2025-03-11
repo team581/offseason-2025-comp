@@ -63,6 +63,14 @@ public class AutoCommands {
                 }));
   }
 
+  public Command l4LineupCommand(ReefPipe pipe) {
+    return Commands.runOnce(
+        () -> {
+          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+          robotManager.l4CoralLineupRequest();
+        });
+  }
+
   public Command intakeStationWarmupCommand() {
     return Commands.runOnce(robotManager::intakeStationRequest);
   }
