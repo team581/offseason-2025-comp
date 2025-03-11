@@ -21,7 +21,7 @@ public class AutoBlocks {
   private static final Transform2d PIPE_APPROACH_OFFSET = new Transform2d(-1, 0, Rotation2d.kZero);
 
   private static final Transform2d FRONT_STATION_APPROACH_OFFSET =
-      new Transform2d(-0.6, 0, Rotation2d.kZero);
+      new Transform2d(-0.8, 0, Rotation2d.kZero);
 
   private static final Transform2d BACK_STATION_APPROACH_OFFSET =
       new Transform2d(0.6, 0, Rotation2d.kZero);
@@ -29,7 +29,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.5, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearVelocity(1.5);
+      BASE_CONSTRAINTS.withMaxLinearVelocity(3).withMaxLinearAcceleration(3);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -43,23 +43,17 @@ public class AutoBlocks {
 
   public Command scoreL4(ReefPipe pipe) {
     return Commands.sequence(
-        trailblazer.followSegment(
-            new AutoSegment(
-                BASE_CONSTRAINTS,
-                new AutoPoint(
-                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
-                    autoCommands.l4WarmupCommand(pipe),
-                    BASE_CONSTRAINTS),
-                new AutoPoint(
-                    () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET),
-                    SCORING_CONSTRAINTS))),
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    SCORING_CONSTRAINTS,
+                    BASE_CONSTRAINTS,
+                    new AutoPoint(
+                        () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_APPROACH_OFFSET),
+                        autoCommands.l4WarmupCommand(pipe)),
                     new AutoPoint(
                         () -> pipe.getPose(ReefPipeLevel.L4).transformBy(PIPE_LINEUP_OFFSET),
-                        autoCommands.l4LineupCommand(pipe)),
+                        autoCommands.l4LineupCommand(pipe),
+                        SCORING_CONSTRAINTS),
                     new AutoPoint(
                         () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4))),
                 false)
