@@ -130,6 +130,6 @@ public class AutoBlocks {
                     Commands.runOnce(robotManager::intakeStationBackRequest)),
                 new AutoPoint(station.backLoadPose)),
             false)
-        .until(autoCommands::isSmartStowing);
+        .withDeadline(autoCommands.waitForBackIntakeDone());
   }
 }

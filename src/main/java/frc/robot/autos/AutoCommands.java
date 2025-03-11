@@ -98,6 +98,28 @@ public class AutoCommands {
     return robotManager.getState() == RobotState.IDLE_CORAL;
   }
 
+  public Command waitForBackIntakeDone() {
+    if (RobotBase.isSimulation()) {
+      return Commands.waitUntil(
+              () -> {
+                var robotPose = robotManager.localization.getPose();
+
+                return Stream.of(CoralStation.values())
+                    .anyMatch(
+                        station ->
+                            station
+                                    .frontLoadPose
+                                    .getTranslation()
+                                    .getDistance(robotPose.getTranslation())
+                                < 0.05);
+              })
+          // Simulate delay from human player dropping the coral
+          .andThen(Commands.waitSeconds(0.75));
+    }
+
+    return Commands.waitUntil(this::isSmartStowing);
+  }
+
   public Command waitForFrontIntakeDone() {
     if (RobotBase.isSimulation()) {
       // Wait until aligned at the coral station
