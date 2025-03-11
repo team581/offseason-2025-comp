@@ -10,6 +10,9 @@ public class FeatureFlags {
   public static final BooleanSupplier PURE_PURSUIT_USE_DYNAMIC_LOOKAHEAD =
       FeatureFlag.of("PurePursuit/UseDynamicLookahead", true);
 
+  public static final BooleanSupplier PURE_PURSUIT_ROTATE_IMMEDIATELY =
+      FeatureFlag.of("PurePursuit/RotateImmediately", false);
+
   public static final BooleanSupplier COLLISION_AVOIDANCE_BOX_SHORTCUTS =
       FeatureFlag.of("CollisionAvoidance/BoxShortcuts", true);
 

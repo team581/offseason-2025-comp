@@ -143,9 +143,14 @@ public class PurePursuitPathTracker implements PathTracker {
       currentTargetWaypoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
       lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
     }
-    currentInterpolatedRotation =
-        PurePursuitUtils.getPointToPointInterpolatedRotation(
-            lastTargetWaypoint, currentTargetPoint, perpendicularPoint);
+
+    if (FeatureFlags.PURE_PURSUIT_ROTATE_IMMEDIATELY.getAsBoolean()) {
+      currentInterpolatedRotation = currentTargetPoint.getRotation();
+    } else {
+      currentInterpolatedRotation =
+          PurePursuitUtils.getPointToPointInterpolatedRotation(
+              lastTargetWaypoint, currentTargetPoint, perpendicularPoint);
+    }
   }
 
   private int getCurrentLookaheadPointIndex() {
