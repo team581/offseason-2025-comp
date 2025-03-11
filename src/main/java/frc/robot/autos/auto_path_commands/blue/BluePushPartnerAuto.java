@@ -26,7 +26,7 @@ public class BluePushPartnerAuto extends BaseAuto {
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_2_AND_5.bluePose;
+    return Points.START_R2_AND_B2.bluePose;
   }
 
   @Override
@@ -38,14 +38,14 @@ public class BluePushPartnerAuto extends BaseAuto {
             // PUSH PARTNER
             new AutoSegment(
                 INTAKING_CONSTRAINTS,
-                new AutoPoint(Points.START_2_AND_5.bluePose),
+                new AutoPoint(Points.START_R2_AND_B2.bluePose),
                 new AutoPoint(new Pose2d(7.587, 6.147, Rotation2d.fromDegrees(180))))),
         // SCORE L4 ON I
         trailblazer
             .followSegment(
                 new AutoSegment(
                     SCORING_CONSTRAINTS,
-                    new AutoPoint(Points.START_2_AND_5.bluePose, INTAKING_CONSTRAINTS),
+                    new AutoPoint(Points.START_R2_AND_B2.bluePose, INTAKING_CONSTRAINTS),
                     new AutoPoint(
                         new Pose2d(5.765, 2, Rotation2d.fromDegrees(-120)),
                         autoCommands

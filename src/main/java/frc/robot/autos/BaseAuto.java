@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
-import frc.robot.robot_manager.RobotState;
 
 public abstract class BaseAuto {
   protected final RobotManager robotManager;
@@ -63,14 +62,5 @@ public abstract class BaseAuto {
               }
             })
         .withName(autoName + "Command");
-  }
-
-  public Command waitForGroundIntakeDone() {
-    return robotManager
-        .waitForStates(
-            RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL,
-            RobotState.INTAKE_CORAL_FLOOR_UPRIGHT,
-            RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL)
-        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
   }
 }

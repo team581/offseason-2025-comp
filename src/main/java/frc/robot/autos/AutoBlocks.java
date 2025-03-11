@@ -134,4 +134,17 @@ public class AutoBlocks {
             false)
         .withDeadline(autoCommands.waitForBackIntakeDone());
   }
+
+  public Command intakeStationGround(Pose2d searchPose) {
+    return trailblazer
+        .followSegment(
+            new AutoSegment(
+                BASE_CONSTRAINTS,
+                new AutoPoint(searchPose),
+                new AutoPoint(
+                    () -> robotManager.coralMap.getBestCoral().orElse(searchPose),
+                    Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest))),
+            false)
+        .withDeadline(autoCommands.waitForGroundIntakeDone());
+  }
 }

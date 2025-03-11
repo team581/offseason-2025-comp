@@ -152,4 +152,13 @@ public class AutoCommands {
   public boolean alignedForScore() {
     return robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced();
   }
+
+  public Command waitForGroundIntakeDone() {
+    return robotManager
+        .waitForStates(
+            RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL,
+            RobotState.INTAKE_CORAL_FLOOR_UPRIGHT,
+            RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
+  }
 }
