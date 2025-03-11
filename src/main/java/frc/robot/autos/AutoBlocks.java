@@ -20,8 +20,11 @@ public class AutoBlocks {
 
   private static final Transform2d PIPE_APPROACH_OFFSET = new Transform2d(-1, 0, Rotation2d.kZero);
 
-  private static final Transform2d STATION_APPROACH_OFFSET =
+  private static final Transform2d FRONT_STATION_APPROACH_OFFSET =
       new Transform2d(-0.6, 0, Rotation2d.kZero);
+
+  private static final Transform2d BACK_STATION_APPROACH_OFFSET =
+      new Transform2d(0.6, 0, Rotation2d.kZero);
 
   private static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.5, 57, 4, 30);
@@ -113,7 +116,7 @@ public class AutoBlocks {
             new AutoSegment(
                 BASE_CONSTRAINTS,
                 new AutoPoint(
-                    station.frontLoadPose.transformBy(STATION_APPROACH_OFFSET),
+                    station.frontLoadPose.transformBy(FRONT_STATION_APPROACH_OFFSET),
                     Commands.runOnce(robotManager::intakeStationFrontRequest)),
                 new AutoPoint(station.frontLoadPose)),
             false)
@@ -126,7 +129,7 @@ public class AutoBlocks {
             new AutoSegment(
                 BASE_CONSTRAINTS,
                 new AutoPoint(
-                    station.backLoadPose.transformBy(STATION_APPROACH_OFFSET),
+                    station.backLoadPose.transformBy(BACK_STATION_APPROACH_OFFSET),
                     Commands.runOnce(robotManager::intakeStationBackRequest)),
                 new AutoPoint(station.backLoadPose)),
             false)
