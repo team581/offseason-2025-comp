@@ -2,6 +2,7 @@ package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -32,6 +33,8 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<GamePieceResult> algaeResult = Optional.empty();
+
+  private double lastPoseTimestamp = 0.0;
 
   private final int[] closestScoringReefTag = {0};
 
@@ -83,22 +86,33 @@ public class Limelight extends StateMachine<LimelightState> {
     if (estimatePose == null) {
       return Optional.empty();
     }
-    if (!MathUtil.isNear(
-        robotHeading, estimatePose.pose.getRotation().getDegrees(), 10, -180, 180)) {
+    var newPose = estimatePose.pose;
+    var newPoseTimestamp = estimatePose.timestampSeconds;
+    if (newPoseTimestamp ==  lastPoseTimestamp) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
+      return Optional.empty();
+    }
+    lastPoseTimestamp = newPoseTimestamp;
+
+    if (!MathUtil.isNear(robotHeading, newPose.getRotation().getDegrees(), 10, -180, 180)) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
       return Optional.empty();
     }
 
-    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", estimatePose.pose);
-
     if (estimatePose.tagCount == 0) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
+
       return Optional.empty();
     }
     // This prevents pose estimator from having crazy poses if the Limelight loses power
-    if (estimatePose.pose.getX() == 0.0 && estimatePose.pose.getY() == 0.0) {
+    if (newPose.getX() == 0.0 && newPose.getY() == 0.0) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
+
       return Optional.empty();
     }
 
+    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", newPose);
     return Optional.of(new TagResult(estimatePose.pose, estimatePose.timestampSeconds));
   }
 
