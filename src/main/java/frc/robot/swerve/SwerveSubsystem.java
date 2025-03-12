@@ -67,7 +67,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       new SwerveRequest.FieldCentric()
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.03)
+          .withDeadband(MaxSpeed * 0.015)
           .withRotationalDeadband(MaxAngularRate * 0.03);
 
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
