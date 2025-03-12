@@ -58,7 +58,7 @@ public class AutoBlocks {
                         () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4))),
                 false)
             .withDeadline(
-                Commands.waitUntil(robotManager.autoAlign::isTagAlignedDebounced)
+                Commands.waitUntil(autoCommands::alignedForScore)
                     .andThen(autoCommands.l4ScoreAndReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
@@ -95,7 +95,7 @@ public class AutoBlocks {
                         SCORING_CONSTRAINTS)),
                 false)
             .withDeadline(
-                Commands.waitUntil(robotManager.autoAlign::isTagAlignedDebounced)
+                Commands.waitUntil(autoCommands::alignedForScore)
                     .andThen(autoCommands.l4ScoreAndReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
