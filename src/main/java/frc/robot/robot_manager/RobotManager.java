@@ -113,7 +113,6 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_DISPLACED_L2_3_PLACE,
               CORAL_DISPLACED_L3_3_PLACE,
               CORAL_DISPLACED_L4_3_PLACE,
-              CLIMBING_1_LINEUP,
               CLIMBING_2_HANGING,
               CLIMBING_3_HANGING_2,
               CLIMBING_4_HANGING_3,
@@ -313,6 +312,8 @@ public class RobotManager extends StateMachine<RobotState> {
           elevator.atGoal() && roll.atGoal() ? RobotState.SMART_STOW_2 : currentState;
       case SMART_STOW_2 -> wrist.atGoal() ? RobotState.IDLE_CORAL : currentState;
       case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
+      case CLIMBING_1_LINEUP ->
+          climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
     };
   }
 

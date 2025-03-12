@@ -1,11 +1,11 @@
 package frc.robot.climber;
 
 public enum ClimberState {
-  STOWED(195, 2, -2),
-  LINEUP(0, 12, -12),
-  HANGING(156.0, 12, -12),
-  HANGING_2(160.0, 12, -12),
-  HANGING_3(165.0, 12, -12);
+  STOWED(98.0, -2, 2),
+  LINEUP(0.0, -12, 12),
+  HANGING(90.0, -12, 12),
+  HANGING_2(92.0, -12, 12),
+  HANGING_3(94.0, -12, 12);
 
   public final double angle;
   public final double forwardsVoltage;

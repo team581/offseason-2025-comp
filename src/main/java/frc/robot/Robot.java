@@ -72,7 +72,11 @@ public class Robot extends TimedRobot {
   private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final ClimberSubsystem climber =
-      new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+      new ClimberSubsystem(
+          hardware.climberClimbMotor,
+          hardware.climberCANcoder,
+          hardware.climberGrabMotor,
+          hardware.climberCanrange);
   private final AutoAlign autoAlign =
       new AutoAlign(frontLeftLimelight, frontRightLimelight, localization, swerve);
   private final CoralMap coralMap = new CoralMap(localization, swerve);
