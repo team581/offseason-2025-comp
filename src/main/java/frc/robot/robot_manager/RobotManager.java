@@ -117,8 +117,6 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_2_HANGING,
               CLIMBING_3_HANGING_2,
               CLIMBING_4_HANGING_3,
-              DISLODGE_ALGAE_L2_WAIT,
-              DISLODGE_ALGAE_L3_WAIT,
               UNJAM_CORAL_STATION,
               UNJAM ->
           currentState;
@@ -214,27 +212,7 @@ public class RobotManager extends StateMachine<RobotState> {
               ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
               : currentState;
 
-      // Dislodging
-      case DISLODGE_ALGAE_L2_PUSHING -> {
-        if (wrist.atGoal() && elevator.atGoal()) {
-          if (intake.getHasGP()) {
-            yield RobotState.CORAL_CENTERED_L2_2_LINEUP;
-          } else if (cameraOnlineAndFarEnoughFromReef()) {
-            yield RobotState.IDLE_NO_GP;
-          }
-        }
-        yield currentState;
-      }
-      case DISLODGE_ALGAE_L3_PUSHING -> {
-        if (wrist.atGoal() && elevator.atGoal()) {
-          if (intake.getHasGP()) {
-            yield RobotState.CORAL_CENTERED_L3_2_LINEUP;
-          } else if (cameraOnlineAndFarEnoughFromReef()) {
-            yield RobotState.IDLE_NO_GP;
-          }
-        }
-        yield currentState;
-      }
+
       // Scoring
       case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
         if (timeout(0.5)) {
@@ -471,42 +449,6 @@ public class RobotManager extends StateMachine<RobotState> {
         roll.setState(RollState.CORAL_HORIZONTAL);
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
-        climber.setState(ClimberState.STOWED);
-      }
-      case DISLODGE_ALGAE_L2_WAIT -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.ALGAE_DISLODGE_L2, WristState.DISLODGE_L2_LOW);
-        roll.setState(RollState.ALGAE);
-        swerve.snapsDriveRequest(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
-        climber.setState(ClimberState.STOWED);
-      }
-      case DISLODGE_ALGAE_L2_PUSHING -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.ALGAE_DISLODGE_L2, WristState.DISLODGE_L2_HIGH);
-        roll.setState(RollState.ALGAE);
-        swerve.snapsDriveRequest(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
-        climber.setState(ClimberState.STOWED);
-      }
-      case DISLODGE_ALGAE_L3_WAIT -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.ALGAE_DISLODGE_L3, WristState.DISLODGE_L3_LOW);
-        roll.setState(RollState.ALGAE);
-        swerve.snapsDriveRequest(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
-        climber.setState(ClimberState.STOWED);
-      }
-      case DISLODGE_ALGAE_L3_PUSHING -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.ALGAE_DISLODGE_L3, WristState.DISLODGE_L3_HIGH);
-        roll.setState(RollState.ALGAE);
-        swerve.snapsDriveRequest(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
-        lights.setState(LightsState.IDLE_NO_GP_ALGAE_MODE);
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L2_1_APPROACH -> {
@@ -952,12 +894,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
     // Update snaps
     switch (getState()) {
-      case DISLODGE_ALGAE_L2_WAIT,
-          DISLODGE_ALGAE_L3_WAIT,
-          DISLODGE_ALGAE_L2_PUSHING,
-          DISLODGE_ALGAE_L3_PUSHING -> {
-        swerve.snapsDriveRequest(reefSnapAngle);
-      }
       case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
       }
@@ -1548,10 +1484,6 @@ public class RobotManager extends StateMachine<RobotState> {
           INTAKE_ALGAE_FLOOR,
           INTAKE_ALGAE_L2,
           INTAKE_ALGAE_L3,
-          DISLODGE_ALGAE_L2_WAIT,
-          DISLODGE_ALGAE_L3_WAIT,
-          DISLODGE_ALGAE_L2_PUSHING,
-          DISLODGE_ALGAE_L3_PUSHING,
           INTAKE_CORAL_FLOOR_HORIZONTAL,
           INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
           INTAKE_CORAL_FLOOR_UPRIGHT,
