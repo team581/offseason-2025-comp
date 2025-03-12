@@ -34,7 +34,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<GamePieceResult> algaeResult = Optional.empty();
 
-  private double lastPoseTimestamp = 0.0;
 
   private final int[] closestScoringReefTag = {0};
 
@@ -87,12 +86,7 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
     var newPose = estimatePose.pose;
-    var newPoseTimestamp = estimatePose.timestampSeconds;
-    if (newPoseTimestamp == lastPoseTimestamp) {
-      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-      return Optional.empty();
-    }
-    lastPoseTimestamp = newPoseTimestamp;
+
 
     if (!MathUtil.isNear(robotHeading, newPose.getRotation().getDegrees(), 10, -180, 180)) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
