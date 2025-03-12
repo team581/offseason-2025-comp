@@ -52,7 +52,7 @@ public class AutoConstraintCalculator {
               constrainedSpeeds.timestampSeconds);
     }
 
-    if (options.maxLinearAcceleration() != 0) {
+    if (options.maxLinearAcceleration() != 0 && false) {
       constrainedSpeeds =
           new TimestampedChassisSpeeds(
               constrainLinearAcceleration(constrainedSpeeds, previousSpeeds, options),
@@ -109,16 +109,23 @@ public class AutoConstraintCalculator {
       TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
 
-    double deltaVx = inputSpeeds.vxMetersPerSecond - previousSpeeds.vxMetersPerSecond;
-    double deltaVy = inputSpeeds.vyMetersPerSecond - previousSpeeds.vyMetersPerSecond;
-    if (Math.abs(inputSpeeds.vxMetersPerSecond) - Math.abs(previousSpeeds.vxMetersPerSecond) < 0
-        && Math.abs(inputSpeeds.vyMetersPerSecond) - Math.abs(previousSpeeds.vyMetersPerSecond)
-            < 0.5) {
+    double inputTotalSpeed =
+        Math.sqrt(
+            Math.pow(inputSpeeds.vxMetersPerSecond, 2)
+                + Math.pow(inputSpeeds.vyMetersPerSecond, 2));
+    double previousTotalSpeed =
+        Math.sqrt(
+            Math.pow(previousSpeeds.vxMetersPerSecond, 2)
+                + Math.pow(previousSpeeds.vyMetersPerSecond, 2));
+    double unconstrainedLinearAcceleration =
+        (inputTotalSpeed - previousTotalSpeed) / inputSpeeds.timestampDifference(previousSpeeds);
+
+    if (unconstrainedLinearAcceleration < 0) {
       return inputSpeeds;
     }
-    double unconstrainedLinearAcceleration =
-        Math.sqrt(deltaVx * deltaVx + deltaVy * deltaVy)
-            / inputSpeeds.timestampDifference(previousSpeeds);
+
+    double deltaVx = inputSpeeds.vxMetersPerSecond - previousSpeeds.vxMetersPerSecond;
+    double deltaVy = inputSpeeds.vyMetersPerSecond - previousSpeeds.vyMetersPerSecond;
 
     double constrainedLinearAcceleration =
         Math.min(unconstrainedLinearAcceleration, options.maxLinearAcceleration());

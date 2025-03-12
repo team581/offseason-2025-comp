@@ -1181,7 +1181,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void intakeAssistFloorRequest() {
     if (algaeMode) {
-      intakeFloorAlgaeRequest();
+      // No intake assist for algae yet, so just do nothing
+      // Require a press & release to trigger algae intake
+      // intakeFloorAlgaeRequest();
     } else {
       intakeAssistFloorCoralHorizontalRequest();
     }

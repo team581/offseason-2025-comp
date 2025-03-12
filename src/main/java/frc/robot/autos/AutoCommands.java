@@ -157,6 +157,14 @@ public class AutoCommands {
         && robotManager.roll.atGoal();
   }
 
+  public Command waitForAlignedForScore() {
+    // return robotManager
+    //     .waitForStates(
+    //         RobotState.CORAL_CENTERED_L4_2_LINEUP, RobotState.CORAL_DISPLACED_L4_2_LINEUP)
+    //     .andThen(Commands.waitUntil(this::alignedForScore));
+    return Commands.waitUntil(this::alignedForScore);
+  }
+
   public Command waitForGroundIntakeDone() {
     return robotManager
         .waitForStates(

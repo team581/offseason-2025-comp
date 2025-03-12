@@ -112,29 +112,29 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(70)
-                          .withSupplyCurrentLimit(70))
+                          .withStatorCurrentLimit(80)
+                          .withSupplyCurrentLimit(80))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
-                          .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0)),
+                          .withPeakForwardTorqueCurrent(80.0)
+                          .withPeakReverseTorqueCurrent(80.0)),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(70)
-                          .withSupplyCurrentLimit(70))
+                          .withStatorCurrentLimit(80)
+                          .withSupplyCurrentLimit(80))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
-                          .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0)),
+                          .withPeakForwardTorqueCurrent(80.0)
+                          .withPeakReverseTorqueCurrent(80.0)),
               90,
               0.66),
           new SwerveConfig(
