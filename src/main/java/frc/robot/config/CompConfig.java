@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
@@ -234,7 +235,9 @@ class CompConfig {
               -55.0,
               215.0,
               new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -245,9 +248,9 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(0.120849609375)
+                          .withMagnetOffset(-0.61865234375)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                          .withAbsoluteSensorDiscontinuityPoint(0.7)),
+                          .withAbsoluteSensorDiscontinuityPoint(0.5)),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -255,7 +258,8 @@ class CompConfig {
                           .withStatorCurrentLimit(35)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(35)),
-              new CANrangeConfiguration()),
+              new CANrangeConfiguration()
+                  .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private CompConfig() {}

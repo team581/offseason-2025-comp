@@ -245,7 +245,8 @@ class PracticeConfig {
                           .withStatorCurrentLimit(35)
                           .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(35)),
-              new CANrangeConfiguration().withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
+              new CANrangeConfiguration()
+                  .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
           new LightsConfig(RIO_CAN_NAME, 18));
 
   private PracticeConfig() {}
