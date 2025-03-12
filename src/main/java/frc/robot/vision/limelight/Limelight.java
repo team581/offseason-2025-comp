@@ -88,7 +88,7 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     var newPose = estimatePose.pose;
     var newPoseTimestamp = estimatePose.timestampSeconds;
-    if (newPoseTimestamp ==  lastPoseTimestamp) {
+    if (newPoseTimestamp == lastPoseTimestamp) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
       return Optional.empty();
     }

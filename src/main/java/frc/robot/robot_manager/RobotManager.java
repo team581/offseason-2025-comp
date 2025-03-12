@@ -215,7 +215,6 @@ public class RobotManager extends StateMachine<RobotState> {
               ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
               : currentState;
 
-
       // Scoring
       case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
         if (timeout(0.5)) {
