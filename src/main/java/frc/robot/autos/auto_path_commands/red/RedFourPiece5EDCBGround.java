@@ -23,13 +23,13 @@ public class RedFourPiece5EDCBGround extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-         // TODO: Add approach points
+        // TODO: Add approach points
         blocks.scorePreloadL4(Points.START_R5_AND_B5.redPose, ReefPipe.PIPE_E),
-        blocks.intakeGround(new Pose2d(),new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
+        blocks.intakeGround(new Pose2d(), new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
         blocks.scoreL4(ReefPipe.PIPE_D),
-        blocks.intakeGround(new Pose2d(),new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
+        blocks.intakeGround(new Pose2d(), new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
         blocks.scoreL4(ReefPipe.PIPE_C),
-        blocks.intakeGround(new Pose2d(),new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
+        blocks.intakeGround(new Pose2d(), new Pose2d(14.644, 6.019, Rotation2d.fromDegrees(35))),
         blocks.scoreL4(ReefPipe.PIPE_B));
   }
 }

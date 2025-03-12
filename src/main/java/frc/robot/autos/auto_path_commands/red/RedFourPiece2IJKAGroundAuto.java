@@ -24,11 +24,17 @@ public class RedFourPiece2IJKAGroundAuto extends BaseAuto {
   protected Command createAutoCommand() {
     return Commands.sequence(
         blocks.scorePreloadL4(Points.START_R2_AND_B2.redPose, ReefPipe.PIPE_I),
-        blocks.intakeGround(new Pose2d(12.888, 1.871, Rotation2d.fromDegrees(-31.0)), new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
+        blocks.intakeGround(
+            new Pose2d(12.888, 1.871, Rotation2d.fromDegrees(-31.0)),
+            new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
         blocks.scoreL4(ReefPipe.PIPE_K),
-        blocks.intakeGround(new Pose2d(14.25, 2.0, Rotation2d.fromDegrees(-35)), new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
+        blocks.intakeGround(
+            new Pose2d(14.25, 2.0, Rotation2d.fromDegrees(-35)),
+            new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
         blocks.scoreL4(ReefPipe.PIPE_L),
-        blocks.intakeGround(new Pose2d(14.188, 1.974, Rotation2d.fromDegrees(-40)), new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
+        blocks.intakeGround(
+            new Pose2d(14.188, 1.974, Rotation2d.fromDegrees(-40)),
+            new Pose2d(15.151, 1.244, Rotation2d.fromDegrees(-20.0))),
         blocks.scoreL4(ReefPipe.PIPE_A));
   }
 }
