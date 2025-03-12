@@ -150,7 +150,11 @@ public class AutoCommands {
   }
 
   public boolean alignedForScore() {
-    return robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced();
+    return robotManager.autoAlign.isTagAlignedDebounced()
+        && robotManager.imu.isFlatDebounced()
+        && robotManager.elevator.atGoal()
+        && robotManager.wrist.atGoal()
+        && robotManager.roll.atGoal();
   }
 
   public Command waitForGroundIntakeDone() {
