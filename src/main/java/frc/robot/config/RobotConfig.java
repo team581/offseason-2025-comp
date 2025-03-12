@@ -2,8 +2,8 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.util.ProfiledPhoenixPIDController;
 
 public record RobotConfig(
     String robotName,
@@ -41,7 +41,7 @@ public record RobotConfig(
       double algaeHoldMaxDutyCycle) {}
 
   public record SwerveConfig(
-      ProfiledPhoenixPIDController snapController,
+      PhoenixPIDController snapController,
       boolean invertRotation,
       boolean invertX,
       boolean invertY,

@@ -1,4 +1,4 @@
-package frc.robot.autos.auto_path_commands.blue;
+package frc.robot.autos.auto_path_commands.red;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,26 +12,28 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class BlueDoNothingAuto extends BaseAuto {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
+public class RedStraightLineAuto extends BaseAuto {
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(10, 50, 1, 30);
 
-  public BlueDoNothingAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public RedStraightLineAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.bluePose;
+    return Points.START_R1_AND_B1.redPose;
   }
 
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        Commands.runOnce(robotManager::rehomeRollRequest),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(Points.START_R1_AND_B1.bluePose),
-                new AutoPoint(new Pose2d(6.92, 7.29, Rotation2d.fromDegrees(180))))));
+                new AutoPoint(Points.START_R1_AND_B1.redPose),
+                new AutoPoint(new Pose2d(11.924, 0.758, Rotation2d.kZero)),
+                new AutoPoint(new Pose2d(12.0, 0.758, Rotation2d.kZero)),
+                new AutoPoint(new Pose2d(13.0, 0.758, Rotation2d.kZero)),
+                new AutoPoint(new Pose2d(15.0, 0.758, Rotation2d.kZero)))));
   }
 }

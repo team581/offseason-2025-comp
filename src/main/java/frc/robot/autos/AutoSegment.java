@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import java.util.List;
 
@@ -31,5 +32,26 @@ public class AutoSegment {
   public AutoSegment pathflipped() {
     return new AutoSegment(
         defaultConstraints, points.stream().map(AutoPoint::pathflipped).toList());
+  }
+
+  /**
+   * Get the remaining distance from the robot's current pose to the end of the segment.
+   *
+   * @param robotPose The current pose of the robot.
+   * @param currentIndex The current index of the segment.
+   */
+  public double getRemainingDistance(Pose2d robotPose, int currentIndex) {
+    var remainingPoints = points.subList(currentIndex, points.size());
+
+    var distance = 0.0;
+
+    for (var i = 0; i < remainingPoints.size(); i++) {
+      var previous = i == 0 ? robotPose : remainingPoints.get(i - 1).poseSupplier.get();
+      var current = remainingPoints.get(i).poseSupplier.get();
+
+      distance += previous.getTranslation().getDistance(current.getTranslation());
+    }
+
+    return distance;
   }
 }

@@ -11,7 +11,7 @@ import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
-  private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
+  public static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
       new Pose3d(
           // Positive-Forward
           Units.inchesToMeters(11.41),
@@ -21,11 +21,12 @@ public class GamePieceDetectionUtil {
           // Positive-Up
           Units.inchesToMeters(36.09),
           new Rotation3d(
-              Units.degreesToRadians(-5),
-              Units.degreesToRadians(32.5),
+              Units.degreesToRadians(-7),
+              Units.degreesToRadians(40.0),
               Units.degreesToRadians(-15)));
 
   private static final double CORAL_LENGTH = 11.875;
+  private static final double CORAL_RADIUS = 2.25;
   private static final double ALGAE_DIAMETER = 16.25;
   private static final double algaeToGroundOffset =
       (CORAL_LENGTH) + (ALGAE_DIAMETER / 2.0); // length of coral + half of diameter of algae
@@ -93,7 +94,7 @@ public class GamePieceDetectionUtil {
     return robotRelativeTranslation;
   }
 
-  private static Translation2d calculateRobotRelativeTranslationFromCamera(
+  public static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
 
     double thetaX = Units.degreesToRadians(visionResult.tx());
@@ -107,20 +108,19 @@ public class GamePieceDetectionUtil {
 
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - newThetaY;
 
-    double yOffset = 0;
+    double forwardOffset = 0;
     if (adjustedThetaY == 0) {
-      yOffset = Math.abs(limelightToRobotOffset.getY());
+      forwardOffset = Math.abs(limelightToRobotOffset.getY());
     } else {
-      yOffset =
+      forwardOffset =
           // .getZ() represents height from floor
-          (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
-              // .getX() is supposed to represent forward and backward distance from center of robot
-              + Math.abs(limelightToRobotOffset.getX());
+          ((limelightToRobotOffset.getZ() - Units.inchesToMeters(CORAL_RADIUS))
+              / Math.tan(adjustedThetaY));
     }
 
-    double xOffset = yOffset * Math.tan(newThetaX);
+    double sidewaysOffset = forwardOffset * Math.tan(newThetaX);
 
-    var cameraRelativeTranslation = new Translation2d(yOffset, xOffset);
+    var cameraRelativeTranslation = new Translation2d(forwardOffset, sidewaysOffset);
     var robotRelativeTranslation =
         cameraRelativeTranslation
             .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))

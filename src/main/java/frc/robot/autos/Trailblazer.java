@@ -15,6 +15,7 @@ import frc.robot.autos.trackers.PathTracker;
 import frc.robot.autos.trackers.pure_pursuit.PurePursuitPathTracker;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.TimestampedChassisSpeeds;
 
 public class Trailblazer {
   /**
@@ -32,10 +33,9 @@ public class Trailblazer {
   private final PathTracker pathTracker = new PurePursuitPathTracker();
   private final PathFollower pathFollower =
       new PidPathFollower(
-          new PIDController(5, 0, 0), new PIDController(5, 0, 0), new PIDController(12, 0, 0));
+          new PIDController(5, 0, 0), new PIDController(5, 0, 0), new PIDController(9, 0, 0));
   private int previousAutoPointIndex = -1;
-  private ChassisSpeeds previousSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-  private double previousTimestamp = 0.0;
+  private TimestampedChassisSpeeds previousSpeeds = new TimestampedChassisSpeeds(0);
 
   public Trailblazer(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.swerve = swerve;
@@ -66,9 +66,13 @@ public class Trailblazer {
                           localization.getPose(), swerve.getFieldRelativeSpeeds());
                       var currentAutoPointIndex = pathTracker.getCurrentPointIndex();
                       var currentAutoPoint = segment.points.get(currentAutoPointIndex);
+                      double distanceToSegmentEnd =
+                          segment.getRemainingDistance(
+                              localization.getPose(), currentAutoPointIndex);
 
                       var constrainedVelocityGoal =
-                          getSwerveSetpoint(currentAutoPoint, segment.defaultConstraints);
+                          getSwerveSetpoint(
+                              currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
                       DogLog.log("Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
@@ -106,18 +110,29 @@ public class Trailblazer {
   }
 
   private ChassisSpeeds getSwerveSetpoint(
-      AutoPoint point, AutoConstraintOptions segmentConstraints) {
-    double currentTimestamp = Timer.getFPGATimestamp();
-    if (previousTimestamp == 0.0) {
-      previousTimestamp = currentTimestamp - 0.02;
+      AutoPoint point, AutoConstraintOptions segmentConstraints, double distanceToSegmentEnd) {
+    if (previousSpeeds.timestampSeconds == 0) {
+      previousSpeeds = new TimestampedChassisSpeeds(Timer.getFPGATimestamp() - 0.02);
     }
+
     var robotPose = localization.getPose();
     var originalTargetPose = pathTracker.getTargetPose();
-    var originalVelocityGoal = pathFollower.calculateSpeeds(robotPose, originalTargetPose);
-    var currentVelocity =
-        Math.hypot(originalVelocityGoal.vxMetersPerSecond, originalVelocityGoal.vyMetersPerSecond);
+    var originalVelocityGoal =
+        new TimestampedChassisSpeeds(pathFollower.calculateSpeeds(robotPose, originalTargetPose));
+    var originalConstraints = resolveConstraints(point, segmentConstraints);
 
-    var usedConstraints = resolveConstraints(point, segmentConstraints);
+    /*
+    var newLinearVelocity =
+        AutoConstraintCalculator.getDynamicVelocityConstraint(
+            robotPose,
+            endPose,
+            swerve.getFieldRelativeSpeeds(),
+            originalConstraints.maxLinearVelocity(),
+            originalConstraints.maxLinearAcceleration());
+    */
+    var usedConstraints =
+        originalConstraints.withMaxLinearVelocity(originalConstraints.maxLinearVelocity());
+
     DogLog.log(
         "Trailblazer/Constraints/VelocityCalculation/CalculatedVelocity",
         usedConstraints.maxLinearVelocity());
@@ -126,13 +141,9 @@ public class Trailblazer {
     DogLog.log("Trailblazer/Follower/RawOutput", originalVelocityGoal);
     var constrainedVelocityGoal =
         AutoConstraintCalculator.constrainVelocityGoal(
-            originalVelocityGoal,
-            previousSpeeds,
-            currentTimestamp - previousTimestamp,
-            usedConstraints);
+            originalVelocityGoal, previousSpeeds, usedConstraints, distanceToSegmentEnd);
     DogLog.log("Trailblazer/Follower/UsedOutput", constrainedVelocityGoal);
 
-    previousTimestamp = currentTimestamp;
     previousSpeeds = constrainedVelocityGoal;
 
     return constrainedVelocityGoal;

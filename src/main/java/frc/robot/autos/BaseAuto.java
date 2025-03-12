@@ -8,21 +8,22 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
-import frc.robot.robot_manager.RobotState;
 
 public abstract class BaseAuto {
   protected final RobotManager robotManager;
   protected final Trailblazer trailblazer;
   protected final RobotCommands actions;
   protected final AutoCommands autoCommands;
+  protected final AutoBlocks blocks;
   private final String autoName;
   private final Command autoCommand;
 
   protected BaseAuto(RobotManager robotManager, Trailblazer trailblazer) {
     this.robotManager = robotManager;
     this.trailblazer = trailblazer;
-    this.actions = new RobotCommands(robotManager);
-    this.autoCommands = new AutoCommands(actions, robotManager);
+    actions = new RobotCommands(robotManager);
+    autoCommands = new AutoCommands(actions, robotManager);
+    blocks = new AutoBlocks(trailblazer, robotManager, autoCommands);
 
     var className = this.getClass().getSimpleName();
     autoName = className.substring(className.lastIndexOf('.') + 1);
@@ -61,14 +62,5 @@ public abstract class BaseAuto {
               }
             })
         .withName(autoName + "Command");
-  }
-
-  public Command waitForGroundIntakeDone() {
-    return robotManager
-        .waitForStates(
-            RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL,
-            RobotState.INTAKE_CORAL_FLOOR_UPRIGHT,
-            RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL)
-        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
   }
 }

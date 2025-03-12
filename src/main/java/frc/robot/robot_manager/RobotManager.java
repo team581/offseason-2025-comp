@@ -183,6 +183,10 @@ public class RobotManager extends StateMachine<RobotState> {
             : RobotState.CORAL_DISPLACED_L3_2_LINEUP;
       }
       case CORAL_L4_1_APPROACH -> {
+        // Require explicit transition in auto
+        if (FeatureFlags.EXPLICIT_L4_LINEUP.getAsBoolean() && DriverStation.isAutonomous()) {
+          yield currentState;
+        }
         var isClose =
             AutoAlign.isCloseToReefSide(
                 localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
@@ -390,7 +394,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         roll.setState(RollState.CORAL_HORIZONTAL);
-        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()));
+        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()), true);
         vision.setState(VisionState.STATION_TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
         climber.setState(ClimberState.STOWED);
@@ -400,7 +404,8 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_FRONT, WristState.INTAKING_CORAL_STATION_FRONT);
         roll.setState(RollState.CORAL_HORIZONTAL);
-        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0);
+        swerve.snapsDriveRequest(
+            SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0, true);
         vision.setState(VisionState.STATION_TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
         climber.setState(ClimberState.STOWED);
@@ -525,7 +530,7 @@ public class RobotManager extends StateMachine<RobotState> {
             WristState.CORAL_SCORE_CENTERED_PLACING_L2,
             true);
         autoAlign.markPipeScored();
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
@@ -560,7 +565,7 @@ public class RobotManager extends StateMachine<RobotState> {
             WristState.CORAL_SCORE_CENTERED_PLACING_L3,
             true);
         autoAlign.markPipeScored();
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
@@ -601,7 +606,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_CENTERED_L4_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L4,
             true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
@@ -636,7 +641,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L2_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L2,
             true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         autoAlign.markPipeScored();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -671,7 +676,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L3_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L3,
             true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
@@ -715,7 +720,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_DISPLACED_L4_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L4,
             true);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle, true);
         roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.markPipeScored();
@@ -923,10 +928,11 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case INTAKE_CORAL_STATION_BACK -> {
-        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()));
+        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()), true);
       }
       case INTAKE_CORAL_STATION_FRONT -> {
-        swerve.snapsDriveRequest(SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0);
+        swerve.snapsDriveRequest(
+            SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0, true);
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
         if (maybeBestCoralMapTranslation.isPresent()) {
@@ -1240,6 +1246,16 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void intakeStationBackRequest() {
+    algaeMode = false;
+    setStateFromRequest(RobotState.INTAKE_CORAL_STATION_BACK);
+  }
+
+  public void intakeStationFrontRequest() {
+    algaeMode = false;
+    setStateFromRequest(RobotState.INTAKE_CORAL_STATION_FRONT);
+  }
+
   public void lowLineupRequest() {
     if (algaeMode) {
       processorWaitingRequest();
@@ -1456,8 +1472,8 @@ public class RobotManager extends StateMachine<RobotState> {
       default ->
           setStateFromRequest(
               intake.isCoralCentered()
-                  ? RobotState.CORAL_CENTERED_L4_2_LINEUP
-                  : RobotState.CORAL_DISPLACED_L4_2_LINEUP);
+                  ? RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST
+                  : RobotState.CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST);
     }
   }
 

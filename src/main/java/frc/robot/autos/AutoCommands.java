@@ -1,13 +1,16 @@
 package frc.robot.autos;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.elevator.CoralStation;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class AutoCommands {
   private final RobotCommands robotCommands;
@@ -60,6 +63,14 @@ public class AutoCommands {
                 }));
   }
 
+  public Command l4LineupCommand(ReefPipe pipe) {
+    return Commands.runOnce(
+        () -> {
+          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+          robotManager.l4CoralLineupRequest();
+        });
+  }
+
   public Command intakeStationWarmupCommand() {
     return Commands.runOnce(robotManager::intakeStationRequest);
   }
@@ -87,11 +98,71 @@ public class AutoCommands {
     return robotManager.getState() == RobotState.IDLE_CORAL;
   }
 
+  public Command waitForBackIntakeDone() {
+    if (RobotBase.isSimulation()) {
+      return Commands.waitUntil(
+              () -> {
+                var robotPose = robotManager.localization.getPose();
+
+                return Stream.of(CoralStation.values())
+                    .anyMatch(
+                        station ->
+                            station
+                                    .backLoadPose
+                                    .getTranslation()
+                                    .getDistance(robotPose.getTranslation())
+                                < 0.05);
+              })
+          // Simulate delay from human player dropping the coral
+          .andThen(Commands.waitSeconds(0.75));
+    }
+
+    return Commands.waitUntil(this::isSmartStowing);
+  }
+
+  public Command waitForFrontIntakeDone() {
+    if (RobotBase.isSimulation()) {
+      // Wait until aligned at the coral station
+      return Commands.waitUntil(
+              () -> {
+                var robotPose = robotManager.localization.getPose();
+
+                return Stream.of(CoralStation.values())
+                    .anyMatch(
+                        station ->
+                            station
+                                    .frontLoadPose
+                                    .getTranslation()
+                                    .getDistance(robotPose.getTranslation())
+                                < 0.05);
+              })
+          // Simulate delay from human player dropping the coral
+          .andThen(Commands.waitSeconds(0.75));
+    }
+
+    return robotManager
+        .waitForState(RobotState.INTAKE_CORAL_STATION_FRONT)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
+  }
+
   public Command stowRequest() {
     return Commands.runOnce(robotManager::stowRequest);
   }
 
   public boolean alignedForScore() {
-    return robotManager.autoAlign.isTagAlignedDebounced() && robotManager.imu.isFlatDebounced();
+    return robotManager.autoAlign.isTagAlignedDebounced()
+        && robotManager.imu.isFlatDebounced()
+        && robotManager.elevator.atGoal()
+        && robotManager.wrist.atGoal()
+        && robotManager.roll.atGoal();
+  }
+
+  public Command waitForGroundIntakeDone() {
+    return robotManager
+        .waitForStates(
+            RobotState.INTAKE_CORAL_FLOOR_HORIZONTAL,
+            RobotState.INTAKE_CORAL_FLOOR_UPRIGHT,
+            RobotState.INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL)
+        .andThen(robotManager.waitForState(RobotState.IDLE_CORAL));
   }
 }
