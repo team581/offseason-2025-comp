@@ -28,9 +28,9 @@ public class AutoBlocks {
       new Transform2d(0.6, 0, Rotation2d.kZero);
 
   private static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(4.5, 57, 3, 30);
+      new AutoConstraintOptions(4.7, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(1);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.5);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -57,7 +57,7 @@ public class AutoBlocks {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    BASE_CONSTRAINTS,
+                    SCORING_CONSTRAINTS,
                     new AutoPoint(
                         () ->
                             robotManager
@@ -78,7 +78,7 @@ public class AutoBlocks {
                 BASE_CONSTRAINTS,
                 new AutoPoint(
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
-                    Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                    Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
                 new AutoPoint(
                     () ->
                         robotManager
@@ -110,7 +110,7 @@ public class AutoBlocks {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    BASE_CONSTRAINTS,
+                    SCORING_CONSTRAINTS,
                     new AutoPoint(
                         () ->
                             robotManager
@@ -134,7 +134,7 @@ public class AutoBlocks {
                 // Start at the scoring position
                 new AutoPoint(
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
-                    Commands.waitSeconds(0.25).andThen(robotManager::stowRequest)),
+                    Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
                 // Scoot back to the lineup position to finish the score
                 new AutoPoint(
                     () ->
