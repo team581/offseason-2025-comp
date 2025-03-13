@@ -44,7 +44,6 @@ public class AutoBlocks {
 
   public Command scoreL4(ReefPipe pipe) {
     return Commands.sequence(
-
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -53,7 +52,8 @@ public class AutoBlocks {
                         robotManager
                             .autoAlign
                             .getUsedScoringPose(pipe, ReefPipeLevel.L4)
-                            .transformBy(PIPE_APPROACH_OFFSET),autoCommands.l4WarmupCommand(pipe)))),
+                            .transformBy(PIPE_APPROACH_OFFSET),
+                    autoCommands.l4WarmupCommand(pipe)))),
         trailblazer
             .followSegment(
                 new AutoSegment(

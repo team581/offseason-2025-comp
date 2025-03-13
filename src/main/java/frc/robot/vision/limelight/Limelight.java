@@ -34,7 +34,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<GamePieceResult> algaeResult = Optional.empty();
 
-
   private final int[] closestScoringReefTag = {0};
 
   private double robotHeading = 0.0;
@@ -86,7 +85,6 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
     var newPose = estimatePose.pose;
-
 
     if (!MathUtil.isNear(robotHeading, newPose.getRotation().getDegrees(), 10, -180, 180)) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);

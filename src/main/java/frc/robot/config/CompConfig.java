@@ -235,9 +235,7 @@ class CompConfig {
               -55.0,
               215.0,
               new TalonFXConfiguration()
-                  .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withNeutralMode(NeutralModeValue.Brake))
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
