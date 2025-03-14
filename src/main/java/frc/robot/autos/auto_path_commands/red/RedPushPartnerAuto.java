@@ -14,7 +14,7 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.elevator.CoralStation;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedPushPartnerAuto extends BaseAuto{
+public class RedPushPartnerAuto extends BaseAuto {
   public RedPushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
@@ -23,10 +23,11 @@ public class RedPushPartnerAuto extends BaseAuto{
   protected Pose2d getStartingPose() {
     return Points.START_R3_AND_B3.redPose;
   }
-   @Override
+
+  @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-              trailblazer.followSegment(
+        trailblazer.followSegment(
             // PUSH PARTNER
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
