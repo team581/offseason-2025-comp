@@ -4,6 +4,7 @@ import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueFourPiece2IJKAGroundAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueFourPiece5EDCBGround;
 import frc.robot.autos.auto_path_commands.blue.BlueOldPushPartnerAuto;
+import frc.robot.autos.auto_path_commands.blue.BluePushPartnerAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece3JKLAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece4EDCAuto;
 import frc.robot.autos.auto_path_commands.red.RedBackThreePiece3JKLAuto;
@@ -12,6 +13,7 @@ import frc.robot.autos.auto_path_commands.red.RedFourPiece2IJKAGroundAuto;
 import frc.robot.autos.auto_path_commands.red.RedFourPiece5EDCBGround;
 import frc.robot.autos.auto_path_commands.red.RedOldPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedOldThreePiece2IKLAuto;
+import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3JKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece4EDCAuto;
 import frc.robot.robot_manager.RobotManager;
@@ -20,7 +22,8 @@ import java.util.function.BiFunction;
 public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
 
-  PUSH_PARTNER(RedOldPushPartnerAuto::new, BlueOldPushPartnerAuto::new),
+  OLD_PUSH_PARTNER(RedOldPushPartnerAuto::new, BlueOldPushPartnerAuto::new),
+  PUSH_PARTNER(RedPushPartnerAuto::new, BluePushPartnerAuto::new),
   FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IJKAGroundAuto::new, BlueFourPiece2IJKAGroundAuto::new),
   FOUR_PIECE_5EDCB_GROUND(RedFourPiece5EDCBGround::new, BlueFourPiece5EDCBGround::new),
 
