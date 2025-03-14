@@ -29,7 +29,7 @@ public class GamePieceDetectionUtil {
   private static final double CORAL_RADIUS = 2.25;
   private static final double ALGAE_DIAMETER = 16.25;
   private static final double algaeToGroundOffset =
-      (CORAL_LENGTH) + (ALGAE_DIAMETER / 2.0); // length of coral + half of diameter of algae
+       CORAL_LENGTH + (ALGAE_DIAMETER / 2.0); // length of coral + half of diameter of algae
 
   private static final Transform3d ALGAE_OFFSET =
       new Transform3d(0, 0, Units.inchesToMeters(-algaeToGroundOffset), Rotation3d.kZero);

@@ -52,7 +52,7 @@ public class AutoConstraintCalculator {
               constrainedSpeeds.timestampSeconds);
     }
 
-    if (options.maxLinearAcceleration() != 0 && false) {
+    if (false) {
       constrainedSpeeds =
           new TimestampedChassisSpeeds(
               constrainLinearAcceleration(constrainedSpeeds, previousSpeeds, options),

@@ -65,7 +65,5 @@ public enum ElevatorState {
     this.height = height;
   }
 
-  private ElevatorState(ElevatorState other) {
-    this(other.height);
-  }
+  
 }

@@ -1,16 +1,12 @@
 package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
-import frc.robot.autos.auto_path_commands.blue.BlueFourPiece2IJKAGroundAuto;
-import frc.robot.autos.auto_path_commands.blue.BlueFourPiece5EDCBGround;
 import frc.robot.autos.auto_path_commands.blue.BlueOldPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.blue.BluePushPartnerAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece3JKLAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece4EDCAuto;
 import frc.robot.autos.auto_path_commands.red.RedBackThreePiece3JKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
-import frc.robot.autos.auto_path_commands.red.RedFourPiece2IJKAGroundAuto;
-import frc.robot.autos.auto_path_commands.red.RedFourPiece5EDCBGround;
 import frc.robot.autos.auto_path_commands.red.RedOldPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3JKLAuto;
