@@ -2,6 +2,8 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.fms.FmsSubsystem;
 
 public enum ReefPipe {
@@ -28,7 +30,7 @@ public enum ReefPipe {
       new Pose2d(4.74, 4.78, Rotation2d.fromDegrees(240)),
       new Pose2d(12.81, 3.27, Rotation2d.fromDegrees(60))),
   PIPE_K(
-      new Pose2d(4.24, 4.78, Rotation2d.fromDegrees(300)),
+      new Pose2d(4.24, 4.78, Rotation2d.fromDegrees(300)).transformBy(new Transform2d(Units.inchesToMeters(-1), 0, Rotation2d.kZero)),
       new Pose2d(13.31, 3.27, Rotation2d.fromDegrees(120))),
   PIPE_L(
       new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
