@@ -19,7 +19,7 @@ public enum CollisionBox {
       2,
       new Rectangle2d( // bottom backwards
           new Translation2d(-24, -4.0), new Translation2d(-10, 25.0)),
-      new SuperstructurePosition(0, 110)), // 0 and angle of station intake
+      new SuperstructurePosition(0, 115)), // 0 and angle of station intake
   BOX_3(
       3,
       new Rectangle2d( // middle
