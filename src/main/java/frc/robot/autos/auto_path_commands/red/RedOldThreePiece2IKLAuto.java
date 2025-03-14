@@ -14,13 +14,13 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedThreePiece2IKLAuto extends BaseAuto {
+public class RedOldThreePiece2IKLAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       new AutoConstraintOptions(2, 57, 4, 30);
 
-  public RedThreePiece2IKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public RedOldThreePiece2IKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
