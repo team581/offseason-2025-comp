@@ -3,7 +3,7 @@ package frc.robot.autos;
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueFourPiece2IJKAGroundAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueFourPiece5EDCBGround;
-import frc.robot.autos.auto_path_commands.blue.BluePushPartnerAuto;
+import frc.robot.autos.auto_path_commands.blue.BlueOldPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece3JKLAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueThreePiece4EDCAuto;
 import frc.robot.autos.auto_path_commands.red.RedBackThreePiece3JKLAuto;
@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
 
-  PUSH_PARTNER(RedOldPushPartnerAuto::new, BluePushPartnerAuto::new),
+  PUSH_PARTNER(RedOldPushPartnerAuto::new, BlueOldPushPartnerAuto::new),
   FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IJKAGroundAuto::new, BlueFourPiece2IJKAGroundAuto::new),
   FOUR_PIECE_5EDCB_GROUND(RedFourPiece5EDCBGround::new, BlueFourPiece5EDCBGround::new),
 

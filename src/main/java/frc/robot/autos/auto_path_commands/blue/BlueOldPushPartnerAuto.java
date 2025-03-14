@@ -14,13 +14,13 @@ import frc.robot.autos.Trailblazer;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
 
-public class BluePushPartnerAuto extends BaseAuto {
+public class BlueOldPushPartnerAuto extends BaseAuto {
   private static final AutoConstraintOptions INTAKING_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       new AutoConstraintOptions(2.3, 57, 4, 30);
 
-  public BluePushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
+  public BlueOldPushPartnerAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
