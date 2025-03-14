@@ -27,7 +27,7 @@ public class AutoBlocks {
   private static final Transform2d BACK_STATION_APPROACH_OFFSET =
       new Transform2d(0.6, 0, Rotation2d.kZero);
 
-  private static final AutoConstraintOptions BASE_CONSTRAINTS =
+  public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.7, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.5);
