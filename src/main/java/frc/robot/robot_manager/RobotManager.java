@@ -935,23 +935,25 @@ public class RobotManager extends StateMachine<RobotState> {
             SnapUtil.getCoralStationAngle(localization.getPose()) - 180.0, true);
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
-        if (maybeBestCoralMapTranslation.isPresent()) {
-          var bestCoralMapTranslation = maybeBestCoralMapTranslation.orElseThrow();
+        if (FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+          if (maybeBestCoralMapTranslation.isPresent()) {
+            var bestCoralMapTranslation = maybeBestCoralMapTranslation.orElseThrow();
 
-          if (DriverStation.isTeleop()) {
-            Pose2d lookaheadPose = localization.getLookaheadPose(0.5);
-            DogLog.log("IntakeAssist/LookaheadPose", lookaheadPose);
-            swerve.setFieldRelativeCoralAssistSpeedsOffset(
-                IntakeAssistUtil.getAssistSpeedsFromPose(bestCoralMapTranslation, lookaheadPose));
-            swerve.coralAlignmentDriveRequest();
+            if (DriverStation.isTeleop()) {
+              Pose2d lookaheadPose = localization.getLookaheadPose(0.5);
+              DogLog.log("IntakeAssist/LookaheadPose", lookaheadPose);
+              swerve.setFieldRelativeCoralAssistSpeedsOffset(
+                  IntakeAssistUtil.getAssistSpeedsFromPose(bestCoralMapTranslation, lookaheadPose));
+              swerve.coralAlignmentDriveRequest();
+            } else {
+              var coralSnapAngle =
+                  IntakeAssistUtil.getIntakeAssistAngle(
+                      bestCoralMapTranslation.getTranslation(), localization.getPose());
+              swerve.snapsDriveRequest(coralSnapAngle);
+            }
           } else {
-            var coralSnapAngle =
-                IntakeAssistUtil.getIntakeAssistAngle(
-                    bestCoralMapTranslation.getTranslation(), localization.getPose());
-            swerve.snapsDriveRequest(coralSnapAngle);
+            swerve.normalDriveRequest();
           }
-        } else {
-          swerve.normalDriveRequest();
         }
       }
       default -> {}

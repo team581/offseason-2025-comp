@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.tag_align.AlignmentCostUtil;
+import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -168,6 +169,9 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   @Override
   protected void collectInputs() {
+    if (!FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+      return;
+    }
     swerveSpeeds = swerve.getRobotRelativeSpeeds();
     updateMap();
   }
@@ -175,7 +179,9 @@ public class CoralMap extends StateMachine<CoralMapState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    updateMap();
+    if (!FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+      return;
+    }
     try {
       DogLog.log(
           "CoralMap/Map",

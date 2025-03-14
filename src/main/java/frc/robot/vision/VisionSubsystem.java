@@ -1,22 +1,16 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-import frc.robot.vision.game_piece_detection.GamePieceDetectionUtil;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.TagResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private final ImuSubsystem imu;
-  private final Limelight frontCoralLimelight;
   private final Limelight backTagLimelight;
   private final Limelight frontRightLimelight;
   private final Limelight frontLeftLimelight;
@@ -31,13 +25,11 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
   public VisionSubsystem(
       ImuSubsystem imu,
-      Limelight frontCoralLimelight,
       Limelight backTagLimelight,
       Limelight frontRightLimelight,
       Limelight frontLeftLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
-    this.frontCoralLimelight = frontCoralLimelight;
     this.backTagLimelight = backTagLimelight;
     this.frontRightLimelight = frontRightLimelight;
     this.frontLeftLimelight = frontLeftLimelight;
@@ -53,14 +45,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     rollRate = imu.getRollRate();
 
     tagResult.clear();
-    var maybeBottomResult = frontCoralLimelight.getTagResult();
     var maybeBackResult = backTagLimelight.getTagResult();
     var maybeFrontRightResult = frontRightLimelight.getTagResult();
     var maybeFrontLeftResult = frontLeftLimelight.getTagResult();
-
-    if (maybeBottomResult.isPresent()) {
-      tagResult.add(maybeBottomResult.orElseThrow());
-    }
 
     if (maybeBackResult.isPresent()) {
       tagResult.add(maybeBackResult.orElseThrow());
@@ -87,31 +74,26 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   protected void afterTransition(VisionState newState) {
     switch (newState) {
       case TAGS -> {
-        frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.TAGS);
         frontRightLimelight.setState(LimelightState.TAGS);
         frontLeftLimelight.setState(LimelightState.TAGS);
       }
       case CLOSEST_REEF_TAG -> {
-        frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         frontRightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         frontLeftLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
       }
       case STATION_TAGS -> {
-        frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.STATION_TAGS);
         frontRightLimelight.setState(LimelightState.STATION_TAGS);
         frontLeftLimelight.setState(LimelightState.STATION_TAGS);
       }
       case CORAL_DETECTION -> {
-        frontCoralLimelight.setState(LimelightState.CORAL);
         backTagLimelight.setState(LimelightState.TAGS);
         frontRightLimelight.setState(LimelightState.TAGS);
         frontLeftLimelight.setState(LimelightState.TAGS);
       }
       case ALGAE_DETECTION -> {
-        frontCoralLimelight.setState(LimelightState.ALGAE);
         backTagLimelight.setState(LimelightState.TAGS);
         frontRightLimelight.setState(LimelightState.TAGS);
         frontLeftLimelight.setState(LimelightState.TAGS);
@@ -123,8 +105,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    frontCoralLimelight.sendImuData(
-        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     frontRightLimelight.sendImuData(
         robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
@@ -132,15 +112,13 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public void setClosestScoringReefTag(int tagID) {
-    frontCoralLimelight.setClosestScoringReefTag(tagID);
     frontRightLimelight.setClosestScoringReefTag(tagID);
     frontLeftLimelight.setClosestScoringReefTag(tagID);
     backTagLimelight.setClosestScoringReefTag(tagID);
   }
 
   public boolean isAnyCameraOffline() {
-    return frontCoralLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
+    return backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontRightLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || frontLeftLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
@@ -183,24 +161,5 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     }
 
     return false;
-  }
-
-  public Optional<Pose2d> getLollipopPose(LocalizationSubsystem localization) {
-    var maybeAlgaeResult = frontCoralLimelight.getAlgaeResult();
-
-    if (maybeAlgaeResult.isEmpty()) {
-      return Optional.empty();
-    }
-
-    var algaeResult = maybeAlgaeResult.orElseThrow();
-    var angleToCoral =
-        GamePieceDetectionUtil.getFieldRelativeAngleToGamePiece(
-            localization.getPose(algaeResult.timestamp()), algaeResult);
-
-    return Optional.of(
-        new Pose2d(
-            GamePieceDetectionUtil.calculateFieldRelativeLollipopTranslationFromCamera(
-                localization.getPose(algaeResult.timestamp()), algaeResult),
-            Rotation2d.fromDegrees(angleToCoral)));
   }
 }

@@ -4,9 +4,6 @@ import frc.robot.util.FeatureFlag;
 import java.util.function.BooleanSupplier;
 
 public class FeatureFlags {
-  public static final BooleanSupplier CORAL_INTAKE_ASSIST =
-      FeatureFlag.of("CoralIntakeAssist", true);
-
   public static final BooleanSupplier PURE_PURSUIT_USE_DYNAMIC_LOOKAHEAD =
       FeatureFlag.of("PurePursuit/UseDynamicLookahead", true);
 
@@ -18,6 +15,8 @@ public class FeatureFlags {
 
   public static final BooleanSupplier INTAKE_VELOCITY_CORAL_DETECTION =
       FeatureFlag.of("Intake/CoralVelocityDetection", true);
+
+  public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
 
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
 

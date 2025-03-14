@@ -46,8 +46,6 @@ public class Robot extends TimedRobot {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight frontCoralLimelight =
-      new Limelight("coral", LimelightState.TAGS, LimelightModel.FOUR);
   private final Limelight backTagLimelight =
       new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG);
   private final Limelight frontRightLimelight =
@@ -56,8 +54,7 @@ public class Robot extends TimedRobot {
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(
-          imu, frontCoralLimelight, backTagLimelight, frontRightLimelight, frontLeftLimelight);
+      new VisionSubsystem(imu, backTagLimelight, frontRightLimelight, frontLeftLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);
@@ -233,11 +230,7 @@ public class Robot extends TimedRobot {
                 () -> {
                   robotManager.setConfirmScoreActive(false);
                 }));
-    hardware
-        .driverController
-        .leftTrigger()
-        .onTrue(robotCommands.floorAssistIntakeCommand())
-        .onFalse(robotCommands.floorIntakeCommand());
+    hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.intakeStationCommand());
     hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
