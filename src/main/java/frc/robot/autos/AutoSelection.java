@@ -23,8 +23,8 @@ public enum AutoSelection {
 
   OLD_PUSH_PARTNER(RedOldPushPartnerAuto::new, BlueOldPushPartnerAuto::new),
   PUSH_PARTNER(RedPushPartnerAuto::new, BluePushPartnerAuto::new),
-  FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IJKAGroundAuto::new, BlueFourPiece2IJKAGroundAuto::new),
-  FOUR_PIECE_5EDCB_GROUND(RedFourPiece5EDCBGround::new, BlueFourPiece5EDCBGround::new),
+  // FOUR_PIECE_2IJKA_GROUND(RedFourPiece2IJKAGroundAuto::new, BlueFourPiece2IJKAGroundAuto::new),
+  // FOUR_PIECE_5EDCB_GROUND(RedFourPiece5EDCBGround::new, BlueFourPiece5EDCBGround::new),
 
   // STRAIGHT_LINE(RedStraightLineAuto::new, BlueDoNothingAuto::new),
 
