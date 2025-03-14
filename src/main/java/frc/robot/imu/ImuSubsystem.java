@@ -9,7 +9,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ImuSubsystem extends StateMachine<ImuState> {
-  private static final double IS_TILTED_THRESHOLD = 5.0;
+  private static final double IS_TILTED_THRESHOLD = 4.0;
   private static final Debouncer IS_TILTED_DEBOUNCE = new Debouncer(0.5, DebounceType.kRising);
   private final Pigeon2 imu;
   private double robotHeading = 0;
