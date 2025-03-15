@@ -794,7 +794,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.climbRequest();
-        roll.setState(RollState.CORAL_HORIZONTAL);
+        roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.LINEUP);
@@ -803,7 +803,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
-        roll.setState(RollState.CORAL_HORIZONTAL);
+        roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.HANGING);
@@ -812,7 +812,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
-        roll.setState(RollState.CORAL_HORIZONTAL);
+        roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.HANGING_2);
@@ -821,7 +821,7 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
-        roll.setState(RollState.CORAL_HORIZONTAL);
+        roll.setState(RollState.CORAL_SCORE);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.HANGING_3);
