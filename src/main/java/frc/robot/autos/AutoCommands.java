@@ -162,7 +162,7 @@ public class AutoCommands {
     //     .waitForStates(
     //         RobotState.CORAL_CENTERED_L4_2_LINEUP, RobotState.CORAL_DISPLACED_L4_2_LINEUP)
     //     .andThen(Commands.waitUntil(this::alignedForScore));
-    return Commands.waitUntil(this::alignedForScore);
+    return Commands.waitUntil(this::alignedForScore).withTimeout(5.0);
   }
 
   public Command waitForGroundIntakeDone() {

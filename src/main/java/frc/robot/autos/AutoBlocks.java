@@ -30,7 +30,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.7, 57, 4, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.5);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
