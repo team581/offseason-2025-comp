@@ -12,6 +12,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -32,6 +33,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private boolean holdingCage = false;
+  private boolean autoLineup = false;
+
+  private Timer lineupTimer = new Timer();
 
   public ClimberSubsystem(
       TalonFX climbMotor, CANcoder encoder, TalonFX grabMotor, CANrange canrange) {
@@ -101,9 +105,27 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         DogLog.log("Climber/Status", "Too high");
       }
     }
+
+    if (!autoLineup && lineupTimer.hasElapsed(105.0)) {
+      if (getState() == ClimberState.STOWED) {
+        setState(ClimberState.AUTO_LINEUP);
+      }
+      autoLineup = true;
+    }
   }
 
   public void setState(ClimberState newState) {
+    if (getState() == ClimberState.AUTO_LINEUP) {
+      if (newState == ClimberState.LINEUP
+          || newState == ClimberState.HANGING
+          || newState == ClimberState.HANGING_2
+          || newState == ClimberState.HANGING_3) {
+        setStateFromRequest(newState);
+      } else {
+        return;
+      }
+    }
+
     setStateFromRequest(newState);
   }
 
@@ -132,6 +154,14 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Climber/StatorCurrent", climbMotor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Climber/SupplyCurrent", climbMotor.getSupplyCurrent().getValueAsDouble());
+  }
+
+  @Override
+  public void teleopInit() {
+    super.teleopInit();
+    autoLineup = false;
+    lineupTimer.reset();
+    lineupTimer.start();
   }
 
   public boolean atGoal() {
