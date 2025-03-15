@@ -40,11 +40,4 @@ public interface PathTracker {
    * @return The index point being tracked.
    */
   public int getCurrentPointIndex();
-
-  /**
-   * Check whether the robot has finished following all the points.
-   *
-   * @return Whether the robot has finished following all the points.
-   */
-  public boolean isFinished();
 }

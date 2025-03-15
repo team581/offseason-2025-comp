@@ -97,7 +97,8 @@ public class Trailblazer {
 
     if (shouldEnd) {
       return command
-          .until(pathTracker::isFinished)
+          .until(
+              () -> segment.isFinished(localization.getPose(), pathTracker.getCurrentPointIndex()))
           .andThen(
               Commands.runOnce(
                   () -> {

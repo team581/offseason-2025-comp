@@ -2,12 +2,16 @@ package frc.robot.autos;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.util.PoseErrorTolerance;
 import java.util.List;
 
 /**
  * A segment is a path (a continuous set of {@link AutoPoint points}) that the roobt will follow.
  */
 public class AutoSegment {
+  private static final PoseErrorTolerance DEFAULT_POSITION_TOLERANCE =
+      new PoseErrorTolerance(0.1, 5);
+
   public final List<AutoPoint> points;
 
   /**
@@ -16,22 +20,41 @@ public class AutoSegment {
    */
   public final AutoConstraintOptions defaultConstraints;
 
-  public AutoSegment(AutoConstraintOptions defaultConstraints, List<AutoPoint> points) {
+  public final PoseErrorTolerance positionTolerance;
+
+  public AutoSegment(
+      AutoConstraintOptions defaultConstraints,
+      PoseErrorTolerance positionTolerance,
+      List<AutoPoint> points) {
     this.defaultConstraints = defaultConstraints;
     this.points = points;
+    this.positionTolerance = positionTolerance;
+  }
+
+  public AutoSegment(
+      AutoConstraintOptions defaultConstraints,
+      PoseErrorTolerance positionTolerance,
+      AutoPoint... points) {
+    this(defaultConstraints, positionTolerance, List.of(points));
   }
 
   public AutoSegment(AutoConstraintOptions defaultConstraints, AutoPoint... points) {
-    this(defaultConstraints, List.of(points));
+    this(defaultConstraints, DEFAULT_POSITION_TOLERANCE, List.of(points));
   }
 
   public AutoSegment(AutoPoint... points) {
-    this(new AutoConstraintOptions(), points);
+    this(new AutoConstraintOptions(), DEFAULT_POSITION_TOLERANCE, points);
+  }
+
+  public AutoSegment(PoseErrorTolerance positionTolerance, AutoPoint... points) {
+    this(new AutoConstraintOptions(), positionTolerance, points);
   }
 
   public AutoSegment pathflipped() {
     return new AutoSegment(
-        defaultConstraints, points.stream().map(AutoPoint::pathflipped).toList());
+        defaultConstraints,
+        positionTolerance,
+        points.stream().map(AutoPoint::pathflipped).toList());
   }
 
   /**
@@ -53,5 +76,18 @@ public class AutoSegment {
     }
 
     return distance;
+  }
+
+  public boolean isFinished(Pose2d robotPose, int currentIndex) {
+    if (points.isEmpty()) {
+      return true;
+    }
+
+    if (currentIndex != points.size() - 1) {
+      // We aren't at the last point in the list, so we definitely aren't finished
+      return false;
+    }
+
+    return positionTolerance.atPose(points.get(points.size() - 1).poseSupplier.get(), robotPose);
   }
 }

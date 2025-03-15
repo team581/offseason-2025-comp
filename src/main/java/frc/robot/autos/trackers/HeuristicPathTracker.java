@@ -24,9 +24,6 @@ public class HeuristicPathTracker implements PathTracker {
 
   @Override
   public Pose2d getTargetPose() {
-    if (isFinished() == true) {
-      return null;
-    }
     AutoPoint currentPoint = points.get(getCurrentPointIndex());
     Pose2d currentTargetPose = currentPoint.poseSupplier.get();
 
@@ -52,10 +49,5 @@ public class HeuristicPathTracker implements PathTracker {
   @Override
   public int getCurrentPointIndex() {
     return currentPointIndex;
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }

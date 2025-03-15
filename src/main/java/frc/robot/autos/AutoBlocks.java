@@ -10,8 +10,16 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.elevator.CoralStation;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.PoseErrorTolerance;
 
 public class AutoBlocks {
+  /**
+   * The tolerance used to determine when to end the little "backup & stow" motion we do after
+   * scoring L4.
+   */
+  private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
+      new PoseErrorTolerance(0.2, 10);
+
   /**
    * The offset used to calculate the position to go to before PIDing to the lineup pose. Ensures we
    * don't strafe into the scoring position, just a straight-on movement.
@@ -76,6 +84,7 @@ public class AutoBlocks {
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
+                AFTER_SCORE_POSITION_TOLERANCE,
                 new AutoPoint(
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),
                     Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
@@ -131,6 +140,7 @@ public class AutoBlocks {
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
+                AFTER_SCORE_POSITION_TOLERANCE,
                 // Start at the scoring position
                 new AutoPoint(
                     () -> robotManager.autoAlign.getUsedScoringPose(pipe, ReefPipeLevel.L4),

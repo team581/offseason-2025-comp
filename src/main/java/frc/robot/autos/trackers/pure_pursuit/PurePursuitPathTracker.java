@@ -1,6 +1,5 @@
 package frc.robot.autos.trackers.pure_pursuit;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -160,24 +159,6 @@ public class PurePursuitPathTracker implements PathTracker {
   @Override
   public int getCurrentPointIndex() {
     return currentRobotFollowedPointIndex;
-  }
-
-  @Override
-  public boolean isFinished() {
-    if (points.isEmpty()) {
-      return true;
-    }
-    if ((currentRobotPose
-                .getTranslation()
-                .getDistance(points.get(points.size() - 1).poseSupplier.get().getTranslation())
-            < AT_END_OF_SEGMENT_DISTANCE_THRESHOLD)
-        && MathUtil.isNear(
-            points.get(points.size() - 1).poseSupplier.get().getRotation().getDegrees(),
-            currentRobotPose.getRotation().getDegrees(),
-            AT_END_OF_SEGMENT_ROTATION_THRESHOLD)) {
-      return true;
-    }
-    return false;
   }
 
   private void updateLookahead() {
