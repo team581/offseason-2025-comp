@@ -246,7 +246,7 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.61865234375)
+                          .withMagnetOffset(-0.444580078125)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5)),
               new TalonFXConfiguration()
