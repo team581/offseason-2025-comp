@@ -165,7 +165,15 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   public boolean atGoal() {
-    return MathUtil.isNear(clamp(getState().angle), currentAngle, TOLERANCE);
+    var goal = clamp(getState().angle);
+    if (currentAngle < goal){
+      return false;
+    }
+    if (currentAngle> goal+TOLERANCE) {
+      return false;
+    }
+
+    return true;
   }
 
   private double clamp(double angle) {
