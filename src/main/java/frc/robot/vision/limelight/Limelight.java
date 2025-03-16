@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class Limelight extends StateMachine<LimelightState> {
   private static final int[] VALID_APRILTAGS =
-      new int[] {1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22};
+      new int[] {1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22};
 
   private static final int[] STATION_TAGS = new int[] {1, 2, 12, 13};
 
