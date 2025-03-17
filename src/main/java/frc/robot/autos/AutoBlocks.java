@@ -18,7 +18,7 @@ public class AutoBlocks {
    * scoring L4.
    */
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
-      new PoseErrorTolerance(0.2, 10);
+      new PoseErrorTolerance(0.3, 10);
 
   /**
    * The offset used to calculate the position to go to before PIDing to the lineup pose. Ensures we
