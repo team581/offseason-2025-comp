@@ -47,7 +47,7 @@ public class GamePieceDetectionUtil {
   public static Translation2d calculateFieldRelativeLollipopTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var robotRelative =
-        calculateRobotRelativeLollipopTranslationFromCamera(
+        calculateRobotRelativeTranslationFromCamera(
             visionResult, LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET);
     return robotRelativeToFieldRelativeGamePiecePose(robotPoseAtCapture, robotRelative);
   }
@@ -57,41 +57,6 @@ public class GamePieceDetectionUtil {
     var gamePiecePose =
         calculateFieldRelativeTranslationFromCamera(robotPoseAtCapture, visionResult);
     return IntakeAssistUtil.getIntakeAssistAngle(gamePiecePose, robotPoseAtCapture);
-  }
-
-  private static Translation2d calculateRobotRelativeLollipopTranslationFromCamera(
-      GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
-
-    double thetaX = Units.degreesToRadians(visionResult.tx());
-    double thetaY = Units.degreesToRadians(visionResult.ty());
-    double hypot = Math.copySign(Math.hypot(thetaX, thetaY), thetaX);
-    double thetaRelativeToCenter = Math.atan(thetaY / thetaX);
-    double adjustedRelativeToCenter =
-        thetaRelativeToCenter + LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET.getRotation().getX();
-    double newThetaX = -1 * (hypot * Math.cos(adjustedRelativeToCenter));
-    double newThetaY = hypot * Math.sin(adjustedRelativeToCenter);
-
-    double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - newThetaY;
-
-    double yOffset = 0;
-    if (adjustedThetaY == 0) {
-      yOffset = Math.abs(limelightToRobotOffset.getY());
-    } else {
-      yOffset =
-          // .getZ() represents height from floor
-          (limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY))
-              // .getX() is supposed to represent forward and backward distance from center of robot
-              + Math.abs(limelightToRobotOffset.getX());
-    }
-
-    double xOffset = yOffset * Math.tan(newThetaX);
-
-    var cameraRelativeTranslation = new Translation2d(yOffset, xOffset);
-    var robotRelativeTranslation =
-        cameraRelativeTranslation
-            .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))
-            .plus(limelightToRobotOffset.getTranslation().toTranslation2d());
-    return robotRelativeTranslation;
   }
 
   public static Translation2d calculateRobotRelativeTranslationFromCamera(
