@@ -93,7 +93,7 @@ public class GamePieceDetectionUtil {
     } else {
       forwardOffset =
           // .getZ() represents height from floor
-          ((limelightToRobotOffset.getZ()) / Math.tan(adjustedThetaY));
+          ( limelightToRobotOffset.getZ() / Math.tan(adjustedThetaY));
     }
 
     double sidewaysOffset = forwardOffset * Math.tan(newThetaX);
