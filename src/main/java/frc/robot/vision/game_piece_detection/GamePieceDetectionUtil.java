@@ -73,6 +73,12 @@ public class GamePieceDetectionUtil {
     return IntakeAssistUtil.getIntakeAssistAngle(gamePiecePose, robotPoseAtCapture);
   }
 
+  public static Translation2d calculateRobotRelativeLollipopTranslationFromCamera(
+      Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
+    return calculateRobotRelativeTranslationFromCamera(
+        visionResult, LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET);
+  }
+
   public static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
 
@@ -106,7 +112,7 @@ public class GamePieceDetectionUtil {
     return robotRelativeTranslation;
   }
 
-  private static Translation2d robotRelativeToFieldRelativeGamePiecePose(
+  public static Translation2d robotRelativeToFieldRelativeGamePiecePose(
       Pose2d robotPose, Translation2d robotRelativeGamePiecePose) {
     return robotRelativeGamePiecePose
         .rotateBy(robotPose.getRotation())
