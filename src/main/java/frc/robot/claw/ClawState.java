@@ -1,6 +1,6 @@
-package frc.robot.intake;
+package frc.robot.claw;
 
-public enum IntakeState {
+public enum ClawState {
   IDLE_NO_GP,
   IDLE_W_ALGAE,
   IDLE_W_CORAL,

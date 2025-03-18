@@ -7,8 +7,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.claw.ClawSubsystem;
 import frc.robot.config.RobotConfig;
-import frc.robot.intake.IntakeSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -22,12 +22,12 @@ public class RollSubsystem extends StateMachine<RollState> {
 
   private LinearFilter linearFilter = LinearFilter.movingAverage(5);
 
-  private final IntakeSubsystem intake;
+  private final ClawSubsystem intake;
 
   private final PositionVoltage motionMagicRequest =
       new PositionVoltage(RollState.CORAL_HORIZONTAL.angle).withEnableFOC(false);
 
-  public RollSubsystem(TalonFX motor, IntakeSubsystem intake) {
+  public RollSubsystem(TalonFX motor, ClawSubsystem intake) {
     super(SubsystemPriority.ROLL, RollState.UNHOMED);
 
     motor.getConfigurator().apply(RobotConfig.get().roll().motorConfig());

@@ -1,4 +1,4 @@
-package frc.robot.intake;
+package frc.robot.claw;
 
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
@@ -13,7 +13,7 @@ import frc.robot.util.VelocityDetector;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
-public class IntakeSubsystem extends StateMachine<IntakeState> {
+public class ClawSubsystem extends StateMachine<ClawState> {
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
   private final CANdi candi;
@@ -43,8 +43,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private boolean topMotorCoralVelocityGp = false;
   private boolean bottomMotorCoralVelocityGp = false;
 
-  public IntakeSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
-    super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
+  public ClawSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
+    super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
 
     topMotor.getConfigurator().apply(RobotConfig.get().intake().topMotorConfig());
     bottomMotor.getConfigurator().apply(RobotConfig.get().intake().bottomMotorConfig());
@@ -103,12 +103,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     };
   }
 
-  public void setState(IntakeState newState) {
+  public void setState(ClawState newState) {
     setStateFromRequest(newState);
   }
 
   @Override
-  protected void afterTransition(IntakeState newState) {
+  protected void afterTransition(ClawState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
         topMotor.disable();

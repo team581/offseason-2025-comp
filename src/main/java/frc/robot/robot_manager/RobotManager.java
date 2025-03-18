@@ -11,6 +11,8 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
+import frc.robot.claw.ClawState;
+import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
@@ -18,8 +20,6 @@ import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.intake.IntakeState;
-import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
@@ -46,7 +46,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public final CoralMap coralMap;
   private final SwerveSubsystem swerve;
-  public final IntakeSubsystem intake;
+  public final ClawSubsystem intake;
   public final WristSubsystem wrist;
   public final ElevatorSubsystem elevator;
   public final RollSubsystem roll;
@@ -60,7 +60,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private boolean algaeMode = false;
 
   public RobotManager(
-      IntakeSubsystem intake,
+      ClawSubsystem intake,
       WristSubsystem wrist,
       ElevatorSubsystem elevator,
       RollSubsystem roll,
@@ -326,7 +326,7 @@ public class RobotManager extends StateMachine<RobotState> {
   protected void afterTransition(RobotState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -336,7 +336,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case IDLE_ALGAE -> {
-        intake.setState(IntakeState.IDLE_W_ALGAE);
+        intake.setState(ClawState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.STOWED, WristState.ALGAE_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.FLOOR_ALGAE);
@@ -345,7 +345,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case IDLE_CORAL -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -354,7 +354,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_ALGAE_FLOOR -> {
-        intake.setState(IntakeState.INTAKING_ALGAE);
+        intake.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, WristState.GROUND_ALGAE_INTAKE);
         swerve.normalDriveRequest();
         roll.setState(RollState.FLOOR_ALGAE);
@@ -363,7 +363,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_ALGAE_L2 -> {
-        intake.setState(IntakeState.INTAKING_ALGAE);
+        intake.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2, WristState.ALGAE_INTAKE_L2);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.ALGAE);
@@ -372,7 +372,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_ALGAE_L3 -> {
-        intake.setState(IntakeState.INTAKING_ALGAE);
+        intake.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3, WristState.ALGAE_INTAKE_L3);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.ALGAE);
@@ -381,7 +381,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_STATION_APPROACH -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -390,7 +390,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_CORAL_STATION_BACK -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -400,7 +400,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_CORAL_STATION_FRONT -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_FRONT, WristState.INTAKING_CORAL_STATION_FRONT);
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -411,7 +411,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case SMART_STOW_1 -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.SMART_STOW_1);
         swerve.normalDriveRequest();
         roll.setState(RollState.SMART_STOW);
@@ -420,7 +420,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case SMART_STOW_2 -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.SMART_STOW);
@@ -429,7 +429,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_CORAL_FLOOR_UPRIGHT -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_UPRIGHT);
@@ -438,7 +438,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_CORAL_FLOOR_HORIZONTAL -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -447,7 +447,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL -> {
-        intake.setState(IntakeState.INTAKING_CORAL);
+        intake.setState(ClawState.INTAKING_CORAL);
         moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE, WristState.GROUND_CORAL_INTAKE);
         // Enable assist in periodic if there's coral in map
         swerve.normalDriveRequest();
@@ -457,7 +457,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L2_1_APPROACH -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L2_APPROACH, WristState.CORAL_STOWED);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -466,7 +466,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L3_1_APPROACH -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L3_APPROACH, WristState.CORAL_STOWED);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -475,7 +475,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L4_1_APPROACH -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L4_APPROACH, WristState.CORAL_STOWED);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -484,7 +484,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L1_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_PLACE, WristState.CORAL_SCORE_PLACING_L1, true);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE_L1);
@@ -493,7 +493,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L1_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(ElevatorState.CORAL_L1_RELEASE, WristState.CORAL_SCORE_PLACING_L1, true);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE_L1);
@@ -502,7 +502,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L2_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L2_LINEUP, WristState.CORAL_SCORE_CENTERED_LINEUP_L2);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -512,7 +512,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L2_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L2_PLACE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L2,
@@ -524,7 +524,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L2_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L2_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L2,
@@ -537,7 +537,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L3_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L3_LINEUP, WristState.CORAL_SCORE_CENTERED_LINEUP_L3);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -547,7 +547,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L3_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L3_PLACE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L3,
@@ -559,7 +559,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L3_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L3_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L3,
@@ -572,7 +572,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_CENTERED_L4_RAISE_WRIST, WristState.CORAL_STOWED);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -581,7 +581,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L4_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L4_LINEUP, WristState.CORAL_SCORE_CENTERED_LINEUP_L4);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -591,7 +591,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE, CORAL_CENTERED_L4_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L4_PLACE, WristState.CORAL_SCORE_CENTERED_LINEUP_L4, true);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -601,7 +601,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_CENTERED_L4_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_CENTERED_L4_RELEASE,
             WristState.CORAL_SCORE_CENTERED_PLACING_L4,
@@ -614,7 +614,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L2_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L2_LINEUP, WristState.CORAL_SCORE_DISPLACED_LINEUP_L2);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -624,7 +624,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L2_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L2_PLACE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L2,
@@ -636,7 +636,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L2_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L2_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L2,
@@ -649,7 +649,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L3_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L3_LINEUP, WristState.CORAL_SCORE_DISPLACED_LINEUP_L3);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -659,7 +659,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L3_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L3_PLACE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L3,
@@ -671,7 +671,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L3_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L3_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L3,
@@ -684,7 +684,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.CORAL_DISPLACED_L4_RAISE_WRIST, WristState.CORAL_STOWED);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         roll.setState(RollState.CORAL_SCORE);
@@ -693,7 +693,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L4_2_LINEUP -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L4_LINEUP, WristState.CORAL_SCORE_DISPLACED_LINEUP_L4);
         swerve.scoringAlignmentRequest(reefSnapAngle);
@@ -703,7 +703,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE, CORAL_DISPLACED_L4_3_PLACE -> {
-        intake.setState(IntakeState.IDLE_W_CORAL);
+        intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L4_PLACE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L4,
@@ -715,7 +715,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_DISPLACED_L4_4_RELEASE -> {
-        intake.setState(IntakeState.SCORE_CORAL);
+        intake.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_DISPLACED_L4_RELEASE,
             WristState.CORAL_SCORE_DISPLACED_PLACING_L4,
@@ -728,7 +728,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_BACK_WAITING, NET_BACK_PREPARE_TO_SCORE -> {
-        intake.setState(IntakeState.IDLE_W_ALGAE);
+        intake.setState(ClawState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
@@ -737,7 +737,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_BACK_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGAE_NET_BACK);
+        intake.setState(ClawState.SCORE_ALGAE_NET_BACK);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getBackwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
@@ -746,7 +746,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_FORWARD_WAITING, NET_FORWARD_PREPARE_TO_SCORE -> {
-        intake.setState(IntakeState.IDLE_W_ALGAE);
+        intake.setState(ClawState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
@@ -755,7 +755,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case NET_FORWARD_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGAE_NET_FORWARD);
+        intake.setState(ClawState.SCORE_ALGAE_NET_FORWARD);
         moveSuperstructure(ElevatorState.NET, WristState.ALGAE_FORWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getForwardNetDirection(localization.getPose()));
         roll.setState(RollState.ALGAE);
@@ -764,7 +764,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case PROCESSOR_WAITING, PROCESSOR_PREPARE_TO_SCORE -> {
-        intake.setState(IntakeState.IDLE_W_ALGAE);
+        intake.setState(ClawState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.PROCESSOR, WristState.ALGAE_PROCESSOR);
         swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         roll.setState(RollState.ALGAE);
@@ -773,7 +773,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case PROCESSOR_SCORING -> {
-        intake.setState(IntakeState.SCORE_ALGAE_PROCESSOR);
+        intake.setState(ClawState.SCORE_ALGAE_PROCESSOR);
         moveSuperstructure(ElevatorState.PROCESSOR, WristState.ALGAE_PROCESSOR);
         swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         roll.setState(RollState.ALGAE);
@@ -782,7 +782,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case ALGAE_OUTTAKE -> {
-        intake.setState(IntakeState.SCORE_ALGAE_PROCESSOR);
+        intake.setState(ClawState.SCORE_ALGAE_PROCESSOR);
         swerve.normalDriveRequest();
         roll.setState(RollState.ALGAE);
         vision.setState(VisionState.TAGS);
@@ -791,7 +791,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.climbRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -800,7 +800,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.LINEUP);
       }
       case CLIMBING_2_HANGING -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -809,7 +809,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.HANGING);
       }
       case CLIMBING_3_HANGING_2 -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -818,7 +818,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.HANGING_2);
       }
       case CLIMBING_4_HANGING_3 -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CLIMBING);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_SCORE);
@@ -827,7 +827,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.HANGING_3);
       }
       case PREPARE_UNJAM_CORAL_STATION -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         swerve.normalDriveRequest();
@@ -837,7 +837,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case UNJAM_CORAL_STATION -> {
-        intake.setState(IntakeState.OUTTAKING);
+        intake.setState(ClawState.OUTTAKING);
         moveSuperstructure(
             ElevatorState.INTAKING_CORAL_STATION_BACK, WristState.INTAKING_CORAL_STATION_BACK);
         swerve.normalDriveRequest();
@@ -847,7 +847,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case UNJAM -> {
-        intake.setState(IntakeState.OUTTAKING);
+        intake.setState(ClawState.OUTTAKING);
         moveSuperstructure(ElevatorState.UNJAM, WristState.UNJAM);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -856,7 +856,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_ELEVATOR -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.MID_MATCH_HOMING, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_HORIZONTAL);
@@ -865,7 +865,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_WRIST -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.MID_MATCH_HOMING);
         swerve.normalDriveRequest();
         roll.setState(RollState.CORAL_UPRIGHT);
@@ -874,7 +874,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_ROLL -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
+        intake.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, WristState.CORAL_STOWED);
         swerve.normalDriveRequest();
         roll.setState(RollState.HOMING);

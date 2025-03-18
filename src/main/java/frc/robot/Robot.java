@@ -13,6 +13,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.field_calibration.FieldCalibrationUtil;
 import frc.robot.autos.Autos;
 import frc.robot.autos.Trailblazer;
+import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
@@ -21,7 +22,6 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.intake.IntakeSubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
@@ -62,8 +62,8 @@ public class Robot extends TimedRobot {
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(hardware.driverController, true);
 
-  private final IntakeSubsystem intake =
-      new IntakeSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor, hardware.candi);
+  private final ClawSubsystem intake =
+      new ClawSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor, hardware.candi);
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
