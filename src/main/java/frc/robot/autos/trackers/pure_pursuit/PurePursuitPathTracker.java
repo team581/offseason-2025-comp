@@ -1,5 +1,6 @@
 package frc.robot.autos.trackers.pure_pursuit;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -141,6 +142,9 @@ public class PurePursuitPathTracker implements PathTracker {
       currentRobotFollowedPointIndex++;
       currentTargetWaypoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
       lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
+    } else if (currentRobotFollowedPointIndex + 1 < currentLookaheadPointIndex) {
+      DogLog.logFault("Trailblazer followed index lagging behind");
+      currentRobotFollowedPointIndex = currentLookaheadPointIndex - 1;
     }
 
     if (FeatureFlags.PURE_PURSUIT_ROTATE_IMMEDIATELY.getAsBoolean()) {
