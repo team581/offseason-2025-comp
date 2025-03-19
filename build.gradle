@@ -88,6 +88,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	errorprone "com.google.errorprone:error_prone_core:2.36.0"
+
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:33.4.0-jre'
 }
 
 test {

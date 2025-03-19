@@ -34,5 +34,6 @@
     "**/.DS_Store": true,
     "**/.git": true,
     "**/.hg": true
-  }
+  },
+  "java.compile.nullAnalysis.mode": "automatic"
 }

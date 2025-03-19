@@ -1,83 +1,71 @@
 package frc.robot.robot_manager.collision_avoidance;
 
-import dev.doglog.DogLog;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import com.google.common.graph.MutableValueGraph;
+import com.google.common.graph.ValueGraph;
+import com.google.common.graph.ValueGraphBuilder;
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 public class CollisionAvoidance {
-  private static final List<CollisionBox> ALL_COLLISION_BOXES = List.of(CollisionBox.values());
-  private static final double ARM_LENGTH = 23.092038;
-  private static final Rotation2d offsetAngle = Rotation2d.fromDegrees(-33.0);
+  private static ValueGraph<MotionWaypoint, WaypointEdge> createGraph(
+      ObstructionKind obstructions) {
+    // Create an undirected value graph to represent safe motion between waypoints. Undirected
+    // because if you can go from A to B, you can also go from B to A. Value graph because we want
+    // to associate a cost with motion between different waypoints.
+    MutableValueGraph<MotionWaypoint, WaypointEdge> graph = ValueGraphBuilder.undirected().build();
 
-  public static Optional<SuperstructurePosition> plan(
-      SuperstructurePosition current, SuperstructurePosition goal) {
-    var goalPoint = getGoalPoint(current, goal);
+    // TODO(@ryanknj5): Add the full graph of safe motion
 
-    return goalPoint;
+    // Left side
+    graph.addNode(MotionWaypoint.LOLLIPOP_INTAKE_LEFT);
+    graph.addNode(MotionWaypoint.ALGAE_INTAKE_LEFT);
+
+    MotionWaypoint.LOLLIPOP_INTAKE_LEFT.canMoveTo(MotionWaypoint.ALGAE_INTAKE_LEFT, graph);
+
+    // Right side
+    graph.addNode(MotionWaypoint.LOLLIPOP_INTAKE_RIGHT);
+    graph.addNode(MotionWaypoint.ALGAE_INTAKE_RIGHT);
+
+    MotionWaypoint.ALGAE_INTAKE_RIGHT.canMoveTo(MotionWaypoint.LOLLIPOP_INTAKE_RIGHT, graph);
+
+    // Return an immutable version now that we have finished constructing the graph
+    return ValueGraphBuilder.from(graph).immutable().build();
   }
 
-  static CollisionBox getZone(SuperstructurePosition current) {
-    var currentPoint = positionToTranslation(current);
+  /** Graph of safe motion when there aren't any special obstructions. */
+  private final ValueGraph<MotionWaypoint, WaypointEdge> notObstructedGraph =
+      createGraph(ObstructionKind.NONE);
 
-    for (var box : ALL_COLLISION_BOXES) {
-      if (box.bounds.contains(currentPoint)) {
-        // If the current position is contained within these bounds, return the box
-        return box;
-      }
-    }
+  /** Graph of safe motion when there are obstructions (the reef) on the left side of the robot. */
+  private final ValueGraph<MotionWaypoint, WaypointEdge> leftObstructedGraph =
+      createGraph(ObstructionKind.LEFT_OBSTRUCTED);
 
-    // The current position isn't contained within a box, so we find the closest fit
-    return ALL_COLLISION_BOXES.stream()
-        // Find the box where the distance from actual point to clamped point is the smallest
-        .min(
-            Comparator.comparingDouble(
-                box -> box.bounds.nearest(currentPoint).getDistance(currentPoint)))
-        .orElseThrow();
-  }
+  /** Graph of safe motion when there are obstructions (the reef) on the right side of the robot. */
+  private final ValueGraph<MotionWaypoint, WaypointEdge> rightObstructedGraph =
+      createGraph(ObstructionKind.RIGHT_OBSTRUCTED);
 
-  static Translation2d positionToTranslation(SuperstructurePosition position) {
-    var armAngle = Rotation2d.fromDegrees(position.armAngle());
-    return new Translation2d(0, position.elevatorHeight())
-        .plus(new Translation2d(ARM_LENGTH, armAngle.minus(offsetAngle)));
-  }
-
-  private static Optional<SuperstructurePosition> getGoalPoint(
-      SuperstructurePosition currentSuperstructurePosition,
-      SuperstructurePosition goalSuperstructurePosition) {
-    var currentZone = getZone(currentSuperstructurePosition);
-    var goalZone = getZone(goalSuperstructurePosition);
-
-    DogLog.log("CollisionAvoidance/CurrentZone", currentZone);
-    DogLog.log("CollisionAvoidance/GoalZone", goalZone);
-    DogLog.log(
-        "CollisionAvoidance/CurrentPosition", positionToTranslation(currentSuperstructurePosition));
-    DogLog.log(
-        "CollisionAvoidance/CurrentElevatorPosition",
-        new Translation2d(0, currentSuperstructurePosition.elevatorHeight()));
-
-    // if(currentZone.id==3||currentZone.id==4||currentZone.id==5&&goalZone.id==3||goalZone.id==4||goalZone.id==5){
-    if (currentZone.shortCutPossible(
-        goalZone, currentSuperstructurePosition, goalSuperstructurePosition)) {
-      DogLog.log("CollisionAvoidance/ShortCutActive", true);
-      return Optional.empty();
-    } else {
-      DogLog.log("CollisionAvoidance/ShortCutActive", false);
-    }
-
-    if (currentZone.id < goalZone.id) {
-      DogLog.log("DEBUG/NextZone", currentZone.id + 1);
-      return Optional.of(CollisionBox.getById(currentZone.id + 1).safeZone);
-    }
-
-    if (currentZone.id > goalZone.id) {
-      DogLog.log("DEBUG/NextZone", currentZone.id - 1);
-      return Optional.of(CollisionBox.getById(currentZone.id - 1).safeZone);
-    }
-
+  /**
+   * Returns an {@link Optional} containing the next {@link MotionWaypoint} in the graph to go to.
+   * Returns an empty Optional if there is no possible routing (impossible to avoid a collision or
+   * you are at final waypoint).
+   *
+   * @param currentPosition The current position of the superstructure.
+   * @param desiredPosition The desired position of the superstructure.
+   * @param obstructionKind Additional constraints based on robot position.
+   */
+  public Optional<MotionWaypoint> route(
+      SuperstructurePosition currentPosition,
+      SuperstructurePosition desiredPosition,
+      ObstructionKind obstructionKind) {
+    // TODO(@ryanknj5): Implement
     return Optional.empty();
+  }
+
+  private ValueGraph<MotionWaypoint, WaypointEdge> getGraph(ObstructionKind obstructionKind) {
+    return switch (obstructionKind) {
+      case LEFT_OBSTRUCTED -> leftObstructedGraph;
+      case RIGHT_OBSTRUCTED -> rightObstructedGraph;
+      default -> notObstructedGraph;
+    };
   }
 }

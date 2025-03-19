@@ -1,5 +1,6 @@
 package frc.robot.robot_manager;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.util.MathHelpers;
 import java.util.Objects;
 
@@ -23,15 +24,21 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
       return true;
     }
 
-    if (!(other instanceof SuperstructurePosition)) {
-      return false;
+    if (other instanceof SuperstructurePosition otherPosition) {
+      return MathUtil.isNear(elevatorHeight, otherPosition.elevatorHeight, ELEVATOR_PRECISION)
+          && MathUtil.isNear(armAngle, otherPosition.armAngle, ARM_PRECISION);
     }
 
-    var otherPosition = (SuperstructurePosition) other;
+    return false;
+  }
 
-    return MathHelpers.roundTo(elevatorHeight, ELEVATOR_PRECISION)
-            == MathHelpers.roundTo(otherPosition.elevatorHeight, ELEVATOR_PRECISION)
-        && MathHelpers.roundTo(armAngle, ARM_PRECISION)
-            == MathHelpers.roundTo(otherPosition.armAngle, ARM_PRECISION);
+  /**
+   * The cost of moving from this position to another position;
+   *
+   * @param other The position you are going to
+   */
+  public double costFor(SuperstructurePosition other) {
+    // TODO(@ryanknj5): Implement
+    return 0;
   }
 }
