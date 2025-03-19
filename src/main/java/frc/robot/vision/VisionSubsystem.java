@@ -25,9 +25,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private double rollRate;
 
   public VisionSubsystem(
-      ImuSubsystem imu,
-      Limelight frontTagLimelight,
-      Limelight backTagLimelight) {
+      ImuSubsystem imu, Limelight frontTagLimelight, Limelight backTagLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.frontTagLimelight = frontTagLimelight;
@@ -53,7 +51,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     if (maybeFrontResult.isPresent()) {
       tagResult.add(maybeFrontResult.orElseThrow());
     }
-
   }
 
   public List<TagResult> getTagResult() {
@@ -74,7 +71,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       case CLOSEST_REEF_TAG -> {
         frontTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         backTagLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
-        }
+      }
       case CORAL_DETECTION -> {
         frontTagLimelight.setState(LimelightState.TAGS);
         backTagLimelight.setState(LimelightState.TAGS);
@@ -95,9 +92,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    frontTagLimelight.sendImuData(
-      robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-      backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    frontTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    backTagLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
 
   public void setClosestScoringReefTag(int tagID) {
@@ -108,9 +104,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public boolean isAnyCameraOffline() {
     // TODO: UPDATE WITH NEW GP LL
     return frontTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        ||
-    backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE
-       ;
+        || backTagLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
   public boolean isAnyTagLimelightOnline() {

@@ -3,7 +3,6 @@ package frc.robot.robot_manager;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -113,7 +112,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NONE : currentState;
 
-
       // TODO: either make processor and net scoring manual or make a way to align
       // Algae prepare to score
       case ALGAE_PROCESSOR_PREPARE ->
@@ -164,21 +162,21 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       // Scoring
-      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_BACK_RELEASE, ALGAE_NET_FRONT_RELEASE ->{
+      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_BACK_RELEASE, ALGAE_NET_FRONT_RELEASE -> {
         if (timeout(0.5)) {
           algaeMode = false;
           yield RobotState.IDLE_NONE;
         }
-        yield !intake.getHasGP() ? RobotState.IDLE_NONE: currentState;
+        yield !intake.getHasGP() ? RobotState.IDLE_NONE : currentState;
       }
       case CORAL_L1_LEFT_RELEASE,
-            CORAL_L2_LEFT_RELEASE,
-            CORAL_L3_LEFT_RELEASE,
-            CORAL_L4_LEFT_RELEASE,
-            CORAL_L1_RIGHT_RELEASE,
-            CORAL_L2_RIGHT_RELEASE,
-            CORAL_L3_RIGHT_RELEASE,
-            CORAL_L4_RIGHT_RELEASE -> {
+          CORAL_L2_LEFT_RELEASE,
+          CORAL_L3_LEFT_RELEASE,
+          CORAL_L4_LEFT_RELEASE,
+          CORAL_L1_RIGHT_RELEASE,
+          CORAL_L2_RIGHT_RELEASE,
+          CORAL_L3_RIGHT_RELEASE,
+          CORAL_L4_RIGHT_RELEASE -> {
         var done =
             wrist.atGoal()
                 && elevator.atGoal()
@@ -213,8 +211,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case CORAL_INTAKE_FLOOR,
-          CORAL_INTAKE_UPRIGHT -> {
+      case CORAL_INTAKE_FLOOR, CORAL_INTAKE_UPRIGHT -> {
         if (intake.getHasGP()) {
           rumbleController.rumbleRequest();
           yield RobotState.IDLE_CORAL;
