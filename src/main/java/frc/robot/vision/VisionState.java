@@ -5,7 +5,6 @@ public enum VisionState {
   TAGS,
   /** The AprilTag on the side of the reef we are scoring on. */
   CLOSEST_REEF_TAG,
-  STATION_TAGS,
   CORAL_DETECTION,
   ALGAE_DETECTION;
 }
