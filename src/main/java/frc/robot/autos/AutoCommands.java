@@ -21,7 +21,7 @@ public class AutoCommands {
     this.robotCommands = robotCommands;
     this.robotManager = robotManager;
     var requirementsList =
-        List.of(robotManager.elevator, robotManager.wrist, robotManager.roll, robotManager.intake);
+        List.of(robotManager.elevator, robotManager.wrist, robotManager.intake);
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
@@ -154,7 +154,7 @@ public class AutoCommands {
         && robotManager.imu.isFlatDebounced()
         && robotManager.elevator.atGoal()
         && robotManager.wrist.atGoal()
-        && robotManager.roll.atGoal();
+;
   }
 
   public Command waitForAlignedForScore() {
