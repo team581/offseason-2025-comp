@@ -21,12 +21,11 @@ public class Hardware {
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final TalonFX intakeTopMotor =
-      new TalonFX(RobotConfig.get().intake().topMotorID(), RobotConfig.get().intake().canBusName());
+      new TalonFX(RobotConfig.get().claw().topMotorID(), RobotConfig.get().claw().canBusName());
   public final TalonFX intakeBottomMotor =
-      new TalonFX(
-          RobotConfig.get().intake().bottomMotorID(), RobotConfig.get().intake().canBusName());
+      new TalonFX(RobotConfig.get().claw().bottomMotorID(), RobotConfig.get().claw().canBusName());
   public final CANdi candi =
-      new CANdi(RobotConfig.get().intake().candiID(), RobotConfig.get().intake().canBusName());
+      new CANdi(RobotConfig.get().claw().candiID(), RobotConfig.get().claw().canBusName());
 
   public final TalonFX wristMotor =
       new TalonFX(RobotConfig.get().wrist().motorID(), RobotConfig.get().wrist().canBusName());

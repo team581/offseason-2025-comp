@@ -10,6 +10,7 @@ public record RobotConfig(
     String robotName,
     ElevatorConfig elevator,
     IntakeConfig intake,
+    ClawConfig claw,
     SwerveConfig swerve,
     VisionConfig vision,
     WristConfig wrist,
@@ -29,6 +30,13 @@ public record RobotConfig(
       double tolerance) {}
 
   public record IntakeConfig(
+      String canBusName,
+      int motorID,
+      int candiID,
+      Debouncer debouncer,
+      TalonFXConfiguration motorConfig) {}
+
+  public record ClawConfig(
       String canBusName,
       int topMotorID,
       int bottomMotorID,

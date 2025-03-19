@@ -20,6 +20,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
@@ -102,6 +103,24 @@ class CompConfig {
               58,
               0.5),
           new IntakeConfig(
+              RIO_CAN_NAME,
+              999,
+              999,
+              new Debouncer(0.1, DebounceType.kBoth),
+              new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(15)
+                          .withSupplyCurrentLimit(20))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))
+                  .withTorqueCurrent(
+                      new TorqueCurrentConfigs()
+                          .withPeakForwardTorqueCurrent(70.0)
+                          .withPeakReverseTorqueCurrent(70.0))),
+          new ClawConfig(
               RIO_CAN_NAME,
               20,
               21,

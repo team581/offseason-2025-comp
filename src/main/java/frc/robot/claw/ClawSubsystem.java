@@ -17,12 +17,12 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
   private final CANdi candi;
-  private final Debouncer rightDebouncer = RobotConfig.get().intake().rightDebouncer();
-  private final Debouncer leftDebouncer = RobotConfig.get().intake().leftDebouncer();
+  private final Debouncer rightDebouncer = RobotConfig.get().claw().rightDebouncer();
+  private final Debouncer leftDebouncer = RobotConfig.get().claw().leftDebouncer();
 
   private final TorqueCurrentFOC algaeHoldRequest =
-      new TorqueCurrentFOC(RobotConfig.get().intake().algaeHoldCurrent())
-          .withMaxAbsDutyCycle(RobotConfig.get().intake().algaeHoldMaxDutyCycle());
+      new TorqueCurrentFOC(RobotConfig.get().claw().algaeHoldCurrent())
+          .withMaxAbsDutyCycle(RobotConfig.get().claw().algaeHoldMaxDutyCycle());
 
   private boolean rightSensorRaw = false;
   private boolean leftSensorRaw = false;
@@ -46,8 +46,8 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   public ClawSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
     super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
 
-    topMotor.getConfigurator().apply(RobotConfig.get().intake().topMotorConfig());
-    bottomMotor.getConfigurator().apply(RobotConfig.get().intake().bottomMotorConfig());
+    topMotor.getConfigurator().apply(RobotConfig.get().claw().topMotorConfig());
+    bottomMotor.getConfigurator().apply(RobotConfig.get().claw().bottomMotorConfig());
     this.topMotor = topMotor;
     this.bottomMotor = bottomMotor;
     this.candi = candi;
@@ -66,7 +66,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
     DogLog.log("Intake/TopMotor/Velocity", topMotorVelocity);
     DogLog.log("Intake/BottomMotor/Velocity", bottomMotorVelocity);
 
-    if (RobotConfig.get().intake().sensorFlipped()) {
+    if (RobotConfig.get().claw().sensorFlipped()) {
       leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
       rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
     } else {
@@ -161,13 +161,12 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Intake/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log(
-        "Intake/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/Sensors/RightSensorRaw", rightSensorRaw);
-    DogLog.log("Intake/Sensors/LeftSensorRaw", leftSensorRaw);
-    DogLog.log("Intake/Sensors/RightSensorDebounced", rightSensorDebounced);
-    DogLog.log("Intake/Sensors/LeftSensorDebounced", leftSensorDebounced);
-    DogLog.log("Intake/SensorsHaveGP", sensorsHaveGP);
+    DogLog.log("Claw/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Claw/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Claw/Sensors/RightSensorRaw", rightSensorRaw);
+    DogLog.log("Claw/Sensors/LeftSensorRaw", leftSensorRaw);
+    DogLog.log("Claw/Sensors/RightSensorDebounced", rightSensorDebounced);
+    DogLog.log("Claw/Sensors/LeftSensorDebounced", leftSensorDebounced);
+    DogLog.log("Claw/SensorsHaveGP", sensorsHaveGP);
   }
 }
