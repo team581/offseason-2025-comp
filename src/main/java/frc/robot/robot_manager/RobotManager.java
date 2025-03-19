@@ -1091,7 +1091,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorRequest() {
     if (algaeMode) {
       intakeFloorAlgaeRequest();
-    } else if (! intake.getSensor()) {
+    } else if (!intake.getSensor()) {
       intakeFloorCoralHorizontalRequest();
     }
   }
