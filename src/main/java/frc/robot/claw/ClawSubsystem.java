@@ -83,35 +83,38 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   @Override
   protected void afterTransition(ClawState newState) {
     switch (newState) {
-      case IDLE_NO_GP -> {
-        motor.disable();
-      }
-      case IDLE_W_ALGAE -> {
-        motor.setVoltage(12.0);
-      }
-      case IDLE_W_CORAL -> {
-        motor.setVoltage(1);
-      }
-      case INTAKING_ALGAE -> {
-        motor.setVoltage(12.0);
-        motorAlgaeDetection.reset();
-      }
-      case CORAL_HANDOFF -> {
-        motor.setVoltage(10.0);
-        motorCoralDetection.reset();
-      }
-      case SCORE_ALGAE_NET -> {
-        motor.setVoltage(-3.0);
-      }
-      case SCORE_ALGAE_PROCESSOR -> {
-        motor.setVoltage(-1.0);
-      }
-      case SCORE_CORAL -> {
-        motor.setVoltage(-2.0);
-      }
-      case OUTTAKING -> {
-        motor.setVoltage(-1.0);
-      }
+          case IDLE_NO_GP -> {
+            motor.disable();
+          }
+          case IDLE_W_ALGAE -> {
+            motor.setVoltage(12.0);
+          }
+          case IDLE_W_CORAL -> {
+            motor.setVoltage(1);
+          }
+          case INTAKING_ALGAE -> {
+            motor.setVoltage(12.0);
+            motorAlgaeDetection.reset();
+          }
+          case CORAL_HANDOFF -> {
+            motor.setVoltage(10.0);
+            motorCoralDetection.reset();
+          }
+          case SCORE_ALGAE_NET -> {
+            motor.setVoltage(-3.0);
+          }
+          case SCORE_ALGAE_PROCESSOR -> {
+            motor.setVoltage(-1.0);
+          }
+          case SCORE_CORAL -> {
+            motor.setVoltage(-2.0);
+          }
+          case OUTTAKING -> {
+            motor.setVoltage(-1.0);
+          }
+          case TRUFFLA_CORAL_INTAKE -> {
+            motor.setVoltage(0);
+          };
     }
   }
 
