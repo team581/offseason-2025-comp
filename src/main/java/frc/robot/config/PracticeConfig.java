@@ -28,7 +28,7 @@ import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
-import frc.robot.config.RobotConfig.WristConfig;
+import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.generated.PracticeBotTunerConstants;
 
 class PracticeConfig {
@@ -165,7 +165,7 @@ class PracticeConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, Double.MAX_VALUE),
-          new WristConfig(
+          new ArmConfig(
               RIO_CAN_NAME,
               22,
               new TalonFXConfiguration()

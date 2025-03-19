@@ -13,7 +13,7 @@ public record RobotConfig(
     ClawConfig claw,
     SwerveConfig swerve,
     VisionConfig vision,
-    WristConfig wrist,
+    ArmConfig arm,
     RollConfig roll,
     ClimberConfig climber,
     LightsConfig lights) {
@@ -56,7 +56,7 @@ public record RobotConfig(
   public record VisionConfig(
       int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
 
-  public record WristConfig(
+  public record ArmConfig(
       String canBusName,
       int motorID,
       TalonFXConfiguration motorConfig,

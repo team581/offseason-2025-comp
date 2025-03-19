@@ -17,9 +17,10 @@ public enum SubsystemPriority {
   // 10-19 is for actuator subsystems
   // Intake must run before roll so that it has fresh sensor data
   INTAKE(11),
+  CLAW(10),
   ROLL(10),
   ELEVATOR(10),
-  WRIST(10),
+  ARM(10),
   CLIMBER(10),
   LIGHTS(10),
 
