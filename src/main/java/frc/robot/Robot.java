@@ -23,7 +23,6 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
