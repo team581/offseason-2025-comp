@@ -95,206 +95,202 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected RobotState getNextState(RobotState currentState) {
     return switch (currentState) {
-          case IDLE_NO_GP,
-                  IDLE_ALGAE,
-                  IDLE_CORAL,
-                  PROCESSOR_WAITING,
-                  NET_BACK_WAITING,
-                  NET_FORWARD_WAITING,
-                  CORAL_L1_3_PLACE,
-                  CORAL_CENTERED_L2_3_PLACE,
-                  CORAL_CENTERED_L3_3_PLACE,
-                  CORAL_CENTERED_L4_3_PLACE,
-                  CORAL_DISPLACED_L2_3_PLACE,
-                  CORAL_DISPLACED_L3_3_PLACE,
-                  CORAL_DISPLACED_L4_3_PLACE,
-                  CLIMBING_2_HANGING,
-                  CLIMBING_3_HANGING_2,
-                  CLIMBING_4_HANGING_3,
-                  UNJAM_CORAL_STATION,
-                  UNJAM ->
-              currentState;
+      case IDLE_NO_GP,
+              IDLE_ALGAE,
+              IDLE_CORAL,
+              PROCESSOR_WAITING,
+              NET_BACK_WAITING,
+              NET_FORWARD_WAITING,
+              CORAL_L1_3_PLACE,
+              CORAL_CENTERED_L2_3_PLACE,
+              CORAL_CENTERED_L3_3_PLACE,
+              CORAL_CENTERED_L4_3_PLACE,
+              CORAL_DISPLACED_L2_3_PLACE,
+              CORAL_DISPLACED_L3_3_PLACE,
+              CORAL_DISPLACED_L4_3_PLACE,
+              CLIMBING_2_HANGING,
+              CLIMBING_3_HANGING_2,
+              CLIMBING_4_HANGING_3,
+              UNJAM_CORAL_STATION,
+              UNJAM ->
+          currentState;
 
-          case REHOME_ELEVATOR ->
-              elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
+      case REHOME_ELEVATOR ->
+          elevator.getState() == ElevatorState.STOWED ? RobotState.IDLE_NO_GP : currentState;
 
-          case PROCESSOR_PREPARE_TO_SCORE ->
-              wrist.atGoal() && elevator.atGoal() ? RobotState.PROCESSOR_SCORING : currentState;
-          case NET_BACK_PREPARE_TO_SCORE ->
-              wrist.atGoal() && elevator.atGoal() ? RobotState.NET_BACK_SCORING : currentState;
-          case NET_FORWARD_PREPARE_TO_SCORE ->
-              wrist.atGoal() && elevator.atGoal() ? RobotState.NET_FORWARD_SCORING : currentState;
+      case PROCESSOR_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal() ? RobotState.PROCESSOR_SCORING : currentState;
+      case NET_BACK_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal() ? RobotState.NET_BACK_SCORING : currentState;
+      case NET_FORWARD_PREPARE_TO_SCORE ->
+          wrist.atGoal() && elevator.atGoal() ? RobotState.NET_FORWARD_SCORING : currentState;
 
-          case CORAL_L2_1_APPROACH -> {
-            var isClose =
-                AutoAlign.isCloseToReefSide(
-                    localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
+      case CORAL_L2_1_APPROACH -> {
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
 
-            if (!isClose) {
-              yield currentState;
-            }
+        if (!isClose) {
+          yield currentState;
+        }
 
-            yield RobotState.CORAL_CENTERED_L2_2_LINEUP;
+        yield RobotState.CORAL_CENTERED_L2_2_LINEUP;
+      }
+      case PREPARE_UNJAM_CORAL_STATION ->
+          elevator.atGoal() && wrist.atGoal() ? RobotState.UNJAM_CORAL_STATION : currentState;
+      case CORAL_CENTERED_L2_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L2_3_PLACE : currentState;
+      case CORAL_CENTERED_L3_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L3_3_PLACE : currentState;
+      case CORAL_CENTERED_L4_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L4_3_PLACE : currentState;
+
+      case CORAL_DISPLACED_L2_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L2_3_PLACE : currentState;
+      case CORAL_DISPLACED_L3_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L3_3_PLACE : currentState;
+      case CORAL_DISPLACED_L4_2_LINEUP ->
+          shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L4_3_PLACE : currentState;
+
+      case CORAL_L3_1_APPROACH -> {
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
+
+        if (!isClose) {
+          yield currentState;
+        }
+
+        yield RobotState.CORAL_CENTERED_L3_2_LINEUP;
+      }
+      case CORAL_L4_1_APPROACH -> {
+        // Require explicit transition in auto
+        if (FeatureFlags.EXPLICIT_L4_LINEUP.getAsBoolean() && DriverStation.isAutonomous()) {
+          yield currentState;
+        }
+        var isClose =
+            AutoAlign.isCloseToReefSide(
+                localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
+
+        if (!isClose) {
+          yield currentState;
+        }
+
+        // Temporary workaround for avoiding tipping into the reef during auto
+        if (DriverStation.isAutonomous()) {
+          yield RobotState.CORAL_CENTERED_L4_2_LINEUP;
+        }
+
+        yield RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST;
+      }
+
+      case CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_CENTERED_L4_2_LINEUP
+              : currentState;
+      case CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
+              : currentState;
+
+      // Scoring
+      case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
+        if (timeout(0.5)) {
+          algaeMode = false;
+          yield RobotState.IDLE_NO_GP;
+        }
+        yield currentState;
+      }
+      case CORAL_L1_4_RELEASE,
+          CORAL_CENTERED_L2_4_RELEASE,
+          CORAL_CENTERED_L3_4_RELEASE,
+          CORAL_CENTERED_L4_4_RELEASE,
+          CORAL_DISPLACED_L2_4_RELEASE,
+          CORAL_DISPLACED_L3_4_RELEASE,
+          CORAL_DISPLACED_L4_4_RELEASE -> {
+        var done =
+            wrist.atGoal()
+                && elevator.atGoal()
+                && (DriverStation.isTeleop() ? cameraOnlineAndFarEnoughFromReef() : timeout(0.5));
+
+        if (done) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_NO_GP;
+        }
+
+        yield currentState;
+      }
+
+      case CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_CENTERED_L4_4_RELEASE
+              : currentState;
+
+      case CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE ->
+          wrist.atGoal() && elevator.atGoal()
+              ? RobotState.CORAL_DISPLACED_L4_4_RELEASE
+              : currentState;
+
+      // Intaking
+      case INTAKE_ALGAE_FLOOR -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_ALGAE;
+        }
+
+        yield currentState;
+      }
+      case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          if (cameraOnlineAndFarEnoughFromReef()) {
+            yield RobotState.IDLE_ALGAE;
           }
-          case PREPARE_UNJAM_CORAL_STATION ->
-              elevator.atGoal() && wrist.atGoal() ? RobotState.UNJAM_CORAL_STATION : currentState;
-          case CORAL_CENTERED_L2_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L2_3_PLACE : currentState;
-          case CORAL_CENTERED_L3_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L3_3_PLACE : currentState;
-          case CORAL_CENTERED_L4_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_CENTERED_L4_3_PLACE : currentState;
+        }
 
-          case CORAL_DISPLACED_L2_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L2_3_PLACE : currentState;
-          case CORAL_DISPLACED_L3_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L3_3_PLACE : currentState;
-          case CORAL_DISPLACED_L4_2_LINEUP ->
-              shouldProgressTeleopScore() ? RobotState.CORAL_DISPLACED_L4_3_PLACE : currentState;
+        yield currentState;
+      }
 
-          case CORAL_L3_1_APPROACH -> {
-            var isClose =
-                AutoAlign.isCloseToReefSide(
-                    localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
+      case INTAKE_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
+          INTAKE_CORAL_FLOOR_UPRIGHT -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_CORAL;
+        }
 
-            if (!isClose) {
-              yield currentState;
-            }
-
-
-                 yield RobotState.CORAL_CENTERED_L3_2_LINEUP;
+        yield currentState;
+      }
+      case INTAKE_STATION_APPROACH -> {
+        if (Units.radiansToDegrees(Math.abs(swerve.getTeleopSpeeds().omegaRadiansPerSecond))
+            < 15.0) {
+          if (AutoAlign.shouldIntakeStationFront(localization.getPose())) {
+            yield RobotState.INTAKE_CORAL_STATION_FRONT;
           }
-          case CORAL_L4_1_APPROACH -> {
-            // Require explicit transition in auto
-            if (FeatureFlags.EXPLICIT_L4_LINEUP.getAsBoolean() && DriverStation.isAutonomous()) {
-              yield currentState;
-            }
-            var isClose =
-                AutoAlign.isCloseToReefSide(
-                    localization.getPose(), nearestReefSide.getPose(), swerve.getFieldRelativeSpeeds());
-
-            if (!isClose) {
-              yield currentState;
-            }
-
-            // Temporary workaround for avoiding tipping into the reef during auto
-            if (DriverStation.isAutonomous()) {
-              yield RobotState.CORAL_CENTERED_L4_2_LINEUP
-                 ;
-            }
-
-            yield  RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST
-                ;
-          }
-
-          case CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST ->
-              wrist.atGoal() && elevator.atGoal()
-                  ? RobotState.CORAL_CENTERED_L4_2_LINEUP
-                  : currentState;
-          case CORAL_DISPLACED_L4_1_POINT_5_RAISE_WRIST ->
-              wrist.atGoal() && elevator.atGoal()
-                  ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
-                  : currentState;
-
-          // Scoring
-          case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
-            if (timeout(0.5)) {
-              algaeMode = false;
-              yield RobotState.IDLE_NO_GP;
-            }
-            yield currentState;
-          }
-          case CORAL_L1_4_RELEASE,
-              CORAL_CENTERED_L2_4_RELEASE,
-              CORAL_CENTERED_L3_4_RELEASE,
-              CORAL_CENTERED_L4_4_RELEASE,
-              CORAL_DISPLACED_L2_4_RELEASE,
-              CORAL_DISPLACED_L3_4_RELEASE,
-              CORAL_DISPLACED_L4_4_RELEASE -> {
-            var done =
-                wrist.atGoal()
-                    && elevator.atGoal()
-                    && (DriverStation.isTeleop() ? cameraOnlineAndFarEnoughFromReef() : timeout(0.5));
-
-            if (done) {
-              rumbleController.rumbleRequest();
-              yield RobotState.IDLE_NO_GP;
-            }
-
-            yield currentState;
-          }
-
-          case CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE ->
-              wrist.atGoal() && elevator.atGoal()
-                  ? RobotState.CORAL_CENTERED_L4_4_RELEASE
-                  : currentState;
-
-          case CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE ->
-              wrist.atGoal() && elevator.atGoal()
-                  ? RobotState.CORAL_DISPLACED_L4_4_RELEASE
-                  : currentState;
-
-          // Intaking
-          case INTAKE_ALGAE_FLOOR -> {
-            if (intake.getHasGP()) {
-              rumbleController.rumbleRequest();
-              yield RobotState.IDLE_ALGAE;
-            }
-
-            yield currentState;
-          }
-          case INTAKE_ALGAE_L2, INTAKE_ALGAE_L3 -> {
-            if (intake.getHasGP()) {
-              rumbleController.rumbleRequest();
-              if (cameraOnlineAndFarEnoughFromReef()) {
-                yield RobotState.IDLE_ALGAE;
-              }
-            }
-
-            yield currentState;
-          }
-
-          case INTAKE_CORAL_FLOOR_HORIZONTAL,
-              INTAKE_ASSIST_CORAL_FLOOR_HORIZONTAL,
-              INTAKE_CORAL_FLOOR_UPRIGHT -> {
-            if (intake.getHasGP()) {
-              rumbleController.rumbleRequest();
-              yield RobotState.IDLE_CORAL;
-            }
-
-            yield currentState;
-          }
-          case INTAKE_STATION_APPROACH -> {
-            if (Units.radiansToDegrees(Math.abs(swerve.getTeleopSpeeds().omegaRadiansPerSecond))
-                < 15.0) {
-              if (AutoAlign.shouldIntakeStationFront(localization.getPose())) {
-                yield RobotState.INTAKE_CORAL_STATION_FRONT;
-              }
-              yield RobotState.INTAKE_CORAL_STATION_BACK;
-            }
-            yield currentState;
-          }
-          case INTAKE_CORAL_STATION_FRONT -> {
-            if (intake.getHasGP()) {
-              rumbleController.rumbleRequest();
-              yield RobotState.IDLE_CORAL;
-            }
-            yield currentState;
-          }
-          case INTAKE_CORAL_STATION_BACK -> {
-            if (intake.getHasGP()) {
-              rumbleController.rumbleRequest();
-              yield RobotState.SMART_STOW_1;
-            }
-            yield currentState;
-          }
-          case SMART_STOW_1 ->
-              elevator.atGoal()  ? RobotState.SMART_STOW_2 : currentState;
-          case SMART_STOW_2 -> wrist.atGoal() ? RobotState.IDLE_CORAL : currentState;
-          case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
-          case CLIMBING_1_LINEUP ->
-              climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
-          default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
+          yield RobotState.INTAKE_CORAL_STATION_BACK;
+        }
+        yield currentState;
+      }
+      case INTAKE_CORAL_STATION_FRONT -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.IDLE_CORAL;
+        }
+        yield currentState;
+      }
+      case INTAKE_CORAL_STATION_BACK -> {
+        if (intake.getHasGP()) {
+          rumbleController.rumbleRequest();
+          yield RobotState.SMART_STOW_1;
+        }
+        yield currentState;
+      }
+      case SMART_STOW_1 -> elevator.atGoal() ? RobotState.SMART_STOW_2 : currentState;
+      case SMART_STOW_2 -> wrist.atGoal() ? RobotState.IDLE_CORAL : currentState;
+      case NET_BACK_SCORING -> intake.getHasGP() ? currentState : RobotState.IDLE_NO_GP;
+      case CLIMBING_1_LINEUP ->
+          climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
+      default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
     };
   }
 
@@ -1095,7 +1091,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorRequest() {
     if (algaeMode) {
       intakeFloorAlgaeRequest();
-    } else if (!(intake.getSensor())) {
+    } else if (!intake.getSensor()) {
       intakeFloorCoralHorizontalRequest();
     }
   }
@@ -1291,20 +1287,15 @@ public class RobotManager extends StateMachine<RobotState> {
     algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
-      default ->
-          setStateFromRequest(
-              RobotState.CORAL_CENTERED_L4_3_PLACE
-);    }
+      default -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_3_PLACE);
+    }
   }
 
   public void l4coralPlaceAndReleaseRequest() {
     algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
-      default ->
-          setStateFromRequest(
-              RobotState.CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE
-                );
+      default -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE);
     }
   }
 
@@ -1312,10 +1303,7 @@ public class RobotManager extends StateMachine<RobotState> {
     algaeMode = false;
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, CLIMBING_3_HANGING_2, CLIMBING_4_HANGING_3 -> {}
-      default ->
-          setStateFromRequest(
-              RobotState.CORAL_CENTERED_L4_4_RELEASE
-                 );
+      default -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_4_RELEASE);
     }
   }
 
@@ -1388,10 +1376,7 @@ public class RobotManager extends StateMachine<RobotState> {
           REHOME_ELEVATOR,
           REHOME_ROLL,
           REHOME_WRIST -> {}
-      default ->
-          setStateFromRequest(
-              RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST
-                  );
+      default -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_1_POINT_5_RAISE_WRIST);
     }
   }
 
@@ -1436,10 +1421,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CORAL_L1_3_PLACE -> setStateFromRequest(RobotState.CORAL_L1_4_RELEASE);
 
-      case CORAL_L2_1_APPROACH ->
-          setStateFromRequest(
-               RobotState.CORAL_CENTERED_L2_2_LINEUP
-                 );
+      case CORAL_L2_1_APPROACH -> setStateFromRequest(RobotState.CORAL_CENTERED_L2_2_LINEUP);
       case CORAL_CENTERED_L2_2_LINEUP -> setStateFromRequest(RobotState.CORAL_CENTERED_L2_3_PLACE);
       case CORAL_CENTERED_L2_3_PLACE -> setStateFromRequest(RobotState.CORAL_CENTERED_L2_4_RELEASE);
       case CORAL_DISPLACED_L2_2_LINEUP ->
@@ -1447,10 +1429,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L2_3_PLACE ->
           setStateFromRequest(RobotState.CORAL_DISPLACED_L2_4_RELEASE);
 
-      case CORAL_L3_1_APPROACH ->
-          setStateFromRequest(
-               RobotState.CORAL_CENTERED_L3_2_LINEUP
-                 );
+      case CORAL_L3_1_APPROACH -> setStateFromRequest(RobotState.CORAL_CENTERED_L3_2_LINEUP);
       case CORAL_CENTERED_L3_2_LINEUP -> setStateFromRequest(RobotState.CORAL_CENTERED_L3_3_PLACE);
       case CORAL_CENTERED_L3_3_PLACE -> setStateFromRequest(RobotState.CORAL_CENTERED_L3_4_RELEASE);
       case CORAL_DISPLACED_L3_2_LINEUP ->
@@ -1458,10 +1437,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_DISPLACED_L3_3_PLACE ->
           setStateFromRequest(RobotState.CORAL_DISPLACED_L3_4_RELEASE);
 
-      case CORAL_L4_1_APPROACH ->
-          setStateFromRequest(
-              RobotState.CORAL_CENTERED_L4_2_LINEUP
-          );
+      case CORAL_L4_1_APPROACH -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_2_LINEUP);
       case CORAL_CENTERED_L4_2_LINEUP -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_3_PLACE);
       case CORAL_CENTERED_L4_3_PLACE -> setStateFromRequest(RobotState.CORAL_CENTERED_L4_4_RELEASE);
       case CORAL_DISPLACED_L4_2_LINEUP ->
