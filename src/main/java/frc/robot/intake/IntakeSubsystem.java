@@ -28,7 +28,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   public IntakeSubsystem(TalonFX motor, CANdi candi) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
-    motor.getConfigurator().apply(RobotConfig.get().claw().topMotorConfig());
+    motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
     this.candi = candi;
   }

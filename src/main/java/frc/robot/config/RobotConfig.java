@@ -38,14 +38,10 @@ public record RobotConfig(
 
   public record ClawConfig(
       String canBusName,
-      int topMotorID,
-      int bottomMotorID,
+      int motorID,
       int candiID,
-      boolean sensorFlipped,
-      Debouncer rightDebouncer,
-      Debouncer leftDebouncer,
-      TalonFXConfiguration topMotorConfig,
-      TalonFXConfiguration bottomMotorConfig,
+      Debouncer debouncer,
+      TalonFXConfiguration motorConfig,
       double algaeHoldCurrent,
       double algaeHoldMaxDutyCycle) {}
 
