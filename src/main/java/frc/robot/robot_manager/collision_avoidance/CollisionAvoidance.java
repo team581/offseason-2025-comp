@@ -57,6 +57,8 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
+    var graph = getGraph(obstructionKind);
+
     // TODO(@ryanknj5): Implement
     return Optional.empty();
   }
@@ -65,7 +67,7 @@ public class CollisionAvoidance {
     return switch (obstructionKind) {
       case LEFT_OBSTRUCTED -> leftObstructedGraph;
       case RIGHT_OBSTRUCTED -> rightObstructedGraph;
-      default -> notObstructedGraph;
+      case NONE -> notObstructedGraph;
     };
   }
 }
