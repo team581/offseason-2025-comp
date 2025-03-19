@@ -9,7 +9,7 @@ import java.util.Optional;
  * that the robot uses, even though they may share a name and/or superstructure position. Collision
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
-public enum MotionWaypoint {
+public enum Waypoint {
   // TODO(@ryanknj5): Add more waypoints (can estimate/vibe out the positions)
   ALGAE_INTAKE_LEFT(new SuperstructurePosition(3, 190)),
   ALGAE_INTAKE_RIGHT(new SuperstructurePosition(3, -10)),
@@ -18,11 +18,11 @@ public enum MotionWaypoint {
 
   public final SuperstructurePosition position;
 
-  MotionWaypoint(SuperstructurePosition position) {
+  Waypoint(SuperstructurePosition position) {
     this.position = position;
   }
 
-  public double costFor(MotionWaypoint other) {
+  public double costFor(Waypoint other) {
     return position.costFor(other.position);
   }
 
@@ -31,14 +31,14 @@ public enum MotionWaypoint {
    *
    * @param position The position of the superstructure.
    */
-  public static MotionWaypoint getClosest(SuperstructurePosition position) {
+  public static Waypoint getClosest(SuperstructurePosition position) {
     // TODO(@ryanknj5): Implement
-    return MotionWaypoint.ALGAE_INTAKE_LEFT;
+    return Waypoint.ALGAE_INTAKE_LEFT;
   }
 
   /** A utility method to add edges to a collision avoidance graph. */
   public Optional<WaypointEdge> canMoveTo(
-      MotionWaypoint other, MutableValueGraph<MotionWaypoint, WaypointEdge> graph) {
+      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     return Optional.ofNullable(graph.putEdgeValue(this, other, new WaypointEdge(this, other)));
   }
 }
