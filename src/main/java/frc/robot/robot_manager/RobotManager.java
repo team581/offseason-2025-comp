@@ -34,7 +34,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-
 import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
@@ -186,13 +185,9 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_CENTERED_L4_1_POINT_5_RAISE_ARM ->
-          arm.atGoal() && elevator.atGoal()
-              ? RobotState.CORAL_CENTERED_L4_2_LINEUP
-              : currentState;
+          arm.atGoal() && elevator.atGoal() ? RobotState.CORAL_CENTERED_L4_2_LINEUP : currentState;
       case CORAL_DISPLACED_L4_1_POINT_5_RAISE_ARM ->
-          arm.atGoal() && elevator.atGoal()
-              ? RobotState.CORAL_DISPLACED_L4_2_LINEUP
-              : currentState;
+          arm.atGoal() && elevator.atGoal() ? RobotState.CORAL_DISPLACED_L4_2_LINEUP : currentState;
 
       // Scoring
       case PROCESSOR_SCORING, NET_FORWARD_SCORING, ALGAE_OUTTAKE -> {
@@ -223,9 +218,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_CENTERED_L4_3_PLACE_THEN_RELEASE ->
-          arm.atGoal() && elevator.atGoal()
-              ? RobotState.CORAL_CENTERED_L4_4_RELEASE
-              : currentState;
+          arm.atGoal() && elevator.atGoal() ? RobotState.CORAL_CENTERED_L4_4_RELEASE : currentState;
 
       case CORAL_DISPLACED_L4_3_PLACE_THEN_RELEASE ->
           arm.atGoal() && elevator.atGoal()
@@ -473,9 +466,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_CENTERED_L2_3_PLACE -> {
         intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_CENTERED_L2_PLACE,
-            ArmState.CORAL_SCORE_CENTERED_PLACING_L2,
-            true);
+            ElevatorState.CORAL_CENTERED_L2_PLACE, ArmState.CORAL_SCORE_CENTERED_PLACING_L2, true);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -505,9 +496,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_CENTERED_L3_3_PLACE -> {
         intake.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_CENTERED_L3_PLACE,
-            ArmState.CORAL_SCORE_CENTERED_PLACING_L3,
-            true);
+            ElevatorState.CORAL_CENTERED_L3_PLACE, ArmState.CORAL_SCORE_CENTERED_PLACING_L3, true);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -1546,8 +1535,7 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(elevatorGoal, armGoal, false);
   }
 
-  private void moveSuperstructure(
-      ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
+  private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
     latestElevatorGoal = elevatorGoal;
     latestArmGoal = armGoal;
     latestUnsafe = unsafe;

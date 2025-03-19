@@ -13,7 +13,6 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -202,11 +201,6 @@ public class FieldCalibrationUtil {
     var actualTranslation = localization.getPose().getTranslation();
 
     return createSummary(
-        wantedElevator,
-        actualElevator,
-        wantedArm,
-        actualArm,
-        wantedTranslation,
-        actualTranslation);
+        wantedElevator, actualElevator, wantedArm, actualArm, wantedTranslation, actualTranslation);
   }
 }

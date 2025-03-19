@@ -20,6 +20,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -28,7 +29,6 @@ import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
-import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.generated.CompBotTunerConstants;
 
 class CompConfig {
