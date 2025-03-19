@@ -50,7 +50,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
     motorCoralVelocityGp = motorCoralDetection.hasGamePiece(motorVelocity, 65);
     DogLog.log("Intake/Motor/Velocity", motorVelocity);
 
-      sensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
+    sensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
 
     sensorDebounced = debouncer.calculate(sensorRaw);
 
