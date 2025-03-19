@@ -33,9 +33,9 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
   }
 
   /**
-   * The cost of moving from this position to another position;
+   * The cost of moving from this position to another position.
    *
-   * @param other The position you are going to
+   * @param other The position you are going to.
    */
   public double costFor(SuperstructurePosition other) {
     // TODO(@ryanknj5): Implement
