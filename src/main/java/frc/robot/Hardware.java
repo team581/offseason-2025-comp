@@ -20,11 +20,10 @@ public class Hardware {
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
 
-  public final TalonFX intakeTopMotor =
-      new TalonFX(RobotConfig.get().claw().topMotorID(), RobotConfig.get().claw().canBusName());
-  public final TalonFX intakeBottomMotor =
-      new TalonFX(RobotConfig.get().claw().bottomMotorID(), RobotConfig.get().claw().canBusName());
-  public final CANdi candi =
+  public final TalonFX intakeMotor =
+      new TalonFX(RobotConfig.get().intake().motorID(), RobotConfig.get().intake().canBusName());
+  public final TalonFX clawMotor = new TalonFX(RobotConfig.get().claw().motorID());
+      public final CANdi candi =
       new CANdi(RobotConfig.get().claw().candiID(), RobotConfig.get().claw().canBusName());
 
   public final TalonFX wristMotor =

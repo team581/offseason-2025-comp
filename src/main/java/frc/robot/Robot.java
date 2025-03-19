@@ -27,7 +27,6 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionBox;
-import frc.robot.roll.RollSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.ElasticLayoutUtil;
 import frc.robot.util.Stopwatch;
@@ -62,11 +61,9 @@ public class Robot extends TimedRobot {
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(hardware.driverController, true);
 
-  private final ClawSubsystem intake =
-      new ClawSubsystem(hardware.intakeTopMotor, hardware.intakeBottomMotor, hardware.candi);
+  private final ClawSubsystem intake = new ClawSubsystem(hardware.intakeMotor, hardware.candi);
 
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
-  private final RollSubsystem roll = new RollSubsystem(hardware.rollMotor, intake);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(
@@ -82,7 +79,6 @@ public class Robot extends TimedRobot {
           intake,
           wrist,
           elevator,
-          roll,
           vision,
           imu,
           swerve,

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
-import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.FeatureFlags;
@@ -14,91 +13,61 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ClawSubsystem extends StateMachine<ClawState> {
-  private final TalonFX topMotor;
-  private final TalonFX bottomMotor;
+  private final TalonFX motor;
   private final CANdi candi;
-  private final Debouncer rightDebouncer = RobotConfig.get().claw().rightDebouncer();
-  private final Debouncer leftDebouncer = RobotConfig.get().claw().leftDebouncer();
+  private final Debouncer debouncer = RobotConfig.get().claw().debouncer();
 
   private final TorqueCurrentFOC algaeHoldRequest =
       new TorqueCurrentFOC(RobotConfig.get().claw().algaeHoldCurrent())
           .withMaxAbsDutyCycle(RobotConfig.get().claw().algaeHoldMaxDutyCycle());
 
-  private boolean rightSensorRaw = false;
-  private boolean leftSensorRaw = false;
-  private boolean rightSensorDebounced = false;
-  private boolean leftSensorDebounced = false;
+  private boolean sensorRaw = false;
+  private boolean sensorDebounced = false;
   private boolean sensorsHaveGP = false;
 
-  private double topMotorVelocity = 0.0;
-  private double bottomMotorVelocity = 0.0;
+  private double motorVelocity = 0.0;
 
-  private final VelocityDetector topMotorAlgaeDetection = new VelocityDetector(32, 0.2, 0.0);
-  private final VelocityDetector bottomMotorAlgaeDetection = new VelocityDetector(30, 0.2, 0.0);
-  private boolean topMotorAlgaeVelocityGp = false;
-  private boolean bottomMotorAlgaeVelocityGp = false;
+  private final VelocityDetector motorAlgaeDetection = new VelocityDetector(32, 0.2, 0.0);
+  private boolean motorAlgaeVelocityGp = false;
 
-  private final VelocityDetector topMotorCoralDetection = new VelocityDetector(78, 0.2, 0.1);
-  private final VelocityDetector bottomMotorCoralDetection = new VelocityDetector(70, 0.2, 0.1);
-  private boolean topMotorCoralVelocityGp = false;
-  private boolean bottomMotorCoralVelocityGp = false;
+  private final VelocityDetector motorCoralDetection = new VelocityDetector(78, 0.2, 0.1);
+  private boolean motorCoralVelocityGp = false;
 
-  public ClawSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANdi candi) {
+  public ClawSubsystem(TalonFX motor, CANdi candi) {
     super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
 
-    topMotor.getConfigurator().apply(RobotConfig.get().claw().topMotorConfig());
-    bottomMotor.getConfigurator().apply(RobotConfig.get().claw().bottomMotorConfig());
-    this.topMotor = topMotor;
-    this.bottomMotor = bottomMotor;
+    motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
+    this.motor = motor;
     this.candi = candi;
   }
 
   @Override
   protected void collectInputs() {
-    topMotorVelocity = topMotor.getVelocity().getValueAsDouble();
-    bottomMotorVelocity = bottomMotor.getVelocity().getValueAsDouble();
+    motorVelocity = motor.getVelocity().getValueAsDouble();
 
-    topMotorAlgaeVelocityGp = topMotorAlgaeDetection.hasGamePiece(topMotorVelocity, 20);
-    bottomMotorAlgaeVelocityGp = bottomMotorAlgaeDetection.hasGamePiece(bottomMotorVelocity, 20);
+    motorAlgaeVelocityGp = motorAlgaeDetection.hasGamePiece(motorVelocity, 20);
 
-    topMotorCoralVelocityGp = topMotorCoralDetection.hasGamePiece(topMotorVelocity, 65);
-    bottomMotorCoralVelocityGp = bottomMotorCoralDetection.hasGamePiece(bottomMotorVelocity, 65);
-    DogLog.log("Intake/TopMotor/Velocity", topMotorVelocity);
-    DogLog.log("Intake/BottomMotor/Velocity", bottomMotorVelocity);
+    motorCoralVelocityGp = motorCoralDetection.hasGamePiece(motorVelocity, 65);
+    DogLog.log("Intake/Motor/Velocity", motorVelocity);
 
-    if (RobotConfig.get().claw().sensorFlipped()) {
-      leftSensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
-      rightSensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
-    } else {
-      leftSensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
-      rightSensorRaw = candi.getS1State().getValue() == S1StateValue.Low;
-    }
+      sensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
 
-    leftSensorDebounced = leftDebouncer.calculate(leftSensorRaw);
-    rightSensorDebounced = rightDebouncer.calculate(rightSensorRaw);
+    sensorDebounced = debouncer.calculate(sensorRaw);
 
-    sensorsHaveGP = rightSensorDebounced || leftSensorDebounced;
+    sensorsHaveGP = sensorDebounced;
   }
 
-  public boolean isCoralCentered() {
-    return leftSensorDebounced && rightSensorDebounced;
-  }
-
-  public boolean getRightSensor() {
-    return rightSensorDebounced;
-  }
-
-  public boolean getLeftSensor() {
-    return leftSensorDebounced;
+  public boolean getSensor() {
+    return sensorDebounced;
   }
 
   public boolean getHasGP() {
     return switch (getState()) {
-      case INTAKING_CORAL ->
+      case CORAL_HANDOFF ->
           FeatureFlags.INTAKE_VELOCITY_CORAL_DETECTION.getAsBoolean()
-              ? topMotorCoralVelocityGp && bottomMotorCoralVelocityGp && sensorsHaveGP
+              ? motorCoralVelocityGp && sensorsHaveGP
               : sensorsHaveGP;
-      case INTAKING_ALGAE -> topMotorAlgaeVelocityGp && bottomMotorAlgaeVelocityGp;
+      case INTAKING_ALGAE -> motorAlgaeVelocityGp;
       default -> sensorsHaveGP;
     };
   }
@@ -111,48 +80,36 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   protected void afterTransition(ClawState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
-        topMotor.disable();
-        bottomMotor.disable();
+        motor.disable();
       }
       case IDLE_W_ALGAE -> {
-        topMotor.setVoltage(12.0);
-        bottomMotor.setVoltage(12.0);
+        motor.setVoltage(0.0);
       }
       case IDLE_W_CORAL -> {
-        topMotor.setVoltage(1);
-        bottomMotor.setVoltage(1);
+        motor.setVoltage(0.0);
       }
       case INTAKING_ALGAE -> {
-        topMotor.setVoltage(12.0);
-        bottomMotor.setVoltage(12.0);
-        topMotorAlgaeDetection.reset();
-        bottomMotorAlgaeDetection.reset();
+        motor.setVoltage(0.0);
+        motorAlgaeDetection.reset();
       }
-      case INTAKING_CORAL -> {
-        topMotor.setVoltage(10.0);
-        bottomMotor.setVoltage(9.0);
-        topMotorCoralDetection.reset();
-        bottomMotorCoralDetection.reset();
+      case CORAL_HANDOFF -> {
+        motor.setVoltage(0.0);
+        motorCoralDetection.reset();
       }
-      case SCORE_ALGAE_NET_FORWARD -> {
-        topMotor.setVoltage(-3.0);
-        bottomMotor.setVoltage(-3.0);
-      }
-      case SCORE_ALGAE_NET_BACK -> {
-        topMotor.setVoltage(-3.0);
-        bottomMotor.setVoltage(-3.0);
+      case SCORE_ALGAE_NET -> {
+        motor.setVoltage(0.0);
       }
       case SCORE_ALGAE_PROCESSOR -> {
-        topMotor.setVoltage(-1.0);
-        bottomMotor.setVoltage(-1.0);
+        motor.setVoltage(0.0);
       }
       case SCORE_CORAL -> {
-        topMotor.setVoltage(-2.0);
-        bottomMotor.setVoltage(-2.0);
+        motor.setVoltage(0.0);
       }
       case OUTTAKING -> {
-        topMotor.setVoltage(-1.0);
-        bottomMotor.setVoltage(-1.0);
+        motor.setVoltage(0.0);
+      }
+      case TRUFFLA_CORAL_INTAKE -> {
+        motor.setVoltage(0.0);
       }
     }
   }
@@ -161,12 +118,9 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Claw/TopMotor/AppliedVoltage", topMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Claw/BottomMotor/AppliedVoltage", bottomMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Claw/Sensors/RightSensorRaw", rightSensorRaw);
-    DogLog.log("Claw/Sensors/LeftSensorRaw", leftSensorRaw);
-    DogLog.log("Claw/Sensors/RightSensorDebounced", rightSensorDebounced);
-    DogLog.log("Claw/Sensors/LeftSensorDebounced", leftSensorDebounced);
+    DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Claw/Sensors/SensorRaw", sensorRaw);
+    DogLog.log("Claw/Sensors/SensorDebounced", sensorDebounced);
     DogLog.log("Claw/SensorsHaveGP", sensorsHaveGP);
   }
 }
