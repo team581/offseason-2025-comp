@@ -13,8 +13,9 @@ public record RobotConfig(
     ClawConfig claw,
     SwerveConfig swerve,
     VisionConfig vision,
-    WristConfig wrist,
+    ArmConfig arm,
     RollConfig roll,
+    DeployConfig deploy,
     ClimberConfig climber,
     LightsConfig lights) {
   public record ElevatorConfig(
@@ -56,7 +57,7 @@ public record RobotConfig(
   public record VisionConfig(
       int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
 
-  public record WristConfig(
+  public record ArmConfig(
       String canBusName,
       int motorID,
       TalonFXConfiguration motorConfig,
@@ -86,6 +87,16 @@ public record RobotConfig(
       double maxAngle,
       double homingCurrentThreshold,
       double homingPosition) {}
+
+  public record DeployConfig(
+      String canBusName,
+      int motorID,
+      TalonFXConfiguration motorConfig,
+      double minAngle,
+      double maxAngle,
+      double homingVoltage,
+      double homingCurrent,
+      double homingCurrentThreshold) {}
 
   public record LightsConfig(String canBusName, int candleID) {}
 

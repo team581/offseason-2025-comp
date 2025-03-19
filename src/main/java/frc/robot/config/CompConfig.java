@@ -20,15 +20,16 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
+import frc.robot.config.RobotConfig.DeployConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
-import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.CompBotTunerConstants;
 
 class CompConfig {
@@ -176,7 +177,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
           new VisionConfig(4, 0.4, Double.MAX_VALUE),
-          new WristConfig(
+          new ArmConfig(
               RIO_CAN_NAME,
               22,
               new TalonFXConfiguration()
@@ -229,6 +230,33 @@ class CompConfig {
               97.91,
               9,
               97.91),
+          new DeployConfig(
+              CANIVORE_NAME,
+              999,
+              new TalonFXConfiguration()
+                  .withFeedback(
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio((50 / 8) * (50 / 18) * (40 / 10)))
+                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(0.0)
+                          .withMotionMagicCruiseVelocity(0.0))
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(1.0)
+                          .withKV(0.0)
+                          .withKG(0.0)
+                          .withGravityType(GravityTypeValue.Arm_Cosine)),
+              0.0,
+              581,
+              0.0,
+              0.0,
+              0.0), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,
               24,
