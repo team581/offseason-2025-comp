@@ -14,7 +14,6 @@ public record RobotConfig(
     SwerveConfig swerve,
     VisionConfig vision,
     ArmConfig arm,
-    RollConfig roll,
     DeployConfig deploy,
     ClimberConfig climber,
     LightsConfig lights) {
@@ -78,15 +77,6 @@ public record RobotConfig(
       CANcoderConfiguration cancoderConfig,
       TalonFXConfiguration grabMotorConfig,
       CANrangeConfiguration canRangeConfig) {}
-
-  public record RollConfig(
-      String canBusName,
-      int motorID,
-      TalonFXConfiguration motorConfig,
-      double minAngle,
-      double maxAngle,
-      double homingCurrentThreshold,
-      double homingPosition) {}
 
   public record DeployConfig(
       String canBusName,

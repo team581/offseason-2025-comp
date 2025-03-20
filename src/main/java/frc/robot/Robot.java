@@ -28,7 +28,6 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
-import frc.robot.robot_manager.collision_avoidance.CollisionBox;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.ElasticLayoutUtil;
 import frc.robot.util.Stopwatch;
@@ -62,7 +61,7 @@ public class Robot extends TimedRobot {
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(hardware.driverController, true);
 
-  private final ClawSubsystem intake = new ClawSubsystem(hardware.intakeMotor, hardware.candi);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.intakeMotor, hardware.candi);
 
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
@@ -77,7 +76,7 @@ public class Robot extends TimedRobot {
   private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
-          intake,
+          claw,
           arm,
           elevator,
           vision,
@@ -121,8 +120,6 @@ public class Robot extends TimedRobot {
     LifecycleSubsystemManager.ready();
 
     configureBindings();
-
-    CollisionBox.visualize();
 
     ElasticLayoutUtil.onBoot();
   }
@@ -247,7 +244,5 @@ public class Robot extends TimedRobot {
 
     hardware.operatorController.a().onTrue(robotCommands.rehomeElevatorCommand());
     hardware.operatorController.b().onTrue(robotCommands.rehomeArmCommand());
-    hardware.operatorController.y().onTrue(robotCommands.rehomeRollCommand());
-    hardware.operatorController.x().onTrue(robotCommands.unjamStationCommand());
   }
 }

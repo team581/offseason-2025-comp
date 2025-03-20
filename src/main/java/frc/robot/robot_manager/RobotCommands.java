@@ -86,11 +86,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
   }
 
-  public Command unjamStationCommand() {
-    return Commands.runOnce(robot::unjamStationRequest, requirements)
-        .withName("UnjamStationCommand");
-  }
-
   public Command rehomeElevatorCommand() {
     return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
         .withName("RehomeElevatorCommand");
@@ -98,11 +93,5 @@ public class RobotCommands {
 
   public Command rehomeArmCommand() {
     return Commands.runOnce(robot::rehomeArmRequest, requirements).withName("RehomeArmCommand");
-  }
-
-  public Command rehomeRollCommand() {
-    return Commands.runOnce(robot::rehomeRollRequest, requirements)
-        .andThen(robot.waitForState(RobotState.IDLE_NO_GP))
-        .withName("RehomeRollCommand");
   }
 }

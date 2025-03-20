@@ -2,7 +2,7 @@ package frc.robot.robot_manager;
 
 public enum RobotState {
   // Idle states
-  IDLE_NONE,
+  IDLE_NO_GP,
   IDLE_CORAL,
   IDLE_ALGAE,
   IDLE_BOTH,
@@ -68,5 +68,6 @@ public enum RobotState {
   // Misc states
   UNJAM,
 
-  REHOME_ELEVATOR;
+  REHOME_ELEVATOR,
+  REHOME_ARM;
 }

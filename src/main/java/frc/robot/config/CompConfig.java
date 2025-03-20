@@ -27,7 +27,6 @@ import frc.robot.config.RobotConfig.DeployConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.LightsConfig;
-import frc.robot.config.RobotConfig.RollConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.generated.CompBotTunerConstants;
@@ -209,27 +208,6 @@ class CompConfig {
               156.5,
               18,
               -56.4),
-          new RollConfig(
-              RIO_CAN_NAME,
-              23,
-              new TalonFXConfiguration()
-                  .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
-                  .withFeedback(
-                      new FeedbackConfigs()
-                          .withSensorToMechanismRatio((60.0 / 8.0) * (60.0 / 15.0)))
-                  .withSlot0(new Slot0Configs().withKP(50.0).withKV(0.0))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(6.0).withPeakReverseVoltage(-6.0))
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(20)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(20)),
-              -94.31,
-              97.91,
-              9,
-              97.91),
           new DeployConfig(
               CANIVORE_NAME,
               999,
