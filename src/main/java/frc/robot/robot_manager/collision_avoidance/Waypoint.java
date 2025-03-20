@@ -2,7 +2,6 @@ package frc.robot.robot_manager.collision_avoidance;
 
 import com.google.common.graph.MutableValueGraph;
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.Optional;
 
 /**
  * These represent "waypoints" for collision avoidance to route through. These are NOT setpoints
@@ -36,9 +35,17 @@ public enum Waypoint {
     return Waypoint.ALGAE_INTAKE_LEFT;
   }
 
-  /** A utility method to add edges to a collision avoidance graph. */
-  public Optional<WaypointEdge> canMoveTo(
+  public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
+  }
+
+  public void canMoveToWhenLeftSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    return Optional.ofNullable(graph.putEdgeValue(this, other, new WaypointEdge(this, other)));
+    graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
+  }
+
+  public void canMoveToWhenRightSafe(
+      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
   }
 }

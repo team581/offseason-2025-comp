@@ -7,7 +7,9 @@ import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.Optional;
 
 public class CollisionAvoidance {
-  private static ValueGraph<Waypoint, WaypointEdge> createGraph(ObstructionKind obstructions) {
+  private static final ValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+
+  private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
@@ -16,26 +18,14 @@ public class CollisionAvoidance {
     // TODO(@ryanknj5): Add the full graph of safe motion
 
     // Left side
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveTo(Waypoint.ALGAE_INTAKE_LEFT, graph);
+    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToAlways(Waypoint.ALGAE_INTAKE_LEFT, graph);
 
     // Right side
-    Waypoint.ALGAE_INTAKE_RIGHT.canMoveTo(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToAlways(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
 
     // Return an immutable version now that we have finished constructing the graph
     return ValueGraphBuilder.from(graph).immutable().build();
   }
-
-  /** Graph of safe motion when there aren't any special obstructions. */
-  private static final ValueGraph<Waypoint, WaypointEdge> notObstructedGraph =
-      createGraph(ObstructionKind.NONE);
-
-  /** Graph of safe motion when there are obstructions (the reef) on the left side of the robot. */
-  private static final ValueGraph<Waypoint, WaypointEdge> leftObstructedGraph =
-      createGraph(ObstructionKind.LEFT_OBSTRUCTED);
-
-  /** Graph of safe motion when there are obstructions (the reef) on the right side of the robot. */
-  private static final ValueGraph<Waypoint, WaypointEdge> rightObstructedGraph =
-      createGraph(ObstructionKind.RIGHT_OBSTRUCTED);
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -50,18 +40,9 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    var graph = getGraph(obstructionKind);
-
     // TODO(@ryanknj5): Implement
-    return Optional.empty();
-  }
 
-  private static ValueGraph<Waypoint, WaypointEdge> getGraph(ObstructionKind obstructionKind) {
-    return switch (obstructionKind) {
-      case LEFT_OBSTRUCTED -> leftObstructedGraph;
-      case RIGHT_OBSTRUCTED -> rightObstructedGraph;
-      case NONE -> notObstructedGraph;
-    };
+    return Optional.empty();
   }
 
   private CollisionAvoidance() {}
