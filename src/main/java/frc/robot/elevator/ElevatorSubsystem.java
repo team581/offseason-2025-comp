@@ -113,13 +113,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
       }
-      case INTAKING_CORAL_STATION_BACK, INTAKING_CORAL_STATION_FRONT -> {
-        var station = getStationIntakeSide();
-        leftMotor.setControl(
-            positionRequest.withPosition(clampHeight(newState.height + station.offset)));
-        rightMotor.setControl(
-            positionRequest.withPosition(clampHeight(newState.height + station.offset)));
-      }
       default -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
@@ -203,30 +196,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       // Since the next state is same setpoint, different arm angle
       case CORAL_CENTERED_L4_RAISE_ARM, CORAL_DISPLACED_L4_RAISE_ARM ->
           averageMeasuredHeight > getState().height - RAISE_ARM_EARLY_THRESHOLD;
-      case INTAKING_CORAL_STATION_BACK, INTAKING_CORAL_STATION_FRONT ->
-          MathUtil.isNear(
-              getState().height + getStationIntakeSide().offset, averageMeasuredHeight, TOLERANCE);
       default -> MathUtil.isNear(getState().height, averageMeasuredHeight, TOLERANCE);
     };
-  }
-
-  private CoralStation getStationIntakeSide() {
-    if (localization.getPose().getY() > 4.025) {
-      if (FmsSubsystem.isRedAlliance()) {
-        // Coral station red, processor side
-        return CoralStation.PROCESSOR_SIDE_RED;
-      }
-
-      // Coral station blue, non processor side
-      return CoralStation.NON_PROCESSOR_SIDE_BLUE;
-    }
-
-    if (FmsSubsystem.isRedAlliance()) {
-      // Coral station red, non processor side
-      return CoralStation.NON_PROCESSOR_SIDE_RED;
-    }
-
-    // Coral station blue, processor side
-    return CoralStation.PROCESSOR_SIDE_BLUE;
   }
 }
