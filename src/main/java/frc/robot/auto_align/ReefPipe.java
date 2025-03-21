@@ -50,5 +50,4 @@ public enum ReefPipe {
   public Pose2d getPose(ReefPipeLevel level) {
     return getPose(level, FmsSubsystem.isRedAlliance());
   }
-
 }

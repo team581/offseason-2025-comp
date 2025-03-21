@@ -35,7 +35,6 @@ public class Hardware {
   public final CANdi intakeCandi =
       new CANdi(RobotConfig.get().intake().candiID(), RobotConfig.get().intake().canBusName());
 
-
   public final TalonFX armMotor =
       new TalonFX(RobotConfig.get().arm().motorID(), RobotConfig.get().arm().canBusName());
 
