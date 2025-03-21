@@ -359,11 +359,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
-  @Deprecated
-  public void setState(SwerveState newState) {
-    setStateFromRequest(newState);
-  }
-
   public void normalDriveRequest() {
     if (DriverStation.isAutonomous()) {
       setStateFromRequest(SwerveState.AUTO);
@@ -422,7 +417,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   public void climbRequest() {
     setSnapToAngle(SnapUtil.getCageAngle());
-    setState(SwerveState.CLIMBING);
+    setStateFromRequest(SwerveState.CLIMBING);
   }
 
   public Translation2d getPoseOffset() {
