@@ -134,7 +134,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
                 Units.degreesToRotations(
                     RobotConfig.get().arm().minAngle() + (motorAngle - lowestSeenAngle)));
 
-            setStateFromRequest(ArmState.CORAL_STOWED);
+            setStateFromRequest(ArmState.CLAW_EMPTY);
           } else {
             motor.setControl(brakeNeutralRequest);
           }
@@ -153,7 +153,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     if (currentState == ArmState.MID_MATCH_HOMING
         && averageMotorCurrent > RobotConfig.get().arm().homingCurrentThreshold()) {
       motor.setPosition(Units.degreesToRotations(RobotConfig.get().arm().homingPosition()));
-      return ArmState.CORAL_STOWED;
+      return ArmState.CLAW_EMPTY;
     }
 
     // Don't do anything
