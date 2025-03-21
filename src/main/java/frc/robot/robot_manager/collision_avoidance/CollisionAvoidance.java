@@ -23,6 +23,9 @@ public class CollisionAvoidance {
     // Right side
     Waypoint.ALGAE_INTAKE_RIGHT.canMoveToAlways(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
 
+    // Visualize the generated graph
+    GraphVisualizer.log(graph);
+
     // Return an immutable version now that we have finished constructing the graph
     return ValueGraphBuilder.from(graph).immutable().build();
   }
