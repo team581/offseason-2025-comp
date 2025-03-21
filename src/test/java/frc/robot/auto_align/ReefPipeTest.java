@@ -29,7 +29,9 @@ public class ReefPipeTest {
 
     for (var pipe : ReefPipe.values()) {
       var distance =
-          pipe.getPose(ReefPipeLevel.BASE, false,  RobotScoringSide.RIGHT).getTranslation().getDistance(BLUE_REEF_CENTER);
+          pipe.getPose(ReefPipeLevel.BASE, false, RobotScoringSide.RIGHT)
+              .getTranslation()
+              .getDistance(BLUE_REEF_CENTER);
       assertTrue(MathUtil.isNear(wantedDistance, distance, 2));
     }
   }
@@ -44,7 +46,9 @@ public class ReefPipeTest {
 
     for (var pipe : ReefPipe.values()) {
       var distance =
-          pipe.getPose(ReefPipeLevel.BASE, true, RobotScoringSide.RIGHT).getTranslation().getDistance(RED_REEF_CENTER);
+          pipe.getPose(ReefPipeLevel.BASE, true, RobotScoringSide.RIGHT)
+              .getTranslation()
+              .getDistance(RED_REEF_CENTER);
       // TODO: Figure out why a wider tolerance is needed here
       assertTrue(MathUtil.isNear(wantedDistance, distance, 0.02));
     }

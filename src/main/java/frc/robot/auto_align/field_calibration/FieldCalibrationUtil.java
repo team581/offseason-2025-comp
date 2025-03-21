@@ -148,9 +148,11 @@ public class FieldCalibrationUtil {
     var anyOk = false;
 
     for (var level : LEVELS) {
-      DogLog.log("FieldCalibration/Red/Best/" + level.toString(), bestRedPipe.getPose(level, true, side));
       DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString(), bestBluePipe.getPose(level, false, side));
+          "FieldCalibration/Red/Best/" + level.toString(), bestRedPipe.getPose(level, true, side));
+      DogLog.log(
+          "FieldCalibration/Blue/Best/" + level.toString(),
+          bestBluePipe.getPose(level, false, side));
 
       var redRightSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.RIGHT);
       var redLeftSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.LEFT);

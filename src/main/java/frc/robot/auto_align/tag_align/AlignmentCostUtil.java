@@ -82,7 +82,10 @@ public class AlignmentCostUtil {
   private final Comparator<ReefPipe> pipeL2Comparator = createReefPipeComparator(ReefPipeLevel.L2);
 
   public AlignmentCostUtil(
-      LocalizationSubsystem localization, SwerveSubsystem swerve, ReefState reefState, RobotScoringSide side) {
+      LocalizationSubsystem localization,
+      SwerveSubsystem swerve,
+      ReefState reefState,
+      RobotScoringSide side) {
     this.localization = localization;
     this.swerve = swerve;
     this.reefState = reefState;
@@ -107,7 +110,8 @@ public class AlignmentCostUtil {
   private Comparator<ReefPipe> createReefPipeComparator(ReefPipeLevel level) {
     return Comparator.comparingDouble(
         pipe ->
-            getAlignCost(pipe.getPose(level, side), localization.getPose(), swerve.getTeleopSpeeds())
+            getAlignCost(
+                    pipe.getPose(level, side), localization.getPose(), swerve.getTeleopSpeeds())
                 + (reefState.isScored(pipe, level) ? 0.25 : 0));
   }
 }
