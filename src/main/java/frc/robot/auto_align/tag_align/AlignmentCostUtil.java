@@ -25,11 +25,10 @@ public class AlignmentCostUtil {
    * @param robotPose The robot's current pose
    * @param robotVelocity The robot's current velocity (field relative)
    */
-  public static double getAlignCost(Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
-
-    var distanceCost = target.getTranslation().getDistance(robotPose.getTranslation());
-    if (target.getTranslation().equals(Translation2d.kZero)
-        || robotPose.getTranslation().equals(Translation2d.kZero)) {
+  public static double getAlignCost(
+      Translation2d target, Translation2d robotPose, ChassisSpeeds robotVelocity) {
+    var distanceCost = target.getDistance(robotPose);
+    if (target.equals(Translation2d.kZero) || robotPose.equals(Translation2d.kZero)) {
       return distanceCost;
     }
 
@@ -37,7 +36,7 @@ public class AlignmentCostUtil {
       return distanceCost;
     }
 
-    var targetRobotRelative = target.getTranslation().minus(robotPose.getTranslation());
+    var targetRobotRelative = target.minus(robotPose);
     var targetDirection = targetRobotRelative.getAngle();
 
     var driveAngleCost =
@@ -70,7 +69,7 @@ public class AlignmentCostUtil {
     return distanceCost + driveAngleCost;
   }
 
-  public final Comparator<Pose2d> ALIGN_COST_COMPARATOR;
+  public final Comparator<Translation2d> ALIGN_COST_COMPARATOR;
 
   private final LocalizationSubsystem localization;
   private final SwerveSubsystem swerve;
@@ -93,7 +92,11 @@ public class AlignmentCostUtil {
 
     ALIGN_COST_COMPARATOR =
         Comparator.comparingDouble(
-            pose -> getAlignCost(pose, localization.getPose(), swerve.getFieldRelativeSpeeds()));
+            translation ->
+                getAlignCost(
+                    translation,
+                    localization.getPose().getTranslation(),
+                    swerve.getFieldRelativeSpeeds()));
   }
 
   public Comparator<ReefPipe> getReefPipeComparator(ReefPipeLevel level) {
@@ -111,7 +114,9 @@ public class AlignmentCostUtil {
     return Comparator.comparingDouble(
         pipe ->
             getAlignCost(
-                    pipe.getPose(level, side), localization.getPose(), swerve.getTeleopSpeeds())
+                    pipe.getPose(level, side).getTranslation(),
+                    localization.getPose().getTranslation(),
+                    swerve.getTeleopSpeeds())
                 + (reefState.isScored(pipe, level) ? 0.25 : 0));
   }
 }
