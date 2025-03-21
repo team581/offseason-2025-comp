@@ -90,16 +90,16 @@ public class FieldCalibrationUtil {
     return switch (level) {
       case L2 ->
           centered
-              ? ArmState.CORAL_SCORE_CENTERED_LINEUP_L2
-              : ArmState.CORAL_SCORE_DISPLACED_LINEUP_L2;
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L2
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L2;
       case L3 ->
           centered
-              ? ArmState.CORAL_SCORE_CENTERED_LINEUP_L3
-              : ArmState.CORAL_SCORE_DISPLACED_LINEUP_L3;
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
       case L4 ->
           centered
-              ? ArmState.CORAL_SCORE_CENTERED_LINEUP_L4
-              : ArmState.CORAL_SCORE_DISPLACED_LINEUP_L4;
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
       default -> ArmState.UNTUNED;
     };
   }

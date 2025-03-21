@@ -279,7 +279,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY -> {
         intake.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, ArmState.GROUND_ALGAE_INTAKE);
+        moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, ArmState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
