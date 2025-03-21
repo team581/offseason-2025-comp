@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +12,7 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
+import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.claw.ClawState;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberState;
@@ -102,6 +104,7 @@ public class RobotManager extends StateMachine<RobotState> {
           RobotState.CORAL_INTAKE_FLOOR_CLAW_ALGAE);
 
   private double reefSnapAngle = 0.0;
+  private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private double coralIntakeAssistAngle = 0.0;
   private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
@@ -604,6 +607,8 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
     maybeBestCoralMapTranslation = coralMap.getBestCoral();
+    robotScoringSide = AutoAlign.getScoringSideFromRobotPose(localization.getPose());
+    autoAlign.setScoringLevel(scoringLevel, robotScoringSide);
 
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
@@ -635,7 +640,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
     vision.setClosestScoringReefTag(nearestReefSide.getTagID());
 
-    autoAlign.setScoringLevel(scoringLevel);
     autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
     if (vision.isAnyTagLimelightOnline() || DriverStation.isAutonomous()) {
       var idealAlignSpeeds =

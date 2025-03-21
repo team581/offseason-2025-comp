@@ -2,6 +2,9 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -44,5 +47,12 @@ public class AutoAlignTest {
     var result = AutoAlign.shouldNetScoreForwards(robotPose);
 
     Assertions.assertEquals(false, result);
+  }
+
+  @Test
+  void scoreRightOrLeft() {
+    var robotPose = new Pose2d(13, 8, Rotation2d.kZero);
+    var result = AutoAlign.getScoringSideFromRobotPose(robotPose);
+    assertEquals(RobotScoringSide.RIGHT, result);
   }
 }
