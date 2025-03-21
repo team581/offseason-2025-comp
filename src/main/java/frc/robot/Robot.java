@@ -62,8 +62,8 @@ public class Robot extends TimedRobot {
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(hardware.driverController, true);
 
-  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.candi);
-  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor, hardware.candi);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCandi);
+  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor, hardware.intakeCandi);
 
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
