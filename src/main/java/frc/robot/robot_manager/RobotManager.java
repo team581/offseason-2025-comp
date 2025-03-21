@@ -4,13 +4,11 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefAlignState;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.claw.ClawState;
@@ -27,7 +25,6 @@ import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -35,7 +32,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-
 import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
@@ -58,7 +54,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public final AutoAlign autoAlign;
 
   public RobotManager(
-    DeploySubsystem deploy,
+      DeploySubsystem deploy,
       ClawSubsystem intake,
       ArmSubsystem arm,
       ElevatorSubsystem elevator,
@@ -120,7 +116,9 @@ public class RobotManager extends StateMachine<RobotState> {
           currentState;
 
       case REHOME_ELEVATOR ->
-          elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY_DEPLOY_EMPTY : currentState;
+          elevator.getState() == ElevatorState.STOWED
+              ? RobotState.CLAW_EMPTY_DEPLOY_EMPTY
+              : currentState;
 
       // Reef lineup states
       case CORAL_L2_LEFT_LINEUP -> {
@@ -163,7 +161,9 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       // Scoring
-      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_LEFT_RELEASE_DEPLOY_CORAL, ALGAE_NET_RIGHT_RELEASE_DEPLOY_CORAL -> {
+      case ALGAE_PROCESSOR_RELEASE,
+          ALGAE_NET_LEFT_RELEASE_DEPLOY_CORAL,
+          ALGAE_NET_RIGHT_RELEASE_DEPLOY_CORAL -> {
         if (timeout(0.5)) {
 
           yield RobotState.CLAW_EMPTY_DEPLOY_CORAL;
@@ -228,7 +228,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
         yield currentState;
       }
-      case CORAL_INTAKE_FLOOR_CLAW_EMPTY, CORAL_INTAKE_UPRIGHT_CLAW_EMPTY, CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
+      case CORAL_INTAKE_FLOOR_CLAW_EMPTY,
+          CORAL_INTAKE_UPRIGHT_CLAW_EMPTY,
+          CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
         if (intake.getHasGP()) {
           rumbleController.rumbleRequest();
           yield RobotState.CLAW_EMPTY_DEPLOY_CORAL;
@@ -504,25 +506,28 @@ public class RobotManager extends StateMachine<RobotState> {
 
     // Update snaps
     switch (getState()) {
-      case ALGAE_INTAKE_L2_DEPLOY_CORAL, ALGAE_INTAKE_L2_DEPLOY_EMPTY, ALGAE_INTAKE_L3_DEPLOY_CORAL, ALGAE_INTAKE_L3_DEPLOY_EMPTY -> {
+      case ALGAE_INTAKE_L2_DEPLOY_CORAL,
+          ALGAE_INTAKE_L2_DEPLOY_EMPTY,
+          ALGAE_INTAKE_L3_DEPLOY_CORAL,
+          ALGAE_INTAKE_L3_DEPLOY_EMPTY -> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case CORAL_L1_LEFT_LINEUP,
-            CORAL_L1_LEFT_RELEASE,
-            CORAL_L2_LEFT_LINEUP,
-            CORAL_L2_LEFT_RELEASE,
-            CORAL_L3_LEFT_LINEUP,
-            CORAL_L3_LEFT_RELEASE,
-            CORAL_L4_LEFT_LINEUP,
-            CORAL_L4_LEFT_RELEASE,
-            CORAL_L1_RIGHT_LINEUP,
-            CORAL_L1_RIGHT_RELEASE,
-            CORAL_L2_RIGHT_LINEUP,
-            CORAL_L2_RIGHT_RELEASE,
-            CORAL_L3_RIGHT_LINEUP,
-            CORAL_L3_RIGHT_RELEASE,
-            CORAL_L4_RIGHT_LINEUP,
-            CORAL_L4_RIGHT_RELEASE -> {
+          CORAL_L1_LEFT_RELEASE,
+          CORAL_L2_LEFT_LINEUP,
+          CORAL_L2_LEFT_RELEASE,
+          CORAL_L3_LEFT_LINEUP,
+          CORAL_L3_LEFT_RELEASE,
+          CORAL_L4_LEFT_LINEUP,
+          CORAL_L4_LEFT_RELEASE,
+          CORAL_L1_RIGHT_LINEUP,
+          CORAL_L1_RIGHT_RELEASE,
+          CORAL_L2_RIGHT_LINEUP,
+          CORAL_L2_RIGHT_RELEASE,
+          CORAL_L3_RIGHT_LINEUP,
+          CORAL_L3_RIGHT_RELEASE,
+          CORAL_L4_RIGHT_LINEUP,
+          CORAL_L4_RIGHT_RELEASE -> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY -> {
@@ -589,21 +594,25 @@ public class RobotManager extends StateMachine<RobotState> {
     reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
-          case CORAL_L1_LEFT_LINEUP, CORAL_L1_RIGHT_LINEUP, CORAL_L1_LEFT_RELEASE, CORAL_L1_RIGHT_RELEASE -> ReefPipeLevel.L1;
+          case CORAL_L1_LEFT_LINEUP,
+                  CORAL_L1_RIGHT_LINEUP,
+                  CORAL_L1_LEFT_RELEASE,
+                  CORAL_L1_RIGHT_RELEASE ->
+              ReefPipeLevel.L1;
           case CORAL_L2_LEFT_LINEUP,
-                CORAL_L2_RIGHT_LINEUP,
-                CORAL_L2_LEFT_RELEASE,
-                CORAL_L2_RIGHT_RELEASE ->
+                  CORAL_L2_RIGHT_LINEUP,
+                  CORAL_L2_LEFT_RELEASE,
+                  CORAL_L2_RIGHT_RELEASE ->
               ReefPipeLevel.L2;
-              case CORAL_L3_LEFT_LINEUP,
-                    CORAL_L3_RIGHT_LINEUP,
-                    CORAL_L3_LEFT_RELEASE,
-                    CORAL_L3_RIGHT_RELEASE ->
+          case CORAL_L3_LEFT_LINEUP,
+                  CORAL_L3_RIGHT_LINEUP,
+                  CORAL_L3_LEFT_RELEASE,
+                  CORAL_L3_RIGHT_RELEASE ->
               ReefPipeLevel.L3;
-              case CORAL_L4_LEFT_LINEUP,
-                    CORAL_L4_RIGHT_LINEUP,
-                    CORAL_L4_LEFT_RELEASE,
-                    CORAL_L4_RIGHT_RELEASE ->
+          case CORAL_L4_LEFT_LINEUP,
+                  CORAL_L4_RIGHT_LINEUP,
+                  CORAL_L4_LEFT_RELEASE,
+                  CORAL_L4_RIGHT_RELEASE ->
               ReefPipeLevel.L4;
           default -> ReefPipeLevel.BASE;
         };
@@ -617,7 +626,11 @@ public class RobotManager extends StateMachine<RobotState> {
     if (vision.isAnyTagLimelightOnline() || DriverStation.isAutonomous()) {
       var idealAlignSpeeds =
           switch (getState()) {
-            case ALGAE_INTAKE_L2_DEPLOY_CORAL, ALGAE_INTAKE_L2_DEPLOY_EMPTY, ALGAE_INTAKE_L3_DEPLOY_CORAL, ALGAE_INTAKE_L3_DEPLOY_EMPTY -> autoAlign.getAlgaeAlignSpeeds();
+            case ALGAE_INTAKE_L2_DEPLOY_CORAL,
+                    ALGAE_INTAKE_L2_DEPLOY_EMPTY,
+                    ALGAE_INTAKE_L3_DEPLOY_CORAL,
+                    ALGAE_INTAKE_L3_DEPLOY_EMPTY ->
+                autoAlign.getAlgaeAlignSpeeds();
             default -> autoAlign.getTagAlignSpeeds();
           };
       swerve.setAutoAlignAutoSpeeds(idealAlignSpeeds);
@@ -650,7 +663,11 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void stowRequest() {
     switch (getState()) {
-      case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY, ALGAE_INTAKE_L2_DEPLOY_CORAL, ALGAE_INTAKE_L2_DEPLOY_EMPTY, ALGAE_INTAKE_L3_DEPLOY_CORAL, ALGAE_INTAKE_L3_DEPLOY_EMPTY -> {
+      case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY,
+          ALGAE_INTAKE_L2_DEPLOY_CORAL,
+          ALGAE_INTAKE_L2_DEPLOY_EMPTY,
+          ALGAE_INTAKE_L3_DEPLOY_CORAL,
+          ALGAE_INTAKE_L3_DEPLOY_EMPTY -> {
         // We are cancelling intaking and want to stow instead
         // Because we are using algae, we can't rely on the sensors to detect a game piece
 
@@ -675,7 +692,8 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_4_HANGING_3,
           REHOME_ELEVATOR,
           REHOME_ARM -> {}
-        case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL -> setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_CORAL);
+      case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL ->
+          setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_CORAL);
       default -> setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
     }
   }
@@ -701,7 +719,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_3_HANGING_2,
           CLIMBING_4_HANGING_3,
           REHOME_ELEVATOR,
-          REHOME_ARM   -> {}
+          REHOME_ARM -> {}
       default -> setStateFromRequest(RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY);
     }
   }
@@ -715,32 +733,6 @@ public class RobotManager extends StateMachine<RobotState> {
           REHOME_ELEVATOR,
           REHOME_ARM -> {}
       default -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING);
-    }
-  }
-
-  private void intakeAlgaeL2Request() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L2_DEPLOY_EMPTY);
-    }
-  }
-
-  private void intakeAlgaeL3Request() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L3_DEPLOY_EMPTY);
     }
   }
 
@@ -820,11 +812,15 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
-      case ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY -> setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY);
-      case ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL -> setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL);
+      case ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY ->
+          setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY);
+      case ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL ->
+          setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL);
 
-      case ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY -> setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY);
-      case ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL -> setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL);
+      case ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY ->
+          setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY);
+      case ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL ->
+          setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL);
 
       default -> {}
     }
@@ -864,8 +860,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-
-
   public void rehomeElevatorRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
@@ -900,8 +894,7 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(elevatorGoal, armGoal, false);
   }
 
-  private void moveSuperstructure(
-      ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
+  private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
     elevator.setState(elevatorGoal);
     arm.setState(armGoal);
   }
@@ -916,9 +909,5 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void setConfirmScoreActive(boolean newValue) {
     confirmScoreActive = newValue;
-  }
-
-  private boolean shouldScoreLeft() {
-    return true;
   }
 }
