@@ -16,7 +16,8 @@ public class RobotCommands {
   }
 
   public Command floorIntakeCommand() {
-    return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements).withName("FloorIntakeCommand");
+    return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements)
+        .withName("FloorIntakeCommand");
   }
 
   public Command floorAssistIntakeCommand() {
