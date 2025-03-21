@@ -43,10 +43,12 @@ public enum ReefPipe {
   }
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
-    return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
+    // TODO: Figure out how we want to incorporate left & right here
+    return isRedAlliance ? redPoses.getLeftPose(level) : bluePoses.getLeftPose(level);
   }
 
   public Pose2d getPose(ReefPipeLevel level) {
     return getPose(level, FmsSubsystem.isRedAlliance());
   }
+
 }
