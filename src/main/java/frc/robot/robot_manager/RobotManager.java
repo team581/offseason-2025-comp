@@ -605,7 +605,7 @@ public class RobotManager extends StateMachine<RobotState> {
     nearestReefSide = autoAlign.getClosestReefSide();
     maybeBestCoralMapTranslation = coralMap.getBestCoral();
 
-    reefSnapAngle = nearestReefSide.getPose().getRotation().getDegrees();
+    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_LEFT_LINEUP,
