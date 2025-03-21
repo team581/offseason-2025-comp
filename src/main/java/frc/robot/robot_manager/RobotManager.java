@@ -34,7 +34,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +95,11 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private final List<RobotState> algaeStates = List.of(RobotState.CLAW_ALGAE_DEPLOY_CORAL,RobotState.CLAW_ALGAE_DEPLOY_EMPTY, RobotState.CORAL_INTAKE_FLOOR_CLAW_ALGAE);
+  private final List<RobotState> algaeStates =
+      List.of(
+          RobotState.CLAW_ALGAE_DEPLOY_CORAL,
+          RobotState.CLAW_ALGAE_DEPLOY_EMPTY,
+          RobotState.CORAL_INTAKE_FLOOR_CLAW_ALGAE);
 
   private double reefSnapAngle = 0.0;
   private double coralIntakeAssistAngle = 0.0;
@@ -291,7 +294,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         intake.setState(IntakeState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, ArmState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
+        moveSuperstructure(
+            ElevatorState.GROUND_ALGAE_INTAKE, ArmState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -681,11 +685,8 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
       } else {
         switch (getState()) {
-          case algae states ->
-        setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
-        default ->
-        setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
-
+          case algae states -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+          default -> setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
         }
       }
     }
