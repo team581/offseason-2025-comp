@@ -68,32 +68,23 @@ public class FieldCalibrationUtil {
     return new Summary(elevatorState, armState, alignOk);
   }
 
-  private static ElevatorState branchToElevator(ReefPipeLevel level, boolean centered) {
+  private static ElevatorState branchToElevator(ReefPipeLevel level, boolean left) {
     return switch (level) {
       case L2 ->
-          centered
-              ? ElevatorState.CORAL_CENTERED_L2_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
+          left ? ElevatorState.CORAL_CENTERED_L2_LINEUP : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
       case L3 ->
-          centered
-              ? ElevatorState.CORAL_CENTERED_L3_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
+          left ? ElevatorState.CORAL_CENTERED_L3_LINEUP : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
       case L4 ->
-          centered
-              ? ElevatorState.CORAL_CENTERED_L4_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
+          left ? ElevatorState.CORAL_CENTERED_L4_LINEUP : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
       default -> ElevatorState.UNTUNED;
     };
   }
 
-  private static ArmState branchToArm(ReefPipeLevel level, boolean centered) {
+  private static ArmState branchToArm(ReefPipeLevel level, boolean left) {
     return switch (level) {
-      case L2 ->
-          centered ? ArmState.CORAL_SCORE_LEFT_LINEUP_L2 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L2;
-      case L3 ->
-          centered ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
-      case L4 ->
-          centered ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
+      case L2 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L2 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L2;
+      case L3 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
+      case L4 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
       default -> ArmState.UNTUNED;
     };
   }
@@ -145,30 +136,26 @@ public class FieldCalibrationUtil {
       DogLog.log(
           "FieldCalibration/Blue/Best/" + level.toString(), bestBluePipe.getPose(level, false));
 
-      var redDisplacedSummary = createSummary(bestRedPipe, true, level, false);
-      var redCenteredSummary = createSummary(bestRedPipe, true, level, true);
-      var blueDisplacedSummary = createSummary(bestBluePipe, false, level, false);
-      var blueCenteredSummary = createSummary(bestBluePipe, false, level, true);
+      var redRightSummary = createSummary(bestRedPipe, true, level, false);
+      var redLeftSummary = createSummary(bestRedPipe, true, level, true);
+      var blueRightSummary = createSummary(bestBluePipe, false, level, false);
+      var blueLeftSummary = createSummary(bestBluePipe, false, level, true);
 
       anyOk =
           anyOk
-              || redDisplacedSummary.isOk()
-              || redCenteredSummary.isOk()
-              || blueDisplacedSummary.isOk()
-              || blueCenteredSummary.isOk();
+              || redRightSummary.isOk()
+              || redLeftSummary.isOk()
+              || blueRightSummary.isOk()
+              || blueLeftSummary.isOk();
 
       DogLog.log(
-          "FieldCalibration/Red/Best/" + level.toString() + "/Displaced",
-          redDisplacedSummary.format());
+          "FieldCalibration/Red/Best/" + level.toString() + "/Right", redRightSummary.format());
       DogLog.log(
-          "FieldCalibration/Red/Best/" + level.toString() + "/Centered",
-          redCenteredSummary.format());
+          "FieldCalibration/Red/Best/" + level.toString() + "/Left", redLeftSummary.format());
       DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString() + "/Displaced",
-          blueDisplacedSummary.format());
+          "FieldCalibration/Blue/Best/" + level.toString() + "/Right", blueRightSummary.format());
       DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString() + "/Centered",
-          blueCenteredSummary.format());
+          "FieldCalibration/Blue/Best/" + level.toString() + "/Left", blueLeftSummary.format());
 
       // Loop through all L2-4 pipes and log the scoring poses for each
       for (var pipe : ReefPipe.values()) {
@@ -184,12 +171,12 @@ public class FieldCalibrationUtil {
   }
 
   private Summary createSummary(
-      ReefPipe pipe, boolean isRedAlliance, ReefPipeLevel level, boolean centered) {
+      ReefPipe pipe, boolean isRedAlliance, ReefPipeLevel level, boolean left) {
     var actualElevator = elevator.getHeight();
     var actualArm = arm.getAngle();
 
-    var wantedElevator = branchToElevator(level, centered);
-    var wantedArm = branchToArm(level, centered);
+    var wantedElevator = branchToElevator(level, left);
+    var wantedArm = branchToArm(level, left);
 
     var wantedTranslation = pipe.getPose(level, isRedAlliance).getTranslation();
     var actualTranslation = localization.getPose().getTranslation();
