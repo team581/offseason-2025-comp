@@ -7,6 +7,7 @@ import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
+import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -68,23 +69,38 @@ public class FieldCalibrationUtil {
     return new Summary(elevatorState, armState, alignOk);
   }
 
-  private static ElevatorState branchToElevator(ReefPipeLevel level, boolean left) {
+  private static ElevatorState branchToElevator(ReefPipeLevel level, RobotScoringSide side) {
     return switch (level) {
       case L2 ->
-          left ? ElevatorState.CORAL_CENTERED_L2_LINEUP : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
+          side == RobotScoringSide.LEFT
+              ? ElevatorState.CORAL_CENTERED_L2_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
       case L3 ->
-          left ? ElevatorState.CORAL_CENTERED_L3_LINEUP : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
+          side == RobotScoringSide.LEFT
+              ? ElevatorState.CORAL_CENTERED_L3_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
       case L4 ->
-          left ? ElevatorState.CORAL_CENTERED_L4_LINEUP : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
+          side == RobotScoringSide.LEFT
+              ? ElevatorState.CORAL_CENTERED_L4_LINEUP
+              : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
       default -> ElevatorState.UNTUNED;
     };
   }
 
-  private static ArmState branchToArm(ReefPipeLevel level, boolean left) {
+  private static ArmState branchToArm(ReefPipeLevel level, RobotScoringSide side) {
     return switch (level) {
-      case L2 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L2 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L2;
-      case L3 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
-      case L4 -> left ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4 : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
+      case L2 ->
+          side == RobotScoringSide.LEFT
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L2
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L2;
+      case L3 ->
+          side == RobotScoringSide.LEFT
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
+      case L4 ->
+          side == RobotScoringSide.LEFT
+              ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4
+              : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
       default -> ArmState.UNTUNED;
     };
   }
@@ -136,10 +152,10 @@ public class FieldCalibrationUtil {
       DogLog.log(
           "FieldCalibration/Blue/Best/" + level.toString(), bestBluePipe.getPose(level, false));
 
-      var redRightSummary = createSummary(bestRedPipe, true, level, false);
-      var redLeftSummary = createSummary(bestRedPipe, true, level, true);
-      var blueRightSummary = createSummary(bestBluePipe, false, level, false);
-      var blueLeftSummary = createSummary(bestBluePipe, false, level, true);
+      var redRightSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.RIGHT);
+      var redLeftSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.LEFT);
+      var blueRightSummary = createSummary(bestBluePipe, false, level, RobotScoringSide.RIGHT);
+      var blueLeftSummary = createSummary(bestBluePipe, false, level, RobotScoringSide.LEFT);
 
       anyOk =
           anyOk
@@ -171,14 +187,14 @@ public class FieldCalibrationUtil {
   }
 
   private Summary createSummary(
-      ReefPipe pipe, boolean isRedAlliance, ReefPipeLevel level, boolean left) {
+      ReefPipe pipe, boolean isRedAlliance, ReefPipeLevel level, RobotScoringSide side) {
     var actualElevator = elevator.getHeight();
     var actualArm = arm.getAngle();
 
-    var wantedElevator = branchToElevator(level, left);
-    var wantedArm = branchToArm(level, left);
+    var wantedElevator = branchToElevator(level, side);
+    var wantedArm = branchToArm(level, side);
 
-    var wantedTranslation = pipe.getPose(level, isRedAlliance).getTranslation();
+    var wantedTranslation = pipe.getPose(level, isRedAlliance, side).getTranslation();
     var actualTranslation = localization.getPose().getTranslation();
 
     return createSummary(
