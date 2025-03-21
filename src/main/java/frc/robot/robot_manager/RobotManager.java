@@ -736,31 +736,9 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private void intakeAlgaeL2Request() {
+  
 
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L2_DEPLOY_EMPTY);
-    }
-  }
-
-  private void intakeAlgaeL3Request() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L3_DEPLOY_EMPTY);
-    }
-  }
+  
 
   public void algaeNetRequest() {
     if (!vision.isAnyTagLimelightOnline()
@@ -937,7 +915,5 @@ public class RobotManager extends StateMachine<RobotState> {
     confirmScoreActive = newValue;
   }
 
-  private boolean shouldScoreLeft() {
-    return true;
-  }
+  
 }
