@@ -14,12 +14,12 @@ public class GraphVisualizer {
     }
 
     var noObstructionContent =
-        toMermaidStateDiagram("Collision avoidance (unobstructed)", graph, ObstructionKind.NONE);
+        toMermaidGraphDiagram("Collision avoidance (unobstructed)", graph, ObstructionKind.NONE);
     var leftObstructedContent =
-        toMermaidStateDiagram(
+        toMermaidGraphDiagram(
             "Collision avoidance (left obstructed)", graph, ObstructionKind.LEFT_OBSTRUCTED);
     var rightObstructedContent =
-        toMermaidStateDiagram(
+        toMermaidGraphDiagram(
             "Collision avoidance (right obstructed)", graph, ObstructionKind.RIGHT_OBSTRUCTED);
 
     // Write to files
@@ -55,30 +55,22 @@ public class GraphVisualizer {
     }
   }
 
-  private static String toMermaidStateDiagram(
+  private static String toMermaidGraphDiagram(
       String title, ValueGraph<Waypoint, WaypointEdge> graph, ObstructionKind obstruction) {
     var sb = new StringBuilder();
 
     sb.append("# ");
     sb.append(title);
-    sb.append("\n\n```mermaid\nstateDiagram-v2\n");
+    sb.append("\n\n```mermaid\ngraph TD\n\n");
 
     for (var pair : graph.edges()) {
       var edge = graph.edgeValue(pair).orElseThrow();
 
-      // U -> V
       sb.append(pair.nodeU().toString());
+      sb.append(" <-- ");
+      sb.append(edge.getCost(obstruction));
       sb.append(" --> ");
       sb.append(pair.nodeV().toString());
-      sb.append(" : ");
-      sb.append(edge.getCost(obstruction));
-      sb.append('\n');
-      // V -> U
-      sb.append(pair.nodeV().toString());
-      sb.append(" --> ");
-      sb.append(pair.nodeU().toString());
-      sb.append(" : ");
-      sb.append(edge.getCost(obstruction));
       sb.append('\n');
     }
 
