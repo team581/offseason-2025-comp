@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
   private final RobotManager robotManager =
       new RobotManager(
           deploy,
+          intake,
           claw,
           arm,
           elevator,

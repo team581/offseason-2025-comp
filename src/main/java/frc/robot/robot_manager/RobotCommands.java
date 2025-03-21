@@ -11,7 +11,7 @@ public class RobotCommands {
 
   public RobotCommands(RobotManager robot) {
     this.robot = robot;
-    var requirementsList = List.of(robot.elevator, robot.arm, robot.intake, robot.climber);
+    var requirementsList = List.of(robot.elevator, robot.arm, robot.claw, robot.climber);
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
