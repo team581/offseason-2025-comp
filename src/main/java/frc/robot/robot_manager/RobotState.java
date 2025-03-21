@@ -10,6 +10,8 @@ public enum RobotState {
   CLAW_ALGAE_DEPLOY_CORAL,
   /** Claw holding algae, deploy is empty. */
   CLAW_ALGAE_DEPLOY_EMPTY,
+  /** Claw holding coral, deploy is empty. */
+  CLAW_CORAL_DEPLOY_EMPTY,
 
   // Intake and outtake states
   CORAL_INTAKE_FLOOR_CLAW_EMPTY,

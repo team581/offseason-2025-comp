@@ -685,7 +685,8 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
       } else {
         switch (getState()) {
-          case algae states -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+          // TODO: Finish implementing
+          // case algae states -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
           default -> setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
         }
       }
