@@ -2,7 +2,7 @@ package frc.robot.auto_align.field_calibration;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.ReefPipe;
@@ -17,6 +17,7 @@ import frc.robot.localization.LocalizationSubsystem;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with the
@@ -27,7 +28,6 @@ import java.util.List;
  * <ul>
  *   <li>Lights: green & yellow lights show whether scoring align & superstructure is good
  *   <li>Elevator: in coast mode while disabled
- *   <li>Arm: assumes it is at bottom hardstop when code starts
  */
 public class FieldCalibrationUtil {
   private static final double ELEVATOR_TOLERANCE = RobotConfig.get().elevator().tolerance();
@@ -35,6 +35,7 @@ public class FieldCalibrationUtil {
   private static final double ARM_TOLERANCE = 2.0;
   // Copied from TagAlign
   private static final double TRANSLATION_TOLERANCE = 0.05;
+  private static final double HEADING_TOLERANCE = 1;
 
   private static final List<ReefPipeLevel> LEVELS =
       List.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
@@ -44,15 +45,20 @@ public class FieldCalibrationUtil {
       double actualElevator,
       ArmState wantedArm,
       double actualArm,
-      Translation2d wantedTranslation,
-      Translation2d actualTranslation) {
+      Pose2d wantedPose,
+      Pose2d actualPose) {
     var elevatorError = wantedElevator.height - actualElevator;
     var armError = wantedArm.angle - actualArm;
-    var alignError = wantedTranslation.getDistance(actualTranslation);
+    var alignError = wantedPose.getTranslation().getDistance(actualPose.getTranslation());
 
     var elevatorState = MechanismState.OK;
     var armState = MechanismState.OK;
     var alignOk = MathUtil.isNear(0, alignError, TRANSLATION_TOLERANCE);
+    var headingOk =
+        MathUtil.isNear(
+            wantedPose.getRotation().getDegrees(),
+            actualPose.getRotation().getDegrees(),
+            HEADING_TOLERANCE);
 
     if (elevatorError > ELEVATOR_TOLERANCE) {
       elevatorState = MechanismState.TOO_LOW;
@@ -66,7 +72,7 @@ public class FieldCalibrationUtil {
       armState = MechanismState.TOO_HIGH;
     }
 
-    return new Summary(elevatorState, armState, alignOk);
+    return new Summary(elevatorState, armState, alignOk, headingOk);
   }
 
   private static ElevatorState branchToElevator(ReefPipeLevel level, RobotScoringSide side) {
@@ -121,66 +127,27 @@ public class FieldCalibrationUtil {
     this.localization = localization;
   }
 
-  public void log(RobotScoringSide side) {
-    var robotTranslation = localization.getPose().getTranslation();
-    var bestRedPipe =
-        Arrays.stream(ReefPipe.values())
-            .min(
-                Comparator.comparingDouble(
-                    pipe ->
-                        pipe.getPose(ReefPipeLevel.L4, true, side)
-                            .getTranslation()
-                            .getDistance(robotTranslation)))
-            .orElseThrow();
-    var bestBluePipe =
-        Arrays.stream(ReefPipe.values())
-            .min(
-                Comparator.comparingDouble(
-                    pipe ->
-                        pipe.getPose(ReefPipeLevel.L4, false, side)
-                            .getTranslation()
-                            .getDistance(robotTranslation)))
-            .orElseThrow();
-
-    DogLog.log("FieldCalibration/Red/Best/Name", bestRedPipe);
-    DogLog.log("FieldCalibration/Blue/Best/Name", bestBluePipe);
+  public void log() {
+    logAllScoringPositions(false, RobotScoringSide.LEFT);
+    logAllScoringPositions(false, RobotScoringSide.RIGHT);
+    logAllScoringPositions(true, RobotScoringSide.LEFT);
+    logAllScoringPositions(true, RobotScoringSide.RIGHT);
 
     var anyOk = false;
 
     for (var level : LEVELS) {
-      DogLog.log(
-          "FieldCalibration/Red/Best/" + level.toString(), bestRedPipe.getPose(level, true, side));
-      DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString(),
-          bestBluePipe.getPose(level, false, side));
+      var prefix = "FieldCalibration/Best/" + level.toString();
+      var bestScoringPosition = getBestScoringPosition(level);
+      DogLog.log(prefix + "/Alliance", bestScoringPosition.isRedAlliance() ? "Red" : "Blue");
+      DogLog.log(prefix + "/Pipe", bestScoringPosition.pipe());
+      DogLog.log(prefix + "/Orientation", bestScoringPosition.side());
+      DogLog.log(prefix + "/Pose", bestScoringPosition.getPose(level));
 
-      var redRightSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.RIGHT);
-      var redLeftSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.LEFT);
-      var blueRightSummary = createSummary(bestBluePipe, false, level, RobotScoringSide.RIGHT);
-      var blueLeftSummary = createSummary(bestBluePipe, false, level, RobotScoringSide.LEFT);
+      var summary = createSummary(level, bestScoringPosition);
 
-      anyOk =
-          anyOk
-              || redRightSummary.isOk()
-              || redLeftSummary.isOk()
-              || blueRightSummary.isOk()
-              || blueLeftSummary.isOk();
+      DogLog.log(prefix + "/Summary", summary.format());
 
-      DogLog.log(
-          "FieldCalibration/Red/Best/" + level.toString() + "/Right", redRightSummary.format());
-      DogLog.log(
-          "FieldCalibration/Red/Best/" + level.toString() + "/Left", redLeftSummary.format());
-      DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString() + "/Right", blueRightSummary.format());
-      DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString() + "/Left", blueLeftSummary.format());
-
-      // Loop through all L2-4 pipes and log the scoring poses for each
-      for (var pipe : ReefPipe.values()) {
-        var branchSlug = pipe.toString() + "/" + level.toString() + "/Pose";
-        DogLog.log("FieldCalibration/Red/" + branchSlug, pipe.getPose(level, true, side));
-        DogLog.log("FieldCalibration/Blue/" + branchSlug, pipe.getPose(level, false, side));
-      }
+      anyOk = anyOk || summary.isOk();
     }
 
     // Use lights to indicate we are in any valid scoring configuration
@@ -188,18 +155,75 @@ public class FieldCalibrationUtil {
         anyOk ? LightsState.SCORE_ALIGN_READY : LightsState.SCORE_ALIGN_NOT_READY);
   }
 
-  private Summary createSummary(
-      ReefPipe pipe, boolean isRedAlliance, ReefPipeLevel level, RobotScoringSide side) {
+  private void logAllScoringPositions(boolean isRedAlliance, RobotScoringSide side) {
+    var allianceLabel = isRedAlliance ? "Red" : "Blue";
+    var sideLabel = side == RobotScoringSide.LEFT ? "Left" : "Right";
+
+    for (var pipe : ReefPipe.values()) {
+      for (var level : LEVELS) {
+        DogLog.log(
+            "FieldCalibration/" + allianceLabel + "/" + sideLabel + "/" + level.toString(),
+            pipe.getPose(level, isRedAlliance, side));
+      }
+    }
+  }
+
+  private Summary createSummary(ReefPipeLevel level, ScoringPosition position) {
     var actualElevator = elevator.getHeight();
     var actualArm = arm.getAngle();
 
-    var wantedElevator = branchToElevator(level, side);
-    var wantedArm = branchToArm(level, side);
+    var wantedElevator = branchToElevator(level, position.side());
+    var wantedArm = branchToArm(level, position.side());
 
-    var wantedTranslation = pipe.getPose(level, isRedAlliance, side).getTranslation();
-    var actualTranslation = localization.getPose().getTranslation();
+    var wantedPose = position.getPose(level);
+    var actualPose = localization.getPose();
 
     return createSummary(
-        wantedElevator, actualElevator, wantedArm, actualArm, wantedTranslation, actualTranslation);
+        wantedElevator, actualElevator, wantedArm, actualArm, wantedPose, actualPose);
+  }
+
+  private ScoringPosition getBestScoringPosition(ReefPipeLevel level) {
+    var bestRedLeft = getBestScoringPipe(true, RobotScoringSide.LEFT);
+    var bestRedRight = getBestScoringPipe(true, RobotScoringSide.RIGHT);
+    var bestBlueLeft = getBestScoringPipe(false, RobotScoringSide.LEFT);
+    var bestBlueRight = getBestScoringPipe(false, RobotScoringSide.RIGHT);
+
+    var robotPose = localization.getPose();
+
+    var bestPipe =
+        Stream.of(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight)
+            .min(
+                Comparator.comparingDouble(
+                        (ScoringPosition scoringPosition) ->
+                            scoringPosition
+                                .getPose(level)
+                                .getTranslation()
+                                .getDistance(robotPose.getTranslation()))
+                    .thenComparingDouble(
+                        (ScoringPosition scoringPosition) ->
+                            Math.abs(
+                                robotPose
+                                    .getRotation()
+                                    .minus(scoringPosition.getPose(level).getRotation())
+                                    .getRadians())))
+            .orElseThrow();
+
+    return bestPipe;
+  }
+
+  private ScoringPosition getBestScoringPipe(boolean isRedAlliance, RobotScoringSide side) {
+    var robotTranslation = localization.getPose().getTranslation();
+
+    var bestPipe =
+        Arrays.stream(ReefPipe.values())
+            .min(
+                Comparator.comparingDouble(
+                    pipe ->
+                        pipe.getPose(ReefPipeLevel.L4, isRedAlliance, side)
+                            .getTranslation()
+                            .getDistance(robotTranslation)))
+            .orElseThrow();
+
+    return new ScoringPosition(bestPipe, side, isRedAlliance);
   }
 }
