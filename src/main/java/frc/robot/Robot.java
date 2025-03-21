@@ -48,13 +48,13 @@ public class Robot extends TimedRobot {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
-  private final Limelight frontTagLimelight =
-      new Limelight("front", LimelightState.TAGS, LimelightModel.FOUR);
-  private final Limelight backTagLimelight =
-      new Limelight("back", LimelightState.TAGS, LimelightModel.FOUR);
+  private final Limelight rightTagLimelight =
+      new Limelight("right", LimelightState.TAGS, LimelightModel.FOUR);
+  private final Limelight leftTagLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.FOUR);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, frontTagLimelight, backTagLimelight);
+      new VisionSubsystem(imu, rightTagLimelight, leftTagLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor, localization);
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
           hardware.climberGrabMotor,
           hardware.climberCanrange);
   private final AutoAlign autoAlign =
-      new AutoAlign(frontTagLimelight, backTagLimelight, localization, swerve);
+      new AutoAlign(rightTagLimelight, leftTagLimelight, localization, swerve);
   private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(

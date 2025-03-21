@@ -103,8 +103,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
-  private final Limelight frontTagLimelight;
-  private final Limelight backTagLimelight;
+  private final Limelight rightTagLimelight;
+  private final Limelight leftTagLimelight;
   private final LocalizationSubsystem localization;
   private final TagAlign tagAlign;
   private final SwerveSubsystem swerve;
@@ -118,16 +118,16 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d usedScoringPose = Pose2d.kZero;
 
   public AutoAlign(
-      Limelight frontTagLimelight,
-      Limelight backTagLimelight,
+      Limelight rightTagLimelight,
+      Limelight leftTagLimelight,
       LocalizationSubsystem localization,
       SwerveSubsystem swerve) {
     super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.DEFAULT_STATE);
 
     this.tagAlign = new TagAlign(swerve, localization);
 
-    this.frontTagLimelight = frontTagLimelight;
-    this.backTagLimelight = backTagLimelight;
+    this.rightTagLimelight = rightTagLimelight;
+    this.leftTagLimelight = leftTagLimelight;
     this.localization = localization;
     this.swerve = swerve;
   }
@@ -237,11 +237,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public ReefAlignState getReefAlignState() {
     // TODO: UPDATE TO USE ONE DEPENDING ON DIRECTION WE'RE SCORING
-    var tagResult = frontTagLimelight.getTagResult().or(backTagLimelight::getTagResult);
+    var tagResult = rightTagLimelight.getTagResult().or(leftTagLimelight::getTagResult);
 
     var combinedTagHealth =
         CameraHealth.combine(
-            frontTagLimelight.getCameraHealth(), backTagLimelight.getCameraHealth());
+            rightTagLimelight.getCameraHealth(), leftTagLimelight.getCameraHealth());
 
     if (combinedTagHealth == CameraHealth.OFFLINE) {
       return ReefAlignState.ALL_CAMERAS_DEAD;
