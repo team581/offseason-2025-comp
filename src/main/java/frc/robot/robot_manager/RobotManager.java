@@ -20,6 +20,7 @@ import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.intake_deploy.DeploySubsystem;
@@ -289,7 +290,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, ArmState.GROUND_ALGAE_INTAKE);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.GROUND_ALGAE_INTAKE, ArmState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -751,32 +753,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private void intakeAlgaeL2Request() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L2_DEPLOY_EMPTY);
-    }
-  }
-
-  private void intakeAlgaeL3Request() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBING_3_HANGING_2,
-          CLIMBING_4_HANGING_3,
-          REHOME_ELEVATOR,
-          REHOME_ARM -> {}
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_L3_DEPLOY_EMPTY);
-    }
-  }
-
   public void algaeNetRequest() {
     if (!vision.isAnyTagLimelightOnline()
         || AutoAlign.shouldNetScoreForwards(localization.getPose())) {
@@ -950,9 +926,5 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void setConfirmScoreActive(boolean newValue) {
     confirmScoreActive = newValue;
-  }
-
-  private boolean shouldScoreLeft() {
-    return true;
   }
 }
