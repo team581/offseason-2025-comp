@@ -11,7 +11,7 @@ public class SnapUtilTest {
   void getForwardSnapAngleBlueSide() {
     var robotPose = new Pose2d(0, 0, Rotation2d.kZero);
     var expected = 0.0;
-    var result = SnapUtil.getForwardNetDirection(robotPose);
+    var result = SnapUtil.getLeftNetDirection(robotPose);
     assertEquals(expected, result);
   }
 
@@ -19,7 +19,7 @@ public class SnapUtilTest {
   void getForwardSnapAngleRedSide() {
     var robotPose = new Pose2d(15, 0, Rotation2d.kZero);
     var expected = 180.0;
-    var result = SnapUtil.getForwardNetDirection(robotPose);
+    var result = SnapUtil.getLeftNetDirection(robotPose);
     assertEquals(expected, result);
   }
 
@@ -27,7 +27,7 @@ public class SnapUtilTest {
   void getBackwardSnapAngleBlueSide() {
     var robotPose = new Pose2d(0, 0, Rotation2d.kZero);
     var expected = 0.0;
-    var result = SnapUtil.getForwardNetDirection(robotPose);
+    var result = SnapUtil.getLeftNetDirection(robotPose);
     assertEquals(expected, result);
   }
 
@@ -35,7 +35,7 @@ public class SnapUtilTest {
   void getBackwardSnapAngleRedSide() {
     var robotPose = new Pose2d(15, 0, Rotation2d.kZero);
     var expected = 180.0;
-    var result = SnapUtil.getForwardNetDirection(robotPose);
+    var result = SnapUtil.getLeftNetDirection(robotPose);
     assertEquals(expected, result);
   }
 }

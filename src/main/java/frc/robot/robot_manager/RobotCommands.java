@@ -16,11 +16,11 @@ public class RobotCommands {
   }
 
   public Command floorIntakeCommand() {
-    return Commands.runOnce(robot::intakeFloorRequest, requirements).withName("FloorIntakeCommand");
+    return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements).withName("FloorIntakeCommand");
   }
 
   public Command floorAssistIntakeCommand() {
-    return Commands.runOnce(robot::intakeAssistFloorRequest, requirements)
+    return Commands.runOnce(robot::intakeAssistFloorCoralHorizontalRequest, requirements)
         .withName("FloorIntakeCommand");
   }
 
@@ -33,44 +33,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::stowRequest, requirements)
         .andThen(Commands.waitUntil(() -> robot.elevator.atGoal() && robot.arm.atGoal()))
         .withName("StowCommand");
-  }
-
-  public Command intakeStationCommand() {
-    return Commands.runOnce(robot::intakeStationRequest, requirements)
-        .andThen(robot.waitForState(RobotState.IDLE_CORAL))
-        .withName("IntakeStationCommand");
-  }
-
-  public Command lowLineupCommand() {
-    return Commands.waitUntil(robot::notSmartStowing)
-        .andThen(Commands.runOnce(robot::lowLineupRequest, requirements))
-        .withName("LowLineupCommand");
-  }
-
-  public Command l2LineupCommand() {
-    return Commands.waitUntil(robot::notSmartStowing)
-        .andThen(Commands.runOnce(robot::l2LineupRequest, requirements))
-        .withName("L2LineupCommand");
-  }
-
-  public Command l3LineupCommand() {
-    return Commands.waitUntil(robot::notSmartStowing)
-        .andThen(Commands.runOnce(robot::l3LineupRequest, requirements))
-        .withName("L3LineupCommand");
-  }
-
-  public Command highLineupCommand() {
-    return Commands.waitUntil(robot::notSmartStowing)
-        .andThen(Commands.runOnce(robot::highApproachRequest, requirements))
-        .withName("HighLineupCommand");
-  }
-
-  public Command setAlgaeModeCommand(boolean algaeActive) {
-    return Commands.runOnce(
-            () -> {
-              robot.setAlgaeMode(algaeActive);
-            })
-        .withName("SetAlgaeModeCommand");
   }
 
   public Command climbUpCommand() {

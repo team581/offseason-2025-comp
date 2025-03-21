@@ -27,7 +27,6 @@ public class RedDoNothingAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        Commands.runOnce(robotManager::rehomeRollRequest),
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,

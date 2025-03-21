@@ -25,10 +25,6 @@ public enum LightsState {
   public final BlinkPattern pattern;
   public final Color color;
 
-  public static LightsState idleNoGp(boolean algaeMode) {
-    return algaeMode ? IDLE_NO_GP_ALGAE_MODE : IDLE_NO_GP_CORAL_MODE;
-  }
-
   LightsState(Color color, BlinkPattern pattern) {
     this.pattern = pattern;
     this.color = color;

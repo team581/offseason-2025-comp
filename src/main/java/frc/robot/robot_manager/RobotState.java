@@ -2,61 +2,88 @@ package frc.robot.robot_manager;
 
 public enum RobotState {
   // Idle states
-  IDLE_NO_GP,
-  IDLE_CORAL,
-  IDLE_ALGAE,
-  IDLE_BOTH,
+  /** Idle without any game piece. */
+  CLAW_EMPTY_DEPLOY_EMPTY,
+  /** Deploy is holding coral, claw isn't doing anything. */
+  CLAW_EMPTY_DEPLOY_CORAL,
+  /** Claw holding algae, deploy is holding coral. */
+  CLAW_ALGAE_DEPLOY_CORAL,
+  /** Claw holding algae, deploy is empty. */
+  CLAW_ALGAE_DEPLOY_EMPTY,
 
   // Intake and outtake states
-  CORAL_INTAKE_FLOOR,
-  CORAL_INTAKE_UPRIGHT,
-  CORAL_OUTTAKE,
+  CORAL_INTAKE_FLOOR_CLAW_EMPTY,
+  CORAL_INTAKE_FLOOR_CLAW_ALGAE,
+  // In theory we could have intake upright while holding algae but nobody is going to use that
+  CORAL_INTAKE_UPRIGHT_CLAW_EMPTY,
+  // Same for this, we only do this in auto, so no algae in claw
+  CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
 
-  ALGAE_INTAKE_FLOOR,
-  ALGAE_INTAKE_L2,
-  ALGAE_INTAKE_L3,
-  ALGAE_OUTTAKE,
+  ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY,
+  ALGAE_INTAKE_L2_DEPLOY_EMPTY,
+  ALGAE_INTAKE_L3_DEPLOY_EMPTY,
+  ALGAE_INTAKE_FLOOR_DEPLOY_CORAL,
+  ALGAE_INTAKE_L2_DEPLOY_CORAL,
+  ALGAE_INTAKE_L3_DEPLOY_CORAL,
 
-  CORAL_L1_DEPLOY_PREPARE,
-  CORAL_L1_DEPLOY_SCORE,
+  // L1 scoring using the ground intake
+  CORAL_L1_DEPLOY_PREPARE_CLAW_ALGAE,
+  CORAL_L1_DEPLOY_PREPARE_CLAW_EMPTY,
+  CORAL_L1_DEPLOY_SCORE_CLAW_ALGAE,
+  CORAL_L1_DEPLOY_SCORE_CLAW_EMPTY,
 
-  // Reef scoring left states
+  // L1 scoring using the claw
+  /** Coral is in the ground intake, need to pass it to the claw. */
+  CORAL_L1_HANDOFF,
+  /** Coral is in the claw, let's get ready to score L1. */
+  CORAL_L1_APPROACH,
   CORAL_L1_LEFT_LINEUP,
-  CORAL_L1_LEFT_RELEASE,
-
-  CORAL_L2_LEFT_LINEUP,
-  CORAL_L2_LEFT_RELEASE,
-
-  CORAL_L3_LEFT_LINEUP,
-  CORAL_L3_LEFT_RELEASE,
-
-  CORAL_L4_LEFT_LINEUP,
-  CORAL_L4_LEFT_RELEASE,
-
-  // Reef scoring right states
   CORAL_L1_RIGHT_LINEUP,
+  CORAL_L1_LEFT_RELEASE,
   CORAL_L1_RIGHT_RELEASE,
 
+  // L2 scoring using the claw
+  /** Coral is in the ground intake, need to pass it to the claw. */
+  CORAL_L2_HANDOFF,
+  /** Coral is in the claw, let's get ready to score L2. */
+  CORAL_L2_APPROACH,
+  CORAL_L2_LEFT_LINEUP,
   CORAL_L2_RIGHT_LINEUP,
+  CORAL_L2_LEFT_RELEASE,
   CORAL_L2_RIGHT_RELEASE,
 
+  // L3 scoring using the claw
+  /** Coral is in the ground intake, need to pass it to the claw. */
+  CORAL_L3_HANDOFF,
+  /** Coral is in the claw, let's get ready to score L3. */
+  CORAL_L3_APPROACH,
+  CORAL_L3_LEFT_LINEUP,
   CORAL_L3_RIGHT_LINEUP,
+  CORAL_L3_LEFT_RELEASE,
   CORAL_L3_RIGHT_RELEASE,
 
+  // L4 scoring using the claw
+  /** Coral is in the ground intake, need to pass it to the claw. */
+  CORAL_L4_HANDOFF,
+  /** Coral is in the claw, let's get ready to score L4. */
+  CORAL_L4_APPROACH,
+  CORAL_L4_LEFT_LINEUP,
   CORAL_L4_RIGHT_LINEUP,
+  CORAL_L4_LEFT_RELEASE,
   CORAL_L4_RIGHT_RELEASE,
 
-  // Algea scoring states
-  ALGAE_NET_FRONT_WAITING,
-  ALGAE_NET_FRONT_PREPARE,
-  ALGAE_NET_FRONT_RELEASE,
+  // Algae scoring states
+  ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY,
+  ALGAE_NET_LEFT_RELEASE_DEPLOY_EMPTY,
+  ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL,
+  ALGAE_NET_LEFT_RELEASE_DEPLOY_CORAL,
 
-  ALGAE_NET_BACK_WAITING,
-  ALGAE_NET_BACK_PREPARE,
-  ALGAE_NET_BACK_RELEASE,
+  ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY,
+  ALGAE_NET_RIGHT_RELEASE_DEPLOY_EMPTY,
+  ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL,
+  ALGAE_NET_RIGHT_RELEASE_DEPLOY_CORAL,
 
   ALGAE_PROCESSOR_WAITING,
-  ALGAE_PROCESSOR_PREPARE,
   ALGAE_PROCESSOR_RELEASE,
 
   // Climbing states
@@ -67,7 +94,7 @@ public enum RobotState {
 
   // Misc states
   UNJAM,
-
+  REHOME_DEPLOY,
   REHOME_ELEVATOR,
   REHOME_ARM;
 }

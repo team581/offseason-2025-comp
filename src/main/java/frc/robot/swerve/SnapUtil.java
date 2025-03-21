@@ -13,7 +13,7 @@ public class SnapUtil {
     return FmsSubsystem.isRedAlliance() ? 0 : 180;
   }
 
-  public static double getForwardNetDirection(Pose2d robotPose) {
+  public static double getLeftNetDirection(Pose2d robotPose) {
     var robotX = robotPose.getX();
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
@@ -27,7 +27,7 @@ public class SnapUtil {
     return 180;
   }
 
-  public static double getBackwardNetDirection(Pose2d robotPose) {
+  public static double getRightNetDirection(Pose2d robotPose) {
     var robotX = robotPose.getX();
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
