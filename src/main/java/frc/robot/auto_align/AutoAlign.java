@@ -182,14 +182,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return algaeAlignSpeeds;
   }
 
-  /**
-   * @deprecated Use {@link #isTagAlignedDebounced()} instead.
-   */
-  @Deprecated
-  public boolean isTagAligned() {
-    return isAligned;
-  }
-
   public ReefPipe getBestReefPipe() {
     return bestReefPipe;
   }
