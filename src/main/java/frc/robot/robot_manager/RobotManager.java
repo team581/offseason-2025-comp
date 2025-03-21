@@ -23,6 +23,7 @@ import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake_assist.IntakeAssistUtil;
+import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -50,12 +51,14 @@ public class RobotManager extends StateMachine<RobotState> {
   public final ElevatorSubsystem elevator;
   public final ClimberSubsystem climber;
   public final RumbleControllerSubsystem rumbleController;
+  public final DeploySubsystem deploy;
 
   private final LightsSubsystem lights;
 
   public final AutoAlign autoAlign;
 
   public RobotManager(
+    DeploySubsystem deploy,
       ClawSubsystem intake,
       ArmSubsystem arm,
       ElevatorSubsystem elevator,
@@ -69,6 +72,7 @@ public class RobotManager extends StateMachine<RobotState> {
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+    this.deploy = deploy;
     this.intake = intake;
     this.arm = arm;
     this.elevator = elevator;

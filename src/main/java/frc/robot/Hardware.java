@@ -29,8 +29,12 @@ public class Hardware {
 
   public final TalonFX clawMotor = new TalonFX(RobotConfig.get().claw().motorID());
 
-  public final CANdi candi =
+  public final CANdi clawCandi =
       new CANdi(RobotConfig.get().claw().candiID(), RobotConfig.get().claw().canBusName());
+
+  public final CANdi intakeCandi =
+      new CANdi(RobotConfig.get().intake().candiID(), RobotConfig.get().intake().canBusName());
+
 
   public final TalonFX armMotor =
       new TalonFX(RobotConfig.get().arm().motorID(), RobotConfig.get().arm().canBusName());

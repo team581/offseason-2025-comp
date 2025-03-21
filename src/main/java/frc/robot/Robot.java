@@ -23,6 +23,7 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
   private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
 
-  private final DeploySubsystem intakeDeploy = new DeploySubsystem(hardware.deployMotor);
+  private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
@@ -61,7 +62,8 @@ public class Robot extends TimedRobot {
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(hardware.driverController, true);
 
-  private final ClawSubsystem claw = new ClawSubsystem(hardware.intakeMotor, hardware.candi);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCandi);
+  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor, hardware.intakeCandi);
 
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
@@ -76,6 +78,7 @@ public class Robot extends TimedRobot {
   private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
+          deploy,
           claw,
           arm,
           elevator,
