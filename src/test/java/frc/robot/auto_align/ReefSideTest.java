@@ -10,12 +10,12 @@ public class ReefSideTest {
   private static void assertSidePoseCorect(boolean isRed, ReefSide side) {
     var pipe1Distance =
         side.pipe1
-            .getPose(ReefPipeLevel.BASE, isRed)
+            .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
             .getDistance(side.getPose(isRed).getTranslation());
     var pipe2Distance =
         side.pipe2
-            .getPose(ReefPipeLevel.BASE, isRed)
+            .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
             .getDistance(side.getPose(isRed).getTranslation());
 

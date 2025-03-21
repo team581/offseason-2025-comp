@@ -7,9 +7,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
+import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import java.util.List;
@@ -25,6 +27,7 @@ public class TagAlign {
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
   private ReefPipeLevel level = ReefPipeLevel.BASE;
+  private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
   private Translation2d driverPoseOffset = Translation2d.kZero;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
@@ -33,11 +36,12 @@ public class TagAlign {
 
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
-    alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState);
+    alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState, robotScoringSide);
   }
 
-  public void setLevel(ReefPipeLevel level) {
+  public void setLevel(ReefPipeLevel level, RobotScoringSide side) {
     this.level = level;
+    this.robotScoringSide = side;
   }
 
   public void setPipeOveride(ReefPipe pipe) {
@@ -54,7 +58,7 @@ public class TagAlign {
 
   public boolean isAligned(ReefPipe pipe) {
     var robotPose = localization.getPose();
-    var scoringPoseFieldRelative = pipe.getPose(level);
+    var scoringPoseFieldRelative = getUsedScoringPose(pipe);
     return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
         <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
   }
@@ -68,7 +72,7 @@ public class TagAlign {
   }
 
   public Pose2d getUsedScoringPose(ReefPipe pipe) {
-    var theoreticalScoringPose = pipe.getPose(level);
+    var theoreticalScoringPose = pipe.getPose(level, robotScoringSide);
 
     if (DriverStation.isTeleop()) {
       var offsetPose =

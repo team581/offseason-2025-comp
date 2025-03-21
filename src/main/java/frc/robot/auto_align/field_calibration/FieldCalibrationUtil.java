@@ -121,14 +121,14 @@ public class FieldCalibrationUtil {
     this.localization = localization;
   }
 
-  public void log() {
+  public void log(RobotScoringSide side) {
     var robotTranslation = localization.getPose().getTranslation();
     var bestRedPipe =
         Arrays.stream(ReefPipe.values())
             .min(
                 Comparator.comparingDouble(
                     pipe ->
-                        pipe.getPose(ReefPipeLevel.L4, true)
+                        pipe.getPose(ReefPipeLevel.L4, true, side)
                             .getTranslation()
                             .getDistance(robotTranslation)))
             .orElseThrow();
@@ -137,7 +137,7 @@ public class FieldCalibrationUtil {
             .min(
                 Comparator.comparingDouble(
                     pipe ->
-                        pipe.getPose(ReefPipeLevel.L4, false)
+                        pipe.getPose(ReefPipeLevel.L4, false, side)
                             .getTranslation()
                             .getDistance(robotTranslation)))
             .orElseThrow();
@@ -148,9 +148,9 @@ public class FieldCalibrationUtil {
     var anyOk = false;
 
     for (var level : LEVELS) {
-      DogLog.log("FieldCalibration/Red/Best/" + level.toString(), bestRedPipe.getPose(level, true));
+      DogLog.log("FieldCalibration/Red/Best/" + level.toString(), bestRedPipe.getPose(level, true, side));
       DogLog.log(
-          "FieldCalibration/Blue/Best/" + level.toString(), bestBluePipe.getPose(level, false));
+          "FieldCalibration/Blue/Best/" + level.toString(), bestBluePipe.getPose(level, false, side));
 
       var redRightSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.RIGHT);
       var redLeftSummary = createSummary(bestRedPipe, true, level, RobotScoringSide.LEFT);
@@ -176,8 +176,8 @@ public class FieldCalibrationUtil {
       // Loop through all L2-4 pipes and log the scoring poses for each
       for (var pipe : ReefPipe.values()) {
         var branchSlug = pipe.toString() + "/" + level.toString() + "/Pose";
-        DogLog.log("FieldCalibration/Red/" + branchSlug, pipe.getPose(level, true));
-        DogLog.log("FieldCalibration/Blue/" + branchSlug, pipe.getPose(level, false));
+        DogLog.log("FieldCalibration/Red/" + branchSlug, pipe.getPose(level, true, side));
+        DogLog.log("FieldCalibration/Blue/" + branchSlug, pipe.getPose(level, false, side));
       }
     }
 

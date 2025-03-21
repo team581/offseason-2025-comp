@@ -123,8 +123,4 @@ public enum ReefSide {
   public int getTagID() {
     return FmsSubsystem.isRedAlliance() ? redTagID : blueTagID;
   }
-
-  public List<Pose2d> getPipes(ReefPipeLevel level) {
-    return List.of(pipe1.getPose(level), pipe2.getPose(level));
-  }
 }

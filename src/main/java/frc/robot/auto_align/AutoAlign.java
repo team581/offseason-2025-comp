@@ -190,8 +190,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlign.markScored(bestReefPipe);
   }
 
-  public void setScoringLevel(ReefPipeLevel level) {
-    tagAlign.setLevel(level);
+  public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
+    tagAlign.setLevel(level, side);
   }
 
   public void clearReefState() {
@@ -210,8 +210,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return tagAlign.getUsedScoringPose(pipe);
   }
 
-  public Pose2d getUsedScoringPose(ReefPipe pipe, ReefPipeLevel level) {
-    setScoringLevel(level);
+  public Pose2d getUsedScoringPose(ReefPipe pipe, ReefPipeLevel level, RobotScoringSide side) {
+    setScoringLevel(level, side);
     return getUsedScoringPose(pipe);
   }
 
