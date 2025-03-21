@@ -47,8 +47,7 @@ public enum ReefPipe {
    */
   @Deprecated(forRemoval = true)
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
-    // TODO: Figure out how we want to incorporate left & right here
-    return isRedAlliance ? redPoses.getLeftPose(level) : bluePoses.getLeftPose(level);
+    return getPose(level, RobotScoringSide.LEFT);
   }
 
   /**
