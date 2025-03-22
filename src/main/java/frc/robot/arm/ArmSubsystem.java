@@ -85,10 +85,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   @Override
   protected void afterTransition(ArmState newState) {
     switch (newState) {
-
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
 
       default -> {
@@ -117,8 +115,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       default -> {}
     }
