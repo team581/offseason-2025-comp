@@ -92,23 +92,19 @@ class PracticeConfig {
               58,
               0.5),
           new IntakeConfig(
-              RIO_CAN_NAME,
+              CANIVORE_NAME,
               25,
               26,
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(15)
-                          .withSupplyCurrentLimit(20))
+                          .withStatorCurrentLimit(50)
+                          .withSupplyCurrentLimit(50))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))
-                  .withTorqueCurrent(
-                      new TorqueCurrentConfigs()
-                          .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0))),
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClawConfig(
               RIO_CAN_NAME,
               18,

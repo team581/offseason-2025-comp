@@ -103,7 +103,7 @@ class CompConfig {
               58,
               0.5),
           new IntakeConfig(
-              RIO_CAN_NAME,
+              CANIVORE_NAME,
               25,
               26,
               new Debouncer(0.1, DebounceType.kBoth),
