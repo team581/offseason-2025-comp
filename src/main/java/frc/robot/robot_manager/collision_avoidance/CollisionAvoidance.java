@@ -183,9 +183,9 @@ public class CollisionAvoidance {
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
    *
-   * @param currentPosition The current position of the superstructure.
-   * @param desiredPosition The desired position of the superstructure.
-   * @param obstructionKind Additional constraints based on robot position.
+   * 
+   * 
+   * 
    */
   public static ArrayList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
