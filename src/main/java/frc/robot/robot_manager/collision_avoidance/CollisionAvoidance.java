@@ -52,8 +52,8 @@ public class CollisionAvoidance {
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
+    Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
 
     Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
@@ -62,8 +62,8 @@ public class CollisionAvoidance {
     Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
     Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
-    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
+    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
@@ -83,98 +83,41 @@ public class CollisionAvoidance {
     Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToAlways(Waypoint.ALGAE_INTAKE_LEFT, graph);
     Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
     Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.L1_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
-    Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.L2_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.L3_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.STOWED, graph);
-    Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.HANDOFF, graph);
 
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.L4_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.STOWED, graph);
-    Waypoint.L4_LEFT.canMoveToWhenLeftSafe(Waypoint.HANDOFF, graph);
-
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.ALGAE_LEFT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenLeftSafe(Waypoint.STOWED, graph);
-    Waypoint.ALGAE_LEFT.canMoveToWhenRightSafe(Waypoint.HANDOFF, graph);
 
     // Right side
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
-    Waypoint.L1_RIGHT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
     Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
-    Waypoint.L2_RIGHT.canMoveToAlways(Waypoint.STOWED_UP, graph);
 
-    Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
-    Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
     Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
-    Waypoint.L3_RIGHT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.STOWED, graph);
-    Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.HANDOFF, graph);
 
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
-    Waypoint.L4_RIGHT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.STOWED, graph);
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.HANDOFF, graph);
-
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToAlways(Waypoint.STOWED_UP, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.STOWED, graph);
-    Waypoint.ALGAE_RIGHT.canMoveToWhenRightSafe(Waypoint.HANDOFF, graph);
 
     // Visualize the generated graph
     GraphVisualizer.log(graph);
