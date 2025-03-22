@@ -229,18 +229,22 @@ public class Robot extends TimedRobot {
                 () -> {
                   robotManager.setConfirmScoreActive(false);
                 }));
-    hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
+    hardware.driverController.leftTrigger().onTrue(robotCommands.coralGroundIntakeCommand());
+    hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
-    // hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
-    // hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
-    // hardware.driverController.b().onTrue(robotCommands.l2LineupCommand());
-    // hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
+    hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
+    hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
+    hardware.driverController.b().onTrue(robotCommands.l2LineupCommand());
+    hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
+
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
-    hardware.driverController.povDown().onTrue(robotCommands.climbDownCommand());
+    hardware.driverController.povDown().onTrue(robotCommands.climbStopCommand());
+    hardware.driverController.povRight().onTrue(robotCommands.algaeReefIntakeCommand());
 
     hardware.driverController.start().onTrue(robotCommands.unjamCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
     hardware.operatorController.a().onTrue(robotCommands.rehomeElevatorCommand());
+    hardware.operatorController.y().onTrue(robotCommands.rehomeDeployCommand());
   }
 }
