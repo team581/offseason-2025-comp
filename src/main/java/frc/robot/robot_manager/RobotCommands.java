@@ -43,7 +43,7 @@ public class RobotCommands {
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::l1CoralApproachRequest, requirements)
+    return Commands.runOnce(robot::lowLineupRequest, requirements)
         .withName("LowLineupCommand");
   }
 
