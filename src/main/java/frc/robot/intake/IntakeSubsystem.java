@@ -5,7 +5,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
