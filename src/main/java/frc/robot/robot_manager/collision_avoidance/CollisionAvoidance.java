@@ -10,10 +10,28 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CollisionAvoidance {
-
   private static final double WRIST_LENGTH = 15; // NOT REAL
 
-  private static ValueGraph<Waypoint, WaypointEdge> createGraph(ObstructionKind obstructions) {
+  private static final ValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+
+  /**
+   * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
+   * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
+   * at final waypoint).
+   *
+   * @param currentPosition The current position of the superstructure.
+   * @param desiredPosition The desired position of the superstructure.
+   * @param obstructionKind Additional constraints based on robot position.
+   */
+  public static Optional<Waypoint> route(
+      SuperstructurePosition currentPosition,
+      SuperstructurePosition desiredPosition,
+      ObstructionKind obstructionKind) {
+    // TODO(@ryankj5): Implement
+    return Optional.empty();
+  }
+
+  private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
@@ -162,12 +180,14 @@ public class CollisionAvoidance {
     Waypoint.ALGAE_RIGHT.canMoveTo(Waypoint.STOWED, graph);
     Waypoint.ALGAE_RIGHT.canMoveTo(Waypoint.HANDOFF, graph);
 
+    // Visualize the generated graph
+    GraphVisualizer.log(graph);
+
     // Return an immutable version now that we have finished constructing the graph
     return ValueGraphBuilder.from(graph).immutable().build();
   }
 
-  public static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
-    var graph = CollisionAvoidance.getGraph(obstructionKind);
+  private static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
     ArrayList<Waypoint> options = new ArrayList<Waypoint>();
 
     for (int o = 0; Waypoint.values().length > o; o++) {
@@ -183,7 +203,7 @@ public class CollisionAvoidance {
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
    */
-  public static ArrayList<Waypoint> reconstructPath(
+  private static ArrayList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
     ArrayList<Waypoint> reversedTotalPath = new ArrayList<Waypoint>();
     ArrayList<Waypoint> totalPath = new ArrayList<Waypoint>();
@@ -202,12 +222,10 @@ public class CollisionAvoidance {
     return totalPath;
   }
 
-  public static Optional<ArrayList<Waypoint>> aStar(
+  static Optional<ArrayList<Waypoint>> aStar(
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-
-    var graph = getGraph(obstructionKind);
     Set<Waypoint> openSet = Set.of(Waypoint.getClosest(currentPosition));
 
     Map<Waypoint, Waypoint> cameFrom = Map.ofEntries();
@@ -252,15 +270,6 @@ public class CollisionAvoidance {
       }
     }
     return Optional.empty();
-  }
-
-  private static ValueGraph<Waypoint, WaypointEdge> getGraph(ObstructionKind obstructionKind) {
-    return createGraph(obstructionKind);
-    // return switch (obstructionKind) {
-    //   case LEFT_OBSTRUCTED -> createGraph(obstructionKind);
-    //   case RIGHT_OBSTRUCTED -> createGraph(obstructionKind);
-    //   case NONE -> createGraph(obstructionKind);
-    // };
   }
 
   private CollisionAvoidance() {}

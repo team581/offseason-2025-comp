@@ -29,6 +29,8 @@ import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
+import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -1261,8 +1263,28 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
-    elevator.setState(elevatorGoal);
-    arm.setState(armGoal);
+    latestElevatorGoal = elevatorGoal;
+    latestArmGoal = armGoal;
+    latestUnsafe = unsafe;
+
+    var maybeCollisionAvoidanceResult =
+        CollisionAvoidance.route(
+            new SuperstructurePosition(elevator.getHeight(), arm.getAngle()),
+            new SuperstructurePosition(elevatorGoal.height, armGoal.angle),
+            ObstructionKind.NONE);
+
+    if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
+      elevator.setState(elevatorGoal);
+      arm.setState(armGoal);
+    } else {
+      var collisionAvoidanceResult = maybeCollisionAvoidanceResult.get();
+
+      elevator.setCollisionAvoidanceGoal(collisionAvoidanceResult.position.elevatorHeight());
+      elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+
+      arm.setCollisionAvoidanceGoal(collisionAvoidanceResult.position.armAngle());
+      arm.setState(ArmState.COLLISION_AVOIDANCE);
+    }
   }
 
   private LightsState getLightStateForScoring() {

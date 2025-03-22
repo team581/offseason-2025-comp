@@ -1,6 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
-enum ObstructionKind {
+public enum ObstructionKind {
   NONE,
   LEFT_OBSTRUCTED,
   RIGHT_OBSTRUCTED;
