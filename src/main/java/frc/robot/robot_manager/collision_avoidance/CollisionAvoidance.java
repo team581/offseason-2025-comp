@@ -36,6 +36,7 @@ public class CollisionAvoidance {
     }
     return Optional.empty();
   }
+
   private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
