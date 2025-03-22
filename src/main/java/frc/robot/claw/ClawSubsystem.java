@@ -103,7 +103,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
       case OUTTAKING -> {
         motor.setVoltage(0.0);
       }
-      case TRUFFLA_CORAL_INTAKE -> {
+      case LOLLIPOP_CORAL_INTAKE -> {
         motor.setVoltage(0.0);
       }
     }
