@@ -25,8 +25,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
   private static final double MAX_CONSTRAINT = 1.5;
 
-  private static final Translation2d CENTER_OF_REEF_RED = new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
-  private static final Translation2d CENTER_OF_REEF_BLUE = new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
+  private static final Translation2d CENTER_OF_REEF_RED =
+      new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
+  private static final Translation2d CENTER_OF_REEF_BLUE =
+      new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
 
   public static boolean shouldNetScoreForwards(Pose2d robotPose) {
     double robotX = robotPose.getX();
@@ -51,13 +53,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
-
   public static RobotScoringSide getScoringSideFromRobotPose(Pose2d robotPose) {
     var centerOfReef = FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
-    var angleToAim = Units.radiansToDegrees(Math.atan2(centerOfReef.getY() - robotPose.getY(), centerOfReef.getX() - robotPose.getX()));
-    var errorRight = Math.abs(angleToAim - (robotPose.getRotation().getDegrees()-90.0));
-    var errorLeft = Math.abs(angleToAim - (robotPose.getRotation().getDegrees()+90.0));
-    if (errorRight<errorLeft) {
+    var angleToAim =
+        Units.radiansToDegrees(
+            Math.atan2(
+                centerOfReef.getY() - robotPose.getY(), centerOfReef.getX() - robotPose.getX()));
+    var errorRight = Math.abs(angleToAim - (robotPose.getRotation().getDegrees() - 90.0));
+    var errorLeft = Math.abs(angleToAim - (robotPose.getRotation().getDegrees() + 90.0));
+    if (errorRight < errorLeft) {
       return RobotScoringSide.RIGHT;
     }
     return RobotScoringSide.LEFT;

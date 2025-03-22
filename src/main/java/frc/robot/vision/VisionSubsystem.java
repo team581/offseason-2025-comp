@@ -48,7 +48,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     if (maybeRightResult.isPresent()) {
       tagResult.add(maybeRightResult.orElseThrow());
     }
-    
+
     if (maybeLeftResult.isPresent()) {
       tagResult.add(maybeLeftResult.orElseThrow());
     }
