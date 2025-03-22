@@ -103,8 +103,6 @@ public enum RobotState {
   // Climbing states
   CLIMBING_1_LINEUP,
   CLIMBING_2_HANGING,
-  CLIMBING_3_HANGING_2,
-  CLIMBING_4_HANGING_3,
 
   // Misc states
   UNJAM,
