@@ -17,10 +17,6 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().claw().debouncer();
 
-  private final TorqueCurrentFOC algaeHoldRequest =
-      new TorqueCurrentFOC(RobotConfig.get().claw().algaeHoldCurrent())
-          .withMaxAbsDutyCycle(RobotConfig.get().claw().algaeHoldMaxDutyCycle());
-
   private boolean sensorRaw = false;
   private boolean sensorDebounced = false;
   private boolean sensorsHaveGP = false;
