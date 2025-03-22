@@ -36,7 +36,8 @@ public enum RobotState {
 
   // L1 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
-  CORAL_L1_HANDOFF,
+  CORAL_L1_PREPARE_HANDOFF,
+  CORAL_L1_RELEASE_HANDOFF,
   /** Coral is in the claw, let's get ready to score L1. */
   CORAL_L1_APPROACH,
   CORAL_L1_LEFT_LINEUP,
@@ -46,7 +47,9 @@ public enum RobotState {
 
   // L2 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
-  CORAL_L2_HANDOFF,
+  CORAL_L2_PREPARE_HANDOFF,
+  CORAL_L2_RELEASE_HANDOFF,
+
   /** Coral is in the claw, let's get ready to score L2. */
   CORAL_L2_APPROACH,
   CORAL_L2_LEFT_LINEUP,
@@ -56,7 +59,8 @@ public enum RobotState {
 
   // L3 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
-  CORAL_L3_HANDOFF,
+  CORAL_L3_PREPARE_HANDOFF,
+  CORAL_L3_RELEASE_HANDOFF,
   /** Coral is in the claw, let's get ready to score L3. */
   CORAL_L3_APPROACH,
   CORAL_L3_LEFT_LINEUP,
@@ -66,7 +70,8 @@ public enum RobotState {
 
   // L4 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
-  CORAL_L4_HANDOFF,
+  CORAL_L4_PREPARE_HANDOFF,
+  CORAL_L4_RELEASE_HANDOFF,
   /** Coral is in the claw, let's get ready to score L4. */
   CORAL_L4_APPROACH,
   CORAL_L4_LEFT_LINEUP,
