@@ -5,9 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.util.VelocityDetector;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -20,14 +18,6 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   private boolean sensorDebounced = false;
   private boolean sensorsHaveGP = false;
 
-  private double motorVelocity = 0.0;
-
-  private final VelocityDetector motorAlgaeDetection = new VelocityDetector(32, 0.2, 0.0);
-  private boolean motorAlgaeVelocityGp = false;
-
-  private final VelocityDetector motorCoralDetection = new VelocityDetector(78, 0.2, 0.1);
-  private boolean motorCoralVelocityGp = false;
-
   public ClawSubsystem(TalonFX motor, CANdi candi) {
     super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
 
@@ -38,13 +28,6 @@ public class ClawSubsystem extends StateMachine<ClawState> {
 
   @Override
   protected void collectInputs() {
-    motorVelocity = motor.getVelocity().getValueAsDouble();
-
-    motorAlgaeVelocityGp = motorAlgaeDetection.hasGamePiece(motorVelocity, 20);
-
-    motorCoralVelocityGp = motorCoralDetection.hasGamePiece(motorVelocity, 65);
-    DogLog.log("Intake/Motor/Velocity", motorVelocity);
-
     sensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
 
     sensorDebounced = debouncer.calculate(sensorRaw);
@@ -57,14 +40,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   }
 
   public boolean getHasGP() {
-    return switch (getState()) {
-      case CORAL_HANDOFF ->
-          FeatureFlags.INTAKE_VELOCITY_CORAL_DETECTION.getAsBoolean()
-              ? motorCoralVelocityGp && sensorsHaveGP
-              : sensorsHaveGP;
-      case INTAKING_ALGAE -> motorAlgaeVelocityGp;
-      default -> sensorsHaveGP;
-    };
+    return sensorsHaveGP;
   }
 
   public void setState(ClawState newState) {
@@ -85,11 +61,9 @@ public class ClawSubsystem extends StateMachine<ClawState> {
       }
       case INTAKING_ALGAE -> {
         motor.setVoltage(0.0);
-        motorAlgaeDetection.reset();
       }
       case CORAL_HANDOFF -> {
         motor.setVoltage(0.0);
-        motorCoralDetection.reset();
       }
       case SCORE_ALGAE_NET -> {
         motor.setVoltage(0.0);
