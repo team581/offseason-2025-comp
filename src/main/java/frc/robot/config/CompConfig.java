@@ -202,7 +202,8 @@ class CompConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(30.0)
                           .withStatorCurrentLimit(60.0)),
-              -56.4, 0.0),
+              -56.4,
+              0.0),
           new DeployConfig(
               CANIVORE_NAME,
               20,

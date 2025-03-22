@@ -191,7 +191,8 @@ class PracticeConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -58.7, 0.0),
+              -58.7,
+              0.0),
           new DeployConfig(
               CANIVORE_NAME,
               20,
