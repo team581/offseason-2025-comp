@@ -53,8 +53,4 @@ public class RobotCommands {
     return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
         .withName("RehomeElevatorCommand");
   }
-
-  public Command rehomeArmCommand() {
-    return Commands.runOnce(robot::rehomeArmRequest, requirements).withName("RehomeArmCommand");
-  }
 }

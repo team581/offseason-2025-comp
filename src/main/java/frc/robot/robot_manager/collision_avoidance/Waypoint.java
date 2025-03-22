@@ -70,8 +70,25 @@ public enum Waypoint {
     return closestWaypoint;
   }
 
-  /** A utility method to add edges to a collision avoidance graph. */
+  /**
+   * @deprecated Use {@link #canMoveToAlways(Waypoint, MutableValueGraph)} instead.
+   */
+  @Deprecated(forRemoval = true)
   public void canMoveTo(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    canMoveToAlways(other, graph);
+  }
+
+  public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
+  }
+
+  public void canMoveToWhenLeftSafe(
+      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
+  }
+
+  public void canMoveToWhenRightSafe(
+      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
   }
 }

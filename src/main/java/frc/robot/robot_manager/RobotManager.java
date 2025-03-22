@@ -879,16 +879,6 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.STOWED);
       }
-      case REHOME_ARM -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        intake.setState(IntakeState.IDLE_NO_GP);
-        deploy.setState(DeployState.STOWED);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.MID_MATCH_HOMING);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
-        climber.setState(ClimberState.STOWED);
-      }
       case REHOME_DEPLOY -> {
         claw.setState(ClawState.IDLE_NO_GP);
         intake.setState(IntakeState.IDLE_NO_GP);
@@ -981,7 +971,7 @@ public class RobotManager extends StateMachine<RobotState> {
     if (!FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       if (vision.isAnyCameraOffline()) {
         lights.setDisabledState(LightsState.ERROR);
-      } else if (arm.getState() == ArmState.PRE_MATCH_HOMING && !arm.rangeOfMotionGood()) {
+      } else if (!arm.rangeOfMotionGood()) {
         lights.setDisabledState(LightsState.UNHOMED);
       } else {
         lights.setDisabledState(LightsState.HEALTHY);
@@ -1110,7 +1100,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void intakeFloorAlgaeRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL ->
           setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_CORAL);
@@ -1121,7 +1111,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeFloorCoralHorizontalRequest() {
 
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
       default -> setStateFromRequest(RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY);
     }
   }
@@ -1129,14 +1119,14 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeAssistFloorCoralHorizontalRequest() {
 
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
       default -> setStateFromRequest(RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY);
     }
   }
 
   public void processorWaitingRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       case CLAW_ALGAE_DEPLOY_EMPTY ->
           setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY);
@@ -1158,7 +1148,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private void algaeNetForwardRequest() {
 
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       default -> setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY);
     }
@@ -1167,7 +1157,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private void algaeNetBackRequest() {
 
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       default -> setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY);
     }
@@ -1176,7 +1166,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void preloadCoralRequest() {
 
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       default -> setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
     }
@@ -1244,7 +1234,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void unjamRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
 
       default -> setStateFromRequest(RobotState.UNJAM);
     }
@@ -1252,17 +1242,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void rehomeElevatorRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ARM -> {}
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
 
       default -> setStateFromRequest(RobotState.REHOME_ELEVATOR);
-    }
-  }
-
-  public void rehomeArmRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      default -> setStateFromRequest(RobotState.REHOME_ARM);
     }
   }
 
@@ -1271,7 +1253,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
-  private ArmState latestArmGoal = ArmState.PRE_MATCH_HOMING;
+  private ArmState latestArmGoal = ArmState.HOLDING_UPRIGHT;
   private boolean latestUnsafe = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {

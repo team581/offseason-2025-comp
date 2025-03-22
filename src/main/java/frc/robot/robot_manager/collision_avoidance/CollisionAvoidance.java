@@ -182,10 +182,6 @@ public class CollisionAvoidance {
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
-   *
-   * @param currentPosition The current position of the superstructure.
-   * @param desiredPosition The desired position of the superstructure.
-   * @param obstructionKind Additional constraints based on robot position.
    */
   public static ArrayList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {

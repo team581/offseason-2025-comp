@@ -35,7 +35,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final PositionVoltage pidRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public ArmSubsystem(TalonFX motor) {
-    super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
+    super(SubsystemPriority.ARM, ArmState.HOLDING_UPRIGHT);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
 
     this.motor = motor;
@@ -48,12 +48,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setState(ArmState newState) {
     switch (getState()) {
-      case PRE_MATCH_HOMING -> {
-        if (newState == ArmState.MID_MATCH_HOMING) {
-          setStateFromRequest(newState);
-        }
-      }
-      case MID_MATCH_HOMING -> {}
       default -> {
         setStateFromRequest(newState);
       }
@@ -73,7 +67,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().angle, motorAngle, 2);
       case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1);
-      case PRE_MATCH_HOMING -> true;
     };
   }
 
@@ -92,18 +85,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   @Override
   protected void afterTransition(ArmState newState) {
     switch (newState) {
-      case MID_MATCH_HOMING -> {
-        motor.setVoltage(-0.5);
-      }
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            pidRequest.withPosition(Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
-      case PRE_MATCH_HOMING -> {
-        motor.setControl(coastNeutralRequest);
-      }
+
       default -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(clamp(newState.angle))));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.angle)));
       }
     }
   }
@@ -127,45 +114,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
 
     switch (getState()) {
-      case PRE_MATCH_HOMING -> {
-        if (rangeOfMotionGood()) {
-          if (DriverStation.isEnabled()) {
-            motor.setPosition(
-                Units.degreesToRotations(
-                    RobotConfig.get().arm().minAngle() + (motorAngle - lowestSeenAngle)));
-
-            setStateFromRequest(ArmState.CLAW_EMPTY);
-          } else {
-            motor.setControl(brakeNeutralRequest);
-          }
-        }
-      }
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            pidRequest.withPosition(Units.degreesToRotations(clamp(collisionAvoidanceGoal))));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       default -> {}
     }
   }
 
-  @Override
-  protected ArmState getNextState(ArmState currentState) {
-    if (currentState == ArmState.MID_MATCH_HOMING
-        && averageMotorCurrent > RobotConfig.get().arm().homingCurrentThreshold()) {
-      motor.setPosition(Units.degreesToRotations(RobotConfig.get().arm().homingPosition()));
-      return ArmState.CLAW_EMPTY;
-    }
-
-    // Don't do anything
-    return currentState;
-  }
-
   public boolean rangeOfMotionGood() {
     return (highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
-  }
-
-  private static double clamp(double armAngle) {
-    return MathUtil.clamp(
-        armAngle, RobotConfig.get().arm().minAngle(), RobotConfig.get().arm().maxAngle());
   }
 }
