@@ -242,6 +242,5 @@ public class Robot extends TimedRobot {
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
     hardware.operatorController.a().onTrue(robotCommands.rehomeElevatorCommand());
-    hardware.operatorController.b().onTrue(robotCommands.rehomeArmCommand());
   }
 }

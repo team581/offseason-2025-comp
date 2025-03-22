@@ -107,6 +107,5 @@ public enum RobotState {
   // Misc states
   UNJAM,
   REHOME_DEPLOY,
-  REHOME_ELEVATOR,
-  REHOME_ARM;
+  REHOME_ELEVATOR;
 }
