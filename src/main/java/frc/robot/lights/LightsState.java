@@ -31,7 +31,6 @@ public enum LightsState {
 
   PLACEHOLDER(Color.kBlack, BlinkPattern.SOLID);
 
-
   public final BlinkPattern pattern;
   public final Color color;
 
