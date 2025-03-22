@@ -3,7 +3,6 @@ package frc.robot.robot_manager.collision_avoidance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +14,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 90),
             new SuperstructurePosition(50, 0),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.STOWED_UP,Waypoint.L4_RIGHT);
-
+    var expected = List.of(Waypoint.STOWED_UP, Waypoint.L4_RIGHT);
 
     assertEquals(expected, result.get());
   }
