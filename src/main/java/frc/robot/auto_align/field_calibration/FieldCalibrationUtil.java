@@ -79,16 +79,16 @@ public class FieldCalibrationUtil {
     return switch (level) {
       case L2 ->
           side == RobotScoringSide.LEFT
-              ? ElevatorState.CORAL_CENTERED_L2_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L2_LINEUP;
+              ? ElevatorState.CORAL_SCORE_LEFT_LINEUP_L2
+              : ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L2;
       case L3 ->
           side == RobotScoringSide.LEFT
-              ? ElevatorState.CORAL_CENTERED_L3_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L3_LINEUP;
+              ? ElevatorState.CORAL_SCORE_LEFT_LINEUP_L3
+              : ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L3;
       case L4 ->
           side == RobotScoringSide.LEFT
-              ? ElevatorState.CORAL_CENTERED_L4_LINEUP
-              : ElevatorState.CORAL_DISPLACED_L4_LINEUP;
+              ? ElevatorState.CORAL_SCORE_LEFT_LINEUP_L4
+              : ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L4;
       default -> ElevatorState.UNTUNED;
     };
   }

@@ -305,7 +305,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L2_DEPLOY_EMPTY -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_L2);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2_LEFT, ArmState.ALGAE_INTAKE_L2);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -313,7 +313,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L2_DEPLOY_CORAL -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_L2);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2_LEFT, ArmState.ALGAE_INTAKE_L2);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -321,7 +321,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L3_DEPLOY_EMPTY -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_L3);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3_LEFT, ArmState.ALGAE_INTAKE_L3);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -329,7 +329,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L3_DEPLOY_CORAL -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_L3);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3_LEFT, ArmState.ALGAE_INTAKE_L3);
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.IDLE_NO_GP_CORAL_MODE);
@@ -370,7 +370,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getLeftNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -378,7 +378,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getRightNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -386,7 +386,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_RELEASE_DEPLOY_EMPTY -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getLeftNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -394,7 +394,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_RELEASE_DEPLOY_EMPTY -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getRightNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -402,7 +402,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_WAITING_DEPLOY_CORAL -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getLeftNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -410,7 +410,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getRightNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -418,7 +418,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_RELEASE_DEPLOY_CORAL -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getLeftNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
@@ -426,7 +426,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_RELEASE_DEPLOY_CORAL -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.NET, ArmState.ALGAE_BACKWARD_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_BACKWARD_NET);
         swerve.snapsDriveRequest(SnapUtil.getRightNetDirection(localization.getPose()));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_WITH_ALGAE);
