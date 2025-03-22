@@ -9,18 +9,28 @@ public enum LightsState {
 
   BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
 
-  IDLE_NO_GP_CORAL_MODE(Color.kWhite, BlinkPattern.BLINK_SLOW),
-  IDLE_WITH_CORAL(Color.kWhite, BlinkPattern.SOLID),
+  IDLE_NO_GP(Color.kGray, BlinkPattern.SOLID),
 
-  IDLE_NO_GP_ALGAE_MODE(Color.kTeal, BlinkPattern.BLINK_SLOW),
-  IDLE_WITH_ALGAE(Color.kTeal, BlinkPattern.SOLID),
+  INTAKING_CORAL(Color.kWhite, BlinkPattern.BLINK_SLOW),
+  INTAKING_ALGAE(Color.kTeal, BlinkPattern.BLINK_SLOW),
+
+  HOLDING_CORAL(Color.kWhite, BlinkPattern.SOLID),
+  HOLDING_ALGAE(Color.kTeal, BlinkPattern.SOLID),
+
+  CORAL_HANDOFF(Color.kWhite, BlinkPattern.BLINK_FAST),
+
+  CLIMB_LINEUP(Color.kYellow, BlinkPattern.SOLID),
+  CLIMB_HANG(Color.kGreen, BlinkPattern.SOLID),
 
   SCORE_ALIGN_NOT_READY(Color.kYellow, BlinkPattern.SOLID),
   SCORE_ALIGN_READY(Color.kGreen, BlinkPattern.SOLID),
 
   SCORING(Color.kGreen, BlinkPattern.BLINK_FAST),
 
+  OTHER(Color.kOrange, BlinkPattern.BLINK_SLOW),
+
   PLACEHOLDER(Color.kBlack, BlinkPattern.SOLID);
+
 
   public final BlinkPattern pattern;
   public final Color color;
