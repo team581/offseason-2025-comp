@@ -54,14 +54,14 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(1.0)
+                          .withKP(0.0)
                           .withKV(0)
-                          .withKG(0.4)
+                          .withKG(0.0)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(275.0)
-                          .withMotionMagicCruiseVelocity(275.0))
+                          .withMotionMagicAcceleration(0.0)
+                          .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -81,14 +81,14 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(1.0)
+                          .withKP(0.0)
                           .withKV(0)
-                          .withKG(0.4)
+                          .withKG(0.0)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(275)
-                          .withMotionMagicCruiseVelocity(275.0))
+                          .withMotionMagicAcceleration(0)
+                          .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -184,10 +184,10 @@ class CompConfig {
                           .withInverted(InvertedValue.Clockwise_Positive))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(100.0)
+                          .withKP(0.0)
                           .withKV(0.0)
-                          .withKD(3.0)
-                          .withKG(0.3)
+                          .withKD(0.0)
+                          .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   // .withMotionMagic(
                   //     new MotionMagicConfigs()
@@ -221,7 +221,7 @@ class CompConfig {
                           .withStatorCurrentLimit(60))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(1.0)
+                          .withKP(0.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine)),

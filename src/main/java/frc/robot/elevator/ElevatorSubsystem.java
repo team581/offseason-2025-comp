@@ -99,8 +99,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
       case MID_MATCH_HOMING -> {
-        leftMotor.setVoltage(-0.5);
-        rightMotor.setVoltage(-0.5);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
