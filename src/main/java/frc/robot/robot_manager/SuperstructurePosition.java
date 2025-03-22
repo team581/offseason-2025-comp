@@ -12,6 +12,7 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
   private static final double ARM_DEGREES_PER_SECOND =
       1.0 / 270.0; // TODO: Get more legit ratios for these
   private static final double ELEVATOR_INCHES_PER_SECOND = 1.0 / 20.0;
+  private static final double STATIC_COST = 1.0; // UNTUNNED
 
   @Override
   public final int hashCode() {
@@ -42,6 +43,7 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
    */
   public double costFor(SuperstructurePosition other) {
     return Math.abs(this.armAngle - other.armAngle) * ARM_DEGREES_PER_SECOND
-        + Math.abs(this.elevatorHeight - other.elevatorHeight) * ELEVATOR_INCHES_PER_SECOND;
+        + Math.abs(this.elevatorHeight - other.elevatorHeight) * ELEVATOR_INCHES_PER_SECOND
+        + STATIC_COST;
   }
 }
