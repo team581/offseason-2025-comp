@@ -7,7 +7,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.util.VelocityDetector;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -16,14 +15,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().intake().debouncer();
 
-  private double motorVelocity = 0.0;
-  private boolean CoralVelocityGp = false;
   private boolean sensorsHaveGP = false;
   private boolean sensorRaw = false;
 
   private boolean sensorDebounced = false;
-
-  private final VelocityDetector CoralDetection = new VelocityDetector(78, 0.2, 0.1);
 
   public IntakeSubsystem(TalonFX motor, CANdi candi) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
@@ -35,22 +30,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
   @Override
   protected void collectInputs() {
-    CoralVelocityGp = CoralDetection.hasGamePiece(motorVelocity, 65);
 
-    double motorVelocity = motor.getVelocity().getValueAsDouble();
-    DogLog.log("Intake/MotorVelocity", motorVelocity);
     sensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
     sensorDebounced = debouncer.calculate(sensorRaw);
   }
 
   public boolean getHasGP() {
-    return switch (getState()) {
-      case INTAKING ->
-          FeatureFlags.INTAKE_VELOCITY_CORAL_DETECTION.getAsBoolean()
-              ? CoralVelocityGp && sensorsHaveGP
-              : sensorsHaveGP;
-      default -> sensorsHaveGP;
-    };
+    return sensorsHaveGP;
   }
 
   public void setState(IntakeState newState) {
@@ -68,7 +54,6 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
       }
       case INTAKING -> {
         motor.setVoltage(0);
-        CoralDetection.reset();
       }
       case SCORING -> {
         motor.setVoltage(0);
