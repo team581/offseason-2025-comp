@@ -240,7 +240,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY,
           CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
           CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
-        if (intake.getHasGP() || claw.getHasGP()) {
+        if (intake.getHasGP()) {
           if (DriverStation.isTeleop()) {
             rumbleController.rumbleRequest();
           }
