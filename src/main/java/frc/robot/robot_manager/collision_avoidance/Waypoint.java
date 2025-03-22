@@ -79,16 +79,28 @@ public enum Waypoint {
   }
 
   public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
+    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
+
+    if (existingEdge != null) {
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+    }
   }
 
   public void canMoveToWhenLeftSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
+    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
+
+    if (existingEdge != null) {
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+    }
   }
 
   public void canMoveToWhenRightSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
+    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
+
+    if (existingEdge != null) {
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+    }
   }
 }
