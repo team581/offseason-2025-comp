@@ -43,8 +43,7 @@ public class RobotCommands {
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, requirements)
-        .withName("LowLineupCommand");
+    return Commands.runOnce(robot::lowLineupRequest, requirements).withName("LowLineupCommand");
   }
 
   public Command algaeReefIntakeCommand() {
