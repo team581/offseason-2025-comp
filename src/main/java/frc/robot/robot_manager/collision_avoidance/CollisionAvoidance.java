@@ -36,14 +36,12 @@ public class CollisionAvoidance {
     }
     return Optional.empty();
   }
-
   private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
     MutableValueGraph<Waypoint, WaypointEdge> graph = ValueGraphBuilder.undirected().build();
 
-    // TODO(@ryanknj5): Add the full graph of safe motion
     // Middle
     Waypoint.STOWED.canMoveTo(Waypoint.L3_LEFT, graph);
     Waypoint.STOWED.canMoveTo(Waypoint.L3_RIGHT, graph);
@@ -181,17 +179,6 @@ public class CollisionAvoidance {
 
   public static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
     return new ArrayList<Waypoint>(graph.adjacentNodes(waypoint));
-
-    //     for (int o = 0; graph.adjacentNodes(waypoint).size() > o; o++) {
-    // System.out.print("consider Options");
-    // System.out.println(graph.adjacentNodes(waypoint));
-    //       if (graph.adjacentNodes(waypoint).contains(Waypoint.values()[o])) {
-    //         System.out.println("hass ekejsfdljflkdsjfijselfjsldfjdskljflkadsdjflk");
-    //         options.add(Waypoint.values()[o]);
-    //       }
-    //     }
-    //     System.out.println(options);
-    //     return options;
   }
 
   /**
