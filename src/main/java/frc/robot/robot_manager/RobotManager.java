@@ -1140,32 +1140,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void algaeNetRequest() {
-    if (!vision.isAnyTagLimelightOnline() || AutoAlign.shouldNetScoreForwards(robotPose)) {
-      algaeNetForwardRequest();
-    } else {
-      algaeNetBackRequest();
-    }
-  }
-
-  private void algaeNetForwardRequest() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      default -> setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY);
-    }
-  }
-
-  private void algaeNetBackRequest() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      default -> setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY);
-    }
-  }
-
   public void preloadCoralRequest() {
 
     switch (getState()) {

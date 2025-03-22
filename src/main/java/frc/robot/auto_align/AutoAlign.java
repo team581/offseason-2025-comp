@@ -30,20 +30,24 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final Translation2d CENTER_OF_REEF_BLUE =
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
 
-  public static boolean shouldNetScoreForwards(Pose2d robotPose) {
+  public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
-    double theta = robotPose.getRotation().getDegrees();
+    double theta = robotPose.getRotation().getDegrees() - 90;
 
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
 
     // Robot is on blue side
-    if (robotX < halfFieldLength) {
-      return Math.abs(theta) < 90;
+    if (halfFieldLength < robotX) {
+      if (Math.abs(theta) < 90) {
+        return RobotScoringSide.LEFT;
+      }
+      return RobotScoringSide.RIGHT;
+    } // Robot is on red side
+    if (Math.abs(theta) < 90) {
+      return RobotScoringSide.RIGHT;
     }
-
-    // Robot is on red side
-    return Math.abs(theta) > 90;
+    return RobotScoringSide.LEFT;
   }
 
   public static boolean shouldIntakeStationFront(Pose2d robotPose) {

@@ -8,44 +8,45 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class AutoAlignTest {
+
   @Test
-  void scoreInNetOnBlueSideAndFacingNet() {
+  void scoreInNetOnBlueSideAndLeft() {
     // x range: 0-8.775 for blue, 8.775-17.55 for red
-    var robotPose = new Pose2d(7, 0, Rotation2d.fromDegrees(23));
+    var robotPose = new Pose2d(7, 0, Rotation2d.fromDegrees(218));
 
-    var result = AutoAlign.shouldNetScoreForwards(robotPose);
+    var result = AutoAlign.getNetScoringSideFromRobotPose(robotPose);
 
-    Assertions.assertEquals(true, result);
+    Assertions.assertEquals(RobotScoringSide.LEFT, result);
   }
 
   @Test
-  void scoreInNetOnBlueSideAndFacingAway() {
+  void scoreInNetOnBlueSideAndRight() {
     // x range: 0-8.775 for blue, 8.775-17.55 for red
-    var robotPose = new Pose2d(3, 0, Rotation2d.fromDegrees(218));
+    var robotPose = new Pose2d(3, 0, Rotation2d.fromDegrees(23));
 
-    var result = AutoAlign.shouldNetScoreForwards(robotPose);
+    var result = AutoAlign.getNetScoringSideFromRobotPose(robotPose);
 
-    Assertions.assertEquals(false, result);
+    Assertions.assertEquals(RobotScoringSide.RIGHT, result);
   }
 
   @Test
-  void scoreInNetOnRedSideAndFacingNet() {
+  void scoreInNetOnRedSideAndLeft() {
     // x range: 0-8.775 for blue, 8.775-17.55 for red
-    var robotPose = new Pose2d(9, 0, Rotation2d.fromDegrees(185));
+    var robotPose = new Pose2d(9, 0, Rotation2d.fromDegrees(67));
 
-    var result = AutoAlign.shouldNetScoreForwards(robotPose);
+    var result = AutoAlign.getNetScoringSideFromRobotPose(robotPose);
 
-    Assertions.assertEquals(true, result);
+    Assertions.assertEquals(RobotScoringSide.LEFT, result);
   }
 
   @Test
-  void scoreInNetOnRedSideAndFacingAway() {
+  void scoreInNetOnRedSideAndRight() {
     // x range: 0-8.775 for blue, 8.775-17.55 for red
-    var robotPose = new Pose2d(13, 0, Rotation2d.fromDegrees(67));
+    var robotPose = new Pose2d(13, 0, Rotation2d.fromDegrees(224));
 
-    var result = AutoAlign.shouldNetScoreForwards(robotPose);
+    var result = AutoAlign.getNetScoringSideFromRobotPose(robotPose);
 
-    Assertions.assertEquals(false, result);
+    Assertions.assertEquals(RobotScoringSide.RIGHT, result);
   }
 
   @Test

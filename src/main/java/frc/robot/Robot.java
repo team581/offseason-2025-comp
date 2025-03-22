@@ -230,7 +230,7 @@ public class Robot extends TimedRobot {
                   robotManager.setConfirmScoreActive(false);
                 }));
     hardware.driverController.leftTrigger().onTrue(robotCommands.coralGroundIntakeCommand());
-    hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeCommand());
+    hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
     hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
