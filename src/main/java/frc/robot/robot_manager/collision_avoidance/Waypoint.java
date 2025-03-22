@@ -12,7 +12,7 @@ import frc.robot.robot_manager.SuperstructurePosition;
 public enum Waypoint {
   // TODO(@ryanknj5): Add more waypoints (can estimate/vibe out the positions)
   ALGAE_INTAKE_LEFT(new SuperstructurePosition(3, 190)),
-  LOLLIPOP_INTAKE_LEFT(new SuperstructurePosition(0, 0)),
+  LOLLIPOP_INTAKE_LEFT(new SuperstructurePosition(0, 180)),
   STOWED(new SuperstructurePosition(20, -90)),
   STOWED_UP(new SuperstructurePosition(0, 90)),
   HANDOFF(new SuperstructurePosition(24, -90)),
@@ -82,7 +82,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
 
     if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 
@@ -91,7 +91,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
 
     if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 
@@ -100,7 +100,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
 
     if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 }

@@ -52,7 +52,10 @@ public enum ArmState {
   ALGAE_PROCESSOR(UNTUNED),
 
   COLLISION_AVOIDANCE(UNTUNED),
-  CLIMBING(UNTUNED);
+  CLIMBING(UNTUNED),
+
+  // For auto
+  LOLLIPOP_CORAL_INTAKE(UNTUNED);
 
   public final double angle;
 

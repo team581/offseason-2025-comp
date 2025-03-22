@@ -9,6 +9,9 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
   private static final double ELEVATOR_PRECISION = 0.1;
   // Arm angles are accurate to 0.1 degrees
   private static final double ARM_PRECISION = 0.1;
+  private static final double ARM_DEGREES_PER_SECOND =
+      1.0 / 270.0; // TODO: Get more legit ratios for these
+  private static final double ELEVATOR_INCHES_PER_SECOND = 1.0 / 20.0;
 
   @Override
   public final int hashCode() {
@@ -38,7 +41,7 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
    * @param other The position you are going to.
    */
   public double costFor(SuperstructurePosition other) {
-    // TODO(@ryanknj5): Implement
-    return 0;
+    return Math.abs(this.armAngle - other.armAngle) * ARM_DEGREES_PER_SECOND
+        + Math.abs(this.elevatorHeight - other.elevatorHeight) * ELEVATOR_INCHES_PER_SECOND;
   }
 }
