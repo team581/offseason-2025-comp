@@ -14,6 +14,7 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.util.tuning.TunablePid;
 
 public class ArmSubsystem extends StateMachine<ArmState> {
   private final TalonFX motor;
@@ -44,6 +45,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       motor.setPosition(Units.degreesToRotations(RobotConfig.get().arm().homingPosition()));
     }
+
+    TunablePid.of("Arm", motor, RobotConfig.get().arm().motorConfig());
   }
 
   public void setState(ArmState newState) {
