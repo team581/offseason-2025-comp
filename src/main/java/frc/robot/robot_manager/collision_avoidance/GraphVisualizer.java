@@ -66,10 +66,16 @@ public class GraphVisualizer {
 
     for (var pair : graph.edges()) {
       var edge = graph.edgeValue(pair).orElseThrow();
+      var cost = edge.getCost(obstruction);
+
+      if (cost == Double.MAX_VALUE) {
+        // Just ignore edges with infinite cost
+        continue;
+      }
 
       sb.append(pair.nodeU().toString());
       sb.append(" <-- ");
-      sb.append(MathHelpers.roundTo(edge.getCost(obstruction), 3));
+      sb.append(MathHelpers.roundTo(cost, 3));
       sb.append(" --> ");
       sb.append(pair.nodeV().toString());
       sb.append('\n');
