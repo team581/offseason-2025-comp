@@ -4,9 +4,6 @@ public enum ArmState {
   UNTUNED(0),
 
   UNJAM(UNTUNED),
-  PRE_MATCH_HOMING(UNTUNED),
-  MID_MATCH_HOMING(UNTUNED),
-
   // Idle positions
   HOLDING_UPRIGHT(UNTUNED),
 
