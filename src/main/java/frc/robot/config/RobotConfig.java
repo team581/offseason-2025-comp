@@ -41,9 +41,7 @@ public record RobotConfig(
       int motorID,
       int candiID,
       Debouncer debouncer,
-      TalonFXConfiguration motorConfig,
-      double algaeHoldCurrent,
-      double algaeHoldMaxDutyCycle) {}
+      TalonFXConfiguration motorConfig) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,
@@ -60,9 +58,6 @@ public record RobotConfig(
       String canBusName,
       int motorID,
       TalonFXConfiguration motorConfig,
-      double minAngle,
-      double maxAngle,
-      double homingCurrentThreshold,
       double homingPosition) {}
 
   public record ClimberConfig(

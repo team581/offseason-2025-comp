@@ -126,9 +126,7 @@ class PracticeConfig {
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(70.0)
-                          .withPeakReverseTorqueCurrent(70.0)),
-              68,
-              0.66),
+                          .withPeakReverseTorqueCurrent(70.0))),
           new SwerveConfig(
               new PhoenixPIDController(5.75, 0, 0),
               true,
@@ -193,9 +191,6 @@ class PracticeConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
-              -58.7,
-              156.5,
-              18,
               -58.7),
           new DeployConfig(
               CANIVORE_NAME,

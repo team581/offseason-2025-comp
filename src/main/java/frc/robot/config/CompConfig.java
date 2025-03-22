@@ -137,9 +137,7 @@ class CompConfig {
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(80.0)
-                          .withPeakReverseTorqueCurrent(80.0)),
-              90,
-              0.66),
+                          .withPeakReverseTorqueCurrent(80.0))),
           new SwerveConfig(
               new PhoenixPIDController(5.75, 0, 0),
               true,
@@ -204,9 +202,6 @@ class CompConfig {
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(30.0)
                           .withStatorCurrentLimit(60.0)),
-              -56.4,
-              156.5,
-              18,
               -56.4),
           new DeployConfig(
               CANIVORE_NAME,
@@ -267,7 +262,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(35)),
               new CANrangeConfiguration()
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
-          new LightsConfig(RIO_CAN_NAME, 18));
+          new LightsConfig(RIO_CAN_NAME, 17));
 
   private CompConfig() {}
 }
