@@ -20,9 +20,9 @@ public class RobotCommands {
         .withName("CoralGroundIntakeCommand");
   }
 
-  public Command algaeIntakeCommand() {
-    return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements)
-        .withName("AlgaeIntakeCommand");
+  public Command algaeIntakeGroundCommand() {
+    return Commands.runOnce(robot::intakeFloorAlgaeRequest, requirements)
+        .withName("AlgaeIntakeGroundCommand");
   }
 
   public Command floorAssistIntakeCommand() {
