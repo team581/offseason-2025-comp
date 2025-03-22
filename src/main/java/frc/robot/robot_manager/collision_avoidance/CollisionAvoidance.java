@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import com.google.common.graph.ElementOrder;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
@@ -41,7 +42,8 @@ public class CollisionAvoidance {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
-    MutableValueGraph<Waypoint, WaypointEdge> graph = ValueGraphBuilder.undirected().build();
+    MutableValueGraph<Waypoint, WaypointEdge> graph =
+        ValueGraphBuilder.undirected().incidentEdgeOrder(ElementOrder.stable()).build();
 
     // Middle
     Waypoint.STOWED.canMoveTo(Waypoint.L3_LEFT, graph);
