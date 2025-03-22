@@ -862,7 +862,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case UNJAM -> {
         claw.setState(ClawState.OUTTAKING);
-        intake.setState(IntakeState.OUTTAKING);
+        intake.setState(IntakeState.SCORING);
         deploy.setState(DeployState.UNJAM);
         moveSuperstructure(ElevatorState.UNJAM, ArmState.UNJAM);
         swerve.normalDriveRequest();

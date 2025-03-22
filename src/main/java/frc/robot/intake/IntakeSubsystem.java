@@ -49,16 +49,16 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         motor.disable();
       }
       case IDLE_GP -> {
-        motor.setVoltage(0);
+        motor.setVoltage(1);
       }
       case INTAKING -> {
-        motor.setVoltage(0);
+        motor.setVoltage(6);
       }
       case SCORING -> {
         motor.setVoltage(0);
       }
-      case OUTTAKING -> {
-        motor.setVoltage(0);
+      case CORAL_HANDOFF -> {
+        motor.setVoltage(-6);
       }
     }
   }
