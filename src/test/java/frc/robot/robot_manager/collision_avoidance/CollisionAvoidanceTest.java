@@ -15,11 +15,10 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 90),
             new SuperstructurePosition(50, 0),
             ObstructionKind.NONE);
-    ArrayList<Waypoint> expected = new ArrayList<Waypoint>();
-    expected.add(Waypoint.ALGAE_INTAKE_LEFT);
-    expected.add(Waypoint.ALGAE_INTAKE_LEFT);
+    var expected = List.of(Waypoint.STOWED_UP,Waypoint.L4_RIGHT);
 
-    assertEquals(expected, result);
+
+    assertEquals(expected, result.get());
   }
 
   @Test
@@ -29,9 +28,9 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 180),
             new SuperstructurePosition(50, -90),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.ALGAE_INTAKE_LEFT, Waypoint.ALGAE_INTAKE_LEFT);
+    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_LEFT, Waypoint.L3_LEFT, Waypoint.HANDOFF);
 
-    assertEquals(expected, result);
+    assertEquals(expected, result.get());
   }
 
   @Test
