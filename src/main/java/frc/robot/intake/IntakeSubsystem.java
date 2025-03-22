@@ -30,7 +30,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   protected void collectInputs() {
 
-    sensorRaw = candi.getS2State().getValue() != S2StateValue.Low;
+    sensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
     sensorDebounced = debouncer.calculate(sensorRaw);
   }
 
@@ -52,7 +52,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         motor.setVoltage(1);
       }
       case INTAKING -> {
-        motor.setVoltage(6);
+        motor.setVoltage(12);
       }
       case SCORING -> {
         motor.setVoltage(0);
