@@ -182,10 +182,6 @@ public class CollisionAvoidance {
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
-   *
-   * 
-   * 
-   * 
    */
   public static ArrayList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
