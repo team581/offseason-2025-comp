@@ -7,6 +7,7 @@ public record WaypointEdge(
     boolean safeWhenLeftBlocked,
     /** Whether this motion is safe when the right side of the robot is obstructed. */
     boolean safeWhenRightBlocked) {
+
   public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, false);
   }
