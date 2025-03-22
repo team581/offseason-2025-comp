@@ -31,7 +31,8 @@ public class CollisionAvoidance {
 
     var maybeResult = aStar(currentPosition, desiredPosition, obstructionKind);
     if (maybeResult.isPresent()) {
-      return Optional.of(maybeResult.orElseThrow().get(0)); // go to the first waypoint in the list to goal
+      return Optional.of(
+          maybeResult.orElseThrow().get(0)); // go to the first waypoint in the list to goal
     }
     return Optional.empty();
   }
