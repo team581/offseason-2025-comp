@@ -31,23 +31,25 @@ public class RobotCommands {
   }
 
   public Command highLineupCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("HighLineupCommand");
+    return Commands.runOnce(robot::highLineupRequest, requirements).withName("HighLineupCommand");
   }
 
   public Command l3LineupCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("L3LineupCommand");
+    return Commands.runOnce(robot::l3LineupRequest, requirements).withName("L3LineupCommand");
   }
 
   public Command l2LineupCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("L2LineupCommand");
+    return Commands.runOnce(robot::l2LineupRequest, requirements).withName("L2LineupCommand");
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("LowLineupCommand");
+    return Commands.runOnce(robot::l1CoralApproachRequest, requirements)
+        .withName("LowLineupCommand");
   }
 
   public Command algaeReefIntakeCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("AlgaeReefIntakeCommand");
+    return Commands.runOnce(robot::algaeReefIntakeRequest, requirements)
+        .withName("AlgaeReefIntakeCommand");
   }
 
   public Command confirmScoreCommand() {
@@ -79,6 +81,7 @@ public class RobotCommands {
   }
 
   public Command rehomeDeployCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("RehomeDeployCommand");
+    return Commands.runOnce(robot::rehomeDeployRequest, requirements)
+        .withName("RehomeDeployCommand");
   }
 }

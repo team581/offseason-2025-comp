@@ -1149,6 +1149,63 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void l4CoralApproachRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CORAL_L4_APPROACH);
+    }
+  }
+
+  public void highLineupRequest() {
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasAlgae) {
+        algaeNetRequest();
+      } else {
+        l4CoralApproachRequest();
+      }
+    }
+  }
+
+  public void l3LineupRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CORAL_L3_APPROACH);
+    }
+  }
+
+  public void l2LineupRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CORAL_L2_APPROACH);
+    }
+  }
+
+  public void lowLineupRequest() {
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasAlgae) {
+        processorWaitingRequest();
+      } else {
+        l1CoralApproachRequest();
+      }
+    }
+  }
+
+  public void l1CoralApproachRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CORAL_L1_APPROACH);
+    }
+  }
+
+  public void algaeReefIntakeRequest() {
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasCoral) {
+        if (robotScoringSide == RobotScoringSide.LEFT) {
+          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L3_LEFT_DEPLOY_CORAL);
+          }
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL);
+        }
+      }
+    }
+  }
+
   public void algaeNetRequest() {
     if (!vision.isAnyTagLimelightOnline()
         || AutoAlign.getNetScoringSideFromRobotPose(robotPose) == RobotScoringSide.LEFT) {
@@ -1263,8 +1320,14 @@ public class RobotManager extends StateMachine<RobotState> {
   public void rehomeElevatorRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
-
       default -> setStateFromRequest(RobotState.REHOME_ELEVATOR);
+    }
+  }
+
+  public void rehomeDeployRequest() {
+    switch (getState()) {
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
+      default -> setStateFromRequest(RobotState.REHOME_DEPLOY);
     }
   }
 
