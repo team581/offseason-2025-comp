@@ -93,8 +93,8 @@ class PracticeConfig {
               0.5),
           new IntakeConfig(
               RIO_CAN_NAME,
-              999,
-              999,
+              25,
+              26,
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -111,8 +111,8 @@ class PracticeConfig {
                           .withPeakReverseTorqueCurrent(70.0))),
           new ClawConfig(
               RIO_CAN_NAME,
-              20,
-              21,
+              18,
+              27,
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -167,7 +167,7 @@ class PracticeConfig {
           new VisionConfig(4, 0.4, Double.MAX_VALUE),
           new ArmConfig(
               RIO_CAN_NAME,
-              22,
+              19,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -199,7 +199,7 @@ class PracticeConfig {
               -58.7),
           new DeployConfig(
               CANIVORE_NAME,
-              999,
+              20,
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
@@ -226,10 +226,10 @@ class PracticeConfig {
               0.0), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,
+              21,
+              22,
+              23,
               24,
-              25,
-              27,
-              28,
               -55.0,
               215.0,
               new TalonFXConfiguration()
@@ -256,7 +256,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(35)),
               new CANrangeConfiguration()
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
-          new LightsConfig(RIO_CAN_NAME, 18));
+          new LightsConfig(RIO_CAN_NAME, 17));
 
   private PracticeConfig() {}
 }

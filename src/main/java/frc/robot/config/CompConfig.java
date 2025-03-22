@@ -104,8 +104,8 @@ class CompConfig {
               0.5),
           new IntakeConfig(
               RIO_CAN_NAME,
-              999,
-              999,
+              25,
+              26,
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -122,8 +122,8 @@ class CompConfig {
                           .withPeakReverseTorqueCurrent(70.0))),
           new ClawConfig(
               RIO_CAN_NAME,
-              20,
-              21,
+              18,
+              27,
               new Debouncer(0.1, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -178,7 +178,7 @@ class CompConfig {
           new VisionConfig(4, 0.4, Double.MAX_VALUE),
           new ArmConfig(
               RIO_CAN_NAME,
-              22,
+              19,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -210,7 +210,7 @@ class CompConfig {
               -56.4),
           new DeployConfig(
               CANIVORE_NAME,
-              999,
+              20,
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
@@ -237,10 +237,10 @@ class CompConfig {
               0.0), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,
+              21,
+              22,
+              23,
               24,
-              25,
-              27,
-              28,
               -55.0,
               100.0,
               new TalonFXConfiguration()
