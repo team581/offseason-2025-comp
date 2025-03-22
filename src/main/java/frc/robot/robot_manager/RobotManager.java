@@ -418,7 +418,8 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.LOLLIPOP_CORAL_INTAKE);
         intake.setState(IntakeState.IDLE_NO_GP);
         deploy.setState(DeployState.STOWED);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_UPRIGHT, ArmState.LOLLIPOP_CORAL_INTAKE);
+        moveSuperstructure(
+            ElevatorState.GROUND_CORAL_INTAKE_UPRIGHT, ArmState.LOLLIPOP_CORAL_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
