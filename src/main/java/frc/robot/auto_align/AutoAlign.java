@@ -122,6 +122,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private ChassisSpeeds algaeAlignSpeeds = new ChassisSpeeds();
   private boolean isAligned = false;
   private boolean isAlignedDebounced = false;
+  private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefPipe bestReefPipe = ReefPipe.PIPE_A;
   private Pose2d usedScoringPose = Pose2d.kZero;
 
@@ -195,7 +196,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
-    algaeAlignSpeeds = tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose());
+    algaeAlignSpeeds =
+        tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
   }
 
   public ChassisSpeeds getTagAlignSpeeds() {
@@ -215,6 +217,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
+    robotScoringSide = side;
     tagAlign.setLevel(level, side);
   }
 

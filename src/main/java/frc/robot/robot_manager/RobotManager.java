@@ -38,7 +38,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-import java.util.List;
 import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
@@ -99,12 +98,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private final List<RobotState> algaeStates =
-      List.of(
-          RobotState.CLAW_ALGAE_DEPLOY_CORAL,
-          RobotState.CLAW_ALGAE_DEPLOY_EMPTY,
-          RobotState.CORAL_INTAKE_FLOOR_CLAW_ALGAE);
-
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private double coralIntakeAssistAngle = 0.0;
@@ -130,7 +123,9 @@ public class RobotManager extends StateMachine<RobotState> {
               ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY,
               ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL,
               CLIMBING_2_HANGING,
-              UNJAM ->
+              UNJAM,
+              ALGAE_OUTTAKE_DEPLOY_EMPTY,
+              ALGAE_OUTTAKE_DEPLOY_CORAL ->
           currentState;
 
       case REHOME_ELEVATOR ->
@@ -895,6 +890,26 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.STOWED);
       }
+      case ALGAE_OUTTAKE_DEPLOY_EMPTY -> {
+        claw.setState(ClawState.OUTTAKING);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        deploy.setState(DeployState.STOWED);
+        moveSuperstructure(ElevatorState.ALGAE_OUTTAKE, ArmState.ALGAE_OUTTAKE);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
+      case ALGAE_OUTTAKE_DEPLOY_CORAL -> {
+        claw.setState(ClawState.OUTTAKING);
+        intake.setState(IntakeState.IDLE_GP);
+        deploy.setState(DeployState.STOWED);
+        moveSuperstructure(ElevatorState.ALGAE_OUTTAKE, ArmState.ALGAE_OUTTAKE);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
     }
   }
 
@@ -1083,69 +1098,81 @@ public class RobotManager extends StateMachine<RobotState> {
         // Technically claw could be holding coral but that shouldn't happen
         setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
       } else {
-        switch (getState()) {
-          // TODO: Finish implementing
-          // case algae states -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
-          default -> setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
+        if (getState().hasAlgae) {
+          setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+        } else {
+          setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
         }
       }
+    } else {
+      if (intake.getHasGP()) {
+        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+      } else {
+        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+      }
     }
-
-    // if (claw.getHasGP() && intake.getHasGP()) {
-    //   setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
-    // } else if (claw.getHasGP() && !intake.getHasGP()) {
-    //   setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
-    // } else if (!claw.getHasGP() && intake.getHasGP()) {
-    //   setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
-    // } else {
-    //   setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
-    // }
   }
 
   public void intakeFloorAlgaeRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL ->
-          setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_CORAL);
-      default -> setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasCoral) {
+        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_CORAL);
+      } else {
+        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY);
+      }
     }
   }
 
   public void intakeFloorCoralHorizontalRequest() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-      default -> setStateFromRequest(RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY);
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasAlgae) {
+        setStateFromRequest(RobotState.CORAL_INTAKE_FLOOR_CLAW_ALGAE);
+      } else {
+        setStateFromRequest(RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY);
+      }
     }
   }
 
   public void intakeAssistFloorCoralHorizontalRequest() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-      default -> setStateFromRequest(RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY);
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY);
     }
   }
 
   public void processorWaitingRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
+    if (!getState().climbingOrRehoming) {
+      if (getState().hasCoral) {
+        setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_CORAL);
+      } else {
+        setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY);
+      }
+    }
+  }
 
-      case CLAW_ALGAE_DEPLOY_EMPTY ->
-          setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY);
-      case CLAW_ALGAE_DEPLOY_CORAL ->
-          setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_CORAL);
-      default -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY);
+  public void algaeNetRequest() {
+    if (!vision.isAnyTagLimelightOnline()
+        || AutoAlign.getNetScoringSideFromRobotPose(robotPose) == RobotScoringSide.LEFT) {
+      algaeNetLeftRequest();
+    } else {
+      algaeNetRightRequest();
+    }
+  }
+
+  private void algaeNetLeftRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY);
+    }
+  }
+
+  private void algaeNetRightRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.ALGAE_NET_LEFT_WAITING_DEPLOY_EMPTY);
     }
   }
 
   public void preloadCoralRequest() {
-
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      default -> setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
     }
   }
 
@@ -1153,6 +1180,18 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
+          CORAL_L1_PREPARE_HANDOFF,
+          CORAL_L2_PREPARE_HANDOFF,
+          CORAL_L3_PREPARE_HANDOFF,
+          CORAL_L4_PREPARE_HANDOFF,
+          CORAL_L1_RELEASE_HANDOFF,
+          CORAL_L2_RELEASE_HANDOFF,
+          CORAL_L3_RELEASE_HANDOFF,
+          CORAL_L4_RELEASE_HANDOFF,
+          CORAL_L1_APPROACH,
+          CORAL_L2_APPROACH,
+          CORAL_L3_APPROACH,
+          CORAL_L4_APPROACH,
           CORAL_L1_LEFT_LINEUP,
           CORAL_L1_LEFT_RELEASE,
           CORAL_L2_LEFT_LINEUP,
@@ -1170,8 +1209,12 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_RIGHT_LINEUP,
           CORAL_L4_RIGHT_RELEASE -> {}
 
-      case CLAW_ALGAE_DEPLOY_EMPTY -> {
-        setStateFromRequest(RobotState.UNJAM);
+      case CLAW_CORAL_DEPLOY_EMPTY,
+          CLAW_EMPTY_DEPLOY_EMPTY,
+          CLAW_ALGAE_DEPLOY_EMPTY,
+          CLAW_ALGAE_DEPLOY_CORAL,
+          CLAW_EMPTY_DEPLOY_CORAL -> {
+        setStateFromRequest(getState().getAlgaeOuttakeState());
       }
       case ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY ->
           setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE_DEPLOY_EMPTY);

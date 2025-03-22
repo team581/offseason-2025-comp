@@ -55,7 +55,11 @@ public record RobotConfig(
       int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
 
   public record ArmConfig(
-      String canBusName, int motorID, TalonFXConfiguration motorConfig, double homingPosition) {}
+      String canBusName,
+      int motorID,
+      TalonFXConfiguration motorConfig,
+      double homingPosition,
+      double inchesFromCenter) {}
 
   public record ClimberConfig(
       String canBusName,
