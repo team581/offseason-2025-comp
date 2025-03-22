@@ -1202,6 +1202,20 @@ public class RobotManager extends StateMachine<RobotState> {
           }
           setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL);
         }
+        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_CORAL);
+        }
+        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_CORAL);
+      }
+      if (robotScoringSide == RobotScoringSide.LEFT) {
+        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_LEFT_DEPLOY_EMPTY);
+        }
+        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_EMPTY);
+        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_EMPTY);
+        }
+        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_EMPTY);
       }
     }
   }
