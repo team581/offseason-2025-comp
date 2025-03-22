@@ -50,7 +50,6 @@ public enum ElevatorState {
   CORAL_SCORE_RIGHT_LINEUP_L4(UNTUNED),
   CORAL_SCORE_RIGHT_RELEASE_L4(UNTUNED),
 
-
   CLIMBING(UNTUNED),
   COLLISION_AVOIDANCE(UNTUNED);
 
@@ -59,7 +58,8 @@ public enum ElevatorState {
   private ElevatorState(double height) {
     this.height = height;
   }
-  ElevatorState(ElevatorState other){
+
+  ElevatorState(ElevatorState other) {
     this(other.height);
   }
 }

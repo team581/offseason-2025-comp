@@ -9,7 +9,6 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
@@ -21,14 +20,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
-  private final LocalizationSubsystem localization;
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
   private double leftMotorCurrent;
   private double rightMotorCurrent;
-
-  private final double RAISE_ARM_EARLY_THRESHOLD = 25.0;
 
   private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
 
@@ -48,12 +44,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double averageMotorCurrent;
   private final CoastOut coastRequest = new CoastOut();
 
-  public ElevatorSubsystem(
-      TalonFX leftMotor, TalonFX rightMotor, LocalizationSubsystem localization) {
+  public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
     this.leftMotor = leftMotor;
     this.rightMotor = rightMotor;
-    this.localization = localization;
     // Motor Configs
     leftMotor.getConfigurator().apply(RobotConfig.get().elevator().leftMotorConfig());
     rightMotor.getConfigurator().apply(RobotConfig.get().elevator().rightMotorConfig());
@@ -193,8 +187,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
       // This state is only used when it's safe to cancel the move partway
       // Since the next state is same setpoint, different arm angle
-      case CORAL_CENTERED_L4_RAISE_ARM, CORAL_DISPLACED_L4_RAISE_ARM ->
-          averageMeasuredHeight > getState().height - RAISE_ARM_EARLY_THRESHOLD;
       default -> MathUtil.isNear(getState().height, averageMeasuredHeight, TOLERANCE);
     };
   }
