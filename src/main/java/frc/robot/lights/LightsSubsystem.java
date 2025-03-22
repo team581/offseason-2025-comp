@@ -12,11 +12,11 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private final CANdle candle;
 
   private Timer blinkTimer = new Timer();
-  private LightsState storedState = LightsState.IDLE_NO_GP_CORAL_MODE;
+  private LightsState storedState = LightsState.IDLE_NO_GP;
   private LightsState disabledState = LightsState.HEALTHY;
 
   public LightsSubsystem(CANdle candle) {
-    super(SubsystemPriority.LIGHTS, LightsState.IDLE_NO_GP_CORAL_MODE);
+    super(SubsystemPriority.LIGHTS, LightsState.IDLE_NO_GP);
     this.candle = candle;
     blinkTimer.start();
   }

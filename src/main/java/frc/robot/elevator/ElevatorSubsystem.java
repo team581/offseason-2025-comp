@@ -11,6 +11,7 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.util.tuning.TunablePid;
 
 public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private static final double TOLERANCE = RobotConfig.get().elevator().tolerance();
@@ -51,6 +52,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     // Motor Configs
     leftMotor.getConfigurator().apply(RobotConfig.get().elevator().leftMotorConfig());
     rightMotor.getConfigurator().apply(RobotConfig.get().elevator().rightMotorConfig());
+
+    TunablePid.of("Elevator/Left", leftMotor, RobotConfig.get().elevator().leftMotorConfig());
+    TunablePid.of("Elevator/Right", rightMotor, RobotConfig.get().elevator().rightMotorConfig());
   }
 
   public void setState(ElevatorState newState) {
@@ -99,8 +103,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
       case MID_MATCH_HOMING -> {
-        leftMotor.setVoltage(-0.5);
-        rightMotor.setVoltage(-0.5);
+        leftMotor.setVoltage(-0.0);
+        rightMotor.setVoltage(-0.0);
       }
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));

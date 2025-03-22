@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.util.tuning.TunablePid;
 
 public class DeploySubsystem extends StateMachine<DeployState> {
   private final double TOLERANCE = 1.0;
@@ -28,6 +29,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     motor.getConfigurator().apply(RobotConfig.get().deploy().motorConfig());
 
     this.motor = motor;
+    TunablePid.of("Deploy", motor, RobotConfig.get().deploy().motorConfig());
   }
 
   @Override
