@@ -15,14 +15,39 @@ public class RobotCommands {
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
-  public Command floorIntakeCommand() {
+  public Command coralGroundIntakeCommand() {
     return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements)
-        .withName("FloorIntakeCommand");
+        .withName("CoralGroundIntakeCommand");
+  }
+
+  public Command algaeIntakeCommand() {
+    return Commands.runOnce(robot::intakeFloorCoralHorizontalRequest, requirements)
+        .withName("AlgaeIntakeCommand");
   }
 
   public Command floorAssistIntakeCommand() {
     return Commands.runOnce(robot::intakeAssistFloorCoralHorizontalRequest, requirements)
         .withName("FloorIntakeCommand");
+  }
+
+  public Command highLineupCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("HighLineupCommand");
+  }
+
+  public Command l3LineupCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("L3LineupCommand");
+  }
+
+  public Command l2LineupCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("L2LineupCommand");
+  }
+
+  public Command lowLineupCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("LowLineupCommand");
+  }
+
+  public Command algaeReefIntakeCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("AlgaeReefIntakeCommand");
   }
 
   public Command confirmScoreCommand() {
@@ -40,9 +65,8 @@ public class RobotCommands {
     return Commands.runOnce(robot::nextClimbStateRequest, requirements).withName("ClimbUpCommand");
   }
 
-  public Command climbDownCommand() {
-    return Commands.runOnce(robot::previousClimbStateRequest, requirements)
-        .withName("ClimbDownCommand");
+  public Command climbStopCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("ClimbStopCommand");
   }
 
   public Command unjamCommand() {
@@ -52,5 +76,9 @@ public class RobotCommands {
   public Command rehomeElevatorCommand() {
     return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
         .withName("RehomeElevatorCommand");
+  }
+
+  public Command rehomeDeployCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("RehomeDeployCommand");
   }
 }
