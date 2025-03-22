@@ -179,7 +179,6 @@ public class CollisionAvoidance {
   }
 
   public static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
-    System.out.println("optioning");
     return new ArrayList<Waypoint>(graph.adjacentNodes(waypoint));
 
     //     for (int o = 0; graph.adjacentNodes(waypoint).size() > o; o++) {
@@ -201,7 +200,6 @@ public class CollisionAvoidance {
    */
   private static ArrayList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
-    System.out.println("Starting reconsturction");
     ArrayList<Waypoint> reversedTotalPath = new ArrayList<Waypoint>();
     ArrayList<Waypoint> totalPath = new ArrayList<Waypoint>();
 
@@ -211,14 +209,9 @@ public class CollisionAvoidance {
       current = cameFrom.get(current);
       reversedTotalPath.add(current);
       // How do i prepend an array list???
-      System.out.println("constructing path with came from");
     }
-    System.out.println("going into for loop");
     for (int i = 0; reversedTotalPath.size() > i; i++) {
-      System.out.println("adding reversedtotalpath size - i");
-      System.out.println(reversedTotalPath.size() - i - 1);
       totalPath.add(reversedTotalPath.get(reversedTotalPath.size() - i - 1));
-      System.out.println("IM Adding to total path:" + i);
     }
     return totalPath;
   }
@@ -235,16 +228,12 @@ public class CollisionAvoidance {
     for (var waypoint : Waypoint.values()) {
       gscore.put(waypoint, Double.MAX_VALUE);
     }
-    System.out.println("gscore:" + gscore);
     Waypoint startWaypoint = Waypoint.getClosest(currentPosition);
     Waypoint goalWaypoint = Waypoint.getClosest(desiredPosition);
-    System.out.println("startWaypoint:" + startWaypoint);
-    System.out.println("goalWaypoint:" + goalWaypoint);
 
     gscore.replace(startWaypoint, 0.0);
     Waypoint current = Waypoint.STOWED;
     while (!openSet.isEmpty()) {
-      System.out.println("loop");
       // current is equal to the waypoint in openset that has the smallest gscore
       double lowestGScore = Double.MAX_VALUE;
 
@@ -254,19 +243,13 @@ public class CollisionAvoidance {
           lowestGScore = gscore.get(openPoint);
         }
       }
-      System.out.println("Lowest gscore in open set/CURRENT:" + current);
       if (current == goalWaypoint) {
-        System.out.println("returning a star");
-        System.out.println(cameFrom);
         return Optional.of(reconstructPath(cameFrom, current));
       }
       openSet.remove(current);
       ArrayList<Waypoint> options = options(current, obstructionKind);
-      System.out.println("number of neighbors :" + options.size());
-      System.out.println("all of neighbors :" + options);
 
       for (Waypoint neighbor : options) {
-        System.out.println("Looking at  neighbors" + neighbor);
 
         double tentativeGScore = gscore.get(current) + current.costFor(neighbor);
         if (tentativeGScore < gscore.get(neighbor)) {
