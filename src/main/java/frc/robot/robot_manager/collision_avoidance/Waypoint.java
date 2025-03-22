@@ -82,7 +82,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
 
     if (existingEdge != null) {
-      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 
@@ -91,7 +91,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
 
     if (existingEdge != null) {
-      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 
@@ -100,7 +100,7 @@ public enum Waypoint {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
 
     if (existingEdge != null) {
-      // throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
 }

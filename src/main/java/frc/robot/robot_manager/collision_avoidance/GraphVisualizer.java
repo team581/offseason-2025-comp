@@ -3,6 +3,7 @@ package frc.robot.robot_manager.collision_avoidance;
 import com.google.common.graph.ValueGraph;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.util.MathHelpers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,10 +66,16 @@ public class GraphVisualizer {
 
     for (var pair : graph.edges()) {
       var edge = graph.edgeValue(pair).orElseThrow();
+      var cost = edge.getCost(obstruction);
+
+      if (cost == Double.MAX_VALUE) {
+        // Just ignore edges with infinite cost
+        continue;
+      }
 
       sb.append(pair.nodeU().toString());
       sb.append(" <-- ");
-      sb.append(edge.getCost(obstruction));
+      sb.append(MathHelpers.roundTo(cost, 3));
       sb.append(" --> ");
       sb.append(pair.nodeV().toString());
       sb.append('\n');

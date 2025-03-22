@@ -2,7 +2,9 @@ package frc.robot.auto_align;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 
 public enum ReefSide {
@@ -113,6 +115,20 @@ public enum ReefSide {
 
   public Pose2d getPose(boolean isRedAlliance) {
     return isRedAlliance ? redPose : bluePose;
+  }
+
+  public Pose2d getPose(RobotScoringSide scoringSide) {
+    return getPose()
+        .transformBy(
+            (scoringSide == RobotScoringSide.LEFT)
+                ? new Transform2d(
+                    0,
+                    -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+                    Rotation2d.kZero)
+                : new Transform2d(
+                    0,
+                    Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+                    Rotation2d.kZero));
   }
 
   public Pose2d getPose() {
