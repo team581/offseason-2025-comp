@@ -21,12 +21,13 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
-private static double rotationsToDistance(double rot) {
-  return rot * (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
-}
-private static double distanceToRotations(double dist) {
-  return dist / (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
-}
+  private static double rotationsToDistance(double rot) {
+    return rot * (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
+  }
+
+  private static double distanceToRotations(double dist) {
+    return dist / (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
+  }
 
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
@@ -158,8 +159,10 @@ private static double distanceToRotations(double dist) {
       }
 
       case COLLISION_AVOIDANCE -> {
-        leftMotor.setControl(positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
-        rightMotor.setControl(positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
+        leftMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
+        rightMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
       }
       default -> {}
     }
