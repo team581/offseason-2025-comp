@@ -274,7 +274,7 @@ public class Limelight extends StateMachine<LimelightState> {
     // Positive X = Right
     var cameraLeftRight = seenCameraPoseTargetSpace.getX();
     // Positive Y = Down, so flipped for common sense
-    var cameraUpDown = -1 *  seenCameraPoseTargetSpace.getY();
+    var cameraUpDown = -1 * seenCameraPoseTargetSpace.getY();
     // Positive Z = Forward
     var cameraForwardBackward = seenCameraPoseTargetSpace.getZ();
     // Pitch rotates around left right axis (x according to LL coordinate systems)
@@ -282,7 +282,7 @@ public class Limelight extends StateMachine<LimelightState> {
     // Roll rotates around forward backward axis (Z according to LL coordinate systems)
     var cameraRoll = seenCameraPoseTargetSpace.getRotation().getZ();
     // Yaw rotates around up down axis (y according to LL coordinate systems)
-    var cameraYaw = -1 *  seenCameraPoseTargetSpace.getRotation().getY();
+    var cameraYaw = -1 * seenCameraPoseTargetSpace.getRotation().getY();
 
     var robotLeftRight = robotPoseTargetSpace.getX();
     var robotUpDown = robotPoseTargetSpace.getY();
