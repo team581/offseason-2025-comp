@@ -46,7 +46,12 @@ public class IntakeAssistUtil {
     var robotRelativeRotation =
         Rotation2d.fromDegrees(getIntakeAssistAngle(translation, Pose2d.kZero));
     var withRotation = new Pose2d(translation.getX(), translation.getY(), robotRelativeRotation);
-    var offset = withRotation.transformBy(new Transform2d(-INTAKE_OFFSET, Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()), Rotation2d.kZero));
+    var offset =
+        withRotation.transformBy(
+            new Transform2d(
+                -INTAKE_OFFSET,
+                Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()),
+                Rotation2d.kZero));
     var fieldRelativeIntakePose =
         new Pose2d(
             GamePieceDetectionUtil.robotRelativeToFieldRelativeGamePiecePose(
