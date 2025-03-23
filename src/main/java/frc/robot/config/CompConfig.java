@@ -68,7 +68,7 @@ class CompConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
+                              1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -91,7 +91,7 @@ class CompConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
+                              1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               0,
               25,
               0,
