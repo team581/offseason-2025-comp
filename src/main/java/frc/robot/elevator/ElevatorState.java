@@ -1,6 +1,10 @@
 package frc.robot.elevator;
 
 public enum ElevatorState {
+  /**
+   * @deprecated This is a placeholder state.
+   */
+  @Deprecated
   UNTUNED(0),
 
   UNJAM(UNTUNED),

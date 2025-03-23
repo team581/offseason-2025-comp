@@ -1,6 +1,10 @@
 package frc.robot.arm;
 
 public enum ArmState {
+  /**
+   * @deprecated This is a placeholder state.
+   */
+  @Deprecated
   UNTUNED(0),
 
   UNJAM(UNTUNED),
