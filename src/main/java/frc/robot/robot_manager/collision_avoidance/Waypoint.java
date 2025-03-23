@@ -12,8 +12,8 @@ import java.util.stream.Stream;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  ALGAE_INTAKE_LEFT(new SuperstructurePosition(3, 190)),
-  LOLLIPOP_INTAKE_LEFT(new SuperstructurePosition(0, 180)),
+  ALGAE_INTAKE_RIGHT(new SuperstructurePosition(3, 0)),
+  LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0, 0)),
   STOWED(new SuperstructurePosition(40, -90)),
   STOWED_UP(new SuperstructurePosition(0, 90)),
   HANDOFF(new SuperstructurePosition(45, -90)),
@@ -25,8 +25,8 @@ public enum Waypoint {
   L2_LEFT(new SuperstructurePosition(20, 180)),
   L3_LEFT(new SuperstructurePosition(50, 180)),
   L4_LEFT(new SuperstructurePosition(65, 180)),
-  ALGAE_RIGHT(new SuperstructurePosition(55, 0)),
-  ALGAE_LEFT(new SuperstructurePosition(55, 180));
+  ALGAE_RIGHT(new SuperstructurePosition(70, 0)),
+  ALGAE_LEFT(new SuperstructurePosition(70, 180));
 
   public final SuperstructurePosition position;
 

@@ -65,8 +65,8 @@ public class CollisionAvoidance {
     Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
     Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
-    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_LEFT, graph);
+    Waypoint.STOWED_UP.canMoveToWhenRightSafe(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
+    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_RIGHT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
@@ -80,18 +80,18 @@ public class CollisionAvoidance {
 
     // Left side
 
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToAlways(Waypoint.LOLLIPOP_INTAKE_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.ALGAE_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToAlways(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
+    Waypoint.ALGAE_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.LOLLIPOP_INTAKE_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L1_RIGHT, graph);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
@@ -139,14 +139,12 @@ public class CollisionAvoidance {
    */
   private static Deque<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
-
     Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
     totalPath.add(endWaypoint);
     Waypoint current = endWaypoint;
     while (cameFrom.containsKey(current)) {
       current = cameFrom.get(current);
       totalPath.addFirst(current);
-      // How do i prepend an array list???
     }
 
     return totalPath;
@@ -183,15 +181,17 @@ public class CollisionAvoidance {
       }
 
       if (current == goalWaypoint) {
-        return Optional.of(reconstructPath(cameFrom, current));
+        var totalPath = reconstructPath(cameFrom, current);
+        return Optional.of(totalPath);
       }
       openSet.remove(current);
       Set<Waypoint> options = graph.adjacentNodes(current);
 
       for (Waypoint neighbor : options) {
-
+        var edge = graph.edgeValue(current, neighbor);
         double tentativeGScore =
-            gscore.getOrDefault(current, Double.MAX_VALUE) + current.costFor(neighbor);
+            gscore.getOrDefault(current, Double.MAX_VALUE)
+                + edge.orElseThrow().getCost(obstructionKind);
         if (tentativeGScore < gscore.getOrDefault(neighbor, Double.MAX_VALUE)) {
           cameFrom.put(neighbor, current);
           gscore.put(neighbor, tentativeGScore);

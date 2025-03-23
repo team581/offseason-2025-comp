@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
@@ -27,11 +28,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 180),
             new SuperstructurePosition(50, -90),
             ObstructionKind.NONE);
-    // Deque<Waypoint> expected = new ArrayDeque<Waypoint>();
-    // expected.add(Waypoint.LOLLIPOP_INTAKE_LEFT);
-    // expected.add(Waypoint.L3_LEFT);
-    // expected.add(Waypoint.HANDOFF);
-    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_LEFT, Waypoint.L3_LEFT, Waypoint.HANDOFF);
+
+    var expected = List.of(Waypoint.L1_LEFT, Waypoint.L3_LEFT, Waypoint.HANDOFF);
 
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
   }
@@ -43,13 +41,32 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 0),
             new SuperstructurePosition(50, -90),
             ObstructionKind.NONE);
-    // Deque<Waypoint> expected = new ArrayDeque<Waypoint>();
-    // expected.add(Waypoint.LOLLIPOP_INTAKE_LEFT);
-    // expected.add(Waypoint.L3_LEFT);
-    // expected.add(Waypoint.HANDOFF);
-    var expected = List.of(Waypoint.L1_RIGHT, Waypoint.L3_RIGHT, Waypoint.HANDOFF);
+
+    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_RIGHT, Waypoint.L3_RIGHT, Waypoint.HANDOFF);
 
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
+  }
+
+  @Test
+  public void leftObstructedAstarTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(0, 90),
+            new SuperstructurePosition(50, 180),
+            ObstructionKind.LEFT_OBSTRUCTED);
+
+    assertEquals(Optional.empty(), result);
+  }
+
+  @Test
+  public void rightObstructedAstarTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(0, 90),
+            new SuperstructurePosition(50, 0),
+            ObstructionKind.RIGHT_OBSTRUCTED);
+
+    assertEquals(Optional.empty(), result);
   }
 
   @Test
@@ -59,14 +76,14 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(0, 180),
             new SuperstructurePosition(0, 180),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_LEFT);
+    var expected = List.of(Waypoint.L1_LEFT);
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
   }
 
   @Test
   public void getClosestNodeTest() {
     var result = Waypoint.getClosest(new SuperstructurePosition(0, 180));
-    Waypoint expected = Waypoint.LOLLIPOP_INTAKE_LEFT;
+    Waypoint expected = Waypoint.L1_LEFT;
 
     assertEquals(expected, result);
   }

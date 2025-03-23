@@ -69,10 +69,10 @@ public class GraphVisualizer {
       var edge = graph.edgeValue(pair).orElseThrow();
       var cost = edge.getCost(obstruction);
 
-      if (cost == Double.MAX_VALUE) {
-        // Just ignore edges with infinite cost
-        continue;
-      }
+      // if (cost == Double.MAX_VALUE) {
+      //   // Just ignore edges with infinite cost
+      //   continue;
+      // }
 
       sb.append(pair.nodeU().toString());
       sb.append(" <-- ");
