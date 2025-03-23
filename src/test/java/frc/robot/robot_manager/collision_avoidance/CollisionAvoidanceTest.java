@@ -35,6 +35,21 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
   }
+  @Test
+  public void lowRightToStowedAstarTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(0, 0),
+            new SuperstructurePosition(50, -90),
+            ObstructionKind.NONE);
+    // Deque<Waypoint> expected = new ArrayDeque<Waypoint>();
+    // expected.add(Waypoint.LOLLIPOP_INTAKE_LEFT);
+    // expected.add(Waypoint.L3_LEFT);
+    // expected.add(Waypoint.HANDOFF);
+    var expected = List.of(Waypoint.L1_RIGHT, Waypoint.L3_RIGHT, Waypoint.HANDOFF);
+
+    assertEquals(expected, new ArrayList<>(result.orElseThrow()));
+  }
 
   @Test
   public void alreadyThereTest() {
