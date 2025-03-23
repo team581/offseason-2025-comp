@@ -20,6 +20,9 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -158,7 +161,13 @@ class PracticeConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.05, 0.1),
+          new VisionConfig(4, 0.05, 0.1,
+          // right is positive x, up is positive y, forward is positive z
+              new Pose3d(
+                  0.0,
+                  Units.inchesToMeters(-57.128),
+                  Units.inchesToMeters(-49.00),
+                  new Rotation3d(0.0, 0.0, 0.0))),
           new ArmConfig(
               RIO_CAN_NAME,
               19,

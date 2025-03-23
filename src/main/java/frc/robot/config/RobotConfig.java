@@ -5,6 +5,8 @@ import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 
 public record RobotConfig(
     String robotName,
@@ -52,7 +54,7 @@ public record RobotConfig(
       TalonFXConfiguration steerMotorConfig) {}
 
   public record VisionConfig(
-      int translationHistoryArraySize, double xyStdDev, double thetaStdDev) {}
+      int translationHistoryArraySize, double xyStdDev, double thetaStdDev, Pose3d robotPoseRelativeToCalibration) {}
 
   public record ArmConfig(
       String canBusName,

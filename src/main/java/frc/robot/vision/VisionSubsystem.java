@@ -3,6 +3,7 @@ package frc.robot.vision;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -146,6 +147,12 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     leftBackLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     leftFrontLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     rightLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+
+    if (FeatureFlags.CAMERA_POSITION_CALIBRATION.getAsBoolean()) {
+      leftBackLimelight.logCameraPositionCalibrationValues();
+      leftFrontLimelight.logCameraPositionCalibrationValues();
+      rightLimelight.logCameraPositionCalibrationValues();
+    }
   }
 
   public void setClosestScoringReefAndPipe(int tagID, ReefPipe currentScoringPipe) {

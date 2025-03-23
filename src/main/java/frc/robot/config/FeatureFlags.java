@@ -13,6 +13,9 @@ public class FeatureFlags {
   public static final BooleanSupplier COLLISION_AVOIDANCE_BOX_SHORTCUTS =
       FeatureFlag.of("CollisionAvoidance/BoxShortcuts", true);
 
+      public static final BooleanSupplier CAMERA_POSITION_CALIBRATION =
+      FeatureFlag.of("Vision/PositionCalibrationMode", false);
+
   public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
 
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
