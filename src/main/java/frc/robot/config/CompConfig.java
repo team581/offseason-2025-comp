@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -141,41 +140,7 @@ class CompConfig {
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(80.0)
                           .withPeakReverseTorqueCurrent(80.0))),
-          new SwerveConfig(
-              new PhoenixPIDController(5.75, 0, 0),
-              true,
-              true,
-              true,
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(70)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(70))
-                  .withOpenLoopRamps(
-                      new OpenLoopRampsConfigs()
-                          .withDutyCycleOpenLoopRampPeriod(0.01)
-                          .withVoltageOpenLoopRampPeriod(0.01)
-                          .withTorqueOpenLoopRampPeriod(0.01))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake)),
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          // Swerve azimuth does not require much torque output, so we can set a
-                          // relatively low stator current limit to help avoid brownouts without
-                          // impacting performance.
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(50)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(80))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
+          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true),
           new VisionConfig(
               4,
               0.05,

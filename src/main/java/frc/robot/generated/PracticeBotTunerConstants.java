@@ -54,24 +54,30 @@ public class PracticeBotTunerConstants {
 
   // The stator current at which the wheels start to slip;
   // This needs to be tuned to your individual robot
-  private static final Current kSlipCurrent = Amps.of(120.0);
+  private static final Current kSlipCurrent = Amps.of(70.0);
 
   // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
-  private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
+  private static final TalonFXConfiguration driveInitialConfigs =
+      new TalonFXConfiguration()
+          .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(70))
+          .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  // Swerve azimuth does not require much torque output, so we can set a relatively
-                  // low
-                  // stator current limit to help avoid brownouts without impacting performance.
-                  .withStatorCurrentLimit(Amps.of(60))
-                  .withStatorCurrentLimitEnable(true));
+                  // Swerve azimuth does not require much torque output, so we can set a
+                  // relatively low stator current limit to help avoid brownouts without
+                  // impacting performance.
+                  .withStatorCurrentLimit(50)
+                  .withSupplyCurrentLimit(80))
+          .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
+
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs =
-      new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(-90));
+      new Pigeon2Configuration()
+          .withMountPose(new MountPoseConfigs().withMountPoseYaw(-90.00006866455078));
 
   // CAN bus that the devices are located on;
   // All swerve devices must share the same CAN bus
