@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.MathHelpers;
@@ -44,9 +43,11 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
-          "Debug/ResetGyroTo180", Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(180))).ignoringDisable(true));
+          "Debug/ResetGyroTo180",
+          Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(180))).ignoringDisable(true));
       SmartDashboard.putData(
-          "Debug/ResetGyroTo0", Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(0))).ignoringDisable(true));
+          "Debug/ResetGyroTo0",
+          Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(0))).ignoringDisable(true));
     }
   }
 
