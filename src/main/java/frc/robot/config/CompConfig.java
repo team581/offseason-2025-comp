@@ -137,15 +137,15 @@ class CompConfig {
               0.05,
               0.1,
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
-// Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
+              // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
               new Pose3d(
                   0.0,
                   Units.inchesToMeters(-57.128),
                   Units.inchesToMeters(-49.00),
                   new Rotation3d(0.0, 0.0, 0.0)),
-  new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
-  new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
-  new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
           new ArmConfig(
               RIO_CAN_NAME,
               19,
