@@ -123,7 +123,7 @@ public class TagAlign {
             TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
     var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
 
-    var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
+    var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
   }
