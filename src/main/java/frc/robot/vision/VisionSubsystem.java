@@ -137,7 +137,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public Optional<GamePieceResult> getLollipopVisionResult() {
-    return leftFrontLimelight.getAlgaeResult();
+    return rightLimelight.getAlgaeResult();
   }
 
   @Override
@@ -220,26 +220,5 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         setState(VisionState.CLOSEST_REEF_TAG_CLOSEUP);
       }
     }
-  }
-
-  public Optional<Pose2d> getLollipopPose(LocalizationSubsystem localization) {
-    // TODO: Update for new camera setup
-    return Optional.empty();
-    // var maybeAlgaeResult = frontCoralLimelight.getAlgaeResult();
-
-    // if (maybeAlgaeResult.isEmpty()) {
-    //   return Optional.empty();
-    // }
-
-    // var algaeResult = maybeAlgaeResult.orElseThrow();
-    // var angleToCoral =
-    //     GamePieceDetectionUtil.getFieldRelativeAngleToGamePiece(
-    //         localization.getPose(algaeResult.timestamp()), algaeResult);
-
-    // return Optional.of(
-    //     new Pose2d(
-    //         GamePieceDetectionUtil.calculateFieldRelativeLollipopTranslationFromCamera(
-    //             localization.getPose(algaeResult.timestamp()), algaeResult),
-    //         Rotation2d.fromDegrees(angleToCoral)));
   }
 }
