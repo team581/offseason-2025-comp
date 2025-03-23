@@ -267,7 +267,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.IDLE_NO_GP);
         climber.setState(ClimberState.STOWED);
       }
       case CLAW_ALGAE_DEPLOY_EMPTY -> {
@@ -623,7 +623,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_L1_RELEASE_HANDOFF,
@@ -636,7 +636,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOWED);
       }
       // Approach states
@@ -848,7 +848,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.climbRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.CLIMB_LINEUP);
         climber.setState(ClimberState.LINEUP);
       }
       case CLIMBING_2_HANGING -> {
@@ -858,7 +858,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.CLIMB_HANG);
         climber.setState(ClimberState.HANGING);
       }
       case CLIMBER_STOP -> {
@@ -868,7 +868,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.CLIMB_STOP);
         climber.setState(ClimberState.STOWED);
       }
       case UNJAM -> {
@@ -878,7 +878,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.UNJAM, ArmState.UNJAM);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.OTHER);
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_ELEVATOR -> {
@@ -888,7 +888,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.MID_MATCH_HOMING, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.OTHER);
         climber.setState(ClimberState.STOWED);
       }
       case REHOME_DEPLOY -> {
@@ -898,7 +898,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.OTHER);
         climber.setState(ClimberState.STOWED);
       }
       case ALGAE_OUTTAKE_DEPLOY_EMPTY -> {
@@ -908,7 +908,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.ALGAE_OUTTAKE, ArmState.ALGAE_OUTTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case ALGAE_OUTTAKE_DEPLOY_CORAL -> {
@@ -918,7 +918,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.ALGAE_OUTTAKE, ArmState.ALGAE_OUTTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.PLACEHOLDER);
+        lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
     }
