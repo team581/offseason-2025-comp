@@ -57,7 +57,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public static boolean shouldArmMoveForward(double distanceFromReef, ChassisSpeeds robotSpeeds) {
     // Account for distance we'll be at once we finish forward motion
-    if ((distanceFromReef - (Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond)*0.8)) > 0.8) {
+    if ((distanceFromReef
+            - (Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond) * 0.8))
+        > 0.8) {
       return true;
     }
     return false;
