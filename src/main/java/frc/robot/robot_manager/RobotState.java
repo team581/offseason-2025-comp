@@ -209,8 +209,8 @@ public enum RobotState {
           Map.entry(CORAL_L1_DEPLOY_SCORE_CLAW_ALGAE, CLAW_ALGAE_DEPLOY_EMPTY));
   private static final Map<RobotState, RobotState> idleToDeployPrepare =
       Map.ofEntries(
-          Map.entry(CLAW_EMPTY_DEPLOY_EMPTY, CORAL_L1_DEPLOY_PREPARE_CLAW_EMPTY),
-          Map.entry(CLAW_ALGAE_DEPLOY_EMPTY, CORAL_L1_DEPLOY_PREPARE_CLAW_ALGAE));
+          Map.entry(CLAW_EMPTY_DEPLOY_CORAL, CORAL_L1_DEPLOY_PREPARE_CLAW_EMPTY),
+          Map.entry(CLAW_ALGAE_DEPLOY_CORAL, CORAL_L1_DEPLOY_PREPARE_CLAW_ALGAE));
   private static final Map<RobotState, RobotState> beforeAlgaeOuttake =
       Map.ofEntries(
           Map.entry(CLAW_CORAL_DEPLOY_EMPTY, ALGAE_OUTTAKE_DEPLOY_EMPTY),

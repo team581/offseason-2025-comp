@@ -145,37 +145,8 @@ class CompConfig {
               new PhoenixPIDController(5.75, 0, 0),
               true,
               true,
-              true,
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(80)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(80))
-                  .withOpenLoopRamps(
-                      new OpenLoopRampsConfigs()
-                          .withDutyCycleOpenLoopRampPeriod(0.01)
-                          .withVoltageOpenLoopRampPeriod(0.01)
-                          .withTorqueOpenLoopRampPeriod(0.01))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake)),
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          // Swerve azimuth does not require much torque output, so we can set a
-                          // relatively low stator current limit to help avoid brownouts without
-                          // impacting performance.
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(50)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(80))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
+              true
+       ),
           new VisionConfig(
               4,
               0.05,
@@ -222,7 +193,7 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((50 / 8) * (50 / 18) * (40 / 10)))
+                          .withSensorToMechanismRatio((50.0 / 8.0) * (50.0 / 18.0) * (40.0 / 10.0)))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withMotionMagic(
                       new MotionMagicConfigs()
@@ -240,7 +211,6 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine)),
               0.0,
               581,
-              0.0,
               0.0,
               0.0), // TODO: get these numbers
           new ClimberConfig(
