@@ -417,7 +417,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.GROUND_CORAL_INTAKE_UPRIGHT, ArmState.LOLLIPOP_CORAL_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
-        lights.setState(LightsState.INTAKING_CORAL);
+        lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY -> {
@@ -980,8 +980,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
     // Update lights
     switch (getState()) {
-      case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY -> {
-        lights.setState(getLightStateForScoring());
+      // TODO: Add lights state for scoring
+      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+        lights.setState(getLightsStateForLollipop());
       }
       default -> {}
     }
@@ -1390,6 +1391,12 @@ public class RobotManager extends StateMachine<RobotState> {
       case HAS_TAGS_IN_POSITION -> LightsState.SCORE_ALIGN_READY;
       default -> LightsState.SCORE_ALIGN_NOT_READY;
     };
+  }
+
+  private LightsState getLightsStateForLollipop() {
+    return vision.getLollipopVisionResult().isPresent()
+        ? LightsState.HOLDING_ALGAE
+        : LightsState.SCORE_ALIGN_NOT_READY;
   }
 
   public void setConfirmScoreActive(boolean newValue) {
