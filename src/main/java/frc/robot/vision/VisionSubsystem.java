@@ -199,7 +199,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         && (rightLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
             || rightLimelight.getCameraHealth() == CameraHealth.GOOD)) {
       return true;
-            }
+    }
     return false;
   }
 
