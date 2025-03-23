@@ -48,9 +48,7 @@ public record RobotConfig(
       PhoenixPIDController snapController,
       boolean invertRotation,
       boolean invertX,
-      boolean invertY,
-      TalonFXConfiguration driveMotorConfig,
-      TalonFXConfiguration steerMotorConfig) {}
+      boolean invertY) {}
 
   public record VisionConfig(
       int translationHistoryArraySize,
