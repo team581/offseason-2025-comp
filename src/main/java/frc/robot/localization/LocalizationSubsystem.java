@@ -44,9 +44,9 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
-          "Debug/ResetGyroTo180", Commands.runOnce(() -> resetGyro(180)).ignoringDisable(true));
+          "Debug/ResetGyroTo180", Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(180))).ignoringDisable(true));
       SmartDashboard.putData(
-          "Debug/ResetGyroTo0", Commands.runOnce(() -> resetGyro(0)).ignoringDisable(true));
+          "Debug/ResetGyroTo0", Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(0))).ignoringDisable(true));
     }
   }
 
