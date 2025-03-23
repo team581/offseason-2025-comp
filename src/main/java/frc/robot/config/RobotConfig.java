@@ -22,6 +22,7 @@ public record RobotConfig(
       String canBusName,
       int leftMotorID,
       int rightMotorID,
+      double drumDiameterInches,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig,
       double homingEndHeight,
@@ -48,9 +49,7 @@ public record RobotConfig(
       PhoenixPIDController snapController,
       boolean invertRotation,
       boolean invertX,
-      boolean invertY,
-      TalonFXConfiguration driveMotorConfig,
-      TalonFXConfiguration steerMotorConfig) {}
+      boolean invertY) {}
 
   public record VisionConfig(
       int translationHistoryArraySize,
@@ -85,7 +84,6 @@ public record RobotConfig(
       double minAngle,
       double maxAngle,
       double homingVoltage,
-      double homingCurrent,
       double homingCurrentThreshold) {}
 
   public record LightsConfig(String canBusName, int candleID) {}

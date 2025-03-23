@@ -14,17 +14,17 @@ import java.util.stream.Stream;
 public enum Waypoint {
   ALGAE_INTAKE_LEFT(new SuperstructurePosition(3, 190)),
   LOLLIPOP_INTAKE_LEFT(new SuperstructurePosition(0, 180)),
-  STOWED(new SuperstructurePosition(20, -90)),
+  STOWED(new SuperstructurePosition(40, -90)),
   STOWED_UP(new SuperstructurePosition(0, 90)),
-  HANDOFF(new SuperstructurePosition(24, -90)),
+  HANDOFF(new SuperstructurePosition(45, -90)),
   L1_RIGHT(new SuperstructurePosition(5, 0)),
   L2_RIGHT(new SuperstructurePosition(20, 0)),
-  L3_RIGHT(new SuperstructurePosition(40, 0)),
-  L4_RIGHT(new SuperstructurePosition(55, 0)),
+  L3_RIGHT(new SuperstructurePosition(50, 0)),
+  L4_RIGHT(new SuperstructurePosition(65, 0)),
   L1_LEFT(new SuperstructurePosition(5, 180)),
   L2_LEFT(new SuperstructurePosition(20, 180)),
-  L3_LEFT(new SuperstructurePosition(40, 180)),
-  L4_LEFT(new SuperstructurePosition(55, 180)),
+  L3_LEFT(new SuperstructurePosition(50, 180)),
+  L4_LEFT(new SuperstructurePosition(65, 180)),
   ALGAE_RIGHT(new SuperstructurePosition(55, 0)),
   ALGAE_LEFT(new SuperstructurePosition(55, 180));
 
@@ -37,8 +37,6 @@ public enum Waypoint {
   public double costFor(Waypoint other) {
     return position.costFor(other.position);
   }
-
-  private static final double WRIST_LENGTH = 15;
 
   public static void log() {
     for (var waypoint : values()) {
@@ -61,20 +59,16 @@ public enum Waypoint {
   public static Waypoint getClosest(SuperstructurePosition position) {
     Waypoint closestWaypoint = STOWED;
     double closestDistance = Double.MAX_VALUE;
-    Translation2d point =
-        new Translation2d(0, position.elevatorHeight())
-            .plus(new Translation2d(WRIST_LENGTH, position.armAngle()));
+    Translation2d point = position.getTranslation();
 
     for (int i = 0; Waypoint.values().length > i; i++) {
 
-      Translation2d nodePoint =
-          new Translation2d(0, Waypoint.values()[i].position.elevatorHeight())
-              .plus(new Translation2d(WRIST_LENGTH, Waypoint.values()[i].position.armAngle()));
+      Translation2d nodePoint = Waypoint.values()[i].position.getTranslation();
 
       double distanceFromNodeToPoint =
-          Math.sqrt(
-              Math.pow(nodePoint.getX() - point.getX(), 2)
-                  + Math.pow(nodePoint.getY() - point.getY(), 2));
+          Math.hypot(
+              Math.pow(nodePoint.getX() - point.getX(), 2),
+              Math.pow(nodePoint.getY() - point.getY(), 2));
 
       if (distanceFromNodeToPoint < closestDistance) {
         closestDistance = distanceFromNodeToPoint;

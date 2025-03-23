@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -45,6 +44,7 @@ class PracticeConfig {
               CANIVORE_NAME,
               15,
               16,
+              1.274,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
                   .withMotorOutput(
@@ -64,11 +64,7 @@ class PracticeConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
@@ -84,11 +80,7 @@ class PracticeConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               0,
               25,
               0,
@@ -98,7 +90,7 @@ class PracticeConfig {
               CANIVORE_NAME,
               25,
               26,
-              new Debouncer(0.1, DebounceType.kBoth),
+              new Debouncer(0.5, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -126,41 +118,7 @@ class PracticeConfig {
                       new TorqueCurrentConfigs()
                           .withPeakForwardTorqueCurrent(70.0)
                           .withPeakReverseTorqueCurrent(70.0))),
-          new SwerveConfig(
-              new PhoenixPIDController(5.75, 0, 0),
-              true,
-              true,
-              true,
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(70)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(70))
-                  .withOpenLoopRamps(
-                      new OpenLoopRampsConfigs()
-                          .withDutyCycleOpenLoopRampPeriod(0.01)
-                          .withVoltageOpenLoopRampPeriod(0.01)
-                          .withTorqueOpenLoopRampPeriod(0.01))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake)),
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          // Swerve azimuth does not require much torque output, so we can set a
-                          // relatively low stator current limit to help avoid brownouts without
-                          // impacting performance.
-                          .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(50)
-                          .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(80))
-                  .withVoltage(
-                      new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
+          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true),
           new VisionConfig(
               4,
               0.05,
@@ -207,7 +165,7 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((50 / 8) * (50 / 18) * (40 / 10)))
+                          .withSensorToMechanismRatio((50.0 / 8.0) * (50.0 / 18.0) * (40.0 / 10.0)))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withMotionMagic(
                       new MotionMagicConfigs()
@@ -219,15 +177,14 @@ class PracticeConfig {
                           .withStatorCurrentLimit(60))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(200.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine)),
-              0.0,
-              581,
-              0.0,
-              0.0,
-              0.0), // TODO: get these numbers
+              -34.0,
+              120.673828125,
+              3,
+              20), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,
               21,

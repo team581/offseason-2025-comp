@@ -6,9 +6,11 @@ import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.Deque;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -34,7 +36,7 @@ public class CollisionAvoidance {
     var maybeResult = aStar(currentPosition, desiredPosition, obstructionKind);
     if (maybeResult.isPresent()) {
       return Optional.of(
-          maybeResult.orElseThrow().get(0)); // go to the first waypoint in the list to goal
+          maybeResult.orElseThrow().peek()); // go to the first waypoint in the list to goal
     }
     return Optional.empty();
   }
@@ -130,75 +132,70 @@ public class CollisionAvoidance {
     return immutableGraph;
   }
 
-  public static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
-    return new ArrayList<Waypoint>(graph.adjacentNodes(waypoint));
-  }
-
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
    */
-  private static ArrayList<Waypoint> reconstructPath(
+  private static Deque<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
-    ArrayList<Waypoint> reversedTotalPath = new ArrayList<Waypoint>();
-    ArrayList<Waypoint> totalPath = new ArrayList<Waypoint>();
 
-    reversedTotalPath.add(endWaypoint);
+    Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
+    totalPath.add(endWaypoint);
     Waypoint current = endWaypoint;
     while (cameFrom.containsKey(current)) {
       current = cameFrom.get(current);
-      reversedTotalPath.add(current);
+      totalPath.addFirst(current);
       // How do i prepend an array list???
     }
-    for (int i = 0; reversedTotalPath.size() > i; i++) {
-      totalPath.add(reversedTotalPath.get(reversedTotalPath.size() - i - 1));
-    }
+
     return totalPath;
   }
 
-  static Optional<ArrayList<Waypoint>> aStar(
+  static Optional<Deque<Waypoint>> aStar(
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    Set<Waypoint> openSet = new HashSet<>(Set.of(Waypoint.getClosest(currentPosition)));
+    Set<Waypoint> openSet = EnumSet.of(Waypoint.getClosest(currentPosition));
 
-    Map<Waypoint, Waypoint> cameFrom = new HashMap<>();
-    Map<Waypoint, Double> gscore = new HashMap<>();
+    Map<Waypoint, Waypoint> cameFrom = new EnumMap<Waypoint, Waypoint>(Waypoint.class);
+
+    Map<Waypoint, Double> gscore = new EnumMap<Waypoint, Double>(Waypoint.class);
 
     for (var waypoint : Waypoint.values()) {
       gscore.put(waypoint, Double.MAX_VALUE);
     }
+
     Waypoint startWaypoint = Waypoint.getClosest(currentPosition);
     Waypoint goalWaypoint = Waypoint.getClosest(desiredPosition);
 
-    gscore.replace(startWaypoint, 0.0);
+    gscore.put(startWaypoint, 0.0);
     Waypoint current = Waypoint.STOWED;
     while (!openSet.isEmpty()) {
       // current is equal to the waypoint in openset that has the smallest gscore
-      double lowestGScore = Double.MAX_VALUE;
-
-      for (Waypoint openPoint : openSet) {
-        if (gscore.get(openPoint) < lowestGScore) {
-          current = openPoint;
-          lowestGScore = gscore.get(openPoint);
-        }
+      var maybeCurrent =
+          openSet.stream()
+              .min(
+                  Comparator.comparingDouble(
+                      waypoint -> gscore.getOrDefault(waypoint, Double.MAX_VALUE)));
+      if (maybeCurrent.isPresent()) {
+        current = maybeCurrent.get();
       }
+
       if (current == goalWaypoint) {
         return Optional.of(reconstructPath(cameFrom, current));
       }
       openSet.remove(current);
-      ArrayList<Waypoint> options = options(current, obstructionKind);
+      Set<Waypoint> options = graph.adjacentNodes(current);
 
       for (Waypoint neighbor : options) {
 
-        double tentativeGScore = gscore.get(current) + current.costFor(neighbor);
-        if (tentativeGScore < gscore.get(neighbor)) {
+        double tentativeGScore =
+            gscore.getOrDefault(current, Double.MAX_VALUE) + current.costFor(neighbor);
+        if (tentativeGScore < gscore.getOrDefault(neighbor, Double.MAX_VALUE)) {
           cameFrom.put(neighbor, current);
-          gscore.replace(neighbor, tentativeGScore);
-          if (!openSet.contains(neighbor)) {
-            openSet.add(neighbor);
-          }
+          gscore.put(neighbor, tentativeGScore);
+          openSet.add(neighbor);
         }
       }
     }

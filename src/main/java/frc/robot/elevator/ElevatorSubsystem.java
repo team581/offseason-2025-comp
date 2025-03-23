@@ -21,6 +21,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
+  private static double rotationsToDistance(double rot) {
+    return rot * (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
+  }
+
+  private static double distanceToRotations(double dist) {
+    return dist / (Math.PI * RobotConfig.get().elevator().drumDiameterInches());
+  }
+
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
@@ -83,8 +91,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected void collectInputs() {
     // Calculate average height of the two motors
-    leftHeight = leftMotor.getPosition().getValueAsDouble();
-    rightHeight = rightMotor.getPosition().getValueAsDouble();
+    leftHeight = rotationsToDistance(leftMotor.getPosition().getValueAsDouble());
+    rightHeight = rotationsToDistance(rightMotor.getPosition().getValueAsDouble());
 
     averageMeasuredHeight = (leftHeight + rightHeight) / 2.0;
 
@@ -107,12 +115,16 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         rightMotor.setVoltage(-0.0);
       }
       case COLLISION_AVOIDANCE -> {
-        leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
-        rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
+        leftMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
+        rightMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
       }
       default -> {
-        leftMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
-        rightMotor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
+        leftMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(newState.height))));
+        rightMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(newState.height))));
       }
     }
   }
@@ -139,16 +151,18 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
           var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
           // TODO: Restore elevator homing
-          leftMotor.setPosition(homingEndHeight);
-          rightMotor.setPosition(homingEndHeight);
+          leftMotor.setPosition(distanceToRotations(homingEndHeight));
+          rightMotor.setPosition(distanceToRotations(homingEndHeight));
 
           setStateFromRequest(ElevatorState.STOWED);
         }
       }
 
       case COLLISION_AVOIDANCE -> {
-        leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
-        rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
+        leftMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
+        rightMotor.setControl(
+            positionRequest.withPosition(distanceToRotations(clampHeight(collisionAvoidanceGoal))));
       }
       default -> {}
     }
@@ -175,8 +189,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   protected ElevatorState getNextState(ElevatorState currentState) {
     if (currentState == ElevatorState.MID_MATCH_HOMING
         && averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
-      leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
-      rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+      leftMotor.setPosition(distanceToRotations(RobotConfig.get().elevator().homingEndHeight()));
+      rightMotor.setPosition(distanceToRotations(RobotConfig.get().elevator().homingEndHeight()));
       return ElevatorState.STOWED;
     }
 

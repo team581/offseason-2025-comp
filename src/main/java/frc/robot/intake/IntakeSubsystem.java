@@ -14,7 +14,6 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().intake().debouncer();
 
-  private boolean sensorHasGP = false;
   private boolean sensorRaw = false;
 
   private boolean sensorDebounced = false;
@@ -30,12 +29,12 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   protected void collectInputs() {
 
-    sensorRaw = candi.getS2State().getValue() == S2StateValue.Low;
+    sensorRaw = candi.getS2State().getValue() != S2StateValue.High;
     sensorDebounced = debouncer.calculate(sensorRaw);
   }
 
   public boolean getHasGP() {
-    return sensorHasGP;
+    return sensorDebounced;
   }
 
   public void setState(IntakeState newState) {
@@ -49,13 +48,13 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         motor.disable();
       }
       case IDLE_GP -> {
-        motor.setVoltage(1);
+        motor.setVoltage(0);
       }
       case INTAKING -> {
         motor.setVoltage(12);
       }
       case SCORING -> {
-        motor.setVoltage(0);
+        motor.setVoltage(-3);
       }
       case CORAL_HANDOFF -> {
         motor.setVoltage(-6);
@@ -68,7 +67,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
     super.robotPeriodic();
 
     DogLog.log("Intake/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/SensorDebounced", sensorDebounced);
-    DogLog.log("Intake/SensorHasGP", sensorHasGP);
+    DogLog.log("Intake/RawSensor", sensorRaw);
+
+    DogLog.log("Intake/SensorHasGP", sensorDebounced);
   }
 }
