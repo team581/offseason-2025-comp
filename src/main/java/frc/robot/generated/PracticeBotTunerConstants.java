@@ -77,7 +77,7 @@ public class PracticeBotTunerConstants {
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs =
       new Pigeon2Configuration()
-          .withMountPose(new MountPoseConfigs().withMountPoseYaw(-90.00006866455078));
+          .withMountPose(new MountPoseConfigs().withMountPoseYaw(0.0));
 
   // CAN bus that the devices are located on;
   // All swerve devices must share the same CAN bus
