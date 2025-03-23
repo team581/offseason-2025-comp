@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
           hardware.climberGrabMotor,
           hardware.climberCanrange);
   private final AutoAlign autoAlign =
-      new AutoAlign(leftBackLimelight, leftFrontLimelight, localization, swerve);
+      new AutoAlign(vision, localization, swerve);
   private final CoralMap coralMap = new CoralMap(localization, swerve);
   private final RobotManager robotManager =
       new RobotManager(
