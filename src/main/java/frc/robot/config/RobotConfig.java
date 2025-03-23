@@ -85,7 +85,6 @@ public record RobotConfig(
       double minAngle,
       double maxAngle,
       double homingVoltage,
-      double homingCurrent,
       double homingCurrentThreshold) {}
 
   public record LightsConfig(String canBusName, int candleID) {}

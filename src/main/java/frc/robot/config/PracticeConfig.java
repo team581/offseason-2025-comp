@@ -98,7 +98,7 @@ class PracticeConfig {
               CANIVORE_NAME,
               25,
               26,
-              new Debouncer(0.1, DebounceType.kBoth),
+              new Debouncer(0.5, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -207,7 +207,7 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((50 / 8) * (50 / 18) * (40 / 10)))
+                          .withSensorToMechanismRatio((50.0 / 8.0) * (50.0 / 18.0) * (40.0 / 10.0)))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withMotionMagic(
                       new MotionMagicConfigs()
@@ -219,15 +219,14 @@ class PracticeConfig {
                           .withStatorCurrentLimit(60))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(200.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine)),
-              0.0,
-              581,
-              0.0,
-              0.0,
-              0.0), // TODO: get these numbers
+              -34.0,
+              120.673828125,
+              3,
+              20), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,
               21,

@@ -1,6 +1,6 @@
 package frc.robot.intake_deploy;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -15,8 +15,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private final double TOLERANCE = 1.0;
 
   private final TalonFX motor;
-  private final MotionMagicVoltage positionRequest =
-      new MotionMagicVoltage(Units.degreesToRotations(DeployState.UNHOMED.angle));
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
   private final LinearFilter currentFilter = LinearFilter.movingAverage(7);
 
   private double currentAngle = 0.0;
@@ -51,7 +50,8 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     return switch (currentState) {
       case HOMING -> {
         if (filteredCurrent > RobotConfig.get().deploy().homingCurrentThreshold()) {
-          motor.setPosition(Units.degreesToRotations(currentState.angle));
+          // TODO: Use dedicated homing end position
+          motor.setPosition(Units.degreesToRotations(clamp(RobotConfig.get().deploy().maxAngle())));
           yield DeployState.STOWED;
         }
         yield currentState;
@@ -66,6 +66,9 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
     DogLog.log("Deploy/AtGoal", atGoal());
     DogLog.log("Deploy/Angle", currentAngle);
+    DogLog.log("Deploy/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Deploy/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Deploy/CurrentThreshold", RobotConfig.get().deploy().homingCurrentThreshold());
   }
 
   @Override
@@ -79,11 +82,22 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   public boolean atGoal() {
     return switch (getState()) {
       case UNHOMED, HOMING -> false;
-      default -> MathUtil.isNear(getState().angle, currentAngle, TOLERANCE);
+      default -> MathUtil.isNear(clamp(getState().angle), currentAngle, TOLERANCE);
     };
   }
 
   public void setState(DeployState newState) {
-    setStateFromRequest(newState);
+    switch (getState()) {
+      case HOMING -> {}
+      case UNHOMED -> {
+        if (newState == DeployState.HOMING) {
+          setStateFromRequest(DeployState.HOMING);
+        }}
+        default -> {setStateFromRequest(newState);}
+        }}
+
+  private static double clamp(double deployAngle) {
+    return MathUtil.clamp(
+        deployAngle, RobotConfig.get().deploy().minAngle(), RobotConfig.get().deploy().maxAngle());
   }
 }

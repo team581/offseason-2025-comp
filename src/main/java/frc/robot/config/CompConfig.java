@@ -222,7 +222,7 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((50 / 8) * (50 / 18) * (40 / 10)))
+                          .withSensorToMechanismRatio((50.0 / 8.0) * (50.0 / 18.0) * (40.0 / 10.0)))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withMotionMagic(
                       new MotionMagicConfigs()
@@ -240,7 +240,6 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine)),
               0.0,
               581,
-              0.0,
               0.0,
               0.0), // TODO: get these numbers
           new ClimberConfig(
