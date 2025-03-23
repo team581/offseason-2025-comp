@@ -92,9 +92,13 @@ public class DeploySubsystem extends StateMachine<DeployState> {
       case UNHOMED -> {
         if (newState == DeployState.HOMING) {
           setStateFromRequest(DeployState.HOMING);
-        }}
-        default -> {setStateFromRequest(newState);}
-        }}
+        }
+      }
+      default -> {
+        setStateFromRequest(newState);
+      }
+    }
+  }
 
   private static double clamp(double deployAngle) {
     return MathUtil.clamp(
