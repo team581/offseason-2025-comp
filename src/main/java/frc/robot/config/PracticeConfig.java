@@ -63,8 +63,7 @@ class PracticeConfig {
                           .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio(
-                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
+                          .withSensorToMechanismRatio(1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
@@ -79,8 +78,7 @@ class PracticeConfig {
                           .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio(
-                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
+                          .withSensorToMechanismRatio(1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               0,
               25,
               0,
@@ -123,12 +121,16 @@ class PracticeConfig {
               4,
               0.05,
               0.1,
-              // right is positive x, up is positive y, forward is positive z
+              // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
+              // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
               new Pose3d(
                   0.0,
                   Units.inchesToMeters(-57.128),
                   Units.inchesToMeters(-49.00),
-                  new Rotation3d(0.0, 0.0, 0.0))),
+                  new Rotation3d(0.0, 0.0, 0.0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
           new ArmConfig(
               RIO_CAN_NAME,
               19,

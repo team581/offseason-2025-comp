@@ -173,12 +173,12 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
-  public boolean isAnyScoringTagLimelightOnline() {
-    if ((rightLimelight.getState() == LimelightState.TAGS
-            || rightLimelight.getState() == LimelightState.CLOSEST_REEF_TAG
-            || rightLimelight.getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)
-        && (rightLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
-            || rightLimelight.getCameraHealth() == CameraHealth.GOOD)) {
+  public boolean isAnyLeftScoringTagLimelightOnline() {
+    if ((leftBackLimelight.getState() == LimelightState.TAGS
+            || leftBackLimelight.getState() == LimelightState.CLOSEST_REEF_TAG
+            || leftBackLimelight.getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)
+        && (leftBackLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
+            || leftBackLimelight.getCameraHealth() == CameraHealth.GOOD)) {
       return true;
     }
     if ((leftFrontLimelight.getState() == LimelightState.TAGS
@@ -189,6 +189,17 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       return true;
     }
 
+    return false;
+  }
+
+  public boolean isAnyRightScoringTagLimelightOnline() {
+    if ((rightLimelight.getState() == LimelightState.TAGS
+            || rightLimelight.getState() == LimelightState.CLOSEST_REEF_TAG
+            || rightLimelight.getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)
+        && (rightLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
+            || rightLimelight.getCameraHealth() == CameraHealth.GOOD)) {
+      return true;
+    }
     return false;
   }
 

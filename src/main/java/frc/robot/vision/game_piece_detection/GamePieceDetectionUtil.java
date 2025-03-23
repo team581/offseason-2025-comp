@@ -7,21 +7,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.config.RobotConfig;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
-  private static final Pose3d LIMELIGHT_POSE_TO_ROBOT =
-      new Pose3d(
-          // Positive-Forward
-          Units.inchesToMeters(10.564),
-          // Positive-Left
-          Units.inchesToMeters(-11.93),
-
-          // Positive-Up
-          Units.inchesToMeters(9.851),
-          new Rotation3d(
-              Units.degreesToRadians(0), Units.degreesToRadians(-5.0), Units.degreesToRadians(20)));
 
   private static final double CORAL_LENGTH = 11.875;
   private static final double CORAL_RADIUS = 2.25;
@@ -36,10 +26,10 @@ public class GamePieceDetectionUtil {
       new Transform3d(0, 0, Units.inchesToMeters(-CORAL_RADIUS), Rotation3d.kZero);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET =
-      LIMELIGHT_POSE_TO_ROBOT.transformBy(LOLLIPOP_OFFSET);
+      RobotConfig.get().vision().rightLimelightPosition().transformBy(LOLLIPOP_OFFSET);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_CORAL_OFFSET =
-      LIMELIGHT_POSE_TO_ROBOT.transformBy(HORIZONTAL_CORAL_OFFSET);
+      RobotConfig.get().vision().rightLimelightPosition().transformBy(HORIZONTAL_CORAL_OFFSET);
 
   public static Translation2d calculateFieldRelativeCoralTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {

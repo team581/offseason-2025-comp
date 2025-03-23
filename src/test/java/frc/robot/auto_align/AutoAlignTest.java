@@ -51,8 +51,8 @@ public class AutoAlignTest {
 
   @Test
   void scoreRightOrLeft() {
-    var robotPose = new Pose2d(13, 8, Rotation2d.kZero);
-    var result = AutoAlign.getScoringSideFromRobotPose(robotPose);
+    var robotPose = new Pose2d(13, 0, Rotation2d.fromDegrees(180.0));
+    var result = AutoAlign.getScoringSideFromRobotPose(robotPose, true, true);
     assertEquals(RobotScoringSide.RIGHT, result);
   }
 }

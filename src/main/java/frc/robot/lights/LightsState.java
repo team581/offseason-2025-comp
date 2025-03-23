@@ -21,6 +21,7 @@ public enum LightsState {
 
   CLIMB_LINEUP(Color.kYellow, BlinkPattern.SOLID),
   CLIMB_HANG(Color.kGreen, BlinkPattern.SOLID),
+  CLIMB_STOP(Color.kGreen, BlinkPattern.BLINK_SLOW),
 
   SCORE_ALIGN_NOT_READY(Color.kYellow, BlinkPattern.SOLID),
   SCORE_ALIGN_READY(Color.kGreen, BlinkPattern.SOLID),
