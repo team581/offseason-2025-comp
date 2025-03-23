@@ -155,7 +155,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return AutoConstraintCalculator.constrainLinearVelocity(speeds, options);
   }
 
-
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
     var newTeleopSpeeds = teleopSpeeds.times(TELEOP_SPEED_SCALAR);
     var addedSpeeds = newTeleopSpeeds.plus(alignSpeeds);

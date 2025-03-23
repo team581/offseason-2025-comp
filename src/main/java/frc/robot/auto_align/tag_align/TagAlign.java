@@ -98,7 +98,10 @@ public class TagAlign {
             .minus(robotPose.getTranslation())
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
-    var goalTranslationWithP = new Translation2d(TAG_FORWARD_PID.calculate(0.0), TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
+    var goalTranslationWithP =
+        new Translation2d(
+            TAG_FORWARD_PID.calculate(0.0),
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
     var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
     var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
