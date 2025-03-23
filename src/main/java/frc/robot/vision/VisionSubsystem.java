@@ -96,10 +96,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     setStateFromRequest(state);
   }
 
-  public void setCurrentScoringPipe(ReefPipe reefPipe) {
-    this.reefPipe = reefPipe;
-  }
-
   @Override
   protected void afterTransition(VisionState newState) {
     switch (newState) {

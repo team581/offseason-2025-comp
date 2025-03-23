@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.tag_align.AlignmentCostUtil;
 import frc.robot.config.FeatureFlags;
+import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -29,9 +30,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   private static final double CORAL_LIFETIME_SECONDS = 1.5;
 
+  private static final double LOLLIPOP_LIFTEIME_SECONDS = 1.5;
+
   // TODO: UPDATE THESE TO REAL NUMBERS
-  private static final double CAMERA_IMAGE_HEIGHT = 480.0;
-  private static final double CAMERA_IMAGE_WIDTH = 640.0;
+  private static final double CAMERA_IMAGE_HEIGHT = 240.0;
+  private static final double CAMERA_IMAGE_WIDTH = 320.0;
   private static final double FOV_VERTICAL = 48.9;
   private static final double FOV_HORIZONTAL = 62.5;
   private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
@@ -53,10 +56,31 @@ public class CoralMap extends StateMachine<CoralMapState> {
               AlignmentCostUtil.getCoralAlignCost(
                   target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
 
+  private Optional<Pose2d> lastLollipopPose = Optional.empty();
+  private double lastLollipopTime = 0.0;
+
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
     this.localization = localization;
     this.swerve = swerve;
+  }
+
+  public void updateLollipopResult(Optional<GamePieceResult> lollipopResult) {
+    var newPose =
+        IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
+            lollipopResult, localization.getPose());
+    if (newPose.isPresent() && !newPose.equals(lastLollipopPose)) {
+      lastLollipopPose = newPose;
+      lastLollipopTime = Timer.getFPGATimestamp();
+    } else {
+      if (Timer.getFPGATimestamp() - lastLollipopTime >= LOLLIPOP_LIFTEIME_SECONDS) {
+        lastLollipopPose = Optional.empty();
+      }
+    }
+  }
+
+  public Optional<Pose2d> getLollipopIntakePose() {
+    return lastLollipopPose;
   }
 
   private List<Translation2d> getRawCoralPoses() {
