@@ -7,8 +7,8 @@ import frc.robot.autos.AutoPoint;
 import java.util.List;
 
 public class PurePursuitUtils {
-  private static final double DYNAMIC_LOOKAHEAD_MAX = 2.0;
-  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.45;
+  public static final double DYNAMIC_LOOKAHEAD_MAX = 1.5;
+  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.35;
 
   public static Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
     var x1 = startPoint.getX();
@@ -203,10 +203,7 @@ public class PurePursuitUtils {
         return endPoint.getRotation();
       }
     }
-    var progressPercent = Math.abs((pointToStart / totalDistance));
-    if (progressPercent > 0.9) {
-      progressPercent = 1.0;
-    }
+    var progressPercent = Math.abs((pointToStart / totalDistance) * 1.2);
 
     var interpolatedRotation =
         startPoint.getRotation().interpolate(endPoint.getRotation(), progressPercent);

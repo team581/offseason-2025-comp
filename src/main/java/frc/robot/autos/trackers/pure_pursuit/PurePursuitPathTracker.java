@@ -1,6 +1,6 @@
 package frc.robot.autos.trackers.pure_pursuit;
 
-import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,9 +13,7 @@ import java.util.List;
 public class PurePursuitPathTracker implements PathTracker {
   private static final double NON_DYNAMIC_LOOKAHEAD_DISTANCE = 1.5;
   private static final double DYNAMIC_LOOKAHEAD_TRANSITION_TIME = 0.5;
-
-  private static final double AT_END_OF_SEGMENT_DISTANCE_THRESHOLD = 0.1;
-  private static final double AT_END_OF_SEGMENT_ROTATION_THRESHOLD = 5;
+  private static final double STARTING_ROBOT_POSE_FAR_FROM_PATH_THRESHOLD = 0.5;
 
   private double lookaheadDistance = 1.5;
   private double lastRequestedLookaheadDistance = Double.MAX_VALUE;
@@ -54,7 +52,6 @@ public class PurePursuitPathTracker implements PathTracker {
   @Override
   public Pose2d getTargetPose() {
     updateLookahead();
-    updateRotation();
     if (points.isEmpty()) {
       return Pose2d.kZero;
     }
@@ -67,17 +64,23 @@ public class PurePursuitPathTracker implements PathTracker {
     var perpendicularPoint =
         PurePursuitUtils.getPerpendicularPoint(
             lastTargetWaypoint, currentTargetWaypoint, currentRobotPose);
+    if (PurePursuitUtils.isBetween(lastTargetWaypoint, currentTargetWaypoint, perpendicularPoint)) {
+      currentRobotFollowedPointIndex = getCurrentLookaheadPointIndex();
+    }
 
+    var robotToSegmentDistanceClamped =
+        MathUtil.clamp(
+            perpendicularPoint.getTranslation().getDistance(currentRobotPose.getTranslation()),
+            0.0,
+            lookaheadDistance);
+    updateRotation();
     var lookaheadPoint =
         new Pose2d(
             PurePursuitUtils.getLookaheadPoint(
                     lastTargetWaypoint,
                     currentTargetWaypoint,
                     perpendicularPoint,
-                    lookaheadDistance
-                        - currentRobotPose
-                            .getTranslation()
-                            .getDistance(perpendicularPoint.getTranslation()))
+                    lookaheadDistance - robotToSegmentDistanceClamped)
                 .getTranslation(),
             currentInterpolatedRotation);
 
@@ -121,38 +124,24 @@ public class PurePursuitPathTracker implements PathTracker {
   }
 
   private void updateRotation() {
-    var lastTargetWaypoint = Pose2d.kZero;
+    var lastTargetPoint = Pose2d.kZero;
     if (currentRobotFollowedPointIndex == 0) {
-      lastTargetWaypoint = startingRobotPose;
+      lastTargetPoint = startingRobotPose;
     } else {
-      lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
+      lastTargetPoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
     }
     var currentTargetPoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
 
     var perpendicularPoint =
         PurePursuitUtils.getPerpendicularPoint(
-            lastTargetWaypoint, currentTargetPoint, currentRobotPose);
-    if (currentRobotFollowedPointIndex < points.size() - 1
-        && perpendicularPoint.getTranslation().getDistance(lastTargetWaypoint.getTranslation())
-                / lastTargetWaypoint
-                    .getTranslation()
-                    .getDistance(currentTargetPoint.getTranslation())
-            > 0.9) {
-
-      currentRobotFollowedPointIndex++;
-      currentTargetWaypoint = points.get(currentRobotFollowedPointIndex).poseSupplier.get();
-      lastTargetWaypoint = points.get(currentRobotFollowedPointIndex - 1).poseSupplier.get();
-    } else if (currentRobotFollowedPointIndex + 1 < currentLookaheadPointIndex) {
-      DogLog.logFault("Trailblazer followed index lagging behind");
-      currentRobotFollowedPointIndex = currentLookaheadPointIndex - 1;
-    }
+            lastTargetPoint, currentTargetPoint, currentRobotPose);
 
     if (FeatureFlags.PURE_PURSUIT_ROTATE_IMMEDIATELY.getAsBoolean()) {
       currentInterpolatedRotation = currentTargetPoint.getRotation();
     } else {
       currentInterpolatedRotation =
           PurePursuitUtils.getPointToPointInterpolatedRotation(
-              lastTargetWaypoint, currentTargetPoint, perpendicularPoint);
+              lastTargetPoint, currentTargetPoint, perpendicularPoint);
     }
   }
 
@@ -169,12 +158,20 @@ public class PurePursuitPathTracker implements PathTracker {
     if (FeatureFlags.PURE_PURSUIT_USE_DYNAMIC_LOOKAHEAD.getAsBoolean() && points.size() > 1) {
 
       if (points.size() == 2) {
-        requestNewLookaheadDistance(
-            PurePursuitUtils.getDynamicLookaheadDistance(
-                startingRobotPose,
-                points.get(0).poseSupplier.get(),
-                points.get(1).poseSupplier.get()),
-            false);
+        if (startingRobotPose
+                .getTranslation()
+                .getDistance(points.get(0).poseSupplier.get().getTranslation())
+            > STARTING_ROBOT_POSE_FAR_FROM_PATH_THRESHOLD) {
+
+          requestNewLookaheadDistance(
+              PurePursuitUtils.getDynamicLookaheadDistance(
+                  startingRobotPose,
+                  points.get(0).poseSupplier.get(),
+                  points.get(1).poseSupplier.get()),
+              false);
+        } else {
+          requestNewLookaheadDistance(PurePursuitUtils.DYNAMIC_LOOKAHEAD_MAX, false);
+        }
       } else if (getCurrentPointIndex() == points.size() - 1) {
         requestNewLookaheadDistance(
             PurePursuitUtils.getDynamicLookaheadDistance(
