@@ -20,6 +20,7 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.get());
   }
+
   @Test
   public void stowedUpToUpRightAstarTest() {
     var result =
