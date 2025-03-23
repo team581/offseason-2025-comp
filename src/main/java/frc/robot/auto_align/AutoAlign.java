@@ -17,9 +17,7 @@ import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
-import frc.robot.vision.CameraHealth;
 import frc.robot.vision.VisionSubsystem;
-import frc.robot.vision.limelight.Limelight;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
@@ -127,13 +125,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d usedScoringPose = Pose2d.kZero;
 
   public AutoAlign(
-       VisionSubsystem vision,
-      LocalizationSubsystem localization,
-      SwerveSubsystem swerve) {
+      VisionSubsystem vision, LocalizationSubsystem localization, SwerveSubsystem swerve) {
     super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.DEFAULT_STATE);
 
     this.tagAlign = new TagAlign(swerve, localization);
-this.vision = vision;
+    this.vision = vision;
     this.localization = localization;
     this.swerve = swerve;
   }
