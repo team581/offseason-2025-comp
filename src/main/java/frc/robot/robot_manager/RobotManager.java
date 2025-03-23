@@ -123,6 +123,7 @@ public class RobotManager extends StateMachine<RobotState> {
               ALGAE_NET_RIGHT_WAITING_DEPLOY_EMPTY,
               ALGAE_NET_RIGHT_WAITING_DEPLOY_CORAL,
               CLIMBING_2_HANGING,
+              CLIMBER_STOP,
               UNJAM,
               ALGAE_OUTTAKE_DEPLOY_EMPTY,
               ALGAE_OUTTAKE_DEPLOY_CORAL ->
@@ -860,6 +861,16 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.PLACEHOLDER);
         climber.setState(ClimberState.HANGING);
       }
+      case CLIMBER_STOP -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        intake.setState(IntakeState.IDLE_NO_GP);
+        deploy.setState(DeployState.STOWED);
+        moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.PLACEHOLDER);
+        climber.setState(ClimberState.STOWED);
+      }
       case UNJAM -> {
         claw.setState(ClawState.OUTTAKING);
         intake.setState(IntakeState.SCORING);
@@ -1283,6 +1294,7 @@ public class RobotManager extends StateMachine<RobotState> {
     switch (getState()) {
       case CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
+          CLIMBER_STOP,
           CORAL_L1_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
@@ -1339,16 +1351,16 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void nextClimbStateRequest() {
     switch (getState()) {
+      case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> {}
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
 
-  public void previousClimbStateRequest() {
+  public void stopClimbStateRequest() {
     switch (getState()) {
-      case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
-      case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
       default -> {}
     }
   }

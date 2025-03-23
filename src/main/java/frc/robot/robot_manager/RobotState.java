@@ -106,6 +106,7 @@ public enum RobotState {
   // Climbing states
   CLIMBING_1_LINEUP(ClawGamePiece.EMPTY, false, true),
   CLIMBING_2_HANGING(ClawGamePiece.EMPTY, false, true),
+  CLIMBER_STOP(ClawGamePiece.EMPTY, false, true),
 
   // Misc states
   ALGAE_OUTTAKE_DEPLOY_EMPTY(ClawGamePiece.ALGAE, false, false),

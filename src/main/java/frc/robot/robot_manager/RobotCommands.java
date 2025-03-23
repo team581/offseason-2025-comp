@@ -67,7 +67,8 @@ public class RobotCommands {
   }
 
   public Command climbStopCommand() {
-    return Commands.runOnce(robot::stowRequest, requirements).withName("ClimbStopCommand");
+    return Commands.runOnce(robot::stopClimbStateRequest, requirements)
+        .withName("ClimbStopCommand");
   }
 
   public Command unjamCommand() {
