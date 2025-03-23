@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import frc.robot.auto_align.tag_align.TagAlign;
+import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
+
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
@@ -55,15 +57,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
-  public static boolean shouldArmMoveForward(double distanceFromReef, ChassisSpeeds robotSpeeds) {
-    // Account for distance we'll be at once we finish forward motion
-    if ((distanceFromReef
-            - (Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond) * 0.8))
-        > 0.8) {
-      return true;
-    }
-    return false;
-  }
+
 
   public static RobotScoringSide getScoringSideFromRobotPose(Pose2d robotPose) {
     var centerOfReef = FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
@@ -182,6 +176,18 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
     algaeAlignSpeeds =
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
+  }
+
+  public ObstructionKind shouldArmScoreForward() {
+    // Account for distance we'll be at once we finish forward motion
+    var lookaheadPose = localization.getLookaheadPose(0.8);
+  var lookaheadPoseDistance = lookaheadPose.getTranslation().getDistance(bestReefPipe.getPose(ReefPipeLevel.BASE, robotScoringSide).getTranslation());
+    if (lookaheadPoseDistance > 0.8) {
+      return robotScoringSide == RobotScoringSide.RIGHT
+          ? ObstructionKind.RIGHT_OBSTRUCTED
+          : ObstructionKind.LEFT_OBSTRUCTED;
+    }
+    return ObstructionKind.NONE;
   }
 
   public ChassisSpeeds getTagAlignSpeeds() {
