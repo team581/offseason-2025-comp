@@ -975,6 +975,9 @@ public class RobotManager extends StateMachine<RobotState> {
           }
         }
       }
+      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+        coralMap.updateLollipopResult(vision.getLollipopVisionResult());
+      }
       default -> {}
     }
 
