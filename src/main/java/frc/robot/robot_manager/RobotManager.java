@@ -2,6 +2,7 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -1020,7 +1021,7 @@ public class RobotManager extends StateMachine<RobotState> {
     nearestReefSide = autoAlign.getClosestReefSide();
     maybeBestCoralMapTranslation = coralMap.getBestCoral();
     robotPose = localization.getPose();
-    robotScoringSide = AutoAlign.getScoringSideFromRobotPose(robotPose);
+    robotScoringSide = AutoAlign.getScoringSideFromRobotPose(robotPose, vision.isAnyLeftScoringTagLimelightOnline(), vision.isAnyRightScoringTagLimelightOnline());
     autoAlign.setScoringLevel(scoringLevel, robotScoringSide);
 
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();

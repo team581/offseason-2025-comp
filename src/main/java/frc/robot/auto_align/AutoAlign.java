@@ -56,14 +56,20 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
-  public static RobotScoringSide getScoringSideFromRobotPose(Pose2d robotPose) {
+  public static RobotScoringSide getScoringSideFromRobotPose(Pose2d robotPose, boolean leftLimelightsOnline, boolean rightLimelightOnline) {
+    if (!leftLimelightsOnline) {
+      return RobotScoringSide.RIGHT;
+    }
+    if (!rightLimelightOnline) {
+      return RobotScoringSide.LEFT;
+    }
     var centerOfReef = FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
     var angleToAim =
-        Units.radiansToDegrees(
-            Math.atan2(
+        MathUtil.angleModulus(Math.atan2(
                 centerOfReef.getY() - robotPose.getY(), centerOfReef.getX() - robotPose.getX()));
-    var errorRight = Math.abs(angleToAim - (robotPose.getRotation().getDegrees() - 90.0));
-    var errorLeft = Math.abs(angleToAim - (robotPose.getRotation().getDegrees() + 90.0));
+    var errorRight = Math.abs(MathUtil.angleModulus(angleToAim- (robotPose.getRotation().getRadians() - (Math.PI/2.0))));
+    var errorLeft = Math.abs(MathUtil.angleModulus(angleToAim - (robotPose.getRotation().getRadians() + (Math.PI/2.0))));
+
     if (errorRight < errorLeft) {
       return RobotScoringSide.RIGHT;
     }
@@ -240,7 +246,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public ReefAlignState getReefAlignState() {
     var tagResult = vision.getTagResult();
 
-    if (!vision.isAnyScoringTagLimelightOnline()) {
+    if (!vision.isAnyLeftScoringTagLimelightOnline() && !vision.isAnyRightScoringTagLimelightOnline()) {
       return ReefAlignState.ALL_CAMERAS_DEAD;
     }
 
