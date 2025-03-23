@@ -70,14 +70,6 @@ public enum Waypoint {
     return closestWaypoint;
   }
 
-  /**
-   * @deprecated Use {@link #canMoveToAlways(Waypoint, MutableValueGraph)} instead.
-   */
-  @Deprecated(forRemoval = true)
-  public void canMoveTo(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    canMoveToAlways(other, graph);
-  }
-
   public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
 
