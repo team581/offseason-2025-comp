@@ -176,8 +176,11 @@ class CompConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.05, 0.1,
-          // right is positive x, up is positive y, forward is positive z
+          new VisionConfig(
+              4,
+              0.05,
+              0.1,
+              // right is positive x, up is positive y, forward is positive z
               new Pose3d(
                   0.0,
                   Units.inchesToMeters(-57.128),
