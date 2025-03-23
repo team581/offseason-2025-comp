@@ -1288,11 +1288,10 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_RIGHT_LINEUP,
           CORAL_L4_RIGHT_RELEASE -> {}
 
-      case CLAW_CORAL_DEPLOY_EMPTY,
-          CLAW_EMPTY_DEPLOY_EMPTY,
-          CLAW_ALGAE_DEPLOY_EMPTY,
-          CLAW_ALGAE_DEPLOY_CORAL,
-          CLAW_EMPTY_DEPLOY_CORAL -> {
+      case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL ->
+          setStateFromRequest(getState().getDeployScoreState());
+
+      case CLAW_CORAL_DEPLOY_EMPTY, CLAW_EMPTY_DEPLOY_EMPTY, CLAW_ALGAE_DEPLOY_EMPTY -> {
         setStateFromRequest(getState().getAlgaeOuttakeState());
       }
       case ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY ->
