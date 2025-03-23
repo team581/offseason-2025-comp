@@ -1,6 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
 import com.google.common.graph.ElementOrder;
+import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
@@ -119,11 +120,14 @@ public class CollisionAvoidance {
 
     Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
+    // Create an immutable copy of the graph now that we've added all the nodes
+    var immutableGraph = ImmutableValueGraph.copyOf(graph);
+
     // Visualize the generated graph
-    GraphVisualizer.log(graph);
+    GraphVisualizer.log(immutableGraph);
     Waypoint.log();
 
-    return graph;
+    return immutableGraph;
   }
 
   public static ArrayList<Waypoint> options(Waypoint waypoint, ObstructionKind obstructionKind) {
