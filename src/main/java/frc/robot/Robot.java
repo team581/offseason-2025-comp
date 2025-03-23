@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
   private final Limelight leftFrontLimelight =
       new Limelight("leftf", LimelightState.TAGS, LimelightModel.FOUR);
 
-      private final Limelight rightLimelight =
+  private final Limelight rightLimelight =
       new Limelight("right", LimelightState.TAGS, LimelightModel.FOUR);
 
   private final VisionSubsystem vision =

@@ -1046,7 +1046,8 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
 
     vision.setClosestScoringReefAndPipe(nearestReefSide.getTagID(), autoAlign.getBestReefPipe());
-    vision.updateDistanceFromReef(robotPose.getTranslation().getDistance(nearestReefSide.getPose().getTranslation()));
+    vision.updateDistanceFromReef(
+        robotPose.getTranslation().getDistance(nearestReefSide.getPose().getTranslation()));
 
     autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
     if (vision.isAnyTagLimelightOnline() || DriverStation.isAutonomous()) {

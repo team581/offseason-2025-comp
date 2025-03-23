@@ -38,6 +38,6 @@ public class AutoBlocks {
     this.autoCommands = autoCommands;
   }
 
-  //TODO: For score preload don't make the first point the starting auto pose,
+  // TODO: For score preload don't make the first point the starting auto pose,
   // megatag 1 deals with this + pure pursuit already makes your starting robot pose the first point
 }

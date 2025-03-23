@@ -34,7 +34,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public VisionSubsystem(
       ImuSubsystem imu,
       Limelight leftBackLimelight,
-      Limelight leftFrontLimelight,      Limelight rightLimelight      ) {
+      Limelight leftFrontLimelight,
+      Limelight rightLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.leftBackLimelight = leftBackLimelight;
@@ -143,8 +144,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     super.robotPeriodic();
 
     leftBackLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-    leftFrontLimelight.sendImuData(
-        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    leftFrontLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     rightLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
   }
 
