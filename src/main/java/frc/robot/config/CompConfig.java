@@ -150,9 +150,9 @@ class CompConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimitEnable(true)
-                          .withStatorCurrentLimit(80)
+                          .withStatorCurrentLimit(70)
                           .withSupplyCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(80))
+                          .withSupplyCurrentLimit(70))
                   .withOpenLoopRamps(
                       new OpenLoopRampsConfigs()
                           .withDutyCycleOpenLoopRampPeriod(0.01)
