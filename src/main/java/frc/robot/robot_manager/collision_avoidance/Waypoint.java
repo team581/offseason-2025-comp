@@ -10,7 +10,6 @@ import frc.robot.robot_manager.SuperstructurePosition;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  // TODO(@ryanknj5): Add more waypoints (can estimate/vibe out the positions)
   ALGAE_INTAKE_LEFT(new SuperstructurePosition(3, 190)),
   LOLLIPOP_INTAKE_LEFT(new SuperstructurePosition(0, 180)),
   STOWED(new SuperstructurePosition(20, -90)),
