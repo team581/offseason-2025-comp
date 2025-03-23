@@ -1,8 +1,10 @@
 package frc.robot.robot_manager.collision_avoidance;
 
 import com.google.common.graph.MutableValueGraph;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.robot_manager.SuperstructurePosition;
+import java.util.stream.Stream;
 
 /**
  * These represent "waypoints" for collision avoidance to route through. These are NOT setpoints
@@ -37,6 +39,19 @@ public enum Waypoint {
   }
 
   private static final double WRIST_LENGTH = 15;
+
+  public static void log() {
+    for (var waypoint : values()) {
+      DogLog.log(
+          "CollisionAvoidance/Waypoints/" + waypoint.toString(),
+          waypoint.position.getTranslation());
+    }
+    DogLog.log(
+        "CollisionAvoidance/Waypoints/All",
+        Stream.of(values())
+            .map(waypoint -> waypoint.position.getTranslation())
+            .toArray(Translation2d[]::new));
+  }
 
   /**
    * Find the closest waypoint to the given superstructure position.

@@ -121,6 +121,7 @@ public class CollisionAvoidance {
 
     // Visualize the generated graph
     GraphVisualizer.log(graph);
+    Waypoint.log();
 
     return graph;
   }
