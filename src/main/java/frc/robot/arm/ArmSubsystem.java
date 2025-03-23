@@ -74,7 +74,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
     };
   }
-  
+
   @Override
   protected void collectInputs() {
     motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
