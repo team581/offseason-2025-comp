@@ -158,7 +158,7 @@ class PracticeConfig {
                       new VoltageConfigs().withPeakForwardVoltage(12).withPeakReverseVoltage(-12))
                   .withMotorOutput(
                       new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))),
-          new VisionConfig(4, 0.4, Double.MAX_VALUE),
+          new VisionConfig(4, 0.05, 0.1),
           new ArmConfig(
               RIO_CAN_NAME,
               19,

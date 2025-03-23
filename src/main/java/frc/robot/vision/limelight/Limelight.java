@@ -1,13 +1,14 @@
 package frc.robot.vision.limelight;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
+import frc.robot.vision.limelight.LimelightHelpers.PoseEstimate;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
 import java.util.Optional;
@@ -75,22 +76,22 @@ public class Limelight extends StateMachine<LimelightState> {
   public Optional<TagResult> getTagResult() {
     if (getState() != LimelightState.TAGS
         && getState() != LimelightState.CLOSEST_REEF_TAG
+        && getState() != LimelightState.CLOSEST_REEF_TAG_CLOSEUP
         && getState() != LimelightState.STATION_TAGS) {
       return Optional.empty();
     }
 
-    var estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+    PoseEstimate estimatePose;
+    if (DriverStation.isDisabled() || getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP) {
+      estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
+    } else {
+      estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+    }
 
     if (estimatePose == null) {
       return Optional.empty();
     }
     var newPose = estimatePose.pose;
-
-    if (!MathUtil.isNear(robotHeading, newPose.getRotation().getDegrees(), 10, -180, 180)) {
-      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-
-      return Optional.empty();
-    }
 
     if (estimatePose.tagCount == 0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
@@ -180,6 +181,10 @@ public class Limelight extends StateMachine<LimelightState> {
       case CORAL -> updateHealth(coralResult);
       case ALGAE -> updateHealth(algaeResult);
       case CLOSEST_REEF_TAG -> {
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
+        updateHealth(tagResult);
+      }
+      case CLOSEST_REEF_TAG_CLOSEUP -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);
       }

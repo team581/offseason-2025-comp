@@ -46,20 +46,6 @@ public class Autos extends LifecycleSubsystem {
       updateSelection();
     }
 
-    if (DriverStation.isAutonomousEnabled()) {
-      hasEnabledAuto = true;
-    }
-
-    // Continuously reset pose before auto
-    if (!hasEnabledAuto && DriverStation.isDisabled() && DriverStation.isAutonomous()) {
-      resetPoseForAuto();
-    }
-  }
-
-  private void resetPoseForAuto() {
-    var auto = FmsSubsystem.isRedAlliance() ? selectedRed.getSecond() : selectedBlue.getSecond();
-    var startingPose = auto.getStartingPose();
-    robotManager.localization.resetPose(startingPose);
   }
 
   private void updateSelection() {
