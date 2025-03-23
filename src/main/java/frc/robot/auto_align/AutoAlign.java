@@ -55,6 +55,14 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
+  public static boolean shouldArmMoveForward(double distanceFromReef, ChassisSpeeds robotSpeeds) {
+    // Account for distance we'll be at once we finish forward motion
+    if ((distanceFromReef - (Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond)*0.8)) > 0.8) {
+      return true;
+    }
+    return false;
+  }
+
   public static RobotScoringSide getScoringSideFromRobotPose(Pose2d robotPose) {
     var centerOfReef = FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
     var angleToAim =
