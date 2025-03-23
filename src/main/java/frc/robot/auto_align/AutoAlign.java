@@ -20,9 +20,8 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
-  private static final double REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD = 1.5;
-  private static final double LOWEST_TELEOP_SPEED_SCALAR = 0.5;
-  private static final double MAX_CONSTRAINT = 1.5;
+  private static final double TELEOP_SPEED_SCALAR = 0.3;
+  private static final double MAX_CONSTRAINT = 2.5;
 
   private static final Translation2d CENTER_OF_REEF_RED =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
@@ -156,30 +155,13 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return AutoConstraintCalculator.constrainLinearVelocity(speeds, options);
   }
 
+
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
-    var addedSpeeds = teleopSpeeds.plus(alignSpeeds);
+    var newTeleopSpeeds = teleopSpeeds.times(TELEOP_SPEED_SCALAR);
+    var addedSpeeds = newTeleopSpeeds.plus(alignSpeeds);
     var constrainedSpeeds = constrainLinearVelocity(addedSpeeds, MAX_CONSTRAINT);
-
-    var robotPose = localization.getPose();
-    var distanceToReef = robotPose.getTranslation().getDistance(usedScoringPose.getTranslation());
-
-    if (distanceToReef > REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD) {
-      return constrainedSpeeds;
-    }
-
-    var progress =
-        MathUtil.clamp(
-            distanceToReef / REEF_FINAL_SPEEDS_DISTANCE_THRESHOLD, LOWEST_TELEOP_SPEED_SCALAR, 1.0);
-    DogLog.log("Debug/Progress", progress);
-    var newTeleopSpeeds = teleopSpeeds.times(progress);
-    if (progress == LOWEST_TELEOP_SPEED_SCALAR) {
-      progress = 0.0;
-    }
-    var newAlignSpeeds = alignSpeeds.times(1.0 - progress);
-    var newAddedSpeeds = newTeleopSpeeds.plus(newAlignSpeeds);
-    var newConstrainedSpeeds = constrainLinearVelocity(newAddedSpeeds, MAX_CONSTRAINT);
-    DogLog.log("Debug/NewConstrainedSpeeds", newConstrainedSpeeds);
-    return newConstrainedSpeeds;
+    DogLog.log("Debug/ConstrainedSpeeds", constrainedSpeeds);
+    return constrainedSpeeds;
   }
 
   @Override

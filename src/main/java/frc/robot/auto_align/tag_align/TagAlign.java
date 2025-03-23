@@ -19,15 +19,14 @@ import java.util.Optional;
 public class TagAlign {
   private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
 
-  private static final PIDController TAG_PID = new PIDController(7.0, 0.0, 0.0);
-  private static final double BEFORE_RAISED_INITIAL_DISTANCE_OFFSET = 0.35;
+  private static final PIDController TAG_SIDEWAYS_PID = new PIDController(6.0, 0.0, 0.0);
+  private static final PIDController TAG_FORWARD_PID = new PIDController(3.0, 0.0, 0.0);
   private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
 
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
   private ReefPipeLevel level = ReefPipeLevel.BASE;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private ChassisSpeeds rawTeleopSpeeds = new ChassisSpeeds();
   private Translation2d driverPoseOffset = Translation2d.kZero;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
 
@@ -45,10 +44,6 @@ public class TagAlign {
 
   public void setPipeOveride(ReefPipe pipe) {
     this.reefPipeOverride = Optional.of(pipe);
-  }
-
-  public void setRawTeleopSpeeds(ChassisSpeeds speeds) {
-    rawTeleopSpeeds = speeds;
   }
 
   public void setDriverPoseOffset(Translation2d offset) {
@@ -103,14 +98,9 @@ public class TagAlign {
             .minus(robotPose.getTranslation())
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
-    var goalTranslationUnrotated = new Translation2d();
-    goalTranslationUnrotated = new Translation2d(0.0, scoringTranslationRobotRelative.getY());
-    var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
-
-    var xEffort = TAG_PID.calculate(-goalTranslation.getX());
-    var yEffort = TAG_PID.calculate(-goalTranslation.getY());
-
-    var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
+    var goalTranslationWithP = new Translation2d(TAG_FORWARD_PID.calculate(0.0), TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
+    var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
+    var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
   }
@@ -124,16 +114,13 @@ public class TagAlign {
             .minus(robotPose.getTranslation())
             .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
 
-    var goalTranslationUnrotated = new Translation2d();
+    var goalTranslationWithP =
+        new Translation2d(
+            TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getX()),
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
+    var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
 
-    goalTranslationUnrotated = scoringTranslationRobotRelative;
-
-    var goalTranslation = goalTranslationUnrotated.rotateBy(robotPose.getRotation());
-
-    var xEffort = TAG_PID.calculate(-goalTranslation.getX());
-    var yEffort = TAG_PID.calculate(-goalTranslation.getY());
-
-    var goalSpeeds = new ChassisSpeeds(xEffort, yEffort, 0.0);
+    var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
   }
