@@ -60,9 +60,7 @@ public class PracticeBotTunerConstants {
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
   private static final TalonFXConfiguration driveInitialConfigs =
       new TalonFXConfiguration()
-          .withCurrentLimits(
-              new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(70))
+          .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(70))
           .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
@@ -78,7 +76,7 @@ public class PracticeBotTunerConstants {
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs =
-      new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(-90.00006866455078));
+      new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(0.0));
 
   // CAN bus that the devices are located on;
   // All swerve devices must share the same CAN bus
