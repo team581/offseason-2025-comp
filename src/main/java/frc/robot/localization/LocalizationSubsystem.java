@@ -84,10 +84,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     DogLog.log("Localization/EstimatedPose", getPose());
   }
 
-  private void resetGyro(double gyroAngle) {
-    Pose2d estimatedPose =
-        new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(gyroAngle));
-    resetPose(estimatedPose);
+  private void resetGyro(Rotation2d gyroAngle) {
+    swerve.drivetrain.resetRotation(gyroAngle);
   }
 
   public void resetPose(Pose2d estimatedPose) {
@@ -103,6 +101,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   public Command getZeroCommand() {
-    return Commands.runOnce(() -> resetGyro(FmsSubsystem.isRedAlliance() ? 180 : 0));
+    return Commands.runOnce(() -> resetGyro(swerve.drivetrain.getOperatorForwardDirection()));
   }
 }
