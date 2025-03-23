@@ -7,8 +7,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.config.RobotConfig;
 import frc.robot.intake_assist.IntakeAssistUtil;
-import frc.robot.vision.limelight.LimelightPositions;
 import frc.robot.vision.results.GamePieceResult;
 
 public class GamePieceDetectionUtil {
@@ -26,10 +26,10 @@ public class GamePieceDetectionUtil {
       new Transform3d(0, 0, Units.inchesToMeters(-CORAL_RADIUS), Rotation3d.kZero);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_ALGAE_OFFSET =
-      LimelightPositions.RIGHT_LIMELIGHT.transformBy(LOLLIPOP_OFFSET);
+      RobotConfig.get().vision().rightLimelightPosition().transformBy(LOLLIPOP_OFFSET);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_CORAL_OFFSET =
-      LimelightPositions.RIGHT_LIMELIGHT.transformBy(HORIZONTAL_CORAL_OFFSET);
+      RobotConfig.get().vision().rightLimelightPosition().transformBy(HORIZONTAL_CORAL_OFFSET);
 
   public static Translation2d calculateFieldRelativeCoralTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {

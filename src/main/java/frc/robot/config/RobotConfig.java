@@ -55,7 +55,11 @@ public record RobotConfig(
       int translationHistoryArraySize,
       double xyStdDev,
       double thetaStdDev,
-      Pose3d robotPoseRelativeToCalibration) {}
+      Pose3d robotPoseRelativeToCalibration,
+      Pose3d leftBackLimelightPosition,
+      Pose3d leftFrontLimelightPosition,
+      Pose3d rightLimelightPosition
+      ) {}
 
   public record ArmConfig(
       String canBusName,
