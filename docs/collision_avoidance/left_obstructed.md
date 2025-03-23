@@ -1,6 +1,7 @@
 # Collision avoidance (left obstructed)
 
 ```mermaid
+%%{ init: { "flowchart": { "defaultRenderer": "elk" } } }%%
 graph TD
 
 HANDOFF <-- 1.2 --> STOWED

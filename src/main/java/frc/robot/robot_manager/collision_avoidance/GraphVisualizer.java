@@ -62,7 +62,8 @@ public class GraphVisualizer {
 
     sb.append("# ");
     sb.append(title);
-    sb.append("\n\n```mermaid\ngraph TD\n\n");
+    sb.append(
+        "\n\n```mermaid\n%%{ init: { \"flowchart\": { \"defaultRenderer\": \"elk\" } } }%%\ngraph TD\n\n");
 
     for (var pair : graph.edges()) {
       var edge = graph.edgeValue(pair).orElseThrow();
