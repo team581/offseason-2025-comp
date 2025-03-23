@@ -1159,7 +1159,11 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l4CoralApproachRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CORAL_L4_APPROACH);
+      if (claw.getHasGP() && !intake.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L4_APPROACH);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
+      }
     }
   }
 
@@ -1175,13 +1179,21 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l3LineupRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CORAL_L3_APPROACH);
+      if (claw.getHasGP() && !intake.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L3_APPROACH);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L3_PREPARE_HANDOFF);
+      }
     }
   }
 
   public void l2LineupRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CORAL_L2_APPROACH);
+      if (claw.getHasGP() && !intake.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L2_APPROACH);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L2_PREPARE_HANDOFF);
+      }
     }
   }
 
@@ -1197,7 +1209,11 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l1CoralApproachRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CORAL_L1_APPROACH);
+      if (claw.getHasGP() && !intake.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L1_APPROACH);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L1_PREPARE_HANDOFF);
+      }
     }
   }
 
@@ -1207,23 +1223,27 @@ public class RobotManager extends StateMachine<RobotState> {
         if (robotScoringSide == RobotScoringSide.LEFT) {
           if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
             setStateFromRequest(RobotState.ALGAE_INTAKE_L3_LEFT_DEPLOY_CORAL);
+          } else {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL);
           }
-          setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL);
+        } else {
+          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_CORAL);
+          } else {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_CORAL);
+          }
         }
-        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
-          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_CORAL);
+      } else {
+        if (robotScoringSide == RobotScoringSide.LEFT) {
+          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L3_LEFT_DEPLOY_EMPTY);
+          }
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_EMPTY);
+          if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+            setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_EMPTY);
+          }
+          setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_EMPTY);
         }
-        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_CORAL);
-      }
-      if (robotScoringSide == RobotScoringSide.LEFT) {
-        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
-          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_LEFT_DEPLOY_EMPTY);
-        }
-        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_LEFT_DEPLOY_EMPTY);
-        if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
-          setStateFromRequest(RobotState.ALGAE_INTAKE_L3_RIGHT_DEPLOY_EMPTY);
-        }
-        setStateFromRequest(RobotState.ALGAE_INTAKE_L2_RIGHT_DEPLOY_EMPTY);
       }
     }
   }
@@ -1288,11 +1308,10 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_RIGHT_LINEUP,
           CORAL_L4_RIGHT_RELEASE -> {}
 
-      case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL -> setStateFromRequest(getState().getDeployScoreState());
+      case CLAW_EMPTY_DEPLOY_CORAL, CLAW_ALGAE_DEPLOY_CORAL ->
+          setStateFromRequest(getState().getDeployScoreState());
 
-      case CLAW_CORAL_DEPLOY_EMPTY,
-          CLAW_EMPTY_DEPLOY_EMPTY,
-          CLAW_ALGAE_DEPLOY_EMPTY -> {
+      case CLAW_CORAL_DEPLOY_EMPTY, CLAW_EMPTY_DEPLOY_EMPTY, CLAW_ALGAE_DEPLOY_EMPTY -> {
         setStateFromRequest(getState().getAlgaeOuttakeState());
       }
       case ALGAE_PROCESSOR_WAITING_DEPLOY_EMPTY ->
@@ -1317,6 +1336,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void nextClimbStateRequest() {
     switch (getState()) {
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
+      case CLIMBING_2_HANGING -> {}
       default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
@@ -1324,32 +1344,26 @@ public class RobotManager extends StateMachine<RobotState> {
   public void previousClimbStateRequest() {
     switch (getState()) {
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
-      case CLIMBING_1_LINEUP -> {
-        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
-      }
-      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+      case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+      default -> {}
     }
   }
 
   public void unjamRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING, REHOME_ELEVATOR -> {}
-
-      default -> setStateFromRequest(RobotState.UNJAM);
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.UNJAM);
     }
   }
 
   public void rehomeElevatorRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
-      default -> setStateFromRequest(RobotState.REHOME_ELEVATOR);
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
   }
 
   public void rehomeDeployRequest() {
-    switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> {}
-      default -> setStateFromRequest(RobotState.REHOME_DEPLOY);
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.REHOME_DEPLOY);
     }
   }
 
