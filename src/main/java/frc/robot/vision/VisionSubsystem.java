@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
@@ -29,6 +30,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private double roll;
   private double rollRate;
   private ReefPipe reefPipe;
+
+  private boolean hasSeenTag = false;
 
   public VisionSubsystem(
       ImuSubsystem imu,
@@ -84,10 +87,18 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     if (maybeFrontResult.isPresent()) {
       tagResult.add(maybeFrontResult.orElseThrow());
     }
+
+    if (DriverStation.isDisabled() && !hasSeenTag) {
+      hasSeenTag = !tagResult.isEmpty();
+    }
   }
 
   public List<TagResult> getTagResult() {
     return tagResult;
+  }
+
+  public boolean hasSeenTag() {
+    return hasSeenTag;
   }
 
   public void setState(VisionState state) {

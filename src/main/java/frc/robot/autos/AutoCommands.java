@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -21,5 +22,13 @@ public class AutoCommands {
 
   public Command stowRequest() {
     return Commands.runOnce(robotManager::stowRequest);
+  }
+
+  public Command resetPoseIfNeeded(Pose2d pose) {
+    return Commands.runOnce(() -> {
+      if (!robotManager.vision.hasSeenTag()) {
+        robotManager.localization.resetPose(pose);
+      }
+    });
   }
 }
