@@ -192,7 +192,7 @@ class PracticeConfig {
                           .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64.0 / 8.0) * (50.0 / 18.0) * (36.0 / 12.0)))
+                          .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
