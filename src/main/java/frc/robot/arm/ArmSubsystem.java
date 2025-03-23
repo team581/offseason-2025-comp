@@ -1,5 +1,6 @@
 package frc.robot.arm;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -26,6 +27,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 120.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
+  private ClosedLoopGeneralConfigs continuousWrap;
 
   private double averageMotorCurrent;
   private LinearFilter linearFilter = LinearFilter.movingAverage(5);
@@ -68,11 +70,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().angle, motorAngle, 2);
-      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1);
+      default -> MathUtil.isNear(getState().angle, motorAngle, 2, -180, 180);
+      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
     };
   }
-
+  
   @Override
   protected void collectInputs() {
     motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
@@ -105,7 +107,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
+    DogLog.log("Arm/RawAngle", Units.rotationsToDegrees(motor.getPosition().getValueAsDouble()));
     DogLog.log("Arm/AtGoal", atGoal());
+    DogLog.log("Arm/ContinuousWrap", continuousWrap.ContinuousWrap);
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
