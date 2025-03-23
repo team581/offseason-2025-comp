@@ -10,6 +10,17 @@ import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
   @Test
+  public void routeStowedUpToUpRightAstarTest() {
+    var result =
+        CollisionAvoidance.route(
+            new SuperstructurePosition(0, 90),
+            new SuperstructurePosition(50, 0),
+            ObstructionKind.NONE);
+    var expected = Waypoint.STOWED_UP;
+
+    assertEquals(expected, result.get());
+  }
+  @Test
   public void stowedUpToUpRightAstarTest() {
     var result =
         CollisionAvoidance.aStar(
