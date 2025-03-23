@@ -51,7 +51,10 @@ public class Autos extends LifecycleSubsystem {
     }
 
     // Continuously reset pose before auto
-    if (!hasEnabledAuto && DriverStation.isDisabled() && DriverStation.isAutonomous() && !robotManager.vision.hasSeenTag()) {
+    if (!hasEnabledAuto
+        && DriverStation.isDisabled()
+        && DriverStation.isAutonomous()
+        && !robotManager.vision.hasSeenTag()) {
       resetPoseForAuto();
     }
   }

@@ -25,10 +25,11 @@ public class AutoCommands {
   }
 
   public Command resetPoseIfNeeded(Pose2d pose) {
-    return Commands.runOnce(() -> {
-      if (!robotManager.vision.hasSeenTag()) {
-        robotManager.localization.resetPose(pose);
-      }
-    });
+    return Commands.runOnce(
+        () -> {
+          if (!robotManager.vision.hasSeenTag()) {
+            robotManager.localization.resetPose(pose);
+          }
+        });
   }
 }
