@@ -22,6 +22,7 @@ public record RobotConfig(
       String canBusName,
       int leftMotorID,
       int rightMotorID,
+      double drumDiameterInches,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig,
       double homingEndHeight,

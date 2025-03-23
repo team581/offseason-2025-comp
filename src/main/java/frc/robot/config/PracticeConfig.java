@@ -45,6 +45,7 @@ class PracticeConfig {
               CANIVORE_NAME,
               15,
               16,
+              1.274,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
                   .withMotorOutput(
@@ -64,11 +65,7 @@ class PracticeConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
@@ -84,11 +81,7 @@ class PracticeConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               0,
               25,
               0,

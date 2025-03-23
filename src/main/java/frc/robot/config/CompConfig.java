@@ -45,6 +45,7 @@ class CompConfig {
               CANIVORE_NAME,
               15,
               16,
+              1.274,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -68,11 +69,7 @@ class CompConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -95,11 +92,7 @@ class CompConfig {
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
-                              1
-                                  / ((14.0 / 50.0)
-                                      * (36.0 / 50.0)
-                                      * (2.0 / 1.0)
-                                      * (Math.PI * 1.274)))),
+                              1.0 / ((14.0 / 50.0) * (36.0 / 50.0) * (2.0 / 1.0)))),
               0,
               25,
               0,
