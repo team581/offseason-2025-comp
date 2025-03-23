@@ -103,6 +103,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   public Command getZeroCommand() {
-    return Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees((FmsSubsystem.isRedAlliance()? 180 : 0))));
+    return Commands.runOnce(
+        () -> resetGyro(Rotation2d.fromDegrees((FmsSubsystem.isRedAlliance() ? 180 : 0))));
   }
 }

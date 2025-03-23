@@ -35,6 +35,7 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
   }
+
   @Test
   public void lowRightToStowedAstarTest() {
     var result =
