@@ -126,7 +126,6 @@ public class CollisionAvoidance {
     var immutableGraph = ImmutableValueGraph.copyOf(graph);
 
     // Visualize the generated graph
-    GraphVisualizer.log(immutableGraph);
     Waypoint.log();
 
     return immutableGraph;
@@ -200,6 +199,11 @@ public class CollisionAvoidance {
       }
     }
     return Optional.empty();
+  }
+
+  /** Don't use this. */
+  static ValueGraph<Waypoint, WaypointEdge> getRawGraph() {
+    return graph;
   }
 
   private CollisionAvoidance() {}

@@ -11,7 +11,13 @@ import java.nio.file.Path;
 public class GraphVisualizer {
   private static final boolean HIDE_INFINITE_COSTS = false;
 
-  public static void log(ValueGraph<Waypoint, WaypointEdge> graph) {
+  public static void visualize() {
+    var graph = CollisionAvoidance.getRawGraph();
+
+    log(graph);
+  }
+
+  private static void log(ValueGraph<Waypoint, WaypointEdge> graph) {
     if (RobotBase.isReal()) {
       return;
     }
