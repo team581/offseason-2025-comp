@@ -103,11 +103,10 @@ public class FieldCalibrationUtil {
           side == RobotScoringSide.LEFT
               ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3
               : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
-      case L4 ->
+      default ->
           side == RobotScoringSide.LEFT
               ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4
               : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
-      default -> ArmState.UNTUNED;
     };
   }
 
