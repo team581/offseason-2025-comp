@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GraphVisualizer {
+  private static final boolean HIDE_INFINITE_COSTS = false;
+
   public static void log(ValueGraph<Waypoint, WaypointEdge> graph) {
     if (RobotBase.isReal()) {
       return;
@@ -69,10 +71,15 @@ public class GraphVisualizer {
       var edge = graph.edgeValue(pair).orElseThrow();
       var cost = edge.getCost(obstruction);
 
-      // if (cost == Double.MAX_VALUE) {
-      //   // Just ignore edges with infinite cost
-      //   continue;
-      // }
+      if (cost == Double.MAX_VALUE) {
+        if (HIDE_INFINITE_COSTS) {
+          // Just ignore edges with infinite cost
+          continue;
+        }
+
+        // Easier to view in the diagram this way
+        cost = 999;
+      }
 
       sb.append(pair.nodeU().toString());
       sb.append(" <-- ");
