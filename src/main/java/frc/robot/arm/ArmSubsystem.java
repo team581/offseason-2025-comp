@@ -68,7 +68,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().angle, motorAngle, 2, -180, 180);
+      default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
       case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
     };
   }
@@ -93,7 +93,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
 
       default -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.angle)));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
       }
     }
   }

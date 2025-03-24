@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
 
   private final MotionMagicVoltage positionRequest =
-      new MotionMagicVoltage(ElevatorState.STOWED.height);
+      new MotionMagicVoltage(ElevatorState.STOWED.getHeight());
 
   // Homing
   private double leftHeight = 0;
@@ -47,7 +47,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private double lowestSeenHeightRight = 0.0;
 
   private double averageMeasuredHeight = 0;
-  private double collisionAvoidanceGoal = ElevatorState.STOWED.height;
+  private double collisionAvoidanceGoal = ElevatorState.STOWED.getHeight();
 
   // Mid-match homing
   private double averageMotorCurrent;
@@ -122,9 +122,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       }
       default -> {
         leftMotor.setControl(
-            positionRequest.withPosition(distanceToRotations(clampHeight(newState.height))));
+            positionRequest.withPosition(distanceToRotations(clampHeight(newState.getHeight()))));
         rightMotor.setControl(
-            positionRequest.withPosition(distanceToRotations(clampHeight(newState.height))));
+            positionRequest.withPosition(distanceToRotations(clampHeight(newState.getHeight()))));
       }
     }
   }
@@ -175,7 +175,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     var usedHeight =
         getState() == ElevatorState.COLLISION_AVOIDANCE
             ? collisionAvoidanceGoal
-            : getState().height;
+            : getState().getHeight();
 
     if (MathUtil.isNear(0, usedHeight, 1.0)
         && MathUtil.isNear(0, getHeight(), 1.0)
@@ -205,7 +205,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
       // This state is only used when it's safe to cancel the move partway
       // Since the next state is same setpoint, different arm angle
-      default -> MathUtil.isNear(getState().height, averageMeasuredHeight, TOLERANCE);
+      default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, TOLERANCE);
     };
   }
 }

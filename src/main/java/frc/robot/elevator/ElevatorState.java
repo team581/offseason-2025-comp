@@ -1,5 +1,8 @@
 package frc.robot.elevator;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
+
 public enum ElevatorState {
   /**
    * @deprecated This is a placeholder state.
@@ -60,13 +63,19 @@ public enum ElevatorState {
   CLIMBING(UNTUNED),
   COLLISION_AVOIDANCE(UNTUNED);
 
-  public final double height;
+  private final double defaultHeight;
+  private final DoubleSubscriber tunableHeight;
 
   private ElevatorState(double height) {
-    this.height = height;
+    this.defaultHeight = height;
+    this.tunableHeight = DogLog.tunable("Elevator/State/" + name(), height);
   }
 
   ElevatorState(ElevatorState other) {
-    this(other.height);
+    this(other.defaultHeight);
+  }
+
+  public double getHeight() {
+    return tunableHeight.get();
   }
 }

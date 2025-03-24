@@ -1401,7 +1401,7 @@ public class RobotManager extends StateMachine<RobotState> {
     var maybeCollisionAvoidanceResult =
         CollisionAvoidance.route(
             new SuperstructurePosition(elevator.getHeight(), arm.getAngle()),
-            new SuperstructurePosition(elevatorGoal.height, armGoal.angle),
+            new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle()),
             ObstructionKind.NONE);
 
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {

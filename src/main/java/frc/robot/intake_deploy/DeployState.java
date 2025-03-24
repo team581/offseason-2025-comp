@@ -1,5 +1,8 @@
 package frc.robot.intake_deploy;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
+
 public enum DeployState {
   UNHOMED(0.0),
   HOMING(0.0), // TODO: set homing end angle
@@ -10,9 +13,13 @@ public enum DeployState {
 
   UNJAM(-28);
 
-  public final double angle;
+  private final DoubleSubscriber tunableAngle;
 
   private DeployState(double angle) {
-    this.angle = angle;
+    this.tunableAngle = DogLog.tunable("Deploy/State/" + name(), angle);
+  }
+
+  public double getAngle() {
+    return tunableAngle.get();
   }
 }
