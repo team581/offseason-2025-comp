@@ -6,7 +6,6 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-import com.google.errorprone.annotations.Var;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,7 +25,6 @@ import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import java.util.Map;
-import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
   public static final double MaxSpeed = 4.75;
@@ -82,7 +80,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
           .withMaxAbsRotationalRate(maxAngularRate);
 
   private double lastSimTime;
-  private @Nullable Notifier simNotifier = null;
+  private Notifier simNotifier = null;
 
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();
@@ -100,7 +98,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private ChassisSpeeds autoAlignAutoSpeeds = new ChassisSpeeds();
 
   private final ChassisSpeeds previousSpeeds = new ChassisSpeeds();
-  private final double previousTimestamp = 0.0;
+  private static final double PREVIOUS_TIMESTAMP = 0.0;
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
@@ -184,13 +182,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void driveTeleop(double x, double y, double theta) {
     rawControllerXValue = x;
     rawControllerYValue = y;
-    @Var double leftY =
+    double leftY =
         -1.0
             * MathHelpers.signedExp(
                 ControllerHelpers.deadbandJoystickValue(y, LEFT_Y_DEADBAND), 2.0);
-    @Var double leftX =
+    double leftX =
         MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, LEFT_X_DEADBAND), 2.0);
-    @Var double rightX =
+    double rightX =
         MathHelpers.signedExp(
             ControllerHelpers.deadbandJoystickValue(theta, RIGHT_X_DEADBAND), 2.0);
 
@@ -384,7 +382,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void snapsDriveRequest(double snapAngle) {
-    snapsDriveRequest(snapAngle, /* teleopOnly= */false);
+    snapsDriveRequest(snapAngle, false);
   }
 
   public void coralAlignmentDriveRequest() {
@@ -454,7 +452,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     simNotifier =
         new Notifier(
             () -> {
-               double currentTime = Utils.getCurrentTimeSeconds();
+              double currentTime = Utils.getCurrentTimeSeconds();
               double deltaTime = currentTime - lastSimTime;
               lastSimTime = currentTime;
 

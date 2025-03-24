@@ -3,9 +3,7 @@ package frc.robot.robot_manager.collision_avoidance;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
-import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
-import com.google.errorprone.annotations.Var;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -18,7 +16,7 @@ import java.util.Set;
 
 public class CollisionAvoidance {
 
-  private static final ValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+  private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -141,7 +139,7 @@ public class CollisionAvoidance {
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
     Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
     totalPath.add(endWaypoint);
-    @Var Waypoint current = endWaypoint;
+    Waypoint current = endWaypoint;
     while (cameFrom.containsKey(current)) {
       current = cameFrom.get(current);
       totalPath.addFirst(current);
@@ -168,7 +166,7 @@ public class CollisionAvoidance {
     Waypoint goalWaypoint = Waypoint.getClosest(desiredPosition);
 
     gscore.put(startWaypoint, 0.0);
-    @Var Waypoint current = Waypoint.STOWED;
+    Waypoint current = Waypoint.STOWED;
     while (!openSet.isEmpty()) {
       // current is equal to the waypoint in openset that has the smallest gscore
       var maybeCurrent =
@@ -203,7 +201,7 @@ public class CollisionAvoidance {
   }
 
   /** Don't use this. */
-  static ValueGraph<Waypoint, WaypointEdge> getRawGraph() {
+  static ImmutableValueGraph<Waypoint, WaypointEdge> getRawGraph() {
     return graph;
   }
 

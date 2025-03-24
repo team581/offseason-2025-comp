@@ -98,11 +98,11 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private final double coralIntakeAssistAngle = 0.0;
+  private static final double CORAL_INTAKE_ASSIST_ANGLE = 0.0;
   private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
-  private final boolean isRollHomed = false;
+  private static final boolean IS_ROLL_HOMED = false;
   private boolean confirmScoreActive = false;
   private Pose2d robotPose;
 
@@ -251,7 +251,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
-      
     };
   }
 
@@ -1382,7 +1381,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public Command waitForRollHomedCommand() {
-    return Commands.waitUntil(() -> isRollHomed);
+    return Commands.waitUntil(() -> IS_ROLL_HOMED);
   }
 
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
@@ -1390,7 +1389,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private boolean latestUnsafe = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
-    moveSuperstructure(elevatorGoal, armGoal, /* unsafe= */false);
+    moveSuperstructure(elevatorGoal, armGoal, false);
   }
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {

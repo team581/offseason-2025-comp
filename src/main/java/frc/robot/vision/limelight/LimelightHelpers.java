@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.errorprone.annotations.Var;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import org.jspecify.annotations.Nullable;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision
@@ -683,7 +681,7 @@ public final class LimelightHelpers {
     return inData[position];
   }
 
-  private static @Nullable PoseEstimate getBotPoseEstimate(
+  private static PoseEstimate getBotPoseEstimate(
       String limelightName, String entryName, boolean isMegaTag2) {
     DoubleArrayEntry poseEntry =
         LimelightHelpers.getLimelightDoubleArrayEntry(limelightName, entryName);
@@ -806,8 +804,8 @@ public final class LimelightHelpers {
 
       rawDetections[i] =
           new RawDetection(
-              classId, txnc, tync, ta, corner0X, corner0Y, corner1X, corner1Y, corner2X,
-              corner2Y, corner3X, corner3Y);
+              classId, txnc, tync, ta, corner0X, corner0Y, corner1X, corner1Y, corner2X, corner2Y,
+              corner3X, corner3Y);
     }
 
     return rawDetections;
@@ -906,7 +904,7 @@ public final class LimelightHelpers {
     return getLimelightNTTableEntry(tableName, entryName).getStringArray(new String[0]);
   }
 
-  public static @Nullable URL getLimelightURLString(String tableName, String request) {
+  public static URL getLimelightURLString(String tableName, String request) {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
     URL url;
     try {
@@ -1272,7 +1270,7 @@ public final class LimelightHelpers {
    * (addVisionMeasurement) in the WPILib Blue alliance coordinate system.
    */
   public static PoseEstimate getBotPoseEstimate_wpiBlue(String limelightName) {
-    return getBotPoseEstimate(limelightName, "botpose_wpiblue", /* isMegaTag2= */false);
+    return getBotPoseEstimate(limelightName, "botpose_wpiblue", false);
   }
 
   /**
@@ -1281,7 +1279,7 @@ public final class LimelightHelpers {
    * setRobotOrientation() before calling this method.
    */
   public static PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(String limelightName) {
-    return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue", /* isMegaTag2= */true);
+    return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue", true);
   }
 
   /** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement) */
@@ -1296,7 +1294,7 @@ public final class LimelightHelpers {
    * you are on the RED alliance
    */
   public static PoseEstimate getBotPoseEstimate_wpiRed(String limelightName) {
-    return getBotPoseEstimate(limelightName, "botpose_wpired", /* isMegaTag2= */false);
+    return getBotPoseEstimate(limelightName, "botpose_wpired", false);
   }
 
   /**
@@ -1304,7 +1302,7 @@ public final class LimelightHelpers {
    * you are on the RED alliance
    */
   public static PoseEstimate getBotPoseEstimate_wpiRed_MegaTag2(String limelightName) {
-    return getBotPoseEstimate(limelightName, "botpose_orb_wpired", /* isMegaTag2= */true);
+    return getBotPoseEstimate(limelightName, "botpose_orb_wpired", true);
   }
 
   /** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement) */
@@ -1438,7 +1436,7 @@ public final class LimelightHelpers {
       double roll,
       double rollRate) {
     setRobotOrientationInternal(
-        limelightName, yaw, yawRate, pitch, pitchRate, roll, rollRate, /* flush= */true);
+        limelightName, yaw, yawRate, pitch, pitchRate, roll, rollRate, true);
   }
 
   public static void SetRobotOrientation_NoFlush(
@@ -1450,7 +1448,7 @@ public final class LimelightHelpers {
       double roll,
       double rollRate) {
     setRobotOrientationInternal(
-        limelightName, yaw, yawRate, pitch, pitchRate, roll, rollRate, /* flush= */false);
+        limelightName, yaw, yawRate, pitch, pitchRate, roll, rollRate, false);
   }
 
   private static void setRobotOrientationInternal(
@@ -1528,7 +1526,7 @@ public final class LimelightHelpers {
    *     0 for pipeline control.
    */
   public static void SetFiducialDownscalingOverride(String limelightName, float downscale) {
-    @Var int d = 0; // pipeline
+    int d = 0; // pipeline
     if (downscale == 1.0) {
       d = 1;
     }
@@ -1628,10 +1626,10 @@ public final class LimelightHelpers {
   public static LimelightResults getLatestResults(String limelightName) {
 
     long start = System.nanoTime();
-    @Var LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
+    LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
     if (mapper == null) {
       mapper =
-          new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, /* state= */false);
+          new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     try {
@@ -1650,6 +1648,5 @@ public final class LimelightHelpers {
     return results;
   }
 
-
-private LimelightHelpers() {}
+  private LimelightHelpers() {}
 }
