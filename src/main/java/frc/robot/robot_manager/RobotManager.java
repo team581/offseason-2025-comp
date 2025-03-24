@@ -93,9 +93,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     var stateCount = RobotState.values().length;
 
-    if (stateCount > 50) {
-      DogLog.log("RobotManager/StateCount", stateCount);
-    }
+    DogLog.log("RobotManager/StateCount", stateCount);
   }
 
   private double reefSnapAngle = 0.0;
