@@ -41,7 +41,6 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private final int[] closestScoringReefTag = {0};
 
-
   public Limelight(String name, LimelightState initialState, LimelightModel limelightModel) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
@@ -61,7 +60,6 @@ public class Limelight extends StateMachine<LimelightState> {
       double rollRate) {
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-  
   }
 
   public void setState(LimelightState state) {
