@@ -1,6 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
 import com.google.common.graph.ValueGraph;
+import com.google.errorprone.annotations.Var;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.util.MathHelpers;
@@ -75,7 +76,7 @@ public class GraphVisualizer {
 
     for (var pair : graph.edges()) {
       var edge = graph.edgeValue(pair).orElseThrow();
-      var cost = edge.getCost(obstruction);
+      @Var var cost = edge.getCost(obstruction);
 
       if (cost == Double.MAX_VALUE) {
         if (HIDE_INFINITE_COSTS) {

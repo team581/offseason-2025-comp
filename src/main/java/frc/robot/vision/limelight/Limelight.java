@@ -30,7 +30,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private final LimelightModel limelightModel;
 
   private final Timer limelightTimer = new Timer();
-  private final Timer seedIMUTimer = new Timer();
+  private final Timer seedImuTimer = new Timer();
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
 
@@ -118,20 +118,20 @@ public class Limelight extends StateMachine<LimelightState> {
     if (t2d.length == 0) {
       return Optional.empty();
     }
-    var coralTX = t2d[4];
-    var coralTY = t2d[5];
-    if (coralTX == 0.0 || coralTY == 0.0) {
+    var coralTx = t2d[4];
+    var coralTy = t2d[5];
+    if (coralTx == 0.0 || coralTy == 0.0) {
       return Optional.empty();
     }
 
-    DogLog.log("Vision/" + name + "/Coral/tx", coralTX);
-    DogLog.log("Vision/" + name + "/Coral/ty", coralTY);
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
 
     var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
 
-    return Optional.of(new GamePieceResult(coralTX, coralTY, timestamp));
+    return Optional.of(new GamePieceResult(coralTx, coralTy, timestamp));
   }
 
   private Optional<GamePieceResult> getRawAlgaeResult() {
@@ -142,20 +142,20 @@ public class Limelight extends StateMachine<LimelightState> {
     if (t2d.length == 0) {
       return Optional.empty();
     }
-    var algaeTX = t2d[4];
-    var algaeTY = t2d[5];
-    if (algaeTX == 0.0 || algaeTY == 0.0) {
+    var algaeTx = t2d[4];
+    var algaeTy = t2d[5];
+    if (algaeTx == 0.0 || algaeTy == 0.0) {
       return Optional.empty();
     }
 
-    DogLog.log("Vision/" + name + "/Algae/tx", algaeTX);
-    DogLog.log("Vision/" + name + "/Algae/ty", algaeTY);
+    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
+    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
 
     var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
 
-    return Optional.of(new GamePieceResult(algaeTX, algaeTY, timestamp));
+    return Optional.of(new GamePieceResult(algaeTx, algaeTy, timestamp));
   }
 
   public void setClosestScoringReefTag(int tagID) {
@@ -207,8 +207,8 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    seedIMUTimer.reset();
-    seedIMUTimer.start();
+    seedImuTimer.reset();
+    seedImuTimer.start();
   }
 
   private void updateHealth(Optional<?> result) {
@@ -266,7 +266,7 @@ public class Limelight extends StateMachine<LimelightState> {
         Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getZ()));
   }
 
-  private Pose3d getRobotRelativeCameraPosition(
+  private static Pose3d getRobotRelativeCameraPosition(
       Pose3d robotPoseTargetSpace, Pose3d seenCameraPoseTargetSpace) {
     // Positive X = Right
     var cameraLeftRight = seenCameraPoseTargetSpace.getX();

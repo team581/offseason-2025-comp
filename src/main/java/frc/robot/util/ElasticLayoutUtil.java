@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Filesystem;
  *
  * <p>Use the "merge" strategy for downloading the layout
  */
-public class ElasticLayoutUtil {
+public final class ElasticLayoutUtil {
   private static final int PORT = 5800;
   private static boolean isServerRunning = false;
 
@@ -36,4 +36,7 @@ public class ElasticLayoutUtil {
     WebServer.stop(PORT);
     isServerRunning = false;
   }
+
+
+private ElasticLayoutUtil() {}
 }

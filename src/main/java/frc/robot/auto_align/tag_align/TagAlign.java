@@ -1,5 +1,6 @@
 package frc.robot.auto_align.tag_align;
 
+import com.google.common.collect.ImmutableList;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class TagAlign {
-  private static final List<ReefPipe> ALL_REEF_PIPES = List.of(ReefPipe.values());
+  private static final ImmutableList<ReefPipe> ALL_REEF_PIPES = ImmutableList.copyOf(List.of(ReefPipe.values()));
 
   private static final PIDController TAG_SIDEWAYS_PID = new PIDController(6.0, 0.0, 0.0);
   private static final PIDController TAG_FORWARD_PID = new PIDController(3.0, 0.0, 0.0);

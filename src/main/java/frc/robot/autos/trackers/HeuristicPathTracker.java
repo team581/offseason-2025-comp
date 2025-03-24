@@ -9,7 +9,7 @@ import java.util.List;
 public class HeuristicPathTracker implements PathTracker {
   private List<AutoPoint> points = List.of();
   private Pose2d currentPose = Pose2d.kZero;
-  private double proximityRadius = 0.5;
+  private final double proximityRadius = 0.5;
   private int currentPointIndex = 0;
 
   @Override

@@ -1,6 +1,7 @@
 package frc.robot.lights;
 
 import com.ctre.phoenix.led.CANdle;
+import com.google.errorprone.annotations.Var;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +12,7 @@ import frc.robot.util.state_machines.StateMachine;
 public class LightsSubsystem extends StateMachine<LightsState> {
   private final CANdle candle;
 
-  private Timer blinkTimer = new Timer();
+  private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_NO_GP;
   private LightsState disabledState = LightsState.HEALTHY;
 
@@ -46,13 +47,13 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
-    Color8Bit color8Bit = new Color8Bit(usedState.color);
+    var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {
       candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
     } else {
       double time = blinkTimer.get();
-      double onDuration = 0;
-      double offDuration = 0;
+      @Var double onDuration = 0;
+      @Var double offDuration = 0;
 
       if (usedState.pattern == BlinkPattern.BLINK_FAST) {
         onDuration = BlinkPattern.BLINK_FAST.duration;

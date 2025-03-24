@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import com.google.common.base.VerifyException;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -54,7 +55,7 @@ public abstract class BaseAuto {
                 DogLog.logFault("Auto command interrupted outside teleop");
 
                 if (RobotConfig.IS_DEVELOPMENT) {
-                  throw new RuntimeException(
+                  throw new VerifyException(
                       "The auto command was interrupted while still in auto mode, is there a command requirements conflict?");
                 }
               }

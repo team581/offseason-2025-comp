@@ -28,7 +28,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final CoastOut coastNeutralRequest = new CoastOut();
 
   private double averageMotorCurrent;
-  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
+  private final LinearFilter linearFilter = LinearFilter.movingAverage(5);
 
   // private final MotionMagicVoltage motionMagicRequest =
   //     new MotionMagicVoltage(0.0).withEnableFOC(false);

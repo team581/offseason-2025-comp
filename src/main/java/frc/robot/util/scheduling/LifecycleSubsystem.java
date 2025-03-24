@@ -1,9 +1,11 @@
 package frc.robot.util.scheduling;
 
+import com.google.errorprone.annotations.Var;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.util.Stopwatch;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Extends {@link SubsystemBase} by adding in lifecycle methods for robotInit, teleopPeriodic, etc.,
@@ -16,14 +18,14 @@ public class LifecycleSubsystem extends SubsystemBase {
 
   protected final String subsystemName;
 
-  private LifecycleStage previousStage = null;
+  private @Nullable LifecycleStage previousStage = null;
 
   public LifecycleSubsystem(SubsystemPriority priority) {
     this.priority = priority;
 
     LifecycleSubsystemManager.registerSubsystem(this);
 
-    String name = this.getClass().getSimpleName();
+    @Var String name = this.getClass().getSimpleName();
     name = name.substring(name.lastIndexOf('.') + 1);
     if (name.endsWith("Subsystem")) {
       name = name.substring(0, name.length() - "Subsystem".length());
@@ -56,9 +58,9 @@ public class LifecycleSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     Stopwatch.start(loggerName);
-    LifecycleStage stage;
+    
 
-    stage = LifecycleSubsystemManager.getStage();
+    LifecycleStage stage = LifecycleSubsystemManager.getStage();
 
     boolean isInit = previousStage != stage;
 

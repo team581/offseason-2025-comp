@@ -3,7 +3,7 @@ package frc.robot.util;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 
-public class ControllerHelpers {
+public final class ControllerHelpers {
   public static double deadbandJoystickValue(double joystickValue, double deadband) {
     return MathUtil.applyDeadband(joystickValue, deadband, 1);
   }
@@ -45,4 +45,7 @@ public class ControllerHelpers {
       return new Translation2d(x, y);
     }
   }
+
+
+private ControllerHelpers() {}
 }

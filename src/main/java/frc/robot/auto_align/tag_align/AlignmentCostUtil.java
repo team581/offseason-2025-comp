@@ -69,7 +69,7 @@ public class AlignmentCostUtil {
     return distanceCost + driveAngleCost;
   }
 
-  public final Comparator<Translation2d> ALIGN_COST_COMPARATOR;
+  public static final Comparator<Translation2d> ALIGN_COST_COMPARATOR;
 
   private final LocalizationSubsystem localization;
   private final SwerveSubsystem swerve;

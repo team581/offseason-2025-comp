@@ -1,5 +1,6 @@
 package frc.robot.autos.constraints;
 
+import com.google.errorprone.annotations.Var;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,7 +15,7 @@ public class AutoConstraintCalculator {
       TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options,
       double distanceToSegmentEnd) {
-    ChassisSpeeds constrainedSpeeds = constrainVelocityGoal(inputSpeeds, previousSpeeds, options);
+    @Var ChassisSpeeds constrainedSpeeds = constrainVelocityGoal(inputSpeeds, previousSpeeds, options);
 
     double newLinearVelocity =
         getAccelerationBasedVelocityConstraint(
@@ -36,7 +37,7 @@ public class AutoConstraintCalculator {
       TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
     lastUsedConstraints = options;
-    var constrainedSpeeds = inputSpeeds;
+    @Var var constrainedSpeeds = inputSpeeds;
 
     if (options.maxLinearVelocity() != 0) {
       constrainedSpeeds =

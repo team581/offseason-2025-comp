@@ -1,5 +1,6 @@
 package frc.robot.vision.game_piece_detection;
 
+import com.google.errorprone.annotations.Var;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,7 +12,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.vision.results.GamePieceResult;
 
-public class GamePieceDetectionUtil {
+public final class GamePieceDetectionUtil {
 
   private static final double CORAL_LENGTH = 11.875;
   private static final double CORAL_RADIUS = 2.25;
@@ -81,7 +82,7 @@ public class GamePieceDetectionUtil {
 
     double adjustedThetaY = limelightToRobotOffset.getRotation().getY() - newThetaY;
 
-    double forwardOffset = 0;
+    @Var double forwardOffset = 0;
     if (adjustedThetaY == 0) {
       forwardOffset = Math.abs(limelightToRobotOffset.getY());
     } else {
@@ -106,4 +107,7 @@ public class GamePieceDetectionUtil {
         .rotateBy(robotPose.getRotation())
         .plus(robotPose.getTranslation());
   }
+
+
+private GamePieceDetectionUtil() {}
 }

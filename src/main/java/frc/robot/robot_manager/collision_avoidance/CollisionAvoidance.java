@@ -5,6 +5,7 @@ import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.google.errorprone.annotations.Var;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -41,7 +42,7 @@ public class CollisionAvoidance {
     return Optional.empty();
   }
 
-  private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
+  private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
@@ -140,7 +141,7 @@ public class CollisionAvoidance {
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
     Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
     totalPath.add(endWaypoint);
-    Waypoint current = endWaypoint;
+    @Var Waypoint current = endWaypoint;
     while (cameFrom.containsKey(current)) {
       current = cameFrom.get(current);
       totalPath.addFirst(current);
@@ -153,7 +154,7 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    Set<Waypoint> openSet = EnumSet.of(Waypoint.getClosest(currentPosition));
+    var openSet = EnumSet.of(Waypoint.getClosest(currentPosition));
 
     Map<Waypoint, Waypoint> cameFrom = new EnumMap<Waypoint, Waypoint>(Waypoint.class);
 
@@ -167,7 +168,7 @@ public class CollisionAvoidance {
     Waypoint goalWaypoint = Waypoint.getClosest(desiredPosition);
 
     gscore.put(startWaypoint, 0.0);
-    Waypoint current = Waypoint.STOWED;
+    @Var Waypoint current = Waypoint.STOWED;
     while (!openSet.isEmpty()) {
       // current is equal to the waypoint in openset that has the smallest gscore
       var maybeCurrent =

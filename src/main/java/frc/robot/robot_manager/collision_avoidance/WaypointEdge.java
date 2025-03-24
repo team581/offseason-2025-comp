@@ -9,15 +9,15 @@ public record WaypointEdge(
     boolean safeWhenRightBlocked) {
 
   public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, true, false);
+    return new WaypointEdge(from, to, /* safeForLeftBlocked= */true, /* safeForRightBlocked= */false);
   }
 
   public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, false, true);
+    return new WaypointEdge(from, to, /* safeForLeftBlocked= */false, /* safeForRightBlocked= */true);
   }
 
   public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, true, true);
+    return new WaypointEdge(from, to, /* safeForLeftBlocked= */true, /* safeForRightBlocked= */true);
   }
 
   private WaypointEdge(

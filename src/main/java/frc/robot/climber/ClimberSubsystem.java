@@ -26,7 +26,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
   private double climbMotorDirection = 0;
   private double cancoderDirection = 0;
-  private boolean climberDirectionBad = false;
+  private final boolean climberDirectionBad = false;
   private double currentAngle;
   private double cilmberMotorAngle;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
@@ -143,7 +143,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     return currentAngle >= goal;
   }
 
-  private double clamp(double angle) {
+  private static double clamp(double angle) {
     return MathUtil.clamp(
         angle, RobotConfig.get().climber().minAngle(), RobotConfig.get().climber().maxAngle());
   }

@@ -98,11 +98,11 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private double coralIntakeAssistAngle = 0.0;
+  private final double coralIntakeAssistAngle = 0.0;
   private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
-  private boolean isRollHomed = false;
+  private final boolean isRollHomed = false;
   private boolean confirmScoreActive = false;
   private Pose2d robotPose;
 
@@ -251,7 +251,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
-      default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
+      
     };
   }
 
@@ -1390,7 +1390,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private boolean latestUnsafe = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
-    moveSuperstructure(elevatorGoal, armGoal, false);
+    moveSuperstructure(elevatorGoal, armGoal, /* unsafe= */false);
   }
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {

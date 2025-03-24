@@ -6,6 +6,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.google.errorprone.annotations.Var;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,10 +26,11 @@ import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
   public static final double MaxSpeed = 4.75;
-  private static final double MaxAngularRate = Units.rotationsToRadians(4);
+  private static final double maxAngularRate = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
   /** Ratio from joystick percentage to scoring pose offset in meters. */
@@ -68,19 +70,19 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.015)
-          .withRotationalDeadband(MaxAngularRate * 0.015);
+          .withRotationalDeadband(maxAngularRate * 0.015);
 
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.01)
-          .withRotationalDeadband(MaxAngularRate * 0.015)
+          .withRotationalDeadband(maxAngularRate * 0.015)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
-          .withMaxAbsRotationalRate(MaxAngularRate);
+          .withMaxAbsRotationalRate(maxAngularRate);
 
   private double lastSimTime;
-  private Notifier simNotifier = null;
+  private @Nullable Notifier simNotifier = null;
 
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();
@@ -97,8 +99,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private ChassisSpeeds autoAlignSpeeds = new ChassisSpeeds();
   private ChassisSpeeds autoAlignAutoSpeeds = new ChassisSpeeds();
 
-  private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
-  private double previousTimestamp = 0.0;
+  private final ChassisSpeeds previousSpeeds = new ChassisSpeeds();
+  private final double previousTimestamp = 0.0;
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
@@ -182,13 +184,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void driveTeleop(double x, double y, double theta) {
     rawControllerXValue = x;
     rawControllerYValue = y;
-    double leftY =
+    @Var double leftY =
         -1.0
             * MathHelpers.signedExp(
                 ControllerHelpers.deadbandJoystickValue(y, LEFT_Y_DEADBAND), 2.0);
-    double leftX =
+    @Var double leftX =
         MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, LEFT_X_DEADBAND), 2.0);
-    double rightX =
+    @Var double rightX =
         MathHelpers.signedExp(
             ControllerHelpers.deadbandJoystickValue(theta, RIGHT_X_DEADBAND), 2.0);
 
@@ -334,7 +336,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withVelocityX(autoSpeeds.vxMetersPerSecond)
                 .withVelocityY(autoSpeeds.vyMetersPerSecond)
                 .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                .withMaxAbsRotationalRate(MaxAngularRate)
+                .withMaxAbsRotationalRate(maxAngularRate)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
@@ -382,7 +384,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   }
 
   public void snapsDriveRequest(double snapAngle) {
-    snapsDriveRequest(snapAngle, false);
+    snapsDriveRequest(snapAngle, /* teleopOnly= */false);
   }
 
   public void coralAlignmentDriveRequest() {
@@ -452,7 +454,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     simNotifier =
         new Notifier(
             () -> {
-              final double currentTime = Utils.getCurrentTimeSeconds();
+               double currentTime = Utils.getCurrentTimeSeconds();
               double deltaTime = currentTime - lastSimTime;
               lastSimTime = currentTime;
 

@@ -12,7 +12,7 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
 
 public class DeploySubsystem extends StateMachine<DeployState> {
-  private final double TOLERANCE = 1.0;
+  private static final double TOLERANCE = 1.0;
 
   private final TalonFX motor;
   private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);

@@ -103,14 +103,12 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     }
   }
 
-  public static boolean isCloseToReefSide(
+  
+public static boolean isCloseToReefSide(
       Pose2d robotPose, Pose2d nearestReefSide, double thresholdMeters) {
     return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
         < thresholdMeters;
   }
-
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
 
   public static boolean isCloseToReefSide(
       Pose2d robotPose, Pose2d nearestReefSide, ChassisSpeeds robotSpeeds) {
@@ -122,6 +120,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS
             + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
   }
+
+
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
 
   private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
   private final VisionSubsystem vision;
@@ -160,7 +162,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     teleopSpeeds = speeds;
   }
 
-  private ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
+  private static ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
     var options =
         new AutoConstraintOptions()
             .withMaxAngularAcceleration(0)
@@ -184,7 +186,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     usedScoringPose = tagAlign.getUsedScoringPose(bestReefPipe);
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-    tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
+    tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, /* forwardOnly= */false);
     algaeAlignSpeeds =
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
   }
