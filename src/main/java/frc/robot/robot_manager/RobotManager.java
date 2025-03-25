@@ -104,6 +104,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private static final boolean IS_ROLL_HOMED = false;
   private boolean confirmScoreActive = false;
   private Pose2d robotPose;
+  private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -924,9 +925,8 @@ public class RobotManager extends StateMachine<RobotState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose());
-    DogLog.log("RobotManager/ShouldIntakeForward", AutoAlign.shouldIntakeStationFront(robotPose));
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
-
+    DogLog.log("AutoAlign/ScoringLoopAroundObstruction", shouldLoopAroundToScoreObstruction);
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
@@ -1033,7 +1033,7 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     autoAlign.setScoringLevel(scoringLevel, robotScoringSide);
-
+    shouldLoopAroundToScoreObstruction = autoAlign.shouldArmGoAroundToScore();
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
@@ -1400,7 +1400,7 @@ public class RobotManager extends StateMachine<RobotState> {
         CollisionAvoidance.route(
             new SuperstructurePosition(elevator.getHeight(), arm.getAngle()),
             new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle()),
-            ObstructionKind.NONE);
+            shouldLoopAroundToScoreObstruction);
 
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
       elevator.setState(elevatorGoal);
