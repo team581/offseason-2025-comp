@@ -11,9 +11,10 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 1.0;
@@ -23,7 +24,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight rightLimelight;
   private final Limelight gamePieceDetectionLimelight;
 
-  private final List<TagResult> tagResult = new ArrayList<>();
+  private final Queue<TagResult> tagResult = new ArrayDeque<>(4);
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
@@ -101,7 +102,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     }
   }
 
-  public List<TagResult> getTagResult() {
+  public Collection<TagResult> getTagResult() {
     return tagResult;
   }
 
