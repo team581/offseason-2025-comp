@@ -123,7 +123,7 @@ public class TagAlign {
     return goalSpeeds;
   }
 
-  public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose, boolean forwardOnly) {
+  public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
     var robotPose = localization.getPose();
 
     var scoringTranslationRobotRelative =
