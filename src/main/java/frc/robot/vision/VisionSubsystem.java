@@ -97,7 +97,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       tagResult.add(maybeGamePieceResult.get());
     }
 
-    if (DriverStation.isDisabled() && !hasSeenTag) {
+    if (!hasSeenTag) {
       hasSeenTag = !tagResult.isEmpty();
     }
   }
