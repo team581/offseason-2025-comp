@@ -4,8 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -38,7 +36,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
@@ -153,9 +150,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState()
-              : currentState;
+          claw.getHasGP() ? currentState.getHandoffReleaseToApproachState() : currentState;
 
       // Aproach
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
@@ -232,7 +227,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case  CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
         if (claw.getHasGP()) {
           yield currentState.getCoralAfterIntake();
         }
@@ -241,7 +236,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-
           CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
           CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
         if (intake.getHasGP()) {
