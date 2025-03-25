@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
@@ -27,6 +28,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
+
+  private static final DoubleSubscriber TIME_TO_RAISE_ARM_FORWARD =
+      DogLog.tunable("AutoAlign/ArmForwardRaiseTime", 0.8);
+  private static final DoubleSubscriber SAFE_ARM_FORWARD_DISTANCE_FROM_REEF_SIDE =
+      DogLog.tunable("AutoAlign/SafeReefDistanceArmForward", 0.8);
 
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
@@ -162,15 +168,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
   }
 
-  public ObstructionKind shouldArmScoreForward() {
+  public ObstructionKind shouldArmGoAroundToScore() {
     // Account for distance we'll be at once we finish forward motion
-    var lookaheadPose = localization.getLookaheadPose(0.8);
+    var lookaheadPose = localization.getLookaheadPose(TIME_TO_RAISE_ARM_FORWARD.get());
     var lookaheadPoseDistance =
         lookaheadPose
             .getTranslation()
             .getDistance(
                 bestReefPipe.getPose(ReefPipeLevel.BASE, robotScoringSide).getTranslation());
-    if (lookaheadPoseDistance > 0.8) {
+    if (lookaheadPoseDistance < SAFE_ARM_FORWARD_DISTANCE_FROM_REEF_SIDE.get()) {
       return robotScoringSide == RobotScoringSide.RIGHT
           ? ObstructionKind.RIGHT_OBSTRUCTED
           : ObstructionKind.LEFT_OBSTRUCTED;
