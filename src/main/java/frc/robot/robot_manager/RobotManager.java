@@ -102,7 +102,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
   private static final boolean IS_ROLL_HOMED = false;
-  private boolean confirmScoreActive = false;
   private Pose2d robotPose;
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
 
@@ -1428,9 +1427,5 @@ public class RobotManager extends StateMachine<RobotState> {
     return vision.getLollipopVisionResult().isPresent()
         ? LightsState.HOLDING_ALGAE
         : LightsState.SCORE_ALIGN_NOT_READY;
-  }
-
-  public void setConfirmScoreActive(boolean newValue) {
-    confirmScoreActive = newValue;
   }
 }

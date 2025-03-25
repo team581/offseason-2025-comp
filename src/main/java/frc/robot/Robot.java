@@ -228,16 +228,7 @@ public class Robot extends TimedRobot {
         .driverController
         .rightTrigger()
         .onTrue(
-            Commands.runOnce(
-                    () -> {
-                      robotManager.setConfirmScoreActive(true);
-                    })
-                .alongWith(robotCommands.confirmScoreCommand()))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  robotManager.setConfirmScoreActive(false);
-                }));
+           robotCommands.confirmScoreCommand());
     hardware.driverController.leftTrigger().onTrue(robotCommands.coralGroundIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
