@@ -16,7 +16,6 @@ public class ClawSubsystem extends StateMachine<ClawState> {
 
   private boolean sensorRaw = false;
   private boolean sensorDebounced = false;
-  private boolean sensorsHaveGP = false;
 
   public ClawSubsystem(TalonFX motor, CANdi candi) {
     super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
@@ -31,16 +30,10 @@ public class ClawSubsystem extends StateMachine<ClawState> {
     sensorRaw = candi.getS1State().getValue() != S1StateValue.Low;
 
     sensorDebounced = debouncer.calculate(sensorRaw);
-
-    sensorsHaveGP = sensorDebounced;
-  }
-
-  public boolean getSensor() {
-    return sensorDebounced;
   }
 
   public boolean getHasGP() {
-    return sensorsHaveGP;
+    return sensorDebounced;
   }
 
   public void setState(ClawState newState) {
@@ -90,6 +83,5 @@ public class ClawSubsystem extends StateMachine<ClawState> {
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Claw/Sensors/SensorRaw", sensorRaw);
     DogLog.log("Claw/Sensors/SensorDebounced", sensorDebounced);
-    DogLog.log("Claw/SensorsHaveGP", sensorsHaveGP);
   }
 }
