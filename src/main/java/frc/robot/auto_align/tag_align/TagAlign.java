@@ -2,11 +2,13 @@ package frc.robot.auto_align.tag_align;
 
 import com.google.common.collect.ImmutableList;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
@@ -22,7 +24,10 @@ public class TagAlign {
 
   private static final PIDController TAG_SIDEWAYS_PID = new PIDController(6.0, 0.0, 0.0);
   private static final PIDController TAG_FORWARD_PID = new PIDController(3.0, 0.0, 0.0);
-  private static final double TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD = 0.05;
+  private static final DoubleSubscriber TRANSLATION_GOOD_THRESHOLD =
+      DogLog.tunable("AutoAlign/IsAlignedTranslation", 0.05);
+  private static final DoubleSubscriber ROTATION_GOOD_THRESHOLD =
+      DogLog.tunable("AutoAlign/IsAlignedRotation", 5.0);
 
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
@@ -54,8 +59,17 @@ public class TagAlign {
   public boolean isAligned(ReefPipe pipe) {
     var robotPose = localization.getPose();
     var scoringPoseFieldRelative = getUsedScoringPose(pipe);
-    return robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
-        <= TAG_ALIGNMENT_FINISHED_DISTANCE_THRESHOLD;
+    var translationGood =
+        (robotPose.getTranslation().getDistance(scoringPoseFieldRelative.getTranslation())
+            <= TRANSLATION_GOOD_THRESHOLD.get());
+    var rotationGood =
+        MathUtil.isNear(
+            scoringPoseFieldRelative.getRotation().getDegrees(),
+            robotPose.getRotation().getDegrees(),
+            ROTATION_GOOD_THRESHOLD.get(),
+            -180.0,
+            180.0);
+    return translationGood && rotationGood;
   }
 
   public void markScored(ReefPipe pipe) {
