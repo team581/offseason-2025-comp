@@ -98,10 +98,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
-  private static final boolean IS_ROLL_HOMED = false;
   private Pose2d robotPose;
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
 
@@ -155,7 +153,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP() && !intake.getHasGP()
+          claw.getHasGP()
               ? currentState.getHandoffReleaseToApproachState()
               : currentState;
 
@@ -234,8 +232,16 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
+      case  CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+        if (claw.getHasGP()) {
+          yield currentState.getCoralAfterIntake();
+        }
+
+        yield currentState;
+      }
+
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-          CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY,
+
           CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
           CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
         if (intake.getHasGP()) {
@@ -961,6 +967,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY -> {
         if (FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+          var maybeBestCoralMapTranslation = coralMap.getBestCoral();
           if (maybeBestCoralMapTranslation.isPresent()) {
             var bestCoralMapTranslation = maybeBestCoralMapTranslation.orElseThrow();
 
@@ -1024,7 +1031,6 @@ public class RobotManager extends StateMachine<RobotState> {
   protected void collectInputs() {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
-    maybeBestCoralMapTranslation = coralMap.getBestCoral();
     robotPose = localization.getPose();
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
@@ -1376,10 +1382,6 @@ public class RobotManager extends StateMachine<RobotState> {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_DEPLOY);
     }
-  }
-
-  public Command waitForRollHomedCommand() {
-    return Commands.waitUntil(() -> IS_ROLL_HOMED);
   }
 
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
