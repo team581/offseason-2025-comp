@@ -115,8 +115,8 @@ public class TagAlign {
 
     var goalTranslationWithP =
         new Translation2d(
-            TAG_FORWARD_PID.calculate(0.0),
-            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
+            TAG_FORWARD_PID.calculate(0));
     var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
     var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
@@ -125,7 +125,6 @@ public class TagAlign {
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
     var robotPose = localization.getPose();
-
     var scoringTranslationRobotRelative =
         usedScoringPose
             .getTranslation()
@@ -134,8 +133,8 @@ public class TagAlign {
 
     var goalTranslationWithP =
         new Translation2d(
-            TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getX()),
-            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getY()));
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
+            TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getY()));
     var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
 
     var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
