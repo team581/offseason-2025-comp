@@ -98,7 +98,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private static final double CORAL_INTAKE_ASSIST_ANGLE = 0.0;
   private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
