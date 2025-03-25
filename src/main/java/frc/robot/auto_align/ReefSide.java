@@ -124,11 +124,11 @@ public enum ReefSide {
                 ? new Transform2d(
                     0,
                     -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
-                    Rotation2d.kZero)
+                    Rotation2d.kCW_90deg)
                 : new Transform2d(
                     0,
                     Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
-                    Rotation2d.kZero));
+                    Rotation2d.kCCW_90deg));
   }
 
   public Pose2d getPose() {
