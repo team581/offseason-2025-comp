@@ -59,8 +59,7 @@ public record RobotConfig(
       Pose3d leftBackLimelightPosition,
       Pose3d leftFrontLimelightPosition,
       Pose3d rightLimelightPosition,
-      Pose3d gamePieceDetectionLimelightPosition
-      ) {}
+      Pose3d gamePieceDetectionLimelightPosition) {}
 
   public record ArmConfig(
       String canBusName,
