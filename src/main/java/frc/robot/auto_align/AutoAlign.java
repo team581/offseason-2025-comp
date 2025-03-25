@@ -14,7 +14,6 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
-import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -49,13 +48,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return RobotScoringSide.LEFT;
   }
 
-  public static boolean shouldIntakeStationFront(Pose2d robotPose) {
-    double theta = robotPose.getRotation().getDegrees();
-    var coralStationBackwardAngle = SnapUtil.getCoralStationAngle(robotPose);
-
-    return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
-  }
-
   public static RobotScoringSide getScoringSideFromRobotPose(
       Pose2d robotPose, boolean leftLimelightsOnline, boolean rightLimelightOnline) {
     if (!leftLimelightsOnline) {
@@ -82,25 +74,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       return RobotScoringSide.RIGHT;
     }
     return RobotScoringSide.LEFT;
-  }
-
-  public static boolean isStationIntakeProcessorSide(Pose2d robotPose) {
-    if (robotPose.getY() > 4.025) {
-      if (FmsSubsystem.isRedAlliance()) {
-        // Coral station red, processor side
-        return true;
-      }
-
-      // Coral station blue, non processor side
-      return false;
-    } else {
-      if (FmsSubsystem.isRedAlliance()) {
-        // Coral station red, non processor side
-        return false;
-      }
-      // Coral station blue, processor side
-      return true;
-    }
   }
 
   public static boolean isCloseToReefSide(
