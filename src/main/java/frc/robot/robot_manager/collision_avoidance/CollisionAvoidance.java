@@ -4,19 +4,25 @@ import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import dev.doglog.DogLog;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CollisionAvoidance {
 
   private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+
+  private static final Map<CollisionAvoidanceQuery, Optional<Waypoint>> aStarCache =
+      new ConcurrentHashMap<>();
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -31,13 +37,24 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
+   return cachedAStar(
+            new CollisionAvoidanceQuery(
+                Waypoint.getClosest(currentPosition),
+                Waypoint.getClosest(desiredPosition),
+                obstructionKind));
+  }
 
-    var maybeResult = aStar(currentPosition, desiredPosition, obstructionKind);
-    if (maybeResult.isPresent()) {
-      return Optional.of(
-          maybeResult.orElseThrow().peek()); // go to the first waypoint in the list to goal
-    }
-    return Optional.empty();
+  private static Optional<Waypoint> cachedAStar(CollisionAvoidanceQuery query) {
+    return aStarCache.computeIfAbsent(query, (k) -> {
+      Optional<Deque<Waypoint>> nextWaypoint =
+      aStar(
+          query.currentWaypoint().position,
+          query.goalWaypoint().position,
+          query.obstructionKind());
+  DogLog.log("CollisionAvoidance", aStarCache.size());
+  return Optional.of(nextWaypoint.orElseThrow().peek());
+    });
+
   }
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
