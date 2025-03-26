@@ -11,6 +11,8 @@ import frc.robot.vision.game_piece_detection.GamePieceDetectionUtil;
 import frc.robot.vision.results.GamePieceResult;
 import java.util.Optional;
 
+import dev.doglog.DogLog;
+
 public final class IntakeAssistUtil {
   private static final double CORAL_ASSIST_KP = 3.0;
   private static final double INTAKE_OFFSET = Units.inchesToMeters(18);
@@ -44,13 +46,13 @@ public final class IntakeAssistUtil {
         GamePieceDetectionUtil.calculateRobotRelativeLollipopTranslationFromCamera(
             robotPose, result.get());
     var robotRelativeRotation =
-        Rotation2d.fromDegrees(getIntakeAssistAngle(translation, Pose2d.kZero));
+        Rotation2d.fromDegrees(getIntakeAssistAngle(translation, Pose2d.kZero)+90.0);
     var withRotation = new Pose2d(translation.getX(), translation.getY(), robotRelativeRotation);
     var offset =
         withRotation.transformBy(
             new Transform2d(
-                -INTAKE_OFFSET,
-                Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()),
+              Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()),
+              INTAKE_OFFSET,
                 Rotation2d.kZero));
     var fieldRelativeIntakePose =
         new Pose2d(
