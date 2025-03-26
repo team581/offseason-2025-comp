@@ -14,6 +14,7 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
 import frc.robot.auto_align.RobotScoringSide;
+import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import java.util.Optional;
@@ -124,6 +125,25 @@ public class TagAlign {
   }
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
+   if (FeatureFlags.AUTO_ALIGN_FIX_ROTATION_CAUSING_OVERSHOOT.getAsBoolean()) {
+     var robotPose = localization.getPose();
+
+     var scoringTranslationRobotRelative =
+         usedScoringPose
+             .getTranslation()
+             .minus(robotPose.getTranslation())
+             .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
+
+     var goalTranslationWithP =
+         new Translation2d(
+             TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
+             TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getY()));
+     var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
+
+     var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
+     DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
+     return goalSpeeds;
+   } else {
     var robotPose = localization.getPose();
     var scoringTranslationRobotRelative =
         usedScoringPose
@@ -140,5 +160,7 @@ public class TagAlign {
     var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
     DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
     return goalSpeeds;
+
+   }
   }
 }

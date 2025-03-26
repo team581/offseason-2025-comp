@@ -18,6 +18,9 @@ public class FeatureFlags {
 
   public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
 
+  public static final BooleanSupplier AUTO_ALIGN_FIX_ROTATION_CAUSING_OVERSHOOT =
+  FeatureFlag.of("AutoAlign/FixRotationCausingOvershoot", false);
+
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
 
   /**
