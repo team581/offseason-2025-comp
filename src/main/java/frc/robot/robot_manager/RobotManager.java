@@ -4,8 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -38,7 +36,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
@@ -98,10 +95,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
-  private static final boolean IS_ROLL_HOMED = false;
   private Pose2d robotPose;
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
 
@@ -155,9 +150,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP() && !intake.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState()
-              : currentState;
+          claw.getHasGP() ? currentState.getHandoffReleaseToApproachState() : currentState;
 
       // Aproach
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
@@ -234,8 +227,15 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
+      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+        if (claw.getHasGP()) {
+          yield currentState.getCoralAfterIntake();
+        }
+
+        yield currentState;
+      }
+
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-          CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY,
           CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
           CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
         if (intake.getHasGP()) {
@@ -421,7 +421,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
@@ -431,7 +431,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
@@ -441,7 +441,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.CORAL_HANDOFF);
         // Enable assist in periodic if there's coral in map
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
@@ -961,6 +961,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY -> {
         if (FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+          var maybeBestCoralMapTranslation = coralMap.getBestCoral();
           if (maybeBestCoralMapTranslation.isPresent()) {
             var bestCoralMapTranslation = maybeBestCoralMapTranslation.orElseThrow();
 
@@ -1024,7 +1025,6 @@ public class RobotManager extends StateMachine<RobotState> {
   protected void collectInputs() {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
-    maybeBestCoralMapTranslation = coralMap.getBestCoral();
     robotPose = localization.getPose();
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
@@ -1108,25 +1108,44 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    if (claw.getHasGP()) {
-      // Claw is maybe algae or coral
+    switch (getState()) {
+      case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY, CORAL_INTAKE_FLOOR_CLAW_EMPTY ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+      case CORAL_INTAKE_FLOOR_CLAW_ALGAE -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
+      case ALGAE_INTAKE_FLOOR_DEPLOY_CORAL,
+              ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L2_RIGHT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L3_LEFT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L3_RIGHT_DEPLOY_CORAL ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+      case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L2_LEFT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L2_RIGHT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L3_LEFT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L3_RIGHT_DEPLOY_EMPTY ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+      default -> {
+        if (claw.getHasGP()) {
+          // Claw is maybe algae or coral
 
-      if (intake.getHasGP()) {
-        // Intake is holding coral
-        // Technically claw could be holding coral but that shouldn't happen
-        setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
-      } else {
-        if (getState().clawGp == ClawGamePiece.ALGAE) {
-          setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+          if (intake.getHasGP()) {
+            // Intake is holding coral
+            // Technically claw could be holding coral but that shouldn't happen
+            setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
+          } else {
+            if (getState().clawGp == ClawGamePiece.ALGAE) {
+              setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+            } else {
+              setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
+            }
+          }
         } else {
-          setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
+          if (intake.getHasGP()) {
+            setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+          } else {
+            setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+          }
         }
-      }
-    } else {
-      if (intake.getHasGP()) {
-        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
-      } else {
-        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
       }
     }
   }
@@ -1376,10 +1395,6 @@ public class RobotManager extends StateMachine<RobotState> {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_DEPLOY);
     }
-  }
-
-  public Command waitForRollHomedCommand() {
-    return Commands.waitUntil(() -> IS_ROLL_HOMED);
   }
 
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
