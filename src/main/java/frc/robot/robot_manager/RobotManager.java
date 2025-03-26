@@ -421,7 +421,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
@@ -431,7 +431,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
@@ -441,7 +441,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
-        moveSuperstructure(ElevatorState.GROUND_CORAL_INTAKE_HORIZONTAL, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.CORAL_HANDOFF);
         // Enable assist in periodic if there's coral in map
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
