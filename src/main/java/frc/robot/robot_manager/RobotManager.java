@@ -1001,7 +1001,7 @@ public class RobotManager extends StateMachine<RobotState> {
     if (!FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       if (vision.isAnyCameraOffline()) {
         lights.setDisabledState(LightsState.ERROR);
-      } else if (!arm.rangeOfMotionGood()) {
+      } else if (arm.getState() == ArmState.PRE_MATCH_HOMING && !arm.rangeOfMotionGood()) {
         lights.setDisabledState(LightsState.UNHOMED);
       } else if (vision.getTagResult().isEmpty()) {
         lights.setDisabledState(LightsState.SCORE_ALIGN_NOT_READY);
