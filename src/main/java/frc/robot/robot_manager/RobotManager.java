@@ -414,7 +414,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.GROUND_CORAL_INTAKE_UPRIGHT, ArmState.LOLLIPOP_CORAL_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
-        lights.setState(getLightStateForScoring());
+        lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY -> {
@@ -1000,7 +1000,7 @@ public class RobotManager extends StateMachine<RobotState> {
     if (!FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       if (vision.isAnyCameraOffline()) {
         lights.setDisabledState(LightsState.ERROR);
-      } else if (!arm.rangeOfMotionGood()) {
+      } else if (arm.getState() == ArmState.PRE_MATCH_HOMING && !arm.rangeOfMotionGood()) {
         lights.setDisabledState(LightsState.UNHOMED);
       } else if (vision.getTagResult().isEmpty()) {
         lights.setDisabledState(LightsState.SCORE_ALIGN_NOT_READY);

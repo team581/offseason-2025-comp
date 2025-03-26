@@ -36,7 +36,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final PositionVoltage pidRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public ArmSubsystem(TalonFX motor) {
-    super(SubsystemPriority.ARM, ArmState.HOLDING_UPRIGHT);
+    super(
+        SubsystemPriority.ARM,
+        RobotConfig.IS_PRACTICE_BOT ? ArmState.PRE_MATCH_HOMING : ArmState.HOLDING_UPRIGHT);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
 
     this.motor = motor;
@@ -70,6 +72,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
       case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
+      case PRE_MATCH_HOMING -> false;
     };
   }
 
@@ -91,11 +94,32 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       case COLLISION_AVOIDANCE -> {
         motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
-
+      case PRE_MATCH_HOMING -> {
+        motor.setControl(coastNeutralRequest);
+      }
       default -> {
         motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
       }
     }
+  }
+
+  @Override
+  protected ArmState getNextState(ArmState currentState) {
+    if (currentState == ArmState.PRE_MATCH_HOMING) {
+      if (rangeOfMotionGood()) {
+        if (DriverStation.isEnabled()) {
+          motor.setPosition(
+              Units.degreesToRotations(
+                  RobotConfig.get().arm().homingPosition() + (motorAngle - lowestSeenAngle)));
+
+          return ArmState.HOLDING_UPRIGHT;
+        } else {
+          motor.setControl(brakeNeutralRequest);
+        }
+      }
+    }
+
+    return currentState;
   }
 
   @Override
@@ -113,7 +137,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
     if (rangeOfMotionGood()) {
       DogLog.clearFault("Arm not seen range of motion");
-    } else {
+    } else if (RobotConfig.IS_PRACTICE_BOT) {
       DogLog.logFault("Arm not seen range of motion", AlertType.kWarning);
     }
 

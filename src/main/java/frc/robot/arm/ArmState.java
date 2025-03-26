@@ -10,6 +10,8 @@ public enum ArmState {
   @Deprecated
   UNTUNED(0),
 
+  PRE_MATCH_HOMING(0),
+
   UNJAM(UNTUNED),
   // Idle positions
   HOLDING_UPRIGHT(UNTUNED),
