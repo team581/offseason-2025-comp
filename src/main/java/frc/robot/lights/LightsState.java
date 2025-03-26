@@ -30,6 +30,10 @@ public enum LightsState {
 
   OTHER(Color.kOrange, BlinkPattern.BLINK_SLOW),
 
+  /**
+   * @deprecated Replace placeholder lights with actual light patterns.
+   */
+  @Deprecated
   PLACEHOLDER(Color.kBlack, BlinkPattern.SOLID);
 
   public final BlinkPattern pattern;

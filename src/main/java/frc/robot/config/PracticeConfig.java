@@ -130,6 +130,7 @@ class PracticeConfig {
                   new Rotation3d(0.0, 0.0, 0.0)),
               new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
               new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+              new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
               new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
           new ArmConfig(
               RIO_CAN_NAME,
@@ -160,7 +161,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(25.0)
                           .withStatorCurrentLimit(40.0)),
               -58.7,
-              0.0),
+              6.615),
           new DeployConfig(
               CANIVORE_NAME,
               20,

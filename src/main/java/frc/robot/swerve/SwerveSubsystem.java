@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> {
   public static final double MaxSpeed = 4.75;
-  private static final double MaxAngularRate = Units.rotationsToRadians(4);
+  private static final double maxAngularRate = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
   /** Ratio from joystick percentage to scoring pose offset in meters. */
@@ -68,16 +68,16 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.015)
-          .withRotationalDeadband(MaxAngularRate * 0.015);
+          .withRotationalDeadband(maxAngularRate * 0.015);
 
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
           .withDeadband(MaxSpeed * 0.01)
-          .withRotationalDeadband(MaxAngularRate * 0.015)
+          .withRotationalDeadband(maxAngularRate * 0.015)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
-          .withMaxAbsRotationalRate(MaxAngularRate);
+          .withMaxAbsRotationalRate(maxAngularRate);
 
   private double lastSimTime;
   private Notifier simNotifier = null;
@@ -97,8 +97,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private ChassisSpeeds autoAlignSpeeds = new ChassisSpeeds();
   private ChassisSpeeds autoAlignAutoSpeeds = new ChassisSpeeds();
 
-  private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
-  private double previousTimestamp = 0.0;
+  private final ChassisSpeeds previousSpeeds = new ChassisSpeeds();
+  private static final double PREVIOUS_TIMESTAMP = 0.0;
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
@@ -334,7 +334,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
                 .withVelocityX(autoSpeeds.vxMetersPerSecond)
                 .withVelocityY(autoSpeeds.vyMetersPerSecond)
                 .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                .withMaxAbsRotationalRate(MaxAngularRate)
+                .withMaxAbsRotationalRate(maxAngularRate)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
@@ -452,7 +452,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     simNotifier =
         new Notifier(
             () -> {
-              final double currentTime = Utils.getCurrentTimeSeconds();
+              double currentTime = Utils.getCurrentTimeSeconds();
               double deltaTime = currentTime - lastSimTime;
               lastSimTime = currentTime;
 

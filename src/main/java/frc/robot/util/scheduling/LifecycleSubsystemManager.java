@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class LifecycleSubsystemManager {
+public final class LifecycleSubsystemManager {
   @SuppressWarnings("unchecked")
   private static Set<Command> getScheduledCommands() {
     try {
@@ -61,4 +61,6 @@ public class LifecycleSubsystemManager {
     subsystems.add(subsystem);
     commandScheduler.unregisterSubsystem(subsystem);
   }
+
+  private LifecycleSubsystemManager() {}
 }

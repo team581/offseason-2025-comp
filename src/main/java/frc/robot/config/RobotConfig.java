@@ -20,8 +20,8 @@ public record RobotConfig(
     LightsConfig lights) {
   public record ElevatorConfig(
       String canBusName,
-      int leftMotorID,
-      int rightMotorID,
+      int leftMotorId,
+      int rightMotorId,
       double drumDiameterInches,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig,
@@ -33,15 +33,15 @@ public record RobotConfig(
 
   public record IntakeConfig(
       String canBusName,
-      int motorID,
-      int candiID,
+      int motorId,
+      int candiId,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
-      int motorID,
-      int candiID,
+      int motorId,
+      int candiId,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
@@ -58,21 +58,22 @@ public record RobotConfig(
       Pose3d robotPoseRelativeToCalibration,
       Pose3d leftBackLimelightPosition,
       Pose3d leftFrontLimelightPosition,
-      Pose3d rightLimelightPosition) {}
+      Pose3d rightLimelightPosition,
+      Pose3d gamePieceDetectionLimelightPosition) {}
 
   public record ArmConfig(
       String canBusName,
-      int motorID,
+      int motorId,
       TalonFXConfiguration motorConfig,
       double homingPosition,
       double inchesFromCenter) {}
 
   public record ClimberConfig(
       String canBusName,
-      int climbMotorID,
-      int cancoderID,
-      int grabMotorID,
-      int canrangeID,
+      int climbMotorId,
+      int cancoderId,
+      int grabMotorId,
+      int canrangeId,
       double minAngle,
       double maxAngle,
       TalonFXConfiguration climbMotorConfig,
@@ -82,14 +83,14 @@ public record RobotConfig(
 
   public record DeployConfig(
       String canBusName,
-      int motorID,
+      int motorId,
       TalonFXConfiguration motorConfig,
       double minAngle,
       double maxAngle,
       double homingVoltage,
       double homingCurrentThreshold) {}
 
-  public record LightsConfig(String canBusName, int candleID) {}
+  public record LightsConfig(String canBusName, int candleId) {}
 
   // TODO: Change this to false during events
   public static final boolean IS_DEVELOPMENT = true;

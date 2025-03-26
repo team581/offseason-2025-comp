@@ -8,13 +8,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.autos.constraints.AutoConstraintCalculator;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
-import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -28,6 +28,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
+
+  private static final DoubleSubscriber TIME_TO_RAISE_ARM_FORWARD =
+      DogLog.tunable("AutoAlign/ArmForwardRaiseTime", 0.8);
+  private static final DoubleSubscriber SAFE_ARM_FORWARD_DISTANCE_FROM_REEF_SIDE =
+      DogLog.tunable("AutoAlign/SafeReefDistanceArmForward", 0.8);
 
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
@@ -47,13 +52,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       return RobotScoringSide.RIGHT;
     }
     return RobotScoringSide.LEFT;
-  }
-
-  public static boolean shouldIntakeStationFront(Pose2d robotPose) {
-    double theta = robotPose.getRotation().getDegrees();
-    var coralStationBackwardAngle = SnapUtil.getCoralStationAngle(robotPose);
-
-    return !MathUtil.isNear(coralStationBackwardAngle, theta, 90, -180, 180);
   }
 
   public static RobotScoringSide getScoringSideFromRobotPose(
@@ -84,33 +82,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return RobotScoringSide.LEFT;
   }
 
-  public static boolean isStationIntakeProcessorSide(Pose2d robotPose) {
-    if (robotPose.getY() > 4.025) {
-      if (FmsSubsystem.isRedAlliance()) {
-        // Coral station red, processor side
-        return true;
-      }
-
-      // Coral station blue, non processor side
-      return false;
-    } else {
-      if (FmsSubsystem.isRedAlliance()) {
-        // Coral station red, non processor side
-        return false;
-      }
-      // Coral station blue, processor side
-      return true;
-    }
-  }
-
   public static boolean isCloseToReefSide(
       Pose2d robotPose, Pose2d nearestReefSide, double thresholdMeters) {
     return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
         < thresholdMeters;
   }
-
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
 
   public static boolean isCloseToReefSide(
       Pose2d robotPose, Pose2d nearestReefSide, ChassisSpeeds robotSpeeds) {
@@ -122,6 +98,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS
             + LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP * linearVelocity);
   }
+
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
 
   private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
   private final VisionSubsystem vision;
@@ -160,7 +139,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     teleopSpeeds = speeds;
   }
 
-  private ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
+  private static ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
     var options =
         new AutoConstraintOptions()
             .withMaxAngularAcceleration(0)
@@ -184,20 +163,20 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     usedScoringPose = tagAlign.getUsedScoringPose(bestReefPipe);
     isAligned = tagAlign.isAligned(bestReefPipe);
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-    tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose, false);
+    tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
   }
 
-  public ObstructionKind shouldArmScoreForward() {
+  public ObstructionKind shouldArmGoAroundToScore() {
     // Account for distance we'll be at once we finish forward motion
-    var lookaheadPose = localization.getLookaheadPose(0.8);
+    var lookaheadPose = localization.getLookaheadPose(TIME_TO_RAISE_ARM_FORWARD.get());
     var lookaheadPoseDistance =
         lookaheadPose
             .getTranslation()
             .getDistance(
                 bestReefPipe.getPose(ReefPipeLevel.BASE, robotScoringSide).getTranslation());
-    if (lookaheadPoseDistance > 0.8) {
+    if (lookaheadPoseDistance < SAFE_ARM_FORWARD_DISTANCE_FROM_REEF_SIDE.get()) {
       return robotScoringSide == RobotScoringSide.RIGHT
           ? ObstructionKind.RIGHT_OBSTRUCTED
           : ObstructionKind.LEFT_OBSTRUCTED;

@@ -3,7 +3,6 @@ package frc.robot.robot_manager.collision_avoidance;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
-import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 public class CollisionAvoidance {
 
-  private static final ValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+  private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -41,7 +40,7 @@ public class CollisionAvoidance {
     return Optional.empty();
   }
 
-  private static ValueGraph<Waypoint, WaypointEdge> createGraph() {
+  private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
     // because if you can go from A to B, you can also go from B to A. Value graph because we want
     // to associate a cost with motion between different waypoints.
@@ -126,7 +125,6 @@ public class CollisionAvoidance {
     var immutableGraph = ImmutableValueGraph.copyOf(graph);
 
     // Visualize the generated graph
-    GraphVisualizer.log(immutableGraph);
     Waypoint.log();
 
     return immutableGraph;
@@ -154,7 +152,7 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    Set<Waypoint> openSet = EnumSet.of(Waypoint.getClosest(currentPosition));
+    var openSet = EnumSet.of(Waypoint.getClosest(currentPosition));
 
     Map<Waypoint, Waypoint> cameFrom = new EnumMap<Waypoint, Waypoint>(Waypoint.class);
 
@@ -200,6 +198,11 @@ public class CollisionAvoidance {
       }
     }
     return Optional.empty();
+  }
+
+  /** Don't use this. */
+  static ImmutableValueGraph<Waypoint, WaypointEdge> getRawGraph() {
+    return graph;
   }
 
   private CollisionAvoidance() {}

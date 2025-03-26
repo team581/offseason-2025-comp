@@ -11,7 +11,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.vision.results.GamePieceResult;
 
-public class GamePieceDetectionUtil {
+public final class GamePieceDetectionUtil {
 
   private static final double CORAL_LENGTH = 11.875;
   private static final double CORAL_RADIUS = 2.25;
@@ -106,4 +106,6 @@ public class GamePieceDetectionUtil {
         .rotateBy(robotPose.getRotation())
         .plus(robotPose.getTranslation());
   }
+
+  private GamePieceDetectionUtil() {}
 }

@@ -22,7 +22,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState> {
@@ -34,7 +34,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
-  private List<TagResult> latestResult = new ArrayList<>();
+  private Collection<TagResult> latestResult = List.of();
 
   public LocalizationSubsystem(ImuSubsystem imu, VisionSubsystem vision, SwerveSubsystem swerve) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
@@ -61,13 +61,13 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     return swerve.getDrivetrainState().Pose;
   }
 
-  public Pose2d getLookaheadPose(double lookahead) {
-    return MathHelpers.poseLookahead(getPose(), swerve.getFieldRelativeSpeeds(), lookahead);
-  }
-
   public Pose2d getPose(double timestamp) {
     var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
     return swerve.drivetrain.samplePoseAt(newTimestamp).orElseGet(this::getPose);
+  }
+
+  public Pose2d getLookaheadPose(double lookahead) {
+    return MathHelpers.poseLookahead(getPose(), swerve.getFieldRelativeSpeeds(), lookahead);
   }
 
   @Override

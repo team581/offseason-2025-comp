@@ -87,10 +87,10 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	errorprone "com.google.errorprone:error_prone_core:2.36.0"
+	errorprone "com.google.errorprone:error_prone_core:2.37.0"
 
-	// https://mvnrepository.com/artifact/com.google.guava/guava
-	implementation 'com.google.guava:guava:33.4.0-jre'
+	// https://central.sonatype.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:33.4.5-jre'
 }
 
 test {
@@ -131,7 +131,7 @@ tasks.withType(JavaCompile).configureEach {
 	// A regular expression pattern (as a string) of file paths to exclude from Error Prone checking
 	options.errorprone.excludedPaths = "LimelightHelpers.java"
 
-	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "UnusedVariable", "InconsistentCapitalization")
+	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "UnusedVariable", "InconsistentCapitalization", "Var", "BooleanParameter", "Java7ApiChecker", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
 
 	// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
 	if (System.getenv().containsKey("ERRORPRONE_AUTOFIX")) {

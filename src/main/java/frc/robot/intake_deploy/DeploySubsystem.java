@@ -12,7 +12,7 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
 
 public class DeploySubsystem extends StateMachine<DeployState> {
-  private final double TOLERANCE = 1.0;
+  private static final double TOLERANCE = 1.0;
 
   private final TalonFX motor;
   private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
@@ -41,7 +41,8 @@ public class DeploySubsystem extends StateMachine<DeployState> {
         motor.setVoltage(RobotConfig.get().deploy().homingVoltage());
       }
       default ->
-          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.angle)));
+          motor.setControl(
+              positionRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
     }
   }
 
@@ -82,7 +83,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   public boolean atGoal() {
     return switch (getState()) {
       case UNHOMED, HOMING -> false;
-      default -> MathUtil.isNear(clamp(getState().angle), currentAngle, TOLERANCE);
+      default -> MathUtil.isNear(clamp(getState().getAngle()), currentAngle, TOLERANCE);
     };
   }
 

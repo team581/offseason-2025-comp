@@ -49,15 +49,19 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final Limelight leftBackLimelight =
-      new Limelight("leftb", LimelightState.TAGS, LimelightModel.FOUR);
+      new Limelight("leftb", LimelightState.TAGS, LimelightModel.THREEG);
   private final Limelight leftFrontLimelight =
-      new Limelight("leftf", LimelightState.TAGS, LimelightModel.FOUR);
+      new Limelight("leftf", LimelightState.TAGS, LimelightModel.THREEG);
 
   private final Limelight rightLimelight =
       new Limelight("right", LimelightState.TAGS, LimelightModel.FOUR);
 
+  private final Limelight gamePieceDetectionLimelight =
+      new Limelight("gp", LimelightState.CORAL, LimelightModel.THREE);
+
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, leftBackLimelight, leftFrontLimelight, rightLimelight);
+      new VisionSubsystem(
+          imu, leftBackLimelight, leftFrontLimelight, rightLimelight, gamePieceDetectionLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
@@ -105,7 +109,10 @@ public class Robot extends TimedRobot {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
 
     DogLog.setOptions(
-        new DogLogOptions().withCaptureDs(true).withNtPublish(RobotConfig.IS_DEVELOPMENT));
+        new DogLogOptions()
+            .withCaptureDs(true)
+            .withNtPublish(RobotConfig.IS_DEVELOPMENT)
+            .withNtTunables(RobotConfig.IS_DEVELOPMENT));
     // DogLog.setPdh(hardware.pdh);
 
     // Record metadata
@@ -217,20 +224,7 @@ public class Robot extends TimedRobot {
               }
             }));
 
-    hardware
-        .driverController
-        .rightTrigger()
-        .onTrue(
-            Commands.runOnce(
-                    () -> {
-                      robotManager.setConfirmScoreActive(true);
-                    })
-                .alongWith(robotCommands.confirmScoreCommand()))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  robotManager.setConfirmScoreActive(false);
-                }));
+    hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
     hardware.driverController.leftTrigger().onTrue(robotCommands.coralGroundIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());

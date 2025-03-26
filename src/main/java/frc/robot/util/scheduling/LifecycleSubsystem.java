@@ -56,9 +56,8 @@ public class LifecycleSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     Stopwatch.start(loggerName);
-    LifecycleStage stage;
 
-    stage = LifecycleSubsystemManager.getStage();
+    LifecycleStage stage = LifecycleSubsystemManager.getStage();
 
     boolean isInit = previousStage != stage;
 

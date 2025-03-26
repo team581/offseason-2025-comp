@@ -1,7 +1,6 @@
 package frc.robot.vision;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
@@ -11,9 +10,10 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 1.0;
@@ -21,8 +21,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight leftBackLimelight;
   private final Limelight leftFrontLimelight;
   private final Limelight rightLimelight;
+  private final Limelight gamePieceDetectionLimelight;
 
-  private final List<TagResult> tagResult = new ArrayList<>();
+  private final Queue<TagResult> tagResult = new ArrayDeque<>(4);
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
@@ -37,12 +38,14 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       ImuSubsystem imu,
       Limelight leftBackLimelight,
       Limelight leftFrontLimelight,
-      Limelight rightLimelight) {
+      Limelight rightLimelight,
+      Limelight gamePieceDetectionLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.leftBackLimelight = leftBackLimelight;
     this.leftFrontLimelight = leftFrontLimelight;
     this.rightLimelight = rightLimelight;
+    this.gamePieceDetectionLimelight = gamePieceDetectionLimelight;
   }
 
   @Override
@@ -75,6 +78,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     var maybeLeftBackResult = leftBackLimelight.getTagResult();
     var maybeleftFrontResult = leftFrontLimelight.getTagResult();
     var maybeFrontResult = rightLimelight.getTagResult();
+    var maybeGamePieceResult = gamePieceDetectionLimelight.getTagResult();
 
     if (maybeLeftBackResult.isPresent()) {
       tagResult.add(maybeLeftBackResult.orElseThrow());
@@ -88,12 +92,16 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       tagResult.add(maybeFrontResult.orElseThrow());
     }
 
-    if (DriverStation.isDisabled() && !hasSeenTag) {
+    if (maybeGamePieceResult.isPresent()) {
+      tagResult.add(maybeGamePieceResult.get());
+    }
+
+    if (!hasSeenTag) {
       hasSeenTag = !tagResult.isEmpty();
     }
   }
 
-  public List<TagResult> getTagResult() {
+  public Collection<TagResult> getTagResult() {
     return tagResult;
   }
 
@@ -112,31 +120,37 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
       case CLOSEST_REEF_TAG -> {
         leftBackLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
       case CLOSEST_REEF_TAG_CLOSEUP -> {
         leftBackLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
         leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
         rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
       case STATION_TAGS -> {
         leftBackLimelight.setState(LimelightState.STATION_TAGS);
         leftFrontLimelight.setState(LimelightState.STATION_TAGS);
         rightLimelight.setState(LimelightState.STATION_TAGS);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
       case CORAL_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
       case ALGAE_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
-        rightLimelight.setState(LimelightState.TAGS);
+        rightLimelight.setState(LimelightState.ALGAE);
+        gamePieceDetectionLimelight.setState(LimelightState.ALGAE);
       }
     }
   }
@@ -152,11 +166,14 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     leftBackLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     leftFrontLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     rightLimelight.sendImuData(robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-
+    gamePieceDetectionLimelight.sendImuData(
+        robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
     if (FeatureFlags.CAMERA_POSITION_CALIBRATION.getAsBoolean()) {
+      setStateFromRequest(VisionState.TAGS);
       leftBackLimelight.logCameraPositionCalibrationValues();
       leftFrontLimelight.logCameraPositionCalibrationValues();
       rightLimelight.logCameraPositionCalibrationValues();
+      gamePieceDetectionLimelight.logCameraPositionCalibrationValues();
     }
   }
 
@@ -165,12 +182,14 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     leftFrontLimelight.setClosestScoringReefTag(tagID);
     rightLimelight.setClosestScoringReefTag(tagID);
     leftBackLimelight.setClosestScoringReefTag(tagID);
+    gamePieceDetectionLimelight.setClosestScoringReefTag(tagID);
   }
 
   public boolean isAnyCameraOffline() {
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
+        || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE
+        || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
   public boolean isAnyLeftScoringTagLimelightOnline() {

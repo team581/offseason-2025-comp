@@ -1,6 +1,13 @@
 package frc.robot.arm;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
+
 public enum ArmState {
+  /**
+   * @deprecated This is a placeholder state.
+   */
+  @Deprecated
   UNTUNED(0),
 
   UNJAM(UNTUNED),
@@ -59,13 +66,19 @@ public enum ArmState {
   // For auto
   LOLLIPOP_CORAL_INTAKE(UNTUNED);
 
-  public final double angle;
+  private final double defaultAngle;
+  private final DoubleSubscriber tunableAngle;
 
   ArmState(double angle) {
-    this.angle = angle;
+    this.defaultAngle = angle;
+    this.tunableAngle = DogLog.tunable("Arm/State/" + name(), angle);
   }
 
   ArmState(ArmState other) {
-    this(other.angle);
+    this(other.defaultAngle);
+  }
+
+  public double getAngle() {
+    return tunableAngle.get();
   }
 }

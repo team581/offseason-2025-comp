@@ -4,8 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -38,7 +36,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
-import java.util.Optional;
 
 public class RobotManager extends StateMachine<RobotState> {
   public final LocalizationSubsystem localization;
@@ -93,20 +90,15 @@ public class RobotManager extends StateMachine<RobotState> {
 
     var stateCount = RobotState.values().length;
 
-    if (stateCount > 50) {
-      DogLog.log("RobotManager/StateCount", stateCount);
-    }
+    DogLog.log("RobotManager/StateCount", stateCount);
   }
 
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private double coralIntakeAssistAngle = 0.0;
-  private Optional<Pose2d> maybeBestCoralMapTranslation = Optional.empty();
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
-  private boolean isRollHomed = false;
-  private boolean confirmScoreActive = false;
   private Pose2d robotPose;
+  private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -158,9 +150,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP() && !intake.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState()
-              : currentState;
+          claw.getHasGP() ? currentState.getHandoffReleaseToApproachState() : currentState;
 
       // Aproach
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
@@ -237,8 +227,15 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
+      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+        if (claw.getHasGP()) {
+          yield currentState.getCoralAfterIntake();
+        }
+
+        yield currentState;
+      }
+
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-          CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY,
           CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
           CORAL_INTAKE_FLOOR_CLAW_ALGAE -> {
         if (intake.getHasGP()) {
@@ -253,7 +250,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
-      default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
     };
   }
 
@@ -928,9 +924,8 @@ public class RobotManager extends StateMachine<RobotState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose());
-    DogLog.log("RobotManager/ShouldIntakeForward", AutoAlign.shouldIntakeStationFront(robotPose));
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
-
+    DogLog.log("AutoAlign/ScoringLoopAroundObstruction", shouldLoopAroundToScoreObstruction);
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
@@ -966,6 +961,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY -> {
         if (FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+          var maybeBestCoralMapTranslation = coralMap.getBestCoral();
           if (maybeBestCoralMapTranslation.isPresent()) {
             var bestCoralMapTranslation = maybeBestCoralMapTranslation.orElseThrow();
 
@@ -1029,7 +1025,6 @@ public class RobotManager extends StateMachine<RobotState> {
   protected void collectInputs() {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
-    maybeBestCoralMapTranslation = coralMap.getBestCoral();
     robotPose = localization.getPose();
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
@@ -1037,7 +1032,7 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     autoAlign.setScoringLevel(scoringLevel, robotScoringSide);
-
+    shouldLoopAroundToScoreObstruction = autoAlign.shouldArmGoAroundToScore();
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
@@ -1383,10 +1378,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public Command waitForRollHomedCommand() {
-    return Commands.waitUntil(() -> isRollHomed);
-  }
-
   private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
   private ArmState latestArmGoal = ArmState.HOLDING_UPRIGHT;
   private boolean latestUnsafe = false;
@@ -1403,8 +1394,8 @@ public class RobotManager extends StateMachine<RobotState> {
     var maybeCollisionAvoidanceResult =
         CollisionAvoidance.route(
             new SuperstructurePosition(elevator.getHeight(), arm.getAngle()),
-            new SuperstructurePosition(elevatorGoal.height, armGoal.angle),
-            ObstructionKind.NONE);
+            new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle()),
+            shouldLoopAroundToScoreObstruction);
 
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
       elevator.setState(elevatorGoal);
@@ -1432,9 +1423,5 @@ public class RobotManager extends StateMachine<RobotState> {
     return vision.getLollipopVisionResult().isPresent()
         ? LightsState.HOLDING_ALGAE
         : LightsState.SCORE_ALIGN_NOT_READY;
-  }
-
-  public void setConfirmScoreActive(boolean newValue) {
-    confirmScoreActive = newValue;
   }
 }

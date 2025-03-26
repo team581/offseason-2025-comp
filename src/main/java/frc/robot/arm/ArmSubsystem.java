@@ -28,7 +28,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final CoastOut coastNeutralRequest = new CoastOut();
 
   private double averageMotorCurrent;
-  private LinearFilter linearFilter = LinearFilter.movingAverage(5);
+  private final LinearFilter linearFilter = LinearFilter.movingAverage(5);
 
   // private final MotionMagicVoltage motionMagicRequest =
   //     new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -68,8 +68,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().angle, motorAngle, 2);
-      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1);
+      default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
+      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
     };
   }
 
@@ -93,7 +93,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
 
       default -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.angle)));
+        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
       }
     }
   }
@@ -105,6 +105,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
+    DogLog.log("Arm/RawAngle", Units.rotationsToDegrees(motor.getPosition().getValueAsDouble()));
     DogLog.log("Arm/AtGoal", atGoal());
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);

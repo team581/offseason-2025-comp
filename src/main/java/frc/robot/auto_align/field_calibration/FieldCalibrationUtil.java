@@ -47,8 +47,8 @@ public class FieldCalibrationUtil {
       double actualArm,
       Pose2d wantedPose,
       Pose2d actualPose) {
-    var elevatorError = wantedElevator.height - actualElevator;
-    var armError = wantedArm.angle - actualArm;
+    var elevatorError = wantedElevator.getHeight() - actualElevator;
+    var armError = wantedArm.getAngle() - actualArm;
     var alignError = wantedPose.getTranslation().getDistance(actualPose.getTranslation());
 
     var elevatorState = MechanismState.OK;
@@ -73,6 +73,20 @@ public class FieldCalibrationUtil {
     }
 
     return new Summary(elevatorState, armState, alignOk, headingOk);
+  }
+
+  private Summary createSummary(ReefPipeLevel level, ScoringPosition position) {
+    var actualElevator = elevator.getHeight();
+    var actualArm = arm.getAngle();
+
+    var wantedElevator = branchToElevator(level, position.side());
+    var wantedArm = branchToArm(level, position.side());
+
+    var wantedPose = position.getPose(level);
+    var actualPose = localization.getPose();
+
+    return createSummary(
+        wantedElevator, actualElevator, wantedArm, actualArm, wantedPose, actualPose);
   }
 
   private static ElevatorState branchToElevator(ReefPipeLevel level, RobotScoringSide side) {
@@ -103,11 +117,10 @@ public class FieldCalibrationUtil {
           side == RobotScoringSide.LEFT
               ? ArmState.CORAL_SCORE_LEFT_LINEUP_L3
               : ArmState.CORAL_SCORE_RIGHT_LINEUP_L3;
-      case L4 ->
+      default ->
           side == RobotScoringSide.LEFT
               ? ArmState.CORAL_SCORE_LEFT_LINEUP_L4
               : ArmState.CORAL_SCORE_RIGHT_LINEUP_L4;
-      default -> ArmState.UNTUNED;
     };
   }
 
@@ -155,7 +168,7 @@ public class FieldCalibrationUtil {
         anyOk ? LightsState.SCORE_ALIGN_READY : LightsState.SCORE_ALIGN_NOT_READY);
   }
 
-  private void logAllScoringPositions(boolean isRedAlliance, RobotScoringSide side) {
+  private static void logAllScoringPositions(boolean isRedAlliance, RobotScoringSide side) {
     var allianceLabel = isRedAlliance ? "Red" : "Blue";
     var sideLabel = side == RobotScoringSide.LEFT ? "Left" : "Right";
 
@@ -166,20 +179,6 @@ public class FieldCalibrationUtil {
             pipe.getPose(level, isRedAlliance, side));
       }
     }
-  }
-
-  private Summary createSummary(ReefPipeLevel level, ScoringPosition position) {
-    var actualElevator = elevator.getHeight();
-    var actualArm = arm.getAngle();
-
-    var wantedElevator = branchToElevator(level, position.side());
-    var wantedArm = branchToArm(level, position.side());
-
-    var wantedPose = position.getPose(level);
-    var actualPose = localization.getPose();
-
-    return createSummary(
-        wantedElevator, actualElevator, wantedArm, actualArm, wantedPose, actualPose);
   }
 
   private ScoringPosition getBestScoringPosition(ReefPipeLevel level) {

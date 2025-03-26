@@ -44,13 +44,13 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private static final NetworkTableEntry LL_TCORNXY =
       NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
 
-  private ArrayList<CoralMapElement> coralMap = new ArrayList<>();
+  private final ArrayList<CoralMapElement> coralMap = new ArrayList<>();
   private double[] previousCornersArray = new double[0];
   private boolean staleCoralCorners = false;
   private ChassisSpeeds swerveSpeeds = new ChassisSpeeds();
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
-  private Comparator<Pose2d> bestCoralComparator =
+  private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
           target ->
               AlignmentCostUtil.getCoralAlignCost(
@@ -212,7 +212,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
           coralMap.stream()
               .map(element -> new Pose2d(element.coralTranslation(), Rotation2d.kZero))
               .toArray(Pose2d[]::new));
-    } catch (Exception error) {
+    } catch (RuntimeException error) {
       DogLog.logFault("CoralMapLoggingError");
       System.err.println(error);
     }

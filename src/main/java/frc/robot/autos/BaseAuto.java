@@ -54,7 +54,7 @@ public abstract class BaseAuto {
                 DogLog.logFault("Auto command interrupted outside teleop");
 
                 if (RobotConfig.IS_DEVELOPMENT) {
-                  throw new RuntimeException(
+                  throw new IllegalStateException(
                       "The auto command was interrupted while still in auto mode, is there a command requirements conflict?");
                 }
               }
