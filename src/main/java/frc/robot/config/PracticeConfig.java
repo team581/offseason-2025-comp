@@ -227,7 +227,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(35)),
               new CANrangeConfiguration()
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
-          new LightsConfig(RIO_CAN_NAME, 17));
+          new LightsConfig(CANIVORE_NAME, 17));
 
   private PracticeConfig() {}
 }
