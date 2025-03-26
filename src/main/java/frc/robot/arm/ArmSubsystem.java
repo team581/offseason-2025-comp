@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -87,7 +86,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
-
   }
 
   @Override
