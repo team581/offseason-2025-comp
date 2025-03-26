@@ -27,9 +27,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
-  private double averageMotorCurrent;
-  private final LinearFilter linearFilter = LinearFilter.movingAverage(5);
-
   // private final MotionMagicVoltage motionMagicRequest =
   //     new MotionMagicVoltage(0.0).withEnableFOC(false);
 
@@ -90,7 +87,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
-    averageMotorCurrent = linearFilter.calculate(motorCurrent);
+
   }
 
   @Override
@@ -131,7 +128,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     DogLog.log("Arm/StatorCurrent", motorCurrent);
-    DogLog.log("Arm/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/NormalizedAngle", MathUtil.clamp(motorAngle, -180, 180));
     DogLog.log("Arm/RawAngle", motorAngle);
