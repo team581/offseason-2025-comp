@@ -29,7 +29,10 @@ public final class GamePieceDetectionUtil {
       RobotConfig.get().vision().rightLimelightPosition().transformBy(LOLLIPOP_OFFSET);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_CORAL_OFFSET =
-      RobotConfig.get().vision().gamePieceDetectionLimelightPosition().transformBy(HORIZONTAL_CORAL_OFFSET);
+      RobotConfig.get()
+          .vision()
+          .gamePieceDetectionLimelightPosition()
+          .transformBy(HORIZONTAL_CORAL_OFFSET);
 
   public static Translation2d calculateFieldRelativeCoralTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
