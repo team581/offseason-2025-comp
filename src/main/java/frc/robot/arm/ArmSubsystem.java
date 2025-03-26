@@ -49,6 +49,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
 
     TunablePid.of("Arm", motor, RobotConfig.get().arm().motorConfig());
+
+    DogLog.tunable("Arm/ChangeEncoderPositionDeg", 0.0, newPositionDeg -> motor.setPosition(Units.degreesToRotations(newPositionDeg)));
   }
 
   public void setState(ArmState newState) {

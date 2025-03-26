@@ -140,7 +140,7 @@ class PracticeConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
-                          .withInverted(InvertedValue.Clockwise_Positive))
+                          .withInverted(InvertedValue.CounterClockwise_Positive))
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(0.0)
