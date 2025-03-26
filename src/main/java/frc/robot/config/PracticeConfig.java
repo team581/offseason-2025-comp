@@ -189,7 +189,8 @@ class PracticeConfig {
               -34.0,
               120.673828125,
               3,
-              20), // TODO: get these numbers
+              20,
+              120.673828125),
           new ClimberConfig(
               CANIVORE_NAME,
               21,

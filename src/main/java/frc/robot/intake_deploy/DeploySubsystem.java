@@ -51,8 +51,8 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     return switch (currentState) {
       case HOMING -> {
         if (filteredCurrent > RobotConfig.get().deploy().homingCurrentThreshold()) {
-          // TODO: Use dedicated homing end position
-          motor.setPosition(Units.degreesToRotations(clamp(RobotConfig.get().deploy().maxAngle())));
+          motor.setPosition(
+              Units.degreesToRotations(clamp(RobotConfig.get().deploy().homingEndPosition())));
           yield DeployState.STOWED;
         }
         yield currentState;

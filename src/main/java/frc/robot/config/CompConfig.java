@@ -208,6 +208,7 @@ class CompConfig {
               0.0,
               581,
               0.0,
+              0.0,
               0.0), // TODO: get these numbers
           new ClimberConfig(
               CANIVORE_NAME,

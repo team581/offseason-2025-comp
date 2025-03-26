@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 
 public enum DeployState {
   UNHOMED(0.0),
-  HOMING(0.0), // TODO: set homing end angle
+  HOMING(0.0),
   STOWED(118),
   FLOOR_INTAKE(-34),
   HANDOFF(118),
