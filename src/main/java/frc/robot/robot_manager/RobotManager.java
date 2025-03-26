@@ -1108,25 +1108,44 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    if (claw.getHasGP()) {
-      // Claw is maybe algae or coral
+    switch (getState()) {
+      case CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY, CORAL_INTAKE_FLOOR_CLAW_EMPTY ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+      case CORAL_INTAKE_FLOOR_CLAW_ALGAE -> setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
+      case ALGAE_INTAKE_FLOOR_DEPLOY_CORAL,
+              ALGAE_INTAKE_L2_LEFT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L2_RIGHT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L3_LEFT_DEPLOY_CORAL,
+              ALGAE_INTAKE_L3_RIGHT_DEPLOY_CORAL ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+      case ALGAE_INTAKE_FLOOR_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L2_LEFT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L2_RIGHT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L3_LEFT_DEPLOY_EMPTY,
+              ALGAE_INTAKE_L3_RIGHT_DEPLOY_EMPTY ->
+          setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+      default -> {
+        if (claw.getHasGP()) {
+          // Claw is maybe algae or coral
 
-      if (intake.getHasGP()) {
-        // Intake is holding coral
-        // Technically claw could be holding coral but that shouldn't happen
-        setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
-      } else {
-        if (getState().clawGp == ClawGamePiece.ALGAE) {
-          setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+          if (intake.getHasGP()) {
+            // Intake is holding coral
+            // Technically claw could be holding coral but that shouldn't happen
+            setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_CORAL);
+          } else {
+            if (getState().clawGp == ClawGamePiece.ALGAE) {
+              setStateFromRequest(RobotState.CLAW_ALGAE_DEPLOY_EMPTY);
+            } else {
+              setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
+            }
+          }
         } else {
-          setStateFromRequest(RobotState.CLAW_CORAL_DEPLOY_EMPTY);
+          if (intake.getHasGP()) {
+            setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
+          } else {
+            setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
+          }
         }
-      }
-    } else {
-      if (intake.getHasGP()) {
-        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_CORAL);
-      } else {
-        setStateFromRequest(RobotState.CLAW_EMPTY_DEPLOY_EMPTY);
       }
     }
   }
