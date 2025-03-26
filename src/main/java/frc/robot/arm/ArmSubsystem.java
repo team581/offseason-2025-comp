@@ -104,8 +104,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Arm/Angle", motorAngle);
-    DogLog.log("Arm/RawAngle", Units.rotationsToDegrees(motor.getPosition().getValueAsDouble()));
+    DogLog.log("Arm/NormalizedAngle", MathUtil.clamp(motorAngle, -180, 180));
+    DogLog.log("Arm/RawAngle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);

@@ -2,6 +2,7 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -12,6 +13,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.configs.VoltageConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -166,15 +168,19 @@ class CompConfig {
                   //     new MotionMagicConfigs()
                   //         .withMotionMagicAcceleration(10.0)
                   //         .withMotionMagicCruiseVelocity(150.0 / 7.0))
+                  // TODO: once cancoder is wired fix ID and ratio
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
+                          .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0))
+                          .withFusedCANcoder(new CANcoder(999))
+                          .withRotorToSensorRatio((64.0 / 8.0) * (90.0 / 10.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(30.0)
-                          .withStatorCurrentLimit(60.0)),
+                          .withStatorCurrentLimit(60.0))
+                  .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
               -56.4,
               6.615),
           new DeployConfig(

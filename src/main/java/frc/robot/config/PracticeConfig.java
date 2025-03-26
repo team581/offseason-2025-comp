@@ -2,6 +2,7 @@ package frc.robot.config;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -159,7 +160,8 @@ class PracticeConfig {
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(25.0)
-                          .withStatorCurrentLimit(40.0)),
+                          .withStatorCurrentLimit(40.0))
+                  .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
               -58.7,
               6.615),
           new DeployConfig(
