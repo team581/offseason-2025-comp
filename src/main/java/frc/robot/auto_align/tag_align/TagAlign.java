@@ -1,6 +1,5 @@
 package frc.robot.auto_align.tag_align;
 
-import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.google.common.collect.ImmutableList;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
