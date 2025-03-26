@@ -414,7 +414,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.GROUND_CORAL_INTAKE_UPRIGHT, ArmState.LOLLIPOP_CORAL_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
-        lights.setState(getLightStateForScoring());
+        lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
       case CORAL_INTAKE_FLOOR_CLAW_EMPTY -> {
