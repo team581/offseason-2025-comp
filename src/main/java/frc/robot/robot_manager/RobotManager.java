@@ -1246,6 +1246,16 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void l4CoralLeftReleaseRequest() {
+    if (!getState().climbingOrRehoming) {
+      if (claw.getHasGP() && !intake.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L4_LEFT_RELEASE);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
+      }
+    }
+  }
+
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming) {
       if (getState().deployHasCoral) {
