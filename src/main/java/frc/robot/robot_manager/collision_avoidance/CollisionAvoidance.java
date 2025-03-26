@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -37,24 +36,25 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-   return cachedAStar(
-            new CollisionAvoidanceQuery(
-                Waypoint.getClosest(currentPosition),
-                Waypoint.getClosest(desiredPosition),
-                obstructionKind));
+    return cachedAStar(
+        new CollisionAvoidanceQuery(
+            Waypoint.getClosest(currentPosition),
+            Waypoint.getClosest(desiredPosition),
+            obstructionKind));
   }
 
   private static Optional<Waypoint> cachedAStar(CollisionAvoidanceQuery query) {
-    return aStarCache.computeIfAbsent(query, (k) -> {
-      Optional<Deque<Waypoint>> nextWaypoint =
-      aStar(
-          query.currentWaypoint().position,
-          query.goalWaypoint().position,
-          query.obstructionKind());
-  DogLog.log("CollisionAvoidance", aStarCache.size());
-  return Optional.of(nextWaypoint.orElseThrow().peek());
-    });
-
+    return aStarCache.computeIfAbsent(
+        query,
+        (k) -> {
+          Optional<Deque<Waypoint>> nextWaypoint =
+              aStar(
+                  query.currentWaypoint().position,
+                  query.goalWaypoint().position,
+                  query.obstructionKind());
+          DogLog.log("CollisionAvoidance", aStarCache.size());
+          return Optional.of(nextWaypoint.orElseThrow().peek());
+        });
   }
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
