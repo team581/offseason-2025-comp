@@ -21,7 +21,7 @@ public enum RobotState {
   CORAL_INTAKE_FLOOR_CLAW_EMPTY(ClawGamePiece.EMPTY, false, false),
   CORAL_INTAKE_FLOOR_CLAW_ALGAE(ClawGamePiece.ALGAE, false, false),
   // In theory we could have intake upright while holding algae but nobody is going to use that
-  CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY(ClawGamePiece.EMPTY, false, false),
+  CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY(ClawGamePiece.EMPTY, false, false),
   // Same for this, we only do this in auto, so no algae in claw
   CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY(ClawGamePiece.EMPTY, false, false),
 
@@ -162,7 +162,7 @@ public enum RobotState {
   private static final ImmutableMap<RobotState, RobotState> coralAfterIntake =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_INTAKE_FLOOR_CLAW_EMPTY, CLAW_EMPTY_DEPLOY_CORAL),
-          Map.entry(CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY, CLAW_CORAL_DEPLOY_EMPTY),
+          Map.entry(CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY, CLAW_CORAL_DEPLOY_EMPTY),
           Map.entry(CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY, CLAW_EMPTY_DEPLOY_CORAL),
           Map.entry(CORAL_INTAKE_FLOOR_CLAW_ALGAE, CLAW_ALGAE_DEPLOY_CORAL));
   private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =

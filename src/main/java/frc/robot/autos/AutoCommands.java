@@ -66,7 +66,7 @@ public class AutoCommands {
     return robotManager.waitForStates(
         RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
         RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-        RobotState.CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY);
+        RobotState.CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY);
   }
 
   public Command l4WarmupCommand(ReefPipe pipe) {

@@ -227,7 +227,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+      case CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY -> {
         if (claw.getHasGP()) {
           yield currentState.getCoralAfterIntake();
         }
@@ -277,7 +277,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CLAW_EMPTY_DEPLOY_CORAL -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
+        claw.setState(ClawState.IDLE_NO_GP);
         intake.setState(IntakeState.IDLE_GP);
         deploy.setState(DeployState.STOWED);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
@@ -287,13 +287,13 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       case CLAW_ALGAE_DEPLOY_CORAL -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
+        claw.setState(ClawState.IDLE_W_ALGAE);
         intake.setState(IntakeState.IDLE_GP);
         deploy.setState(DeployState.STOWED);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.HOLDING_CORAL);
+        lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
       case CLAW_CORAL_DEPLOY_EMPTY -> {
@@ -406,7 +406,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
-      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+      case CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY -> {
         claw.setState(ClawState.LOLLIPOP_CORAL_INTAKE);
         intake.setState(IntakeState.IDLE_NO_GP);
         deploy.setState(DeployState.STOWED);
@@ -442,7 +442,6 @@ public class RobotManager extends StateMachine<RobotState> {
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
         moveSuperstructure(ElevatorState.STOWED, ArmState.CORAL_HANDOFF);
-        // Enable assist in periodic if there's coral in map
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
         lights.setState(LightsState.INTAKING_CORAL);
@@ -982,7 +981,7 @@ public class RobotManager extends StateMachine<RobotState> {
           }
         }
       }
-      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+      case CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY -> {
         coralMap.updateLollipopResult(vision.getLollipopVisionResult());
       }
       default -> {}
@@ -991,7 +990,7 @@ public class RobotManager extends StateMachine<RobotState> {
     // Update lights
     switch (getState()) {
       // TODO: Add lights state for scoring
-      case CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY -> {
+      case CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY -> {
         lights.setState(getLightsStateForLollipop());
       }
       default -> {}
@@ -1172,7 +1171,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void intakeAssistFloorCoralHorizontalRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_CLAW_EMPTY);
+      setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY);
     }
   }
 
