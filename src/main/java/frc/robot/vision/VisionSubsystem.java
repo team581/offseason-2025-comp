@@ -1,7 +1,6 @@
 package frc.robot.vision;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
@@ -11,9 +10,6 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-
-import java.beans.JavaBean;
-import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Optional;
@@ -193,7 +189,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
-        // || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
+    // || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
 
   }
 
