@@ -19,10 +19,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final TalonFX motor;
   private double motorAngle;
   private double motorCurrent;
-  private double lowestSeenAngle = Double.MAX_VALUE;
-  private double highestSeenAngle = Double.MIN_VALUE;
+  private double lowestSeenAngle = Double.POSITIVE_INFINITY;
+  private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private double collisionAvoidanceGoal;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 120.0;
+  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
@@ -54,6 +54,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setState(ArmState newState) {
     switch (getState()) {
+      case PRE_MATCH_HOMING -> {}
       default -> {
         setStateFromRequest(newState);
       }
@@ -103,24 +104,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-  @Override
-  protected ArmState getNextState(ArmState currentState) {
-    if (currentState == ArmState.PRE_MATCH_HOMING) {
-      if (rangeOfMotionGood()) {
-        if (DriverStation.isEnabled()) {
-          motor.setPosition(
-              Units.degreesToRotations(
-                  RobotConfig.get().arm().homingPosition() + (motorAngle - lowestSeenAngle)));
-
-          return ArmState.HOLDING_UPRIGHT;
-        } else {
-          motor.setControl(brakeNeutralRequest);
-        }
-      }
-    }
-
-    return currentState;
-  }
 
   @Override
   public void robotPeriodic() {
@@ -130,6 +113,20 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/NormalizedAngle", MathUtil.clamp(motorAngle, -180, 180));
     DogLog.log("Arm/RawAngle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
+    DogLog.log("Arm/RangeOfMotionGood", rangeOfMotionGood());
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      if (rangeOfMotionGood()) {
+        if (DriverStation.isEnabled()) {
+          motor.setPosition(
+              Units.degreesToRotations(
+                  RobotConfig.get().arm().homingPosition() + (motorAngle - lowestSeenAngle)));
+
+          setStateFromRequest(ArmState.HOLDING_UPRIGHT);
+        } else {
+          motor.setControl(brakeNeutralRequest);
+        }
+      }
+    }
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
@@ -149,6 +146,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   public boolean rangeOfMotionGood() {
-    return (highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 }
