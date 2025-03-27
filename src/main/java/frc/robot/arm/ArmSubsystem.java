@@ -104,7 +104,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
