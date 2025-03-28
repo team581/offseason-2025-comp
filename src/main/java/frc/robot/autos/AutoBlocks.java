@@ -164,7 +164,8 @@ public class AutoBlocks {
                 new AutoPoint(
                     intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET),
                     Commands.runOnce(robotManager::intakeFloorCoralHorizontalRequest)),
-                new AutoPoint(intakingPoint.redPose)),
+                new AutoPoint(
+                    intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_LINEUP_OFFSET))),
             false)
         .withDeadline(autoCommands.waitForIntakeDone());
   }
