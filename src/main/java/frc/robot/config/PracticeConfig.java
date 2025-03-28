@@ -77,7 +77,7 @@ class PracticeConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(65)
+                          .withMotionMagicAcceleration(65.0)
                           .withMotionMagicCruiseVelocity(65.0))
                   .withFeedback(
                       new FeedbackConfigs()
@@ -109,8 +109,8 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(15)
-                          .withSupplyCurrentLimit(20))
+                          .withStatorCurrentLimit(58.1)
+                          .withSupplyCurrentLimit(58.1))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive)
@@ -198,7 +198,7 @@ class PracticeConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(3)
+                          .withMotionMagicAcceleration(3.0)
                           .withMotionMagicCruiseVelocity(3.0))
                   .withFeedback(
                       new FeedbackConfigs()
@@ -210,7 +210,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0))
                   .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
-              -11.162,
+              -13.532,
               6.615),
           new DeployConfig(
               CANIVORE_NAME,
