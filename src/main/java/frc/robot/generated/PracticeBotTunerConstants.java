@@ -177,7 +177,7 @@ public final class PracticeBotTunerConstants {
   private static final int kFrontRightDriveMotorId = 5;
   private static final int kFrontRightSteerMotorId = 6;
   private static final int kFrontRightEncoderId = 12;
-  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.2490234375);
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.248779296875);
   private static final boolean kFrontRightSteerMotorInverted = true;
   private static final boolean kFrontRightEncoderInverted = false;
 
@@ -198,7 +198,7 @@ public final class PracticeBotTunerConstants {
   private static final int kBackRightDriveMotorId = 9;
   private static final int kBackRightSteerMotorId = 10;
   private static final int kBackRightEncoderId = 14;
-  private static final Angle kBackRightEncoderOffset = Rotations.of(0.142822265625);
+  private static final Angle kBackRightEncoderOffset = Rotations.of(-0.1142578125);
   private static final boolean kBackRightSteerMotorInverted = true;
   private static final boolean kBackRightEncoderInverted = false;
 
