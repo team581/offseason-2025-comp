@@ -55,18 +55,14 @@ public class AutoCommands {
     return Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest);
   }
 
-  public Command waitForIntakeDone() {
-    return robotManager
-        .waitForState(RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY)
-        .andThen(robotManager.waitForState(RobotState.CLAW_EMPTY_DEPLOY_CORAL))
-        .withTimeout(4);
-  }
-
   public Command waitForGroundIntakeDone() {
-    return robotManager.waitForStates(
-        RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
-        RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-        RobotState.CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY);
+    return robotManager
+        .waitForStates(
+            RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
+            RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY,
+            RobotState.CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY)
+        .andThen(robotManager.waitForState(RobotState.CLAW_EMPTY_DEPLOY_CORAL)
+        .withTimeout(4));
   }
 
   public Command l4WarmupCommand(ReefPipe pipe) {
