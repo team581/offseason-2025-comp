@@ -4,7 +4,6 @@ import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
-import dev.doglog.DogLog;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -43,8 +42,6 @@ public class CollisionAvoidance {
     //         Waypoint.getClosest(desiredPosition),
     //         obstructionKind));
   }
-
-  
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
