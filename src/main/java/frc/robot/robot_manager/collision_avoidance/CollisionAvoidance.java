@@ -44,7 +44,8 @@ public class CollisionAvoidance {
       ObstructionKind obstructionKind) {
 
     // Check if the desired position and obstruction is the same, then use the same path
-    if (lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition)) && lastQuery.obstructionKind().equals(obstructionKind)) {
+    if (lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition))
+        && lastQuery.obstructionKind().equals(obstructionKind)) {
 
       var lastPath = maybeLastPath.orElseThrow();
       if (lastPath.isEmpty()) {
@@ -52,14 +53,19 @@ public class CollisionAvoidance {
       }
       var currentWaypoint = lastPath.peek();
       // Check if our current position is close to the current waypoint in path
-      DogLog.log("CollisionAvoidance/CurrentWaypoint/ElevatorHeight", currentWaypoint.position.elevatorHeight());
-      DogLog.log("CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
-      DogLog.log("CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
+      DogLog.log(
+          "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
+          currentWaypoint.position.elevatorHeight());
+      DogLog.log(
+          "CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+      DogLog.log(
+          "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
       DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
 
-      boolean near = SuperstructurePosition.near(
-        currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
-        DogLog.log("CollisionAvoidance/Near", near);
+      boolean near =
+          SuperstructurePosition.near(
+              currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
+      DogLog.log("CollisionAvoidance/Near", near);
       if (near) {
 
         // If it's close, return the next waypoint
@@ -81,17 +87,25 @@ public class CollisionAvoidance {
         cachedAStar(
             new CollisionAvoidanceQuery(
                 currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind));
-    lastQuery = new CollisionAvoidanceQuery(Waypoint.getClosest(currentPosition), Waypoint.getClosest(desiredPosition), obstructionKind);
+    lastQuery =
+        new CollisionAvoidanceQuery(
+            Waypoint.getClosest(currentPosition),
+            Waypoint.getClosest(desiredPosition),
+            obstructionKind);
     // Check if our current position is close to the current waypoint in path
-    DogLog.log("CollisionAvoidance/CurrentWaypoint/ElevatorHeight", currentWaypoint.position.elevatorHeight());
+    DogLog.log(
+        "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
+        currentWaypoint.position.elevatorHeight());
     DogLog.log("CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
-    DogLog.log("CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
+    DogLog.log(
+        "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
     DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
 
-    boolean near = SuperstructurePosition.near(
-        currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
-        DogLog.timestamp("CollisionAvoidance/NewPath");
-        DogLog.log("CollisionAvoidance/Near", near);
+    boolean near =
+        SuperstructurePosition.near(
+            currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
+    DogLog.timestamp("CollisionAvoidance/NewPath");
+    DogLog.log("CollisionAvoidance/Near", near);
     if (near) {
       // If it's close, return the next waypoint
       var lastPath = maybeLastPath.orElseThrow();

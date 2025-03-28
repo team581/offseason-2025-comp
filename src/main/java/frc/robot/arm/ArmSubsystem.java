@@ -2,7 +2,6 @@ package frc.robot.arm;
 
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
@@ -31,7 +30,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
-
 
   public ArmSubsystem(TalonFX motor) {
     super(
