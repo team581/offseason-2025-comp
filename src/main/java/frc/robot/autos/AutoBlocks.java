@@ -167,7 +167,7 @@ public class AutoBlocks {
                 new AutoPoint(
                     intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_LINEUP_OFFSET))),
             false)
-        .withDeadline(autoCommands.waitForIntakeDone());
+        .withDeadline(autoCommands.waitForGroundIntakeDone());
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
