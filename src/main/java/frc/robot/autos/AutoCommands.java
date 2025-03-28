@@ -10,7 +10,6 @@ import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import frc.robot.robot_manager.ground_manager.GroundState;
-
 import java.util.List;
 
 public class AutoCommands {
@@ -58,14 +57,17 @@ public class AutoCommands {
   }
 
   public Command waitForIntakeDone() {
-    return robotManager.groundManager
+    return robotManager
+        .groundManager
         .waitForState(GroundState.INTAKING)
         .andThen(robotManager.groundManager.waitForState(GroundState.IDLE_CORAL))
         .withTimeout(4);
   }
 
   public Command waitForGroundIntakeDone() {
-    return robotManager.waitForState(RobotState.CORAL_INTAKE_LOLLIPOP).andThen(robotManager.groundManager.waitForState(GroundState.INTAKING));
+    return robotManager
+        .waitForState(RobotState.CORAL_INTAKE_LOLLIPOP)
+        .andThen(robotManager.groundManager.waitForState(GroundState.INTAKING));
   }
 
   public Command l4WarmupCommand(ReefPipe pipe) {

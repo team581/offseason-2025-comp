@@ -225,16 +225,10 @@ public class Robot extends TimedRobot {
               }
             }));
 
-    hardware
-        .driverController
-        .rightTrigger()
-        .onTrue(robotCommands.confirmScoreCommand());
+    hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
     hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
-    hardware
-        .driverController
-        .rightBumper()
-        .onTrue(robotCommands.stowCommand());
+    hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
     hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
     hardware.driverController.b().onTrue(robotCommands.l2LineupCommand());

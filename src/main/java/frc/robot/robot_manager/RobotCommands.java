@@ -61,7 +61,8 @@ public class RobotCommands {
   }
 
   public Command climbUpCommand() {
-    return Commands.runOnce(robot::nextClimbStateRequest, rmRequirements).withName("ClimbUpCommand");
+    return Commands.runOnce(robot::nextClimbStateRequest, rmRequirements)
+        .withName("ClimbUpCommand");
   }
 
   public Command climbStopCommand() {
@@ -79,10 +80,12 @@ public class RobotCommands {
   }
 
   public Command floorIntakeCommand() {
-    return Commands.runOnce(robot.groundManager::intakeRequest, gmRequirements).withName("FloorIntakeCommand");
+    return Commands.runOnce(robot.groundManager::intakeRequest, gmRequirements)
+        .withName("FloorIntakeCommand");
   }
 
   public Command rehomeDeployCommand() {
-    return Commands.runOnce(robot.groundManager::rehomeDeployRequest, gmRequirements).withName("RehomeDeployCommand");
+    return Commands.runOnce(robot.groundManager::rehomeDeployRequest, gmRequirements)
+        .withName("RehomeDeployCommand");
   }
 }
