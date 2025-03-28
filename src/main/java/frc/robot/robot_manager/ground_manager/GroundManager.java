@@ -80,8 +80,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void l1Request() {
     switch (getState()) {
-      
-      case L1_WAIT -> setStateFromRequest(GroundState.L1_SCORE);default -> setStateFromRequest(GroundState.L1_WAIT);
+      case L1_WAIT -> setStateFromRequest(GroundState.L1_SCORE);
+      default -> setStateFromRequest(GroundState.L1_WAIT);
     }
   }
 
