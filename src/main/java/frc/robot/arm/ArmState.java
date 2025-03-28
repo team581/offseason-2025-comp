@@ -8,7 +8,7 @@ public enum ArmState {
    * @deprecated This is a placeholder state.
    */
   @Deprecated
-  UNTUNED(0),
+  UNTUNED(90),
 
   PRE_MATCH_HOMING(0),
 
@@ -43,10 +43,10 @@ public enum ArmState {
   CORAL_SCORE_RIGHT_RELEASE_L4(UNTUNED),
 
   // Handoffs
-  CORAL_HANDOFF(UNTUNED),
+  CORAL_HANDOFF(-90.0),
 
   // Algae positions
-  ALGAE_INTAKE_FLOOR(UNTUNED),
+  ALGAE_INTAKE_FLOOR(-21.18),
 
   ALGAE_INTAKE_LEFT_L2(UNTUNED),
   ALGAE_INTAKE_LEFT_L3(UNTUNED),
