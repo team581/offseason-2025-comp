@@ -280,7 +280,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         intake.setState(IntakeState.IDLE_GP);
         deploy.setState(DeployState.STOWED);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
@@ -1187,7 +1187,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l4CoralApproachRequest() {
     if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP() && !intake.getHasGP()) {
+      if (claw.getHasGP()) {
         setStateFromRequest(RobotState.CORAL_L4_APPROACH);
       } else {
         setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
@@ -1207,7 +1207,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l3LineupRequest() {
     if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP() && !intake.getHasGP()) {
+      if (claw.getHasGP()) {
         setStateFromRequest(RobotState.CORAL_L3_APPROACH);
       } else {
         setStateFromRequest(RobotState.CORAL_L3_PREPARE_HANDOFF);
@@ -1217,7 +1217,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l2LineupRequest() {
     if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP() && !intake.getHasGP()) {
+      if (claw.getHasGP()) {
         setStateFromRequest(RobotState.CORAL_L2_APPROACH);
       } else {
         setStateFromRequest(RobotState.CORAL_L2_PREPARE_HANDOFF);
@@ -1237,7 +1237,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void l1CoralApproachRequest() {
     if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP() && !intake.getHasGP()) {
+      if (claw.getHasGP()) {
         setStateFromRequest(RobotState.CORAL_L1_APPROACH);
       } else {
         setStateFromRequest(RobotState.CORAL_L1_PREPARE_HANDOFF);
