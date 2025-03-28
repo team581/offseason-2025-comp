@@ -63,7 +63,6 @@ public class CollisionAvoidance {
       DogLog.log("CollisionAvoidance/ClosestWaypoint", Waypoint.getClosest(currentPosition));
       DogLog.log("CollisionAvoidance/AstarPath", lastPath.toArray(Waypoint[]::new));
 
-
       DogLog.log(
           "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
       DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
