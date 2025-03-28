@@ -14,8 +14,8 @@ public record WaypointEdge(
      * regular motion magic parameters are used.
      */
     Optional<SuperstructureLimits> limits) {
-  
-public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
+
+  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, false, Optional.empty());
   }
 
@@ -24,9 +24,7 @@ public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, false, Optional.of(limits));
   }
 
-
-  
-public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
+  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, false, true, Optional.empty());
   }
 
@@ -35,16 +33,13 @@ public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, false, true, Optional.of(limits));
   }
 
-
-  
-public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
+  public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, true, Optional.empty());
   }
 
   public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to, SuperstructureLimits limits) {
     return new WaypointEdge(from, to, true, true, Optional.of(limits));
   }
-
 
   private WaypointEdge(
       Waypoint from,
