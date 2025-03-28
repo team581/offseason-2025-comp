@@ -44,19 +44,7 @@ public class CollisionAvoidance {
     //         obstructionKind));
   }
 
-  private static Optional<Waypoint> cachedAStar(CollisionAvoidanceQuery query) {
-    return aStarCache.computeIfAbsent(
-        query,
-        (k) -> {
-          Optional<Deque<Waypoint>> nextWaypoint =
-              aStar(
-                  query.currentWaypoint().position,
-                  query.goalWaypoint().position,
-                  query.obstructionKind());
-          DogLog.log("CollisionAvoidance", aStarCache.size());
-          return Optional.of(nextWaypoint.orElseThrow().peek());
-        });
-  }
+  
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
     // Create an undirected value graph to represent safe motion between waypoints. Undirected
