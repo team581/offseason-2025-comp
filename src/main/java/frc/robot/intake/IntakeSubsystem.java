@@ -59,6 +59,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
       case CORAL_HANDOFF -> {
         motor.setVoltage(-6);
       }
+      case UNJAM -> {
+        motor.setVoltage(-6);
+      }
     }
   }
 
