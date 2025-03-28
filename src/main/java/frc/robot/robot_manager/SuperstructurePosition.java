@@ -7,6 +7,8 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.util.MathHelpers;
 import java.util.Objects;
 
+import dev.doglog.DogLog;
+
 public record SuperstructurePosition(double elevatorHeight, double armAngle) {
   private static final double ARM_LENGTH = Units.inchesToMeters(37.416);
   // Elevator heights are accurate to 0.1 inches

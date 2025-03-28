@@ -12,12 +12,14 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
+import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
 
 public class ArmSubsystem extends StateMachine<ArmState> {
   private final TalonFX motor;
+  private double rawMotorAngle;
   private double motorAngle;
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
@@ -30,7 +32,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
 
-  private final PositionVoltage pidRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public ArmSubsystem(TalonFX motor) {
     super(
@@ -74,6 +75,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
+      // TODO: This is redudant with SuperstructurePosition.near()
       case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
       case PRE_MATCH_HOMING -> false;
     };
@@ -81,10 +83,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   protected void collectInputs() {
-    motorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
+    rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
+    motorAngle = MathHelpers.angleModulus(rawMotorAngle);
     if (DriverStation.isDisabled()) {
-      lowestSeenAngle = Math.min(lowestSeenAngle, motorAngle);
-      highestSeenAngle = Math.max(highestSeenAngle, motorAngle);
+      lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
+      highestSeenAngle = Math.max(highestSeenAngle, rawMotorAngle);
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
@@ -112,8 +115,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     super.robotPeriodic();
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Arm/NormalizedAngle", MathUtil.clamp(motorAngle, -180, 180));
-    DogLog.log("Arm/RawAngle", motorAngle);
+    DogLog.log("Arm/NormalizedAngle", motorAngle);
+    DogLog.log("Arm/RawAngle", rawMotorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
     DogLog.log("Arm/RangeOfMotionGood", rangeOfMotionGood());
     if (getState() == ArmState.PRE_MATCH_HOMING) {
@@ -121,7 +124,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         if (DriverStation.isEnabled()) {
           motor.setPosition(
               Units.degreesToRotations(
-                  RobotConfig.get().arm().homingPosition() + (motorAngle - lowestSeenAngle)));
+                  RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
 
           setStateFromRequest(ArmState.HOLDING_UPRIGHT);
         } else {
