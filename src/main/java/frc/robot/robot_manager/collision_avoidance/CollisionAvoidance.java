@@ -36,11 +36,12 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    return cachedAStar(
-        new CollisionAvoidanceQuery(
-            Waypoint.getClosest(currentPosition),
-            Waypoint.getClosest(desiredPosition),
-            obstructionKind));
+    return Optional.empty();
+    // return cachedAStar(
+    //     new CollisionAvoidanceQuery(
+    //         Waypoint.getClosest(currentPosition),
+    //         Waypoint.getClosest(desiredPosition),
+    //         obstructionKind));
   }
 
   private static Optional<Waypoint> cachedAStar(CollisionAvoidanceQuery query) {

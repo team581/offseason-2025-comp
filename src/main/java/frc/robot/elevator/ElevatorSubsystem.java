@@ -48,7 +48,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   private double averageMeasuredHeight = 0;
   private double collisionAvoidanceGoal = ElevatorState.STOWED.getHeight();
-
   // Mid-match homing
   private double averageMotorCurrent;
   private final CoastOut coastRequest = new CoastOut();
@@ -137,6 +136,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     DogLog.log("Elevator/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
+
     DogLog.log("Elevator/Left/Height", leftHeight);
     DogLog.log("Elevator/Right/Height", rightHeight);
     DogLog.log("Elevator/Height", averageMeasuredHeight);

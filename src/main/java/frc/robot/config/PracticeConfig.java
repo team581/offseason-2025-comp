@@ -54,14 +54,15 @@ class PracticeConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(10.0)
+                          .withKD(0.5)
                           .withKV(0)
-                          .withKG(0.0)
+                          .withKG(0.3)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(65.0)
+                          .withMotionMagicCruiseVelocity(65.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
@@ -69,21 +70,22 @@ class PracticeConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(10.0)
+                          .withKD(0.5)
                           .withKV(0)
-                          .withKG(0.0)
+                          .withKG(0.3)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(65)
+                          .withMotionMagicCruiseVelocity(65.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               0,
               25,
               0,
-              62.0,
+              61.5,
               0.5),
           new IntakeConfig(
               CANIVORE_NAME,
@@ -189,15 +191,15 @@ class PracticeConfig {
                           .withInverted(InvertedValue.CounterClockwise_Positive))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(150.0)
                           .withKV(0.0)
-                          .withKD(0.0)
-                          .withKG(0.0)
+                          .withKD(7.0)
+                          .withKG(0.50)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(3)
+                          .withMotionMagicCruiseVelocity(3.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
@@ -205,8 +207,8 @@ class PracticeConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimitEnable(true)
                           .withStatorCurrentLimitEnable(true)
-                          .withSupplyCurrentLimit(25.0)
-                          .withStatorCurrentLimit(40.0))
+                          .withSupplyCurrentLimit(60.0)
+                          .withStatorCurrentLimit(60.0))
                   .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
               -11.162,
               6.615),

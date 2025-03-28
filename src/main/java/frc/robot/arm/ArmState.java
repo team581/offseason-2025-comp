@@ -14,7 +14,7 @@ public enum ArmState {
 
   UNJAM(UNTUNED),
   // Idle positions
-  HOLDING_UPRIGHT(UNTUNED),
+  HOLDING_UPRIGHT(90),
 
   // Left coral positions
   CORAL_SCORE_LEFT_LINEUP_L1(UNTUNED),

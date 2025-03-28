@@ -1,6 +1,7 @@
 package frc.robot.arm;
 
 import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,8 +27,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
-  // private final MotionMagicVoltage motionMagicRequest =
-  //     new MotionMagicVoltage(0.0).withEnableFOC(false);
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private final PositionVoltage pidRequest = new PositionVoltage(0).withEnableFOC(false);
 
@@ -93,13 +94,15 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   protected void afterTransition(ArmState newState) {
     switch (newState) {
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       case PRE_MATCH_HOMING -> {
         motor.setControl(coastNeutralRequest);
       }
       default -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
       }
     }
   }
@@ -138,7 +141,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(pidRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       default -> {}
     }
