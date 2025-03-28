@@ -59,6 +59,11 @@ public class CollisionAvoidance {
           currentWaypoint.position.elevatorHeight());
       DogLog.log(
           "CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+      DogLog.log("CollisionAvoidance/CurrentWaypoint", currentWaypoint);
+      DogLog.log("CollisionAvoidance/ClosestWaypoint", Waypoint.getClosest(currentPosition));
+      DogLog.log("CollisionAvoidance/AstarPath", lastPath.toArray(Waypoint[]::new));
+
+
       DogLog.log(
           "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
       DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
@@ -144,19 +149,10 @@ public class CollisionAvoidance {
     // Middle
     Waypoint.STOWED.canMoveToAlways(Waypoint.HANDOFF, graph);
 
-    Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
     Waypoint.STOWED_UP.canMoveToWhenRightSafe(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_RIGHT, graph);
