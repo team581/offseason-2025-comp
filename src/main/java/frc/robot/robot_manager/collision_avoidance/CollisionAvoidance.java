@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
@@ -22,7 +23,7 @@ public class CollisionAvoidance {
 
   private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
-  private static final Map<CollisionAvoidanceQuery, Optional<Deque<Waypoint>>> aStarCache =
+  private static final Map<CollisionAvoidanceQuery, Optional<ImmutableList<Waypoint>>> aStarCache =
       new HashMap<>();
 
   private static CollisionAvoidanceQuery lastQuery =
@@ -85,8 +86,9 @@ public class CollisionAvoidance {
     var currentWaypoint = Waypoint.getClosest(currentPosition);
     maybeLastPath =
         cachedAStar(
-            new CollisionAvoidanceQuery(
-                currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind));
+                new CollisionAvoidanceQuery(
+                    currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind))
+            .map(ArrayDeque::new);
     lastQuery =
         new CollisionAvoidanceQuery(
             Waypoint.getClosest(currentPosition),
@@ -120,7 +122,7 @@ public class CollisionAvoidance {
     return Optional.of(currentWaypoint);
   }
 
-  private static Optional<Deque<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
+  private static Optional<ImmutableList<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
     DogLog.log("CollisionAvoidance", aStarCache.size());
 
     return aStarCache.computeIfAbsent(
@@ -227,7 +229,7 @@ public class CollisionAvoidance {
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
    */
-  private static Deque<Waypoint> reconstructPath(
+  private static ImmutableList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
     Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
     totalPath.add(endWaypoint);
@@ -237,10 +239,10 @@ public class CollisionAvoidance {
       totalPath.addFirst(current);
     }
 
-    return totalPath;
+    return ImmutableList.copyOf(totalPath);
   }
 
-  static Optional<Deque<Waypoint>> aStar(
+  static Optional<ImmutableList<Waypoint>> aStar(
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
