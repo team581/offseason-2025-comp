@@ -4,7 +4,6 @@ import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
-
 import dev.doglog.DogLog;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
@@ -26,7 +25,8 @@ public class CollisionAvoidance {
   private static final Map<CollisionAvoidanceQuery, Optional<Deque<Waypoint>>> aStarCache =
       new HashMap<>();
 
-  private static CollisionAvoidanceQuery lastQuery = new CollisionAvoidanceQuery(Waypoint.STOWED, Waypoint.STOWED, ObstructionKind.NONE);
+  private static final CollisionAvoidanceQuery lastQuery =
+      new CollisionAvoidanceQuery(Waypoint.STOWED, Waypoint.STOWED, ObstructionKind.NONE);
   private static Optional<Deque<Waypoint>> maybeLastPath = Optional.empty();
 
   /**
@@ -70,9 +70,7 @@ public class CollisionAvoidance {
     maybeLastPath =
         cachedAStar(
             new CollisionAvoidanceQuery(
-              currentWaypoint,
-                Waypoint.getClosest(desiredPosition),
-                obstructionKind));
+                currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind));
 
     // Check if our current position is close to the current waypoint in path
     if (SuperstructurePosition.near(

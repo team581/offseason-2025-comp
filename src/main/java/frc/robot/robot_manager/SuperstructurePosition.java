@@ -33,7 +33,11 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
     }
 
     if (other instanceof SuperstructurePosition otherPosition) {
-      return near(otherPosition, new SuperstructurePosition(elevatorHeight, armAngle), ELEVATOR_PRECISION, ARM_PRECISION);
+      return near(
+          otherPosition,
+          new SuperstructurePosition(elevatorHeight, armAngle),
+          ELEVATOR_PRECISION,
+          ARM_PRECISION);
     }
 
     return false;
