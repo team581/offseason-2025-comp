@@ -8,8 +8,8 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class GroundManager extends StateMachine<GroundState> {
-  private final DeploySubsystem deploy;
-  private final IntakeSubsystem intake;
+  public final DeploySubsystem deploy;
+  public final IntakeSubsystem intake;
   private boolean hasCoral = false;
 
   public GroundManager(DeploySubsystem deploy, IntakeSubsystem intake) {
@@ -99,5 +99,13 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void handoffReleaseRequest() {
     setStateFromRequest(GroundState.HANDOFF_RELEASE);
+  }
+
+  public void unjamRequest() {
+    setStateFromRequest(GroundState.UNJAM);
+  }
+
+  public void rehomeDeployRequest() {
+    deploy.setState(DeployState.HOMING);
   }
 }

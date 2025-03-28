@@ -9,6 +9,8 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
+import frc.robot.robot_manager.ground_manager.GroundState;
+
 import java.util.List;
 
 public class AutoCommands {
@@ -48,7 +50,7 @@ public class AutoCommands {
   }
 
   public Command intakeCoralHorizontalCommand() {
-    return Commands.runOnce(robotManager::intakeFloorCoralHorizontalRequest);
+    return Commands.runOnce(robotManager.groundManager::intakeRequest);
   }
 
   public Command intakeLollipopCommand() {
@@ -56,17 +58,14 @@ public class AutoCommands {
   }
 
   public Command waitForIntakeDone() {
-    return robotManager
-        .waitForState(RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY)
-        .andThen(robotManager.waitForState(RobotState.CLAW_EMPTY_DEPLOY_CORAL))
+    return robotManager.groundManager
+        .waitForState(GroundState.INTAKING)
+        .andThen(robotManager.groundManager.waitForState(GroundState.IDLE_CORAL))
         .withTimeout(4);
   }
 
   public Command waitForGroundIntakeDone() {
-    return robotManager.waitForStates(
-        RobotState.CORAL_INTAKE_ASSIST_FLOOR_CLAW_EMPTY,
-        RobotState.CORAL_INTAKE_FLOOR_CLAW_EMPTY,
-        RobotState.CORAL_INTAKE_LOLLIPOP_DEPLOY_EMPTY);
+    return robotManager.waitForState(RobotState.CORAL_INTAKE_LOLLIPOP).andThen(robotManager.groundManager.waitForState(GroundState.INTAKING));
   }
 
   public Command l4WarmupCommand(ReefPipe pipe) {
