@@ -10,17 +10,22 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class CollisionAvoidance {
+  private static final double ELEVATOR_TOLERANCE = 2.0;
+  private static final double ARM_TOLERANCE = 5.0;
 
   private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
-  private static final Map<CollisionAvoidanceQuery, Optional<Waypoint>> aStarCache =
-      new ConcurrentHashMap<>();
+  private static final Map<CollisionAvoidanceQuery, Optional<Deque<Waypoint>>> aStarCache =
+      new HashMap<>();
+
+  private static CollisionAvoidanceQuery lastQuery = new CollisionAvoidanceQuery(Waypoint.STOWED, Waypoint.STOWED, ObstructionKind.NONE);
+  private static Optional<Deque<Waypoint>> maybeLastPath = Optional.empty();
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -35,12 +40,62 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    return Optional.empty();
-    // return cachedAStar(
-    //     new CollisionAvoidanceQuery(
-    //         Waypoint.getClosest(currentPosition),
-    //         Waypoint.getClosest(desiredPosition),
-    //         obstructionKind));
+
+    // Check if the desired position and obstruction is the same, then use the same path
+    if (lastQuery.equals(
+        new CollisionAvoidanceQuery(
+            lastQuery.currentWaypoint(), Waypoint.getClosest(desiredPosition), obstructionKind))) {
+
+      var lastPath = maybeLastPath.orElseThrow();
+      var currentWaypoint = lastPath.peek();
+      // Check if our current position is close to the current waypoint in path
+      if (SuperstructurePosition.near(
+          currentWaypoint.position, desiredPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE)) {
+        // If it's close, return the next waypoint
+        if (lastPath.isEmpty()) {
+          return Optional.empty();
+        }
+        return Optional.of(lastPath.pop());
+      }
+      // If it's not close, return the same waypoint
+      return Optional.of(currentWaypoint);
+    }
+
+    // If our desired position or obstruction changed, regenerate the path
+
+    // Update the last path
+    var currentWaypoint = Waypoint.getClosest(currentPosition);
+    maybeLastPath =
+        cachedAStar(
+            new CollisionAvoidanceQuery(
+              currentWaypoint,
+                Waypoint.getClosest(desiredPosition),
+                obstructionKind));
+
+    // Check if our current position is close to the current waypoint in path
+    if (SuperstructurePosition.near(
+        currentWaypoint.position, desiredPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE)) {
+      // If it's close, return the next waypoint
+      var lastPath = maybeLastPath.orElseThrow();
+      if (lastPath.isEmpty()) {
+        return Optional.empty();
+      }
+      return Optional.of(lastPath.pop());
+    }
+    // If it's not close, return the first waypoint
+    return Optional.of(currentWaypoint);
+  }
+
+  private static Optional<Deque<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
+    DogLog.log("CollisionAvoidance", aStarCache.size());
+
+    return aStarCache.computeIfAbsent(
+        query,
+        (k) ->
+            aStar(
+                query.currentWaypoint().position,
+                query.goalWaypoint().position,
+                query.obstructionKind()));
   }
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
