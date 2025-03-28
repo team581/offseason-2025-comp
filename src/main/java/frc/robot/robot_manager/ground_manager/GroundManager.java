@@ -8,96 +8,96 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class GroundManager extends StateMachine<GroundState> {
-    private final DeploySubsystem deploy;
-    private final IntakeSubsystem intake;
-    private boolean hasCoral = false;
-    
-    public GroundManager(DeploySubsystem deploy, IntakeSubsystem intake) {
-        super(SubsystemPriority.GROUND_MANAGER, GroundState.IDLE_EMPTY);
-        this.deploy = deploy;
-        this.intake = intake;
-    }
+  private final DeploySubsystem deploy;
+  private final IntakeSubsystem intake;
+  private boolean hasCoral = false;
 
-    @Override
-    protected GroundState getNextState(GroundState currentState) {
-        return switch (currentState) {
-            case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
-            case HANDOFF_RELEASE, L1_SCORE -> !hasCoral ? GroundState.IDLE_EMPTY : currentState;
-            default -> currentState;
-        };
-    }
+  public GroundManager(DeploySubsystem deploy, IntakeSubsystem intake) {
+    super(SubsystemPriority.GROUND_MANAGER, GroundState.IDLE_EMPTY);
+    this.deploy = deploy;
+    this.intake = intake;
+  }
 
-    @Override
-    protected void afterTransition(GroundState newState) {
-        switch (newState) {
-            case IDLE_EMPTY -> {
-                deploy.setState(DeployState.STOWED);
-                intake.setState(IntakeState.IDLE_NO_GP);
-            }
-            case IDLE_CORAL -> {
-                deploy.setState(DeployState.STOWED);
-                intake.setState(IntakeState.IDLE_GP);
-            }
-            case INTAKING -> {
-                deploy.setState(DeployState.FLOOR_INTAKE);
-                intake.setState(IntakeState.INTAKING);
-            }
-            case L1_WAIT -> {
-                deploy.setState(DeployState.L1_SCORE);
-                intake.setState(IntakeState.IDLE_GP);
-            }
-            case L1_SCORE -> {
-                deploy.setState(DeployState.L1_SCORE);
-                intake.setState(IntakeState.SCORING);
-            }
-            case HANDOFF_WAIT -> {
-                deploy.setState(DeployState.HANDOFF);
-                intake.setState(IntakeState.IDLE_GP);
-            }
-            case HANDOFF_RELEASE -> {
-                deploy.setState(DeployState.HANDOFF);
-                intake.setState(IntakeState.CORAL_HANDOFF);
-            }
-            case UNJAM -> {
-                deploy.setState(DeployState.UNJAM);
-                intake.setState(IntakeState.UNJAM);
-            }
-        }
-    }
+  @Override
+  protected GroundState getNextState(GroundState currentState) {
+    return switch (currentState) {
+      case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
+      case HANDOFF_RELEASE, L1_SCORE -> !hasCoral ? GroundState.IDLE_EMPTY : currentState;
+      default -> currentState;
+    };
+  }
 
-    @Override
-    protected void collectInputs() {
-        hasCoral = intake.getHasGP();
+  @Override
+  protected void afterTransition(GroundState newState) {
+    switch (newState) {
+      case IDLE_EMPTY -> {
+        deploy.setState(DeployState.STOWED);
+        intake.setState(IntakeState.IDLE_NO_GP);
+      }
+      case IDLE_CORAL -> {
+        deploy.setState(DeployState.STOWED);
+        intake.setState(IntakeState.IDLE_GP);
+      }
+      case INTAKING -> {
+        deploy.setState(DeployState.FLOOR_INTAKE);
+        intake.setState(IntakeState.INTAKING);
+      }
+      case L1_WAIT -> {
+        deploy.setState(DeployState.L1_SCORE);
+        intake.setState(IntakeState.IDLE_GP);
+      }
+      case L1_SCORE -> {
+        deploy.setState(DeployState.L1_SCORE);
+        intake.setState(IntakeState.SCORING);
+      }
+      case HANDOFF_WAIT -> {
+        deploy.setState(DeployState.HANDOFF);
+        intake.setState(IntakeState.IDLE_GP);
+      }
+      case HANDOFF_RELEASE -> {
+        deploy.setState(DeployState.HANDOFF);
+        intake.setState(IntakeState.CORAL_HANDOFF);
+      }
+      case UNJAM -> {
+        deploy.setState(DeployState.UNJAM);
+        intake.setState(IntakeState.UNJAM);
+      }
     }
+  }
 
-    public boolean hasCoral() {
-        return hasCoral;
-    }
+  @Override
+  protected void collectInputs() {
+    hasCoral = intake.getHasGP();
+  }
 
-    public void intakeRequest() {
-        setStateFromRequest(GroundState.INTAKING);
-    }
+  public boolean hasCoral() {
+    return hasCoral;
+  }
 
-    public void l1Request() {
-        switch (getState()) {
-            default -> setStateFromRequest(GroundState.L1_WAIT);
-            case L1_WAIT -> setStateFromRequest(GroundState.L1_SCORE);
-        }
-    }
+  public void intakeRequest() {
+    setStateFromRequest(GroundState.INTAKING);
+  }
 
-    public void idleRequest() {
-        if (hasCoral) {
-            setStateFromRequest(GroundState.IDLE_CORAL);
-        } else {
-            setStateFromRequest(GroundState.IDLE_EMPTY);
-        }
+  public void l1Request() {
+    switch (getState()) {
+      
+      case L1_WAIT -> setStateFromRequest(GroundState.L1_SCORE);default -> setStateFromRequest(GroundState.L1_WAIT);
     }
+  }
 
-    public void handoffWaitRequest() {
-        setStateFromRequest(GroundState.HANDOFF_WAIT);
+  public void idleRequest() {
+    if (hasCoral) {
+      setStateFromRequest(GroundState.IDLE_CORAL);
+    } else {
+      setStateFromRequest(GroundState.IDLE_EMPTY);
     }
+  }
 
-    public void handoffReleaseRequest() {
-        setStateFromRequest(GroundState.HANDOFF_RELEASE);
-    }
+  public void handoffWaitRequest() {
+    setStateFromRequest(GroundState.HANDOFF_WAIT);
+  }
+
+  public void handoffReleaseRequest() {
+    setStateFromRequest(GroundState.HANDOFF_RELEASE);
+  }
 }

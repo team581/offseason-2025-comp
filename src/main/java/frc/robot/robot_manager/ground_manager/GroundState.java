@@ -1,16 +1,16 @@
 package frc.robot.robot_manager.ground_manager;
 
 public enum GroundState {
-    IDLE_EMPTY,
-    IDLE_CORAL,
+  IDLE_EMPTY,
+  IDLE_CORAL,
 
-    INTAKING,
+  INTAKING,
 
-    HANDOFF_WAIT,
-    HANDOFF_RELEASE,
+  HANDOFF_WAIT,
+  HANDOFF_RELEASE,
 
-    L1_WAIT,
-    L1_SCORE,
+  L1_WAIT,
+  L1_SCORE,
 
-    UNJAM;
+  UNJAM;
 }
