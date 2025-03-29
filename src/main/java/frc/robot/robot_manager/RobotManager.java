@@ -108,7 +108,7 @@ public class RobotManager extends StateMachine<RobotState> {
               UNJAM,
               SPIN_TO_WIN,
               ALGAE_INTAKE_FLOOR,
-              CORAL_INTAKE_LOLLIPOP_APPROACH->
+              CORAL_INTAKE_LOLLIPOP_APPROACH ->
           currentState;
 
       case REHOME_ELEVATOR ->
