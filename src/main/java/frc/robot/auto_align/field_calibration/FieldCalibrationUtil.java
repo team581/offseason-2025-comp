@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  *   <li>Elevator: in coast mode while disabled
  */
 public class FieldCalibrationUtil {
-  private static final double ELEVATOR_TOLERANCE = RobotConfig.get().elevator().tolerance();
+  private static final double ELEVATOR_TOLERANCE = 0.5;
   // Copied from ArmSubsystem
   private static final double ARM_TOLERANCE = 2.0;
   // Copied from TagAlign
