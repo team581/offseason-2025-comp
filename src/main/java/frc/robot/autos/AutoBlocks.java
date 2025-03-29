@@ -54,7 +54,7 @@ public class AutoBlocks {
 
   public Command scorePreloadL4(Pose2d startingPose, ReefPipe pipe) {
     return Commands.sequence(
-      autoCommands.resetPoseIfNeeded(startingPose),
+        autoCommands.resetPoseIfNeeded(startingPose),
         trailblazer
             .followSegment(
                 new AutoSegment(
