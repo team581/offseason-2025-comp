@@ -152,7 +152,6 @@ public class CollisionAvoidance {
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_L3_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_L3_RIGHT, graph);
 
-
     // Left side
 
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
