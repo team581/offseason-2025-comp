@@ -54,6 +54,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return RobotScoringSide.LEFT;
   }
 
+  public static Translation2d getAllianceCenterOfReef() {
+    return FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
+  }
+
   public static RobotScoringSide getScoringSideFromRobotPose(
       Pose2d robotPose, boolean leftLimelightsOnline, boolean rightLimelightOnline) {
     if (!leftLimelightsOnline) {
@@ -62,7 +66,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     if (!rightLimelightOnline) {
       return RobotScoringSide.LEFT;
     }
-    var centerOfReef = FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
+    var centerOfReef = getAllianceCenterOfReef();
     var angleToAim =
         MathUtil.angleModulus(
             Math.atan2(

@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
@@ -11,17 +12,23 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class CollisionAvoidance {
+  private static final double ELEVATOR_TOLERANCE = 2.0;
+  private static final double ARM_TOLERANCE = 5.0;
 
   private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
-  private static final Map<CollisionAvoidanceQuery, Optional<Waypoint>> aStarCache =
-      new ConcurrentHashMap<>();
+  private static final Map<CollisionAvoidanceQuery, Optional<ImmutableList<Waypoint>>> aStarCache =
+      new HashMap<>();
+
+  private static CollisionAvoidanceQuery lastQuery =
+      new CollisionAvoidanceQuery(Waypoint.STOWED, Waypoint.STOWED, ObstructionKind.NONE);
+  private static Optional<Deque<Waypoint>> maybeLastPath = Optional.empty();
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -36,25 +43,99 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    return cachedAStar(
+
+    // Check if the desired position and obstruction is the same, then use the same path
+    if (lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition))
+        && lastQuery.obstructionKind().equals(obstructionKind)) {
+
+      var lastPath = maybeLastPath.orElseThrow();
+      if (lastPath.isEmpty()) {
+        return Optional.empty();
+      }
+      var currentWaypoint = lastPath.peek();
+      // Check if our current position is close to the current waypoint in path
+      DogLog.log(
+          "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
+          currentWaypoint.position.elevatorHeight());
+      DogLog.log(
+          "CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+      DogLog.log("CollisionAvoidance/CurrentWaypoint", currentWaypoint);
+      DogLog.log("CollisionAvoidance/ClosestWaypoint", Waypoint.getClosest(currentPosition));
+      DogLog.log("CollisionAvoidance/AstarPath", lastPath.toArray(Waypoint[]::new));
+
+      DogLog.log(
+          "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
+      DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
+
+      boolean near =
+          SuperstructurePosition.near(
+              currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
+      DogLog.log("CollisionAvoidance/Near", near);
+      if (near) {
+
+        // If it's close, return the next waypoint
+        if (lastPath.isEmpty()) {
+          DogLog.timestamp("CollisionAvoidance/PathEmpty");
+          return Optional.empty();
+        }
+        return Optional.of(lastPath.pop());
+      }
+      // If it's not close, return the same waypoint
+      return Optional.of(currentWaypoint);
+    }
+
+    // If our desired position or obstruction changed, regenerate the path
+
+    // Update the last path
+    var currentWaypoint = Waypoint.getClosest(currentPosition);
+    maybeLastPath =
+        cachedAStar(
+                new CollisionAvoidanceQuery(
+                    currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind))
+            .map(ArrayDeque::new);
+    lastQuery =
         new CollisionAvoidanceQuery(
             Waypoint.getClosest(currentPosition),
             Waypoint.getClosest(desiredPosition),
-            obstructionKind));
+            obstructionKind);
+    // Check if our current position is close to the current waypoint in path
+    DogLog.log(
+        "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
+        currentWaypoint.position.elevatorHeight());
+    DogLog.log("CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+    DogLog.log(
+        "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
+    DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
+
+    boolean near =
+        SuperstructurePosition.near(
+            currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
+    DogLog.timestamp("CollisionAvoidance/NewPath");
+    DogLog.log("CollisionAvoidance/Near", near);
+    if (near) {
+      // If it's close, return the next waypoint
+      var lastPath = maybeLastPath.orElseThrow();
+      if (lastPath.isEmpty()) {
+        DogLog.timestamp("CollisionAvoidance/PathEmpty");
+
+        return Optional.empty();
+      }
+      return Optional.of(lastPath.pop());
+    }
+    // If it's not close, return the first waypoint
+    return Optional.of(currentWaypoint);
   }
 
-  private static Optional<Waypoint> cachedAStar(CollisionAvoidanceQuery query) {
+  private static Optional<ImmutableList<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
+    DogLog.log("CollisionAvoidance", aStarCache.size());
+
     return aStarCache.computeIfAbsent(
         query,
-        (k) -> {
-          Optional<Deque<Waypoint>> nextWaypoint =
-              aStar(
-                  query.currentWaypoint().position,
-                  query.goalWaypoint().position,
-                  query.obstructionKind());
-          DogLog.log("CollisionAvoidance", aStarCache.size());
-          return Optional.of(nextWaypoint.orElseThrow().peek());
-        });
+        (k) ->
+            aStar(
+                query.currentWaypoint().position,
+                query.goalWaypoint().position,
+                query.obstructionKind()));
   }
 
   private static ImmutableValueGraph<Waypoint, WaypointEdge> createGraph() {
@@ -67,19 +148,10 @@ public class CollisionAvoidance {
     // Middle
     Waypoint.STOWED.canMoveToAlways(Waypoint.HANDOFF, graph);
 
-    Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
     Waypoint.STOWED.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.HANDOFF.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
-    Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
 
     Waypoint.STOWED_UP.canMoveToWhenRightSafe(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_RIGHT, graph);
@@ -152,7 +224,7 @@ public class CollisionAvoidance {
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
    * at final waypoint).
    */
-  private static Deque<Waypoint> reconstructPath(
+  private static ImmutableList<Waypoint> reconstructPath(
       Map<Waypoint, Waypoint> cameFrom, Waypoint endWaypoint) {
     Deque<Waypoint> totalPath = new ArrayDeque<Waypoint>();
     totalPath.add(endWaypoint);
@@ -162,10 +234,10 @@ public class CollisionAvoidance {
       totalPath.addFirst(current);
     }
 
-    return totalPath;
+    return ImmutableList.copyOf(totalPath);
   }
 
-  static Optional<Deque<Waypoint>> aStar(
+  static Optional<ImmutableList<Waypoint>> aStar(
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {

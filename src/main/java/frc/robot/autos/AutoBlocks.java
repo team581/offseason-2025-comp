@@ -52,8 +52,9 @@ public class AutoBlocks {
     this.autoCommands = autoCommands;
   }
 
-  public Command scorePreloadL4(Points startingPose, ReefPipe pipe) {
+  public Command scorePreloadL4(Pose2d startingPose, ReefPipe pipe) {
     return Commands.sequence(
+        autoCommands.resetPoseIfNeeded(startingPose),
         trailblazer
             .followSegment(
                 new AutoSegment(
@@ -166,7 +167,7 @@ public class AutoBlocks {
                     Commands.runOnce(robotManager.groundManager::intakeRequest)),
                 new AutoPoint(intakingPoint.redPose)),
             false)
-        .withDeadline(autoCommands.waitForIntakeDone());
+        .withDeadline(autoCommands.waitForGroundIntakeDone());
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
@@ -178,7 +179,9 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.coralMap.getLollipopIntakePose().orElse(defaultIntakingPoint),
-                    Commands.runOnce(autoCommands::intakeLollipopCommand),
+                    Commands.runOnce(
+                        () ->
+                            autoCommands.intakeLollipopCommand()),
                     LOLLIPOP_CONSTRAINTS)),
             false)
         .withTimeout(5);

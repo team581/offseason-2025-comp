@@ -47,31 +47,31 @@ public class ClawSubsystem extends StateMachine<ClawState> {
         motor.disable();
       }
       case IDLE_W_ALGAE -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(10.0);
       }
       case IDLE_W_CORAL -> {
         motor.setVoltage(0.0);
       }
       case INTAKING_ALGAE -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(10.0);
       }
       case CORAL_HANDOFF -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(6);
       }
       case SCORE_ALGAE_NET -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(-5);
       }
       case SCORE_ALGAE_PROCESSOR -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(-5);
       }
       case SCORE_CORAL -> {
         motor.setVoltage(0.0);
       }
       case OUTTAKING -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(-6);
       }
       case LOLLIPOP_CORAL_INTAKE -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(8);
       }
     }
   }

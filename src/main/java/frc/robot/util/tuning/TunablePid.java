@@ -39,6 +39,21 @@ public class TunablePid {
         key + "/kG",
         defaultConfig.Slot0.kG,
         newG -> motor.getConfigurator().apply(defaultConfig.Slot0.withKG(newG)));
+
+    DogLog.tunable(
+        key + "/MotionMagic/MaxVel",
+        defaultConfig.MotionMagic.MotionMagicCruiseVelocity,
+        newMaxVelocity ->
+            motor
+                .getConfigurator()
+                .apply(defaultConfig.MotionMagic.withMotionMagicCruiseVelocity(newMaxVelocity)));
+    DogLog.tunable(
+        key + "/MotionMagic/MaxAccel",
+        defaultConfig.MotionMagic.MotionMagicCruiseVelocity,
+        newMaxAccel ->
+            motor
+                .getConfigurator()
+                .apply(defaultConfig.MotionMagic.withMotionMagicAcceleration(newMaxAccel)));
   }
 
   private TunablePid() {}

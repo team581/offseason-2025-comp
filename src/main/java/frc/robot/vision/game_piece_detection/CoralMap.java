@@ -8,9 +8,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.tag_align.AlignmentCostUtil;
 import frc.robot.config.FeatureFlags;
+import frc.robot.fms.FmsSubsystem;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -143,9 +146,39 @@ public class CoralMap extends StateMachine<CoralMapState> {
     return bestCoral;
   }
 
-  private List<Translation2d> getFilteredCoralPoses() {
+  public static boolean isCoralInSafeSpotForAuto(Translation2d coralPose) {
+    var centerOfReef = AutoAlign.getAllianceCenterOfReef();
+    if (coralPose.getDistance(centerOfReef) < Units.inchesToMeters(37.2)) {
+      return false;
+    }
 
-    return safeToTrack() ? getRawCoralPoses() : List.of();
+    if ((FmsSubsystem.isRedAlliance() && coralPose.getX() > Units.inchesToMeters(630))
+        || (!FmsSubsystem.isRedAlliance() && coralPose.getX() < Units.inchesToMeters(55))) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private List<Translation2d> getFilteredCoralPoses() {
+    if (!safeToTrack()) {
+      return List.of();
+    }
+
+    var rawCoralPoses = getRawCoralPoses();
+    if (DriverStation.isTeleop()) {
+      return rawCoralPoses;
+    }
+    List<Translation2d> safeCoralPoses = new ArrayList<>();
+    rawCoralPoses.stream()
+        .forEach(
+            element -> {
+              if (isCoralInSafeSpotForAuto(element)) {
+                safeCoralPoses.add(element);
+              }
+            });
+
+    return safeCoralPoses;
   }
 
   private boolean safeToTrack() {

@@ -22,7 +22,7 @@ public class RedThreePiece2IKLAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        blocks.scorePreloadL4(Points.START_R2_AND_B2, ReefPipe.PIPE_I),
+        blocks.scorePreloadL4(Points.START_R2_AND_B2.redPose, ReefPipe.PIPE_I),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),
         blocks.scoreL4(ReefPipe.PIPE_K),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),
