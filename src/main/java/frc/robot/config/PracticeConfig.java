@@ -93,8 +93,7 @@ class PracticeConfig {
               0,
               25,
               0,
-              61.5,
-              0.5),
+              61.5),
           new IntakeConfig(
               CANIVORE_NAME,
               25,

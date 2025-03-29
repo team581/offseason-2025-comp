@@ -27,8 +27,7 @@ public record RobotConfig(
       double homingEndHeight,
       double homingCurrentThreshold,
       double minHeight,
-      double maxHeight,
-      double tolerance) {}
+      double maxHeight) {}
 
   public record IntakeConfig(
       String canBusName,

@@ -14,7 +14,7 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
 
 public class ElevatorSubsystem extends StateMachine<ElevatorState> {
-  private static final double TOLERANCE = RobotConfig.get().elevator().tolerance();
+  private static final double TOLERANCE = 0.5;
 
   private static double clampHeight(double height) {
     return MathUtil.clamp(

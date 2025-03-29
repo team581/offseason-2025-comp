@@ -97,8 +97,7 @@ class CompConfig {
               0,
               25,
               0,
-              62.0,
-              0.5),
+              62.0),
           new IntakeConfig(
               CANIVORE_NAME,
               25,
