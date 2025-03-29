@@ -57,9 +57,9 @@ class PracticeConfig {
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(10.0)
-                          .withKD(0.5)
+                          .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.3)
+                          .withKG(0.2)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
@@ -78,14 +78,14 @@ class PracticeConfig {
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(10.0)
-                          .withKD(0.5)
+                          .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.3)
+                          .withKG(0.2)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(65.0)
-                          .withMotionMagicCruiseVelocity(65.0))
+                          .withMotionMagicAcceleration(65.0 / 5.0)
+                          .withMotionMagicCruiseVelocity(65.0 / 5.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -205,8 +205,8 @@ class PracticeConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(3.0)
-                          .withMotionMagicCruiseVelocity(3.0))
+                          .withMotionMagicAcceleration(3.0 / 5.0)
+                          .withMotionMagicCruiseVelocity(3.0 / 5.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
