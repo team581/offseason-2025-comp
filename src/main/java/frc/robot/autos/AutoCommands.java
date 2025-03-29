@@ -12,6 +12,7 @@ import frc.robot.robot_manager.RobotState;
 import java.util.List;
 
 public class AutoCommands {
+  private static final double LOLLIPOP_LOWER_ARM_THRESHOLD = 1.0;
   private final RobotCommands robotCommands;
   private final RobotManager robotManager;
   private final Subsystem[] requirements;
@@ -51,8 +52,16 @@ public class AutoCommands {
     return Commands.runOnce(robotManager::intakeFloorCoralHorizontalRequest);
   }
 
-  public Command intakeLollipopCommand() {
-    return Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest);
+  public Command intakeLollipopCommand(Pose2d lollipopTranslation) {
+    return Commands.waitUntil(
+            () ->
+                robotManager
+                        .localization
+                        .getPose()
+                        .getTranslation()
+                        .getDistance(lollipopTranslation.getTranslation())
+                    < LOLLIPOP_LOWER_ARM_THRESHOLD)
+        .andThen(Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest));
   }
 
   public Command waitForGroundIntakeDone() {
