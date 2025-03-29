@@ -66,7 +66,7 @@ public enum ArmState {
 
   // For auto
   LOLLIPOP_CORAL_INTAKE_APPROACH(20),
-  LOLLIPOP_CORAL_INTAKE_INTAKE(0),
+  LOLLIPOP_CORAL_INTAKE_INTAKE(-8),
   LOLLIPOP_CORAL_INTAKE_TILT(-15);
 
   private final double defaultAngle;
