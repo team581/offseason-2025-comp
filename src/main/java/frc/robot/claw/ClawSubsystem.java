@@ -65,7 +65,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
         motor.setVoltage(-5);
       }
       case SCORE_CORAL -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(-4);
       }
       case OUTTAKING -> {
         motor.setVoltage(-6);
