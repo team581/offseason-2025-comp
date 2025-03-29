@@ -110,6 +110,7 @@ public class RobotCommands {
   }
 
   public Command testNextLollipopCommand() {
-    return Commands.runOnce(robot::testingNextLollipopRequest, rmRequirements).withName("TestNextLollipopCommand");
+    return Commands.runOnce(robot::testingNextLollipopRequest, rmRequirements)
+        .withName("TestNextLollipopCommand");
   }
 }
