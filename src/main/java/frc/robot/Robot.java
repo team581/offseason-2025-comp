@@ -249,6 +249,6 @@ public class Robot extends TimedRobot {
 
     hardware.operatorController.back().onTrue(robotCommands.spinToWinCommand());
 
-    // hardware.operatorController.leftTrigger().onTrue(robotCommands.testNextLollipopCommand());
+    hardware.operatorController.leftTrigger().onTrue(robotCommands.testNextLollipopCommand());
   }
 }

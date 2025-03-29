@@ -25,6 +25,8 @@ public enum RobotState {
   ALGAE_INTAKE_L2_RIGHT(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3_RIGHT(ClawGamePiece.ALGAE, false),
 
+  PREPARE_HANDOFF_AFTER_INTAKE(ClawGamePiece.EMPTY, false),
+
   // L1 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L1_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),

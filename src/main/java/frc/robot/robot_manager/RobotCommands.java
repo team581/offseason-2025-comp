@@ -44,11 +44,13 @@ public class RobotCommands {
   }
 
   public Command l3LineupCommand() {
-    return Commands.runOnce(robot::l3LineupRequest, bothRequirements).withName("L3LineupCommand");
+    return Commands.runOnce(robot::l3CoralApproachRequest, bothRequirements)
+        .withName("L3LineupCommand");
   }
 
   public Command l2LineupCommand() {
-    return Commands.runOnce(robot::l2LineupRequest, bothRequirements).withName("L2LineupCommand");
+    return Commands.runOnce(robot::l2CoralApproachRequest, bothRequirements)
+        .withName("L2LineupCommand");
   }
 
   public Command lowLineupCommand() {
