@@ -48,6 +48,10 @@ class PracticeConfig {
               1.274,
               // Sensor to mechanism ratio is the gear ratio multiplied by the sprocket circumfrence
               new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withSupplyCurrentLimit(40)
+                          .withStatorCurrentLimit(40))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -67,6 +71,10 @@ class PracticeConfig {
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(1.0 / ((8.0 / 40.0) * (2.0 / 1.0)))),
               new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withSupplyCurrentLimit(40)
+                          .withStatorCurrentLimit(40))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
@@ -205,8 +213,6 @@ class PracticeConfig {
                           .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withSupplyCurrentLimitEnable(true)
-                          .withStatorCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0))
                   .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
@@ -256,9 +262,7 @@ class PracticeConfig {
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
                           .withStatorCurrentLimit(60)
-                          .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(60)),
               new CANcoderConfiguration()
                   .withMagnetSensor(
@@ -269,9 +273,7 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimitEnable(true)
                           .withStatorCurrentLimit(35)
-                          .withSupplyCurrentLimitEnable(true)
                           .withSupplyCurrentLimit(35)),
               new CANrangeConfiguration()
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
