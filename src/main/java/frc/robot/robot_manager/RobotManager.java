@@ -377,24 +377,6 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOWED);
       }
       // L1
-      case CORAL_L1_LEFT_LINEUP -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
-        moveSuperstructure(
-            ElevatorState.CORAL_SCORE_LEFT_LINEUP_L1, ArmState.CORAL_SCORE_LEFT_LINEUP_L1);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
-      }
-      case CORAL_L1_LEFT_RELEASE -> {
-        claw.setState(ClawState.SCORE_CORAL);
-        moveSuperstructure(
-            ElevatorState.CORAL_SCORE_LEFT_RELEASE_L1, ArmState.CORAL_SCORE_LEFT_RELEASE_L1);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
-      }
       case CORAL_L1_RIGHT_LINEUP -> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
