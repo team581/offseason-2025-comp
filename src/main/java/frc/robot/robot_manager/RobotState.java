@@ -15,7 +15,9 @@ public enum RobotState {
 
   // Intake states
   // In theory we could have intake upright while holding algae but nobody is going to use that
-  CORAL_INTAKE_LOLLIPOP(ClawGamePiece.EMPTY, false),
+  CORAL_INTAKE_LOLLIPOP_APPROACH(ClawGamePiece.EMPTY, false),
+  CORAL_INTAKE_LOLLIPOP_GRAB(ClawGamePiece.EMPTY, false),
+  CORAL_INTAKE_LOLLIPOP_TILT(ClawGamePiece.CORAL, false),
 
   ALGAE_INTAKE_FLOOR(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L2_LEFT(ClawGamePiece.ALGAE, false),

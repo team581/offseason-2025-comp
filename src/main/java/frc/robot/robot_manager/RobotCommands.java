@@ -34,7 +34,7 @@ public class RobotCommands {
   }
 
   public Command floorAssistIntakeCommand() {
-    return Commands.runOnce(robot::intakeAssistFloorCoralHorizontalRequest, rmRequirements)
+    return Commands.runOnce(robot::lollipopIntakeApproachRequest, rmRequirements)
         .withName("FloorIntakeCommand");
   }
 
@@ -107,5 +107,9 @@ public class RobotCommands {
 
   public Command spinToWinCommand() {
     return Commands.runOnce(robot::spinToWinRequest, rmRequirements).withName("SpinToWinCommand");
+  }
+
+  public Command testNextLollipopCommand() {
+    return Commands.runOnce(robot::testingNextLollipopRequest, rmRequirements).withName("TestNextLollipopCommand");
   }
 }
