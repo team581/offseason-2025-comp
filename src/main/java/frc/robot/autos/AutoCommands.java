@@ -53,8 +53,12 @@ public class AutoCommands {
     return Commands.runOnce(robotManager.groundManager::intakeRequest);
   }
 
-  public Command intakeLollipopCommand() {
+  public Command lollipopApproachCommand() {
     return Commands.runOnce(robotManager::lollipopIntakeApproachRequest);
+  }
+
+  public Command intakeLollipopCommand() {
+    return Commands.runOnce(robotManager::lollipopIntakeGrabRequest);
   }
 
   public Command waitForIntakeDone() {
