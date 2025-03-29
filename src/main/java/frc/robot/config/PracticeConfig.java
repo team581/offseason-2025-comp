@@ -48,23 +48,23 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withSupplyCurrentLimit(40)
-                          .withStatorCurrentLimit(40))
+                          .withSupplyCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(10.0)
+                          .withKP(40.0)
                           .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.2)
+                          .withKG(0.8)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(65.0)
-                          .withMotionMagicCruiseVelocity(65.0))
+                          .withMotionMagicAcceleration(240.0)
+                          .withMotionMagicCruiseVelocity(240.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -72,20 +72,20 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withSupplyCurrentLimit(40)
-                          .withStatorCurrentLimit(40))
+                          .withSupplyCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(10.0)
+                          .withKP(40.0)
                           .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.2)
+                          .withKG(0.8)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(65.0)
-                          .withMotionMagicCruiseVelocity(65.0))
+                          .withMotionMagicAcceleration(240.0)
+                          .withMotionMagicCruiseVelocity(240.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
