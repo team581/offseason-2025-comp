@@ -102,6 +102,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       case PRE_MATCH_HOMING -> {
         motor.setControl(coastNeutralRequest);
       }
+      case SPIN_TO_WIN -> {
+        motor.setControl(spinToWin);
+      }
       default -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
@@ -145,9 +148,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       case COLLISION_AVOIDANCE -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
-      }
-      case SPIN_TO_WIN -> {
-        motor.setControl(spinToWin);
       }
       default -> {}
     }
