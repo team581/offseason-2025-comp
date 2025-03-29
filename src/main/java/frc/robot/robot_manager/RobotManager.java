@@ -849,7 +849,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l3CoralApproachRequest() {
-    if (!getState().climbingOrRehoming) {
+    if (getState().climbingOrRehoming) {
       return;
     }
 
@@ -864,7 +864,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void l2CoralApproachRequest() {
-    if (!getState().climbingOrRehoming) {
+    if (getState().climbingOrRehoming) {
       return;
     }
 
