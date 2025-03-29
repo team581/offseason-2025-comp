@@ -107,7 +107,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBER_STOP,
               UNJAM,
               SPIN_TO_WIN,
-              ALGAE_OUTTAKE ->
+              ALGAE_INTAKE_FLOOR ->
           currentState;
 
       case REHOME_ELEVATOR ->
@@ -172,17 +172,13 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       // Algae scoring
-      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_LEFT_RELEASE, ALGAE_NET_RIGHT_RELEASE ->
+      case ALGAE_PROCESSOR_RELEASE,
+              ALGAE_NET_LEFT_RELEASE,
+              ALGAE_NET_RIGHT_RELEASE,
+              ALGAE_OUTTAKE ->
           timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       // Intaking
-      case ALGAE_INTAKE_FLOOR -> {
-        if (claw.getHasGP()) {
-          rumbleController.rumbleRequest();
-          yield RobotState.CLAW_ALGAE;
-        }
-        yield currentState;
-      }
       case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L3_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
