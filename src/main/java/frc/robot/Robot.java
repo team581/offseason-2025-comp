@@ -30,6 +30,7 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.ElasticLayoutUtil;
 import frc.robot.util.Stopwatch;
@@ -84,10 +85,10 @@ public class Robot extends TimedRobot {
           hardware.climberCanrange);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve);
   private final CoralMap coralMap = new CoralMap(localization, swerve);
+  private final GroundManager gm = new GroundManager(deploy, intake);
   private final RobotManager robotManager =
       new RobotManager(
-          deploy,
-          intake,
+          gm,
           claw,
           arm,
           elevator,
@@ -228,7 +229,7 @@ public class Robot extends TimedRobot {
             }));
 
     hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
-    hardware.driverController.leftTrigger().onTrue(robotCommands.coralGroundIntakeCommand());
+    hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
@@ -245,5 +246,7 @@ public class Robot extends TimedRobot {
 
     hardware.operatorController.a().onTrue(robotCommands.rehomeElevatorCommand());
     hardware.operatorController.y().onTrue(robotCommands.rehomeDeployCommand());
+
+    hardware.operatorController.back().onTrue(robotCommands.spinToWinCommand());
   }
 }

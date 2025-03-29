@@ -164,9 +164,8 @@ public class AutoBlocks {
                 BASE_CONSTRAINTS,
                 new AutoPoint(
                     intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET),
-                    Commands.runOnce(robotManager::intakeFloorCoralHorizontalRequest)),
-                new AutoPoint(
-                    intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_LINEUP_OFFSET))),
+                    Commands.runOnce(robotManager.groundManager::intakeRequest)),
+                new AutoPoint(intakingPoint.redPose)),
             false)
         .withDeadline(autoCommands.waitForGroundIntakeDone());
   }
@@ -180,13 +179,7 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.coralMap.getLollipopIntakePose().orElse(defaultIntakingPoint),
-                    Commands.runOnce(
-                        () ->
-                            autoCommands.intakeLollipopCommand(
-                                robotManager
-                                    .coralMap
-                                    .getLollipopIntakePose()
-                                    .orElse(defaultIntakingPoint))),
+                    Commands.runOnce(() -> autoCommands.intakeLollipopCommand()),
                     LOLLIPOP_CONSTRAINTS)),
             false)
         .withTimeout(5);

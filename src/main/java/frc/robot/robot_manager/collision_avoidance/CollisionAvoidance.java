@@ -47,8 +47,11 @@ public class CollisionAvoidance {
     // Check if the desired position and obstruction is the same, then use the same path
     if (lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition))
         && lastQuery.obstructionKind().equals(obstructionKind)) {
-
+      if (maybeLastPath.isEmpty()) {
+        return Optional.empty();
+      }
       var lastPath = maybeLastPath.orElseThrow();
+
       if (lastPath.isEmpty()) {
         return Optional.empty();
       }
@@ -155,7 +158,6 @@ public class CollisionAvoidance {
 
     Waypoint.STOWED_UP.canMoveToWhenRightSafe(Waypoint.LOLLIPOP_INTAKE_RIGHT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.ALGAE_INTAKE_RIGHT, graph);
-    Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L1_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.STOWED_UP.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
@@ -180,11 +182,6 @@ public class CollisionAvoidance {
     Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
     Waypoint.LOLLIPOP_INTAKE_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_RIGHT, graph);
-
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L2_LEFT, graph);
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
-    Waypoint.L1_LEFT.canMoveToWhenLeftSafe(Waypoint.ALGAE_LEFT, graph);
 
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);

@@ -187,10 +187,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
-      case COLLISION_AVOIDANCE ->
-          MathUtil.isNear(collisionAvoidanceGoal, averageMeasuredHeight, TOLERANCE);
-      // This state is only used when it's safe to cancel the move partway
-      // Since the next state is same setpoint, different arm angle
+      case COLLISION_AVOIDANCE -> false;
       default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, TOLERANCE);
     };
   }

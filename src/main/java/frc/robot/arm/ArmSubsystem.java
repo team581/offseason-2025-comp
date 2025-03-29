@@ -3,6 +3,7 @@ package frc.robot.arm;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -27,6 +28,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
+  private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -73,9 +75,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
-      // TODO: This is redudant with SuperstructurePosition.near()
-      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
-      case PRE_MATCH_HOMING -> false;
+      case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
   }
 
@@ -144,6 +144,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       case COLLISION_AVOIDANCE -> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+      }
+      case SPIN_TO_WIN -> {
+        motor.setControl(spinToWin);
       }
       default -> {}
     }
