@@ -179,9 +179,7 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.coralMap.getLollipopIntakePose().orElse(defaultIntakingPoint),
-                    Commands.runOnce(
-                        () ->
-                            autoCommands.intakeLollipopCommand()),
+                    Commands.runOnce(() -> autoCommands.intakeLollipopCommand()),
                     LOLLIPOP_CONSTRAINTS)),
             false)
         .withTimeout(5);
