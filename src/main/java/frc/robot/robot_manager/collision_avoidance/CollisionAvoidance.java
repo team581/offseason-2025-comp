@@ -46,44 +46,40 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-  if(DriverStation.isDisabled()) {
-    return Optional.empty();
-  }
-        DogLog.log("CollisionAvoidance/DesiredWaypoint", Waypoint.getClosest(desiredPosition));
+    if (DriverStation.isDisabled()) {
+      return Optional.empty();
+    }
+    DogLog.log("CollisionAvoidance/DesiredWaypoint", Waypoint.getClosest(desiredPosition));
     // Check if the desired position and obstruction is the same, then use the same path
     if (!lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition))
         || !lastQuery.obstructionKind().equals(obstructionKind)) {
-          var currentWaypoint = Waypoint.getClosest(currentPosition);
-          DogLog.timestamp("CollisionAvoidance/NewDesiredPosition");
-    lastQuery =
-        new CollisionAvoidanceQuery(
-            currentWaypoint,
-            Waypoint.getClosest(desiredPosition),
-            obstructionKind);
+      var currentWaypoint = Waypoint.getClosest(currentPosition);
+      DogLog.timestamp("CollisionAvoidance/NewDesiredPosition");
+      lastQuery =
+          new CollisionAvoidanceQuery(
+              currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind);
 
-              var maybePath = cachedAStar(lastQuery).map(ArrayDeque::new);
-              if (maybePath.isPresent()) {
-                hasGeneratedPath = true;
-                lastPath = maybePath.get();
-              } else {
-                DogLog.timestamp("CollisionAvoidance/NewDesiredPositionMaybeEmpty");
+      var maybePath = cachedAStar(lastQuery).map(ArrayDeque::new);
+      if (maybePath.isPresent()) {
+        hasGeneratedPath = true;
+        lastPath = maybePath.get();
+      } else {
+        DogLog.timestamp("CollisionAvoidance/NewDesiredPositionMaybeEmpty");
 
-                return Optional.empty();
-              }
+        return Optional.empty();
+      }
+    }
 
-        }
+    if (lastPath.isEmpty()) {
+      return Optional.empty();
+    }
 
-        if (lastPath.isEmpty()) {
-          return Optional.empty();
-        }
+    var currentWaypoint = lastPath.peek();
 
-      var currentWaypoint = lastPath.peek();
-
-      DogLog.log(
+    DogLog.log(
         "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
         currentWaypoint.position.elevatorHeight());
-    DogLog.log(
-        "CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+    DogLog.log("CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
     DogLog.log("CollisionAvoidance/CurrentWaypoint", currentWaypoint);
     DogLog.log("CollisionAvoidance/ClosestWaypoint", Waypoint.getClosest(currentPosition));
     DogLog.log("CollisionAvoidance/AstarPath", lastPath.toArray(Waypoint[]::new));
@@ -97,19 +93,18 @@ public class CollisionAvoidance {
             currentWaypoint.position, currentPosition, ELEVATOR_TOLERANCE, ARM_TOLERANCE);
     DogLog.log("CollisionAvoidance/Near", near);
 
-
-      // Check if our current position is close to the current waypoint in path
-      if (near) {
-        // If it's close, return the next waypoint
-        if (lastPath.isEmpty()) {
-          DogLog.timestamp("CollisionAvoidance/PathEmpty");
-          return Optional.empty();
-        }
-        return Optional.of(lastPath.pop());
+    // Check if our current position is close to the current waypoint in path
+    if (near) {
+      // If it's close, return the next waypoint
+      if (lastPath.isEmpty()) {
+        DogLog.timestamp("CollisionAvoidance/PathEmpty");
+        return Optional.empty();
       }
-      // If it's not close, return the same waypoint
-      return Optional.of(currentWaypoint);
+      return Optional.of(lastPath.pop());
     }
+    // If it's not close, return the same waypoint
+    return Optional.of(currentWaypoint);
+  }
 
   private static Optional<ImmutableList<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
     DogLog.log("CollisionAvoidance", aStarCache.size());
