@@ -21,7 +21,6 @@ public enum Waypoint {
   L2_RIGHT(new SuperstructurePosition(20, 0)),
   L3_RIGHT(new SuperstructurePosition(35, 0)),
   L4_RIGHT(new SuperstructurePosition(60, 0)),
-  L1_LEFT(new SuperstructurePosition(5, 180)),
   L2_LEFT(new SuperstructurePosition(20, 180)),
   L3_LEFT(new SuperstructurePosition(35, 180)),
   L4_LEFT(new SuperstructurePosition(60, 180)),
