@@ -52,8 +52,9 @@ public class AutoBlocks {
     this.autoCommands = autoCommands;
   }
 
-  public Command scorePreloadL4(Points startingPose, ReefPipe pipe) {
+  public Command scorePreloadL4(Pose2d startingPose, ReefPipe pipe) {
     return Commands.sequence(
+      autoCommands.resetPoseIfNeeded(startingPose),
         trailblazer
             .followSegment(
                 new AutoSegment(

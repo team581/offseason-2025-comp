@@ -1,5 +1,7 @@
 package frc.robot.autos.auto_path_commands.red;
 
+import com.ctre.phoenix.platform.can.AutocacheState;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,11 +27,14 @@ public class RedPushPartnerAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
+        autoCommands.resetPoseIfNeeded(Points.START_R3_AND_B3.redPose),
         trailblazer.followSegment(
             new AutoSegment(
                 new AutoPoint(Points.START_R3_AND_B3.redPose),
                 new AutoPoint(new Pose2d(9.462, 3.054, Rotation2d.fromDegrees(0))))),
-        blocks.scorePreloadL4(Points.START_R3_AND_B3, ReefPipe.PIPE_I),
+
+        // TODO: Scoring preload resets pose (if robot has never seen a tag before auto)
+        blocks.scorePreloadL4(Points.START_R3_AND_B3.redPose, ReefPipe.PIPE_I),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),
         blocks.scoreL4(ReefPipe.PIPE_J),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),

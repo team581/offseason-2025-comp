@@ -23,7 +23,7 @@ public class RedLollipopAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        blocks.scorePreloadL4(Points.START_R3_AND_B3, ReefPipe.PIPE_I),
+        blocks.scorePreloadL4(Points.START_R3_AND_B3.redPose, ReefPipe.PIPE_I),
         blocks.intakeLollipop(
             new Pose2d(14.2, 2.168, Rotation2d.fromDegrees(0)),
             new Pose2d(15.2, 2.168, Rotation2d.fromDegrees(0))),
