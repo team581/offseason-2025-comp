@@ -8,7 +8,6 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
-import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.lights.LightsState;
