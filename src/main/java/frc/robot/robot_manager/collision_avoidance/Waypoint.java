@@ -12,20 +12,25 @@ import java.util.stream.Stream;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  ALGAE_INTAKE_RIGHT(new SuperstructurePosition(3, 0)),
-  LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0, 0)),
-  STOWED(new SuperstructurePosition(55, -90)),
-  STOWED_UP(new SuperstructurePosition(0, 90)),
-  HANDOFF(new SuperstructurePosition(41.12, -90)),
-  L1_RIGHT(new SuperstructurePosition(0, 35)),
-  L2_RIGHT(new SuperstructurePosition(7.2, 43)),
-  L3_RIGHT(new SuperstructurePosition(22, 43)),
-  L4_RIGHT(new SuperstructurePosition(46, 47.5)),
-  L2_LEFT(new SuperstructurePosition(7.2, 180 - 43)),
-  L3_LEFT(new SuperstructurePosition(22, 180 - 43)),
-  L4_LEFT(new SuperstructurePosition(46, 180 - 47.5)),
-  ALGAE_RIGHT(new SuperstructurePosition(60, 0)),
-  ALGAE_LEFT(new SuperstructurePosition(60, 180));
+  ALGAE_INTAKE_RIGHT(new SuperstructurePosition(3.0, 0.0)),
+  LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0.0, 0.0)),
+  STOWED(new SuperstructurePosition(55.0, -90.0)),
+  LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, 90.0)),
+  STOWED_UP(new SuperstructurePosition(0.0, 90.0)),
+  HANDOFF(new SuperstructurePosition(41.12, -90.0)),
+  L1_RIGHT(new SuperstructurePosition(0.0, 35.0)),
+  L2_RIGHT(new SuperstructurePosition(7.2, 43.0)),
+  L3_RIGHT(new SuperstructurePosition(22.0, 43.0)),
+  L4_RIGHT(new SuperstructurePosition(46.0, 47.5)),
+  L2_LEFT(new SuperstructurePosition(7.2, 180.0 - 43.0)),
+  L3_LEFT(new SuperstructurePosition(22.0, 180.0 - 43.0)),
+  L4_LEFT(new SuperstructurePosition(46.0, 180.0 - 47.5)),
+  ALGAE_RIGHT(new SuperstructurePosition(60.0, 0.0)),
+  ALGAE_LEFT(new SuperstructurePosition(60.0, 180.0)),
+  ALGAE_L2_RIGHT(new SuperstructurePosition(24.0, 0.0)),
+  ALGAE_L2_LEFT(new SuperstructurePosition(39.0,180.0)),
+  ALGAE_L3_RIGHT(new SuperstructurePosition(24.0, 0.0)),
+  ALGAE_L3_LEFT(new SuperstructurePosition(39.0, 180.0));
 
   public final SuperstructurePosition position;
 
