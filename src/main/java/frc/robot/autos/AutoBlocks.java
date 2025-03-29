@@ -193,7 +193,7 @@ public class AutoBlocks {
                 new AutoPoint(approachPoint),
                 new AutoPoint(
                     () -> robotManager.coralMap.getBestCoral().orElse(defaultIntakingPose),
-                    Commands.runOnce(robotManager::intakeAssistFloorCoralHorizontalRequest))),
+                    Commands.runOnce(robotManager::lollipopIntakeApproachRequest))),
             false)
         .withDeadline(autoCommands.waitForGroundIntakeDone());
   }
