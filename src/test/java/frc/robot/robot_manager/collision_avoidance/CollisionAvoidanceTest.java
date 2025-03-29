@@ -33,19 +33,6 @@ public class CollisionAvoidanceTest {
     assertEquals(expected, new ArrayList<>(result.orElseThrow()));
   }
 
-  // @Test
-  // public void lowLeftToStowedAstarTest() {
-  //   var result =
-  //       CollisionAvoidance.aStar(
-  //           new SuperstructurePosition(0, 180),
-  //           new SuperstructurePosition(50, -90),
-  //           ObstructionKind.NONE);
-
-  //   var expected = List.of(Waypoint.L1_LEFT, Waypoint.L3_LEFT, Waypoint.HANDOFF);
-
-  //   assertEquals(expected, new ArrayList<>(result.orElseThrow()));
-  // }
-
   @Test
   public void lowRightToStowedAstarTest() {
     var result =
@@ -80,25 +67,6 @@ public class CollisionAvoidanceTest {
 
     assertEquals(Optional.empty(), result);
   }
-
-  // @Test
-  // public void alreadyThereTest() {
-  //   var result =
-  //       CollisionAvoidance.aStar(
-  //           new SuperstructurePosition(0, 180),
-  //           new SuperstructurePosition(0, 180),
-  //           ObstructionKind.NONE);
-  //   var expected = List.of(Waypoint.L1_LEFT);
-  //   assertEquals(expected, new ArrayList<>(result.orElseThrow()));
-  // }
-
-  // @Test
-  // public void getClosestNodeTest() {
-  //   var result = Waypoint.getClosest(new SuperstructurePosition(0, 180));
-  //   Waypoint expected = Waypoint.L1_LEFT;
-
-  //   assertEquals(expected, result);
-  // }
 
   @Test
   public void getClosestNodeStowedTest() {
