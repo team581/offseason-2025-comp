@@ -73,9 +73,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, 2, -180, 180);
-      // TODO: This is redudant with SuperstructurePosition.near()
-      case COLLISION_AVOIDANCE -> MathUtil.isNear(collisionAvoidanceGoal, motorAngle, 1, -180, 180);
-      case PRE_MATCH_HOMING -> false;
+      case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
   }
 

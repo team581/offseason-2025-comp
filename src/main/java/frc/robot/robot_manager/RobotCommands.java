@@ -9,6 +9,7 @@ public class RobotCommands {
   private final RobotManager robot;
   private final Subsystem[] rmRequirements;
   private final Subsystem[] gmRequirements;
+  private final Subsystem[] bothRequirements;
 
   public RobotCommands(RobotManager robot) {
     this.robot = robot;
@@ -16,6 +17,8 @@ public class RobotCommands {
     rmRequirements = requirementsList.toArray(Subsystem[]::new);
     requirementsList = List.of(robot.groundManager.deploy, robot.groundManager.intake);
     gmRequirements = requirementsList.toArray(Subsystem[]::new);
+    requirementsList = List.of(robot.elevator, robot.arm, robot.claw, robot.climber, robot.groundManager.deploy, robot.groundManager.intake);
+    bothRequirements = requirementsList.toArray(Subsystem[]::new);
   }
 
   public Command algaeIntakeGroundCommand() {
@@ -29,19 +32,19 @@ public class RobotCommands {
   }
 
   public Command highLineupCommand() {
-    return Commands.runOnce(robot::highLineupRequest, rmRequirements).withName("HighLineupCommand");
+    return Commands.runOnce(robot::highLineupRequest, bothRequirements).withName("HighLineupCommand");
   }
 
   public Command l3LineupCommand() {
-    return Commands.runOnce(robot::l3LineupRequest, rmRequirements).withName("L3LineupCommand");
+    return Commands.runOnce(robot::l3LineupRequest, bothRequirements).withName("L3LineupCommand");
   }
 
   public Command l2LineupCommand() {
-    return Commands.runOnce(robot::l2LineupRequest, rmRequirements).withName("L2LineupCommand");
+    return Commands.runOnce(robot::l2LineupRequest, bothRequirements).withName("L2LineupCommand");
   }
 
   public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, rmRequirements).withName("LowLineupCommand");
+    return Commands.runOnce(robot::lowLineupRequest, bothRequirements).withName("LowLineupCommand");
   }
 
   public Command algaeReefIntakeCommand() {
@@ -50,13 +53,13 @@ public class RobotCommands {
   }
 
   public Command confirmScoreCommand() {
-    return Commands.runOnce(robot::confirmScoreRequest, rmRequirements)
+    return Commands.runOnce(robot::confirmScoreRequest, bothRequirements)
         .withName("ConfirmScoreCommand");
   }
 
   public Command stowCommand() {
-    return Commands.runOnce(robot::stowRequest, rmRequirements)
-        .andThen(Commands.waitUntil(() -> robot.elevator.atGoal() && robot.arm.atGoal()))
+    return Commands.runOnce(robot::stowRequest, bothRequirements)
+        .andThen(Commands.waitUntil(() -> robot.elevator.atGoal() && robot.arm.atGoal() && robot.groundManager.deploy.atGoal()))
         .withName("StowCommand");
   }
 
@@ -71,7 +74,7 @@ public class RobotCommands {
   }
 
   public Command unjamCommand() {
-    return Commands.runOnce(robot::unjamRequest, rmRequirements).withName("UnjamCommand");
+    return Commands.runOnce(robot::unjamRequest, bothRequirements).withName("UnjamCommand");
   }
 
   public Command rehomeElevatorCommand() {

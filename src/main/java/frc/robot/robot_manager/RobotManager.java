@@ -739,9 +739,12 @@ public class RobotManager extends StateMachine<RobotState> {
               ALGAE_INTAKE_L2_LEFT,
               ALGAE_INTAKE_L2_RIGHT,
               ALGAE_INTAKE_L3_LEFT,
-              ALGAE_INTAKE_L3_RIGHT ->
-          setStateFromRequest(RobotState.CLAW_EMPTY);
+              ALGAE_INTAKE_L3_RIGHT -> {
+                groundManager.idleRequest();
+                setStateFromRequest(RobotState.CLAW_EMPTY);
+              }
       default -> {
+        groundManager.idleRequest();
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
           if (getState().clawGp == ClawGamePiece.ALGAE) {

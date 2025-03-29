@@ -23,6 +23,7 @@ public class GroundManager extends StateMachine<GroundState> {
     return switch (currentState) {
       case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
       case HANDOFF_RELEASE, L1_SCORE -> !hasCoral ? GroundState.IDLE_EMPTY : currentState;
+      case REHOME_DEPLOY -> deploy.atGoal() ? GroundState.IDLE_EMPTY : currentState;
       default -> currentState;
     };
   }
@@ -62,6 +63,10 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.UNJAM);
         intake.setState(IntakeState.UNJAM);
       }
+      case REHOME_DEPLOY -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        deploy.setState(DeployState.HOMING);
+      }
     }
   }
 
@@ -70,42 +75,49 @@ public class GroundManager extends StateMachine<GroundState> {
     hasCoral = intake.getHasGP();
   }
 
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, HOMING -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
   public boolean hasCoral() {
     return hasCoral;
   }
 
   public void intakeRequest() {
-    setStateFromRequest(GroundState.INTAKING);
+    setState(GroundState.INTAKING);
   }
 
   public void l1Request() {
     switch (getState()) {
-      case L1_WAIT -> setStateFromRequest(GroundState.L1_SCORE);
-      default -> setStateFromRequest(GroundState.L1_WAIT);
+      case L1_WAIT -> setState(GroundState.L1_SCORE);
+      default -> setState(GroundState.L1_WAIT);
     }
   }
 
   public void idleRequest() {
     if (hasCoral) {
-      setStateFromRequest(GroundState.IDLE_CORAL);
+      setState(GroundState.IDLE_CORAL);
     } else {
-      setStateFromRequest(GroundState.IDLE_EMPTY);
+      setState(GroundState.IDLE_EMPTY);
     }
   }
 
   public void handoffWaitRequest() {
-    setStateFromRequest(GroundState.HANDOFF_WAIT);
+    setState(GroundState.HANDOFF_WAIT);
   }
 
   public void handoffReleaseRequest() {
-    setStateFromRequest(GroundState.HANDOFF_RELEASE);
+    setState(GroundState.HANDOFF_RELEASE);
   }
 
   public void unjamRequest() {
-    setStateFromRequest(GroundState.UNJAM);
+    setState(GroundState.UNJAM);
   }
 
   public void rehomeDeployRequest() {
-    deploy.setState(DeployState.HOMING);
+    setStateFromRequest(GroundState.REHOME_DEPLOY);
   }
 }
