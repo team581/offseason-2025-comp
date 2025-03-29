@@ -21,6 +21,9 @@ public class FeatureFlags {
   public static final BooleanSupplier AUTO_ALIGN_FIX_ROTATION_CAUSING_OVERSHOOT =
       FeatureFlag.of("AutoAlign/FixRotationCausingOvershoot", false);
 
+  public static final BooleanSupplier VISION_STALE_DATA_CHECK =
+      FeatureFlag.of("Vision/StaleDataRejection", false);
+
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
 
   /**

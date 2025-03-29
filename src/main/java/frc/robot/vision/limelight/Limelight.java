@@ -12,6 +12,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
+import frc.robot.config.FeatureFlags;
 import frc.robot.vision.limelight.LimelightHelpers.PoseEstimate;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
@@ -33,6 +34,9 @@ public class Limelight extends StateMachine<LimelightState> {
   private final Timer seedImuTimer = new Timer();
   private CameraHealth cameraHealth = CameraHealth.NO_TARGETS;
   private double limelightHeartbeat = -1;
+
+  private double lastTimestamp = 0.0;
+
 
   private Optional<TagResult> tagResult = Optional.empty();
 
@@ -91,6 +95,15 @@ public class Limelight extends StateMachine<LimelightState> {
 
     if (estimatePose == null) {
       return Optional.empty();
+    }
+
+    if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
+      var newTimestamp = estimatePose.timestampSeconds;
+      if (newTimestamp == lastTimestamp) {
+        return Optional.empty();
+      }
+
+      lastTimestamp = newTimestamp;
     }
     var newPose = estimatePose.pose;
 
