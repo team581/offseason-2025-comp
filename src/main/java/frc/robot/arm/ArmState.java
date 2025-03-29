@@ -62,6 +62,8 @@ public enum ArmState {
   COLLISION_AVOIDANCE(UNTUNED),
   CLIMBING(UNTUNED),
 
+  SPIN_TO_WIN(90),
+
   // For auto
   LOLLIPOP_CORAL_INTAKE(UNTUNED);
 

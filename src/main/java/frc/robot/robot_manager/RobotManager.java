@@ -106,11 +106,14 @@ public class RobotManager extends StateMachine<RobotState> {
               CLIMBING_2_HANGING,
               CLIMBER_STOP,
               UNJAM,
+              SPIN_TO_WIN,
               ALGAE_OUTTAKE ->
           currentState;
 
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY : currentState;
+      case PREPARE_SPIN_TO_WIN ->
+          elevator.atGoal() && arm.atGoal() ? RobotState.SPIN_TO_WIN : currentState;
       // handoff
       case CORAL_L1_PREPARE_HANDOFF,
               CORAL_L2_PREPARE_HANDOFF,
@@ -556,6 +559,22 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOWED);
       }
+      case PREPARE_SPIN_TO_WIN -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.HOLDING_UPRIGHT);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
+        climber.setState(ClimberState.STOWED);
+      }
+      case SPIN_TO_WIN -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.SPIN_TO_WIN, true);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORING);
+        climber.setState(ClimberState.STOWED);
+      }
     }
   }
 
@@ -952,6 +971,12 @@ public class RobotManager extends StateMachine<RobotState> {
   public void rehomeElevatorRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_ELEVATOR);
+    }
+  }
+
+  public void spinToWinRequest() {
+    if (!getState().climbingOrRehoming && FeatureFlags.SPIN_TO_WIN.getAsBoolean()) {
+      setStateFromRequest(RobotState.PREPARE_SPIN_TO_WIN);
     }
   }
 
