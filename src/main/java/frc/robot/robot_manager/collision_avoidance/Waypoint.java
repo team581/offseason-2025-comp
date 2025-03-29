@@ -16,7 +16,7 @@ public enum Waypoint {
   LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0, 0)),
   STOWED(new SuperstructurePosition(55, -90)),
   STOWED_UP(new SuperstructurePosition(0, 90)),
-  HANDOFF(new SuperstructurePosition(45, -90)),
+  HANDOFF(new SuperstructurePosition(41.12, -90)),
   L1_RIGHT(new SuperstructurePosition(0, 35)),
   L2_RIGHT(new SuperstructurePosition(7.2, 43)),
   L3_RIGHT(new SuperstructurePosition(22, 43)),
