@@ -730,7 +730,14 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_LEFT_LINEUP,
           CORAL_L2_RIGHT_LINEUP,
           CORAL_L3_RIGHT_LINEUP,
-          CORAL_L4_RIGHT_LINEUP -> {
+          CORAL_L4_RIGHT_LINEUP,
+          CORAL_L2_LEFT_PLACE,
+          CORAL_L3_LEFT_PLACE,
+          CORAL_L4_LEFT_PLACE,
+          CORAL_L2_RIGHT_PLACE,
+          CORAL_L3_RIGHT_PLACE,
+          CORAL_L4_RIGHT_PLACE
+           -> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
       }
       case CORAL_INTAKE_LOLLIPOP_APPROACH,
