@@ -1,0 +1,93 @@
+{
+  "cameras": [],
+  "components": [
+    {
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 90
+        },
+        {
+          "axis": "z",
+          "degrees": 270
+        }
+      ],
+      "zeroedPosition": [
+        -0.1899448068,
+        0,
+        0
+      ]
+    },
+    {
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 90
+        },
+        {
+          "axis": "z",
+          "degrees": 90
+        }
+      ],
+      "zeroedPosition": [
+        -0.1899448068,
+        0,
+        0.26749375
+      ]
+    },
+    {
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 90
+        },
+        {
+          "axis": "z",
+          "degrees": 90
+        }
+      ],
+      "zeroedPosition": [
+        -0.1899448068,
+        0,
+        0.26749375
+      ]
+    },
+    {
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 90
+        },
+        {
+          "axis": "z",
+          "degrees": 180
+        },
+        {
+          "axis": "y",
+          "degrees": -34
+        }
+      ],
+      "zeroedPosition": [
+        0.19,
+        0,
+        -0.15
+      ]
+    }
+  ],
+  "name": "Zuma",
+  "position": [
+    0,
+    0,
+    0
+  ],
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    },
+    {
+      "axis": "z",
+      "degrees": 270
+    }
+  ]
+}

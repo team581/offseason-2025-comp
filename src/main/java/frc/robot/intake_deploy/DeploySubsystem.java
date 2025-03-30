@@ -22,6 +22,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private final LinearFilter currentFilter = LinearFilter.movingAverage(7);
 
   private double currentAngle = 0.0;
+
   private double rawCurrent = 0.0;
   private double filteredCurrent = 0.0;
 
@@ -107,6 +108,10 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private static double clamp(double deployAngle) {
     return MathUtil.clamp(
         deployAngle, RobotConfig.get().deploy().minAngle(), RobotConfig.get().deploy().maxAngle());
+  }
+
+  public double getAngle() {
+    return currentAngle;
   }
 
   private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();

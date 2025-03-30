@@ -1127,11 +1127,13 @@ public class RobotManager extends StateMachine<RobotState> {
     latestArmGoal = armGoal;
     latestUnsafe = unsafe;
 
+    var currentPosition = new SuperstructurePosition(elevator.getHeight(), arm.getAngle());
+    var goal = new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle());
+
+    MechanismVisualizer.log(currentPosition, groundManager.deploy.getAngle());
+
     var maybeCollisionAvoidanceResult =
-        CollisionAvoidance.route(
-            new SuperstructurePosition(elevator.getHeight(), arm.getAngle()),
-            new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle()),
-            shouldLoopAroundToScoreObstruction);
+        CollisionAvoidance.route(currentPosition, goal, shouldLoopAroundToScoreObstruction);
 
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
       elevator.setState(elevatorGoal);

@@ -20,6 +20,8 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
 
 public class ArmSubsystem extends StateMachine<ArmState> {
+  public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
+
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 10.0;
   private final TalonFX motor;

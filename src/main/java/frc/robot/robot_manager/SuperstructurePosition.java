@@ -4,11 +4,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.arm.ArmSubsystem;
 import frc.robot.util.MathHelpers;
 import java.util.Objects;
 
 public record SuperstructurePosition(double elevatorHeight, double armAngle) {
-  private static final double ARM_LENGTH = Units.inchesToMeters(37.416);
   // Elevator heights are accurate to 0.1 inches
   private static final double ELEVATOR_PRECISION = 0.1;
   // Arm angles are accurate to 0.1 degrees
@@ -67,6 +67,6 @@ public record SuperstructurePosition(double elevatorHeight, double armAngle) {
 
   public Translation2d getTranslation() {
     return new Translation2d(0, Units.inchesToMeters(elevatorHeight))
-        .plus(new Translation2d(ARM_LENGTH, Rotation2d.fromDegrees(armAngle)));
+        .plus(new Translation2d(ArmSubsystem.ARM_LENGTH_METERS, Rotation2d.fromDegrees(armAngle)));
   }
 }
