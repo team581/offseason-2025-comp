@@ -16,7 +16,8 @@ public record WaypointEdge(
      * regular motion magic parameters are used.
      */
     Optional<SuperstructureLimits> limits) {
-  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
+  
+public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, false, true, Optional.empty());
   }
 
@@ -25,7 +26,20 @@ public record WaypointEdge(
     return new WaypointEdge(from, to, true, false, true, Optional.of(limits));
   }
 
-  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
+
+  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
+    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.empty());
+  }
+
+
+  public static WaypointEdge rightUnblocked(
+      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
+    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.of(limits));
+  }
+
+
+  
+public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, false, true, true, Optional.empty());
   }
 
@@ -34,7 +48,20 @@ public record WaypointEdge(
     return new WaypointEdge(from, to, false, true, true, Optional.of(limits));
   }
 
-  public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
+
+  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
+    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.empty());
+  }
+
+
+  public static WaypointEdge leftUnblocked(
+      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
+    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.of(limits));
+  }
+
+
+  
+public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
     return new WaypointEdge(from, to, true, true, true, Optional.empty());
   }
 
@@ -42,32 +69,17 @@ public record WaypointEdge(
     return new WaypointEdge(from, to, true, true, true, Optional.of(limits));
   }
 
-  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.empty());
-  }
-
-  public static WaypointEdge rightUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.of(limits));
-  }
-
-  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.empty());
-  }
-
-  public static WaypointEdge leftUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.of(limits));
-  }
 
   public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to, boolean climberAtRisk) {
     return new WaypointEdge(from, to, true, true, climberAtRisk, Optional.empty());
   }
 
+
   public static WaypointEdge alwaysSafe(
       Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
     return new WaypointEdge(from, to, true, true, climberAtRisk, Optional.of(limits));
   }
+
 
   private WaypointEdge(
       Waypoint from,
