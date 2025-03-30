@@ -45,8 +45,8 @@ public enum RobotState {
   CORAL_L2_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L2_LEFT_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L2_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L2_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L2_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L2_LEFT_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L2_RIGHT_PLACE(ClawGamePiece.CORAL, false),
 
   // L3 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -56,8 +56,8 @@ public enum RobotState {
   CORAL_L3_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L3_LEFT_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L3_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L3_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L3_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L3_LEFT_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L3_RIGHT_PLACE(ClawGamePiece.CORAL, false),
 
   // L4 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -67,8 +67,8 @@ public enum RobotState {
   CORAL_L4_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L4_LEFT_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L4_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L4_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L4_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L4_LEFT_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L4_RIGHT_PLACE(ClawGamePiece.CORAL, false),
 
   // Algae scoring states
   ALGAE_NET_LEFT_WAITING(ClawGamePiece.ALGAE, false),
@@ -100,15 +100,15 @@ public enum RobotState {
     this.climbingOrRehoming = climbingOrRehoming;
   }
 
-  private static final ImmutableMap<RobotState, RobotState> lineupToRelease =
+  private static final ImmutableMap<RobotState, RobotState> lineupToPlace =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_LEFT_LINEUP, CORAL_L2_LEFT_RELEASE),
-          Map.entry(CORAL_L3_LEFT_LINEUP, CORAL_L3_LEFT_RELEASE),
-          Map.entry(CORAL_L4_LEFT_LINEUP, CORAL_L4_LEFT_RELEASE),
+          Map.entry(CORAL_L2_LEFT_LINEUP, CORAL_L2_LEFT_PLACE),
+          Map.entry(CORAL_L3_LEFT_LINEUP, CORAL_L3_LEFT_PLACE),
+          Map.entry(CORAL_L4_LEFT_LINEUP, CORAL_L4_LEFT_PLACE),
           Map.entry(CORAL_L1_RIGHT_LINEUP, CORAL_L1_RIGHT_RELEASE),
-          Map.entry(CORAL_L2_RIGHT_LINEUP, CORAL_L2_RIGHT_RELEASE),
-          Map.entry(CORAL_L3_RIGHT_LINEUP, CORAL_L3_RIGHT_RELEASE),
-          Map.entry(CORAL_L4_RIGHT_LINEUP, CORAL_L4_RIGHT_RELEASE));
+          Map.entry(CORAL_L2_RIGHT_LINEUP, CORAL_L2_RIGHT_PLACE),
+          Map.entry(CORAL_L3_RIGHT_LINEUP, CORAL_L3_RIGHT_PLACE),
+          Map.entry(CORAL_L4_RIGHT_LINEUP, CORAL_L4_RIGHT_PLACE));
 
   private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =
       ImmutableMap.ofEntries(
@@ -136,8 +136,8 @@ public enum RobotState {
           Map.entry(CORAL_L3_APPROACH, CORAL_L3_RIGHT_LINEUP),
           Map.entry(CORAL_L4_APPROACH, CORAL_L4_RIGHT_LINEUP));
 
-  public RobotState getLineupToReleaseState() {
-    return lineupToRelease.getOrDefault(this, this);
+  public RobotState getLineupToPlaceState() {
+    return lineupToPlace.getOrDefault(this, this);
   }
 
   public RobotState getHandoffPrepareToReleaseState() {
