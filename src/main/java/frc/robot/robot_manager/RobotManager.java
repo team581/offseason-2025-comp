@@ -107,6 +107,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY,
               CLAW_ALGAE,
               CLAW_CORAL,
+              ALGAE_INTAKE_FLOOR,
               ALGAE_PROCESSOR_WAITING,
               ALGAE_NET_LEFT_WAITING,
               ALGAE_NET_RIGHT_WAITING,
@@ -189,13 +190,7 @@ public class RobotManager extends StateMachine<RobotState> {
           timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       // Intaking
-      case ALGAE_INTAKE_FLOOR -> {
-        if (claw.getHasGP()) {
-          rumbleController.rumbleRequest();
-          yield RobotState.CLAW_ALGAE;
-        }
-        yield currentState;
-      }
+
       case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L3_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
@@ -744,6 +739,15 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     }
 
+    switch (getState()) {
+      case ALGAE_INTAKE_FLOOR -> {
+        if (claw.getHasGP()) {
+          rumbleController.rumbleRequest();
+        }
+      }
+      default -> {}
+    }
+
     switch (swerve.getState()) {
       case REEF_ALIGN_TELEOP -> {
         if (autoAlign.isTagAlignedDebounced()) {
@@ -849,8 +853,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void stowRequest() {
     afterIntakingCoralState = Optional.empty();
     switch (getState()) {
-      case ALGAE_INTAKE_FLOOR,
-          ALGAE_INTAKE_L2_LEFT,
+      case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
           ALGAE_INTAKE_L3_LEFT,
           ALGAE_INTAKE_L3_RIGHT -> {
