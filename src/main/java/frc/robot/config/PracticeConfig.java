@@ -120,7 +120,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(58.1))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withTorqueCurrent(
                       new TorqueCurrentConfigs()
