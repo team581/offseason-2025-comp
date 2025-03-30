@@ -92,7 +92,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
-  private ReefPipeLevel scoringLevel = ReefPipeLevel.BASE;
+  private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
@@ -711,12 +711,7 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_L3_LEFT_RELEASE,
                   CORAL_L3_RIGHT_RELEASE ->
               ReefPipeLevel.L3;
-          case CORAL_L4_LEFT_LINEUP,
-                  CORAL_L4_RIGHT_LINEUP,
-                  CORAL_L4_LEFT_RELEASE,
-                  CORAL_L4_RIGHT_RELEASE ->
-              ReefPipeLevel.L4;
-          default -> ReefPipeLevel.L1;
+          default -> ReefPipeLevel.L4;
         };
 
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
