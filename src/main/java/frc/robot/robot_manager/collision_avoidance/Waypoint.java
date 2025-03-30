@@ -82,8 +82,7 @@ public enum Waypoint {
     return closestWaypoint;
   }
 
-  
-public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+  public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     canMoveToAlways(other, true, graph);
   }
 
@@ -96,9 +95,7 @@ public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, Waypoint
     }
   }
 
-
-  
-public void canMoveToWhenLeftSafe(
+  public void canMoveToWhenLeftSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     canMoveToWhenLeftSafe(other, true, graph);
   }
@@ -112,9 +109,7 @@ public void canMoveToWhenLeftSafe(
     }
   }
 
-
-  
-public void canMoveToWhenRightSafe(
+  public void canMoveToWhenRightSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     canMoveToWhenRightSafe(other, true, graph);
   }
@@ -127,5 +122,4 @@ public void canMoveToWhenRightSafe(
       throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
     }
   }
-
 }
