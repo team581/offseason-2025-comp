@@ -69,7 +69,9 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Intake/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Intake/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Intake/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Intake/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Intake/RawSensor", sensorRaw);
 
     DogLog.log("Intake/SensorHasGP", sensorDebounced);

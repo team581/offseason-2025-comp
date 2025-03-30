@@ -81,6 +81,8 @@ public class ClawSubsystem extends StateMachine<ClawState> {
     super.robotPeriodic();
 
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Claw/Sensors/SensorRaw", sensorRaw);
     DogLog.log("Claw/Sensors/SensorDebounced", sensorDebounced);
   }
