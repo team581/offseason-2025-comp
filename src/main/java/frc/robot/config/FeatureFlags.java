@@ -23,6 +23,9 @@ public class FeatureFlags {
 
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
 
+  public static final BooleanSupplier COLLISION_AVOIDANCE_OBSTRUCTION = FeatureFlag.of("CollisionAvoidance/Obstruction", false);
+
+
   /**
    * Whether L4 approach state should automatically transition to L4 lineup when close enough to the
    * reef during autonomous. Doesn't alter teleop behavior.
