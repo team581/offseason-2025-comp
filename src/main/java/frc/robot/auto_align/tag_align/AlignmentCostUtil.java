@@ -13,7 +13,6 @@ import frc.robot.util.MathHelpers;
 import java.util.Comparator;
 
 public class AlignmentCostUtil {
-  private static final double LOOKAHEAD = 0.5;
   private static final double ANGLE_DIFFERENCE_SCALAR = 0.02;
   private static final double ANGLE_DIFFERENCE_SCALAR_CORAL = 0.07;
 
