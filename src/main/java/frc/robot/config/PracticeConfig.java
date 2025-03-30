@@ -227,8 +227,8 @@ class PracticeConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(0.5)
+                          .withMotionMagicCruiseVelocity(0.5))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(60)

@@ -1,11 +1,14 @@
 package frc.robot.intake_deploy;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -104,5 +107,49 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private static double clamp(double deployAngle) {
     return MathUtil.clamp(
         deployAngle, RobotConfig.get().deploy().minAngle(), RobotConfig.get().deploy().maxAngle());
+  }
+
+  private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();
+  private TrapezoidProfile.Constraints simConstraints;
+  private boolean simDidInit = false;
+
+  @Override
+  public void simulationPeriodic() {
+    if (getState() == DeployState.HOMING) {
+      motor.setPosition(RobotConfig.get().deploy().homingEndPosition());
+      setStateFromRequest(DeployState.STOWED);
+    }
+
+    if (!simDidInit) {
+      motor.getConfigurator().refresh(simMotorConfig);
+
+      simConstraints =
+          new TrapezoidProfile.Constraints(
+              simMotorConfig.MotionMagic.MotionMagicCruiseVelocity,
+              simMotorConfig.MotionMagic.MotionMagicAcceleration);
+
+      simDidInit = true;
+    }
+
+    if (DriverStation.isDisabled()) {
+      return;
+    }
+
+    var currentState =
+        new TrapezoidProfile.State(
+            motor.getPosition().getValueAsDouble(), motor.getVelocity().getValueAsDouble());
+    var wantedState =
+        new TrapezoidProfile.State(motor.getClosedLoopReference().getValueAsDouble(), 0);
+
+    var predictedState =
+        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
+
+    var motorSim = motor.getSimState();
+
+    motorSim.setRawRotorPosition(
+        predictedState.position * simMotorConfig.Feedback.SensorToMechanismRatio);
+
+    motorSim.setRotorVelocity(
+        predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
   }
 }

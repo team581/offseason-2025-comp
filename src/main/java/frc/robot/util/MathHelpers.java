@@ -26,6 +26,10 @@ public class MathHelpers {
     return new Translation2d(roundTo(input.getX(), precision), roundTo(input.getY(), precision));
   }
 
+  public static double average(double a, double b) {
+    return (a + b) / 2.0;
+  }
+
   public static double angleModulus(double angleDegrees) {
     return MathUtil.inputModulus(angleDegrees, -180, 180);
   }
