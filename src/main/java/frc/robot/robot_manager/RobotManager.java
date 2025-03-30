@@ -116,6 +116,7 @@ public class RobotManager extends StateMachine<RobotState> {
               UNJAM,
               SPIN_TO_WIN,
               CORAL_INTAKE_LOLLIPOP_APPROACH,
+              CORAL_INTAKE_LOLLIPOP_PUSH,
               PREPARE_HANDOFF_AFTER_INTAKE,
               CORAL_L2_RIGHT_PLACE,
               CORAL_L2_LEFT_PLACE,
@@ -207,10 +208,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case CORAL_INTAKE_LOLLIPOP_GRAB ->
-          claw.getHasGP() ? RobotState.CORAL_INTAKE_LOLLIPOP_TILT : currentState;
-      case CORAL_INTAKE_LOLLIPOP_TILT ->
-          arm.atGoal() && elevator.atGoal() ? RobotState.CLAW_CORAL : currentState;
+      case CORAL_INTAKE_LOLLIPOP_GRAB -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
@@ -291,11 +289,19 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(
             // TODO: We don't want to require unsafe mode here
-            ElevatorState.LOLLIPOP_CORAL_INTAKE_APPROACH,
-            ArmState.LOLLIPOP_CORAL_INTAKE_APPROACH,
-            true);
+            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
+        lights.setState(getLightsStateForLollipop());
+        climber.setState(ClimberState.STOWED);
+      }
+      case CORAL_INTAKE_LOLLIPOP_PUSH -> {
+        claw.setState(ClawState.OUTTAKING);
+        moveSuperstructure(
+            // TODO: We don't want to require unsafe mode here
+            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
         lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
@@ -305,16 +311,6 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CORAL_DETECTION);
-        lights.setState(getLightsStateForLollipop());
-        climber.setState(ClimberState.STOWED);
-      }
-      case CORAL_INTAKE_LOLLIPOP_TILT -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
-        moveSuperstructure(
-            // TODO: We don't want to require unsafe mode here
-            ElevatorState.LOLLIPOP_CORAL_INTAKE_TILT, ArmState.LOLLIPOP_CORAL_INTAKE_TILT, true);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
         lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
@@ -747,7 +743,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_INTAKE_LOLLIPOP_APPROACH,
           CORAL_INTAKE_LOLLIPOP_GRAB,
-          CORAL_INTAKE_LOLLIPOP_TILT -> {
+          CORAL_INTAKE_LOLLIPOP_PUSH -> {
         coralMap.updateLollipopResult(vision.getLollipopVisionResult());
       }
       default -> {}
@@ -758,7 +754,7 @@ public class RobotManager extends StateMachine<RobotState> {
       // TODO: Add lights state for scoring
       case CORAL_INTAKE_LOLLIPOP_APPROACH,
           CORAL_INTAKE_LOLLIPOP_GRAB,
-          CORAL_INTAKE_LOLLIPOP_TILT -> {
+          CORAL_INTAKE_LOLLIPOP_PUSH -> {
         lights.setState(getLightsStateForLollipop());
       }
       default -> {}
@@ -949,8 +945,8 @@ public class RobotManager extends StateMachine<RobotState> {
       switch (getState()) {
         case CORAL_INTAKE_LOLLIPOP_APPROACH -> lollipopIntakeGrabRequest();
         case CORAL_INTAKE_LOLLIPOP_GRAB ->
-            setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_TILT);
-        case CORAL_INTAKE_LOLLIPOP_TILT -> setStateFromRequest(RobotState.CLAW_CORAL);
+            setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH);
+        case CORAL_INTAKE_LOLLIPOP_PUSH -> setStateFromRequest(RobotState.CLAW_CORAL);
         default -> lollipopIntakeApproachRequest();
       }
     }
