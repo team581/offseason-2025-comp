@@ -763,24 +763,38 @@ public class RobotManager extends StateMachine<RobotState> {
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
-          case CORAL_L2_LEFT_LINEUP,
-                  CORAL_L2_RIGHT_LINEUP,
-                  CORAL_L2_LEFT_PLACE,
-                  CORAL_L2_RIGHT_PLACE ->
+          //L2
+          case CORAL_L2_LEFT_LINEUP, CORAL_L2_RIGHT_LINEUP ->
               (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
                   ? ReefPipeLevel.L2
                   : ReefPipeLevel.RAISING;
-          case CORAL_L3_LEFT_LINEUP,
-                  CORAL_L3_RIGHT_LINEUP,
-                  CORAL_L3_LEFT_PLACE,
-                  CORAL_L3_RIGHT_PLACE ->
+          case CORAL_L2_LEFT_PLACE,
+                  CORAL_L2_RIGHT_PLACE,
+                  CORAL_L2_LEFT_RELEASE,
+                  CORAL_L2_RIGHT_RELEASE ->
+              ReefPipeLevel.L2;
+          // L3
+          case CORAL_L3_LEFT_LINEUP, CORAL_L3_RIGHT_LINEUP ->
               (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
                   ? ReefPipeLevel.L3
                   : ReefPipeLevel.RAISING;
-          default ->
+          case CORAL_L3_LEFT_PLACE,
+                  CORAL_L3_RIGHT_PLACE,
+                  CORAL_L3_LEFT_RELEASE,
+                  CORAL_L3_RIGHT_RELEASE ->
+              ReefPipeLevel.L3;
+          //L4
+          case CORAL_L4_LEFT_LINEUP, CORAL_L4_RIGHT_LINEUP ->
               (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
                   ? ReefPipeLevel.L4
                   : ReefPipeLevel.RAISING;
+          case CORAL_L4_LEFT_PLACE,
+                  CORAL_L4_RIGHT_PLACE,
+                  CORAL_L4_LEFT_RELEASE,
+                  CORAL_L4_RIGHT_RELEASE ->
+              ReefPipeLevel.L4;
+          // Always default to raising, unless we're in auto
+          default -> (DriverStation.isAutonomous()) ? ReefPipeLevel.L4 : ReefPipeLevel.RAISING;
         };
 
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
