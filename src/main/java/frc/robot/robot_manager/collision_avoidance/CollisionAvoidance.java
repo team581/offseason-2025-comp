@@ -56,7 +56,6 @@ public class CollisionAvoidance {
     if (!lastQuery.goalWaypoint().equals(Waypoint.getClosest(desiredPosition))
         || !lastQuery.obstructionKind().equals(obstructionKind)) {
       var currentWaypoint = Waypoint.getClosest(currentPosition);
-      DogLog.timestamp("CollisionAvoidance/NewDesiredPosition");
       lastQuery =
           new CollisionAvoidanceQuery(
               currentWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind);
@@ -66,8 +65,6 @@ public class CollisionAvoidance {
         hasGeneratedPath = true;
         lastPath = maybePath.get();
       } else {
-        DogLog.timestamp("CollisionAvoidance/NewDesiredPositionMaybeEmpty");
-
         return Optional.empty();
       }
     }
@@ -99,7 +96,6 @@ public class CollisionAvoidance {
     if (near) {
       // If it's close, return the next waypoint
       if (lastPath.isEmpty()) {
-        DogLog.timestamp("CollisionAvoidance/PathEmpty");
         return Optional.empty();
       }
       return Optional.of(lastPath.pop());
