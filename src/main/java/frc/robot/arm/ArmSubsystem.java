@@ -117,10 +117,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     super.robotPeriodic();
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Arm/NormalizedAngle", motorAngle);
-    DogLog.log("Arm/RawAngle", rawMotorAngle);
+    DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
-    DogLog.log("Arm/RangeOfMotionGood", rangeOfMotionGood());
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       if (rangeOfMotionGood()) {
         if (DriverStation.isEnabled()) {
