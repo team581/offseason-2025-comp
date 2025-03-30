@@ -675,7 +675,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     }
 
-    autoAlign.setDriverPoseOffset(swerve.getPoseOffset());
     switch (swerve.getState()) {
       case REEF_ALIGN_TELEOP -> {
         if (autoAlign.isTagAlignedDebounced()) {
@@ -720,7 +719,6 @@ public class RobotManager extends StateMachine<RobotState> {
     vision.updateDistanceFromReef(
         robotPose.getTranslation().getDistance(nearestReefSide.getPose().getTranslation()));
 
-    autoAlign.setTeleopSpeeds(swerve.getTeleopSpeeds());
     if (vision.isAnyTagLimelightOnline() || DriverStation.isAutonomous()) {
       var idealAlignSpeeds =
           switch (getState()) {

@@ -139,10 +139,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return ReefSide.fromPipe(bestReefPipe);
   }
 
-  public void setTeleopSpeeds(ChassisSpeeds speeds) {
-    teleopSpeeds = speeds;
-  }
-
   private static ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
     var options =
         new AutoConstraintOptions()
@@ -163,6 +159,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   @Override
   protected void collectInputs() {
+    teleopSpeeds = swerve.getTeleopSpeeds();
     bestReefPipe = tagAlign.getBestPipe();
     usedScoringPose = tagAlign.getUsedScoringPose(bestReefPipe);
     isAligned = tagAlign.isAligned(bestReefPipe);
@@ -170,6 +167,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
+
+    tagAlign.setDriverPoseOffset(swerve.getPoseOffset());
   }
 
   public ObstructionKind shouldArmGoAroundToScore() {
@@ -228,10 +227,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public Pose2d getUsedScoringPose(ReefPipe pipe, ReefPipeLevel level, RobotScoringSide side) {
     setScoringLevel(level, side);
     return getUsedScoringPose(pipe);
-  }
-
-  public void setDriverPoseOffset(Translation2d offset) {
-    tagAlign.setDriverPoseOffset(offset);
   }
 
   public ReefAlignState getReefAlignState() {
