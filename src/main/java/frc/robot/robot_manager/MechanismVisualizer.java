@@ -56,7 +56,8 @@ public final class MechanismVisualizer {
             new Translation3d(0, 0, elevatorHeight),
             new Rotation3d(Units.degreesToRadians(armAngle), 0, 0));
     var deployPose =
-        new Pose3d(Translation3d.kZero, new Rotation3d(0, Units.degreesToRadians(deployAngle), 0));
+        new Pose3d(
+            Translation3d.kZero, new Rotation3d(0, -1.0 * Units.degreesToRadians(deployAngle), 0));
     DogLog.log(
         "SuperstructureVisualization/Superstructure3d",
         new Pose3d[] {elevatorPose, carriagePose, armPose, deployPose});
