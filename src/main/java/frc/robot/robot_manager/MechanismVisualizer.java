@@ -47,7 +47,7 @@ public final class MechanismVisualizer {
     SmartDashboard.putData("SuperstructureVisualization", mechanism);
 
     var elevatorHeight = Units.inchesToMeters(position.elevatorHeight());
-    var armAngle = position.armAngle() + 360 - elevator.getAngle();
+    var armAngle = -1.0 * (position.armAngle() + 360 - elevator.getAngle());
 
     var elevatorPose = new Pose3d(Translation3d.kZero, Rotation3d.kZero);
     var carriagePose = new Pose3d(new Translation3d(0, 0, elevatorHeight), Rotation3d.kZero);
@@ -62,7 +62,7 @@ public final class MechanismVisualizer {
         new Pose3d[] {elevatorPose, carriagePose, armPose, deployPose});
 
     elevator.setLength(Units.inchesToMeters(position.elevatorHeight()));
-    arm.setAngle(position.armAngle() + 360 - elevator.getAngle());
+    arm.setAngle(armAngle);
   }
 
   private MechanismVisualizer() {}
