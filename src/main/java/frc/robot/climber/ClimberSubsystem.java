@@ -17,20 +17,15 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
-  private static final double TOLERANCE = 1.5;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
   private final CANrange canRange;
-  private final Debouncer climbMotorDirectionDebouncer = new Debouncer(1.0, DebounceType.kBoth);
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
-  private double climbMotorDirection = 0;
-  private double cancoderDirection = 0;
-  private static final boolean CLIMBER_DIRECTION_BAD = false;
-  private double currentAngle;
-  private double cilmberMotorAngle;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
+  private double currentAngle;
+  private double cilmberMotorAngle;
   private boolean holdingCage = false;
 
   public ClimberSubsystem(
@@ -46,26 +41,14 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
     grabMotor.getConfigurator().apply(RobotConfig.get().climber().grabMotorConfig());
     canRange.getConfigurator().apply(RobotConfig.get().climber().canRangeConfig());
-
-    DogLog.log("Climber/DirectionBad", CLIMBER_DIRECTION_BAD);
   }
 
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    // if (!climberDirectionBad) {
-    //   climberDirectionBad =
-    //       climbMotorDirectionDebouncer.calculate(
-    //           cancoderDirection != 0
-    //               && climbMotorDirection != 0
-    //               && cancoderDirection != climbMotorDirection);
-    // }
 
-    if (CLIMBER_DIRECTION_BAD) {
-      DogLog.logFault("Climber Direction Bad", AlertType.kError);
-      DogLog.log("Climber/DirectionBad", CLIMBER_DIRECTION_BAD);
-    }
+
     if (getState() == ClimberState.STOWED && !atGoal()) {
       DogLog.logFault("Climber stowed and not at goal", AlertType.kWarning);
     } else {
@@ -78,7 +61,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       } else {
         climbMotor.setControl(brakeNeutralRequest);
       }
-    } else if (CLIMBER_DIRECTION_BAD || atGoal()) {
+    } else if (atGoal()) {
       climbMotor.disable();
     } else if (currentAngle < clamp(getState().angle)) {
       climbMotor.setVoltage(getState().forwardsVoltage);
@@ -120,15 +103,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     cilmberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
 
-    cancoderDirection = Math.signum(climbMotor.getVelocity().getValueAsDouble());
-    climbMotorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
-
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
-    DogLog.log("Climber/Cancoder/Direction", cancoderDirection);
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
-    DogLog.log("Climber/ClimbMotor/Direction", climbMotorDirection);
     DogLog.log("Climber/ClimbMotor/Angle", cilmberMotorAngle);
 
     DogLog.log("Climber/HoldingCage", holdingCage);
