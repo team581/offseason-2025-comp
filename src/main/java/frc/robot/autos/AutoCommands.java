@@ -13,7 +13,6 @@ import frc.robot.robot_manager.ground_manager.GroundState;
 import java.util.List;
 
 public class AutoCommands {
-  private static final double LOLLIPOP_LOWER_ARM_THRESHOLD = 1.0;
   private final RobotCommands robotCommands;
   private final RobotManager robotManager;
   private final Subsystem[] requirements;
