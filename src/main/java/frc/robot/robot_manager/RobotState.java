@@ -124,8 +124,8 @@ public enum RobotState {
           Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_APPROACH));
   private static final ImmutableMap<RobotState, RobotState> approachToLineupLeftStates =
       ImmutableMap.ofEntries(
-        // Go to right l1 since robot can't do left l1
-        Map.entry(CORAL_L1_APPROACH, CORAL_L1_RIGHT_LINEUP),
+          // Go to right l1 since robot can't do left l1
+          Map.entry(CORAL_L1_APPROACH, CORAL_L1_RIGHT_LINEUP),
           Map.entry(CORAL_L2_APPROACH, CORAL_L2_LEFT_LINEUP),
           Map.entry(CORAL_L3_APPROACH, CORAL_L3_LEFT_LINEUP),
           Map.entry(CORAL_L4_APPROACH, CORAL_L4_LEFT_LINEUP));
