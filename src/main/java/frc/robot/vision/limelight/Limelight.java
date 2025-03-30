@@ -85,11 +85,11 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
 
-    PoseEstimate estimatePose;
+    PoseEstimate estimatePose= new PoseEstimate();
     if (DriverStation.isDisabled() || getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP) {
-      estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
+       estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
     } else {
-      estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+       estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
     }
 
     if (estimatePose == null) {
