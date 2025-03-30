@@ -33,7 +33,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   private static final double CORAL_LIFETIME_SECONDS = 1.5;
 
-  private static final double LOLLIPOP_LIFTEIME_SECONDS = 1.5;
+  private static final double LOLLIPOP_LIFTEIME_SECONDS = 2.0;
 
   // TODO: UPDATE THESE TO REAL NUMBERS
   private static final double CAMERA_IMAGE_HEIGHT = 240.0;
