@@ -9,7 +9,6 @@ import frc.robot.autos.AutoBlocks;
 import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
-import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.robot_manager.RobotManager;
 
 public class RedLollipopAuto extends BaseAuto {
@@ -27,16 +26,22 @@ public class RedLollipopAuto extends BaseAuto {
     return Commands.sequence(
         blocks.scorePreloadL4(Points.START_R3_AND_B3.redPose, ReefPipe.PIPE_I),
         blocks.intakeLollipop(
-            new Pose2d(14.2, 2.168, Rotation2d.fromDegrees(90)).transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.2, 2.168, Rotation2d.fromDegrees(90)).transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
+            new Pose2d(14.2, 2.168, Rotation2d.fromDegrees(90))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
+            new Pose2d(15.2, 2.168, Rotation2d.fromDegrees(90))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_A),
         blocks.intakeLollipop(
-            new Pose2d(14.5, 3.996, Rotation2d.fromDegrees(90)).transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.2, 3.996, Rotation2d.fromDegrees(90)).transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
+            new Pose2d(14.5, 3.996, Rotation2d.fromDegrees(90))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
+            new Pose2d(15.2, 3.996, Rotation2d.fromDegrees(90))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_B),
         blocks.intakeLollipop(
-            new Pose2d(15.085, 5.106, Rotation2d.fromDegrees(50.5)).transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.513, 5.473, Rotation2d.fromDegrees(50.5)).transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
+            new Pose2d(15.085, 5.106, Rotation2d.fromDegrees(50.5))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
+            new Pose2d(15.513, 5.473, Rotation2d.fromDegrees(50.5))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_C));
   }
 }

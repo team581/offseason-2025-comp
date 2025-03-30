@@ -37,7 +37,7 @@ public class AutoBlocks {
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
-    new Transform2d(-0.6615,0, Rotation2d.fromDegrees(90));
+      new Transform2d(-0.6615, 0, Rotation2d.fromDegrees(90));
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.7, 57, 4, 30);
@@ -175,7 +175,9 @@ public class AutoBlocks {
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
-   double getLollipopAngle = IntakeAssistUtil.getIntakeAssistAngle(defaultIntakingPoint.getTranslation(), robotManager.localization.getPose());
+    double getLollipopAngle =
+        IntakeAssistUtil.getIntakeAssistAngle(
+            defaultIntakingPoint.getTranslation(), robotManager.localization.getPose());
     return trailblazer
         .followSegment(
             new AutoSegment(
