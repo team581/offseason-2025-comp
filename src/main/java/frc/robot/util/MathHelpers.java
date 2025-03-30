@@ -26,40 +26,8 @@ public class MathHelpers {
     return new Translation2d(roundTo(input.getX(), precision), roundTo(input.getY(), precision));
   }
 
-  public static double sec(double radians) {
-    return (1 / Math.cos(radians));
-  }
-
-  public static double csc(double radians) {
-    return (1 / Math.sin(radians));
-  }
-
   public static double angleModulus(double angleDegrees) {
     return MathUtil.inputModulus(angleDegrees, -180, 180);
-  }
-
-  public static Translation2d chassisSpeedsToTranslation2d(ChassisSpeeds speeds) {
-    return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-  }
-
-  public static ChassisSpeeds translation2dToChassisSpeeds(Translation2d translation2d) {
-    return new ChassisSpeeds(translation2d.getX(), translation2d.getY(), 0.0);
-  }
-
-  public static double nonZeroDivide(double a, double b) {
-    return b == 0 ? 0 : a / b;
-  }
-
-  public static Rotation2d angleMin(Rotation2d a, Rotation2d b) {
-    return Rotation2d.fromDegrees(Math.min(a.getDegrees(), b.getDegrees()));
-  }
-
-  public static Rotation2d angleMax(Rotation2d a, Rotation2d b) {
-    return Rotation2d.fromDegrees(Math.max(a.getDegrees(), b.getDegrees()));
-  }
-
-  public static Rotation2d angleAbs(Rotation2d a) {
-    return Rotation2d.fromDegrees(Math.abs(a.getDegrees()));
   }
 
   public static Pose2d poseLookahead(Pose2d current, ChassisSpeeds velocity, double lookahead) {
