@@ -91,9 +91,7 @@ public class AutoBlocks {
                         SCORING_CONSTRAINTS)),
                 false)
             .withDeadline(
-                autoCommands
-                    .waitForAlignedForScore()
-                    .andThen(autoCommands.l4LeftReleaseCommand())),
+                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -141,9 +139,7 @@ public class AutoBlocks {
                                 pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT))),
                 false)
             .withDeadline(
-                autoCommands
-                    .waitForAlignedForScore()
-                    .andThen(autoCommands.l4LeftReleaseCommand())),
+                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
