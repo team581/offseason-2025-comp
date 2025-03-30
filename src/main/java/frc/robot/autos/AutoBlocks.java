@@ -91,7 +91,7 @@ public class AutoBlocks {
                         SCORING_CONSTRAINTS)),
                 false)
             .withDeadline(
-                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
+                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4RightReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -121,7 +121,7 @@ public class AutoBlocks {
                         () ->
                             robotManager
                                 .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
+                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.RIGHT)
                                 .transformBy(PIPE_APPROACH_OFFSET),
                         autoCommands.l4WarmupCommand(pipe),
                         BASE_CONSTRAINTS),
@@ -129,17 +129,17 @@ public class AutoBlocks {
                         () ->
                             robotManager
                                 .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
+                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.RIGHT)
                                 .transformBy(PIPE_LINEUP_OFFSET),
                         autoCommands.l4LineupCommand(pipe),
                         SCORING_CONSTRAINTS),
                     new AutoPoint(
                         () ->
                             robotManager.autoAlign.getUsedScoringPose(
-                                pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT))),
+                                pipe, ReefPipeLevel.L4, RobotScoringSide.RIGHT))),
                 false)
             .withDeadline(
-                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
+                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4RightReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -147,13 +147,13 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.autoAlign.getUsedScoringPose(
-                            pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT),
+                            pipe, ReefPipeLevel.L4, RobotScoringSide.RIGHT),
                     Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
                 new AutoPoint(
                     () ->
                         robotManager
                             .autoAlign
-                            .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
+                            .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.RIGHT)
                             .transformBy(PIPE_LINEUP_OFFSET)))));
   }
 
