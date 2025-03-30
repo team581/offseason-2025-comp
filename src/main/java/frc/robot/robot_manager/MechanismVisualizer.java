@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.config.RobotConfig;
 
-public class MechanismVisualizer {
+public final class MechanismVisualizer {
   private static final Translation2d MECHANISM_AREA =
       new Translation2d(
           ((ArmSubsystem.ARM_LENGTH_METERS + Units.inchesToMeters(2)) * 2.0),
@@ -64,4 +64,7 @@ public class MechanismVisualizer {
     elevator.setLength(Units.inchesToMeters(position.elevatorHeight()));
     arm.setAngle(position.armAngle() + 360 - elevator.getAngle());
   }
+
+
+private MechanismVisualizer() {}
 }
