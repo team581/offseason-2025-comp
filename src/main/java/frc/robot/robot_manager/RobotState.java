@@ -121,13 +121,13 @@ public enum RobotState {
           Map.entry(CORAL_L4_RIGHT_LINEUP, CORAL_L4_RIGHT_PLACE));
   private static final ImmutableMap<RobotState, RobotState> placeToRelease =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_LEFT_RELEASE, CORAL_L2_LEFT_RELEASE),
-          Map.entry(CORAL_L3_LEFT_RELEASE, CORAL_L3_LEFT_RELEASE),
-          Map.entry(CORAL_L4_LEFT_RELEASE, CORAL_L4_LEFT_RELEASE),
+          Map.entry(CORAL_L2_LEFT_PLACE, CORAL_L2_LEFT_RELEASE),
+          Map.entry(CORAL_L3_LEFT_PLACE, CORAL_L3_LEFT_RELEASE),
+          Map.entry(CORAL_L4_LEFT_PLACE, CORAL_L4_LEFT_RELEASE),
           Map.entry(CORAL_L1_RIGHT_RELEASE, CORAL_L1_RIGHT_RELEASE),
-          Map.entry(CORAL_L2_RIGHT_RELEASE, CORAL_L2_RIGHT_RELEASE),
-          Map.entry(CORAL_L3_RIGHT_RELEASE, CORAL_L3_RIGHT_RELEASE),
-          Map.entry(CORAL_L4_RIGHT_RELEASE, CORAL_L4_RIGHT_RELEASE));
+          Map.entry(CORAL_L2_RIGHT_PLACE, CORAL_L2_RIGHT_RELEASE),
+          Map.entry(CORAL_L3_RIGHT_PLACE, CORAL_L3_RIGHT_RELEASE),
+          Map.entry(CORAL_L4_RIGHT_PLACE, CORAL_L4_RIGHT_RELEASE));
 
   private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =
       ImmutableMap.ofEntries(
