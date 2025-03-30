@@ -14,7 +14,6 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
 import frc.robot.auto_align.RobotScoringSide;
-import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import java.util.Optional;
@@ -116,9 +115,7 @@ public class TagAlign {
             .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
 
     var goalTranslationWithP =
-        new Translation2d(
-            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
-            0.0);
+        new Translation2d(TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), 0.0);
     var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
 
     var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
@@ -127,22 +124,22 @@ public class TagAlign {
   }
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
-      var robotPose = localization.getPose();
+    var robotPose = localization.getPose();
 
-      var scoringTranslationRobotRelative =
-          usedScoringPose
-              .getTranslation()
-              .minus(robotPose.getTranslation())
-              .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
+    var scoringTranslationRobotRelative =
+        usedScoringPose
+            .getTranslation()
+            .minus(robotPose.getTranslation())
+            .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
 
-      var goalTranslationWithP =
-          new Translation2d(
-              TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
-              TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getY()));
-      var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
+    var goalTranslationWithP =
+        new Translation2d(
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
+            TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getY()));
+    var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
 
-      var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
-      DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
-      return goalSpeeds;
+    var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
+    DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
+    return goalSpeeds;
   }
 }
