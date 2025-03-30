@@ -45,6 +45,16 @@ public enum ReefPipeLevel {
       new Transform2d(
           -Units.inchesToMeters(14.5 + 4.0 + 4.5),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(90))),
+
+  RAISING(
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 8.0),
+          Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(270)),
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 8.0),
+          -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90)));
 
   public final Transform2d leftOffset;

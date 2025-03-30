@@ -10,10 +10,12 @@ record ReefPipePoses(
     Pose2d leftL2,
     Pose2d leftL3,
     Pose2d leftL4,
+    Pose2d leftRaising,
     Pose2d rightL1,
     Pose2d rightL2,
     Pose2d rightL3,
-    Pose2d rightL4) {
+    Pose2d rightL4,
+    Pose2d rightRaising) {
   public ReefPipePoses(Pose2d base) {
     this(
         base,
@@ -21,10 +23,12 @@ record ReefPipePoses(
         base.transformBy(ReefPipeLevel.L2.leftOffset),
         base.transformBy(ReefPipeLevel.L3.leftOffset),
         base.transformBy(ReefPipeLevel.L4.leftOffset),
+        base.transformBy(ReefPipeLevel.RAISING.leftOffset),
         base.transformBy(ReefPipeLevel.L1.rightOffset),
         base.transformBy(ReefPipeLevel.L2.rightOffset),
         base.transformBy(ReefPipeLevel.L3.rightOffset),
-        base.transformBy(ReefPipeLevel.L4.rightOffset));
+        base.transformBy(ReefPipeLevel.L4.rightOffset),
+        base.transformBy(ReefPipeLevel.RAISING.rightOffset));
   }
 
   public Pose2d getLeftPose(ReefPipeLevel level) {
@@ -34,6 +38,7 @@ record ReefPipePoses(
       case L2 -> leftL2;
       case L3 -> leftL3;
       case L4 -> leftL4;
+      case RAISING -> leftRaising;
     };
   }
 
@@ -44,6 +49,7 @@ record ReefPipePoses(
       case L2 -> rightL2;
       case L3 -> rightL3;
       case L4 -> rightL4;
+      case RAISING -> rightRaising;
     };
   }
 }

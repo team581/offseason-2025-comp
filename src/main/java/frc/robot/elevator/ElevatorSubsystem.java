@@ -15,6 +15,7 @@ import frc.robot.util.tuning.TunablePid;
 
 public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private static final double TOLERANCE = 0.5;
+  private static final double NEAR_TOLERANCE = 5.0;
 
   private static double clampHeight(double height) {
     return MathUtil.clamp(
@@ -189,6 +190,14 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
       case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE -> false;
       default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, TOLERANCE);
+    };
+  }
+
+  public boolean nearGoal() {
+    return switch (getState()) {
+      case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
+      case COLLISION_AVOIDANCE -> false;
+      default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, NEAR_TOLERANCE);
     };
   }
 }

@@ -704,13 +704,20 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_L2_RIGHT_LINEUP,
                   CORAL_L2_LEFT_RELEASE,
                   CORAL_L2_RIGHT_RELEASE ->
-              ReefPipeLevel.L2;
+              (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
+                  ? ReefPipeLevel.L2
+                  : ReefPipeLevel.RAISING;
           case CORAL_L3_LEFT_LINEUP,
                   CORAL_L3_RIGHT_LINEUP,
                   CORAL_L3_LEFT_RELEASE,
                   CORAL_L3_RIGHT_RELEASE ->
-              ReefPipeLevel.L3;
-          default -> ReefPipeLevel.L4;
+              (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
+                  ? ReefPipeLevel.L3
+                  : ReefPipeLevel.RAISING;
+          default ->
+              (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
+                  ? ReefPipeLevel.L4
+                  : ReefPipeLevel.RAISING;
         };
 
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());

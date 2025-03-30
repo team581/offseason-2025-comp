@@ -57,6 +57,9 @@ public class TagAlign {
   }
 
   public boolean isAligned(ReefPipe pipe) {
+    if (level.equals(ReefPipeLevel.RAISING)) {
+      return false;
+    }
     var robotPose = localization.getPose();
     var scoringPoseFieldRelative = getUsedScoringPose(pipe);
     var translationGood =
