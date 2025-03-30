@@ -33,9 +33,7 @@ public enum RobotState {
   CORAL_L1_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
   /** Coral is in the claw, let's get ready to score L1. */
   CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L1_LEFT_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L1_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L1_LEFT_RELEASE(ClawGamePiece.CORAL, false),
   CORAL_L1_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
 
   // L2 scoring using the claw
@@ -104,7 +102,6 @@ public enum RobotState {
 
   private static final ImmutableMap<RobotState, RobotState> lineupToRelease =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_LEFT_LINEUP, CORAL_L1_LEFT_RELEASE),
           Map.entry(CORAL_L2_LEFT_LINEUP, CORAL_L2_LEFT_RELEASE),
           Map.entry(CORAL_L3_LEFT_LINEUP, CORAL_L3_LEFT_RELEASE),
           Map.entry(CORAL_L4_LEFT_LINEUP, CORAL_L4_LEFT_RELEASE),
@@ -127,7 +124,6 @@ public enum RobotState {
           Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_APPROACH));
   private static final ImmutableMap<RobotState, RobotState> approachToLineupLeftStates =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_APPROACH, CORAL_L1_LEFT_LINEUP),
           Map.entry(CORAL_L2_APPROACH, CORAL_L2_LEFT_LINEUP),
           Map.entry(CORAL_L3_APPROACH, CORAL_L3_LEFT_LINEUP),
           Map.entry(CORAL_L4_APPROACH, CORAL_L4_LEFT_LINEUP));
