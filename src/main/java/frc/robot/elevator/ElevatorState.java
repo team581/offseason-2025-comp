@@ -24,6 +24,8 @@ public enum ElevatorState {
 
   ALGAE_OUTTAKE(UNTUNED),
 
+  ALGAE_FLING(UNTUNED),
+
   CORAL_HANDOFF(41.12),
 
   ALGAE_INTAKE_L2_LEFT(24.0),

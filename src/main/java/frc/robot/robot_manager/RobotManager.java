@@ -129,13 +129,17 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L3_LEFT_LINEUP,
               CORAL_L3_RIGHT_LINEUP,
               CORAL_L4_LEFT_LINEUP,
-              CORAL_L4_RIGHT_LINEUP ->
+              CORAL_L4_RIGHT_LINEUP,
+              ALGAE_FLING_WAIT ->
           currentState;
 
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY : currentState;
       case PREPARE_SPIN_TO_WIN ->
           elevator.atGoal() && arm.atGoal() ? RobotState.SPIN_TO_WIN : currentState;
+
+      case ALGAE_FLING_PREPARE -> arm.atGoal() ? RobotState.ALGAE_FLING_RELEASE : currentState;
+      case ALGAE_FLING_RELEASE -> !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       // handoff
       case CORAL_L1_PREPARE_HANDOFF,
@@ -679,6 +683,30 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.SCORING);
         climber.setState(ClimberState.STOWED);
       }
+      case ALGAE_FLING_WAIT -> {
+        claw.setState(ClawState.IDLE_W_ALGAE);
+        moveSuperstructure(ElevatorState.ALGAE_FLING, ArmState.ALGAE_FLING_WAIT);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
+        climber.setState(ClimberState.STOWED);
+      }
+      case ALGAE_FLING_PREPARE -> {
+        claw.setState(ClawState.IDLE_W_ALGAE);
+        moveSuperstructure(ElevatorState.ALGAE_FLING, ArmState.ALGAE_FLING_SWING);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORE_ALIGN_READY);
+        climber.setState(ClimberState.STOWED);
+      }
+      case ALGAE_FLING_RELEASE -> {
+        claw.setState(ClawState.SCORE_ALGAE_NET);
+        moveSuperstructure(ElevatorState.ALGAE_FLING, ArmState.ALGAE_FLING_SWING);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORING);
+        climber.setState(ClimberState.STOWED);
+      }
     }
   }
 
@@ -876,6 +904,22 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void algaeFlingRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+
+    setStateFromRequest(RobotState.ALGAE_FLING_WAIT);
+  }
+
+  public void algaeFlingConfirmRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+
+    setStateFromRequest(RobotState.ALGAE_FLING_PREPARE);
+  }
+
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
@@ -1064,6 +1108,8 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_APPROACH,
           CORAL_L3_APPROACH,
           CORAL_L4_APPROACH -> {}
+
+      case ALGAE_FLING_WAIT -> setStateFromRequest(RobotState.ALGAE_FLING_PREPARE);
 
       case CORAL_L2_LEFT_LINEUP,
           CORAL_L3_LEFT_LINEUP,

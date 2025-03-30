@@ -3,6 +3,7 @@ package frc.robot.arm;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -38,6 +39,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
+
+  // TODO: tune velocity
+  private final PositionVoltage algaeFling =
+      new PositionVoltage(Units.degreesToRotations(ArmState.ALGAE_FLING_SWING.getAngle()))
+          .withVelocity(Units.degreesToRotations(90));
 
   public ArmSubsystem(TalonFX motor) {
     super(
@@ -81,6 +87,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, TOLERANCE, -180, 180);
+      case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
   }
@@ -116,6 +123,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
       case SPIN_TO_WIN -> {
         motor.setControl(spinToWin);
+      }
+      case ALGAE_FLING_SWING -> {
+        motor.setControl(algaeFling);
       }
       default -> {
         motor.setControl(

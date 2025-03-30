@@ -249,6 +249,7 @@ public class Robot extends TimedRobot {
 
     hardware.operatorController.back().onTrue(robotCommands.spinToWinCommand());
 
+    // hardware.operatorController.rightTrigger().onTrue(robotCommands.waitAlgaeFlingCommand());
     hardware.operatorController.leftTrigger().onTrue(robotCommands.testNextLollipopCommand());
   }
 }

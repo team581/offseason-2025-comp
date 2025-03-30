@@ -115,4 +115,9 @@ public class RobotCommands {
     return Commands.runOnce(robot::testingNextLollipopRequest, rmRequirements)
         .withName("TestNextLollipopCommand");
   }
+
+  public Command waitAlgaeFlingCommand() {
+    return Commands.runOnce(robot::algaeFlingRequest, rmRequirements)
+        .withName("WaitAlgaeFlingCommand");
+  }
 }

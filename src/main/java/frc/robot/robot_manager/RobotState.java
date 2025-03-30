@@ -25,6 +25,10 @@ public enum RobotState {
   ALGAE_INTAKE_L2_RIGHT(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3_RIGHT(ClawGamePiece.ALGAE, false),
 
+  ALGAE_FLING_WAIT(ClawGamePiece.ALGAE, false),
+  ALGAE_FLING_PREPARE(ClawGamePiece.ALGAE, false),
+  ALGAE_FLING_RELEASE(ClawGamePiece.ALGAE, false),
+
   PREPARE_HANDOFF_AFTER_INTAKE(ClawGamePiece.EMPTY, false),
 
   // L1 scoring using the claw
