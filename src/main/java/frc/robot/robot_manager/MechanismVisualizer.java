@@ -65,6 +65,5 @@ public final class MechanismVisualizer {
     arm.setAngle(position.armAngle() + 360 - elevator.getAngle());
   }
 
-
-private MechanismVisualizer() {}
+  private MechanismVisualizer() {}
 }
