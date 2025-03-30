@@ -46,6 +46,8 @@ public class CollisionAvoidance {
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
+    DogLog.log("CollisionAvoidance/ClawPos", currentPosition.getTranslation());
+
     if (DriverStation.isDisabled()) {
       return Optional.empty();
     }
@@ -107,7 +109,7 @@ public class CollisionAvoidance {
   }
 
   private static Optional<ImmutableList<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
-    DogLog.log("CollisionAvoidance", aStarCache.size());
+    DogLog.log("CollisionAvoidance/AStarCacheSize", aStarCache.size());
 
     return aStarCache.computeIfAbsent(
         query,
