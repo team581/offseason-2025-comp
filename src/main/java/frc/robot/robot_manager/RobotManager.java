@@ -794,7 +794,7 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_L4_RIGHT_RELEASE ->
               ReefPipeLevel.L4;
           // Always default to raising, unless we're in auto
-          default ->  DriverStation.isAutonomous() ? ReefPipeLevel.L4 : ReefPipeLevel.RAISING;
+          default -> DriverStation.isAutonomous() ? ReefPipeLevel.L4 : ReefPipeLevel.RAISING;
         };
 
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
