@@ -763,7 +763,7 @@ public class RobotManager extends StateMachine<RobotState> {
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
-          //L2
+          // L2
           case CORAL_L2_LEFT_LINEUP, CORAL_L2_RIGHT_LINEUP ->
               (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
                   ? ReefPipeLevel.L2
@@ -783,7 +783,7 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_L3_LEFT_RELEASE,
                   CORAL_L3_RIGHT_RELEASE ->
               ReefPipeLevel.L3;
-          //L4
+          // L4
           case CORAL_L4_LEFT_LINEUP, CORAL_L4_RIGHT_LINEUP ->
               (DriverStation.isAutonomous() || (elevator.nearGoal() && arm.nearGoal()))
                   ? ReefPipeLevel.L4
@@ -794,7 +794,7 @@ public class RobotManager extends StateMachine<RobotState> {
                   CORAL_L4_RIGHT_RELEASE ->
               ReefPipeLevel.L4;
           // Always default to raising, unless we're in auto
-          default -> (DriverStation.isAutonomous()) ? ReefPipeLevel.L4 : ReefPipeLevel.RAISING;
+          default ->  DriverStation.isAutonomous() ? ReefPipeLevel.L4 : ReefPipeLevel.RAISING;
         };
 
     DogLog.log("AutoAlign/UsedPose", autoAlign.getUsedScoringPose());
