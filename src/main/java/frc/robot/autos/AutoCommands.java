@@ -90,8 +90,8 @@ public class AutoCommands {
         });
   }
 
-  public Command l4RightReleaseCommand() {
-    return Commands.runOnce(robotManager::l4CoralRightReleaseRequest);
+  public Command l4LeftReleaseCommand() {
+    return Commands.runOnce(robotManager::l4CoralLeftReleaseRequest);
   }
 
   public Command waitForAlignedForScore() {

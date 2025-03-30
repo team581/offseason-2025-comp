@@ -992,10 +992,10 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void l4CoralRightReleaseRequest() {
+  public void l4CoralLeftReleaseRequest() {
     if (!getState().climbingOrRehoming) {
       if (claw.getHasGP()) {
-        setStateFromRequest(RobotState.CORAL_L4_RIGHT_PLACE);
+        setStateFromRequest(RobotState.CORAL_L4_LEFT_PLACE);
       } else {
         setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
       }
