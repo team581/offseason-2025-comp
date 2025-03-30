@@ -154,9 +154,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState()
-              : currentState;
+          claw.getHasGP() ? currentState.getHandoffReleaseToApproachState() : currentState;
 
       // Approach
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->

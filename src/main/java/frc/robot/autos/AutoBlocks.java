@@ -29,7 +29,7 @@ public class AutoBlocks {
   private static final Transform2d PIPE_APPROACH_OFFSET =
       new Transform2d(-1.3, 0, Rotation2d.kZero);
 
-  private static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
+  public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
       new Transform2d(-1.3, 0, Rotation2d.kZero);
 
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
