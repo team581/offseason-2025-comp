@@ -107,43 +107,26 @@ public class TagAlign {
   }
 
   public ChassisSpeeds getAlgaeAlignmentSpeeds(Pose2d usedScoringPose) {
-    if (FeatureFlags.AUTO_ALIGN_FIX_ROTATION_CAUSING_OVERSHOOT.getAsBoolean()) {
-      var robotPose = localization.getPose();
-      var scoringTranslationRobotRelative =
-          usedScoringPose
-              .getTranslation()
-              .minus(robotPose.getTranslation())
-              .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
+    var robotPose = localization.getPose();
+    DogLog.log("AutoAlign/UsedAlgaePose", usedScoringPose);
+    var scoringTranslationRobotRelative =
+        usedScoringPose
+            .getTranslation()
+            .minus(robotPose.getTranslation())
+            .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
 
-      var goalTranslationWithP =
-          new Translation2d(
-              TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
-              TAG_FORWARD_PID.calculate(0));
-      var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
-      var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
-      DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
-      return goalSpeeds;
-    } else {
-      var robotPose = localization.getPose();
-      var scoringTranslationRobotRelative =
-          usedScoringPose
-              .getTranslation()
-              .minus(robotPose.getTranslation())
-              .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
+    var goalTranslationWithP =
+        new Translation2d(
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
+            0.0);
+    var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
 
-      var goalTranslationWithP =
-          new Translation2d(
-              TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
-              TAG_FORWARD_PID.calculate(0));
-      var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
-      var goalSpeeds = new ChassisSpeeds(goalTranslation.getX(), goalTranslation.getY(), 0.0);
-      DogLog.log("AutoAlign/AlgaeAlign/GoalSpeeds", goalSpeeds);
-      return goalSpeeds;
-    }
+    var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
+    DogLog.log("AutoAlign/GoalAlgaeSpeeds", goalSpeeds);
+    return goalSpeeds;
   }
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
-    if (FeatureFlags.AUTO_ALIGN_FIX_ROTATION_CAUSING_OVERSHOOT.getAsBoolean()) {
       var robotPose = localization.getPose();
 
       var scoringTranslationRobotRelative =
@@ -161,23 +144,5 @@ public class TagAlign {
       var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
       DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
       return goalSpeeds;
-    } else {
-      var robotPose = localization.getPose();
-      var scoringTranslationRobotRelative =
-          usedScoringPose
-              .getTranslation()
-              .minus(robotPose.getTranslation())
-              .rotateBy(Rotation2d.fromDegrees(360 - robotPose.getRotation().getDegrees()));
-
-      var goalTranslationWithP =
-          new Translation2d(
-              TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()),
-              TAG_FORWARD_PID.calculate(scoringTranslationRobotRelative.getY()));
-      var goalTranslation = goalTranslationWithP.rotateBy(robotPose.getRotation());
-
-      var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
-      DogLog.log("AutoAlign/GoalSpeeds", goalSpeeds);
-      return goalSpeeds;
-    }
   }
 }

@@ -123,11 +123,11 @@ public enum ReefSide {
             (scoringSide == RobotScoringSide.LEFT)
                 ? new Transform2d(
                     0,
-                    -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+                    Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
                     Rotation2d.kCW_90deg)
                 : new Transform2d(
                     0,
-                    Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+                    -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
                     Rotation2d.kCCW_90deg));
   }
 
