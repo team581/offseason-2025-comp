@@ -236,6 +236,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
+    if (lastLollipopPose.isPresent()) {
+      DogLog.log("CoralMap/LollipopPose", lastLollipopPose.get());
+    } else {
+      DogLog.log("CoralMap/LollipopPose", Pose2d.kZero);
+    }
     if (!FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
       return;
     }

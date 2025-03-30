@@ -1200,9 +1200,12 @@ public class RobotManager extends StateMachine<RobotState> {
     var goal = new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle());
 
     MechanismVisualizer.log(currentPosition, groundManager.deploy.getAngle());
-
+    var obstructionKind =
+        FeatureFlags.COLLISION_AVOIDANCE_OBSTRUCTION.getAsBoolean()
+            ? shouldLoopAroundToScoreObstruction
+            : ObstructionKind.NONE;
     var maybeCollisionAvoidanceResult =
-        CollisionAvoidance.route(currentPosition, goal, shouldLoopAroundToScoreObstruction);
+        CollisionAvoidance.route(currentPosition, goal, obstructionKind);
 
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
       elevator.setState(elevatorGoal);

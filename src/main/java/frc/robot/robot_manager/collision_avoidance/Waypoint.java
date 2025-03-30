@@ -83,6 +83,11 @@ public enum Waypoint {
   }
 
   public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    canMoveToAlways(other, true, graph);
+  }
+
+  public void canMoveToAlways(
+      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
 
     if (existingEdge != null) {
@@ -92,6 +97,11 @@ public enum Waypoint {
 
   public void canMoveToWhenLeftSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    canMoveToWhenLeftSafe(other, true, graph);
+  }
+
+  public void canMoveToWhenLeftSafe(
+      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
 
     if (existingEdge != null) {
@@ -101,6 +111,11 @@ public enum Waypoint {
 
   public void canMoveToWhenRightSafe(
       Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
+    canMoveToWhenRightSafe(other, true, graph);
+  }
+
+  public void canMoveToWhenRightSafe(
+      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
     var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
 
     if (existingEdge != null) {

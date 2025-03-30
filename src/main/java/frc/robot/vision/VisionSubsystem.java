@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
-  private static final double REEF_CLOSEUP_DISTANCE = 1.0;
+  private static final double REEF_CLOSEUP_DISTANCE = 0.7;
   private final ImuSubsystem imu;
   private final Limelight leftBackLimelight;
   private final Limelight leftFrontLimelight;

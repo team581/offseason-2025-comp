@@ -10,9 +10,6 @@ public class FeatureFlags {
   public static final BooleanSupplier PURE_PURSUIT_ROTATE_IMMEDIATELY =
       FeatureFlag.of("PurePursuit/RotateImmediately", false);
 
-  public static final BooleanSupplier COLLISION_AVOIDANCE_BOX_SHORTCUTS =
-      FeatureFlag.of("CollisionAvoidance/BoxShortcuts", true);
-
   public static final BooleanSupplier CAMERA_POSITION_CALIBRATION =
       FeatureFlag.of("Vision/PositionCalibrationMode", false);
 
@@ -22,6 +19,9 @@ public class FeatureFlags {
       FeatureFlag.of("Vision/StaleDataRejection", false);
 
   public static final BooleanSupplier FIELD_CALIBRATION = FeatureFlag.of("FieldCalibration", false);
+
+  public static final BooleanSupplier COLLISION_AVOIDANCE_OBSTRUCTION =
+      FeatureFlag.of("CollisionAvoidance/Obstruction", false);
 
   /**
    * Whether L4 approach state should automatically transition to L4 lineup when close enough to the
