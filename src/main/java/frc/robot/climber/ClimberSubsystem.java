@@ -47,8 +47,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-
-
     if (getState() == ClimberState.STOWED && !atGoal()) {
       DogLog.logFault("Climber stowed and not at goal", AlertType.kWarning);
     } else {
