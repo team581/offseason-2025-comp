@@ -149,8 +149,7 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Reef lineup states
-      case
-              CORAL_L1_RIGHT_LINEUP,
+      case CORAL_L1_RIGHT_LINEUP,
               CORAL_L2_LEFT_LINEUP,
               CORAL_L2_RIGHT_LINEUP,
               CORAL_L3_LEFT_LINEUP,
@@ -159,8 +158,7 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L4_RIGHT_LINEUP ->
           currentState;
 
-      case
-          CORAL_L2_LEFT_RELEASE,
+      case CORAL_L2_LEFT_RELEASE,
           CORAL_L3_LEFT_RELEASE,
           CORAL_L4_LEFT_RELEASE,
           CORAL_L1_RIGHT_RELEASE,
@@ -703,11 +701,7 @@ public class RobotManager extends StateMachine<RobotState> {
     reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
-          case
-                  CORAL_L1_RIGHT_LINEUP,
-
-                  CORAL_L1_RIGHT_RELEASE ->
-              ReefPipeLevel.L1;
+          case CORAL_L1_RIGHT_LINEUP, CORAL_L1_RIGHT_RELEASE -> ReefPipeLevel.L1;
           case CORAL_L2_LEFT_LINEUP,
                   CORAL_L2_RIGHT_LINEUP,
                   CORAL_L2_LEFT_RELEASE,
@@ -993,8 +987,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L3_RIGHT_RELEASE,
           CORAL_L4_RIGHT_RELEASE -> {}
 
-      case
-          CORAL_L2_LEFT_LINEUP,
+      case CORAL_L2_LEFT_LINEUP,
           CORAL_L3_LEFT_LINEUP,
           CORAL_L4_LEFT_LINEUP,
           CORAL_L1_RIGHT_LINEUP,
