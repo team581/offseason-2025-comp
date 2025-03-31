@@ -221,7 +221,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY -> {
         claw.setState(ClawState.IDLE_NO_GP);
         groundManager.idleRequest();
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -239,7 +239,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_CORAL -> {
         claw.setState(ClawState.IDLE_W_CORAL);
         groundManager.idleRequest();
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
