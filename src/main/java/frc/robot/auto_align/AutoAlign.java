@@ -108,7 +108,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KS = 1.5;
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.625;
+  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE_KP = 0.4;
 
   private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
   private final VisionSubsystem vision;
