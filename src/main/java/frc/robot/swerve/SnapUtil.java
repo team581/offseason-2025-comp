@@ -1,7 +1,6 @@
 package frc.robot.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.fms.FmsSubsystem;
 
@@ -20,12 +19,11 @@ public class SnapUtil {
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
 
-      if (robotX<halfFieldLength) {
+    if (robotX < halfFieldLength) {
 
-        return scoringSide.equals(RobotScoringSide.RIGHT)? 90:-90;
-
+      return scoringSide.equals(RobotScoringSide.RIGHT) ? 90 : -90;
     }
-         return scoringSide.equals(RobotScoringSide.RIGHT)? -90:90;
+    return scoringSide.equals(RobotScoringSide.RIGHT) ? -90 : 90;
   }
 
   public static double getCoralStationAngle(Pose2d robotPose) {

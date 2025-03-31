@@ -2,7 +2,6 @@ package frc.robot.robot_manager;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.arm.ArmState;
@@ -342,7 +341,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_NET_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
         moveSuperstructure(ElevatorState.ALGAE_NET_RIGHT, ArmState.ALGAE_NET_RIGHT, true);
-        swerve.normalDriveRequest();;
+        swerve.normalDriveRequest();
+        ;
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOWED);
@@ -708,7 +708,6 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose());
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);

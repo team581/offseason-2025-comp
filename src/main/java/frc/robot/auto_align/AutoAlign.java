@@ -45,14 +45,14 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
     // Robot is on blue side
     if (robotX < halfFieldLength) {
-      if (theta>0.0) {
+      if (theta > 0.0) {
         return RobotScoringSide.RIGHT;
       }
       return RobotScoringSide.LEFT;
     }
 
     // Robot is on red side
-    if (theta>0.0) {
+    if (theta > 0.0) {
       return RobotScoringSide.LEFT;
     }
     return RobotScoringSide.RIGHT;
