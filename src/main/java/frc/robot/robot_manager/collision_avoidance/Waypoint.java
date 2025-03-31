@@ -23,19 +23,19 @@ public enum Waypoint {
   LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, 90.0)),
   STOWED_UP(new SuperstructurePosition(0.0, 90.0)),
   HANDOFF(new SuperstructurePosition(41.12, -90.0)),
-  L1_RIGHT(new SuperstructurePosition(0.0, 35.0)),
-  L2_RIGHT(new SuperstructurePosition(17.0, 25.0)),
-  L3_RIGHT(new SuperstructurePosition(33.0, 25.0)),
-  L4_RIGHT(new SuperstructurePosition(53.0, 32.0)),
-  L2_LEFT(new SuperstructurePosition(17.0, 180.0 - 25.0)),
-  L3_LEFT(new SuperstructurePosition(33.0, 180.0 - 25.0)),
-  L4_LEFT(new SuperstructurePosition(53.0, 180.0 - 32.0)),
-  ALGAE_RIGHT(new SuperstructurePosition(50, 75)),
-  ALGAE_LEFT(new SuperstructurePosition(50, 180 - 75)),
-  ALGAE_L2_RIGHT(new SuperstructurePosition(24.0, 0.0)),
-  ALGAE_L2_LEFT(new SuperstructurePosition(39.0, 180.0)),
-  ALGAE_L3_RIGHT(new SuperstructurePosition(24.0, 0.0)),
-  ALGAE_L3_LEFT(new SuperstructurePosition(39.0, 180.0));
+  L1_RIGHT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1)),
+  L2_RIGHT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2)),
+  L3_RIGHT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3)),
+  L4_RIGHT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4)),
+  L2_LEFT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_LEFT_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2)),
+  L3_LEFT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_LEFT_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3)),
+  L4_LEFT(new SuperstructurePosition(ElevatorState.CORAL_SCORE_LEFT_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4)),
+  ALGAE_RIGHT(new SuperstructurePosition(ElevatorState.ALGAE_NET_RIGHT, ArmState.ALGAE_NET_RIGHT)),
+  ALGAE_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_NET_LEFT)),
+  ALGAE_L2_RIGHT(new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2_RIGHT, ArmState.ALGAE_INTAKE_RIGHT_L2)),
+  ALGAE_L2_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2_LEFT, ArmState.ALGAE_INTAKE_LEFT_L2)),
+  ALGAE_L3_RIGHT(new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3_RIGHT, ArmState.ALGAE_INTAKE_RIGHT_L3)),
+  ALGAE_L3_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3_LEFT, ArmState.ALGAE_INTAKE_LEFT_L3));
 
   public final SuperstructurePosition position;
 
