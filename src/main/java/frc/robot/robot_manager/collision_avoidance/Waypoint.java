@@ -3,6 +3,8 @@ package frc.robot.robot_manager.collision_avoidance;
 import com.google.common.graph.MutableValueGraph;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.arm.ArmState;
+import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.stream.Stream;
 
@@ -12,7 +14,10 @@ import java.util.stream.Stream;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  ALGAE_INTAKE_RIGHT(new SuperstructurePosition(3.0, 0.0)),
+  // TODO Here's an example of using setpoints for waypoints. Don't do this 100% of the time! Only
+  // where it makes sense - Jonah
+  ALGAE_INTAKE_RIGHT(
+      new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR)),
   LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0.0, 0.0)),
   STOWED(new SuperstructurePosition(55.0, -90.0)),
   LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, 90.0)),
