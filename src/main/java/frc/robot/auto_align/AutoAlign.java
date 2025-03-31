@@ -16,6 +16,7 @@ import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
@@ -36,22 +37,25 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
-    double theta = robotPose.getRotation().getDegrees() - 90;
+    double theta = MathHelpers.angleModulus(robotPose.getRotation().getDegrees());
+    DogLog.log("Debug/Theta", theta);
 
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
 
     // Robot is on blue side
-    if (halfFieldLength < robotX) {
-      if (Math.abs(theta) < 90) {
-        return RobotScoringSide.LEFT;
+    if (robotX < halfFieldLength) {
+      if (theta>0.0) {
+        return RobotScoringSide.RIGHT;
       }
-      return RobotScoringSide.RIGHT;
-    } // Robot is on red side
-    if (Math.abs(theta) < 90) {
-      return RobotScoringSide.RIGHT;
+      return RobotScoringSide.LEFT;
     }
-    return RobotScoringSide.LEFT;
+
+    // Robot is on red side
+    if (theta>0.0) {
+      return RobotScoringSide.LEFT;
+    }
+    return RobotScoringSide.RIGHT;
   }
 
   public static Translation2d getAllianceCenterOfReef() {
