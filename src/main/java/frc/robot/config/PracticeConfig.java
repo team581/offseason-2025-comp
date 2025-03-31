@@ -18,7 +18,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -41,9 +40,10 @@ class PracticeConfig {
   private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
-  private static final DoubleSubscriber VISION_TRANSLATION_STD_DEV = DogLog.tunable("Vision/TranslationDev", 0.05);
-  private static final DoubleSubscriber VISION_ROTATION_STD_DEV = DogLog.tunable("Vision/RotationDev", 0.1);
-
+  private static final DoubleSubscriber VISION_TRANSLATION_STD_DEV =
+      DogLog.tunable("Vision/TranslationDev", 0.05);
+  private static final DoubleSubscriber VISION_ROTATION_STD_DEV =
+      DogLog.tunable("Vision/RotationDev", 0.1);
 
   public static final RobotConfig practiceBot =
       new RobotConfig(

@@ -77,7 +77,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
       Pose2d visionPose = results.pose();
 
       double visionTimestamp = Utils.fpgaToCurrentTime(results.timestamp());
-      if (DriverStation.isDisabled()) {
+      if (DriverStation.isDisabled() && FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()) {
         resetPose(visionPose);
       }
       swerve.drivetrain.addVisionMeasurement(visionPose, visionTimestamp, VISION_STD_DEVS);

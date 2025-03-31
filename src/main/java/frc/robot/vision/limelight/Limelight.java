@@ -86,7 +86,8 @@ public class Limelight extends StateMachine<LimelightState> {
     }
 
     PoseEstimate estimatePose = new PoseEstimate();
-    if (DriverStation.isDisabled() || getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP) {
+    if (FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()
+        && (DriverStation.isDisabled() || getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)) {
       estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
     } else {
       estimatePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
