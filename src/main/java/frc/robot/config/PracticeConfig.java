@@ -18,11 +18,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -37,6 +40,10 @@ import frc.robot.generated.PracticeBotTunerConstants;
 class PracticeConfig {
   private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
+
+  private static final DoubleSubscriber VISION_TRANSLATION_STD_DEV = DogLog.tunable("Vision/TranslationDev", 0.05);
+  private static final DoubleSubscriber VISION_ROTATION_STD_DEV = DogLog.tunable("Vision/RotationDev", 0.1);
+
 
   public static final RobotConfig practiceBot =
       new RobotConfig(
@@ -129,8 +136,8 @@ class PracticeConfig {
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true),
           new VisionConfig(
               4,
-              0.05,
-              0.1,
+              VISION_TRANSLATION_STD_DEV.get(),
+              VISION_ROTATION_STD_DEV.get(),
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
 
