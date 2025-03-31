@@ -44,7 +44,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       RobotConfig.get().swerve().snapController();
 
   private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
-      InterpolatingDoubleTreeMap.ofEntries(Map.entry(40.0, 1.0), Map.entry(40.1, 0.4));
+      InterpolatingDoubleTreeMap.ofEntries(Map.entry(0.0, 1.0));
 
   public final TunerSwerveDrivetrain drivetrain =
       RobotConfig.IS_PRACTICE_BOT
