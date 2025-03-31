@@ -799,6 +799,13 @@ public class RobotManager extends StateMachine<RobotState> {
     super.collectInputs();
     nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
+
+    var maybeHandoffAngle = vision.getHandoffOffsetResult();
+    if (maybeHandoffAngle.isPresent()) {
+      arm.setHandoffAngle(maybeHandoffAngle.getAsDouble());
+    } else {
+      arm.setHandoffAngle(-90);
+    }
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
             robotPose,

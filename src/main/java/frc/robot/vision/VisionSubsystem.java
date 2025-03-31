@@ -13,6 +13,7 @@ import frc.robot.vision.results.TagResult;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
@@ -157,6 +158,10 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
   public Optional<GamePieceResult> getLollipopVisionResult() {
     return rightLimelight.getAlgaeResult();
+  }
+
+  public OptionalDouble getHandoffOffsetResult() {
+    return gamePieceDetectionLimelight.coralHandoff();
   }
 
   @Override

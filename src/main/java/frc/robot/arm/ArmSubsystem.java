@@ -31,6 +31,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
+  private double handoffAngle = -90;
   private double collisionAvoidanceGoal;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
@@ -64,6 +65,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         "Arm/ChangeEncoderPositionDeg",
         0.0,
         newPositionDeg -> motor.setPosition(Units.degreesToRotations(newPositionDeg)));
+  }
+
+  public void setHandoffAngle(double angle) {
+    handoffAngle = angle;
   }
 
   public void setState(ArmState newState) {
@@ -141,6 +146,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
+    switch (getState()) {
+      case CORAL_HANDOFF -> {
+        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(handoffAngle)));
+      }
+    }
+
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       if (rangeOfMotionGood()) {
         if (DriverStation.isEnabled()) {
