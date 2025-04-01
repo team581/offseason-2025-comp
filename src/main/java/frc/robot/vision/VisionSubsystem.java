@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
@@ -191,6 +192,11 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public boolean isAnyCameraOffline() {
+
+    if (RobotBase.isSimulation()) {
+      return false
+      ;
+    }
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
@@ -214,6 +220,10 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       return true;
     }
 
+
+    if (RobotBase.isSimulation()) {
+      return true;
+    }
     return false;
   }
 
@@ -223,6 +233,10 @@ public class VisionSubsystem extends StateMachine<VisionState> {
             || rightLimelight.getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)
         && (rightLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
             || rightLimelight.getCameraHealth() == CameraHealth.GOOD)) {
+      return true;
+    }
+
+    if (RobotBase.isSimulation()) {
       return true;
     }
     return false;
@@ -248,6 +262,10 @@ public class VisionSubsystem extends StateMachine<VisionState> {
             || leftFrontLimelight.getState() == LimelightState.CLOSEST_REEF_TAG_CLOSEUP)
         && (leftFrontLimelight.getCameraHealth() == CameraHealth.NO_TARGETS
             || leftFrontLimelight.getCameraHealth() == CameraHealth.GOOD)) {
+      return true;
+    }
+
+    if (RobotBase.isSimulation()) {
       return true;
     }
 
