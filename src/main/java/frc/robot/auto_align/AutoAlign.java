@@ -32,9 +32,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
 
   private static final DoubleSubscriber TIME_TO_RAISE_ARM_FORWARD =
-      DogLog.tunable("AutoAlign/ArmForwardRaiseTime", 0.8);
+      DogLog.tunable("AutoAlign/ArmForwardRaiseTime", 0.2);
   private static final DoubleSubscriber SAFE_ARM_FORWARD_DISTANCE_FROM_REEF_SIDE =
-      DogLog.tunable("AutoAlign/SafeReefDistanceArmForward", 0.8);
+      DogLog.tunable("AutoAlign/SafeReefDistanceArmForward", 1.3);
 
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
