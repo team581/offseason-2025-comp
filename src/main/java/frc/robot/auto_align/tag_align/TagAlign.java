@@ -188,10 +188,12 @@ public class TagAlign {
             .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
     var forwardsSpeeds = Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
     var goalTranslationWithP =
-        new Translation2d(TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), forwardsSpeeds);
+        new Translation2d(
+            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), forwardsSpeeds);
     var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
 
-    var goalAlignSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0).times(0.7);
+    var goalAlignSpeeds =
+        new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0).times(0.7);
     var scaledTeleopSpeeds = teleopSpeeds.times(0.3);
     DogLog.log("AutoAlign/GoalAlgaeSpeeds", goalAlignSpeeds);
     return goalAlignSpeeds.plus(scaledTeleopSpeeds);
