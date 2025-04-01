@@ -61,9 +61,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     switch (getState()) {
       case STOPPED -> {
         climbMotor.disable();
+        grabMotor.disable();
       }
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
+        grabMotor.disable();
         if (cancoderBackwardDebounced) {
           setStateFromRequest(ClimberState.LINEUP_BACKWARD);
           DogLog.timestamp("Climber/LineupForwardStartedFlip");
@@ -88,6 +90,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         } else {
           climbMotor.disable();
         }
+        grabMotor.disable();
       }
       default -> {}
     }
