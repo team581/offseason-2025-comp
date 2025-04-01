@@ -58,38 +58,38 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       }
     }
 
-    if (getState() == ClimberState.STOPPED) {
-      climbMotor.disable();
-    }
-
-    if (getState() == ClimberState.LINEUP_FORWARD) {
-      climbMotor.setVoltage(getState().forwardsVoltage);
-      if (cancoderBackwardDebounced) {
-        setStateFromRequest(ClimberState.LINEUP_BACKWARD);
-        DogLog.timestamp("Climber/LineupForwardStartedFlip");
-      }
-    }
-
-    if (getState() == ClimberState.LINEUP_BACKWARD) {
-      if (!atGoal()) {
-        climbMotor.setVoltage(getState().forwardsVoltage);
-      } else {
+    switch (getState()) {
+      case STOPPED -> {
         climbMotor.disable();
       }
-      if (!holdingCage) {
-        grabMotor.setVoltage(-0.0);
-      } else {
-        grabMotor.disable();
-        setStateFromRequest(ClimberState.HANGING);
-      }
-    }
-
-    if (getState() == ClimberState.HANGING) {
-      if (!atGoal()) {
+      case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
-      } else {
-        climbMotor.disable();
+        if (cancoderBackwardDebounced) {
+          setStateFromRequest(ClimberState.LINEUP_BACKWARD);
+          DogLog.timestamp("Climber/LineupForwardStartedFlip");
+        }
       }
+      case LINEUP_BACKWARD -> {
+        if (!atGoal()) {
+          climbMotor.setVoltage(getState().forwardsVoltage);
+        } else {
+          climbMotor.disable();
+        }
+        if (!holdingCage) {
+          grabMotor.setVoltage(-0.0);
+        } else {
+          grabMotor.disable();
+          setStateFromRequest(ClimberState.HANGING);
+        }
+      }
+      case HANGING -> {
+        if (!atGoal()) {
+          climbMotor.setVoltage(getState().forwardsVoltage);
+        } else {
+          climbMotor.disable();
+        }
+      }
+      default -> {}
     }
 
     if (RobotConfig.IS_DEVELOPMENT) {
