@@ -21,7 +21,8 @@ import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 0.7;
-  private static final Debouncer HAS_SEEN_TAG_DISABLED_DEBOUNCE = new Debouncer(0.5, DebounceType.kFalling) ;
+  private static final Debouncer HAS_SEEN_TAG_DISABLED_DEBOUNCE =
+      new Debouncer(0.5, DebounceType.kFalling);
   private final ImuSubsystem imu;
   private final Limelight leftBackLimelight;
   private final Limelight leftFrontLimelight;
@@ -29,7 +30,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight gamePieceDetectionLimelight;
 
   private final Queue<TagResult> tagResult = new ArrayDeque<>(4);
-  private double lastSeenTagDisabledTimestamp = 0.0;
+  private final double lastSeenTagDisabledTimestamp = 0.0;
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
