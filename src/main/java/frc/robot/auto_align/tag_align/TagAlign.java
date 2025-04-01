@@ -32,12 +32,13 @@ public class TagAlign {
 
   /** Ratio from joystick percentage to scoring pose offset in meters. */
   private static final double FINE_ADJUST_CONTROLLER_SCALAR = 0.3;
+
   private static final double PIPE_SWITCH_TIMEOUT = 1.0;
 
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
-  private final double lastPipeSwitchTimestamp = 0.0;
-  
+  private static final double LAST_PIPE_SWITCH_TIMESTAMP = 0.0;
+
   private ReefPipeLevel level = ReefPipeLevel.BASE;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
@@ -73,7 +74,7 @@ public class TagAlign {
     var scaledX = rawControllerXValue * FINE_ADJUST_CONTROLLER_SCALAR;
     var scaledY = rawControllerYValue * FINE_ADJUST_CONTROLLER_SCALAR;
     if (pipeSwitchActive
-        && (Timer.getFPGATimestamp() > lastPipeSwitchTimestamp + PIPE_SWITCH_TIMEOUT)
+        && (Timer.getFPGATimestamp() > LAST_PIPE_SWITCH_TIMESTAMP + PIPE_SWITCH_TIMEOUT)
         && rawControllerXValue == 0.0) {
       pipeSwitchActive = false;
     }
@@ -98,7 +99,6 @@ public class TagAlign {
             case PIPE_J -> ReefPipe.PIPE_K;
             case PIPE_K -> ReefPipe.PIPE_J;
             case PIPE_L -> ReefPipe.PIPE_K;
-
           };
       ReefPipe rightPipe =
           switch (storedPipe) {
