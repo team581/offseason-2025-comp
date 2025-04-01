@@ -802,7 +802,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     var maybeHandoffAngle = vision.getHandoffOffsetResult();
     if (maybeHandoffAngle.isPresent()) {
-      arm.setHandoffAngle(maybeHandoffAngle.getAsDouble());
+      arm.setHandoffAngle(90+maybeHandoffAngle.getAsDouble());
     } else {
       arm.setHandoffAngle(-90);
     }
