@@ -768,10 +768,10 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setDisabledState(LightsState.ERROR);
       } else if (arm.getState() == ArmState.PRE_MATCH_HOMING && !arm.rangeOfMotionGood()) {
         lights.setDisabledState(LightsState.UNHOMED);
-      } else if (vision.getTagResult().isEmpty()) {
-        lights.setDisabledState(LightsState.SCORE_ALIGN_NOT_READY);
-      } else {
+      } else if (vision.hasSeenTagRecentlyDisabled()) {
         lights.setDisabledState(LightsState.HEALTHY);
+      } else {
+        lights.setDisabledState(LightsState.SCORE_ALIGN_NOT_READY);
       }
     }
 
