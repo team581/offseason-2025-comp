@@ -21,16 +21,20 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final CANcoder encoder;
   private final TalonFX grabMotor;
   private final CANrange canRange;
+  private final Debouncer cancoderBackwardsDebouncer = new Debouncer(1.0, DebounceType.kRising);
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private double currentAngle;
-  private double cilmberMotorAngle;
+   private double climbMotorDirection = 0;
+  private double cancoderDirection = 0;
+  private boolean cancoderBackwardDebounced = false;
+  private double currentAngle = 0.0;
+  private double cilmberMotorAngle = 0.0;
   private boolean holdingCage = false;
 
   public ClimberSubsystem(
       TalonFX climbMotor, CANcoder encoder, TalonFX grabMotor, CANrange canRange) {
-    super(SubsystemPriority.CLIMBER, ClimberState.STOWED);
+    super(SubsystemPriority.CLIMBER, ClimberState.STOPPED);
 
     this.climbMotor = climbMotor;
     this.encoder = encoder;
@@ -47,28 +51,48 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    if (getState() == ClimberState.STOWED && !atGoal()) {
-      DogLog.logFault("Climber stowed and not at goal", AlertType.kWarning);
-    } else {
-      DogLog.clearFault("Climber stowed and not at goal");
-    }
 
     if (DriverStation.isDisabled()) {
-      if (getState() == ClimberState.STOWED) {
+      if (getState() == ClimberState.STOPPED) {
         climbMotor.setControl(coastNeutralRequest);
       } else {
         climbMotor.setControl(brakeNeutralRequest);
       }
-    } else if (atGoal()) {
-      climbMotor.disable();
-    } else if (currentAngle < clamp(getState().angle)) {
-      climbMotor.setVoltage(getState().forwardsVoltage);
     }
 
-    if (getState() == ClimberState.LINEUP && !holdingCage) {
-      grabMotor.setVoltage(-0.0);
-    } else {
-      grabMotor.disable();
+    if (getState() == ClimberState.STOPPED) {
+      climbMotor.disable();
+    }
+
+    if (getState() == ClimberState.LINEUP_FORWARD) {
+      climbMotor.setVoltage(getState().forwardsVoltage);
+      if (cancoderBackwardDebounced) {
+        setStateFromRequest(ClimberState.LINEUP_BACKWARD);
+        DogLog.timestamp("Climber/LineupForwardStartedFlip");
+      }
+    }
+
+
+    if(getState() == ClimberState.LINEUP_BACKWARD) {
+      if (!atGoal()) {
+        climbMotor.setVoltage(getState().forwardsVoltage);
+      } else {
+        climbMotor.disable();
+      }
+      if (!holdingCage) {
+        grabMotor.setVoltage(-0.0);
+      } else {
+        grabMotor.disable();
+        setStateFromRequest(ClimberState.HANGING);
+      }
+    }
+
+    if (getState() == ClimberState.HANGING) {
+      if (!atGoal()) {
+        climbMotor.setVoltage(getState().forwardsVoltage);
+      } else {
+        climbMotor.disable();
+      }
     }
 
     if (RobotConfig.IS_DEVELOPMENT) {
@@ -83,13 +107,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   public void setState(ClimberState newState) {
-    if (newState == ClimberState.LINEUP || newState == ClimberState.HANGING) {
+    if (newState == ClimberState.LINEUP_FORWARD || newState == ClimberState.STOPPED) {
       setStateFromRequest(newState);
     } else {
       return;
     }
-
-    setStateFromRequest(newState);
   }
 
   public boolean holdingCage() {
@@ -100,6 +122,11 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     cilmberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
+
+    cancoderDirection = Math.signum(climbMotor.getVelocity().getValueAsDouble());
+    climbMotorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
+    cancoderBackwardDebounced = cancoderBackwardsDebouncer.calculate((cancoderDirection!=0&&climbMotorDirection!=0)&&cancoderDirection<climbMotorDirection);
+
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 

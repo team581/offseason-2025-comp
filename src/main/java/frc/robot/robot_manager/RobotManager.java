@@ -225,7 +225,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CLAW_ALGAE -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -234,7 +234,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CLAW_CORAL -> {
         claw.setState(ClawState.IDLE_W_CORAL);
@@ -243,7 +243,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_FLOOR -> {
         claw.setState(ClawState.INTAKING_ALGAE);
@@ -251,7 +251,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.INTAKING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_LEFT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
@@ -259,7 +259,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_RIGHT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
@@ -267,7 +267,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_LEFT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
@@ -275,7 +275,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_RIGHT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
@@ -283,7 +283,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.scoringAlignmentRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_INTAKE_LOLLIPOP_APPROACH -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -293,7 +293,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.ALGAE_DETECTION);
         lights.setState(getLightsStateForLollipop());
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_INTAKE_LOLLIPOP_PUSH -> {
         claw.setState(ClawState.OUTTAKING);
@@ -303,7 +303,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(getLightsStateForLollipop());
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_INTAKE_LOLLIPOP_GRAB -> {
         claw.setState(ClawState.LOLLIPOP_CORAL_INTAKE);
@@ -312,7 +312,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.ALGAE_DETECTION);
         lights.setState(getLightsStateForLollipop());
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_NET_LEFT_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -320,7 +320,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(RobotScoringSide.LEFT, robotPose));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_NET_RIGHT_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -328,7 +328,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(RobotScoringSide.RIGHT, robotPose));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_NET_LEFT_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
@@ -336,7 +336,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_NET_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
@@ -345,7 +345,7 @@ public class RobotManager extends StateMachine<RobotState> {
         ;
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_PROCESSOR_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -353,7 +353,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_PROCESSOR_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_PROCESSOR);
@@ -361,7 +361,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case PREPARE_HANDOFF_AFTER_INTAKE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -369,7 +369,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.CORAL_HANDOFF);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // Handoff states
       case CORAL_L1_PREPARE_HANDOFF,
@@ -383,7 +383,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
@@ -395,7 +395,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // Approach states
       case CORAL_L1_APPROACH -> {
@@ -404,7 +404,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH -> {
         claw.setState(ClawState.IDLE_W_CORAL);
@@ -412,7 +412,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // L1
       case CORAL_L1_RIGHT_LINEUP -> {
@@ -422,7 +422,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L1_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -433,7 +433,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // L2
       case CORAL_L2_LEFT_LINEUP -> {
@@ -443,7 +443,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_LEFT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -452,7 +452,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_LEFT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -461,7 +461,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RIGHT_LINEUP -> {
         claw.setState(ClawState.IDLE_W_CORAL);
@@ -470,7 +470,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.snapsDriveRequest(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RIGHT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -481,7 +481,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -492,7 +492,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // L3
       case CORAL_L3_LEFT_LINEUP -> {
@@ -502,7 +502,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_LEFT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -511,7 +511,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_LEFT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -520,7 +520,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_RIGHT_LINEUP -> {
         claw.setState(ClawState.IDLE_W_CORAL);
@@ -529,7 +529,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_RIGHT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -540,7 +540,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -551,7 +551,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // L4
       case CORAL_L4_LEFT_LINEUP -> {
@@ -561,7 +561,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_LEFT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -570,7 +570,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_LEFT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -579,7 +579,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_RIGHT_LINEUP -> {
         claw.setState(ClawState.IDLE_W_CORAL);
@@ -588,7 +588,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_RIGHT_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -599,7 +599,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
@@ -610,7 +610,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       // TODO: Create special light states for climbing, unjam, and rehoming
       case CLIMBING_1_LINEUP -> {
@@ -619,7 +619,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.climbRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CLIMB_LINEUP);
-        climber.setState(ClimberState.LINEUP);
+        climber.setState(ClimberState.LINEUP_FORWARD);
       }
       case CLIMBING_2_HANGING -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -635,7 +635,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CLIMB_STOP);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case UNJAM -> {
         claw.setState(ClawState.OUTTAKING);
@@ -644,7 +644,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case REHOME_ELEVATOR -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -652,7 +652,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_OUTTAKE -> {
         claw.setState(ClawState.OUTTAKING);
@@ -660,7 +660,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case PREPARE_SPIN_TO_WIN -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -668,7 +668,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case SPIN_TO_WIN -> {
         claw.setState(ClawState.IDLE_NO_GP);
@@ -676,7 +676,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_FLING_WAIT -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -684,7 +684,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_FLING_PREPARE -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -692,7 +692,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORE_ALIGN_READY);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_FLING_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
@@ -700,7 +700,7 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
-        climber.setState(ClimberState.STOWED);
+        climber.setState(ClimberState.STOPPED);
       }
     }
   }
