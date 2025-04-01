@@ -10,12 +10,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefState;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+
+import java.util.Comparator;
 import java.util.Optional;
 
 public class TagAlign {
@@ -29,12 +32,20 @@ public class TagAlign {
   private static final DoubleSubscriber ROTATION_GOOD_THRESHOLD =
       DogLog.tunable("AutoAlign/IsAlignedRotation", 5.0);
 
+  /** Ratio from joystick percentage to scoring pose offset in meters. */
+  private static final double FINE_ADJUST_CONTROLLER_SCALAR = 0.3;
+
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
   private ReefPipeLevel level = ReefPipeLevel.BASE;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private Translation2d driverPoseOffset = Translation2d.kZero;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
+  private double rawControllerXValue = 0.0;
+  private double rawControllerYValue = 0.0;
+
+  private boolean pipeSwitchActive = false;
+  private double lastPipeSwitchTimestamp = 0.0;
+  private double PIPE_SWITCH_TIMEOUT = 1.0;
 
   public ReefState reefState = new ReefState();
 
@@ -44,7 +55,9 @@ public class TagAlign {
   }
 
   public void setLevel(ReefPipeLevel level, RobotScoringSide side) {
-    this.level = level;
+    if (!pipeSwitchActive) {
+      this.level = level;
+    }
     this.robotScoringSide = side;
   }
 
@@ -52,9 +65,67 @@ public class TagAlign {
     this.reefPipeOverride = Optional.of(pipe);
   }
 
-  public void setDriverPoseOffset(Translation2d offset) {
-    driverPoseOffset = offset;
+  public void setControllerValues(double controllerXValue, double controllerYValue) {
+    rawControllerXValue = controllerXValue;
+    rawControllerYValue = controllerYValue;
   }
+
+  private Translation2d getPoseOffset() {
+    var scaledX = rawControllerXValue * FINE_ADJUST_CONTROLLER_SCALAR;
+    var scaledY = rawControllerYValue * FINE_ADJUST_CONTROLLER_SCALAR;
+    if (pipeSwitchActive&&(Timer.getFPGATimestamp()>lastPipeSwitchTimestamp+PIPE_SWITCH_TIMEOUT)&&rawControllerXValue==0.0) {
+      pipeSwitchActive = false;
+    }
+    if (pipeSwitchActive) {
+      return Translation2d.kZero;
+    }
+    if ((rawControllerXValue < -0.98 ||  rawControllerXValue > 0.98)) {
+      var storedPipe = getBestPipe();
+      pipeSwitchActive = true;
+      this.level = ReefPipeLevel.RAISING;
+      ReefPipe leftPipe =
+      switch (storedPipe) {
+        case PIPE_A -> ReefPipe.PIPE_L;
+        case PIPE_B -> ReefPipe.PIPE_A;
+        case PIPE_C -> ReefPipe.PIPE_B;
+        case PIPE_D -> ReefPipe.PIPE_C;
+        case PIPE_E -> ReefPipe.PIPE_F;
+        case PIPE_F -> ReefPipe.PIPE_G;
+        case PIPE_G -> ReefPipe.PIPE_H;
+        case PIPE_H -> ReefPipe.PIPE_I;
+        case PIPE_I -> ReefPipe.PIPE_J;
+        case PIPE_J -> ReefPipe.PIPE_K;
+        case PIPE_K -> ReefPipe.PIPE_J;
+        case PIPE_L -> ReefPipe.PIPE_K;
+        default -> ReefPipe.PIPE_A;
+      };
+      ReefPipe rightPipe =
+      switch (storedPipe) {
+        case PIPE_A -> ReefPipe.PIPE_B;
+        case PIPE_B -> ReefPipe.PIPE_C;
+        case PIPE_C -> ReefPipe.PIPE_D;
+        case PIPE_D -> ReefPipe.PIPE_E;
+        case PIPE_E -> ReefPipe.PIPE_D;
+        case PIPE_F -> ReefPipe.PIPE_E;
+        case PIPE_G -> ReefPipe.PIPE_F;
+        case PIPE_H -> ReefPipe.PIPE_G;
+        case PIPE_I -> ReefPipe.PIPE_H;
+        case PIPE_J -> ReefPipe.PIPE_I;
+        case PIPE_K -> ReefPipe.PIPE_L;
+        case PIPE_L -> ReefPipe.PIPE_A;
+      };
+
+         if (rawControllerXValue<-0.98) {
+          setPipeOveride(leftPipe);
+         } else if (rawControllerXValue>0.98) {
+          setPipeOveride(rightPipe);
+         }
+          return Translation2d.kZero;
+        }
+        return new Translation2d(scaledY, scaledX);
+  }
+
+
 
   public boolean isAligned(ReefPipe pipe) {
     if (level.equals(ReefPipeLevel.RAISING)) {
@@ -89,7 +160,7 @@ public class TagAlign {
     if (DriverStation.isTeleop()) {
       var offsetPose =
           new Pose2d(
-              theoreticalScoringPose.getTranslation().plus(driverPoseOffset),
+              theoreticalScoringPose.getTranslation().plus(getPoseOffset()),
               theoreticalScoringPose.getRotation());
       return offsetPose;
     }
@@ -99,7 +170,7 @@ public class TagAlign {
 
   /** Returns the best reef pipe for scoring, based on the robot's current state. */
   public ReefPipe getBestPipe() {
-    if (DriverStation.isAutonomous() && reefPipeOverride.isPresent()) {
+    if ((DriverStation.isAutonomous() || pipeSwitchActive) && reefPipeOverride.isPresent()) {
       return reefPipeOverride.orElseThrow();
     }
 

@@ -15,6 +15,7 @@ import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
+import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -155,6 +156,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
     var newTeleopSpeeds = teleopSpeeds.times(TELEOP_SPEED_SCALAR);
+    if (swerve.getState()==SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+      return constrainLinearVelocity(alignSpeeds, MAX_CONSTRAINT);
+    }
     var addedSpeeds = newTeleopSpeeds.plus(alignSpeeds);
     var constrainedSpeeds = constrainLinearVelocity(addedSpeeds, MAX_CONSTRAINT);
     DogLog.log("Debug/ConstrainedSpeeds", constrainedSpeeds);
@@ -171,8 +175,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
         tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
-
-    tagAlign.setDriverPoseOffset(swerve.getPoseOffset());
+    var controllerValues = swerve.getControllerValues();
+    tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
   }
 
   public ObstructionKind shouldArmGoAroundToScore() {

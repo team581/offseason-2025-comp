@@ -31,9 +31,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   private static final double maxAngularRate = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
-  /** Ratio from joystick percentage to scoring pose offset in meters. */
-  private static final double FINE_ADJUST_CONTROLLER_SCALAR = 0.3;
-
   private static final double LEFT_X_DEADBAND = 0.05;
   private static final double LEFT_Y_DEADBAND = 0.05;
   private static final double RIGHT_X_DEADBAND = 0.15;
@@ -367,6 +364,18 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
+  public Translation2d getControllerValues() {
+    if (getState() != SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+      return Translation2d.kZero;
+    }
+    var mappedValues =
+        ControllerHelpers.fromCircularDiscCoordinates(rawControllerXValue, rawControllerYValue);
+    var deadbandX = ControllerHelpers.deadbandJoystickValue(mappedValues.getX(), LEFT_X_DEADBAND);
+    var deadbandY = ControllerHelpers.deadbandJoystickValue(mappedValues.getY(), LEFT_Y_DEADBAND);
+
+    return new Translation2d(deadbandX, deadbandY);
+  }
+
   public void snapsDriveRequest(double snapAngle, boolean teleopOnly) {
     setSnapToAngle(snapAngle);
 
@@ -399,7 +408,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       normalDriveRequest();
     } else {
       setSnapToAngle(snapAngle);
-      setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
+      if (getState()!=SwerveState.REEF_ALIGN_TELEOP&&getState()!=SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+        setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
+      }
     }
   }
 
@@ -418,21 +429,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void climbRequest() {
     setSnapToAngle(SnapUtil.getCageAngle());
     setStateFromRequest(SwerveState.CLIMBING);
-  }
-
-  public Translation2d getPoseOffset() {
-    if (getState() != SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
-      return Translation2d.kZero;
-    }
-
-    var mappedValues =
-        ControllerHelpers.fromCircularDiscCoordinates(rawControllerXValue, rawControllerYValue);
-    var deadbandX = ControllerHelpers.deadbandJoystickValue(mappedValues.getX(), LEFT_X_DEADBAND);
-    var deadbandY = ControllerHelpers.deadbandJoystickValue(mappedValues.getY(), LEFT_Y_DEADBAND);
-    var scaledX = deadbandX * FINE_ADJUST_CONTROLLER_SCALAR;
-    var scaledY = deadbandY * FINE_ADJUST_CONTROLLER_SCALAR;
-
-    return new Translation2d(scaledY, scaledX);
   }
 
   @Override
