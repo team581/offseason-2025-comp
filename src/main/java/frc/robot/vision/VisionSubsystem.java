@@ -30,7 +30,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight gamePieceDetectionLimelight;
 
   private final Queue<TagResult> tagResult = new ArrayDeque<>(4);
-  private final double lastSeenTagDisabledTimestamp = 0.0;
+  private static final double LAST_SEEN_TAG_DISABLED_TIMESTAMP = 0.0;
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
