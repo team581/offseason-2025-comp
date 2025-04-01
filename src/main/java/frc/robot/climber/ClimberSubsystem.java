@@ -10,7 +10,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -25,7 +24,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-   private double climbMotorDirection = 0;
+  private double climbMotorDirection = 0;
   private double cancoderDirection = 0;
   private boolean cancoderBackwardDebounced = false;
   private double currentAngle = 0.0;
@@ -51,7 +50,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-
     if (DriverStation.isDisabled()) {
       if (getState() == ClimberState.STOPPED) {
         climbMotor.setControl(coastNeutralRequest);
@@ -72,8 +70,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       }
     }
 
-
-    if(getState() == ClimberState.LINEUP_BACKWARD) {
+    if (getState() == ClimberState.LINEUP_BACKWARD) {
       if (!atGoal()) {
         climbMotor.setVoltage(getState().forwardsVoltage);
       } else {
@@ -125,8 +122,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     cancoderDirection = Math.signum(climbMotor.getVelocity().getValueAsDouble());
     climbMotorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
-    cancoderBackwardDebounced = cancoderBackwardsDebouncer.calculate((cancoderDirection!=0&&climbMotorDirection!=0)&&cancoderDirection<climbMotorDirection);
-
+    cancoderBackwardDebounced =
+        cancoderBackwardsDebouncer.calculate(
+            (cancoderDirection != 0 && climbMotorDirection != 0)
+                && cancoderDirection < climbMotorDirection);
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
