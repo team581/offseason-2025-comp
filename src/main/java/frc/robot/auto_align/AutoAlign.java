@@ -156,7 +156,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
     var newTeleopSpeeds = teleopSpeeds.times(TELEOP_SPEED_SCALAR);
-    if (swerve.getState()==SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+    if (swerve.getState() == SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
       return constrainLinearVelocity(alignSpeeds, MAX_CONSTRAINT);
     }
     var addedSpeeds = newTeleopSpeeds.plus(alignSpeeds);

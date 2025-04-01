@@ -194,8 +194,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public boolean isAnyCameraOffline() {
 
     if (RobotBase.isSimulation()) {
-      return false
-      ;
+      return false;
     }
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
@@ -219,7 +218,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
             || leftFrontLimelight.getCameraHealth() == CameraHealth.GOOD)) {
       return true;
     }
-
 
     if (RobotBase.isSimulation()) {
       return true;

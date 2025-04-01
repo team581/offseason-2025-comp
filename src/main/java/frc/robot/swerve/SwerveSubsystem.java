@@ -408,7 +408,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       normalDriveRequest();
     } else {
       setSnapToAngle(snapAngle);
-      if (getState()!=SwerveState.REEF_ALIGN_TELEOP&&getState()!=SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
+      if (getState() != SwerveState.REEF_ALIGN_TELEOP
+          && getState() != SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
         setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
       }
     }
