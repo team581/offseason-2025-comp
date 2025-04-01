@@ -43,7 +43,7 @@ public class TagAlign {
 
   private boolean pipeSwitchActive = false;
   private final double lastPipeSwitchTimestamp = 0.0;
-  private final static final double PIPE_SWITCH_TIMEOUT = 1.0;
+  private final static double PIPE_SWITCH_TIMEOUT = 1.0;
 
   public ReefState reefState = new ReefState();
 
@@ -97,7 +97,7 @@ public class TagAlign {
             case PIPE_J -> ReefPipe.PIPE_K;
             case PIPE_K -> ReefPipe.PIPE_J;
             case PIPE_L -> ReefPipe.PIPE_K;
-            
+
           };
       ReefPipe rightPipe =
           switch (storedPipe) {
