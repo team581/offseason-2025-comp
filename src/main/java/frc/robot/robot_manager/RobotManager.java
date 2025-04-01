@@ -291,7 +291,7 @@ public class RobotManager extends StateMachine<RobotState> {
             // TODO: We don't want to require unsafe mode here
             ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.CORAL_DETECTION);
+        vision.setState(VisionState.ALGAE_DETECTION);
         lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
@@ -310,7 +310,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.CORAL_DETECTION);
+        vision.setState(VisionState.ALGAE_DETECTION);
         lights.setState(getLightsStateForLollipop());
         climber.setState(ClimberState.STOWED);
       }
