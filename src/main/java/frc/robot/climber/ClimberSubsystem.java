@@ -104,10 +104,14 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   public void setState(ClimberState newState) {
-    if (newState == ClimberState.LINEUP_FORWARD || newState == ClimberState.STOPPED) {
-      setStateFromRequest(newState);
-    } else {
-      return;
+    switch (newState) {
+      case LINEUP_FORWARD, STOPPED -> setStateFromRequest(newState);
+      case HANGING -> {
+        if (getState() == ClimberState.LINEUP_BACKWARD && atGoal()) {
+          setStateFromRequest(newState);
+        }
+      }
+      default -> {}
     }
   }
 
@@ -125,7 +129,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     cancoderBackwardDebounced =
         cancoderBackwardsDebouncer.calculate(
             (cancoderDirection != 0 && climbMotorDirection != 0)
-                && cancoderDirection < climbMotorDirection);
+                && cancoderDirection != climbMotorDirection);
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
