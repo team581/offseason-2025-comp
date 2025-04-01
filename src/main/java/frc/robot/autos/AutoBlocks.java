@@ -175,9 +175,6 @@ public class AutoBlocks {
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
-    double getLollipopAngle =
-        IntakeAssistUtil.getIntakeAssistAngle(
-            defaultIntakingPoint.getTranslation(), robotManager.localization.getPose());
     return trailblazer
         .followSegment(
             new AutoSegment(
