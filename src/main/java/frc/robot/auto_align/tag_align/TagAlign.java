@@ -178,7 +178,7 @@ public class TagAlign {
         .orElseThrow();
   }
 
-  public ChassisSpeeds getAlgaeAlignmentSpeeds(Pose2d usedScoringPose, ChassisSpeeds teleopSpeeds) {
+  public ChassisSpeeds getAlgaeAlignmentSpeeds(Pose2d usedScoringPose) {
     var robotPose = localization.getPose();
     DogLog.log("AutoAlign/UsedAlgaePose", usedScoringPose);
     var scoringTranslationRobotRelative =
@@ -186,17 +186,14 @@ public class TagAlign {
             .getTranslation()
             .minus(robotPose.getTranslation())
             .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
-    var forwardsSpeeds = Math.hypot(teleopSpeeds.vxMetersPerSecond, teleopSpeeds.vyMetersPerSecond);
+
     var goalTranslationWithP =
-        new Translation2d(
-            TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), forwardsSpeeds);
+        new Translation2d(TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), 0.0);
     var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
 
-    var goalAlignSpeeds =
-        new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0).times(0.7);
-    var scaledTeleopSpeeds = teleopSpeeds.times(0.3);
-    DogLog.log("AutoAlign/GoalAlgaeSpeeds", goalAlignSpeeds);
-    return goalAlignSpeeds.plus(scaledTeleopSpeeds);
+    var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
+    DogLog.log("AutoAlign/GoalAlgaeSpeeds", goalSpeeds);
+    return goalSpeeds;
   }
 
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {

@@ -67,15 +67,15 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     if (getState() == VisionState.CLOSEST_REEF_TAG_CLOSEUP) {
       switch (reefPipe) {
         case PIPE_A, PIPE_C, PIPE_E, PIPE_G, PIPE_I, PIPE_K -> {
-          if (leftFrontLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
-            leftBackLimelight.setState(LimelightState.OFF);
+          if (leftBackLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
             leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
+            leftFrontLimelight.setState(LimelightState.OFF);
           }
         }
         case PIPE_B, PIPE_D, PIPE_F, PIPE_H, PIPE_J, PIPE_L -> {
-          if (leftBackLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
-            leftFrontLimelight.setState(LimelightState.OFF);
-            leftBackLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
+          if (leftFrontLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
+            leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
+            leftBackLimelight.setState(LimelightState.OFF);
           }
         }
       }
