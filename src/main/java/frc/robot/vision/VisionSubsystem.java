@@ -12,24 +12,22 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.Queue;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 0.7;
-  private static final Debouncer HAS_SEEN_TAG_DISABLED_DEBOUNCE =
-      new Debouncer(0.5, DebounceType.kFalling);
+  private final Debouncer hasSeenTagDisabledDebouncer = new Debouncer(0.5, DebounceType.kFalling);
   private final ImuSubsystem imu;
   private final Limelight leftBackLimelight;
   private final Limelight leftFrontLimelight;
   private final Limelight rightLimelight;
   private final Limelight gamePieceDetectionLimelight;
 
-  private final Queue<TagResult> tagResult = new ArrayDeque<>(3);
-  private static final double LAST_SEEN_TAG_DISABLED_TIMESTAMP = 0.0;
+  private Optional<TagResult> leftBackTagResult = Optional.empty();
+  private Optional<TagResult> leftFrontTagResult = Optional.empty();
+  private Optional<TagResult> rightTagResult = Optional.empty();
+
   private double robotHeading;
   private double pitch;
   private double angularVelocity;
@@ -80,34 +78,30 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       }
     }
 
-    tagResult.clear();
-    var maybeLeftBackResult = leftBackLimelight.getTagResult();
-    var maybeleftFrontResult = leftFrontLimelight.getTagResult();
-    var maybeFrontResult = rightLimelight.getTagResult();
+    leftBackTagResult = leftBackLimelight.getTagResult();
+    leftFrontTagResult = leftFrontLimelight.getTagResult();
+    rightTagResult = rightLimelight.getTagResult();
 
-    if (maybeLeftBackResult.isPresent()) {
-      tagResult.add(maybeLeftBackResult.orElseThrow());
-    }
-
-    if (maybeleftFrontResult.isPresent()) {
-      tagResult.add(maybeleftFrontResult.orElseThrow());
-    }
-
-    if (maybeFrontResult.isPresent()) {
-      tagResult.add(maybeFrontResult.orElseThrow());
-    }
-
-    if (!hasSeenTag) {
-      hasSeenTag = !tagResult.isEmpty();
-    }
+    hasSeenTag =
+        leftBackTagResult.isPresent()
+            || leftFrontTagResult.isPresent()
+            || rightTagResult.isPresent();
   }
 
-  public Collection<TagResult> getTagResult() {
-    return tagResult;
+  public Optional<TagResult> getLeftBackTagResult() {
+    return leftBackTagResult;
+  }
+
+  public Optional<TagResult> getLeftFrontTagResult() {
+    return leftFrontTagResult;
+  }
+
+  public Optional<TagResult> getRightTagResult() {
+    return rightTagResult;
   }
 
   public boolean hasSeenTagRecentlyDisabled() {
-    return HAS_SEEN_TAG_DISABLED_DEBOUNCE.calculate(!getTagResult().isEmpty());
+    return hasSeenTagDisabledDebouncer.calculate(hasSeenTag);
   }
 
   public boolean hasSeenTag() {
