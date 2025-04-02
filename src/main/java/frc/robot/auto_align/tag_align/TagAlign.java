@@ -172,6 +172,7 @@ public class TagAlign {
     if ((DriverStation.isAutonomous() || pipeSwitchActive) && reefPipeOverride.isPresent()) {
       return reefPipeOverride.orElseThrow();
     }
+    alignmentCostUtil.setSide(robotScoringSide);
 
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level))
