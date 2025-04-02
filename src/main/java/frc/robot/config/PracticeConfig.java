@@ -109,8 +109,8 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(50)
-                          .withSupplyCurrentLimit(50))
+                          .withStatorCurrentLimit(90)
+                          .withSupplyCurrentLimit(90))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)

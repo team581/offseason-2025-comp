@@ -8,7 +8,7 @@ public enum DeployState {
   HOMING(0.0),
   STOWED(118),
   FLOOR_INTAKE(-34),
-  HANDOFF(118),
+  HANDOFF(113),
   L1_SCORE(80),
 
   UNJAM(-28);

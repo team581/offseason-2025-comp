@@ -154,9 +154,12 @@ public class CollisionAvoidance {
     // Left side
 
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L3_LEFT, graph);
+    Waypoint.L2_LEFT.canMoveToAlways(Waypoint.L2_LEFT_PLACE, graph);
     Waypoint.L2_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
 
     Waypoint.L3_LEFT.canMoveToWhenLeftSafe(Waypoint.L4_LEFT, graph);
+    Waypoint.L3_LEFT.canMoveToAlways(Waypoint.L3_LEFT_PLACE, graph);
+    Waypoint.L4_LEFT.canMoveToAlways(Waypoint.L4_LEFT_PLACE, graph);
 
     // Right side
 
@@ -174,16 +177,16 @@ public class CollisionAvoidance {
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L2_RIGHT, graph);
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
     Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.L1_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_NET_UP, graph);
 
     Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.L3_RIGHT, graph);
+    Waypoint.L2_RIGHT.canMoveToAlways(Waypoint.L2_RIGHT_PLACE, graph);
+
     Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.L2_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_NET_UP, graph);
 
     Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
-    Waypoint.L3_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_NET_UP, graph);
+    Waypoint.L3_RIGHT.canMoveToAlways(Waypoint.L3_RIGHT_PLACE, graph);
+    Waypoint.L4_RIGHT.canMoveToAlways(Waypoint.L4_RIGHT_PLACE, graph);
 
-    Waypoint.L4_RIGHT.canMoveToWhenRightSafe(Waypoint.ALGAE_NET_UP, graph);
 
     Waypoint.ALGAE_L2_RIGHT.canMoveToWhenLeftSafe(Waypoint.ALGAE_NET_UP, graph);
     Waypoint.ALGAE_L3_RIGHT.canMoveToWhenLeftSafe(Waypoint.ALGAE_NET_UP, graph);
