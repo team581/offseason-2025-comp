@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
@@ -253,7 +254,7 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     limelightHeartbeat = newHeartbeat;
 
-    if (limelightTimer.hasElapsed(IS_OFFLINE_TIMEOUT)) {
+    if (limelightTimer.hasElapsed(IS_OFFLINE_TIMEOUT) && RobotBase.isReal()) {
       cameraHealth = CameraHealth.OFFLINE;
       DogLog.logFault(limelightTableName + " is offline", AlertType.kError);
       return;
@@ -298,6 +299,14 @@ public class Limelight extends StateMachine<LimelightState> {
     DogLog.log(
         "CameraPositionCalibration/" + name + "/LL Yaw",
         Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getZ()));
+  }
+
+  public boolean isOnlineForTags() {
+    return switch (getState()) {
+      case TAGS, CLOSEST_REEF_TAG, CLOSEST_REEF_TAG_CLOSEUP, STATION_TAGS ->
+          getCameraHealth() != CameraHealth.OFFLINE;
+      default -> false;
+    };
   }
 
   private static Pose3d getRobotRelativeCameraPosition(
