@@ -262,7 +262,8 @@ class PracticeConfig {
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withNeutralMode(NeutralModeValue.Brake).withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withPeakReverseDutyCycle(0))
                   .withVoltage(new VoltageConfigs().withPeakReverseVoltage(0))
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
@@ -280,7 +281,9 @@ class PracticeConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(35)
-                          .withSupplyCurrentLimit(35)).withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
+                          .withSupplyCurrentLimit(35))
+                  .withMotorOutput(
+                      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               new CANrangeConfiguration()
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
           new LightsConfig(CANIVORE_NAME, 17));

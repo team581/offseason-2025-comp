@@ -54,7 +54,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     switch (getState()) {
       case STOPPED -> {
         if (DriverStation.isDisabled()) {
-        climbMotor.setControl(coastNeutralRequest);
+          climbMotor.setControl(coastNeutralRequest);
         } else {
           climbMotor.disable();
         }
@@ -130,7 +130,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
 
-DogLog.log("Climber/RunningBackwards", runningBackwards);
+    DogLog.log("Climber/RunningBackwards", runningBackwards);
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
