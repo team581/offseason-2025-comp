@@ -63,7 +63,7 @@ public class CollisionAvoidance {
       var maybePath = cachedAStar(lastQuery).map(ArrayDeque::new);
       if (maybePath.isPresent()) {
         hasGeneratedPath = true;
-        lastPath = maybePath.get();
+        lastPath = maybePath.orElseThrow();
       } else {
         return Optional.empty();
       }
@@ -250,7 +250,7 @@ public class CollisionAvoidance {
                   Comparator.comparingDouble(
                       waypoint -> gscore.getOrDefault(waypoint, Double.MAX_VALUE)));
       if (maybeCurrent.isPresent()) {
-        current = maybeCurrent.get();
+        current = maybeCurrent.orElseThrow();
       }
 
       if (current == goalWaypoint) {
