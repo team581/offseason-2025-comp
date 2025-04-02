@@ -3,9 +3,6 @@ package frc.robot.robot_manager.collision_avoidance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
