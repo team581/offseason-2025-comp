@@ -9,6 +9,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
@@ -20,15 +21,15 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final CANcoder encoder;
   private final TalonFX grabMotor;
   private final CANrange canRange;
-  private final Debouncer cancoderBackwardsDebouncer = new Debouncer(1.0, DebounceType.kRising);
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private final LinearFilter cancoderVelocityFilter = LinearFilter.movingAverage(7);
+
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private double climbMotorDirection = 0;
-  private double cancoderDirection = 0;
-  private boolean cancoderBackwardDebounced = false;
+  private double cancoderVelocity = 0;
+  private boolean runningBackwards = false;
   private double currentAngle = 0.0;
-  private double cilmberMotorAngle = 0.0;
+  private double climberMotorAngle = 0.0;
   private boolean holdingCage = false;
 
   public ClimberSubsystem(
@@ -50,45 +51,41 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    if (DriverStation.isDisabled()) {
-      if (getState() == ClimberState.STOPPED) {
-        climbMotor.setControl(coastNeutralRequest);
-      } else {
-        climbMotor.setControl(brakeNeutralRequest);
-      }
-    }
-
     switch (getState()) {
       case STOPPED -> {
-        climbMotor.disable();
+        if (DriverStation.isDisabled()) {
+          climbMotor.setControl(coastNeutralRequest);
+        } else {
+          climbMotor.disable();
+        }
         grabMotor.disable();
       }
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
         grabMotor.disable();
-        if (cancoderBackwardDebounced) {
+        if (runningBackwards) {
           setStateFromRequest(ClimberState.LINEUP_BACKWARD);
           DogLog.timestamp("Climber/LineupForwardStartedFlip");
         }
       }
       case LINEUP_BACKWARD -> {
-        if (!atGoal()) {
-          climbMotor.setVoltage(getState().forwardsVoltage);
-        } else {
+        if (atGoal()) {
           climbMotor.disable();
-        }
-        if (!holdingCage) {
-          grabMotor.setVoltage(-0.0);
         } else {
+          climbMotor.setVoltage(getState().forwardsVoltage);
+        }
+        if (holdingCage) {
           grabMotor.disable();
           setStateFromRequest(ClimberState.HANGING);
+        } else {
+          grabMotor.setVoltage(12.0);
         }
       }
       case HANGING -> {
-        if (!atGoal()) {
-          climbMotor.setVoltage(getState().forwardsVoltage);
-        } else {
+        if (atGoal()) {
           climbMotor.disable();
+        } else {
+          climbMotor.setVoltage(getState().forwardsVoltage);
         }
         grabMotor.disable();
       }
@@ -125,20 +122,18 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   @Override
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
-    cilmberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
-
-    cancoderDirection = Math.signum(climbMotor.getVelocity().getValueAsDouble());
-    climbMotorDirection = Math.signum(encoder.getVelocity().getValueAsDouble());
-    cancoderBackwardDebounced =
-        cancoderBackwardsDebouncer.calculate(
-            (cancoderDirection != 0 && climbMotorDirection != 0)
-                && cancoderDirection != climbMotorDirection);
+    climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
+    cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
+    runningBackwards = cancoderVelocity < -1;
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
+    DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
+
+    DogLog.log("Climber/RunningBackwards", runningBackwards);
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
-    DogLog.log("Climber/ClimbMotor/Angle", cilmberMotorAngle);
+    DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
 
     DogLog.log("Climber/HoldingCage", holdingCage);
 

@@ -9,7 +9,6 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.constraints.AutoConstraintOptions;
-import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.PoseErrorTolerance;
 
@@ -175,9 +174,6 @@ public class AutoBlocks {
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
-    double getLollipopAngle =
-        IntakeAssistUtil.getIntakeAssistAngle(
-            defaultIntakingPoint.getTranslation(), robotManager.localization.getPose());
     return trailblazer
         .followSegment(
             new AutoSegment(

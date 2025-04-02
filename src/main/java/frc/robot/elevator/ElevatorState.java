@@ -60,7 +60,7 @@ public enum ElevatorState {
   CORAL_SCORE_RIGHT_LINEUP_L4(53.0),
   CORAL_SCORE_RIGHT_RELEASE_L4(53.0),
 
-  CLIMBING(UNTUNED),
+  CLIMBING(0.0),
   COLLISION_AVOIDANCE(UNTUNED);
 
   private final double defaultHeight;
