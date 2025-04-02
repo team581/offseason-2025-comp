@@ -41,9 +41,9 @@ class PracticeConfig {
   private static final String RIO_CAN_NAME = "rio";
 
   private static final DoubleSubscriber VISION_TRANSLATION_STD_DEV =
-      DogLog.tunable("Vision/TranslationDev", 0.05);
+      DogLog.tunable("Vision/TranslationDev", 0.1);
   private static final DoubleSubscriber VISION_ROTATION_STD_DEV =
-      DogLog.tunable("Vision/RotationDev", 0.1);
+      DogLog.tunable("Vision/RotationDev", 0.8);
 
   public static final RobotConfig practiceBot =
       new RobotConfig(
