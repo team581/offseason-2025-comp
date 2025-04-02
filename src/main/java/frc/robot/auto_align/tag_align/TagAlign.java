@@ -23,8 +23,8 @@ public class TagAlign {
   private static final ImmutableList<ReefPipe> ALL_REEF_PIPES =
       ImmutableList.copyOf(ReefPipe.values());
 
-  private static final PIDController TAG_SIDEWAYS_PID = new PIDController(7.0, 0.0, 0.0);
-  private static final PIDController TAG_FORWARD_PID = new PIDController(6.0, 0.0, 0.0);
+  private static final PIDController TAG_SIDEWAYS_PID = new PIDController(5.0, 0.0, 0.0);
+  private static final PIDController TAG_FORWARD_PID = new PIDController(4.5, 0.0, 0.0);
   private static final DoubleSubscriber TRANSLATION_GOOD_THRESHOLD =
       DogLog.tunable("AutoAlign/IsAlignedTranslation", 0.05);
   private static final DoubleSubscriber ROTATION_GOOD_THRESHOLD =
