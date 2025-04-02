@@ -97,12 +97,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         < thresholdMeters;
   }
 
-  public static boolean isCloseToReefSide(
-      Pose2d robotPose, Pose2d nearestReefSide) {
-    return isCloseToReefSide(
-        robotPose,
-        nearestReefSide,
-        LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE);
+  public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
+    return isCloseToReefSide(robotPose, nearestReefSide, LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE);
   }
 
   private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE = 1.2;

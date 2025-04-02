@@ -159,8 +159,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       // Approach
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
-          AutoAlign.isCloseToReefSide(
-                  robotPose, nearestReefSide.getPose())
+          AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose())
               ? currentState.getApproachToLineupState(robotScoringSide)
               : currentState;
 
