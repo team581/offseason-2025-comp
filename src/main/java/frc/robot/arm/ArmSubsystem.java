@@ -146,9 +146,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
-    switch (getState()) {
-      case CORAL_HANDOFF -> {
-        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(handoffAngle)));
+    if (FeatureFlags.VISION_HANDOFF_ADJUSTMENT.getAsBoolean()) {
+      switch (getState()) {
+        case CORAL_HANDOFF -> {
+          motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(handoffAngle)));
+        }
       }
     }
 
