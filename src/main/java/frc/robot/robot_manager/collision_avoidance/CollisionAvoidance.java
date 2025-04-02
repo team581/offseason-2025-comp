@@ -73,7 +73,7 @@ public class CollisionAvoidance {
       return Optional.empty();
     }
 
-    var currentWaypoint = lastPath.peek();
+    var currentWaypoint = lastPath.getFirst();
 
     DogLog.log(
         "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
@@ -228,10 +228,6 @@ public class CollisionAvoidance {
     Map<Waypoint, Waypoint> cameFrom = new EnumMap<Waypoint, Waypoint>(Waypoint.class);
 
     Map<Waypoint, Double> gscore = new EnumMap<Waypoint, Double>(Waypoint.class);
-
-    for (var waypoint : Waypoint.values()) {
-      gscore.put(waypoint, Double.MAX_VALUE);
-    }
 
     Waypoint startWaypoint = Waypoint.getClosest(currentPosition);
     Waypoint goalWaypoint = Waypoint.getClosest(desiredPosition);
