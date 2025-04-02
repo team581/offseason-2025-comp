@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -111,6 +112,9 @@ public class Robot extends TimedRobot {
     System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
 
     DriverStation.silenceJoystickConnectionWarning(RobotBase.isSimulation());
+
+    SignalLogger.start();
+    SignalLogger.setPath("/media/sda1/hoot/");
 
     DogLog.setOptions(
         new DogLogOptions()
