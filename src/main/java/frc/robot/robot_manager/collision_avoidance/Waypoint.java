@@ -16,15 +16,15 @@ import java.util.stream.Stream;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  // TODO Here's an example of using setpoints for waypoints. Don't do this 100% of the time! Only
-  // where it makes sense - Jonah
   ALGAE_INTAKE_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR)),
-  LOLLIPOP_INTAKE_RIGHT(new SuperstructurePosition(0.0, 0.0)),
-  STOWED(new SuperstructurePosition(55.0, -90.0)),
-  LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, 90.0)),
-  STOWED_UP(new SuperstructurePosition(0.0, 90.0)),
-  HANDOFF(new SuperstructurePosition(41.12, -90.0)),
+  LOLLIPOP_INTAKE_RIGHT(
+      new SuperstructurePosition(
+          ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE)),
+  STOWED(new SuperstructurePosition(55.0, ArmState.CORAL_HANDOFF)),
+  LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, ArmState.HOLDING_UPRIGHT)),
+  STOWED_UP(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
+  HANDOFF(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF)),
   L1_RIGHT(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1)),
