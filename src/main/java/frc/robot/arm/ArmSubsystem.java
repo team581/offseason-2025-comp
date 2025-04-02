@@ -77,10 +77,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     handoffOffset = tx.orElse(0);
   }
 
-  public OptionalDouble coralHandoff() {
-    return OptionalDouble.of(CORAL_TX_TO_ARM_ANGLE_TABLE.get(handoffOffset));
-  }
-
   public void setState(ArmState newState) {
     switch (getState()) {
       case PRE_MATCH_HOMING -> {}
@@ -102,13 +98,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, TOLERANCE, -180, 180);
-      case CORAL_HANDOFF ->
-          MathUtil.isNear(
-              ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0),
-              motorAngle,
-              TOLERANCE,
-              -180,
-              180);
+      case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
       case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
@@ -123,6 +113,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   protected void collectInputs() {
+    usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle() + handoffOffset;
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     motorAngle = MathHelpers.angleModulus(rawMotorAngle);
     if (DriverStation.isDisabled()) {
@@ -168,9 +159,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       switch (getState()) {
         case CORAL_HANDOFF -> {
           motor.setControl(
-              motionMagicRequest.withPosition(
-                  Units.degreesToRotations(
-                      ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0))));
+              motionMagicRequest.withPosition(Units.degreesToRotations(usedHandoffAngle)));
         }
         default -> {}
       }
@@ -215,6 +204,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();
   private TrapezoidProfile.Constraints simConstraints;
   private boolean simDidInit = false;
+
+  private double usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle();
 
   @Override
   public void simulationPeriodic() {

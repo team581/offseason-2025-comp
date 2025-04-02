@@ -149,10 +149,27 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public OptionalDouble handoffTx() {
+    if (getState() != LimelightState.HELD_CORAL) {
+      return OptionalDouble.empty();
+    }
 
-    double tx = LimelightHelpers.getTX(limelightTableName);
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
 
-    return OptionalDouble.of(tx);
+    if (t2d.length != 17) {
+      return OptionalDouble.empty();
+    }
+    var tv = t2d[0];
+
+    if (tv == 0) {
+      return OptionalDouble.empty();
+    }
+
+    var tx = t2d[4];
+    if (tx == 0.0) {
+      return OptionalDouble.empty();
+    }
+
+    return OptionalDouble.empty();
   }
 
   private Optional<GamePieceResult> getRawAlgaeResult() {
