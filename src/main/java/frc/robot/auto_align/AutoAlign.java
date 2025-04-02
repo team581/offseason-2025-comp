@@ -230,24 +230,24 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   public ReefAlignState getReefAlignState() {
-    var tagResult = vision.getTagResult();
-
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
       return ReefAlignState.ALL_CAMERAS_DEAD;
     }
 
-    if (tagResult.isEmpty()) {
+    if (vision.getLeftBackTagResult().isPresent()
+        || vision.getLeftFrontTagResult().isPresent()
+        || vision.getRightTagResult().isPresent()) {
       if (isAligned) {
-        return ReefAlignState.NO_TAGS_IN_POSITION;
+        return ReefAlignState.HAS_TAGS_IN_POSITION;
       }
-      return ReefAlignState.NO_TAGS_WRONG_POSITION;
+
+      return ReefAlignState.HAS_TAGS_WRONG_POSITION;
     }
 
     if (isAligned) {
-      return ReefAlignState.HAS_TAGS_IN_POSITION;
+      return ReefAlignState.NO_TAGS_IN_POSITION;
     }
-
-    return ReefAlignState.HAS_TAGS_WRONG_POSITION;
+    return ReefAlignState.NO_TAGS_WRONG_POSITION;
   }
 }
