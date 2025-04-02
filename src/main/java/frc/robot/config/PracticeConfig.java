@@ -105,7 +105,7 @@ class PracticeConfig {
               CANIVORE_NAME,
               25,
               26,
-              new Debouncer(0.5, DebounceType.kBoth),
+              new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
