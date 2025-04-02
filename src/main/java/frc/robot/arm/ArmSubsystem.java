@@ -40,8 +40,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
-  public final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
-      InterpolatingDoubleTreeMap.ofEntries(Map.entry(3.53, 5.0),Map.entry(-1.9, 0.0), Map.entry(-9.96, -5.0));
+  public static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
+      InterpolatingDoubleTreeMap.ofEntries(
+          Map.entry(3.53, 5.0), Map.entry(-1.9, 0.0), Map.entry(-9.96, -5.0));
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -101,7 +102,13 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, TOLERANCE, -180, 180);
-      case CORAL_HANDOFF -> MathUtil.isNear(ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0), motorAngle, TOLERANCE, -180, 180);
+      case CORAL_HANDOFF ->
+          MathUtil.isNear(
+              ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0),
+              motorAngle,
+              TOLERANCE,
+              -180,
+              180);
       case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
