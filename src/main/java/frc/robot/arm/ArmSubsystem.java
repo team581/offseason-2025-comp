@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -19,6 +20,8 @@ import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.util.tuning.TunablePid;
+import java.util.Map;
+import java.util.OptionalDouble;
 
 public class ArmSubsystem extends StateMachine<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
@@ -31,12 +34,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private double handoffAngle = -90;
+  private double handoffOffset = 0;
   private double collisionAvoidanceGoal;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
+  public final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
+      InterpolatingDoubleTreeMap.ofEntries(Map.entry(3.53, 5.0),Map.entry(-1.9, 0.0), Map.entry(-9.96, -5.0));
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -67,8 +72,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         newPositionDeg -> motor.setPosition(Units.degreesToRotations(newPositionDeg)));
   }
 
-  public void setHandoffAngle(double angle) {
-    handoffAngle = angle;
+  public void setCoralTx(OptionalDouble tx) {
+    handoffOffset = tx.orElse(0);
+  }
+
+  public OptionalDouble coralHandoff() {
+    return OptionalDouble.of(CORAL_TX_TO_ARM_ANGLE_TABLE.get(handoffOffset));
   }
 
   public void setState(ArmState newState) {
@@ -92,6 +101,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), motorAngle, TOLERANCE, -180, 180);
+      case CORAL_HANDOFF -> MathUtil.isNear(ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0), motorAngle, TOLERANCE, -180, 180);
       case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
@@ -146,11 +156,16 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
+
     if (FeatureFlags.VISION_HANDOFF_ADJUSTMENT.getAsBoolean()) {
       switch (getState()) {
         case CORAL_HANDOFF -> {
-          motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(handoffAngle)));
+          motor.setControl(
+              motionMagicRequest.withPosition(
+                  Units.degreesToRotations(
+                      ArmState.CORAL_HANDOFF.getAngle() + coralHandoff().orElse(0))));
         }
+        default -> {}
       }
     }
 

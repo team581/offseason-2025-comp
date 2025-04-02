@@ -157,6 +157,12 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         rightLimelight.setState(LimelightState.TAGS);
         gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
+      case HANDOFF -> {
+        leftBackLimelight.setState(LimelightState.TAGS);
+        leftFrontLimelight.setState(LimelightState.TAGS);
+        rightLimelight.setState(LimelightState.TAGS);
+        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
+      }
       case ALGAE_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
@@ -170,8 +176,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return rightLimelight.getAlgaeResult();
   }
 
-  public OptionalDouble getHandoffOffsetResult() {
-    return gamePieceDetectionLimelight.coralHandoff();
+  public OptionalDouble getHandoffOffsetTx() {
+    return gamePieceDetectionLimelight.handoffTx();
   }
 
   @Override

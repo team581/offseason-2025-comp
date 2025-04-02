@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,7 +16,6 @@ import frc.robot.vision.CameraHealth;
 import frc.robot.vision.limelight.LimelightHelpers.PoseEstimate;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -28,9 +26,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private static final int[] STATION_TAGS = new int[] {1, 2, 12, 13};
 
   private static final double IS_OFFLINE_TIMEOUT = 3;
-
-  private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
-      InterpolatingDoubleTreeMap.ofEntries(Map.entry(3.53, 5.0), Map.entry(-9.96, -5.0));
 
   private final String limelightTableName;
   private final String name;
@@ -153,15 +148,11 @@ public class Limelight extends StateMachine<LimelightState> {
     return Optional.of(new GamePieceResult(coralTx, coralTy, timestamp));
   }
 
-  public OptionalDouble coralHandoff() {
-
-    if (getState() != LimelightState.HELD_CORAL) {
-      return OptionalDouble.empty();
-    }
+  public OptionalDouble handoffTx() {
 
     double tx = LimelightHelpers.getTX(limelightTableName);
 
-    return OptionalDouble.of(CORAL_TX_TO_ARM_ANGLE_TABLE.get(tx));
+    return OptionalDouble.of(tx);
   }
 
   private Optional<GamePieceResult> getRawAlgaeResult() {

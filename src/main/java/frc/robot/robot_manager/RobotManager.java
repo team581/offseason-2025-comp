@@ -367,7 +367,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -381,7 +381,7 @@ public class RobotManager extends StateMachine<RobotState> {
         groundManager.handoffWaitRequest();
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
+        vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -393,7 +393,7 @@ public class RobotManager extends StateMachine<RobotState> {
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
+        vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -715,6 +715,8 @@ public class RobotManager extends StateMachine<RobotState> {
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
+    arm.setCoralTx(vision.getHandoffOffsetTx());
+
     // Update snaps
     switch (getState()) {
       case ALGAE_INTAKE_L2_LEFT,
@@ -800,12 +802,10 @@ public class RobotManager extends StateMachine<RobotState> {
     nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
 
-    var maybeHandoffAngle = vision.getHandoffOffsetResult();
-    if (maybeHandoffAngle.isPresent()) {
-      arm.setHandoffAngle(90 + maybeHandoffAngle.getAsDouble());
-    } else {
-      arm.setHandoffAngle(-90);
-    }
+    var maybeHandoffAngle = vision.getHandoffOffsetTx();
+
+    arm.setCoralTx(maybeHandoffAngle);
+
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
             robotPose,
