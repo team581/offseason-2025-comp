@@ -43,7 +43,7 @@ public enum ArmState {
   CORAL_HANDOFF(-90.0),
 
   // Algae positions
-  ALGAE_INTAKE_FLOOR(-23.0),
+  ALGAE_INTAKE_FLOOR(-25.0),
 
   ALGAE_INTAKE_LEFT_L2(180.0),
   ALGAE_INTAKE_LEFT_L3(180.0),
