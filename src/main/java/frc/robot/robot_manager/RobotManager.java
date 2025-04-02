@@ -316,7 +316,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_NET_LEFT);
+        moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT);
         swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(RobotScoringSide.LEFT, robotPose));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -324,7 +324,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.ALGAE_NET_RIGHT, ArmState.ALGAE_NET_RIGHT);
+        moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT);
         swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(RobotScoringSide.RIGHT, robotPose));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -332,7 +332,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_LEFT_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
-        moveSuperstructure(ElevatorState.ALGAE_NET_LEFT, ArmState.ALGAE_NET_LEFT, true);
+        moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT, true);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -340,9 +340,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_NET_RIGHT_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
-        moveSuperstructure(ElevatorState.ALGAE_NET_RIGHT, ArmState.ALGAE_NET_RIGHT, true);
+        moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT, true);
         swerve.normalDriveRequest();
-        ;
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
         climber.setState(ClimberState.STOPPED);
