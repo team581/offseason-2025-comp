@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.arm.ArmState;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -60,6 +62,8 @@ public enum Waypoint {
       new SuperstructurePosition(
           ElevatorState.ALGAE_INTAKE_L3_LEFT, ArmState.ALGAE_INTAKE_LEFT_L3));
 
+  private static final List<Waypoint> ALL_WAYPOINTS = List.of(values());
+
   public final SuperstructurePosition position;
 
   Waypoint(SuperstructurePosition position) {
@@ -89,25 +93,9 @@ public enum Waypoint {
    * @param position The position of the superstructure.
    */
   public static Waypoint getClosest(SuperstructurePosition position) {
-    Waypoint closestWaypoint = STOWED;
-    double closestDistance = Double.MAX_VALUE;
-    Translation2d point = position.getTranslation();
-
-    for (int i = 0; Waypoint.values().length > i; i++) {
-
-      Translation2d nodePoint = Waypoint.values()[i].position.getTranslation();
-
-      double distanceFromNodeToPoint =
-          Math.hypot(
-              Math.pow(nodePoint.getX() - point.getX(), 2),
-              Math.pow(nodePoint.getY() - point.getY(), 2));
-
-      if (distanceFromNodeToPoint < closestDistance) {
-        closestDistance = distanceFromNodeToPoint;
-        closestWaypoint = Waypoint.values()[i];
-      }
-    }
-    return closestWaypoint;
+    return ALL_WAYPOINTS.stream()
+        .min(Comparator.comparingDouble(waypoint -> position.costFor(waypoint.position)))
+        .orElseThrow();
   }
 
   public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
