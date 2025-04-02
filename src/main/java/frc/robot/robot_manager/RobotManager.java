@@ -220,7 +220,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY -> {
         claw.setState(ClawState.IDLE_NO_GP);
         groundManager.idleRequest();
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -238,7 +238,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_CORAL -> {
         claw.setState(ClawState.IDLE_W_CORAL);
         groundManager.idleRequest();
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
@@ -363,7 +363,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case PREPARE_HANDOFF_AFTER_INTAKE -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
@@ -377,7 +377,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         afterIntakingCoralState = Optional.empty();
         groundManager.handoffWaitRequest();
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
@@ -662,7 +662,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case PREPARE_SPIN_TO_WIN -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORE_ALIGN_NOT_READY);
@@ -670,7 +670,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case SPIN_TO_WIN -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.SPIN_TO_WIN, true);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.SPIN_TO_WIN, true);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING);
