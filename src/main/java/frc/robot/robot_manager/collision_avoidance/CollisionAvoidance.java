@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CollisionAvoidance {
-  private static final double ELEVATOR_TOLERANCE = 15.0;
-  private static final double ARM_TOLERANCE = 30.0;
+  private static final double ELEVATOR_TOLERANCE = 25.0;
+  private static final double ARM_TOLERANCE = 40.0;
 
   private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
 
