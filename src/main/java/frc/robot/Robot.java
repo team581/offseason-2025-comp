@@ -151,6 +151,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    DogLog.timeEnd("Scheduler/TimeSinceLastLoop");
+    DogLog.time("Scheduler/TimeSinceLastLoop");
+
     Stopwatch.start("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     Stopwatch.stop("Scheduler/CommandSchedulerPeriodic");
