@@ -173,6 +173,7 @@ public class TagAlign {
         .min(alignmentCostUtil.getReefPipeComparator(level))
         .orElseThrow();
   }
+
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
     var robotPose = localization.getPose();
 

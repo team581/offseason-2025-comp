@@ -141,7 +141,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
-        tagAlign.getPoseAlignmentChassisSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(reefSideOffset,robotScoringSide));
+        tagAlign.getPoseAlignmentChassisSpeeds(
+            ReefSide.fromPipe(bestReefPipe).getPose(reefSideOffset, robotScoringSide));
     var controllerValues = swerve.getControllerValues();
     tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
   }

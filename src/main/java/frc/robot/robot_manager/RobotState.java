@@ -164,7 +164,7 @@ public enum RobotState {
           Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_LEFT_LINEUP),
           Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_LEFT_LINEUP));
 
-          private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
+  private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2_LEFT_APPROACH, ALGAE_INTAKE_L2_LEFT),
