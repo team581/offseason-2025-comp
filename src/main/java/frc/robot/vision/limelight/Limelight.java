@@ -220,6 +220,7 @@ public class Limelight extends StateMachine<LimelightState> {
       }
       case CORAL -> updateHealth(coralResult);
       case ALGAE -> updateHealth(algaeResult);
+      case HELD_CORAL -> updateHealth(coralResult);
       case CLOSEST_REEF_TAG, CLOSEST_REEF_TAG_CLOSEUP -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);
