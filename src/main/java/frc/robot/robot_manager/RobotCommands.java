@@ -78,11 +78,10 @@ public class RobotCommands {
         .withName("StowCommand");
   }
 
-  public Command scoringAlignOffCommand(){
+  public Command scoringAlignOffCommand() {
     return Commands.runOnce(robot::scoringAlignOffRequest, bothRequirements)
-    .withName("ScoringAlignOffCommand");
+        .withName("ScoringAlignOffCommand");
   }
-
 
   public Command climbUpCommand() {
     return Commands.runOnce(robot::nextClimbStateRequest, rmRequirements)

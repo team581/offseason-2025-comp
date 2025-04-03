@@ -155,9 +155,7 @@ public class TagAlign {
 
     if (DriverStation.isTeleop()) {
       var offsetPose =
-          new Pose2d(
-              theoreticalScoringPose.getTranslation(),
-              theoreticalScoringPose.getRotation());
+          new Pose2d(theoreticalScoringPose.getTranslation(), theoreticalScoringPose.getRotation());
       return offsetPose;
     }
 
