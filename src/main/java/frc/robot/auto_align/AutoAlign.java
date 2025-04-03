@@ -109,7 +109,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private final TagAlign tagAlign;
   private final SwerveSubsystem swerve;
 
-  private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
   private ChassisSpeeds tagAlignSpeeds = new ChassisSpeeds();
   private ChassisSpeeds algaeAlignSpeeds = new ChassisSpeeds();
   private boolean isAligned = false;
@@ -136,30 +135,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return ReefSide.fromPipe(bestReefPipe);
   }
 
-  private static ChassisSpeeds constrainLinearVelocity(ChassisSpeeds speeds, double maxSpeed) {
-    var options =
-        new AutoConstraintOptions()
-            .withMaxAngularAcceleration(0)
-            .withMaxAngularVelocity(0)
-            .withMaxLinearAcceleration(0)
-            .withMaxLinearVelocity(maxSpeed);
-    return AutoConstraintCalculator.constrainLinearVelocity(speeds, options);
-  }
-
-  public ChassisSpeeds calculateConstrainedAndWeightedSpeeds(ChassisSpeeds alignSpeeds) {
-    var newTeleopSpeeds = teleopSpeeds.times(TELEOP_SPEED_SCALAR);
-    if (swerve.getState() == SwerveState.REEF_ALIGN_TELEOP_FINE_ADJUST) {
-      return constrainLinearVelocity(alignSpeeds, MAX_CONSTRAINT);
-    }
-    var addedSpeeds = newTeleopSpeeds.plus(alignSpeeds);
-    var constrainedSpeeds = constrainLinearVelocity(addedSpeeds, MAX_CONSTRAINT);
-    DogLog.log("Debug/ConstrainedSpeeds", constrainedSpeeds);
-    return constrainedSpeeds;
-  }
-
   @Override
   protected void collectInputs() {
-    teleopSpeeds = swerve.getTeleopSpeeds();
     bestReefPipe = tagAlign.getBestPipe();
     usedScoringPose = tagAlign.getUsedScoringPose(bestReefPipe);
     isAligned = tagAlign.isAligned(bestReefPipe);

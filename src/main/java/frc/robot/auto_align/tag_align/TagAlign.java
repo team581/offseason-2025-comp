@@ -68,18 +68,17 @@ public class TagAlign {
   public void setControllerValues(double controllerXValue, double controllerYValue) {
     rawControllerXValue = controllerXValue;
     rawControllerYValue = controllerYValue;
+    checkControllerForSwitch();
   }
 
-  private Translation2d getPoseOffset() {
-    var scaledX = rawControllerXValue * FINE_ADJUST_CONTROLLER_SCALAR;
-    var scaledY = rawControllerYValue * FINE_ADJUST_CONTROLLER_SCALAR;
+  private void checkControllerForSwitch() {
     if (pipeSwitchActive
         && (Timer.getFPGATimestamp() > LAST_PIPE_SWITCH_TIMESTAMP + PIPE_SWITCH_TIMEOUT)
         && rawControllerXValue == 0.0) {
       pipeSwitchActive = false;
     }
     if (pipeSwitchActive) {
-      return Translation2d.kZero;
+      return;
     }
     if ((rawControllerXValue < -0.98 || rawControllerXValue > 0.98)) {
       var storedPipe = getBestPipe();
@@ -121,9 +120,7 @@ public class TagAlign {
       } else if (rawControllerXValue > 0.98) {
         setPipeOveride(rightPipe);
       }
-      return Translation2d.kZero;
     }
-    return new Translation2d(scaledY, scaledX);
   }
 
   public boolean isAligned(ReefPipe pipe) {
@@ -159,7 +156,7 @@ public class TagAlign {
     if (DriverStation.isTeleop()) {
       var offsetPose =
           new Pose2d(
-              theoreticalScoringPose.getTranslation().plus(getPoseOffset()),
+              theoreticalScoringPose.getTranslation(),
               theoreticalScoringPose.getRotation());
       return offsetPose;
     }

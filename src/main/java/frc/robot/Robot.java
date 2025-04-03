@@ -239,10 +239,10 @@ public class Robot extends TimedRobot {
     hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
-    hardware.driverController.y().onTrue(robotCommands.highLineupCommand());
-    hardware.driverController.x().onTrue(robotCommands.l3LineupCommand());
-    hardware.driverController.b().onTrue(robotCommands.l2LineupCommand());
-    hardware.driverController.a().onTrue(robotCommands.lowLineupCommand());
+    hardware.driverController.y().onTrue(robotCommands.highLineupCommand()).onFalse(robotCommands.scoringAlignOffCommand());
+    hardware.driverController.x().onTrue(robotCommands.l3LineupCommand()).onFalse(robotCommands.scoringAlignOffCommand());
+    hardware.driverController.b().onTrue(robotCommands.l2LineupCommand()).onFalse(robotCommands.scoringAlignOffCommand());
+    hardware.driverController.a().onTrue(robotCommands.lowLineupCommand()).onFalse(robotCommands.scoringAlignOffCommand());
 
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
     hardware.driverController.povDown().onTrue(robotCommands.climbStopCommand());
