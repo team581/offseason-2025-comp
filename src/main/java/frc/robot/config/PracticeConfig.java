@@ -41,9 +41,9 @@ class PracticeConfig {
   private static final String RIO_CAN_NAME = "rio";
 
   private static final DoubleSubscriber VISION_TRANSLATION_STD_DEV =
-      DogLog.tunable("Vision/TranslationDev", 0.05);
+      DogLog.tunable("Vision/TranslationDev", 0.01);
   private static final DoubleSubscriber VISION_ROTATION_STD_DEV =
-      DogLog.tunable("Vision/RotationDev", 0.1);
+      DogLog.tunable("Vision/RotationDev", 0.8);
 
   public static final RobotConfig practiceBot =
       new RobotConfig(
@@ -105,12 +105,12 @@ class PracticeConfig {
               CANIVORE_NAME,
               25,
               26,
-              new Debouncer(0.5, DebounceType.kBoth),
+              new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(50)
-                          .withSupplyCurrentLimit(50))
+                          .withStatorCurrentLimit(90)
+                          .withSupplyCurrentLimit(90))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -222,7 +222,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0))
                   .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(true)),
-              -13.532,
+              -10.532,
               6.615),
           new DeployConfig(
               CANIVORE_NAME,
