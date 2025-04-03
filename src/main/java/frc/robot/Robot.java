@@ -262,7 +262,7 @@ public class Robot extends TimedRobot {
 
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
     hardware.driverController.povDown().onTrue(robotCommands.climbStopCommand());
-    hardware.driverController.povRight().onTrue(robotCommands.algaeReefIntakeCommand());
+    hardware.driverController.povRight().onTrue(robotCommands.algaeReefIntakeCommand()).onFalse(robotCommands.scoringAlignOffCommand());
 
     hardware.driverController.start().onTrue(robotCommands.unjamCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());

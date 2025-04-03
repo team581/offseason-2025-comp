@@ -20,6 +20,11 @@ public enum RobotState {
   CORAL_INTAKE_LOLLIPOP_GRAB(ClawGamePiece.EMPTY, false),
 
   ALGAE_INTAKE_FLOOR(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L2_LEFT_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L3_LEFT_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L2_RIGHT_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L3_RIGHT_APPROACH(ClawGamePiece.ALGAE, false),
+
   ALGAE_INTAKE_L2_LEFT(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3_LEFT(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L2_RIGHT(ClawGamePiece.ALGAE, false),
@@ -158,6 +163,14 @@ public enum RobotState {
           Map.entry(CORAL_L2_LEFT_APPROACH, CORAL_L2_LEFT_LINEUP),
           Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_LEFT_LINEUP),
           Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_LEFT_LINEUP));
+
+          private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
+      ImmutableMap.ofEntries(
+          // Go to right l1 since robot can't do left l1
+          Map.entry(ALGAE_INTAKE_L2_LEFT_APPROACH, ALGAE_INTAKE_L2_LEFT),
+          Map.entry(ALGAE_INTAKE_L3_LEFT_APPROACH, ALGAE_INTAKE_L3_LEFT),
+          Map.entry(ALGAE_INTAKE_L2_RIGHT_APPROACH, ALGAE_INTAKE_L2_RIGHT),
+          Map.entry(ALGAE_INTAKE_L3_RIGHT_APPROACH, ALGAE_INTAKE_L3_RIGHT));
   private static final ImmutableMap<RobotState, RobotState> approachToLineupRightStates =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_RIGHT_APPROACH, CORAL_L1_RIGHT_LINEUP),
@@ -171,6 +184,10 @@ public enum RobotState {
 
   public RobotState getPlaceToReleaseState() {
     return placeToRelease.getOrDefault(this, this);
+  }
+
+  public RobotState getAlgaeApproachToIntakeState() {
+    return algaeApproachToIntakeStates.getOrDefault(this, this);
   }
 
   public RobotState getHandoffPrepareToReleaseState() {

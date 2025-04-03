@@ -113,6 +113,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefPipe bestReefPipe = ReefPipe.PIPE_A;
   private Pose2d usedScoringPose = Pose2d.kZero;
+  private ReefSideOffset reefSideOffset = ReefSideOffset.BASE;
 
   public AutoAlign(
       VisionSubsystem vision, LocalizationSubsystem localization, SwerveSubsystem swerve) {
@@ -140,7 +141,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
-        tagAlign.getAlgaeAlignmentSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(robotScoringSide));
+        tagAlign.getPoseAlignmentChassisSpeeds(ReefSide.fromPipe(bestReefPipe).getPose(reefSideOffset,robotScoringSide));
     var controllerValues = swerve.getControllerValues();
     tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
   }
@@ -180,6 +181,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
     robotScoringSide = side;
     tagAlign.setLevel(level, side);
+  }
+
+  public void setAlgaeIntakingOffset(ReefSideOffset offset) {
+    reefSideOffset = offset;
   }
 
   public void clearReefState() {

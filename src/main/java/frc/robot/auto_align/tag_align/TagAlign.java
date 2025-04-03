@@ -173,25 +173,6 @@ public class TagAlign {
         .min(alignmentCostUtil.getReefPipeComparator(level))
         .orElseThrow();
   }
-
-  public ChassisSpeeds getAlgaeAlignmentSpeeds(Pose2d usedScoringPose) {
-    var robotPose = localization.getPose();
-    DogLog.log("AutoAlign/UsedAlgaePose", usedScoringPose);
-    var scoringTranslationRobotRelative =
-        usedScoringPose
-            .getTranslation()
-            .minus(robotPose.getTranslation())
-            .rotateBy(Rotation2d.fromDegrees(360 - usedScoringPose.getRotation().getDegrees()));
-
-    var goalTranslationWithP =
-        new Translation2d(TAG_SIDEWAYS_PID.calculate(scoringTranslationRobotRelative.getX()), 0.0);
-    var goalTranslation = goalTranslationWithP.rotateBy(usedScoringPose.getRotation());
-
-    var goalSpeeds = new ChassisSpeeds(-goalTranslation.getX(), -goalTranslation.getY(), 0.0);
-    DogLog.log("AutoAlign/GoalAlgaeSpeeds", goalSpeeds);
-    return goalSpeeds;
-  }
-
   public ChassisSpeeds getPoseAlignmentChassisSpeeds(Pose2d usedScoringPose) {
     var robotPose = localization.getPose();
 
