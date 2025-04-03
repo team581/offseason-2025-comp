@@ -25,8 +25,6 @@ public class Limelight extends StateMachine<LimelightState> {
   private static final int[] VALID_APRILTAGS =
       new int[] {1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22};
 
-  private static final int[] STATION_TAGS = new int[] {1, 2, 12, 13};
-
   private static final double IS_OFFLINE_TIMEOUT = 3;
 
   private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
@@ -86,8 +84,7 @@ public class Limelight extends StateMachine<LimelightState> {
   public Optional<TagResult> getTagResult() {
     if (getState() != LimelightState.TAGS
         && getState() != LimelightState.CLOSEST_REEF_TAG
-        && getState() != LimelightState.CLOSEST_REEF_TAG_CLOSEUP
-        && getState() != LimelightState.STATION_TAGS) {
+        && getState() != LimelightState.CLOSEST_REEF_TAG_CLOSEUP) {
       return Optional.empty();
     }
 
@@ -213,10 +210,6 @@ public class Limelight extends StateMachine<LimelightState> {
       case ALGAE -> updateHealth(algaeResult);
       case CLOSEST_REEF_TAG, CLOSEST_REEF_TAG_CLOSEUP -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
-        updateHealth(tagResult);
-      }
-      case STATION_TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, STATION_TAGS);
         updateHealth(tagResult);
       }
     }
