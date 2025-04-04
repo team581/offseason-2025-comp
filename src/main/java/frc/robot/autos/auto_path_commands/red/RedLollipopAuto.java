@@ -24,23 +24,23 @@ public class RedLollipopAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        blocks.scorePreloadL4(Points.START_R3_AND_B3.redPose, ReefPipe.PIPE_I),
+        blocks.scorePreloadL4(Points.START_R1_AND_B1.redPose, ReefPipe.PIPE_L),
         blocks.intakeLollipop(
-            new Pose2d(14.2, 2.168, Rotation2d.fromDegrees(90))
+            new Pose2d(14.2, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.2, 2.168, Rotation2d.fromDegrees(90))
+            new Pose2d(15.2, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_A),
         blocks.intakeLollipop(
-            new Pose2d(14.5, 3.996, Rotation2d.fromDegrees(90))
+            new Pose2d(14.5, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.2, 3.996, Rotation2d.fromDegrees(90))
+            new Pose2d(15.2, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_B),
         blocks.intakeLollipop(
-            new Pose2d(15.085, 5.106, Rotation2d.fromDegrees(140.5))
+            new Pose2d(15.085, 5.106, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.513, 5.473, Rotation2d.fromDegrees(140.5))
+            new Pose2d(15.795, 5.473, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_C));
   }
