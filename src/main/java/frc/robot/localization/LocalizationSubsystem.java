@@ -24,11 +24,16 @@ import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.results.TagResult;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState> {
-  private static final Vector<N3> VISION_STD_DEVS =
+  private static final Vector<N3> MT1_VISION_STD_DEVS =
       VecBuilder.fill(
           RobotConfig.get().vision().xyStdDev(),
           RobotConfig.get().vision().xyStdDev(),
           RobotConfig.get().vision().thetaStdDev());
+  private static final Vector<N3> MT2_VISION_STD_DEVS =
+      VecBuilder.fill(
+          RobotConfig.get().vision().xyStdDev(),
+          RobotConfig.get().vision().xyStdDev(),
+          Double.MAX_VALUE);
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
@@ -79,8 +84,14 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     if (DriverStation.isDisabled() && FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()) {
       resetPose(visionPose);
     }
+
+    var stdDevs =
+        FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()
+            ? MT1_VISION_STD_DEVS
+            : MT2_VISION_STD_DEVS;
+
     swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), VISION_STD_DEVS);
+        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), stdDevs);
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
