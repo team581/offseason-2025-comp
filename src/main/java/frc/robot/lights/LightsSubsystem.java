@@ -13,7 +13,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
   private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_EMPTY;
-  private LightsState disabledState = LightsState.HEALTHY;
+  private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
   public LightsSubsystem(CANdle candle) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_EMPTY);
