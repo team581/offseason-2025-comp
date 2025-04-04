@@ -9,7 +9,7 @@ public enum LightsState {
 
   BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
 
-  IDLE_EMPTY(Color.kGray, BlinkPattern.SOLID),
+  IDLE_EMPTY(Color.kGray, BlinkPattern.OFF),
 
   INTAKING_CORAL(Color.kWhite, BlinkPattern.BLINK_SLOW),
   INTAKING_ALGAE(Color.kTeal, BlinkPattern.BLINK_SLOW),
