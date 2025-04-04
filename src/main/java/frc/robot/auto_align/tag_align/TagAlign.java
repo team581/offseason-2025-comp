@@ -55,10 +55,9 @@ public class TagAlign {
   }
 
   public void setLevel(ReefPipeLevel level, RobotScoringSide side) {
-    if (!pipeSwitchActive) {
-      this.level = level;
-    }
     this.robotScoringSide = side;
+    alignmentCostUtil.setSide(robotScoringSide);
+    this.level = level;
   }
 
   public void setPipeOveride(ReefPipe pipe) {
@@ -83,7 +82,6 @@ public class TagAlign {
     if ((rawControllerXValue < -0.98 || rawControllerXValue > 0.98)) {
       var storedPipe = getBestPipe();
       pipeSwitchActive = true;
-      this.level = ReefPipeLevel.RAISING;
       ReefPipe leftPipe =
           switch (storedPipe) {
             case PIPE_A -> ReefPipe.PIPE_L;
@@ -167,7 +165,6 @@ public class TagAlign {
     if ((DriverStation.isAutonomous() || pipeSwitchActive) && reefPipeOverride.isPresent()) {
       return reefPipeOverride.orElseThrow();
     }
-    alignmentCostUtil.setSide(robotScoringSide);
 
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level))
