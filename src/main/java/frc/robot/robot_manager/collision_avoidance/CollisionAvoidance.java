@@ -7,6 +7,7 @@ import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -266,6 +267,7 @@ public class CollisionAvoidance {
 
       if (current == goalWaypoint) {
         var totalPath = reconstructPath(cameFrom, current);
+        DogLog.clearFault("Collision avoidance path not possible");
         return Optional.of(totalPath);
       }
       openSet.remove(current);
@@ -283,7 +285,8 @@ public class CollisionAvoidance {
         }
       }
     }
-    return Optional.empty();
+    DogLog.logFault("Collision avoidance path not possible", AlertType.kWarning);
+    return Optional.of(ImmutableList.of(Waypoint.getClosest(currentPosition)));
   }
 
   /** Don't use this. */
