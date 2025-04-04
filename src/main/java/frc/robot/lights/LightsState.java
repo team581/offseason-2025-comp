@@ -23,12 +23,12 @@ public enum LightsState {
   CLIMB_HANG(Color.kGreen, BlinkPattern.SOLID),
   CLIMB_STOP(Color.kGreen, BlinkPattern.BLINK_SLOW),
 
-  SCORE_ALIGN_NOT_READY(Color.kOrange, BlinkPattern.BLINK_FAST),
-  SCORE_ALIGN_READY(Color.kGreen, BlinkPattern.SOLID),
+  SCORE_ALIGN_NO_TAGS(Color.kYellow, BlinkPattern.BLINK_FAST),
+  SCORE_ALIGN_TAGS(Color.kGreen, BlinkPattern.BLINK_FAST),
 
   SCORING(Color.kGreen, BlinkPattern.BLINK_FAST),
 
-  OTHER(Color.kOrange, BlinkPattern.BLINK_SLOW),
+  OTHER(Color.kPurple, BlinkPattern.BLINK_SLOW),
 
   /**
    * @deprecated Replace placeholder lights with actual light patterns.

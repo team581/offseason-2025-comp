@@ -37,6 +37,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private ReefPipe reefPipe;
 
   private boolean hasSeenTag = false;
+  private boolean seeingTag = false;
 
   public VisionSubsystem(
       ImuSubsystem imu,
@@ -61,31 +62,19 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     roll = imu.getRoll();
     rollRate = imu.getRollRate();
 
-    if (getState() == VisionState.CLOSEST_REEF_TAG_CLOSEUP) {
-      switch (reefPipe) {
-        case PIPE_A, PIPE_C, PIPE_E, PIPE_G, PIPE_I, PIPE_K -> {
-          if (leftBackLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
-            leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
-            leftFrontLimelight.setState(LimelightState.OFF);
-          }
-        }
-        case PIPE_B, PIPE_D, PIPE_F, PIPE_H, PIPE_J, PIPE_L -> {
-          if (leftFrontLimelight.getCameraHealth() != CameraHealth.OFFLINE) {
-            leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
-            leftBackLimelight.setState(LimelightState.OFF);
-          }
-        }
-      }
-    }
 
     leftBackTagResult = leftBackLimelight.getTagResult();
     leftFrontTagResult = leftFrontLimelight.getTagResult();
     rightTagResult = rightLimelight.getTagResult();
 
-    hasSeenTag =
-        leftBackTagResult.isPresent()
-            || leftFrontTagResult.isPresent()
-            || rightTagResult.isPresent();
+    if (leftBackTagResult.isPresent()
+        || leftFrontTagResult.isPresent()
+        || rightTagResult.isPresent()) {
+      hasSeenTag = true;
+      seeingTag = true;
+    } else {
+      seeingTag = false;
+    }
   }
 
   public Optional<TagResult> getLeftBackTagResult() {
@@ -100,8 +89,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return rightTagResult;
   }
 
-  public boolean hasSeenTagRecentlyDisabled() {
-    return hasSeenTagDisabledDebouncer.calculate(hasSeenTag);
+  public boolean seeingTagRecentlyDisabled() {
+    return hasSeenTagDisabledDebouncer.calculate(seeingTag);
   }
 
   public boolean hasSeenTag() {

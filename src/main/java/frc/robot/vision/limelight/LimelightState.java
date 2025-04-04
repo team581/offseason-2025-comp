@@ -1,7 +1,6 @@
 package frc.robot.vision.limelight;
 
 public enum LimelightState {
-  OFF(0),
   TAGS(1),
   CLOSEST_REEF_TAG(1),
   CLOSEST_REEF_TAG_CLOSEUP(1),

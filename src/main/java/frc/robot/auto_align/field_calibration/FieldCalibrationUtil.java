@@ -163,8 +163,7 @@ public class FieldCalibrationUtil {
     }
 
     // Use lights to indicate we are in any valid scoring configuration
-    lights.setDisabledState(
-        anyOk ? LightsState.SCORE_ALIGN_READY : LightsState.SCORE_ALIGN_NOT_READY);
+    lights.setDisabledState(anyOk ? LightsState.SCORE_ALIGN_TAGS : LightsState.SCORE_ALIGN_NO_TAGS);
   }
 
   private static void logAllScoringPositions(boolean isRedAlliance, RobotScoringSide side) {
