@@ -297,7 +297,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   public boolean isOnlineForTags() {
     return switch (getState()) {
-      case TAGS, CLOSEST_REEF_TAG, CLOSEST_REEF_TAG_CLOSEUP ->
+      case TAGS, CLOSEST_REEF_TAG, CLOSEST_REEF_TAG_CLOSEUP, OFF ->
           getCameraHealth() != CameraHealth.OFFLINE;
       default -> false;
     };
