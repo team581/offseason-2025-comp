@@ -95,6 +95,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
+    imu.setAngle(gyroAngle.getDegrees());
     swerve.drivetrain.resetRotation(gyroAngle);
   }
 
