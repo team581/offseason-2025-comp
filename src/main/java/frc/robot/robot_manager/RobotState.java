@@ -191,6 +191,18 @@ public enum RobotState {
           Map.entry(CORAL_L3_RIGHT_APPROACH, CORAL_L3_RIGHT_LINEUP),
           Map.entry(CORAL_L4_RIGHT_APPROACH, CORAL_L4_RIGHT_LINEUP));
 
+  private static final ImmutableMap<RobotState, RobotState> rightToLeftApproachStates =
+      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L2_RIGHT_APPROACH, CORAL_L2_LEFT_APPROACH),
+          Map.entry(CORAL_L3_RIGHT_APPROACH, CORAL_L3_LEFT_APPROACH),
+          Map.entry(CORAL_L4_RIGHT_APPROACH, CORAL_L4_LEFT_APPROACH));
+
+  private static final ImmutableMap<RobotState, RobotState> leftToRightApproachStates =
+      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L2_LEFT_APPROACH, CORAL_L2_RIGHT_APPROACH),
+          Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_RIGHT_APPROACH),
+          Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_RIGHT_APPROACH));
+
   public RobotState getLineupToPlaceState() {
     return lineupToPlace.getOrDefault(this, this);
   }
@@ -226,5 +238,13 @@ public enum RobotState {
 
   public RobotState getRightApproachToLineupState() {
     return approachToLineupRightStates.getOrDefault(this, this);
+  }
+
+  public RobotState getRightToLeftApproachState() {
+    return rightToLeftApproachStates.getOrDefault(this, this);
+  }
+
+  public RobotState getLeftToRightApproachState() {
+    return leftToRightApproachStates.getOrDefault(this, this);
   }
 }

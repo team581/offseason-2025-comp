@@ -178,18 +178,30 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       // Approach
-      case CORAL_L2_LEFT_APPROACH, CORAL_L3_LEFT_APPROACH, CORAL_L4_LEFT_APPROACH ->
-          elevator.nearGoal() && arm.nearGoal()
-              ? currentState.getLeftApproachToLineupState()
-              : currentState;
-
-      case CORAL_L1_RIGHT_APPROACH,
-              CORAL_L2_RIGHT_APPROACH,
-              CORAL_L3_RIGHT_APPROACH,
-              CORAL_L4_RIGHT_APPROACH ->
+      case CORAL_L1_RIGHT_APPROACH ->
           elevator.nearGoal() && arm.nearGoal()
               ? currentState.getRightApproachToLineupState()
               : currentState;
+
+      case CORAL_L2_LEFT_APPROACH, CORAL_L3_LEFT_APPROACH, CORAL_L4_LEFT_APPROACH -> {
+        if (robotScoringSide == RobotScoringSide.RIGHT) {
+          yield currentState.getLeftToRightApproachState();
+        }
+
+        yield elevator.nearGoal() && arm.nearGoal()
+            ? currentState.getLeftApproachToLineupState()
+            : currentState;
+      }
+
+      case CORAL_L2_RIGHT_APPROACH, CORAL_L3_RIGHT_APPROACH, CORAL_L4_RIGHT_APPROACH -> {
+        if (robotScoringSide == RobotScoringSide.LEFT) {
+          yield currentState.getRightToLeftApproachState();
+        }
+
+        yield elevator.nearGoal() && arm.nearGoal()
+            ? currentState.getRightApproachToLineupState()
+            : currentState;
+      }
 
       case CORAL_L2_LEFT_RELEASE,
           CORAL_L3_LEFT_RELEASE,
