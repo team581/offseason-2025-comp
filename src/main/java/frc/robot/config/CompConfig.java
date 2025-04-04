@@ -136,7 +136,6 @@ class CompConfig {
                           .withPeakReverseTorqueCurrent(80.0))),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true),
           new VisionConfig(
-              4,
               0.05,
               0.1,
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up

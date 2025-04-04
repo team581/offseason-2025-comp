@@ -51,7 +51,6 @@ public record RobotConfig(
       boolean invertY) {}
 
   public record VisionConfig(
-      int translationHistoryArraySize,
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
