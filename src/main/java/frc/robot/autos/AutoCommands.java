@@ -60,6 +60,10 @@ public class AutoCommands {
     return Commands.runOnce(robotManager::lollipopIntakeGrabRequest);
   }
 
+  public Command homeDeployCommand(){
+    return Commands.runOnce(robotManager.groundManager::rehomeDeployRequest);
+  }
+
   public Command waitForIntakeDone() {
     return robotManager
         .groundManager
