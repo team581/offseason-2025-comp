@@ -35,11 +35,11 @@ public class AutoBlocks {
           Rotation2d.fromDegrees(90));
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(4.7, 57, 4, 30);
+      new AutoConstraintOptions(2, 57, 2, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(1.0);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(1).withMaxLinearVelocity(1.0);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -161,11 +161,11 @@ public class AutoBlocks {
             new AutoSegment(
                 BASE_CONSTRAINTS,
                 new AutoPoint(
-                    approachPoint, Commands.runOnce(() -> autoCommands.lollipopApproachCommand())),
+                    approachPoint, autoCommands.lollipopApproachCommand()),
                 new AutoPoint(
                     () ->
                         robotManager.coralMap.getLollipopIntakePose().orElse(defaultIntakingPoint),
-                    Commands.runOnce(() -> autoCommands.intakeLollipopCommand()),
+                    autoCommands.intakeLollipopCommand(),
                     LOLLIPOP_CONSTRAINTS)),
             false)
         .withTimeout(5);
