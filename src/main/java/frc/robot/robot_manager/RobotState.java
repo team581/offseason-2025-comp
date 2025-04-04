@@ -177,11 +177,11 @@ public enum RobotState {
           Map.entry(ALGAE_INTAKE_L2_RIGHT_APPROACH, ALGAE_INTAKE_L2_RIGHT),
           Map.entry(ALGAE_INTAKE_L3_RIGHT_APPROACH, ALGAE_INTAKE_L3_RIGHT));
 
-          private static final ImmutableMap<RobotState, RobotState> algaeIntakeToHoldingStates =
+  private static final ImmutableMap<RobotState, RobotState> algaeIntakeToHoldingStates =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2_LEFT, ALGAE_INTAKE_L2_LEFT_HOLDING),
-          Map.entry( ALGAE_INTAKE_L3_LEFT, ALGAE_INTAKE_L3_LEFT_HOLDING),
+          Map.entry(ALGAE_INTAKE_L3_LEFT, ALGAE_INTAKE_L3_LEFT_HOLDING),
           Map.entry(ALGAE_INTAKE_L2_RIGHT, ALGAE_INTAKE_L2_RIGHT_HOLDING),
           Map.entry(ALGAE_INTAKE_L3_RIGHT, ALGAE_INTAKE_L3_RIGHT_HOLDING));
   private static final ImmutableMap<RobotState, RobotState> approachToLineupRightStates =
@@ -190,7 +190,6 @@ public enum RobotState {
           Map.entry(CORAL_L2_RIGHT_APPROACH, CORAL_L2_RIGHT_LINEUP),
           Map.entry(CORAL_L3_RIGHT_APPROACH, CORAL_L3_RIGHT_LINEUP),
           Map.entry(CORAL_L4_RIGHT_APPROACH, CORAL_L4_RIGHT_LINEUP));
-
 
   public RobotState getLineupToPlaceState() {
     return lineupToPlace.getOrDefault(this, this);
@@ -203,10 +202,10 @@ public enum RobotState {
   public RobotState getAlgaeApproachToIntakeState() {
     return algaeApproachToIntakeStates.getOrDefault(this, this);
   }
+
   public RobotState getAlgaeIntakeToHoldingState() {
     return algaeIntakeToHoldingStates.getOrDefault(this, this);
   }
-
 
   public RobotState getHandoffPrepareToReleaseState() {
     return handoffPrepareToRelease.getOrDefault(this, this);
