@@ -3,12 +3,14 @@ package frc.robot.autos;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.constraints.AutoConstraintOptions;
+import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.PoseErrorTolerance;
 
@@ -20,22 +22,17 @@ public class AutoBlocks {
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
       new PoseErrorTolerance(0.3, 10);
 
-  /**
-   * The offset used to calculate the position to go to before PIDing to the lineup pose. Ensures we
-   * don't strafe into the scoring position, just a straight-on movement.
-   */
-  private static final Transform2d PIPE_LINEUP_OFFSET = new Transform2d(-0.6, 0, Rotation2d.kZero);
-
-  private static final Transform2d PIPE_APPROACH_OFFSET =
-      new Transform2d(-1.3, 0, Rotation2d.kZero);
-
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
       new Transform2d(-1.3, 0, Rotation2d.kZero);
 
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
-  public static final Transform2d LOLLIPOP_OFFSET = new Transform2d(-0.6615, 0, Rotation2d.kZero);
+  public static final Transform2d LOLLIPOP_OFFSET =
+      new Transform2d(
+          Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          0,
+          Rotation2d.fromDegrees(90));
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.7, 57, 4, 30);
@@ -62,27 +59,21 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS,
                     new AutoPoint(
-                        robotManager
-                            .autoAlign
-                            .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                            .transformBy(PIPE_APPROACH_OFFSET),
+                        robotManager.autoAlign.getUsedScoringPose(
+                            pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                         autoCommands
                             .preloadCoralCommand()
                             .andThen(autoCommands.l4WarmupCommand(pipe)),
                         BASE_CONSTRAINTS),
                     new AutoPoint(
                         () ->
-                            robotManager
-                                .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                                .transformBy(PIPE_LINEUP_OFFSET),
+                            robotManager.autoAlign.getUsedScoringPose(
+                                pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                         BASE_CONSTRAINTS),
                     new AutoPoint(
                         () ->
-                            robotManager
-                                .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                                .transformBy(PIPE_LINEUP_OFFSET),
+                            robotManager.autoAlign.getUsedScoringPose(
+                                pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                         autoCommands.l4LineupCommand(pipe),
                         SCORING_CONSTRAINTS),
                     // Actually align to score
@@ -102,15 +93,13 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.autoAlign.getUsedScoringPose(
-                            pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT),
+                            pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                     Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
                 // Scoot back to the lineup position to finish the score
                 new AutoPoint(
                     () ->
-                        robotManager
-                            .autoAlign
-                            .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                            .transformBy(PIPE_LINEUP_OFFSET)))));
+                        robotManager.autoAlign.getUsedScoringPose(
+                            pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)))));
   }
 
   public Command scoreL4(ReefPipe pipe) {
@@ -121,18 +110,14 @@ public class AutoBlocks {
                     SCORING_CONSTRAINTS,
                     new AutoPoint(
                         () ->
-                            robotManager
-                                .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                                .transformBy(PIPE_APPROACH_OFFSET),
+                            robotManager.autoAlign.getUsedScoringPose(
+                                pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                         autoCommands.l4WarmupCommand(pipe),
                         BASE_CONSTRAINTS),
                     new AutoPoint(
                         () ->
-                            robotManager
-                                .autoAlign
-                                .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                                .transformBy(PIPE_LINEUP_OFFSET),
+                            robotManager.autoAlign.getUsedScoringPose(
+                                pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                         autoCommands.l4LineupCommand(pipe),
                         SCORING_CONSTRAINTS),
                     new AutoPoint(
@@ -149,14 +134,12 @@ public class AutoBlocks {
                 new AutoPoint(
                     () ->
                         robotManager.autoAlign.getUsedScoringPose(
-                            pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT),
+                            pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                     Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)),
                 new AutoPoint(
                     () ->
-                        robotManager
-                            .autoAlign
-                            .getUsedScoringPose(pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)
-                            .transformBy(PIPE_LINEUP_OFFSET)))));
+                        robotManager.autoAlign.getUsedScoringPose(
+                            pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)))));
   }
 
   public Command intakeCoralGroundPoints(Points intakingPoint) {
