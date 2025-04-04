@@ -56,7 +56,7 @@ class PracticeConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(40.0)
+                          .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.8)
@@ -77,7 +77,7 @@ class PracticeConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(40.0)
+                          .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.8)
