@@ -15,7 +15,7 @@ import java.util.OptionalDouble;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 0.7;
-  private final Debouncer hasSeenTagDisabledDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+  private final Debouncer hasSeenTagDisabledDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final ImuSubsystem imu;
   private final Limelight leftBackLimelight;
   private final Limelight leftFrontLimelight;
