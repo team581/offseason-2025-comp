@@ -34,7 +34,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private double pitchRate;
   private double roll;
   private double rollRate;
-  private ReefPipe reefPipe;
 
   private boolean hasSeenTag = false;
   private boolean seeingTag = false;
@@ -115,12 +114,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
-      case CLOSEST_REEF_TAG_CLOSEUP -> {
-        leftBackLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
-        leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
-        rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG_CLOSEUP);
-        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
-      }
       case CORAL_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
@@ -167,8 +160,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     }
   }
 
-  public void setClosestScoringReefAndPipe(int tagID, ReefPipe currentScoringPipe) {
-    reefPipe = currentScoringPipe;
+  public void setClosestScoringReefAndPipe(int tagID) {
     leftFrontLimelight.setClosestScoringReefTag(tagID);
     rightLimelight.setClosestScoringReefTag(tagID);
     leftBackLimelight.setClosestScoringReefTag(tagID);
@@ -177,8 +169,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   public boolean isAnyCameraOffline() {
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
-        || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
-    // || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
+        || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE
+    || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
 
   }
 
@@ -194,14 +186,5 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return leftBackLimelight.isOnlineForTags()
         || leftFrontLimelight.isOnlineForTags()
         || rightLimelight.isOnlineForTags();
-  }
-
-  public void updateDistanceFromReef(double distanceFromReef) {
-    DogLog.log("Vision/DistanceFromReef", distanceFromReef);
-    if (getState() == VisionState.CLOSEST_REEF_TAG) {
-      if (distanceFromReef < REEF_CLOSEUP_DISTANCE) {
-        setState(VisionState.CLOSEST_REEF_TAG_CLOSEUP);
-      }
-    }
   }
 }
