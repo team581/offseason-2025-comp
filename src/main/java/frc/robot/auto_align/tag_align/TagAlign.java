@@ -40,7 +40,7 @@ public class TagAlign {
   private static final double LAST_PIPE_SWITCH_TIMESTAMP = 0.0;
 
   private ReefPipeLevel pipeLevel = ReefPipeLevel.RAISING;
-  private final ReefPipeLevel preferredScoringLevel = ReefPipeLevel.L4;
+  private static final ReefPipeLevel PREFERRED_SCORING_LEVEL = ReefPipeLevel.L4;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
   private double rawControllerXValue = 0.0;
@@ -142,7 +142,7 @@ public class TagAlign {
   }
 
   public void markScored(ReefPipe pipe) {
-    reefState.markScored(pipe, preferredScoringLevel);
+    reefState.markScored(pipe, PREFERRED_SCORING_LEVEL);
   }
 
   public void clearReefState() {
@@ -168,7 +168,7 @@ public class TagAlign {
     }
     var level = pipeLevel;
     if (pipeLevel.equals(ReefPipeLevel.RAISING)) {
-      level = preferredScoringLevel;
+      level = PREFERRED_SCORING_LEVEL;
     }
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level))
