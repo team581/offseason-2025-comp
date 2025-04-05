@@ -78,8 +78,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public Optional<TagResult> getTagResult() {
-    if (getState() != LimelightState.TAGS
-        && getState() != LimelightState.CLOSEST_REEF_TAG) {
+    if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
       return Optional.empty();
     }
 
@@ -296,8 +295,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   public boolean isOnlineForTags() {
     return switch (getState()) {
-      case TAGS, CLOSEST_REEF_TAG ->
-          getCameraHealth() != CameraHealth.OFFLINE;
+      case TAGS, CLOSEST_REEF_TAG -> getCameraHealth() != CameraHealth.OFFLINE;
       default -> false;
     };
   }

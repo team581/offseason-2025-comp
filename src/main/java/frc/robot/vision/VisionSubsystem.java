@@ -1,9 +1,7 @@
 package frc.robot.vision;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import frc.robot.auto_align.ReefPipe;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -170,8 +168,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     return leftBackLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || leftFrontLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE
-    || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
-
+        || gamePieceDetectionLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
   public boolean isAnyLeftScoringTagLimelightOnline() {
