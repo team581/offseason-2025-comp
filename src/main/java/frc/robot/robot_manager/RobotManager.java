@@ -1138,11 +1138,11 @@ public class RobotManager extends StateMachine<RobotState> {
   public void testingNextLollipopRequest() {
     if (!getState().climbingOrRehoming) {
       switch (getState()) {
-        case CORAL_INTAKE_LOLLIPOP_APPROACH -> lollipopIntakeGrabRequest();
+        case CORAL_INTAKE_LOLLIPOP_APPROACH -> lollipopIntakeApproachRequest();
         case CORAL_INTAKE_LOLLIPOP_GRAB ->
             setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH);
         case CORAL_INTAKE_LOLLIPOP_PUSH -> setStateFromRequest(RobotState.CLAW_CORAL);
-        default -> lollipopIntakeApproachRequest();
+        default -> lollipopIntakeGrabRequest();
       }
     }
   }
