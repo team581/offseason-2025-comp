@@ -180,7 +180,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlign.markScored(bestReefPipe);
   }
 
-  public void setScoringLevel(ReefPipeLevel level, ReefPipeLevel preferredLevel, RobotScoringSide side) {
+  public void setScoringLevel(
+      ReefPipeLevel level, ReefPipeLevel preferredLevel, RobotScoringSide side) {
     robotScoringSide = side;
     tagAlign.setLevel(level, preferredLevel, side);
   }

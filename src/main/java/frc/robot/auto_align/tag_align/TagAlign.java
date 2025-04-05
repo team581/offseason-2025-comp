@@ -40,7 +40,7 @@ public class TagAlign {
   private static final double LAST_PIPE_SWITCH_TIMESTAMP = 0.0;
 
   private ReefPipeLevel pipeLevel = ReefPipeLevel.RAISING;
-  private ReefPipeLevel preferredScoringLevel = ReefPipeLevel.L4;
+  private final ReefPipeLevel preferredScoringLevel = ReefPipeLevel.L4;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
   private double rawControllerXValue = 0.0;
