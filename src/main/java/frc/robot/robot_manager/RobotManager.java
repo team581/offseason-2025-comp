@@ -1298,6 +1298,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RIGHT_PLACE,
           CORAL_L3_RIGHT_PLACE,
           CORAL_L4_RIGHT_PLACE -> {
+        autoAlign.markPipeScored();
         setStateFromRequest(getState().getPlaceToReleaseState());
       }
 
