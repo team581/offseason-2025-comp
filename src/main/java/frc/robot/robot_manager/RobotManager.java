@@ -280,7 +280,7 @@ public class RobotManager extends StateMachine<RobotState> {
         groundManager.idleRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
+        vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
