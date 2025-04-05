@@ -40,7 +40,7 @@ public class TagAlign {
   private static final double LAST_PIPE_SWITCH_TIMESTAMP = 0.0;
 
   private ReefPipeLevel pipeLevel = ReefPipeLevel.RAISING;
-  private static final ReefPipeLevel PREFERRED_SCORING_LEVEL = ReefPipeLevel.L4;
+  private  ReefPipeLevel preferredScoringLevel = ReefPipeLevel.L4;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
   private double rawControllerXValue = 0.0;
@@ -123,7 +123,7 @@ public class TagAlign {
   }
 
   public boolean isAligned(ReefPipe pipe) {
-    if (pipeLevel.equals(ReefPipeLevel.RAISING)) {
+    if (pipeLevel.equals(ReefPipeLevel.RAISING) || pipeLevel.equals(ReefPipeLevel.BACK_AWAY)) {
       return false;
     }
     var robotPose = localization.getPose();
@@ -142,7 +142,7 @@ public class TagAlign {
   }
 
   public void markScored(ReefPipe pipe) {
-    reefState.markScored(pipe, PREFERRED_SCORING_LEVEL);
+    reefState.markScored(pipe, preferredScoringLevel);
   }
 
   public void clearReefState() {
@@ -166,9 +166,12 @@ public class TagAlign {
     if ((DriverStation.isAutonomous() || pipeSwitchActive) && reefPipeOverride.isPresent()) {
       return reefPipeOverride.orElseThrow();
     }
-
+    var level = pipeLevel;
+if (pipeLevel.equals(ReefPipeLevel.RAISING)) {
+      level = preferredScoringLevel;
+    }
     return ALL_REEF_PIPES.stream()
-        .min(alignmentCostUtil.getReefPipeComparator(PREFERRED_SCORING_LEVEL))
+        .min(alignmentCostUtil.getReefPipeComparator(level))
         .orElseThrow();
   }
 

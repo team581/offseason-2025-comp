@@ -947,14 +947,16 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L3_LEFT_APPROACH,
               CORAL_L3_RIGHT_APPROACH,
               CORAL_L4_LEFT_APPROACH,
-              CORAL_L4_RIGHT_APPROACH,
-              CORAL_L2_LEFT_RELEASE,
+              CORAL_L4_RIGHT_APPROACH ->
+              ReefPipeLevel.RAISING;
+
+          case CORAL_L2_LEFT_RELEASE,
               CORAL_L2_RIGHT_RELEASE,
               CORAL_L3_LEFT_RELEASE,
               CORAL_L3_RIGHT_RELEASE,
               CORAL_L4_LEFT_RELEASE,
               CORAL_L4_RIGHT_RELEASE ->
-              ReefPipeLevel.RAISING;
+              ReefPipeLevel.BACK_AWAY;
 
           case CORAL_L1_RIGHT_LINEUP, CORAL_L1_RIGHT_RELEASE -> ReefPipeLevel.L1;
           case CORAL_L2_LEFT_LINEUP,
