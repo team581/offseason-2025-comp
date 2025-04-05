@@ -14,10 +14,7 @@ public class ReefPipeTest {
   private static final Translation2d RED_REEF_CENTER =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.499));
 
-  private static double round(double value) {
-    // Round to centimeter precision
-    return MathHelpers.roundTo(value, 2);
-  }
+  
 
   @Test
   void checkBlueReefPipeDistancesToCenter() {
