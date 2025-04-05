@@ -132,6 +132,7 @@ public class RobotManager extends StateMachine<RobotState> {
             && arm.atGoal()
             && elevator.atGoal()
             && scoringAlignActive) {
+              autoAlign.markPipeScored();
           yield currentState.getPlaceToReleaseState();
         }
         yield currentState;
