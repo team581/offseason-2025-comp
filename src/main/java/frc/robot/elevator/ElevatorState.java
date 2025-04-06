@@ -31,7 +31,7 @@ public enum ElevatorState {
   ALGAE_INTAKE_L2(26.0),
   ALGAE_INTAKE_L3(41.0),
 
-  ALGAE_NET(56.0),
+  ALGAE_NET(67.0),
 
   PROCESSOR(20.0),
 
