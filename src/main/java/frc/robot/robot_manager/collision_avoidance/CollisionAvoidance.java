@@ -189,6 +189,13 @@ public class CollisionAvoidance {
     Waypoint.L3_LEFT.canMoveToAlways(Waypoint.L3_LEFT_PLACE, graph);
     Waypoint.L4_LEFT.canMoveToAlways(Waypoint.L4_LEFT_PLACE, graph);
 
+    Waypoint.L4_LEFT_PLACE.canMoveToAlways(Waypoint.ALGAE_L2_LEFT, graph);
+    Waypoint.L4_LEFT_PLACE.canMoveToAlways(Waypoint.ALGAE_L3_LEFT, graph);
+
+    Waypoint.L4_RIGHT_PLACE.canMoveToAlways(Waypoint.ALGAE_L2_RIGHT, graph);
+    Waypoint.L4_RIGHT_PLACE.canMoveToAlways(Waypoint.ALGAE_L3_RIGHT, graph);
+
+
     // Right side
     Waypoint.HANDOFF.canMoveToWhenRightSafe(Waypoint.L4_RIGHT, graph);
 
