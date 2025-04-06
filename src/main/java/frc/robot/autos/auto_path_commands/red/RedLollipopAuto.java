@@ -21,7 +21,7 @@ public class RedLollipopAuto extends BaseAuto {
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1_FORWARD.redPose;
+    return Points.START_R1_AND_B1.redPose;
   }
 
   @Override
@@ -30,8 +30,8 @@ public class RedLollipopAuto extends BaseAuto {
         blocks.startingPath(
             getStartingPose(),
             new AutoSegment(
-                new AutoPoint(new Pose2d(10.289, 0.758, Rotation2d.fromDegrees(0.0))),
-                new AutoPoint(new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30))),
+                new AutoPoint(new Pose2d(10.289, 0.758, Rotation2d.fromDegrees(90.0))),
+                new AutoPoint(new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(60))),
                 new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
         blocks.intakeLollipop(
