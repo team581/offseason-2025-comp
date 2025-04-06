@@ -12,8 +12,6 @@ import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import frc.robot.robot_manager.ground_manager.GroundState;
-import frc.robot.util.FeatureFlag;
-
 import java.util.List;
 
 public class AutoCommands {
@@ -46,7 +44,8 @@ public class AutoCommands {
   public Command resetPoseIfNeeded(Pose2d pose) {
     return Commands.runOnce(
         () -> {
-          if (!robotManager.vision.hasSeenTag()||!FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()) {
+          if (!robotManager.vision.hasSeenTag()
+              || !FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()) {
             robotManager.localization.resetPose(pose);
           }
         });
