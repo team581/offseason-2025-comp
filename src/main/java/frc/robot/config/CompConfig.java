@@ -32,15 +32,16 @@ import frc.robot.config.RobotConfig.IntakeConfig;
 import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
+import frc.robot.generated.CompBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants;
 
-class PracticeConfig {
-  private static final String CANIVORE_NAME = PracticeBotTunerConstants.kCANBus.getName();
+class CompConfig {
+  private static final String CANIVORE_NAME = CompBotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
-  public static final RobotConfig practiceBot =
+  public static final RobotConfig competitionBot =
       new RobotConfig(
-          "practice",
+          "comp",
           new ElevatorConfig(
               CANIVORE_NAME,
               15,
@@ -214,7 +215,7 @@ class PracticeConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0))
                   .withClosedLoopGeneral(new ClosedLoopGeneralConfigs().withContinuousWrap(false)),
-              -10.98,
+              -12.568359375,
               6.615),
           new DeployConfig(
               CANIVORE_NAME,
@@ -266,7 +267,7 @@ class PracticeConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.566650390625)
+                          .withMagnetOffset(-0.44921875)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5)),
               new TalonFXConfiguration()
@@ -280,5 +281,5 @@ class PracticeConfig {
                   .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
           new LightsConfig(CANIVORE_NAME, 17));
 
-  private PracticeConfig() {}
+  private CompConfig() {}
 }
