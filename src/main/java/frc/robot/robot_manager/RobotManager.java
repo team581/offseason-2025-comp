@@ -119,7 +119,8 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_INTAKE_LOLLIPOP_APPROACH,
           CORAL_INTAKE_LOLLIPOP_PUSH,
           PREPARE_HANDOFF_AFTER_INTAKE,
-          ALGAE_FLING_WAIT ->
+          ALGAE_FLING_WAIT,
+          ENDGAME_STOWED ->
           currentState;
       case CORAL_L2_RIGHT_PLACE,
           CORAL_L2_LEFT_PLACE,
@@ -305,6 +306,14 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ENDGAME_STOWED -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_FLOOR -> {
@@ -1082,16 +1091,14 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void stowRequest() {
     afterIntakingCoralState = Optional.empty();
+    groundManager.idleRequest();
     switch (getState()) {
       case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
           ALGAE_INTAKE_L3_LEFT,
-          ALGAE_INTAKE_L3_RIGHT -> {
-        groundManager.idleRequest();
-        setStateFromRequest(RobotState.CLAW_EMPTY);
-      }
+          ALGAE_INTAKE_L3_RIGHT -> setStateFromRequest(RobotState.CLAW_EMPTY);
+      case ENDGAME_STOWED -> {}
       default -> {
-        groundManager.idleRequest();
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
           if (getState().clawGp == ClawGamePiece.ALGAE) {
@@ -1373,6 +1380,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_CORAL -> l4CoralApproachRequest();
+      case ENDGAME_STOWED -> groundManager.l1Request();
+
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
       case ALGAE_NET_LEFT_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_LEFT_RELEASE);
@@ -1414,6 +1423,12 @@ public class RobotManager extends StateMachine<RobotState> {
   public void spinToWinRequest() {
     if (!getState().climbingOrRehoming && FeatureFlags.SPIN_TO_WIN.getAsBoolean()) {
       setStateFromRequest(RobotState.PREPARE_SPIN_TO_WIN);
+    }
+  }
+
+  public void endgameStowRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.ENDGAME_STOWED);
     }
   }
 
