@@ -177,7 +177,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
         MathHelpers.signedExp(ControllerHelpers.deadbandJoystickValue(x, LEFT_X_DEADBAND), 2.0);
     double rightX =
         MathHelpers.signedExp(
-            ControllerHelpers.deadbandJoystickValue(theta, RIGHT_X_DEADBAND), 2.0);
+            ControllerHelpers.deadbandJoystickValue(theta, RIGHT_X_DEADBAND), 1.0);
 
     if (RobotConfig.get().swerve().invertRotation()) {
       rightX *= -1.0;
