@@ -252,8 +252,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L3_RIGHT -> {
         if (claw.getHasGP()) {
           rumbleController.rumbleRequest();
-            yield currentState.getAlgaeIntakeToHoldingState();
-          
+          yield currentState.getAlgaeIntakeToHoldingState();
         }
 
         yield currentState;
