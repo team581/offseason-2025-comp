@@ -33,7 +33,6 @@ import frc.robot.config.RobotConfig.LightsConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.generated.CompBotTunerConstants;
-import frc.robot.generated.PracticeBotTunerConstants;
 
 class CompConfig {
   private static final String CANIVORE_NAME = CompBotTunerConstants.kCANBus.getName();
