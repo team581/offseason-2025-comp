@@ -54,4 +54,6 @@ L3_RIGHT <-- 1.378 --> L1_RIGHT
 L3_RIGHT <-- 1.016 --> L2_RIGHT
 L2_RIGHT_PLACE <-- 1.062 --> L2_RIGHT
 L3_RIGHT_PLACE <-- 1.093 --> L3_RIGHT
+
+linkStyle 1,4,6,7,8,17,19,20,21,22,29,30,31,32,33,34,42 stroke:red;
 ```
