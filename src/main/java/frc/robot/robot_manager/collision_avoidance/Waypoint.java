@@ -70,6 +70,10 @@ public enum Waypoint {
   ALGAE_OUT_RIGHT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT)),
   ALGAE_OUT_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT)),
 
+  ALGAE_LEFT_INTAKE_OUT( new SuperstructurePosition(
+    ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_LEFT_L2)),
+    ALGAE_RIGHT_INTAKE_OUT( new SuperstructurePosition(
+      ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_RIGHT_L2)),
   ALGAE_L2_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_RIGHT_L2)),
   ALGAE_L2_LEFT(
