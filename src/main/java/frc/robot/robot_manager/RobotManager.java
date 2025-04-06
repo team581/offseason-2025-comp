@@ -1084,7 +1084,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
           ALGAE_INTAKE_L3_LEFT,
-          ALGAE_INTAKE_L3_RIGHT -> setStateFromRequest(RobotState.CLAW_EMPTY);
+          ALGAE_INTAKE_L3_RIGHT ->
+          setStateFromRequest(RobotState.CLAW_EMPTY);
       case ENDGAME_STOWED -> {}
       default -> {
         if (claw.getHasGP()) {
