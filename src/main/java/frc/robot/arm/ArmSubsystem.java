@@ -54,9 +54,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
           .withVelocity(Units.degreesToRotations(90));
 
   public ArmSubsystem(TalonFX motor) {
-    super(
-        SubsystemPriority.ARM,
-        RobotConfig.IS_PRACTICE_BOT ? ArmState.PRE_MATCH_HOMING : ArmState.HOLDING_UPRIGHT);
+    super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
 
     this.motor = motor;
