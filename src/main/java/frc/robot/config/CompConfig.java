@@ -240,9 +240,9 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine)),
               -34.0,
               120.673828125,
-              3,
+              -3,
               20,
-              120.673828125),
+              -34.0),
           new ClimberConfig(
               CANIVORE_NAME,
               21,
