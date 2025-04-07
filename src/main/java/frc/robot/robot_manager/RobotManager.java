@@ -19,6 +19,7 @@ import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake_deploy.DeployState;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -175,7 +176,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP()
+          claw.getHasGP() && groundManager.deploy.atGoal(DeployState.STOWED)
               ? currentState.getHandoffReleaseToApproachState(robotScoringSide)
               : currentState;
 
@@ -838,6 +839,7 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
     arm.setCoralTx(vision.getHandoffOffsetTx());
+    groundManager.deploy.setClawHasGP(claw.getHasGP());
 
     switch (getState()) {
       case ALGAE_INTAKE_L2_LEFT_APPROACH,
