@@ -7,7 +7,7 @@ import frc.robot.util.MathHelpers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Stack;
+import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 
 public class GraphVisualizer {
@@ -70,7 +70,7 @@ public class GraphVisualizer {
       String title, ValueGraph<Waypoint, WaypointEdge> graph, ObstructionKind obstruction) {
     var sb = new StringBuilder();
     var linkIndex = 0;
-    var impossibleLinkIndexes = new Stack<>();
+    var impossibleLinkIndexes = new ArrayDeque<Integer>();
 
     sb.append("# ");
     sb.append(title);
