@@ -1170,6 +1170,18 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void l3CoralLeftAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L3_LEFT_APPROACH);
+    }
+  }
+
+  public void l3CoralRightAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L3_RIGHT_APPROACH);
+    }
+  }
+
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {
       return;
@@ -1267,6 +1279,16 @@ public class RobotManager extends StateMachine<RobotState> {
         setStateFromRequest(RobotState.CORAL_L4_LEFT_RELEASE);
       } else {
         setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
+      }
+    }
+  }
+
+  public void l3CoralLeftReleaseRequest() {
+    if (!getState().climbingOrRehoming) {
+      if (claw.getHasGP()) {
+        setStateFromRequest(RobotState.CORAL_L3_LEFT_RELEASE);
+      } else {
+        setStateFromRequest(RobotState.CORAL_L3_PREPARE_HANDOFF);
       }
     }
   }
