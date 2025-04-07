@@ -29,22 +29,26 @@ public class RedLollipopVariantAuto extends BaseAuto {
     return Commands.sequence(
         trailblazer.followSegment(
             new AutoSegment(
-                new AutoPoint(new Pose2d(10.289, 0.758, Rotation2d.fromDegrees(30))),
-                new AutoPoint(new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30))),
-                new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
-        blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
+                new AutoPoint(new Pose2d(10.289,0.47, Rotation2d.fromDegrees(30))),
+                new AutoPoint(new Pose2d(12.405, 1.331, Rotation2d.fromDegrees(30))),
+                new AutoPoint(new Pose2d(14.258, 2.489, Rotation2d.fromDegrees(30))),
+                new AutoPoint(new Pose2d(14.921, 3.556, Rotation2d.fromDegrees(90))))),
+        blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+       //Lollipop 2
+       blocks.intakeLollipop(
+        new Pose2d(13.9, 3.996, Rotation2d.fromDegrees(0))
+            .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
+        new Pose2d(15.1, 3.996, Rotation2d.fromDegrees(0))
+            .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
+    blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
+        //Lollipop 1
         blocks.intakeLollipop(
             new Pose2d(13.7, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.1, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
-        blocks.intakeLollipop(
-            new Pose2d(13.9, 3.996, Rotation2d.fromDegrees(0))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.1, 3.996, Rotation2d.fromDegrees(0))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
+        blocks.scoreL3(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+        // Lollipop 3
         blocks.intakeLollipop(
             new Pose2d(14.8, 5.106, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
