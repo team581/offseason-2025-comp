@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -375,6 +376,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
+
+    var odometryFrequency = drivetrain.getOdometryFrequency();
+    DogLog.log("Swerve/OdometryFrequency", odometryFrequency);
+
+    if (odometryFrequency < 250) {
+      DogLog.logFault("Swerve odometry frequency too low", AlertType.kWarning);
+    } else {
+      DogLog.clearFault("Swerve odometry frequency too low");
+    }
   }
 
   private void startSimThread() {
