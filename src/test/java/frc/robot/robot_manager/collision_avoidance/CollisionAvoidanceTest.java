@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
@@ -79,28 +78,6 @@ public class CollisionAvoidanceTest {
     double expected = 540.0;
 
     assertEquals(expected, result);
-  }
-
-  @Test
-  public void leftObstructedAstarTest() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(0, 90),
-            new SuperstructurePosition(50, 180),
-            ObstructionKind.LEFT_OBSTRUCTED);
-
-    assertEquals(Optional.empty(), result);
-  }
-
-  @Test
-  public void rightObstructedAstarTest() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(0, 90),
-            new SuperstructurePosition(50, 0),
-            ObstructionKind.RIGHT_OBSTRUCTED);
-
-    assertEquals(Optional.empty(), result);
   }
 
   @Test

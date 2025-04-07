@@ -265,7 +265,8 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L2_RIGHT_HOLDING,
           ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
         if (cameraOnlineAndFarEnoughFromReef()) {
-          // yield DriverStation.isAutonomous() ? RobotState.CLAW_ALGAE_STOW_INWARD : RobotState.CLAW_ALGAE;
+          // yield DriverStation.isAutonomous() ? RobotState.CLAW_ALGAE_STOW_INWARD :
+          // RobotState.CLAW_ALGAE;
           // TODO: implement stow inward
           yield RobotState.CLAW_ALGAE;
         }
