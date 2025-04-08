@@ -33,7 +33,7 @@ public class FeatureFlags {
       FeatureFlag.of("Vision/HandoffAdjustment", true);
 
   public static final BooleanSupplier AUTO_ALIGN_AUTO_SCORE =
-      FeatureFlag.of("AutoAlign/AutoScore", true);
+      FeatureFlag.of("AutoAlign/AutoScore", false);
 
   public static final BooleanSupplier SPIN_TO_WIN = FeatureFlag.of("Yapping/SpinToWin", false);
 

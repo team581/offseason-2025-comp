@@ -96,6 +96,8 @@ public class Limelight extends StateMachine<LimelightState> {
     if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
       var newTimestamp = mT2Estimate.timestampSeconds;
       if (newTimestamp == lastTimestamp) {
+        DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", 0.0);
+
         DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
         return Optional.empty();
       }
