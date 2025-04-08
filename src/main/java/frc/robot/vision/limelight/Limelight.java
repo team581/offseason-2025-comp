@@ -21,7 +21,7 @@ import java.util.OptionalDouble;
 
 public class Limelight extends StateMachine<LimelightState> {
   private static final int[] VALID_APRILTAGS =
-      new int[] { 6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+      new int[] {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 
   private static final double IS_OFFLINE_TIMEOUT = 3;
   private static final double USE_MT1_DISTANCE_THRESHOLD = Units.inchesToMeters(40.0);
@@ -92,7 +92,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
       return Optional.empty();
     }
-    DogLog.log("Vision/"+name+"/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
+    DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
     if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
       var newTimestamp = mT2Estimate.timestampSeconds;
       if (newTimestamp == lastTimestamp) {
@@ -112,19 +112,21 @@ public class Limelight extends StateMachine<LimelightState> {
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
     if (FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
-        var distance = mT2Estimate.avgTagDist;
-        DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
+      var distance = mT2Estimate.avgTagDist;
+      DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
-        var xyDev = 0.01 * Math.pow(distance, 1.2);
-        var thetaDev = 0.03 * Math.pow(distance, 1.2);
+      var xyDev = 0.01 * Math.pow(distance, 1.2);
+      var thetaDev = 0.03 * Math.pow(distance, 1.2);
 
-        devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
+      devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
 
-        if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
-          DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
-          var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
-          if (mT1Result != null && mT1Result.tagCount!=0 &&mT1Result.pose.getRotation().getDegrees() != 0.0) {
-            mt2Pose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
+      if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
+        DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
+        var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
+        if (mT1Result != null
+            && mT1Result.tagCount != 0
+            && mT1Result.pose.getRotation().getDegrees() != 0.0) {
+          mt2Pose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
         }
       }
     }
