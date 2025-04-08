@@ -19,7 +19,7 @@ public class RedThreePiece3IKLAuto extends BaseAuto {
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_R2_AND_B2.redPose;
+    return Points.START_R3_AND_B3.redPose;
   }
 
   @Override
