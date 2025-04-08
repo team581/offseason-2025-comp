@@ -86,55 +86,51 @@ public class Limelight extends StateMachine<LimelightState> {
     if (mT2Estimate == null) {
       return Optional.empty();
     }
+
+    if (mT2Estimate.tagCount == 0) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
+
+      return Optional.empty();
+    }
+    DogLog.log("Vision/"+name+"/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
     if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
       var newTimestamp = mT2Estimate.timestampSeconds;
       if (newTimestamp == lastTimestamp) {
+        DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
         return Optional.empty();
       }
 
       lastTimestamp = newTimestamp;
     }
 
-    var newPose = mT2Estimate.pose;
-    if (mT2Estimate.tagCount == 0) {
-      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-
-      return Optional.empty();
-    }
+    var mt2Pose = mT2Estimate.pose;
     // This prevents pose estimator from having crazy poses if the Limelight loses power
-    if (newPose.getX() == 0.0 && newPose.getY() == 0.0) {
+    if (mt2Pose.getX() == 0.0 && mt2Pose.getY() == 0.0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
       return Optional.empty();
     }
-    var devs =
-        VecBuilder.fill(
-            RobotConfig.get().vision().xyStdDev(),
-            RobotConfig.get().vision().xyStdDev(),
-            Double.MAX_VALUE);
+    var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
     if (FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
-      var cameraToTagPose = LimelightHelpers.getCameraPose3d_TargetSpace(limelightTableName);
-      DogLog.log("Vision/" + name + "/Tags/CameraToTagPose", cameraToTagPose);
+        var distance = mT2Estimate.avgTagDist;
+        DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
-      if (cameraToTagPose != null) {
-        var distance = Math.hypot(cameraToTagPose.getX(), cameraToTagPose.getZ());
         var xyDev = 0.01 * Math.pow(distance, 1.2);
         var thetaDev = 0.03 * Math.pow(distance, 1.2);
 
         devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
-        DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
+
         if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
           DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
           var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
-          if (mT1Result != null && mT1Result.pose.getRotation().getDegrees() != 0.0) {
-            newPose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
-          }
+          if (mT1Result != null && mT1Result.tagCount!=0 &&mT1Result.pose.getRotation().getDegrees() != 0.0) {
+            mt2Pose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
         }
       }
     }
 
-    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", newPose);
-    return Optional.of(new TagResult(newPose, mT2Estimate.timestampSeconds, devs));
+    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", mt2Pose);
+    return Optional.of(new TagResult(mt2Pose, mT2Estimate.timestampSeconds, devs));
   }
 
   private Optional<GamePieceResult> getRawCoralResult() {
