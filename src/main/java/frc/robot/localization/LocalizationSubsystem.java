@@ -1,6 +1,5 @@
 package frc.robot.localization;
 
-
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -10,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -83,9 +81,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private void ingestTagResult(TagResult result) {
     var visionPose = result.pose();
 
-
-
-    if (!vision.seenTagRecentlyForReset()&&FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
     swerve.drivetrain.addVisionMeasurement(

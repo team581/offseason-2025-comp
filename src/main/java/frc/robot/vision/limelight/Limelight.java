@@ -16,8 +16,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-
-import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -84,12 +82,12 @@ public class Limelight extends StateMachine<LimelightState> {
       return Optional.empty();
     }
 
-    var MT2Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
-    if (MT2Estimate == null) {
+    var mT2Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+    if (mT2Estimate == null) {
       return Optional.empty();
     }
     if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
-      var newTimestamp = MT2Estimate.timestampSeconds;
+      var newTimestamp = mT2Estimate.timestampSeconds;
       if (newTimestamp == lastTimestamp) {
         return Optional.empty();
       }
@@ -97,8 +95,8 @@ public class Limelight extends StateMachine<LimelightState> {
       lastTimestamp = newTimestamp;
     }
 
-    var newPose = MT2Estimate.pose;
-    if (MT2Estimate.tagCount == 0) {
+    var newPose = mT2Estimate.pose;
+    if (mT2Estimate.tagCount == 0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
       return Optional.empty();
@@ -109,34 +107,34 @@ public class Limelight extends StateMachine<LimelightState> {
 
       return Optional.empty();
     }
-    var devs = VecBuilder.fill(RobotConfig.get().vision().xyStdDev(),RobotConfig.get().vision().xyStdDev(),Double.MAX_VALUE);
+    var devs =
+        VecBuilder.fill(
+            RobotConfig.get().vision().xyStdDev(),
+            RobotConfig.get().vision().xyStdDev(),
+            Double.MAX_VALUE);
     if (FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var cameraToTagPose = LimelightHelpers.getCameraPose3d_TargetSpace(limelightTableName);
-      DogLog.log("Vision/"+name+"/Tags/CameraToTagPose", cameraToTagPose);
+      DogLog.log("Vision/" + name + "/Tags/CameraToTagPose", cameraToTagPose);
 
       if (cameraToTagPose != null) {
         var distance = Math.hypot(cameraToTagPose.getX(), cameraToTagPose.getZ());
-        var xyDev = 0.01 * (Math.pow(distance, 1.2));
-        var thetaDev = 0.03 * (Math.pow(distance, 1.2));
+        var xyDev = 0.01 *  Math.pow(distance, 1.2);
+        var thetaDev = 0.03 *  Math.pow(distance, 1.2);
 
-         devs = VecBuilder.fill(
-          xyDev,
-          xyDev,
-          thetaDev);
-        DogLog.log("Vision/"+name+"/Tags/DistanceFromTag", Units.metersToInches(distance));
+        devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
+        DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
         if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
           DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
-          var MT1Result =
-              LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
-              if(MT1Result!=null && MT1Result.pose.getRotation().getDegrees()!=0.0) {
-                newPose = new Pose2d(MT2Estimate.pose.getTranslation(), MT1Result.pose.getRotation());
-              }
+          var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
+          if (mT1Result != null && mT1Result.pose.getRotation().getDegrees() != 0.0) {
+            newPose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
+          }
         }
       }
     }
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", newPose);
-    return Optional.of(new TagResult(newPose, MT2Estimate.timestampSeconds, devs));
+    return Optional.of(new TagResult(newPose, mT2Estimate.timestampSeconds, devs));
   }
 
   private Optional<GamePieceResult> getRawCoralResult() {

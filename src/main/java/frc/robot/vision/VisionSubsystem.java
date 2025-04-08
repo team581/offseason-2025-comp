@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,17 +12,14 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import frc.robot.vision.results.TagResult;
-
-import java.sql.Driver;
 import java.util.Optional;
 import java.util.OptionalDouble;
-
-import dev.doglog.DogLog;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
   private static final double REEF_CLOSEUP_DISTANCE = 0.7;
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
-  private final Debouncer seeingTagForPoseResetDebouncer = new Debouncer(5.0, DebounceType.kFalling);
+  private final Debouncer seeingTagForPoseResetDebouncer =
+      new Debouncer(5.0, DebounceType.kFalling);
 
   private final ImuSubsystem imu;
   private final Limelight leftBackLimelight;
@@ -76,7 +74,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       seeingTag = false;
     }
     seeingTagDebounced = seeingTagDebouncer.calculate(seeingTag);
-    if(DriverStation.isDisabled()) {
+    if (DriverStation.isDisabled()) {
       seenTagRecentlyForReset = true;
     } else {
       seenTagRecentlyForReset = seeingTagForPoseResetDebouncer.calculate(seeingTag);
@@ -181,7 +179,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     DogLog.log("Vision/SeeingTag", seeingTag);
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);
-
   }
 
   public void setClosestScoringReefAndPipe(int tagID) {
