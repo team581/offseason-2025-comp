@@ -118,8 +118,8 @@ public class Limelight extends StateMachine<LimelightState> {
 
       if (cameraToTagPose != null) {
         var distance = Math.hypot(cameraToTagPose.getX(), cameraToTagPose.getZ());
-        var xyDev = 0.01 *  Math.pow(distance, 1.2);
-        var thetaDev = 0.03 *  Math.pow(distance, 1.2);
+        var xyDev = 0.01 * Math.pow(distance, 1.2);
+        var thetaDev = 0.03 * Math.pow(distance, 1.2);
 
         devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
         DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
