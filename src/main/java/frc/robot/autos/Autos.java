@@ -45,7 +45,7 @@ public class Autos extends LifecycleSubsystem {
     if (DriverStation.isDisabled()) {
       updateSelection();
 
-      if (!hasEnabledAuto) {
+      if (!hasEnabledAuto && (DriverStation.isAutonomous() || DriverStation.isFMSAttached())) {
         // Continuously reset pose
         resetPoseForAuto();
       }
