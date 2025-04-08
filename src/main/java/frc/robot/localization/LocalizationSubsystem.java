@@ -1,5 +1,6 @@
 package frc.robot.localization;
 
+
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -81,17 +83,13 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private void ingestTagResult(TagResult result) {
     var visionPose = result.pose();
 
-    if (DriverStation.isDisabled() && FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()) {
+
+
+    if (!vision.seenTagRecentlyForReset()&&FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-
-    var stdDevs =
-        FeatureFlags.CONTEXT_BASED_MEGATAG_1.getAsBoolean()
-            ? MT1_VISION_STD_DEVS
-            : MT2_VISION_STD_DEVS;
-
     swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), stdDevs);
+        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {

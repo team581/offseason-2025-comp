@@ -129,7 +129,7 @@ class PracticeConfig {
                           .withPeakReverseTorqueCurrent(70.0))),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true),
           new VisionConfig(
-              0.005,
+              0.01,
               Double.MAX_VALUE,
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
