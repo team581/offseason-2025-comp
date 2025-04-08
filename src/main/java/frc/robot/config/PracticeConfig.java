@@ -136,7 +136,7 @@ class PracticeConfig {
 
               // Robot pose to calibration rig
               new Pose3d(
-                  -Units.inchesToMeters(18.5+4.5+2.0),
+                  -Units.inchesToMeters(18.5 + 4.5 + 2.0),
                   Units.inchesToMeters(13.1496063),
                   Units.inchesToMeters(0.0),
                   new Rotation3d(0.0, 0.0, 0.0)),
@@ -151,7 +151,7 @@ class PracticeConfig {
                   new Rotation3d(
                       Units.degreesToRadians(0.0),
                       Units.degreesToRadians(-5.0),
-                      Units.degreesToRadians(90.0-50.0))),
+                      Units.degreesToRadians(90.0 - 50.0))),
 
               // Left Front Limelight
               // Forward: 0.2472182, Right: -0.3260344, Up: 0.2320544, Roll: 0.0, Pitch: 5.0, Yaw:
