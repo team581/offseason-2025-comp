@@ -7,6 +7,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -133,6 +135,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
 
     driveToAngle.HeadingController.setTolerance(0.01);
+
+    drivetrain.setStateStdDevs(new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002)));
   }
 
   public void setFieldRelativeAutoSpeeds(ChassisSpeeds speeds) {
