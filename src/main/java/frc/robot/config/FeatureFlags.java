@@ -16,7 +16,7 @@ public class FeatureFlags {
   public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
 
   public static final BooleanSupplier VISION_STALE_DATA_CHECK =
-      FeatureFlag.of("Vision/StaleDataRejection", true);
+      FeatureFlag.of("Vision/StaleDataRejection", false);
 
   public static final BooleanSupplier MT_VISION_METHOD =
       FeatureFlag.of("Vision/MTVisionMethod", true);
