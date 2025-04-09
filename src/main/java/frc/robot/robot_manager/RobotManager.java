@@ -277,7 +277,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_INTAKE_LOLLIPOP_GRAB ->
           claw.getHasGP() ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH : currentState;
       case CORAL_INTAKE_LOLLIPOP_PUSH ->
-          arm.atGoal() && elevator.atGoal() ? RobotState.PRELOAD_CORAL : currentState;
+          arm.atGoal() && elevator.atGoal() ? RobotState.CLAW_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
@@ -407,9 +407,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(
             // TODO: We don't want to require unsafe mode here
-            ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE,
-            ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE
-            );
+            ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.ALGAE_DETECTION);
         lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
