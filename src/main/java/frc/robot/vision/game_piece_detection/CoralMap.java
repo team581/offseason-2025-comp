@@ -56,10 +56,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
 
-    private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
-    private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
-    private double filteredLollipopX = 0.0;
-    private double filteredLollipopY = 0.0;
+  private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
+  private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
+  private double filteredLollipopX = 0.0;
+  private double filteredLollipopY = 0.0;
 
   private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
@@ -80,7 +80,6 @@ public class CoralMap extends StateMachine<CoralMapState> {
     for (var i = 0; i < LOLLIPOP_FILTER_TAPS; i++) {
       lollipopXFilter.calculate(expectedTranslation.getX());
       lollipopYFilter.calculate(expectedTranslation.getY());
-
     }
   }
 
@@ -89,7 +88,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
             lollipopResult, localization.getPose());
     if (newPose.isPresent() && safeToTrack()) {
-      if(filteredLollipopPose.isEmpty()) {
+      if (filteredLollipopPose.isEmpty()) {
         resetLollipopFilter(newPose.get().getTranslation());
       }
       filteredLollipopX = lollipopXFilter.calculate(newPose.get().getX());
