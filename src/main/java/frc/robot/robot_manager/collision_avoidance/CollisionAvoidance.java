@@ -716,6 +716,26 @@ public class CollisionAvoidance {
     return Optional.of(ImmutableList.of(startWaypoint));
   }
 
+  /**
+   * Compute a few common paths to help the JIT warm up A* execution, and add some values to the
+   * cache.
+   */
+  public static void warmup() {
+    DogLog.time("CollisionAvoidance/Warmup");
+    for (var obstruction : ObstructionKind.values()) {
+      cachedAStar(
+          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.L4_LEFT_LINEUP, obstruction));
+      cachedAStar(
+          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.L4_RIGHT_LINEUP, obstruction));
+      cachedAStar(
+          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.GROUND_ALGAE_INTAKE, obstruction));
+      cachedAStar(
+          new CollisionAvoidanceQuery(
+              Waypoint.ELEVATOR_0_ARM_UP, Waypoint.ALGAE_NET_OUT_RIGHT, obstruction));
+    }
+    DogLog.timeEnd("CollisionAvoidance/Warmup");
+  }
+
   /** Don't use this. */
   static ImmutableValueGraph<Waypoint, WaypointEdge> getRawGraph() {
     return graph;
