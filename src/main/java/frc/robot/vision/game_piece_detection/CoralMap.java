@@ -1,6 +1,7 @@
 package frc.robot.vision.game_piece_detection;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -53,13 +54,19 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private ChassisSpeeds swerveSpeeds = new ChassisSpeeds();
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
+
+    private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(7);
+    private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(7);
+    private double filteredLollipopX = 0.0;
+    private double filteredLollipopY = 0.0;
+
   private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
           target ->
               AlignmentCostUtil.getCoralAlignCost(
                   target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
 
-  private Optional<Pose2d> lastLollipopPose = Optional.empty();
+  private Optional<Pose2d> filteredLollipopPose = Optional.empty();
   private double lastLollipopTime = 0.0;
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
@@ -72,18 +79,25 @@ public class CoralMap extends StateMachine<CoralMapState> {
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
             lollipopResult, localization.getPose());
-    if (newPose.isPresent() && !newPose.equals(lastLollipopPose)) {
-      lastLollipopPose = newPose;
+    if (newPose.isPresent() && safeToTrack()) {
+      filteredLollipopX = lollipopXFilter.calculate(newPose.get().getX());
+      filteredLollipopY = lollipopYFilter.calculate(newPose.get().getY());
+      filteredLollipopPose =
+          Optional.of(
+              new Pose2d(
+                  filteredLollipopX,
+                  filteredLollipopY,
+                  Rotation2d.fromDegrees(newPose.get().getRotation().getDegrees())));
       lastLollipopTime = Timer.getFPGATimestamp();
     } else {
       if (Timer.getFPGATimestamp() - lastLollipopTime >= LOLLIPOP_LIFTEIME_SECONDS) {
-        lastLollipopPose = Optional.empty();
+        filteredLollipopPose = Optional.empty();
       }
     }
   }
 
   public Optional<Pose2d> getLollipopIntakePose() {
-    return lastLollipopPose;
+    return filteredLollipopPose;
   }
 
   private List<Translation2d> getRawCoralPoses() {
@@ -236,8 +250,8 @@ public class CoralMap extends StateMachine<CoralMapState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    if (lastLollipopPose.isPresent()) {
-      DogLog.log("CoralMap/LollipopPose", lastLollipopPose.get());
+    if (filteredLollipopPose.isPresent()) {
+      DogLog.log("CoralMap/LollipopPose", filteredLollipopPose.get());
     } else {
       DogLog.log("CoralMap/LollipopPose", Pose2d.kZero);
     }
