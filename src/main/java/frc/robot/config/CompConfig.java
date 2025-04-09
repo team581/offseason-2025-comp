@@ -278,7 +278,10 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               new CANrangeConfiguration()
-                  .withProximityParams(new ProximityParamsConfigs().withProximityThreshold(0.06))),
+                  .withProximityParams(
+                      new ProximityParamsConfigs()
+                          .withProximityThreshold(0.06)
+                          .withMinSignalStrengthForValidMeasurement(14000))),
           new LightsConfig(CANIVORE_NAME, 17));
 
   private CompConfig() {}

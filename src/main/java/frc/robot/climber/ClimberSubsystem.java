@@ -124,7 +124,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
-    runningBackwards = cancoderVelocity < -1;
+    runningBackwards = cancoderVelocity < -0.3;
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
