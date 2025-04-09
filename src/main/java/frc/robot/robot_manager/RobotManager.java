@@ -403,20 +403,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_INTAKE_LOLLIPOP_APPROACH -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(
-            // TODO: We don't want to require unsafe mode here
             ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH);
         swerve.normalDriveRequest();
         vision.setState(VisionState.ALGAE_DETECTION);
-        lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case CORAL_INTAKE_LOLLIPOP_PUSH -> {
-        claw.setState(ClawState.OUTTAKING);
-        moveSuperstructure(
-            // TODO: We don't want to require unsafe mode here
-            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
@@ -426,6 +415,16 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.ALGAE_DETECTION);
+        lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case CORAL_INTAKE_LOLLIPOP_PUSH -> {
+        claw.setState(ClawState.OUTTAKING);
+        // You are only ever doing this from the grab state, so this is fine
+        moveSuperstructure(
+            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
