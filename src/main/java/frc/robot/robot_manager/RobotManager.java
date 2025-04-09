@@ -419,7 +419,7 @@ public class RobotManager extends StateMachine<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_INTAKE_LOLLIPOP_PUSH -> {
-        claw.setState(ClawState.OUTTAKING);
+        claw.setState(ClawState.IDLE_W_CORAL);
         // You are only ever doing this from the grab state, so this is fine
         moveSuperstructure(
             ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
