@@ -160,7 +160,9 @@ public class AutoBlocks {
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
     return Commands.sequence(
         autoCommands.lollipopApproachCommand(),
-        trailblazer.followSegment(new AutoSegment(BASE_CONSTRAINTS, new AutoPoint(approachPoint))),
+        trailblazer
+            .followSegment(new AutoSegment(BASE_CONSTRAINTS, new AutoPoint(approachPoint)), false)
+            .withDeadline(autoCommands.waitForElevatorAndArmNearGoal()),
         autoCommands.intakeLollipopCommand(),
         trailblazer
             .followSegment(
