@@ -4,6 +4,7 @@ import com.google.common.graph.MutableValueGraph;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.arm.ArmState;
+import frc.robot.config.FeatureFlags;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.Comparator;
@@ -126,6 +127,16 @@ public enum Waypoint {
    * @param position The position of the superstructure.
    */
   public static Waypoint getClosest(SuperstructurePosition position) {
+    if (FeatureFlags.USE_ALTERNATE_WAYPOINT_CHOOSER.getAsBoolean()) {
+      var positionTranslation = position.getTranslation();
+
+      return ALL_WAYPOINTS.stream()
+          .min(
+              Comparator.comparingDouble(
+                  waypoint -> positionTranslation.getDistance(waypoint.position.getTranslation())))
+          .orElseThrow();
+    }
+
     return ALL_WAYPOINTS.stream()
         .min(Comparator.comparingDouble(waypoint -> position.costFor(waypoint.position)))
         .orElseThrow();
