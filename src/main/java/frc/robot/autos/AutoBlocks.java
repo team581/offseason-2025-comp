@@ -113,7 +113,7 @@ public class AutoBlocks {
                         autoCommands.l4ApproachCommand(pipe, scoringSide),
                         BASE_CONSTRAINTS)),
                 false)
-            .withDeadline(autoCommands.waitForReleaseCommand()),
+            .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(5)),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
