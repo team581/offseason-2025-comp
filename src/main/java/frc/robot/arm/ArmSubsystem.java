@@ -290,7 +290,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
-      default -> {}
+      default -> {
+        afterTransition(getState());
+      }
     }
   }
 
