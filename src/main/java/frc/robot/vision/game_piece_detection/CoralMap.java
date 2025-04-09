@@ -55,10 +55,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
 
-    private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(7);
-    private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(7);
-    private double filteredLollipopX = 0.0;
-    private double filteredLollipopY = 0.0;
+  private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(7);
+  private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(7);
+  private double filteredLollipopX = 0.0;
+  private double filteredLollipopY = 0.0;
 
   private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
