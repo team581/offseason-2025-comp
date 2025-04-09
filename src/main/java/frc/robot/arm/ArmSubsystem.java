@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
+import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -25,6 +26,64 @@ import java.util.OptionalDouble;
 
 public class ArmSubsystem extends StateMachine<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
+
+  /**
+   * Denormalizes a goal angle to be in the same rotation as the current angle, always moving
+   * forward (clockwise) if adjustment is needed.
+   *
+   * @param currentAngle The current, non-normalized angle of the arm.
+   * @param normalizedGoalAngle The normalized goal angle (between [-180, 180))
+   * @return A denormalized goal angle that can be reached by moving forward
+   */
+  public static double denormalizeAngleForward(double currentAngle, double normalizedGoalAngle) {
+    // Normalize the current angle to [-180, 180)
+    double normalizedCurrentAngle = MathHelpers.angleModulus(currentAngle);
+
+    // Calculate the number of full rotations in the current angle
+    var fullRotations = (int) Math.floor((currentAngle - normalizedCurrentAngle) / 360.0);
+
+    // Calculate base angle (same rotation as current)
+    double baseAngle = fullRotations * 360.0;
+
+    // Initialize result with the base angle + normalized goal
+    double result = baseAngle + normalizedGoalAngle;
+
+    // If moving to this angle would require moving backward, add 360 degrees
+    if (MathHelpers.angleModulus(normalizedGoalAngle - normalizedCurrentAngle) < 0) {
+      result += 360.0;
+    }
+
+    return result;
+  }
+
+  /**
+   * Denormalizes a goal angle to be in the same rotation as the current angle, always moving
+   * backward (counterclockwise) if adjustment is needed.
+   *
+   * @param currentAngle The current, non-normalized angle of the arm.
+   * @param normalizedGoalAngle The normalized goal angle (between [-180, 180))
+   * @return A denormalized goal angle that can be reached by moving backward
+   */
+  public static double denormalizeAngleBackward(double currentAngle, double normalizedGoalAngle) {
+    // Normalize the current angle to [-180, 180)
+    double normalizedCurrentAngle = MathHelpers.angleModulus(currentAngle);
+
+    // Calculate the number of full rotations in the current angle
+    var fullRotations = (int) Math.floor((currentAngle - normalizedCurrentAngle) / 360.0);
+
+    // Calculate base angle (same rotation as current)
+    double baseAngle = fullRotations * 360.0;
+
+    // Initialize result with the base angle + normalized goal
+    double result = baseAngle + normalizedGoalAngle;
+
+    // If moving to this angle would require moving forward, subtract 360 degrees
+    if (MathHelpers.angleModulus(normalizedGoalAngle - normalizedCurrentAngle) > 0) {
+      result -= 360.0;
+    }
+
+    return result;
+  }
 
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 25.0;
@@ -89,96 +148,39 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return motorAngle;
   }
 
-  public static double getCollisionAvoidanceGoal(
-      double angle, boolean climberRisky, double currentRawMotorAngle) {
-    double finalPathDecision;
-    double solution1;
-    double solution2;
-
-    int wrap = (int) currentRawMotorAngle / 360;
-    if (angle < 0) {
-      solution1 = (wrap * 360) - Math.abs(angle);
-      solution2 = (wrap * 360) + (360 - Math.abs(angle));
-    } else {
-      solution1 = (wrap * 360) + angle;
-      solution2 = (wrap * 360) - (360 - angle);
-    }
-
-    double climberUnsafeAngle1 = (wrap * 360) - (360 - CLIMBER_UNSAFE_ANGLE);
-    double climberUnsafeAngle2 = (wrap * 360) + CLIMBER_UNSAFE_ANGLE;
-
-    if (climberRisky) {
-      if ((Math.max(currentRawMotorAngle, solution1) > climberUnsafeAngle1
-              && Math.min(currentRawMotorAngle, solution1) < climberUnsafeAngle1)
-          || (Math.max(currentRawMotorAngle, solution1) > climberUnsafeAngle2
-              && Math.min(currentRawMotorAngle, solution1)
-                  < climberUnsafeAngle2)) { // bad spot is in between the solution 1 path
-        finalPathDecision = solution2;
-      } else if ((Math.max(currentRawMotorAngle, solution2) > climberUnsafeAngle1
-              && Math.min(currentRawMotorAngle, solution2) < climberUnsafeAngle1)
-          || (Math.max(currentRawMotorAngle, solution2) > climberUnsafeAngle2
-              && Math.min(currentRawMotorAngle, solution2)
-                  < climberUnsafeAngle2)) { // bad spot is in between the solution 2 path
-        finalPathDecision = solution1;
-      } else {
-        finalPathDecision = currentRawMotorAngle; // Something very bad has happened
-      }
-
-    } else {
-
-      finalPathDecision =
-          Math.min(
-              Math.abs(solution2 - currentRawMotorAngle),
-              Math.abs(solution1 - currentRawMotorAngle));
-    }
-    return finalPathDecision;
+  public double getRawAngle() {
+    return rawMotorAngle;
   }
 
-  public void setCollisionAvoidanceGoal(double angle, boolean climberRisky) {
+  private double getRawAngleFromNormalAngle(double angle) {
+    double solution1 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawMotorAngle, angle)[0];
+    double solution2 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawMotorAngle, angle)[1];
 
-    double solution1;
-    double solution2;
-
-    int wrap = (int) rawMotorAngle / 360;
-    if (angle < 0) {
-      solution1 = (wrap * 360) - Math.abs(angle);
-      solution2 = (wrap * 360) + (360 - Math.abs(angle));
+    if (Math.abs(solution2 - rawMotorAngle) > Math.abs(solution1 - rawMotorAngle)) {
+      return solution1;
     } else {
-      solution1 = (wrap * 360) + angle;
-      solution2 = (wrap * 360) - (360 - angle);
+      return solution2;
     }
+  }
 
-    double climberUnsafeAngle1 = (wrap * 360) - (360 - CLIMBER_UNSAFE_ANGLE);
-    double climberUnsafeAngle2 = (wrap * 360) + CLIMBER_UNSAFE_ANGLE;
+  public static double getRawAngleFromNormalAngleTest(double angle, double rawAngle) {
+    double solution1 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawAngle, angle)[0];
+    double solution2 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawAngle, angle)[1];
 
-    if (climberRisky) {
-      if ((Math.max(rawMotorAngle, solution1) > climberUnsafeAngle1
-              && Math.min(rawMotorAngle, solution1) < climberUnsafeAngle1)
-          || (Math.max(rawMotorAngle, solution1) > climberUnsafeAngle2
-              && Math.min(rawMotorAngle, solution1)
-                  < climberUnsafeAngle2)) { // bad spot is in between the solution 1 path
-        collisionAvoidanceGoal = solution2;
-      } else if ((Math.max(rawMotorAngle, solution2) > climberUnsafeAngle1
-              && Math.min(rawMotorAngle, solution2) < climberUnsafeAngle1)
-          || (Math.max(rawMotorAngle, solution2) > climberUnsafeAngle2
-              && Math.min(rawMotorAngle, solution2)
-                  < climberUnsafeAngle2)) { // bad spot is in between the solution 2 path
-        collisionAvoidanceGoal = solution1;
-      } else {
-        collisionAvoidanceGoal = rawMotorAngle; // Something very bad has happened
-      }
-
+    if (Math.abs(solution2 - rawAngle) > Math.abs(solution1 - rawAngle)) {
+      return solution1;
     } else {
-
-      collisionAvoidanceGoal =
-          Math.min(Math.abs(solution2 - rawMotorAngle), Math.abs(solution1 - rawMotorAngle));
+      return solution2;
     }
-    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
+  }
+
+  public void setCollisionAvoidanceGoal(double angle) {
+    collisionAvoidanceGoal = angle;
   }
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), motorAngle, TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
       case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
       case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
@@ -187,7 +189,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public boolean nearGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), motorAngle, NEAR_TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
   }
@@ -223,7 +225,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
       default -> {
         motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(getRawAngleFromNormalAngle(newState.getAngle()))));
+        DogLog.log("Arm/defaultSetPosition", getRawAngleFromNormalAngle(newState.getAngle()));
       }
     }
   }
@@ -234,6 +238,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
+    DogLog.log("Arm/RawAngle", rawMotorAngle);
+
     DogLog.log("Arm/AtGoal", atGoal());
     DogLog.log("Arm/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
 
@@ -241,7 +247,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       switch (getState()) {
         case CORAL_HANDOFF -> {
           motor.setControl(
-              motionMagicRequest.withPosition(Units.degreesToRotations(usedHandoffAngle)));
+              motionMagicRequest.withPosition(
+                  Units.degreesToRotations(getRawAngleFromNormalAngle(usedHandoffAngle))));
+          DogLog.log("ArmCoralHandoffSetPostion", getRawAngleFromNormalAngle(usedHandoffAngle));
         }
         default -> {}
       }
@@ -275,6 +283,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     } else {
       DogLog.clearFault("Arm above 40°C");
     }
+    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {

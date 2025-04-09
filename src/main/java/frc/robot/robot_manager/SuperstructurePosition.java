@@ -34,7 +34,8 @@ public record SuperstructurePosition(
               Units.rotationsToDegrees(
                   RobotConfig.get().arm().motorConfig().MotionMagic.MotionMagicAcceleration)));
 
-  private static final double STATIC_COST = 0.5;
+  // TODO: Tune this number, maybe the big tolerances in collision avoidance mean we can reduce it?
+  private static final double STATIC_COST = 1.0;
 
   public SuperstructurePosition(double elevatorHeight, double armAngle) {
     this(
@@ -71,25 +72,16 @@ public record SuperstructurePosition(
     }
 
     if (other instanceof SuperstructurePosition otherPosition) {
-      return near(
-          otherPosition,
-          new SuperstructurePosition(elevatorHeight, armAngle),
-          ELEVATOR_PRECISION,
-          ARM_PRECISION);
+      return isNear(otherPosition, ELEVATOR_PRECISION, ARM_PRECISION);
     }
 
     return false;
   }
 
-  public static boolean near(
-      SuperstructurePosition firstPosition,
-      SuperstructurePosition secondPosition,
-      double elevatorTolerance,
-      double armTolerance) {
-    return (MathUtil.isNear(
-            firstPosition.elevatorHeight(), secondPosition.elevatorHeight(), elevatorTolerance)
-        && MathUtil.isNear(
-            firstPosition.armAngle(), secondPosition.armAngle(), armTolerance, -180, 180));
+  public boolean isNear(
+      SuperstructurePosition other, double elevatorTolerance, double armTolerance) {
+    return MathUtil.isNear(elevatorHeight, other.elevatorHeight, elevatorTolerance)
+        && MathUtil.isNear(armAngle, other.armAngle, armTolerance, -180, 180);
   }
 
   /**
@@ -100,6 +92,16 @@ public record SuperstructurePosition(
   public double costFor(SuperstructurePosition other) {
     ELEVATOR_PROFILE.calculate(0.02, elevatorState, other.elevatorState);
     ARM_PROFILE.calculate(0.02, armState, other.armState);
+
+    return ELEVATOR_PROFILE.totalTime() + ARM_PROFILE.totalTime() + STATIC_COST;
+  }
+
+  public double costForLongWay(SuperstructurePosition other) {
+    ELEVATOR_PROFILE.calculate(0.02, elevatorState, other.elevatorState);
+    ARM_PROFILE.calculate(
+        0.02,
+        armState,
+        new TrapezoidProfile.State((360 - Math.abs(this.armAngle - other.armAngle)), 0));
 
     return ELEVATOR_PROFILE.totalTime() + ARM_PROFILE.totalTime() + STATIC_COST;
   }
