@@ -35,14 +35,14 @@ public class CollisionAvoidance {
 
   private static CollisionAvoidanceQuery lastQuery =
       new CollisionAvoidanceQuery(
-          Waypoint.ELEVATOR_0_ARM_UP, Waypoint.ELEVATOR_0_ARM_UP, ObstructionKind.NONE);
+          Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE);
   private static double lastSolution = 90.0;
   private static boolean lastClimberRisky = true;
   private static ObstructionKind lastObstruction = ObstructionKind.NONE;
   private static ObstructionStrategy lastLeftStrategy = ObstructionStrategy.IGNORE_BLOCKED;
   private static ObstructionStrategy lastRightStrategy = ObstructionStrategy.IGNORE_BLOCKED;
-  private static Waypoint lastWaypoint = Waypoint.ELEVATOR_0_ARM_UP;
-  private static final Waypoint lastPreviousWaypoint = Waypoint.ELEVATOR_0_ARM_UP;
+  private static Waypoint lastWaypoint = Waypoint.L1_UPRIGHT;
+  private static final Waypoint lastPreviousWaypoint = Waypoint.L1_UPRIGHT;
 
   private static Deque<Waypoint> lastPath = new ArrayDeque<>();
 
@@ -427,7 +427,7 @@ public class CollisionAvoidance {
 
     // TODO: Need to see if it's actually safe to do this all in one move
     // Waypoint.HANDOFF.avoidClimberAlwaysSafe(graph, Waypoint.ELEVATOR_0_ARM_UP);
-    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(graph, Waypoint.ELEVATOR_0_ARM_UP);
+    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(graph, Waypoint.L1_UPRIGHT);
     // TODO: Previously this had ALGAE_NET_UP.avoidClimberAlwaysSafe(HANDOFF_CLEARS_CLIMBER), seems
     // like that bonks the net?
 
@@ -592,7 +592,7 @@ public class CollisionAvoidance {
             Waypoint.PROCESSOR,
             Waypoint.HANDOFF_ARM_OUT_RIGHT);
 
-    Waypoint.ELEVATOR_0_ARM_UP.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
+    Waypoint.L1_UPRIGHT.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
     Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
     Waypoint.HANDOFF.alwaysSafe(
         graph,
@@ -613,7 +613,7 @@ public class CollisionAvoidance {
     Waypoint.REEF_ALGAE_L3_ELEVATOR.alwaysSafe(
         graph, Waypoint.REEF_ALGAE_L3_RIGHT, Waypoint.REEF_ALGAE_L3_LEFT);
 
-    Waypoint.ELEVATOR_0_ARM_UP.alwaysSafe(
+    Waypoint.L1_UPRIGHT.alwaysSafe(
         graph, Waypoint.HANDOFF_ARM_OUT_RIGHT, Waypoint.HANDOFF_ARM_OUT_LEFT);
 
     Waypoint.HANDOFF_ARM_OUT_RIGHT.alwaysSafe(
@@ -685,7 +685,7 @@ public class CollisionAvoidance {
     }
 
     gscore.put(startWaypoint, 0.0);
-    Waypoint current = Waypoint.ELEVATOR_0_ARM_UP;
+    Waypoint current = Waypoint.L1_UPRIGHT;
     while (!openSet.isEmpty()) {
       // current is equal to the waypoint in openset that has the smallest gscore
       var maybeCurrent =
@@ -736,7 +736,7 @@ public class CollisionAvoidance {
           new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.GROUND_ALGAE_INTAKE, obstruction));
       cachedAStar(
           new CollisionAvoidanceQuery(
-              Waypoint.ELEVATOR_0_ARM_UP, Waypoint.ALGAE_NET_OUT_RIGHT, obstruction));
+              Waypoint.L1_UPRIGHT, Waypoint.ALGAE_NET_OUT_RIGHT, obstruction));
     }
     DogLog.timeEnd("CollisionAvoidance/Warmup");
   }

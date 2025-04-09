@@ -22,7 +22,6 @@ public enum Waypoint {
   LOLLIPOP_INTAKE_RIGHT(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE)),
-  ELEVATOR_0_ARM_UP(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
   HANDOFF(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF)),
   HANDOFF_ARM_OUT_LEFT(new SuperstructurePosition(55, 180.0)),
   HANDOFF_ARM_OUT_RIGHT(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, 0.0)),
@@ -30,6 +29,7 @@ public enum Waypoint {
 
   PROCESSOR(new SuperstructurePosition(ElevatorState.PROCESSOR, ArmState.ALGAE_PROCESSOR)),
 
+  L1_UPRIGHT(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
   L2_UPRIGHT(
       new SuperstructurePosition(ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.HOLDING_UPRIGHT)),
   L3_UPRIGHT(
