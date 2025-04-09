@@ -36,7 +36,7 @@ public class GroundManager extends StateMachine<GroundState> {
         intake.setState(IntakeState.IDLE_NO_GP);
       }
       case IDLE_CORAL -> {
-        deploy.setState(DeployState.HANDOFF);
+        deploy.setState(DeployState.STOWED);
         intake.setState(IntakeState.IDLE_GP);
       }
       case INTAKING -> {
@@ -66,14 +66,6 @@ public class GroundManager extends StateMachine<GroundState> {
       case REHOME_DEPLOY -> {
         intake.setState(IntakeState.IDLE_NO_GP);
         deploy.setState(DeployState.HOMING);
-      }
-      case UNOBSTRUCT_ARM_NO_CORAL -> {
-        intake.setState(IntakeState.IDLE_NO_GP);
-        deploy.setState(DeployState.OUTWARD);
-      }
-      case UNOBSTRUCT_ARM_W_CORAL -> {
-        intake.setState(IntakeState.IDLE_GP);
-        deploy.setState(DeployState.OUTWARD);
       }
     }
   }
@@ -127,13 +119,5 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void rehomeDeployRequest() {
     setStateFromRequest(GroundState.REHOME_DEPLOY);
-  }
-
-  public void unobstructArmRequest() {
-    if (hasCoral) {
-      setState(GroundState.UNOBSTRUCT_ARM_W_CORAL);
-    } else {
-      setState(GroundState.UNOBSTRUCT_ARM_NO_CORAL);
-    }
   }
 }

@@ -26,8 +26,6 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private double rawCurrent = 0.0;
   private double filteredCurrent = 0.0;
 
-  private boolean clawHasGp = false;
-
   public DeploySubsystem(TalonFX motor) {
     super(SubsystemPriority.DEPLOY, DeployState.UNHOMED);
 
@@ -63,13 +61,8 @@ public class DeploySubsystem extends StateMachine<DeployState> {
         }
         yield currentState;
       }
-      case HANDOFF -> clawHasGp ? DeployState.STOWED : currentState;
       default -> currentState;
     };
-  }
-
-  public void setClawHasGP(boolean hasGP) {
-    clawHasGp = hasGP;
   }
 
   @Override
