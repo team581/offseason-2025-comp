@@ -392,7 +392,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_LEFT_L2),
             ObstructionKind.NONE);
     var expected =
-        List.of(Waypoint.HANDOFF,Waypoint. HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L2_LEFT);
+        List.of(Waypoint.HANDOFF, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L2_LEFT);
 
     assertEquals(expected, result.orElseThrow());
   }
