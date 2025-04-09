@@ -16,71 +16,79 @@ import java.util.stream.Stream;
  * avoidance uses these as nodes within a graph to route from a current position to a goal position.
  */
 public enum Waypoint {
-  ALGAE_INTAKE_RIGHT(
+  GROUND_ALGAE_INTAKE(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR)),
   LOLLIPOP_INTAKE_RIGHT(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE)),
-  STOWED(new SuperstructurePosition(55.0, ArmState.CORAL_HANDOFF)),
-  LEFT_SAFE_STOWED_UP(new SuperstructurePosition(10.0, ArmState.HOLDING_UPRIGHT)),
-  STOWED_UP(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
+  ELEVATOR_0_ARM_UP(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
   HANDOFF(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF)),
-  L1_RIGHT(
+  HANDOFF_ARM_OUT_LEFT(new SuperstructurePosition(55, 180.0)),
+  HANDOFF_ARM_OUT_RIGHT(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, 0.0)),
+  HANDOFF_CLEARS_CLIMBER(new SuperstructurePosition(55, ArmState.CORAL_HANDOFF)),
+
+  PROCESSOR(new SuperstructurePosition(ElevatorState.PROCESSOR, ArmState.ALGAE_PROCESSOR)),
+
+  L2_UPRIGHT(
+      new SuperstructurePosition(ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.HOLDING_UPRIGHT)),
+  L3_UPRIGHT(
+      new SuperstructurePosition(ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.HOLDING_UPRIGHT)),
+  L4_UPRIGHT(
+      new SuperstructurePosition(ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.HOLDING_UPRIGHT)),
+
+  L1_RIGHT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1)),
-  L2_RIGHT(
+  L2_RIGHT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2)),
   L2_RIGHT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_RIGHT_RELEASE_L2)),
-  L3_RIGHT(
+  L3_RIGHT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3)),
   L3_RIGHT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_RIGHT_RELEASE_L3)),
-  L4_RIGHT(
+  L4_RIGHT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4)),
   L4_RIGHT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_RIGHT_RELEASE_L4)),
-  L2_LEFT(
+  L2_LEFT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2)),
   L2_LEFT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_LEFT_RELEASE_L2)),
-  L3_LEFT(
+  L3_LEFT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3)),
   L3_LEFT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3)),
-  L4_LEFT(
+  L4_LEFT_LINEUP(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4)),
   L4_LEFT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4)),
-  ALGAE_GROUND_INTAKE_OUT(
-      new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_FLOOR)),
-  ALGAE_NET_UP(new SuperstructurePosition(30, ArmState.HOLDING_UPRIGHT)),
-  ALGAE_OUT_RIGHT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT)),
-  ALGAE_OUT_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT)),
-
-  ALGAE_LEFT_INTAKE_OUT(
-      new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_LEFT_L2)),
-  ALGAE_RIGHT_INTAKE_OUT(
-      new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_RIGHT_L2)),
-  ALGAE_L2_RIGHT(
+  ALGAE_NET_UP(new SuperstructurePosition(48.0, ArmState.HOLDING_UPRIGHT)),
+  ALGAE_NET_OUT_RIGHT(
+      new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT)),
+  ALGAE_NET_OUT_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT)),
+  REEF_ALGAE_L2_LEFT_ARM(new SuperstructurePosition(55.0, ArmState.ALGAE_INTAKE_LEFT_L2)),
+  REEF_ALGAE_L2_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_RIGHT_L2)),
-  ALGAE_L2_LEFT(
+  REEF_ALGAE_L2_LEFT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_LEFT_L2)),
-  ALGAE_L3_RIGHT(
+  REEF_ALGAE_L3_ELEVATOR(
+      new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3, ArmState.CORAL_HANDOFF)),
+  REEF_ALGAE_L3_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_RIGHT_L3)),
-  ALGAE_L3_LEFT(
+  REEF_ALGAE_L3_LEFT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_LEFT_L3));
 
   private static final List<Waypoint> ALL_WAYPOINTS = List.of(values());
@@ -93,6 +101,10 @@ public enum Waypoint {
 
   public double costFor(Waypoint other) {
     return position.costFor(other.position);
+  }
+
+  public double costForLongWay(Waypoint other) {
+    return position.costForLongWay(other.position);
   }
 
   public static void log() {
@@ -119,44 +131,78 @@ public enum Waypoint {
         .orElseThrow();
   }
 
-  public void canMoveToAlways(Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    canMoveToAlways(other, true, graph);
-  }
-
-  public void canMoveToAlways(
-      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.alwaysSafe(this, other));
-
-    if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+  public void alwaysSafe(MutableValueGraph<Waypoint, WaypointEdge> graph, Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(
+              this, other, ObstructionStrategy.IGNORE_BLOCKED, ObstructionStrategy.IGNORE_BLOCKED));
     }
   }
 
-  public void canMoveToWhenLeftSafe(
-      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    canMoveToWhenLeftSafe(other, true, graph);
-  }
-
-  public void canMoveToWhenLeftSafe(
-      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.leftUnblocked(this, other));
-
-    if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+  public void leftSideSpecial(
+      MutableValueGraph<Waypoint, WaypointEdge> graph,
+      ObstructionStrategy leftStrategy,
+      Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(this, other, leftStrategy, ObstructionStrategy.IGNORE_BLOCKED));
     }
   }
 
-  public void canMoveToWhenRightSafe(
-      Waypoint other, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    canMoveToWhenRightSafe(other, true, graph);
+  public void rightSideSpecial(
+      MutableValueGraph<Waypoint, WaypointEdge> graph,
+      ObstructionStrategy rightStrategy,
+      Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(this, other, ObstructionStrategy.IGNORE_BLOCKED, rightStrategy));
+    }
   }
 
-  public void canMoveToWhenRightSafe(
-      Waypoint other, boolean climberAtRisk, MutableValueGraph<Waypoint, WaypointEdge> graph) {
-    var existingEdge = graph.putEdgeValue(this, other, WaypointEdge.rightUnblocked(this, other));
+  public void avoidClimberAlwaysSafe(
+      MutableValueGraph<Waypoint, WaypointEdge> graph, Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(
+                  this,
+                  other,
+                  ObstructionStrategy.IGNORE_BLOCKED,
+                  ObstructionStrategy.IGNORE_BLOCKED)
+              .avoidClimber());
+    }
+  }
 
-    if (existingEdge != null) {
-      throw new IllegalStateException("Redundant edge connecting " + this + " to " + other);
+  public void avoidClimberLeftSideSpecial(
+      MutableValueGraph<Waypoint, WaypointEdge> graph,
+      ObstructionStrategy leftStrategy,
+      Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(this, other, leftStrategy, ObstructionStrategy.IGNORE_BLOCKED)
+              .avoidClimber());
+    }
+  }
+
+  public void avoidClimberRightSideSpecial(
+      MutableValueGraph<Waypoint, WaypointEdge> graph,
+      ObstructionStrategy rightStrategy,
+      Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(this, other, ObstructionStrategy.IGNORE_BLOCKED, rightStrategy)
+              .avoidClimber());
     }
   }
 }

@@ -1,90 +1,40 @@
 package frc.robot.robot_manager.collision_avoidance;
 
-import java.util.Optional;
-
 public record WaypointEdge(
-    /** The cost associated with the motion connecting the nodes on this edge. */
-    double cost,
+    double shortCost,
+    double longCost,
+    boolean hitsClimber,
     /** Whether this motion is safe when the left side of the robot is obstructed. */
-    boolean safeWhenLeftBlocked,
+    ObstructionStrategy leftSideStrategy,
     /** Whether this motion is safe when the right side of the robot is obstructed. */
-    boolean safeWhenRightBlocked,
-    /** Whether this motion will pass through the climber area. */
-    boolean climberAtRisk,
-    /**
-     * The constraints for superstructure motion to use when moving along this edge. If empty,
-     * regular motion magic parameters are used.
-     */
-    Optional<SuperstructureLimits> limits) {
-
-  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, true, false, true, Optional.empty());
-  }
-
-  public static WaypointEdge rightUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits) {
-    return new WaypointEdge(from, to, true, false, true, Optional.of(limits));
-  }
-
-  public static WaypointEdge rightUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.empty());
-  }
-
-  public static WaypointEdge rightUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, false, climberAtRisk, Optional.of(limits));
-  }
-
-  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, false, true, true, Optional.empty());
-  }
-
-  public static WaypointEdge leftUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits) {
-    return new WaypointEdge(from, to, false, true, true, Optional.of(limits));
-  }
-
-  public static WaypointEdge leftUnblocked(Waypoint from, Waypoint to, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.empty());
-  }
-
-  public static WaypointEdge leftUnblocked(
-      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, false, true, climberAtRisk, Optional.of(limits));
-  }
-
-  public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to) {
-    return new WaypointEdge(from, to, true, true, true, Optional.empty());
-  }
-
-  public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to, SuperstructureLimits limits) {
-    return new WaypointEdge(from, to, true, true, true, Optional.of(limits));
-  }
-
-  public static WaypointEdge alwaysSafe(Waypoint from, Waypoint to, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, true, climberAtRisk, Optional.empty());
-  }
-
-  public static WaypointEdge alwaysSafe(
-      Waypoint from, Waypoint to, SuperstructureLimits limits, boolean climberAtRisk) {
-    return new WaypointEdge(from, to, true, true, climberAtRisk, Optional.of(limits));
-  }
-
-  private WaypointEdge(
+    ObstructionStrategy rightSideStrategy) {
+  public WaypointEdge(
       Waypoint from,
       Waypoint to,
-      boolean safeForLeftBlocked,
-      boolean safeForRightBlocked,
-      boolean climberAtRisk,
-      Optional<SuperstructureLimits> limits) {
-    this(from.costFor(to), safeForLeftBlocked, safeForRightBlocked, climberAtRisk, limits);
+      ObstructionStrategy leftSideStrategy,
+      ObstructionStrategy rightSideStrategy) {
+    this(from.costFor(to), from.costForLongWay(to), false, leftSideStrategy, rightSideStrategy);
+  }
+
+  public WaypointEdge avoidClimber() {
+    return new WaypointEdge(shortCost, longCost, true, leftSideStrategy, rightSideStrategy);
   }
 
   public double getCost(ObstructionKind obstruction) {
     return switch (obstruction) {
-      case LEFT_OBSTRUCTED -> safeWhenLeftBlocked ? cost : Double.MAX_VALUE;
-      case RIGHT_OBSTRUCTED -> safeWhenRightBlocked ? cost : Double.MAX_VALUE;
-      case NONE -> cost;
+      case LEFT_OBSTRUCTED ->
+          switch (leftSideStrategy) {
+            case IMPOSSIBLE_IF_BLOCKED -> Double.MAX_VALUE;
+            case IGNORE_BLOCKED -> shortCost;
+            case LONG_WAY_IF_BLOCKED -> longCost;
+          };
+      case RIGHT_OBSTRUCTED ->
+          switch (rightSideStrategy) {
+            case IMPOSSIBLE_IF_BLOCKED -> Double.MAX_VALUE;
+            case IGNORE_BLOCKED -> shortCost;
+            case LONG_WAY_IF_BLOCKED -> longCost;
+          };
+      case NONE -> shortCost;
     };
   }
 }

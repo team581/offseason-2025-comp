@@ -69,7 +69,7 @@ public enum ArmState {
   ALGAE_FLING_SWING(UNTUNED),
 
   // For auto
-  LOLLIPOP_CORAL_INTAKE_PUSH(0),
+  LOLLIPOP_CORAL_INTAKE_PUSH(-20),
   LOLLIPOP_CORAL_INTAKE_INTAKE(-8);
 
   private final double defaultAngle;

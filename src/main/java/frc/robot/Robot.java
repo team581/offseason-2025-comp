@@ -31,6 +31,7 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.ElasticLayoutUtil;
@@ -143,6 +144,8 @@ public class Robot extends TimedRobot {
     configureBindings();
 
     ElasticLayoutUtil.onBoot();
+
+    CollisionAvoidance.warmup();
   }
 
   @Override
