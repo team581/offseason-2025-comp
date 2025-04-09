@@ -339,8 +339,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4),
             ObstructionKind.RIGHT_OBSTRUCTED);
     // Moves elevator first, only extends arm at the end
-    var expected =
-        List.of(Waypoint.L1_UPRIGHT, Waypoint.L4_UPRIGHT, Waypoint.L4_RIGHT_LINEUP);
+    var expected = List.of(Waypoint.L1_UPRIGHT, Waypoint.L4_UPRIGHT, Waypoint.L4_RIGHT_LINEUP);
 
     assertEquals(expected, result.get());
   }

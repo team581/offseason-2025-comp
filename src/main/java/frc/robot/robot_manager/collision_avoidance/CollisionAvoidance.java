@@ -34,8 +34,7 @@ public class CollisionAvoidance {
       new HashMap<>();
 
   private static CollisionAvoidanceQuery lastQuery =
-      new CollisionAvoidanceQuery(
-          Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE);
+      new CollisionAvoidanceQuery(Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE);
   private static double lastSolution = 90.0;
   private static boolean lastClimberRisky = true;
   private static ObstructionKind lastObstruction = ObstructionKind.NONE;
