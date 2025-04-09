@@ -581,9 +581,7 @@ public class CollisionAvoidance {
         Waypoint.REEF_ALGAE_L2_RIGHT,
         Waypoint.REEF_ALGAE_L3_RIGHT);
     Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
-        graph,
-        ObstructionStrategy.LONG_WAY_IF_BLOCKED,
-        Waypoint.ALGAE_NET_UP);
+        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.ALGAE_NET_UP);
 
     // L1 movements
     var l1AreaWaypoints =
@@ -596,7 +594,8 @@ public class CollisionAvoidance {
 
     Waypoint.ELEVATOR_0_ARM_UP.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
     Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
-    Waypoint.HANDOFF.alwaysSafe(graph, Waypoint.HANDOFF_ARM_OUT_RIGHT, Waypoint.HANDOFF_ARM_OUT_LEFT);
+    Waypoint.HANDOFF.alwaysSafe(
+        graph, Waypoint.HANDOFF_ARM_OUT_RIGHT, Waypoint.HANDOFF_ARM_OUT_LEFT);
     Waypoint.HANDOFF.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
 
     Waypoint.HANDOFF.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
@@ -615,7 +614,8 @@ public class CollisionAvoidance {
     Waypoint.HANDOFF_ARM_OUT_RIGHT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_RIGHT);
     Waypoint.HANDOFF_ARM_OUT_RIGHT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L3_RIGHT);
 
-    Waypoint.HANDOFF_ARM_OUT_LEFT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L3_LEFT, Waypoint.REEF_ALGAE_L2_LEFT);
+    Waypoint.HANDOFF_ARM_OUT_LEFT.alwaysSafe(
+        graph, Waypoint.REEF_ALGAE_L3_LEFT, Waypoint.REEF_ALGAE_L2_LEFT);
 
     Waypoint.HANDOFF_ARM_OUT_RIGHT.alwaysSafe(graph, Waypoint.LOLLIPOP_INTAKE_RIGHT);
     for (var a : l1AreaWaypoints) {
