@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CoralMap extends StateMachine<CoralMapState> {
+  private static final int LOLLIPOP_FILTER_TAPS = 7;
   private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
 
@@ -55,10 +56,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private LocalizationSubsystem localization;
   private SwerveSubsystem swerve;
 
-  private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(7);
-  private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(7);
-  private double filteredLollipopX = 0.0;
-  private double filteredLollipopY = 0.0;
+    private final LinearFilter lollipopXFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
+    private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
+    private double filteredLollipopX = 0.0;
+    private double filteredLollipopY = 0.0;
 
   private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
@@ -75,11 +76,22 @@ public class CoralMap extends StateMachine<CoralMapState> {
     this.swerve = swerve;
   }
 
+  private void resetLollipopFilter(Translation2d expectedTranslation) {
+    for (var i = 0; i < LOLLIPOP_FILTER_TAPS; i++) {
+      lollipopXFilter.calculate(expectedTranslation.getX());
+      lollipopYFilter.calculate(expectedTranslation.getY());
+
+    }
+  }
+
   public void updateLollipopResult(Optional<GamePieceResult> lollipopResult) {
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
             lollipopResult, localization.getPose());
     if (newPose.isPresent() && safeToTrack()) {
+      if(filteredLollipopPose.isEmpty()) {
+        resetLollipopFilter(newPose.get().getTranslation());
+      }
       filteredLollipopX = lollipopXFilter.calculate(newPose.get().getX());
       filteredLollipopY = lollipopYFilter.calculate(newPose.get().getY());
       filteredLollipopPose =
@@ -92,6 +104,8 @@ public class CoralMap extends StateMachine<CoralMapState> {
     } else {
       if (Timer.getFPGATimestamp() - lastLollipopTime >= LOLLIPOP_LIFTEIME_SECONDS) {
         filteredLollipopPose = Optional.empty();
+        lollipopXFilter.reset();
+        lollipopYFilter.reset();
       }
     }
   }
