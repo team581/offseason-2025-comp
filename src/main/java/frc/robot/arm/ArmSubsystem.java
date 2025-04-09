@@ -291,7 +291,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
             motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       default -> {
-        afterTransition(getState());
+        if (DriverStation.isEnabled()) {
+          afterTransition(getState());
+        }
       }
     }
   }
