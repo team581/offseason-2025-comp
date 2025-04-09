@@ -109,6 +109,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY,
           CLAW_ALGAE,
           CLAW_CORAL,
+          PRELOAD_CORAL,
           CLAW_ALGAE_STOW_INWARD,
           ENDGAME_STOWED,
           ALGAE_INTAKE_FLOOR,
@@ -274,7 +275,7 @@ public class RobotManager extends StateMachine<RobotState> {
         yield currentState;
       }
 
-      case CORAL_INTAKE_LOLLIPOP_GRAB -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
+      case CORAL_INTAKE_LOLLIPOP_GRAB -> claw.getHasGP() ? RobotState.PRELOAD_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
@@ -306,6 +307,15 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         groundManager.idleRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.HOLDING_CORAL);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case PRELOAD_CORAL -> {
+        claw.setState(ClawState.IDLE_W_CORAL);
+        groundManager.idleRequest();
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
@@ -1156,7 +1166,7 @@ public class RobotManager extends StateMachine<RobotState> {
         case CORAL_INTAKE_LOLLIPOP_APPROACH -> lollipopIntakeApproachRequest();
         case CORAL_INTAKE_LOLLIPOP_GRAB ->
             setStateFromRequest(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH);
-        case CORAL_INTAKE_LOLLIPOP_PUSH -> setStateFromRequest(RobotState.CLAW_CORAL);
+        case CORAL_INTAKE_LOLLIPOP_PUSH -> setStateFromRequest(RobotState.PRELOAD_CORAL);
         default -> lollipopIntakeGrabRequest();
       }
     }
@@ -1404,7 +1414,7 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       }
 
-      case CLAW_CORAL -> l4CoralApproachRequest();
+      case CLAW_CORAL, PRELOAD_CORAL -> l4CoralApproachRequest();
       case ENDGAME_STOWED -> groundManager.l1Request();
 
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
