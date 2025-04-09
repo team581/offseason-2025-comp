@@ -70,7 +70,7 @@ public class RobotManager extends StateMachine<RobotState> {
       AutoAlign autoAlign,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
-    super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
+    super(SubsystemPriority.ROBOT_MANAGER, RobotState.PRELOAD_CORAL);
     this.groundManager = groundManager;
     this.arm = arm;
     this.claw = claw;
