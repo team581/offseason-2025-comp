@@ -46,7 +46,7 @@ public class CollisionAvoidance {
   private static Deque<Waypoint> lastPath = new ArrayDeque<>();
 
   private static boolean hasGeneratedPath = false;
-  private static Waypoint previousWaypoint;
+  private static Waypoint previousWaypoint = Waypoint.L1_UPRIGHT;
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
