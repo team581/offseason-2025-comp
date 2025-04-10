@@ -226,9 +226,6 @@ public class RobotManager extends StateMachine<RobotState> {
           if (cameraOnlineAndFarEnoughFromReef()) {
             yield RobotState.CLAW_EMPTY;
           }
-        } else if (arm.atGoal() && elevator.atGoal() && (!claw.getHasGP() || timeout(0.5))) {
-          // In auto, check if the score succeeded with a timeout
-          yield RobotState.CLAW_EMPTY;
         }
 
         yield currentState;
