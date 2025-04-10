@@ -99,8 +99,12 @@ public class AutoCommands {
         });
   }
 
-  public Command l4LeftReleaseCommand() {
-    return Commands.runOnce(robotManager::l4CoralLeftReleaseRequest);
+  public Command l4LeftReleaseCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
+    return Commands.runOnce(
+      () -> {
+        robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+        robotManager.l4CoralLeftReleaseRequest();
+      });
   }
 
   public Command l3LeftReleaseCommand() {

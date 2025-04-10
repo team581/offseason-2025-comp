@@ -35,7 +35,7 @@ public class AutoBlocks {
           Rotation2d.fromDegrees(90));
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(2, 57, 2, 30);
+      new AutoConstraintOptions(3, 57, 2, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
@@ -81,10 +81,9 @@ public class AutoBlocks {
                         () ->
                             robotManager.autoAlign.getUsedScoringPose(
                                 pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT),
-                        SCORING_CONSTRAINTS)),
-                false)
-            .withDeadline(
-                autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
+                        SCORING_CONSTRAINTS))),
+  //          .withDeadline(
+  //              autoCommands.waitForAlignedForScore().andThen(autoCommands.l4LeftReleaseCommand())),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -120,7 +119,7 @@ public class AutoBlocks {
                 AFTER_SCORE_POSITION_TOLERANCE,
                 new AutoPoint(
                     () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                    Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)))));
+                    Commands.waitSeconds(0.10).andThen(robotManager::stowRequest)))));
   }
 
   public Command intakeCoralGroundPoints(Points intakingPoint) {
@@ -154,7 +153,7 @@ public class AutoBlocks {
                 AFTER_SCORE_POSITION_TOLERANCE,
                 new AutoPoint(
                     () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                    Commands.waitSeconds(0.15).andThen(robotManager::stowRequest)))));
+                    Commands.waitSeconds(0.10).andThen(robotManager::stowRequest)))));
   }
 
   public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
