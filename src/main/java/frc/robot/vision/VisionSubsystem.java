@@ -4,6 +4,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -106,7 +107,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public boolean seeingTag() {
-    return seeingTag;
+    return seeingTag || RobotBase.isSimulation();
   }
 
   public boolean hasSeenTag() {
