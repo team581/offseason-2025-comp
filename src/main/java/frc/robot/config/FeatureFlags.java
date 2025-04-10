@@ -13,7 +13,7 @@ public class FeatureFlags {
   public static final BooleanSupplier CAMERA_POSITION_CALIBRATION =
       FeatureFlag.of("Vision/PositionCalibrationMode", false);
 
-  public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
+  public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", true);
 
   public static final BooleanSupplier VISION_STALE_DATA_CHECK =
       FeatureFlag.of("Vision/StaleDataRejection", false);
