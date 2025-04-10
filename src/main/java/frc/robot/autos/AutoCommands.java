@@ -59,7 +59,10 @@ public class AutoCommands {
     if (RobotBase.isSimulation()) {
       return Commands.waitSeconds(1.0);
     }
-    return robotManager.groundManager.waitForStates(GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE)
+    return robotManager
+        .groundManager
+        .waitForStates(
+            GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE)
         .withTimeout(4);
   }
 
