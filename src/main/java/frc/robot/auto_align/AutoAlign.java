@@ -147,7 +147,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
   }
 
-
   public ObstructionKind getObstruction() {
     // Account for distance we'll be at once we finish forward motion
     var lookaheadPose = localization.getLookaheadPose(OBSTRUCTION_LOOKAHEAD.get());

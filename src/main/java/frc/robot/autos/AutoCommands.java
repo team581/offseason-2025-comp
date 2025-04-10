@@ -62,7 +62,9 @@ public class AutoCommands {
     return robotManager
         .groundManager
         .waitForState(GroundState.INTAKING)
-        .andThen(robotManager.groundManager.waitForStates(GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE))
+        .andThen(
+            robotManager.groundManager.waitForStates(
+                GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE))
         .withTimeout(4);
   }
 
@@ -104,10 +106,10 @@ public class AutoCommands {
 
   public Command l4LeftReleaseCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
-      () -> {
-        robotManager.autoAlign.setAutoReefPipeOverride(pipe);
-        robotManager.l4CoralLeftReleaseRequest();
-      });
+        () -> {
+          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+          robotManager.l4CoralLeftReleaseRequest();
+        });
   }
 
   public Command l3LeftReleaseCommand() {

@@ -29,10 +29,11 @@ public class RedLollipopAuto extends BaseAuto {
     return Commands.sequence(
         trailblazer.followSegment(
             new AutoSegment(
-              AutoBlocks.BASE_CONSTRAINTS,
+                AutoBlocks.BASE_CONSTRAINTS,
                 new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(30))),
-                new AutoPoint(new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
-                autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
+                new AutoPoint(
+                    new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
+                    autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
                 new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
         // LOLLIPOP 2

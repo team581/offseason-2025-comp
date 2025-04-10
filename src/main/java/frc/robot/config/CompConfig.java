@@ -169,14 +169,13 @@ class CompConfig {
               // Forward: 0.187706, Right: 0.186182, Up: 0.2042922, Roll: 0.0, Pitch: 10.0, Yaw:
               // -90.0
               new Pose3d(
-                Units.inchesToMeters(7.5),
-                Units.inchesToMeters(-7.0),
-                Units.inchesToMeters(9.5),
-                new Rotation3d(
-                    Units.degreesToRadians(0.0),
-                    Units.degreesToRadians(-10.0),
-                    Units.degreesToRadians(-87.0))),
-
+                  Units.inchesToMeters(7.5),
+                  Units.inchesToMeters(-7.0),
+                  Units.inchesToMeters(9.5),
+                  new Rotation3d(
+                      Units.degreesToRadians(0.0),
+                      Units.degreesToRadians(-10.0),
+                      Units.degreesToRadians(-87.0))),
 
               // Game Piece Limelight
               // Forward: 0.0, Right: 0.0, Up: 0.0, Roll: 0.0, Pitch: 0.0, Yaw:

@@ -91,7 +91,6 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     };
   }
 
-
   public void setState(DeployState newState) {
     switch (getState()) {
       case HOMING -> {}
