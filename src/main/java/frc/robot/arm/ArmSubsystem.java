@@ -86,7 +86,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   private static final double TOLERANCE = 2.0;
-  private static final double NEAR_TOLERANCE = 25.0;
+  private static final double NEAR_TOLERANCE = 35.0;
   private static final double CLIMBER_UNSAFE_ANGLE = 225.0;
   private final TalonFX motor;
   private double rawMotorAngle;
