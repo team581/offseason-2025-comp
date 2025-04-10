@@ -150,9 +150,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   @Override
   public void robotPeriodic() {
-    // TODO Auto-generated method stub
     super.robotPeriodic();
-
+    DogLog.log("AutoAlign/UsedScoringPose", usedScoringPose);
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
   }
