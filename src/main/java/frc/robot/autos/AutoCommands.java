@@ -56,10 +56,13 @@ public class AutoCommands {
   }
 
   public Command waitForIntakeDone() {
+    if (RobotBase.isSimulation()) {
+      return Commands.waitSeconds(2.0);
+    }
     return robotManager
         .groundManager
         .waitForState(GroundState.INTAKING)
-        .andThen(robotManager.groundManager.waitForState(GroundState.IDLE_CORAL))
+        .andThen(robotManager.groundManager.waitForStates(GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE))
         .withTimeout(4);
   }
 
