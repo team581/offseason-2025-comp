@@ -314,8 +314,8 @@ public class CollisionAvoidance {
         shortSolution = solution2;
         longSolution = solution1;
       }
-      System.out.println("short=" + shortSolution);
-      System.out.println("long=" + longSolution);
+      // System.out.println("short=" + shortSolution);
+      // System.out.println("long=" + longSolution);
 
       return switch (currentObstructionKind) {
         case LEFT_OBSTRUCTED ->
