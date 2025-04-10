@@ -35,21 +35,24 @@ public class RedLollipopAuto extends BaseAuto {
                     new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
                     autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
                 new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
-        blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
+        blocks.scoreL4(
+            ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 2
         blocks.intakeLollipop(
             new Pose2d(15.5, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.7, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
+        blocks.scoreL4(
+            ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 1
         blocks.intakeLollipop(
             new Pose2d(15.5, 3.313, Rotation2d.fromDegrees(-50))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.852, 2.622, Rotation2d.fromDegrees(-50))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+        blocks.scoreL4(
+            ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 3
         blocks.intakeLollipop(
             new Pose2d(14.3, 5.106, Rotation2d.fromDegrees(32))
