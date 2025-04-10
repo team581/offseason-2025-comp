@@ -19,7 +19,6 @@ import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.intake_deploy.DeployState;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -122,7 +121,6 @@ public class RobotManager extends StateMachine<RobotState> {
           UNJAM,
           SPIN_TO_WIN,
           CORAL_INTAKE_LOLLIPOP_APPROACH,
-          PREPARE_HANDOFF_AFTER_INTAKE,
           ALGAE_FLING_WAIT ->
           currentState;
       case CORAL_L2_RIGHT_PLACE,
@@ -165,6 +163,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_FLING_RELEASE -> !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       // handoff
+      case WAITING_L1_HANDOFF, WAITING_L2_HANDOFF, WAITING_L3_HANDOFF, WAITING_L4_HANDOFF ->
+          groundManager.hasCoral() ? currentState.getHandoffWaitingToPrepareState() : currentState;
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
@@ -481,7 +481,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.SCORING_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
-      case PREPARE_HANDOFF_AFTER_INTAKE -> {
+      case WAITING_L1_HANDOFF, WAITING_L2_HANDOFF, WAITING_L3_HANDOFF, WAITING_L4_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
@@ -1207,6 +1207,12 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void l4WaitingHandoffRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.WAITING_L4_HANDOFF);
+    }
+  }
+
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {
       return;
@@ -1219,7 +1225,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     } else if (groundManager.getState() == GroundState.INTAKING) {
       afterIntakingCoralState = Optional.of(RobotState.CORAL_L4_PREPARE_HANDOFF);
-      setStateFromRequest(RobotState.PREPARE_HANDOFF_AFTER_INTAKE);
+      setStateFromRequest(RobotState.WAITING_L4_HANDOFF);
     } else {
       setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
     }
@@ -1238,7 +1244,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     } else if (groundManager.getState() == GroundState.INTAKING) {
       afterIntakingCoralState = Optional.of(RobotState.CORAL_L3_PREPARE_HANDOFF);
-      setStateFromRequest(RobotState.PREPARE_HANDOFF_AFTER_INTAKE);
+      setStateFromRequest(RobotState.WAITING_L3_HANDOFF);
     } else {
       setStateFromRequest(RobotState.CORAL_L3_PREPARE_HANDOFF);
     }
@@ -1257,7 +1263,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     } else if (groundManager.getState() == GroundState.INTAKING) {
       afterIntakingCoralState = Optional.of(RobotState.CORAL_L2_PREPARE_HANDOFF);
-      setStateFromRequest(RobotState.PREPARE_HANDOFF_AFTER_INTAKE);
+      setStateFromRequest(RobotState.WAITING_L2_HANDOFF);
     } else {
       setStateFromRequest(RobotState.CORAL_L2_PREPARE_HANDOFF);
     }
@@ -1272,7 +1278,7 @@ public class RobotManager extends StateMachine<RobotState> {
       setStateFromRequest(RobotState.CORAL_L1_RIGHT_APPROACH);
     } else if (groundManager.getState() == GroundState.INTAKING) {
       afterIntakingCoralState = Optional.of(RobotState.CORAL_L1_PREPARE_HANDOFF);
-      setStateFromRequest(RobotState.PREPARE_HANDOFF_AFTER_INTAKE);
+      setStateFromRequest(RobotState.WAITING_L1_HANDOFF);
     } else {
       setStateFromRequest(RobotState.CORAL_L1_PREPARE_HANDOFF);
     }

@@ -45,7 +45,10 @@ public enum RobotState {
   ALGAE_FLING_PREPARE(ClawGamePiece.ALGAE, false),
   ALGAE_FLING_RELEASE(ClawGamePiece.ALGAE, false),
 
-  PREPARE_HANDOFF_AFTER_INTAKE(ClawGamePiece.EMPTY, false),
+  WAITING_L1_HANDOFF(ClawGamePiece.EMPTY, false),
+  WAITING_L2_HANDOFF(ClawGamePiece.EMPTY, false),
+  WAITING_L3_HANDOFF(ClawGamePiece.EMPTY, false),
+  WAITING_L4_HANDOFF(ClawGamePiece.EMPTY, false),
 
   // L1 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -150,6 +153,12 @@ public enum RobotState {
           Map.entry(CORAL_L3_RIGHT_PLACE, CORAL_L3_RIGHT_RELEASE),
           Map.entry(CORAL_L4_RIGHT_PLACE, CORAL_L4_RIGHT_RELEASE));
 
+  private static final ImmutableMap<RobotState, RobotState> handoffWaitingToPrepare =
+      ImmutableMap.ofEntries(
+          Map.entry(WAITING_L1_HANDOFF, CORAL_L1_PREPARE_HANDOFF),
+          Map.entry(WAITING_L2_HANDOFF, CORAL_L2_PREPARE_HANDOFF),
+          Map.entry(WAITING_L3_HANDOFF, CORAL_L3_PREPARE_HANDOFF),
+          Map.entry(WAITING_L4_HANDOFF, CORAL_L4_PREPARE_HANDOFF));
   private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_PREPARE_HANDOFF, CORAL_L1_RELEASE_HANDOFF),
@@ -228,6 +237,10 @@ public enum RobotState {
 
   public RobotState getHandoffPrepareToReleaseState() {
     return handoffPrepareToRelease.getOrDefault(this, this);
+  }
+
+  public RobotState getHandoffWaitingToPrepareState() {
+    return handoffWaitingToPrepare.getOrDefault(this, this);
   }
 
   public RobotState getHandoffReleaseToApproachState(RobotScoringSide scoringSide) {
