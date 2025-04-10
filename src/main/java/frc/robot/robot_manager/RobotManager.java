@@ -177,7 +177,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP() && groundManager.deploy.atGoal(DeployState.STOWED)
+          claw.getHasGP()
               ? currentState.getHandoffReleaseToApproachState(robotScoringSide)
               : currentState;
 
