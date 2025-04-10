@@ -21,9 +21,6 @@ import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.VisionSubsystem;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
-  private static final double TELEOP_SPEED_SCALAR = 0.3;
-  private static final double MAX_CONSTRAINT = 2.5;
-
   private static final Translation2d CENTER_OF_REEF_RED =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
@@ -94,12 +91,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
         < thresholdMeters;
   }
-
-  public static boolean isCloseToReefSide(Pose2d robotPose, Pose2d nearestReefSide) {
-    return isCloseToReefSide(robotPose, nearestReefSide, LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE);
-  }
-
-  private static final double LINEAR_VELOCITY_TO_REEF_SIDE_DISTANCE = 1.2;
 
   private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
   private final VisionSubsystem vision;
