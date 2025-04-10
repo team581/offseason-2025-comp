@@ -54,7 +54,7 @@ public class Trailblazer {
                   pathTracker.resetAndSetPoints(segment.points);
                   previousAutoPointIndex = -1;
                   DogLog.log(
-                      "Trailblazer/CurrentSegment/InitialPoints",
+                      "Autos/Trailblazer/CurrentSegment/InitialPoints",
                       segment.points.stream()
                           .map(point -> point.poseSupplier.get())
                           .toArray(Pose2d[]::new));
@@ -75,7 +75,7 @@ public class Trailblazer {
                               currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
-                      DogLog.log("Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
+                      DogLog.log("Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
                       if (previousAutoPointIndex != currentAutoPointIndex) {
                         // Currently tracked point has changed, trigger side effects
 
@@ -85,7 +85,7 @@ public class Trailblazer {
                                 previousAutoPointIndex + 1, currentAutoPointIndex + 1);
                         for (var passedPoint : pointsToRunSideEffectsFor) {
                           DogLog.log(
-                              "Trailblazer/Tracker/CommandTriggered",
+                              "Autos/Trailblazer/Tracker/CommandTriggered",
                               passedPoint.command.getName());
                           passedPoint.command.schedule();
                         }
@@ -135,15 +135,15 @@ public class Trailblazer {
         originalConstraints.withMaxLinearVelocity(originalConstraints.maxLinearVelocity());
 
     DogLog.log(
-        "Trailblazer/Constraints/VelocityCalculation/CalculatedVelocity",
+        "Autos/Trailblazer/Constraints/VelocityCalculation/CalculatedVelocity",
         usedConstraints.maxLinearVelocity());
-    DogLog.log("Trailblazer/Tracker/RawOutput", originalTargetPose);
+    DogLog.log("Autos/Trailblazer/Tracker/RawOutput", originalTargetPose);
 
-    DogLog.log("Trailblazer/Follower/RawOutput", originalVelocityGoal);
+    DogLog.log("Autos/Trailblazer/Follower/RawOutput", originalVelocityGoal);
     var constrainedVelocityGoal =
         AutoConstraintCalculator.constrainVelocityGoal(
             originalVelocityGoal, previousSpeeds, usedConstraints, distanceToSegmentEnd);
-    DogLog.log("Trailblazer/Follower/UsedOutput", constrainedVelocityGoal);
+    DogLog.log("Autos/Trailblazer/Follower/UsedOutput", constrainedVelocityGoal);
 
     previousSpeeds = constrainedVelocityGoal;
 

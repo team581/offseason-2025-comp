@@ -11,7 +11,7 @@ public class ReefState {
   private final EnumSet<ReefPipe> scoredL4Pipes = EnumSet.noneOf(ReefPipe.class);
 
   public ReefState() {
-    SmartDashboard.putData("Debug/Clear reef state", Commands.runOnce(this::clear));
+    SmartDashboard.putData("ReefState/Clear", Commands.runOnce(this::clear));
   }
 
   public void clear() {

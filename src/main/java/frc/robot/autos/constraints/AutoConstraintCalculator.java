@@ -25,9 +25,7 @@ public class AutoConstraintCalculator {
     constrainedSpeeds =
         constrainLinearVelocity(
             constrainedSpeeds, options.withMaxLinearVelocity(newLinearVelocity));
-    DogLog.log(
-        "Debug/finalConstrainedSpeeds",
-        Math.hypot(constrainedSpeeds.vxMetersPerSecond, constrainedSpeeds.vyMetersPerSecond));
+
     return new TimestampedChassisSpeeds(constrainedSpeeds, inputSpeeds.timestampSeconds);
   }
 
@@ -155,11 +153,7 @@ public class AutoConstraintCalculator {
         (1.0 * (currentVelocity * currentVelocity)) / (2.0 * accelerationLimit);
     double perfectVelocity =
         Math.sqrt(0.0 - (-1.0 * 2.0 * (accelerationLimit * distanceToSegmentEnd)));
-    // TODO: Clean these logs up
-    DogLog.log("Debug/DistanceToSegmentEnd", distanceToSegmentEnd);
-    DogLog.log("Debug/currentVelocity", currentVelocity);
-    DogLog.log("Debug/perfectDecelerationVelocity", perfectVelocity);
-    DogLog.log("Debug/decelerationDistance", decelerationDistance);
+
     if (distanceToSegmentEnd > decelerationDistance) {
       return currentVelocity;
     }
@@ -173,10 +167,8 @@ public class AutoConstraintCalculator {
       double oldVelocityConstraint,
       double accelerationLimit) {
     var distanceToEnd = currentPose.getTranslation().getDistance(endWaypoint.getTranslation());
-    DogLog.log("Debug/DistanceToEnd", distanceToEnd);
     var currentVelocity =
         Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
-    DogLog.log("Debug/CurrentVelocity", distanceToEnd);
 
     var timeToTraverse = distanceToEnd / currentVelocity;
     var acceleration = (accelerationLimit - currentVelocity) / timeToTraverse;

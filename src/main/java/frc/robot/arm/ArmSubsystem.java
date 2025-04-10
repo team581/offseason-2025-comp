@@ -191,7 +191,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
           motor.setControl(
               motionMagicRequest.withPosition(
                   Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
-          DogLog.log("ArmCoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
+          DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
         }
         default -> {}
       }

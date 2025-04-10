@@ -288,16 +288,16 @@ public class CoralMap extends StateMachine<CoralMapState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     if (filteredLollipopPose.isPresent()) {
-      DogLog.log("CoralMap/LollipopPose", filteredLollipopPose.get());
+      DogLog.log("CoralMap/Lollipop/FilteredPose", filteredLollipopPose.get());
     } else {
-      DogLog.log("CoralMap/LollipopPose", Pose2d.kZero);
+      DogLog.log("CoralMap/Lollipop/FilteredPose", Pose2d.kZero);
     }
     if (!FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
       return;
     }
     try {
       DogLog.log(
-          "CoralMap/Map",
+          "CoralMap/Coral",
           coralMap.stream()
               .map(element -> new Pose2d(element.coralTranslation(), Rotation2d.kZero))
               .toArray(Pose2d[]::new));

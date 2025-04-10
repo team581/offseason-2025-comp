@@ -34,7 +34,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
     double theta = MathHelpers.angleModulus(robotPose.getRotation().getDegrees());
-    DogLog.log("Debug/Theta", theta);
 
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
