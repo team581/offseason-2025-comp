@@ -24,6 +24,8 @@ import frc.robot.util.tuning.TunablePid;
 import java.util.Map;
 import java.util.OptionalDouble;
 
+import javax.management.RuntimeMBeanException;
+
 public class ArmSubsystem extends StateMachine<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
 
@@ -152,15 +154,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return rawMotorAngle;
   }
 
+  // -30, at 330
   private double getRawAngleFromNormalAngle(double angle) {
-    double solution1 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawMotorAngle, angle)[0];
-    double solution2 = CollisionAvoidance.getCollisionAvoidanceSolutions(rawMotorAngle, angle)[1];
-
-    if (Math.abs(solution2 - rawMotorAngle) > Math.abs(solution1 - rawMotorAngle)) {
-      return solution1;
-    } else {
-      return solution2;
+    if ((Math.abs(collisionAvoidanceGoal % 360) != Math.abs(angle)) || (Math.abs((360 - collisionAvoidanceGoal) % 360) != Math.abs(angle))){
+      DogLog.log("Arm/getRawAngleFromNormalAngleBad", true);
+      return getRawAngleFromNormalAngleTest(angle, rawMotorAngle);
     }
+    DogLog.log("Arm/getRawAngleFromNormalAngleBad", false);
+    return collisionAvoidanceGoal;
   }
 
   public static double getRawAngleFromNormalAngleTest(double angle, double rawAngle) {
