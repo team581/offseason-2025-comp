@@ -11,8 +11,8 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedThreePiece2ILKAuto extends BaseAuto {
-  public RedThreePiece2ILKAuto(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedFivePiece2JKLABAuto extends BaseAuto {
+  public RedFivePiece2JKLABAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
@@ -24,11 +24,14 @@ public class RedThreePiece2ILKAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        blocks.scorePreloadL4(
-            Points.START_R2_AND_B2.redPose, ReefPipe.PIPE_I, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
+        blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
+        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
+        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
-        blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT));
+        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.RIGHT),
+        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.RIGHT));
   }
 }

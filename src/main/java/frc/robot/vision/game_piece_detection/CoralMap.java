@@ -20,7 +20,9 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
+import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightHelpers;
+import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +47,8 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
   private static final double VERTICAL_TOP_VIEW = 48.9 / 2;
 
-  private static final String LIMELIGHT_NAME = "limelight-coral";
+  private Limelight limelight;
+  private static final String LIMELIGHT_NAME = "limelight-gp";
   private static final NetworkTableEntry LL_TCORNXY =
       NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
 
@@ -70,10 +73,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private Optional<Pose2d> filteredLollipopPose = Optional.empty();
   private double lastLollipopTime = 0.0;
 
-  public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve) {
+  public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve, Limelight limelight) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
     this.localization = localization;
     this.swerve = swerve;
+    this.limelight = limelight;
   }
 
   private void resetLollipopFilter(Translation2d expectedTranslation) {
@@ -116,6 +120,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   private List<Translation2d> getRawCoralPoses() {
+    if (limelight.getState() != LimelightState.CORAL) {
+      return List.of();
+    }
+
     List<Translation2d> coralTranslations = new ArrayList<>();
     double[] corners = LL_TCORNXY.getDoubleArray(new double[0]);
 
@@ -158,7 +166,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
     return coralTranslations;
   }
 
-  public Optional<Pose2d> getBestCoral() {
+  public Optional<Pose2d> getBestCoralPose() {
     if (coralMap.isEmpty()) {
       return Optional.empty();
     }
@@ -167,12 +175,16 @@ public class CoralMap extends StateMachine<CoralMapState> {
         coralMap.stream()
             .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
             .min(bestCoralComparator);
-
     if (bestCoral.isPresent()) {
-      DogLog.log("CoralMap/BestCoral", bestCoral.orElseThrow());
+      var rotation =
+          IntakeAssistUtil.getIntakeAssistAngle(
+              bestCoral.get().getTranslation(), localization.getPose());
+      var coralPoseWithIntakeRotation =
+          new Pose2d(bestCoral.get().getTranslation(), Rotation2d.fromDegrees(rotation));
+      DogLog.log("CoralMap/BestCoralPose", coralPoseWithIntakeRotation);
+      return Optional.of(coralPoseWithIntakeRotation);
     }
-
-    return bestCoral;
+    return Optional.empty();
   }
 
   public static boolean isCoralInSafeSpotForAuto(Translation2d coralPose) {
