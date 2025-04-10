@@ -181,7 +181,7 @@ public class AutoBlocks {
             .withDeadline(autoCommands.waitForLollipopIntakeDone()));
   }
 
-  public Command intakeGround(Pose2d defaultIntakingPose) {
+  public Command intakeGroundForL4(Pose2d defaultIntakingPose) {
     return trailblazer
         .followSegment(
             new AutoSegment(
@@ -191,6 +191,7 @@ public class AutoBlocks {
                     Commands.runOnce(
                         () -> {
                           robotManager.groundManager.intakeRequest();
+                          robotManager.l4WaitingHandoffRequest();
                         }))),
             false)
         .withDeadline(autoCommands.waitForIntakeDone());
