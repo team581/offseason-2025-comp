@@ -51,10 +51,10 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
       SmartDashboard.putData(
           "FieldCalibration/ResetGyroTo0",
           Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(0))).ignoringDisable(true));
-          SmartDashboard.putData(
+      SmartDashboard.putData(
           "FieldCalibration/ResetGyroTo90",
           Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(90))).ignoringDisable(true));
-          SmartDashboard.putData(
+      SmartDashboard.putData(
           "FieldCalibration/ResetGyroTo270",
           Commands.runOnce(() -> resetGyro(Rotation2d.fromDegrees(270))).ignoringDisable(true));
     }

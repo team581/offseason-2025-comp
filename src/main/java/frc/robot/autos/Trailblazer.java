@@ -75,7 +75,8 @@ public class Trailblazer {
                               currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
-                      DogLog.log("Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
+                      DogLog.log(
+                          "Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
                       if (previousAutoPointIndex != currentAutoPointIndex) {
                         // Currently tracked point has changed, trigger side effects
 
