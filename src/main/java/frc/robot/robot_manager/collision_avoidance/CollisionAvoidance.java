@@ -34,7 +34,8 @@ public class CollisionAvoidance {
       new HashMap<>();
 
   private static CollisionAvoidanceQuery lastQuery =
-      new CollisionAvoidanceQuery(Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE);
+      new CollisionAvoidanceQuery(
+          Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE, true);
   private static double lastSolution = 90.0;
   private static boolean lastClimberRisky = true;
   private static ObstructionKind lastObstruction = ObstructionKind.NONE;
@@ -145,7 +146,9 @@ public class CollisionAvoidance {
     // Check if the desired position and obstruction is the same, then use the same path
     if (!lastQuery.goalWaypoint().equals(closestToDesired)
         || !lastQuery.obstructionKind().equals(obstructionKind)) {
-      lastQuery = new CollisionAvoidanceQuery(closestToCurrent, closestToDesired, obstructionKind);
+      lastQuery =
+          new CollisionAvoidanceQuery(
+              closestToCurrent, closestToDesired, obstructionKind, DriverStation.isTeleop());
 
       var maybePath = cachedAStar(lastQuery).map(ArrayDeque::new);
       if (maybePath.isPresent()) {
@@ -508,11 +511,6 @@ public class CollisionAvoidance {
 
     // Place
 
-    Waypoint.L4_LEFT_PLACE.avoidClimberAlwaysSafe(
-        graph, Waypoint.REEF_ALGAE_L2_LEFT, Waypoint.REEF_ALGAE_L3_LEFT);
-    Waypoint.L4_RIGHT_PLACE.avoidClimberAlwaysSafe(
-        graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
-
     // You can always go to the push state after grabbing a lollipop coral
     Waypoint.LOLLIPOP_INTAKE_RIGHT.alwaysSafe(graph, Waypoint.LOLLIPOP_INTAKE_PUSH);
     // Helps with stowing after the push motion
@@ -603,6 +601,17 @@ public class CollisionAvoidance {
     Waypoint.HANDOFF_REEF_ALGAE_L2_LEFT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_LEFT);
     Waypoint.HANDOFF_REEF_ALGAE_L2_RIGHT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_RIGHT);
 
+    // Place states can go to the reef algae at that height
+    // Only in teleop, since this is technically not a safe motion (but we trust the driver)
+    Waypoint.L4_LEFT_PLACE.avoidClimberAlwaysSafeTeleop(
+        graph, Waypoint.REEF_ALGAE_L2_LEFT, Waypoint.REEF_ALGAE_L3_LEFT);
+    Waypoint.L4_RIGHT_PLACE.avoidClimberAlwaysSafeTeleop(
+        graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
+    Waypoint.L3_LEFT_PLACE.avoidClimberAlwaysSafeTeleop(
+        graph, Waypoint.REEF_ALGAE_L2_LEFT, Waypoint.REEF_ALGAE_L3_LEFT);
+    Waypoint.L3_RIGHT_PLACE.avoidClimberAlwaysSafeTeleop(
+        graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
+
     // Create an immutable copy of the graph now that we've added all the nodes
     var immutableGraph = ImmutableValueGraph.copyOf(graph);
 
@@ -690,16 +699,21 @@ public class CollisionAvoidance {
    */
   public static void warmup() {
     DogLog.time("CollisionAvoidance/Warmup");
-    for (var obstruction : ObstructionKind.values()) {
-      cachedAStar(
-          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.L4_LEFT_LINEUP, obstruction));
-      cachedAStar(
-          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.L4_RIGHT_LINEUP, obstruction));
-      cachedAStar(
-          new CollisionAvoidanceQuery(Waypoint.HANDOFF, Waypoint.GROUND_ALGAE_INTAKE, obstruction));
-      cachedAStar(
-          new CollisionAvoidanceQuery(
-              Waypoint.L1_UPRIGHT, Waypoint.ALGAE_NET_OUT_RIGHT, obstruction));
+    for (var teleop : new boolean[] {true, false}) {
+      for (var obstruction : ObstructionKind.values()) {
+        cachedAStar(
+            new CollisionAvoidanceQuery(
+                Waypoint.HANDOFF, Waypoint.L4_LEFT_LINEUP, obstruction, teleop));
+        cachedAStar(
+            new CollisionAvoidanceQuery(
+                Waypoint.HANDOFF, Waypoint.L4_RIGHT_LINEUP, obstruction, teleop));
+        cachedAStar(
+            new CollisionAvoidanceQuery(
+                Waypoint.HANDOFF, Waypoint.GROUND_ALGAE_INTAKE, obstruction, teleop));
+        cachedAStar(
+            new CollisionAvoidanceQuery(
+                Waypoint.L1_UPRIGHT, Waypoint.ALGAE_NET_OUT_RIGHT, obstruction, teleop));
+      }
     }
     DogLog.timeEnd("CollisionAvoidance/Warmup");
   }

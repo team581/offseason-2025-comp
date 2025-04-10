@@ -1,5 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public record WaypointEdge(
     double shortCost,
     double longCost,
@@ -7,20 +9,37 @@ public record WaypointEdge(
     /** Whether this motion is safe when the left side of the robot is obstructed. */
     ObstructionStrategy leftSideStrategy,
     /** Whether this motion is safe when the right side of the robot is obstructed. */
-    ObstructionStrategy rightSideStrategy) {
+    ObstructionStrategy rightSideStrategy,
+    boolean teleopOnly) {
   public WaypointEdge(
       Waypoint from,
       Waypoint to,
       ObstructionStrategy leftSideStrategy,
       ObstructionStrategy rightSideStrategy) {
-    this(from.costFor(to), from.costForLongWay(to), false, leftSideStrategy, rightSideStrategy);
+    this(
+        from.costFor(to),
+        from.costForLongWay(to),
+        false,
+        leftSideStrategy,
+        rightSideStrategy,
+        false);
   }
 
   public WaypointEdge avoidClimber() {
-    return new WaypointEdge(shortCost, longCost, true, leftSideStrategy, rightSideStrategy);
+    return new WaypointEdge(
+        shortCost, longCost, true, leftSideStrategy, rightSideStrategy, teleopOnly);
+  }
+
+  public WaypointEdge onlyTeleop() {
+    return new WaypointEdge(
+        shortCost, longCost, hitsClimber, leftSideStrategy, rightSideStrategy, true);
   }
 
   public double getCost(ObstructionKind obstruction) {
+    if (teleopOnly && DriverStation.isAutonomous()) {
+      return Double.MAX_VALUE;
+    }
+
     return switch (obstruction) {
       case LEFT_OBSTRUCTED ->
           switch (leftSideStrategy) {

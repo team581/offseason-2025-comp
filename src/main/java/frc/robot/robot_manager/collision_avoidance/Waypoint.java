@@ -196,6 +196,22 @@ public enum Waypoint {
     }
   }
 
+  public void avoidClimberAlwaysSafeTeleop(
+      MutableValueGraph<Waypoint, WaypointEdge> graph, Waypoint... others) {
+    for (var other : others) {
+      graph.putEdgeValue(
+          this,
+          other,
+          new WaypointEdge(
+                  this,
+                  other,
+                  ObstructionStrategy.IGNORE_BLOCKED,
+                  ObstructionStrategy.IGNORE_BLOCKED)
+              .avoidClimber()
+              .onlyTeleop());
+    }
+  }
+
   public void avoidClimberLeftSideSpecial(
       MutableValueGraph<Waypoint, WaypointEdge> graph,
       ObstructionStrategy leftStrategy,
