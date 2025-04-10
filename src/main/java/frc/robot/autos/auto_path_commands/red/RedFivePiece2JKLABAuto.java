@@ -25,13 +25,13 @@ public class RedFivePiece2JKLABAuto extends BaseAuto {
   protected Command createAutoCommand() {
     return Commands.sequence(
         blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(12.978, 2.132, Rotation2d.fromDegrees(-18))),
         blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(13.925, 2.286, Rotation2d.fromDegrees(-30))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(14.672, 2.760, Rotation2d.fromDegrees(-100))),
         blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.RIGHT),
-        blocks.intakeGround(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(14.931, 3.236, Rotation2d.fromDegrees(-100))),
         blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.RIGHT));
   }
 }

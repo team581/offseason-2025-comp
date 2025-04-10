@@ -26,9 +26,9 @@ public class RedThreePiece3IKLAuto extends BaseAuto {
     return Commands.sequence(
         blocks.scorePreloadL4(
             Points.START_R3_AND_B3.redPose, ReefPipe.PIPE_I, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
         blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
-        blocks.intakeGround(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
+        blocks.intakeGroundForL4(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT));
   }
 }
