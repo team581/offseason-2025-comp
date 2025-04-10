@@ -189,7 +189,8 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       case CORAL_L2_LEFT_APPROACH, CORAL_L3_LEFT_APPROACH, CORAL_L4_LEFT_APPROACH -> {
-        if (robotScoringSide == RobotScoringSide.RIGHT) {
+        // Support switching from left to right if in teleop & robot is closer to the right side
+        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.RIGHT) {
           yield currentState.getLeftToRightApproachState();
         }
 
@@ -201,7 +202,8 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_L2_RIGHT_APPROACH, CORAL_L3_RIGHT_APPROACH, CORAL_L4_RIGHT_APPROACH -> {
-        if (robotScoringSide == RobotScoringSide.LEFT) {
+        // Support switching from right to left if in teleop & robot is closer to the left side
+        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.LEFT) {
           yield currentState.getRightToLeftApproachState();
         }
 
