@@ -316,6 +316,15 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
+      case STARTING_POSITION -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        groundManager.idleRequest();
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.IDLE_EMPTY);
+        climber.setState(ClimberState.STOPPED);
+      }
       case STARTING_POSITION_CORAL -> {
         claw.setState(ClawState.IDLE_W_CORAL);
         groundManager.idleRequest();
