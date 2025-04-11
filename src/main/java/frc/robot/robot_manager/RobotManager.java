@@ -230,11 +230,15 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       // Algae scoring
-      case ALGAE_PROCESSOR_RELEASE,
-          ALGAE_NET_LEFT_RELEASE,
-          ALGAE_NET_RIGHT_RELEASE,
-          ALGAE_OUTTAKE ->
-          timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
+      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_LEFT_RELEASE, ALGAE_NET_RIGHT_RELEASE -> {
+        if (FeatureFlags.AUTO_STOW_ALGAE.getAsBoolean()) {
+          yield timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
+        }
+
+        yield currentState;
+      }
+
+      case ALGAE_OUTTAKE -> timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       // Intaking
 

@@ -32,6 +32,8 @@ public class FeatureFlags {
   public static final BooleanSupplier APPROACH_TAG_CHECK =
       FeatureFlag.of("Vision/ApproachTagCheck", true);
 
+  public static final BooleanSupplier AUTO_STOW_ALGAE = FeatureFlag.of("AutoStowAlgaeScore", false);
+
   // TODO: Delete this, it's no longer actually used
   public static final BooleanSupplier VISION_HANDOFF_ADJUSTMENT =
       FeatureFlag.of("Vision/HandoffAdjustment", true);
