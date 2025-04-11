@@ -1357,7 +1357,12 @@ public class RobotManager extends StateMachine<RobotState> {
       if (robotScoringSide == RobotScoringSide.LEFT) {
 
         switch (getState()) {
-          case CORAL_L2_LEFT_PLACE, CORAL_L3_LEFT_PLACE, CORAL_L4_LEFT_PLACE -> {
+          case CORAL_L2_LEFT_PLACE,
+              CORAL_L2_LEFT_RELEASE,
+              CORAL_L3_LEFT_PLACE,
+              CORAL_L3_LEFT_RELEASE,
+              CORAL_L4_LEFT_PLACE,
+              CORAL_L4_LEFT_RELEASE -> {
             canSkipCollisionAvoidanceForReefAlgae = true;
           }
           default -> {
@@ -1372,7 +1377,12 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       } else {
         switch (getState()) {
-          case CORAL_L2_RIGHT_PLACE, CORAL_L3_RIGHT_PLACE, CORAL_L4_RIGHT_PLACE -> {
+          case CORAL_L2_RIGHT_PLACE,
+              CORAL_L2_RIGHT_RELEASE,
+              CORAL_L3_RIGHT_PLACE,
+              CORAL_L3_RIGHT_RELEASE,
+              CORAL_L4_RIGHT_PLACE,
+              CORAL_L4_RIGHT_RELEASE -> {
             canSkipCollisionAvoidanceForReefAlgae = true;
           }
           default -> {
