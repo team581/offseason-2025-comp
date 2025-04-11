@@ -70,7 +70,7 @@ public class TagAlign {
   }
 
   private void checkControllerForSwitch() {
-    if(!DriverStation.isTeleop()){
+    if (!DriverStation.isTeleop()) {
       return;
     }
     if (pipeSwitchActive

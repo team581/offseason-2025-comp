@@ -112,9 +112,8 @@ public class AutoBlocks {
                     SCORING_CONSTRAINTS,
                     new AutoPoint(
                         () -> robotManager.autoAlign.getUsedScoringPose(pipe),
-                        Commands.runOnce(()->robotManager.autoAlign.setAutoReefPipeOverride(pipe)).andThen(
-                        robotManager
-                            .waitForState(RobotState.CLAW_CORAL))
+                        Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
+                            .andThen(robotManager.waitForState(RobotState.CLAW_CORAL))
                             .andThen(autoCommands.l4ApproachCommand(scoringSide)),
                         BASE_CONSTRAINTS)),
                 false)
