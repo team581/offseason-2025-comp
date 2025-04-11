@@ -15,6 +15,8 @@ import java.util.Optional;
 public final class IntakeAssistUtil {
   private static final double CORAL_ASSIST_KP = 3.0;
   private static final double INTAKE_OFFSET = Units.inchesToMeters(18);
+  private static final double LOLLIPOP_INTAKE_OFFSET = Units.inchesToMeters(20);
+
 
   public static ChassisSpeeds getAssistSpeedsFromPose(
       Pose2d target, Pose2d robotPose, ChassisSpeeds teleopSpeeds) {
@@ -56,7 +58,7 @@ public final class IntakeAssistUtil {
         fieldRelativePose.transformBy(
             new Transform2d(
                 Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()),
-                INTAKE_OFFSET,
+                LOLLIPOP_INTAKE_OFFSET,
                 Rotation2d.kZero));
     DogLog.log("CoralMap/Lollipop/WantedIntakePose", offset);
     return Optional.of(offset);
