@@ -70,6 +70,9 @@ public class TagAlign {
   }
 
   private void checkControllerForSwitch() {
+    if(!DriverStation.isTeleop()){
+      return;
+    }
     if (pipeSwitchActive
         && (Timer.getFPGATimestamp() > LAST_PIPE_SWITCH_TIMESTAMP + PIPE_SWITCH_TIMEOUT)
         && rawControllerXValue == 0.0) {

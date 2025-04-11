@@ -149,7 +149,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.OFF);
         leftFrontLimelight.setState(LimelightState.OFF);
         rightLimelight.setState(LimelightState.ALGAE);
-        gamePieceDetectionLimelight.setState(LimelightState.OFF);
+        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
     }
   }

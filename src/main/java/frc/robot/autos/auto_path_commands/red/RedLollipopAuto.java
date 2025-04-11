@@ -30,10 +30,11 @@ public class RedLollipopAuto extends BaseAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
+                AutoBlocks.APPROACH_REEF_TOLERANCE,
                 new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(30))),
                 new AutoPoint(
                     new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
-                    autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
+                    Commands.runOnce(()-> robotManager.autoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_L)).andThen(autoCommands.l4ApproachCommand(RobotScoringSide.LEFT))),
                 new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
         blocks.scoreL4(
             ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
@@ -44,21 +45,22 @@ public class RedLollipopAuto extends BaseAuto {
             new Pose2d(15.7, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(
-            ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
+            ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 1
         blocks.intakeLollipop(
-            new Pose2d(15.5, 3.313, Rotation2d.fromDegrees(-50))
+            new Pose2d(15.3, 3.2, Rotation2d.fromDegrees(-50))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
-            new Pose2d(15.852, 2.622, Rotation2d.fromDegrees(-50))
+            new Pose2d(15.852, 2.6, Rotation2d.fromDegrees(-50))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(
-            ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
+            ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 3
         blocks.intakeLollipop(
             new Pose2d(14.3, 5.106, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.795, 5.473, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        blocks.scoreL4(ReefPipe.PIPE_C, RobotScoringSide.LEFT));
+        blocks.scoreL4(ReefPipe.PIPE_C, RobotScoringSide.LEFT),
+        autoCommands.moveToStartingPositionCommand());
   }
 }

@@ -68,9 +68,8 @@ public class AutoCommands {
 
   public Command waitForLollipopIntakeDone() {
     return robotManager
-        .waitForState(RobotState.CORAL_INTAKE_LOLLIPOP_GRAB)
-        .andThen(robotManager.waitForState(RobotState.CLAW_CORAL))
-        .withTimeout(4);
+        .waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL)
+        .withTimeout(3);
   }
 
   public Command waitForElevatorAndArmNearGoal() {
@@ -78,10 +77,9 @@ public class AutoCommands {
         () -> robotManager.elevator.nearGoal() && robotManager.arm.nearGoal());
   }
 
-  public Command l4ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
+  public Command l4ApproachCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
         () -> {
-          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
           if (scoringSide == RobotScoringSide.LEFT) {
             robotManager.l4CoralLeftAutoApproachRequest();
           } else {
@@ -112,6 +110,10 @@ public class AutoCommands {
 
   public Command l3LeftReleaseCommand() {
     return Commands.runOnce(robotManager::l3CoralLeftReleaseRequest);
+  }
+
+  public Command moveToStartingPositionCommand() {
+    return Commands.runOnce(robotManager::startingPositionRequest);
   }
 
   public Command waitForReleaseCommand() {

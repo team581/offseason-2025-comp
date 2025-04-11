@@ -117,6 +117,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   public void setAutoReefPipeOverride(ReefPipe override) {
+    DogLog.log("Debug/SetPipeOverride", override);
     tagAlign.setPipeOveride(override);
   }
 

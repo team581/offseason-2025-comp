@@ -278,8 +278,7 @@ public class RobotManager extends StateMachine<RobotState> {
           (RobotBase.isSimulation() ? timeout(1) : claw.getHasGP())
               ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH
               : currentState;
-      case CORAL_INTAKE_LOLLIPOP_PUSH ->
-          arm.atGoal() && elevator.atGoal() ? RobotState.CLAW_CORAL : currentState;
+      case CORAL_INTAKE_LOLLIPOP_PUSH -> timeout(0.2) ? RobotState.CLAW_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
@@ -1432,6 +1431,12 @@ public class RobotManager extends StateMachine<RobotState> {
   public void preloadCoralRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.CLAW_EMPTY);
+    }
+  }
+
+  public void startingPositionRequest() {
+    if (!getState().climbingOrRehoming) {
+      setStateFromRequest(RobotState.STARTING_POSITION);
     }
   }
 
