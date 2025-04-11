@@ -636,11 +636,31 @@ public class CollisionAvoidance {
   }
 
   static Optional<ImmutableList<Waypoint>> aStar(
+      Waypoint startWaypoint,
+      SuperstructurePosition desiredPosition,
+      ObstructionKind obstructionKind) {
+    return aStar(startWaypoint, Waypoint.getClosest(desiredPosition), obstructionKind);
+  }
+
+  static Optional<ImmutableList<Waypoint>> aStar(
       SuperstructurePosition currentPosition,
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind) {
-    var startWaypoint = Waypoint.getClosest(currentPosition);
-    var goalWaypoint = Waypoint.getClosest(desiredPosition);
+    return aStar(
+        Waypoint.getClosest(currentPosition),
+        Waypoint.getClosest(desiredPosition),
+        obstructionKind);
+  }
+
+  static Optional<ImmutableList<Waypoint>> aStar(
+      SuperstructurePosition currentPosition,
+      Waypoint goalWaypoint,
+      ObstructionKind obstructionKind) {
+    return aStar(Waypoint.getClosest(currentPosition), goalWaypoint, obstructionKind);
+  }
+
+  static Optional<ImmutableList<Waypoint>> aStar(
+      Waypoint startWaypoint, Waypoint goalWaypoint, ObstructionKind obstructionKind) {
     var openSet = EnumSet.of(startWaypoint);
 
     Map<Waypoint, Waypoint> cameFrom = new EnumMap<Waypoint, Waypoint>(Waypoint.class);
