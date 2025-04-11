@@ -29,7 +29,7 @@ public class RedLollipopAuto extends BaseAuto {
     return Commands.sequence(
         trailblazer.followSegment(
             new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
+                AutoBlocks.MAX_CONSTRAINTS,
                 AutoBlocks.APPROACH_REEF_TOLERANCE,
                 new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(30))),
                 new AutoPoint(
