@@ -33,11 +33,6 @@ public class RobotCommands {
         .withName("AlgaeIntakeGroundCommand");
   }
 
-  public Command floorAssistIntakeCommand() {
-    return Commands.runOnce(robot::lollipopIntakeApproachRequest, rmRequirements)
-        .withName("FloorIntakeCommand");
-  }
-
   public Command highLineupCommand() {
     return Commands.runOnce(robot::highLineupRequest, bothRequirements)
         .withName("HighLineupCommand");
