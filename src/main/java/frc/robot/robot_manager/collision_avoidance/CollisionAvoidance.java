@@ -513,9 +513,18 @@ public class CollisionAvoidance {
 
     // You can always go to the push state after grabbing a lollipop coral
     Waypoint.LOLLIPOP_INTAKE_RIGHT.alwaysSafe(graph, Waypoint.LOLLIPOP_INTAKE_PUSH);
-    // Helps with stowing after the push motion
+    // Used in lollipop auto to go directly to/from scoring L4/L3
     Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
-        graph, Waypoint.L1_UPRIGHT, Waypoint.L2_UPRIGHT, Waypoint.L3_UPRIGHT, Waypoint.L4_UPRIGHT);
+        graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L4_LEFT_LINEUP);
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.avoidClimberAlwaysSafe(
+        graph, Waypoint.L3_LEFT_PLACE, Waypoint.L4_LEFT_PLACE);
+
+    // Additional ways to exit the push state, mostly just to help cover weird edge cases
+    // Putting L1_UPRIGHT here is safe, but makes going L4_LEFT_PLACE to L1_UPRIGHT weird
+    Waypoint.LOLLIPOP_INTAKE_RIGHT.avoidClimberAlwaysSafe(
+        graph, Waypoint.L2_UPRIGHT, Waypoint.L3_UPRIGHT, Waypoint.L4_UPRIGHT);
+    Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
+        graph, Waypoint.L2_UPRIGHT, Waypoint.L3_UPRIGHT, Waypoint.L4_UPRIGHT);
 
     /* Switching coral level on the same side is okay if you won't hit the reef */
     var leftCoralScoreWaypoints =

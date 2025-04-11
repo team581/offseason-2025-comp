@@ -452,13 +452,20 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH),
             ObstructionKind.LEFT_OBSTRUCTED);
-    // TODO: This is suboptimal and should be optimized
-    var expected =
-        List.of(
-            Waypoint.L4_LEFT_PLACE,
-            Waypoint.L4_LEFT_LINEUP,
-            Waypoint.L4_UPRIGHT,
-            Waypoint.LOLLIPOP_INTAKE_RIGHT);
+    var expected = List.of(Waypoint.L4_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE_RIGHT);
+
+    assertEquals(expected, result.orElseThrow());
+  }
+
+  @Test
+  void lollipopPushToL4LineupTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            Waypoint.LOLLIPOP_INTAKE_PUSH,
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4),
+            ObstructionKind.NONE);
+    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.L4_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
