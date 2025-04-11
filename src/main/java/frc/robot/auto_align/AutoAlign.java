@@ -91,7 +91,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         < thresholdMeters;
   }
 
-  private final Debouncer isAlignedDebouncer = new Debouncer(0.25, DebounceType.kRising);
+  private final Debouncer isAlignedDebouncer = new Debouncer(0.15, DebounceType.kRising);
   private final VisionSubsystem vision;
   private final LocalizationSubsystem localization;
   private final TagAlign tagAlign;

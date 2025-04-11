@@ -21,7 +21,7 @@ public class AutoBlocks {
    * scoring L4.
    */
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
-      new PoseErrorTolerance(0.3, 10);
+      new PoseErrorTolerance(0.2, 10);
 
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
@@ -124,7 +124,7 @@ public class AutoBlocks {
                 AFTER_SCORE_POSITION_TOLERANCE,
                 new AutoPoint(
                     () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                    Commands.waitSeconds(0.10).andThen(onFinish)))));
+                    Commands.waitSeconds(0.15).andThen(onFinish)))));
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
