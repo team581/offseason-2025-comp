@@ -2,7 +2,6 @@ package frc.robot.claw;
 
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.S1StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.RobotConfig;
@@ -28,10 +27,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   @Override
   protected void collectInputs() {
     var candiValue = candi.getS1State().getValue();
-    sensorRaw =
-        RobotConfig.get().claw().sensorFlipped()
-            ? candiValue == S1StateValue.Low
-            : candiValue != S1StateValue.Low;
+    sensorRaw = getState() != ClawState.INTAKING_ALGAE;
 
     sensorDebounced = debouncer.calculate(sensorRaw);
   }

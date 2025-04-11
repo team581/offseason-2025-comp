@@ -429,7 +429,6 @@ public class CollisionAvoidance {
 
     // TODO: If it's possible, allow going HANDOFF_CLEARS_CLIMBER to L1_UPRIGHT
     Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(graph, Waypoint.L2_UPRIGHT);
-    Waypoint.HANDOFF.avoidClimberAlwaysSafe(graph, Waypoint.L2_UPRIGHT, Waypoint.L3_UPRIGHT);
 
     /* Arm up to left/right is always safe */
     Waypoint.L2_UPRIGHT.avoidClimberAlwaysSafe(
@@ -550,28 +549,30 @@ public class CollisionAvoidance {
     }
 
     /* Scoring coral directly from handoff, depends a lot on obstructions */
-    Waypoint.HANDOFF_CLEARS_CLIMBER.leftSideSpecial(
+    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberLeftSideSpecial(
         graph,
         ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_LEFT_LINEUP,
         Waypoint.L3_LEFT_LINEUP,
         Waypoint.L4_LEFT_LINEUP);
-    Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
+    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberRightSideSpecial(
         graph,
         ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_RIGHT_LINEUP,
         Waypoint.L3_RIGHT_LINEUP,
         Waypoint.L4_RIGHT_LINEUP);
 
-    Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.ALGAE_NET_UP);
+    Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, Waypoint.ALGAE_NET_UP);
 
     // L1 movements
     var l1AreaWaypoints =
-        List.of(Waypoint.L1_RIGHT_LINEUP, Waypoint.GROUND_ALGAE_INTAKE, Waypoint.PROCESSOR);
+        List.of(
+            Waypoint.L1_RIGHT_LINEUP,
+            Waypoint.GROUND_ALGAE_INTAKE,
+            Waypoint.PROCESSOR,
+            Waypoint.CLIMB);
 
     Waypoint.L1_UPRIGHT.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
-    Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, l1AreaWaypoints.toArray(Waypoint[]::new));
 
     Waypoint.HANDOFF.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
 
@@ -590,27 +591,11 @@ public class CollisionAvoidance {
     // Can go directly to L3 algae from handoff since elevator is basically at the right height
     // This takes the long path with the arm for left side to avoid climber
     Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(
-        graph, Waypoint.REEF_ALGAE_L3_RIGHT, Waypoint.REEF_ALGAE_L3_LEFT);
-    // Keep elevator at same height, move the arm straight out
-    // This takes the long path with the arm for left side to avoid climber
-    Waypoint.HANDOFF.avoidClimberLeftSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.HANDOFF_REEF_ALGAE_L2_LEFT);
-    Waypoint.HANDOFF.avoidClimberRightSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.HANDOFF_REEF_ALGAE_L2_RIGHT);
-    // Lower the elevator to get to the reef intake height, arm is already straight out
-    Waypoint.HANDOFF_REEF_ALGAE_L2_LEFT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_LEFT);
-    Waypoint.HANDOFF_REEF_ALGAE_L2_RIGHT.alwaysSafe(graph, Waypoint.REEF_ALGAE_L2_RIGHT);
-
-    // Place states can go to the reef algae at that height
-    // Only in teleop, since this is technically not a safe motion (but we trust the driver)
-    Waypoint.L4_LEFT_PLACE.avoidClimberAlwaysSafeTeleop(
-        graph, Waypoint.REEF_ALGAE_L2_LEFT, Waypoint.REEF_ALGAE_L3_LEFT);
-    Waypoint.L4_RIGHT_PLACE.avoidClimberAlwaysSafeTeleop(
-        graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
-    Waypoint.L3_LEFT_PLACE.avoidClimberAlwaysSafeTeleop(
-        graph, Waypoint.REEF_ALGAE_L2_LEFT, Waypoint.REEF_ALGAE_L3_LEFT);
-    Waypoint.L3_RIGHT_PLACE.avoidClimberAlwaysSafeTeleop(
-        graph, Waypoint.REEF_ALGAE_L2_RIGHT, Waypoint.REEF_ALGAE_L3_RIGHT);
+        graph,
+        Waypoint.REEF_ALGAE_L2_LEFT,
+        Waypoint.REEF_ALGAE_L2_RIGHT,
+        Waypoint.REEF_ALGAE_L3_RIGHT,
+        Waypoint.REEF_ALGAE_L3_LEFT);
 
     // Create an immutable copy of the graph now that we've added all the nodes
     var immutableGraph = ImmutableValueGraph.copyOf(graph);

@@ -29,6 +29,7 @@ public enum Waypoint {
   HANDOFF_CLEARS_CLIMBER(new SuperstructurePosition(55, ArmState.CORAL_HANDOFF)),
 
   PROCESSOR(new SuperstructurePosition(ElevatorState.PROCESSOR, ArmState.ALGAE_PROCESSOR)),
+  CLIMB(new SuperstructurePosition(ElevatorState.CLIMBING, ArmState.CLIMBING)),
 
   L1_UPRIGHT(new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT)),
   L2_UPRIGHT(
@@ -81,18 +82,11 @@ public enum Waypoint {
   ALGAE_NET_OUT_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT)),
   ALGAE_NET_OUT_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT)),
-
-  HANDOFF_REEF_ALGAE_L2_RIGHT(
-      new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.ALGAE_INTAKE_RIGHT_L2)),
-  HANDOFF_REEF_ALGAE_L2_LEFT(
-      new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.ALGAE_INTAKE_LEFT_L2)),
   REEF_ALGAE_L2_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_RIGHT_L2)),
   REEF_ALGAE_L2_LEFT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_LEFT_L2)),
 
-  REEF_ALGAE_L3_CLAW_HANDOFF(
-      new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3, ArmState.CORAL_HANDOFF)),
   REEF_ALGAE_L3_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_RIGHT_L3)),
   REEF_ALGAE_L3_LEFT(
