@@ -29,7 +29,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   protected void collectInputs() {
 
-    sensorRaw = candi.getS2State().getValue() != S2StateValue.High;
+    sensorRaw = candi.getS2State().getValue() != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
     sensorDebounced = debouncer.calculate(sensorRaw);
   }
 
