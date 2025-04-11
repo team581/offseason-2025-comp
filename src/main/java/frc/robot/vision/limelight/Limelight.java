@@ -42,6 +42,8 @@ public class Limelight extends StateMachine<LimelightState> {
   private Optional<GamePieceResult> coralResult = Optional.empty();
   private Optional<GamePieceResult> algaeResult = Optional.empty();
 
+  private double angularVelocity = 0.0;
+
   private final int[] closestScoringReefTag = {0};
 
   public Limelight(String name, LimelightState initialState, LimelightModel limelightModel) {
@@ -63,6 +65,7 @@ public class Limelight extends StateMachine<LimelightState> {
       double rollRate) {
     LimelightHelpers.SetRobotOrientation(
         limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+        this.angularVelocity = angularVelocity;
   }
 
   public void setState(LimelightState state) {
@@ -86,12 +89,20 @@ public class Limelight extends StateMachine<LimelightState> {
     if (mT2Estimate == null) {
       return Optional.empty();
     }
-
+    if (Math.abs(angularVelocity) > 360) {
+      return Optional.empty();
+  }
     if (mT2Estimate.tagCount == 0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
       return Optional.empty();
     }
+    if (mT2Estimate.rawFiducials.length == 1) {
+      double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
+      if (ambiguity >= 0.7) {
+          return Optional.empty();
+      }
+  }
     DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
     if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
       var newTimestamp = mT2Estimate.timestampSeconds;
