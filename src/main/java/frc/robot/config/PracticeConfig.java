@@ -251,7 +251,7 @@ class PracticeConfig {
               23,
               24,
               -55.0,
-              215.0,
+              100.0,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
