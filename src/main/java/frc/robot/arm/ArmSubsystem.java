@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
+import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
+import frc.robot.robot_manager.collision_avoidance.ObstructionStrategy;
 import frc.robot.util.MathHelpers;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -98,7 +100,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     if ((Math.abs(collisionAvoidanceGoal % 360) != Math.abs(angle))
         || (Math.abs((360 - collisionAvoidanceGoal) % 360) != Math.abs(angle))) {
       DogLog.log("Arm/getRawAngleFromNormalAngleBad", true);
-      return getRawAngleFromNormalAngle(angle, rawMotorAngle);
+      // return getRawAngleFromNormalAngle(angle, rawMotorAngle);
+      return CollisionAvoidance.getCollisionAvoidanceAngleGoal(
+          angle,
+          true,
+          ObstructionKind.NONE,
+          ObstructionStrategy.IGNORE_BLOCKED,
+          ObstructionStrategy.IGNORE_BLOCKED,
+          rawMotorAngle);
     }
     DogLog.log("Arm/getRawAngleFromNormalAngleBad", false);
     return collisionAvoidanceGoal;
