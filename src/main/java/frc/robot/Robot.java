@@ -170,6 +170,10 @@ public class Robot extends TimedRobot {
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       fieldCalibrationUtil.log();
     }
+
+    if (!autonomousCommand.isScheduled()) {
+      autos.markEndTimestamp();
+    }
   }
 
   @Override
