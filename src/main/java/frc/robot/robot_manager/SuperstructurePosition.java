@@ -35,8 +35,10 @@ public record SuperstructurePosition(
               Units.rotationsToDegrees(
                   RobotConfig.get().arm().motorConfig().MotionMagic.MotionMagicAcceleration)));
 
-  // TODO: Tune this number, maybe the big tolerances in collision avoidance mean we can reduce it?
-  private static final double STATIC_COST = 1.0;
+  // Unfortunately increasing this to 1.0 will cause the robot to start to prefer some really stupid
+  // motions. ex. going from L4_LEFT_LINEUP to L2_LEFT_LINEUP will go to HANDOFF_CLEARS_CLIMBER
+  // instead of just doing L4_UPRIGHT then L2_UPRIGHT
+  private static final double STATIC_COST = 0.99;
 
   public SuperstructurePosition(double elevatorHeight, double armAngle) {
     this(

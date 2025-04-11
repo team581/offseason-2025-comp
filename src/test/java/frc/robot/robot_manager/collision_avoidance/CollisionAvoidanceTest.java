@@ -533,4 +533,23 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.orElseThrow());
   }
+
+  @Test
+  void leftObstructedL4LeftToL2LeftTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4),
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
+            ObstructionKind.LEFT_OBSTRUCTED);
+    var expected =
+        List.of(
+            Waypoint.L4_LEFT_LINEUP,
+            Waypoint.L4_UPRIGHT,
+            Waypoint.L2_UPRIGHT,
+            Waypoint.L2_LEFT_LINEUP);
+
+    assertEquals(expected, result.orElseThrow());
+  }
 }
