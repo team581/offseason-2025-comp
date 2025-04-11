@@ -33,6 +33,11 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
     this.motor = motor;
     TunablePid.of("Deploy", motor, RobotConfig.get().deploy().motorConfig());
+
+    if (RobotConfig.IS_DEVELOPMENT) {
+      DogLog.tunable(
+          "Deploy/SetAngleDeg", 0.0, angle -> motor.setPosition(Units.degreesToRotations(angle)));
+    }
   }
 
   @Override
