@@ -1,6 +1,5 @@
 package frc.robot.autos;
 
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -55,7 +54,7 @@ public class Autos extends LifecycleSubsystem {
         // Continuously reset pose
         resetPoseForAuto();
       }
-      DogLog.log("Autos/TotalTime", endTimestamp-enabledTimestamp);
+      DogLog.log("Autos/TotalTime", endTimestamp - enabledTimestamp);
     }
     if (DriverStation.isAutonomousEnabled()) {
       hasEnabledAuto = true;
@@ -64,9 +63,9 @@ public class Autos extends LifecycleSubsystem {
 
   @Override
   public void autonomousInit() {
-      super.autonomousInit();
-      enabledTimestamp = Timer.getFPGATimestamp();
-      trackingTotalTime = true;
+    super.autonomousInit();
+    enabledTimestamp = Timer.getFPGATimestamp();
+    trackingTotalTime = true;
   }
 
   public void markEndTimestamp() {

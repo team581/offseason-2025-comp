@@ -17,7 +17,6 @@ public final class IntakeAssistUtil {
   private static final double INTAKE_OFFSET = Units.inchesToMeters(18);
   private static final double LOLLIPOP_INTAKE_OFFSET = Units.inchesToMeters(20);
 
-
   public static ChassisSpeeds getAssistSpeedsFromPose(
       Pose2d target, Pose2d robotPose, ChassisSpeeds teleopSpeeds) {
     var robotRelativePose =

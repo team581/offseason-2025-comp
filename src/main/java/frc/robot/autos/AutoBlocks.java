@@ -36,8 +36,8 @@ public class AutoBlocks {
           0.0,
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90));
-          public static final AutoConstraintOptions MAX_CONSTRAINTS =
-          new AutoConstraintOptions(4.5, 57, 3.0, 30);
+  public static final AutoConstraintOptions MAX_CONSTRAINTS =
+      new AutoConstraintOptions(4.5, 57, 3.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(3.5, 57, 2, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =

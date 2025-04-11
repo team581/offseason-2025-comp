@@ -131,8 +131,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_LEFT_PLACE -> {
         if (((FeatureFlags.AUTO_ALIGN_AUTO_SCORE.getAsBoolean() && scoringAlignActive)
                 || DriverStation.isAutonomous())
-            && ((arm.atGoal()
-            && elevator.atGoal())||timeout(0.15))) {
+            && ((arm.atGoal() && elevator.atGoal()) || timeout(0.15))) {
           autoAlign.markPipeScored();
           yield currentState.getPlaceToReleaseState();
         }
