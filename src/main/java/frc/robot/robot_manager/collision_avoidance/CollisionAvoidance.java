@@ -601,6 +601,13 @@ public class CollisionAvoidance {
         Waypoint.REEF_ALGAE_L2_RIGHT,
         Waypoint.REEF_ALGAE_L3_RIGHT,
         Waypoint.REEF_ALGAE_L3_LEFT);
+    // Algae stow position can go directly to any of the intake states
+    Waypoint.L1_UPRIGHT.avoidClimberAlwaysSafe(
+        graph,
+        Waypoint.REEF_ALGAE_L2_LEFT,
+        Waypoint.REEF_ALGAE_L2_RIGHT,
+        Waypoint.REEF_ALGAE_L3_RIGHT,
+        Waypoint.REEF_ALGAE_L3_LEFT);
 
     // Create an immutable copy of the graph now that we've added all the nodes
     var immutableGraph = ImmutableValueGraph.copyOf(graph);
