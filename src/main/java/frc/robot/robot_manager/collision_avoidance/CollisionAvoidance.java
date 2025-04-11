@@ -429,6 +429,7 @@ public class CollisionAvoidance {
 
     // TODO: If it's possible, allow going HANDOFF_CLEARS_CLIMBER to L1_UPRIGHT
     Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(graph, Waypoint.L2_UPRIGHT);
+    Waypoint.HANDOFF.avoidClimberAlwaysSafe(graph, Waypoint.ELEVATOR_HANDOFF_ARM_GROUND_ALGAE_INTAKE);
 
     /* Arm up to left/right is always safe */
     Waypoint.L2_UPRIGHT.avoidClimberAlwaysSafe(
@@ -586,6 +587,8 @@ public class CollisionAvoidance {
         a.alwaysSafe(graph, b);
       }
     }
+
+    Waypoint.ELEVATOR_HANDOFF_ARM_GROUND_ALGAE_INTAKE.alwaysSafe(graph, Waypoint.GROUND_ALGAE_INTAKE);
 
     /* Reef algae */
     // Can go directly to L3 algae from handoff since elevator is basically at the right height
