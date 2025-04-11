@@ -61,7 +61,12 @@ public enum ArmState {
   ALGAE_OUTTAKE(UNTUNED),
 
   COLLISION_AVOIDANCE(UNTUNED),
-  CLIMBING(60.0),
+  // TODO: Setting the arm to 60 can lead to false positives when coming from net scoring to algae
+  // ground intake. The robot will be partially done with the motion to go to handoff, and the
+  // nearest waypoint is climbing, which is used as the path start when the algae intake request is
+  // received.
+  // CLIMBING(60.0),
+  CLIMBING(0.0),
 
   SPIN_TO_WIN(90),
 
