@@ -58,7 +58,7 @@ public class RedLollipopAuto extends BaseAuto {
             ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.lollipopApproachCommand()),
         // LOLLIPOP 3
         blocks.intakeLollipop(
-            new Pose2d(14.3, 5.106, Rotation2d.fromDegrees(32))
+            new Pose2d(14.875, 5.014, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.795, 5.473, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
