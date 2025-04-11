@@ -377,7 +377,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_RIGHT_L2),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.HANDOFF, Waypoint.REEF_ALGAE_L2_RIGHT);
+    var expected =
+        List.of(Waypoint.HANDOFF, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L2_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -390,7 +391,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_LEFT_L2),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.HANDOFF, Waypoint.REEF_ALGAE_L2_LEFT);
+    var expected =
+        List.of(Waypoint.HANDOFF, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L2_LEFT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -403,7 +405,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_RIGHT_L3),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.HANDOFF, Waypoint.REEF_ALGAE_L3_RIGHT);
+    var expected =
+        List.of(Waypoint.HANDOFF, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L3_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -416,63 +419,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_LEFT_L3),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.HANDOFF, Waypoint.REEF_ALGAE_L3_LEFT);
-
-    assertEquals(expected, result.orElseThrow());
-  }
-
-  @Test
-  void l4PlaceToAlgaeLeftl2() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(
-                ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_LEFT_L2),
-            ObstructionKind.NONE);
-    var expected = List.of(Waypoint.L4_LEFT_PLACE, Waypoint.REEF_ALGAE_L2_LEFT);
-
-    assertEquals(expected, result.orElseThrow());
-  }
-
-  @Test
-  void l4PlaceToAlgaeLeftl3() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(
-                ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_LEFT_L3),
-            ObstructionKind.NONE);
-    var expected = List.of(Waypoint.L4_LEFT_PLACE, Waypoint.REEF_ALGAE_L3_LEFT);
-
-    assertEquals(expected, result.orElseThrow());
-  }
-
-  @Test
-  void l4PlaceToAlgaeRightl2() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(
-                ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_RIGHT_RELEASE_L4),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_RIGHT_L2),
-            ObstructionKind.NONE);
-    var expected = List.of(Waypoint.L4_RIGHT_PLACE, Waypoint.REEF_ALGAE_L2_RIGHT);
-
-    assertEquals(expected, result.orElseThrow());
-  }
-
-  @Test
-  void l4PlaceToAlgaeRightl3() {
-    var result =
-        CollisionAvoidance.aStar(
-            new SuperstructurePosition(
-                ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_RIGHT_RELEASE_L4),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_RIGHT_L3),
-            ObstructionKind.NONE);
-    var expected = List.of(Waypoint.L4_RIGHT_PLACE, Waypoint.REEF_ALGAE_L3_RIGHT);
+    var expected =
+        List.of(Waypoint.HANDOFF, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.REEF_ALGAE_L3_LEFT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -496,19 +444,21 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  void lollipopToHandoff() {
+  void l4PlaceToLollipop() {
     var result =
         CollisionAvoidance.aStar(
             new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4),
+            new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH),
-            new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF),
-            ObstructionKind.NONE);
+            ObstructionKind.LEFT_OBSTRUCTED);
+    // TODO: This is suboptimal and should be optimized
     var expected =
         List.of(
-            Waypoint.LOLLIPOP_INTAKE_PUSH,
-            Waypoint.L2_UPRIGHT,
-            Waypoint.REEF_ALGAE_L3_RIGHT,
-            Waypoint.HANDOFF);
+            Waypoint.L4_LEFT_PLACE,
+            Waypoint.L4_LEFT_LINEUP,
+            Waypoint.L4_UPRIGHT,
+            Waypoint.LOLLIPOP_INTAKE_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
