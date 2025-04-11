@@ -159,29 +159,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   @Override
-  protected void afterTransition(ArmState newState) {
-    switch (newState) {
-      case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
-      }
-      case PRE_MATCH_HOMING -> {
-        motor.setControl(coastNeutralRequest);
-      }
-      case SPIN_TO_WIN -> {
-        motor.setControl(spinToWin);
-      }
-      case ALGAE_FLING_SWING -> {
-        motor.setControl(algaeFling);
-      }
-      default -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(getSetpoint(newState.getAngle()))));
-        DogLog.log("Arm/defaultSetPosition", getSetpoint(newState.getAngle()));
-      }
-    }
-  }
+  protected void afterTransition(ArmState newState) {}
 
   @Override
   public void robotPeriodic() {
@@ -194,31 +172,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AtGoal", atGoal());
     DogLog.log("Arm/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
 
-    if (FeatureFlags.VISION_HANDOFF_ADJUSTMENT.getAsBoolean()) {
-      switch (getState()) {
-        case CORAL_HANDOFF -> {
-          motor.setControl(
-              motionMagicRequest.withPosition(
-                  Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
-          DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
-        }
-        default -> {}
-      }
-    }
-
-    if (getState() == ArmState.PRE_MATCH_HOMING) {
-      if (rangeOfMotionGood()) {
-        if (DriverStation.isEnabled()) {
-          motor.setPosition(
-              Units.degreesToRotations(
-                  RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
-
-          setStateFromRequest(ArmState.HOLDING_UPRIGHT);
-        } else {
-          motor.setControl(brakeNeutralRequest);
-        }
-      }
-    }
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
@@ -241,10 +194,38 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         motor.setControl(
             motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
-      default -> {
-        if (DriverStation.isEnabled()) {
-          afterTransition(getState());
+      case PRE_MATCH_HOMING -> {
+        if (rangeOfMotionGood()) {
+          if (DriverStation.isEnabled()) {
+            motor.setPosition(
+                Units.degreesToRotations(
+                    RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
+
+            setStateFromRequest(ArmState.HOLDING_UPRIGHT);
+          } else {
+            motor.setControl(brakeNeutralRequest);
+          }
+        } else {
+          motor.setControl(coastNeutralRequest);
         }
+      }
+      case SPIN_TO_WIN -> {
+        motor.setControl(spinToWin);
+      }
+      case ALGAE_FLING_SWING -> {
+        motor.setControl(algaeFling);
+      }
+      case CORAL_HANDOFF -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
+        DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
+      }
+      default -> {
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(getSetpoint(getState().getAngle()))));
+        DogLog.log("Arm/defaultSetPosition", getSetpoint(getState().getAngle()));
       }
     }
   }
