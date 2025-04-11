@@ -3,7 +3,6 @@ package frc.robot.robot_manager;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -275,9 +274,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_INTAKE_LOLLIPOP_GRAB ->
-          (RobotBase.isSimulation() ? timeout(1) : claw.getHasGP())
-              ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH
-              : currentState;
+          claw.getHasGP() ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH : currentState;
       case CORAL_INTAKE_LOLLIPOP_PUSH -> timeout(0.2) ? RobotState.CLAW_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->

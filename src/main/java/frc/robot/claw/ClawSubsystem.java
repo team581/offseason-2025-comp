@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -32,6 +33,19 @@ public class ClawSubsystem extends StateMachine<ClawState> {
         RobotConfig.get().claw().sensorFlipped()
             ? candiValue == S1StateValue.Low
             : candiValue != S1StateValue.Low;
+
+    if (RobotBase.isSimulation()) {
+      sensorRaw =
+          switch (getState()) {
+            case CORAL_HANDOFF -> timeout(0.5);
+            case IDLE_NO_GP -> false;
+            case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
+            case INTAKING_ALGAE -> timeout(1);
+            case SCORE_CORAL -> timeout(1);
+            case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> timeout(0.25);
+            case LOLLIPOP_CORAL_INTAKE -> timeout(3);
+          };
+    }
 
     sensorDebounced = debouncer.calculate(sensorRaw);
   }
