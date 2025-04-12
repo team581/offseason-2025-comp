@@ -15,6 +15,7 @@ public abstract class BaseAuto {
   protected final RobotCommands actions;
   protected final AutoCommands autoCommands;
   protected final AutoBlocks blocks;
+  protected final AutoTiming timing;
   private final String autoName;
   private final Command autoCommand;
 
@@ -27,6 +28,8 @@ public abstract class BaseAuto {
 
     var className = this.getClass().getSimpleName();
     autoName = className.substring(className.lastIndexOf('.') + 1);
+    timing = new AutoTiming(autoName);
+
     autoCommand = createFullAutoCommand();
   }
 
@@ -47,8 +50,10 @@ public abstract class BaseAuto {
     TrailblazerPathLogger.markAuto(this);
     // We continuously reset the pose anyway, but doing it here should be fine
     // It's basically free as long as we aren't updating the IMU
-    return Commands.sequence(
-      // TODO: Seems like this doesn't run or runs incorrectly in sim
+    return timing
+        .time(
+            "TotalTime",
+            // TODO: Seems like this doesn't run or runs incorrectly in sim
             Commands.runOnce(() -> robotManager.localization.resetPose(getStartingPose())),
             createAutoCommand())
         .finallyDo(

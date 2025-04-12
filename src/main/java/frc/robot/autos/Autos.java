@@ -1,10 +1,8 @@
 package frc.robot.autos;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.fms.FmsSubsystem;
@@ -20,9 +18,6 @@ public class Autos extends LifecycleSubsystem {
   private Pair<AutoSelection, BaseAuto> selectedRed;
   private Pair<AutoSelection, BaseAuto> selectedBlue;
   private Command autoCommand;
-  private boolean trackingTotalTime = false;
-  private double enabledTimestamp = 0.0;
-  private double endTimestamp = 0.0;
 
   public Autos(RobotManager robotManager, Trailblazer trailblazer) {
     super(SubsystemPriority.AUTOS);
@@ -55,24 +50,9 @@ public class Autos extends LifecycleSubsystem {
         // Continuously reset pose
         resetPoseForAuto();
       }
-      DogLog.log("Autos/TotalTime", endTimestamp - enabledTimestamp);
     }
     if (DriverStation.isAutonomousEnabled()) {
       hasEnabledAuto = true;
-    }
-  }
-
-  @Override
-  public void autonomousInit() {
-    super.autonomousInit();
-    enabledTimestamp = Timer.getFPGATimestamp();
-    trackingTotalTime = true;
-  }
-
-  public void markEndTimestamp() {
-    if (trackingTotalTime) {
-      endTimestamp = Timer.getFPGATimestamp();
-      trackingTotalTime = false;
     }
   }
 
