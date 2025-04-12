@@ -3,6 +3,7 @@ package frc.robot.autos;
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedFivePiece2JKLABAuto;
+import frc.robot.autos.auto_path_commands.red.RedHybrid4PieceAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopVariantAuto;
 import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
@@ -20,6 +21,7 @@ public enum AutoSelection {
   LOLLIPOP(RedLollipopAuto::new, RedLollipopAuto::new),
   LOLLIPOP_VARIANT(RedLollipopVariantAuto::new, RedLollipopVariantAuto::new),
   FIVE_PIECE_2JKLAB(RedFivePiece2JKLABAuto::new, RedFivePiece2JKLABAuto::new),
+  HYBRID_AUTO(RedHybrid4PieceAuto::new, RedHybrid4PieceAuto::new),
   PUSH_PARTNER(RedPushPartnerAuto::new, RedPushPartnerAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;

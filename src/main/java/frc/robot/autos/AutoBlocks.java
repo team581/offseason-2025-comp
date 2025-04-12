@@ -148,7 +148,9 @@ public class AutoBlocks {
                 new AutoPoint(
                     intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET),
                     Commands.runOnce(robotManager.groundManager::intakeRequest)),
-                new AutoPoint(intakingPoint.redPose)),
+                new AutoPoint(
+                    intakingPoint.redPose,
+                    Commands.runOnce(() -> robotManager.l4WaitingHandoffRequest()))),
             false)
         .withDeadline(autoCommands.waitForIntakeDone());
   }

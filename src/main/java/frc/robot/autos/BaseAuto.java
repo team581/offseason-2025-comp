@@ -48,6 +48,7 @@ public abstract class BaseAuto {
     // We continuously reset the pose anyway, but doing it here should be fine
     // It's basically free as long as we aren't updating the IMU
     return Commands.sequence(
+      // TODO: Seems like this doesn't run or runs incorrectly in sim
             Commands.runOnce(() -> robotManager.localization.resetPose(getStartingPose())),
             createAutoCommand())
         .finallyDo(
