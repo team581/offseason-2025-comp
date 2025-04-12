@@ -25,6 +25,7 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.robot_manager.ground_manager.GroundManager;
+import frc.robot.robot_manager.ground_manager.GroundState;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -111,7 +112,7 @@ public class RobotManager extends StateMachine<RobotState> {
           STARTING_POSITION_CORAL,
           STARTING_POSITION,
           CLAW_ALGAE_STOW_INWARD,
-          ENDGAME_STOWED,
+          LOW_STOW,
           ALGAE_INTAKE_FLOOR,
           ALGAE_PROCESSOR_WAITING,
           ALGAE_NET_LEFT_WAITING,
@@ -292,7 +293,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.HANDOFF);
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
@@ -312,7 +313,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
-      case STARTING_POSITION -> {
+      case STARTING_POSITION, LOW_STOW -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
@@ -326,14 +327,6 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case ENDGAME_STOWED -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_FLOOR -> {
@@ -887,6 +880,14 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
     switch (getState()) {
+      case CLAW_EMPTY -> {
+if(groundManager.hasCoral()) {
+          vision.setState(VisionState.HANDOFF);
+        } else {
+          vision.setState(VisionState.TAGS);
+        }
+      }
+
       case CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
@@ -943,7 +944,7 @@ public class RobotManager extends StateMachine<RobotState> {
         if (scoringAlignActive) {
           swerve.scoringAlignmentRequest(reefSnapAngle);
         } else {
-          swerve.normalDriveRequest();
+          swerve.snapsDriveRequest(reefSnapAngle);
         }
 
         lights.setState(getLightStateForScoring());
@@ -957,6 +958,13 @@ public class RobotManager extends StateMachine<RobotState> {
             lollipopVisionResult.isPresent()
                 ? LightsState.LOLLIPOP_SEES_ALGAE
                 : LightsState.LOLLIPOP_NO_ALGAE);
+      }
+      case LOW_STOW, CLAW_EMPTY, CLAW_ALGAE, STARTING_POSITION -> {
+        if (groundManager.getState() == GroundState.L1_WAIT) {
+          swerve.snapsDriveRequest(reefSnapAngle);
+        } else {
+          swerve.normalDriveRequest();
+        }
       }
       default -> {}
     }
@@ -996,7 +1004,11 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     shouldLoopAroundToScoreObstruction = autoAlign.getObstruction();
-    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
+    reefSnapAngle =
+        switch (getState()) {
+          case LOW_STOW -> SnapUtil.getNearestReefAngle(robotPose);
+          default -> autoAlign.getUsedScoringPose().getRotation().getDegrees();
+        };
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_RIGHT_APPROACH,
@@ -1142,7 +1154,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L3_LEFT,
           ALGAE_INTAKE_L3_RIGHT ->
           setStateFromRequest(RobotState.CLAW_EMPTY);
-      case ENDGAME_STOWED -> {}
+      case LOW_STOW -> {}
       default -> {
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
@@ -1235,6 +1247,18 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l3CoralRightAutoApproachRequest() {
     if (DriverStation.isAutonomous()) {
       setStateFromRequest(RobotState.CORAL_L3_RIGHT_APPROACH);
+    }
+  }
+
+  public void l2CoralLeftAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_LEFT_APPROACH);
+    }
+  }
+
+  public void l2CoralRightAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_RIGHT_APPROACH);
     }
   }
 
@@ -1482,7 +1506,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
-      case ENDGAME_STOWED -> groundManager.l1Request();
+      case LOW_STOW -> groundManager.l1Request();
 
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
@@ -1516,7 +1540,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void rehomeElevatorRequest() {
+  public void lowStowRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
@@ -1530,7 +1554,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void endgameStowRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.ENDGAME_STOWED);
+      setStateFromRequest(RobotState.LOW_STOW);
     }
   }
 

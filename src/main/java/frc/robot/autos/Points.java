@@ -11,6 +11,8 @@ public enum Points {
 
   START_R2_AND_B2(new Pose2d(10.289, 1.903, Rotation2d.kZero)),
   START_R3_AND_B3(new Pose2d(10.289, 3.054, Rotation2d.kZero)),
+  START_R3_AND_B3_LEFT_FORWARD(new Pose2d(10.289, 3.054, Rotation2d.kCW_90deg)),
+
   START_R4_AND_B4(new Pose2d(10.289, 5.069, Rotation2d.kZero)),
   START_R5_AND_B5(new Pose2d(10.289, 6.127, Rotation2d.kZero)),
   START_R6_AND_B6(new Pose2d(10.289, 7.292, Rotation2d.kZero)),

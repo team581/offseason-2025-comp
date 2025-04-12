@@ -340,22 +340,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     return new Translation2d(deadbandX, deadbandY);
   }
 
-  public void snapsDriveRequest(double snapAngle, boolean teleopOnly) {
+  public void snapsDriveRequest(double snapAngle) {
     setSnapToAngle(snapAngle);
 
     if (DriverStation.isAutonomous()) {
-      if (teleopOnly) {
-        normalDriveRequest();
-      } else {
-        setStateFromRequest(SwerveState.AUTO_SNAPS);
-      }
+      setStateFromRequest(SwerveState.AUTO_SNAPS);
     } else {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
     }
-  }
-
-  public void snapsDriveRequest(double snapAngle) {
-    snapsDriveRequest(snapAngle, false);
   }
 
   public void scoringAlignmentRequest(double snapAngle) {

@@ -93,7 +93,7 @@ public class RobotCommands {
   }
 
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorRequest, rmRequirements)
+    return Commands.runOnce(robot::lowStowRequest, rmRequirements)
         .withName("RehomeElevatorCommand");
   }
 
@@ -121,8 +121,7 @@ public class RobotCommands {
         .withName("WaitAlgaeFlingCommand");
   }
 
-  public Command endgameStowCommand() {
-    return Commands.runOnce(robot::endgameStowRequest, rmRequirements)
-        .withName("EndgameStowCommand");
+  public Command lowStowCommand() {
+    return Commands.runOnce(robot::endgameStowRequest, rmRequirements).withName("LowStowCommand");
   }
 }

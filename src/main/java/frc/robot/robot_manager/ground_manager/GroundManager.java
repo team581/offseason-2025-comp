@@ -131,6 +131,10 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void intakeThenHandoffRequest() {
-    setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
+    if (hasCoral) {
+      setState(GroundState.HANDOFF_WAIT);
+    } else {
+      setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
+    }
   }
 }
