@@ -601,14 +601,14 @@ public class CollisionAvoidance {
         graph, Waypoint.GROUND_ALGAE_INTAKE);
 
     /* Reef algae */
-    // Can go directly to L3 algae from handoff since elevator is basically at the right height
-    // This takes the long path with the arm for left side to avoid climber
-    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(
+    Waypoint.HANDOFF.avoidClimberAlwaysSafe(
+        graph, Waypoint.REEF_ALGAE_L3_LEFT, Waypoint.REEF_ALGAE_L3_RIGHT);
+    Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(
         graph,
         Waypoint.REEF_ALGAE_L2_LEFT,
+        Waypoint.REEF_ALGAE_L3_LEFT,
         Waypoint.REEF_ALGAE_L2_RIGHT,
-        Waypoint.REEF_ALGAE_L3_RIGHT,
-        Waypoint.REEF_ALGAE_L3_LEFT);
+        Waypoint.REEF_ALGAE_L3_RIGHT);
     // Algae stow position can go directly to any of the intake states
     Waypoint.L1_UPRIGHT.avoidClimberAlwaysSafe(
         graph,
