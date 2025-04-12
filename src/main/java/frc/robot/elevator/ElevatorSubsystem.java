@@ -269,13 +269,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   @Override
   public void disabledInit() {
-      // reset position to be 0
-      var leftSim = leftMotor.getSimState();
+    // reset position to be 0
+    var leftSim = leftMotor.getSimState();
     var rightSim = rightMotor.getSimState();
 
     leftSim.setRawRotorPosition(0);
     rightSim.setRawRotorPosition(0);
-
-
   }
 }

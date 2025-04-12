@@ -282,8 +282,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   public void disabledInit() {
-      // reset position to be 0*
-      var motorSim = motor.getSimState();
-      motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+    // reset position to be 0*
+    var motorSim = motor.getSimState();
+    motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
   }
 }
