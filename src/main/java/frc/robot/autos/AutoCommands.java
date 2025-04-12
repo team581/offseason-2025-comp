@@ -77,9 +77,10 @@ public class AutoCommands {
         () -> robotManager.elevator.nearGoal() && robotManager.arm.nearGoal());
   }
 
-  public Command l4ApproachCommand(RobotScoringSide scoringSide) {
+  public Command l4ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
         () -> {
+          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
           if (scoringSide == RobotScoringSide.LEFT) {
             robotManager.l4CoralLeftAutoApproachRequest();
           } else {

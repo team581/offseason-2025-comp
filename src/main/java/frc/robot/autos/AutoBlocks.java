@@ -73,7 +73,7 @@ public class AutoBlocks {
                             pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
                     autoCommands
                         .preloadCoralCommand()
-                        .andThen(autoCommands.l4ApproachCommand(scoringSide)),
+                        .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)),
                     BASE_CONSTRAINTS),
                 new AutoPoint(
                     () ->
@@ -84,7 +84,7 @@ public class AutoBlocks {
                     () ->
                         robotManager.autoAlign.getUsedScoringPose(
                             pipe, ReefPipeLevel.RAISING, RobotScoringSide.LEFT),
-                    autoCommands.l4ApproachCommand(scoringSide),
+                    autoCommands.l4ApproachCommand(pipe, scoringSide),
                     SCORING_CONSTRAINTS),
                 // Actually align to score
                 new AutoPoint(
@@ -113,23 +113,21 @@ public class AutoBlocks {
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
-
     return Commands.sequence(
+            Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
             trailblazer
                 .followSegment(
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
                         new AutoPoint(
-                            () -> robotManager.autoAlign.getUsedScoringPose(pipe),
-                            Commands.runOnce(
-                                    () -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
-                                .andThen(
-                                    robotManager.waitForStates(
-                                        RobotState.CLAW_CORAL,
-                                        RobotState.CORAL_L4_LEFT_APPROACH,
-                                        RobotState.CORAL_L4_RIGHT_APPROACH,
-                                        RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l4ApproachCommand(scoringSide)),
+                            () -> pipe.getPose(ReefPipeLevel.L4, scoringSide),
+                            robotManager
+                                .waitForStates(
+                                    RobotState.CLAW_CORAL,
+                                    RobotState.CORAL_L4_LEFT_APPROACH,
+                                    RobotState.CORAL_L4_RIGHT_APPROACH,
+                                    RobotState.STARTING_POSITION_CORAL)
+                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)),
                             BASE_CONSTRAINTS)),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
@@ -148,7 +146,8 @@ public class AutoBlocks {
   }
 
   public Command intakeCoralGroundPoints(Points intakingPoint) {
-    return autoCommands.groundIntakeToL4Command()
+    return autoCommands
+        .groundIntakeToL4Command()
         .alongWith(
             trailblazer
                 .followSegment(
@@ -166,14 +165,13 @@ public class AutoBlocks {
 
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
     return Commands.sequence(
+        autoCommands.l3ApproachCommand(pipe, scoringSide),
         trailblazer
             .followSegment(
                 new AutoSegment(
                     SCORING_CONSTRAINTS,
                     new AutoPoint(
-                        () -> robotManager.autoAlign.getUsedScoringPose(pipe),
-                        autoCommands.l3ApproachCommand(pipe, scoringSide),
-                        BASE_CONSTRAINTS)),
+                        () -> robotManager.autoAlign.getUsedScoringPose(pipe), BASE_CONSTRAINTS)),
                 false)
             .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(5)),
         trailblazer.followSegment(
