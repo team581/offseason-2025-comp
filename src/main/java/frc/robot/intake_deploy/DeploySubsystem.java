@@ -1,6 +1,7 @@
 package frc.robot.intake_deploy;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
@@ -18,6 +19,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private static final double TOLERANCE = 1.0;
 
   private final TalonFX motor;
+  private final CoastOut coastRequest = new CoastOut();
   private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
   private final LinearFilter currentFilter = LinearFilter.movingAverage(7);
 
@@ -44,7 +46,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   protected void afterTransition(DeployState newState) {
     switch (newState) {
       case UNHOMED -> {
-        motor.disable();
+        motor.setControl(coastRequest);
       }
       case HOMING -> {
         motor.setVoltage(RobotConfig.get().deploy().homingVoltage());

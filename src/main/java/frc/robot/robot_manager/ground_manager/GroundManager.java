@@ -24,6 +24,7 @@ public class GroundManager extends StateMachine<GroundState> {
       case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
       case HANDOFF_RELEASE, L1_SCORE -> !hasCoral ? GroundState.IDLE_EMPTY : currentState;
       case REHOME_DEPLOY -> deploy.atGoal() ? GroundState.IDLE_EMPTY : currentState;
+      case INTAKE_THEN_HANDOFF_WAIT -> hasCoral ? GroundState.HANDOFF_WAIT : currentState;
       default -> currentState;
     };
   }
@@ -39,7 +40,7 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.STOWED);
         intake.setState(IntakeState.IDLE_GP);
       }
-      case INTAKING -> {
+      case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> {
         deploy.setState(DeployState.FLOOR_INTAKE);
         intake.setState(IntakeState.INTAKING);
       }
@@ -127,5 +128,9 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void climbRequest() {
     setState(GroundState.CLIMB);
+  }
+
+  public void intakeThenHandoffRequest() {
+    setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
   }
 }

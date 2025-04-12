@@ -6,6 +6,8 @@ public enum GroundState {
 
   INTAKING,
 
+  INTAKE_THEN_HANDOFF_WAIT,
+
   HANDOFF_WAIT,
   HANDOFF_RELEASE,
 
