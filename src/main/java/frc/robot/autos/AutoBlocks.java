@@ -25,7 +25,7 @@ public class AutoBlocks {
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.4, 5);
-      private static final PoseErrorTolerance LOLLIPOP_CENTER_TOLERANCE =
+  private static final PoseErrorTolerance LOLLIPOP_CENTER_TOLERANCE =
       new PoseErrorTolerance(0.3, 5);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
@@ -50,7 +50,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 57, 2.5, 30);
 
-      public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
+  public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 10, 2.5, 10);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);

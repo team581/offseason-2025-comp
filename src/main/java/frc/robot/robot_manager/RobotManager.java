@@ -880,7 +880,10 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
     switch (getState()) {
-      case CLAW_EMPTY -> {
+      case CLAW_EMPTY,
+          CORAL_L4_PREPARE_HANDOFF,
+          CORAL_L3_PREPARE_HANDOFF,
+          CORAL_L2_PREPARE_HANDOFF -> {
         if (groundManager.hasCoral()) {
           vision.setState(VisionState.HANDOFF);
         } else {
@@ -1263,6 +1266,18 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l2CoralRightAutoApproachRequest() {
     if (DriverStation.isAutonomous()) {
       setStateFromRequest(RobotState.CORAL_L2_RIGHT_APPROACH);
+    }
+  }
+
+  public void l2CoralLeftAutoLineupRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_LEFT_LINEUP);
+    }
+  }
+
+  public void l2CoralRightAutoLineupRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_RIGHT_LINEUP);
     }
   }
 
