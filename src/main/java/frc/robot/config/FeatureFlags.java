@@ -43,5 +43,8 @@ public class FeatureFlags {
 
   public static final BooleanSupplier SPIN_TO_WIN = FeatureFlag.of("Yapping/SpinToWin", false);
 
+  public static final BooleanSupplier USE_ANY_REEF_TAG =
+      FeatureFlag.of("Vision/UseAnyReefTag", true);
+
   private FeatureFlags() {}
 }
