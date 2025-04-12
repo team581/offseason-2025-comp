@@ -67,6 +67,10 @@ public class GroundManager extends StateMachine<GroundState> {
         intake.setState(IntakeState.IDLE_NO_GP);
         deploy.setState(DeployState.HOMING);
       }
+      case CLIMB -> {
+        intake.setState(IntakeState.IDLE_NO_GP);
+        deploy.setState(DeployState.FLOOR_INTAKE);
+      }
     }
   }
 
@@ -119,5 +123,9 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void rehomeDeployRequest() {
     setStateFromRequest(GroundState.REHOME_DEPLOY);
+  }
+
+  public void climbRequest() {
+    setState(GroundState.CLIMB);
   }
 }

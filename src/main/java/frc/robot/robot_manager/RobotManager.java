@@ -788,6 +788,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_1_LINEUP -> {
         claw.setState(ClawState.IDLE_NO_GP);
+        groundManager.climbRequest();
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.climbRequest();
         vision.setState(VisionState.TAGS);
@@ -796,6 +797,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBING_2_HANGING -> {
         claw.setState(ClawState.IDLE_NO_GP);
+        groundManager.climbRequest();
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
@@ -804,6 +806,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLIMBER_STOP -> {
         claw.setState(ClawState.IDLE_NO_GP);
+        groundManager.climbRequest();
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);

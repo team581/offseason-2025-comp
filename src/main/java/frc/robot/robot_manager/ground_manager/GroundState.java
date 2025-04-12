@@ -12,6 +12,8 @@ public enum GroundState {
   L1_WAIT,
   L1_SCORE,
 
+  CLIMB,
+
   REHOME_DEPLOY,
   UNJAM;
 }
