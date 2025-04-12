@@ -63,7 +63,7 @@ public class SnapUtil {
     for (var angle : angles) {
       var error = Math.abs(angle - currentAngle);
       if (error < best) {
-        best = error;
+        best = angle;
       }
     }
 

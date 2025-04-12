@@ -961,7 +961,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case LOW_STOW, CLAW_EMPTY, CLAW_ALGAE, STARTING_POSITION -> {
         if (groundManager.getState() == GroundState.L1_WAIT) {
-          swerve.snapsDriveRequest(reefSnapAngle);
+          swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
           swerve.normalDriveRequest();
         }
@@ -997,6 +997,11 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected void collectInputs() {
     super.collectInputs();
+
+    if (DriverStation.isAutonomous()) {
+      scoringAlignActive = true;
+    }
+
     vision.setEstimatedPoseAngle(localization.getPose().getRotation().getDegrees());
     nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
@@ -1007,11 +1012,7 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     shouldLoopAroundToScoreObstruction = autoAlign.getObstruction();
-    reefSnapAngle =
-        switch (getState()) {
-          case LOW_STOW -> SnapUtil.getNearestReefAngle(robotPose);
-          default -> autoAlign.getUsedScoringPose().getRotation().getDegrees();
-        };
+    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_RIGHT_APPROACH,
