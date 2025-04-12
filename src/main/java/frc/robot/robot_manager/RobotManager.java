@@ -293,7 +293,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        vision.setState(VisionState.HANDOFF);
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
@@ -880,6 +880,14 @@ public class RobotManager extends StateMachine<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
     switch (getState()) {
+      case CLAW_EMPTY -> {
+if(groundManager.hasCoral()) {
+          vision.setState(VisionState.HANDOFF);
+        } else {
+          vision.setState(VisionState.TAGS);
+        }
+      }
+
       case CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
@@ -1239,6 +1247,18 @@ public class RobotManager extends StateMachine<RobotState> {
   public void l3CoralRightAutoApproachRequest() {
     if (DriverStation.isAutonomous()) {
       setStateFromRequest(RobotState.CORAL_L3_RIGHT_APPROACH);
+    }
+  }
+
+  public void l2CoralLeftAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_LEFT_APPROACH);
+    }
+  }
+
+  public void l2CoralRightAutoApproachRequest() {
+    if (DriverStation.isAutonomous()) {
+      setStateFromRequest(RobotState.CORAL_L2_RIGHT_APPROACH);
     }
   }
 
