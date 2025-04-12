@@ -14,10 +14,11 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedLollipopL2AB extends BaseAuto{
-public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedLollipopL2AB extends BaseAuto {
+  public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
+
   @Override
   protected Pose2d getStartingPose() {
     return Points.START_R1_AND_B1.redPose;
@@ -25,7 +26,7 @@ public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
 
   @Override
   protected Command createAutoCommand() {
-     return Commands.sequence(
+    return Commands.sequence(
         timing.time(
             "Preload",
             autoCommands.preloadCoralCommand(),
@@ -42,7 +43,9 @@ public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
                                     () ->
                                         robotManager.autoAlign.setAutoReefPipeOverride(
                                             ReefPipe.PIPE_L))
-                                .andThen(autoCommands.l4ApproachCommand(ReefPipe.PIPE_L,RobotScoringSide.LEFT))),
+                                .andThen(
+                                    autoCommands.l4ApproachCommand(
+                                        ReefPipe.PIPE_L, RobotScoringSide.LEFT))),
                         new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30)))))),
             blocks.scoreL4(
                 ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
@@ -61,8 +64,10 @@ public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
                 new Pose2d(15.799, 2.496, Rotation2d.fromDegrees(-30))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
-                ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.moveToStartingPositionCommand())),
-                trailblazer.followSegment(new AutoSegment(new AutoPoint(new Pose2d(15.0, 2.6, Rotation2d.fromDegrees(90))))));
-
-}
+                ReefPipe.PIPE_A,
+                RobotScoringSide.LEFT,
+                autoCommands.moveToStartingPositionCommand())),
+        trailblazer.followSegment(
+            new AutoSegment(new AutoPoint(new Pose2d(15.0, 2.6, Rotation2d.fromDegrees(90))))));
+  }
 }
