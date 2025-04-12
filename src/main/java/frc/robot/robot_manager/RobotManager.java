@@ -1455,14 +1455,16 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L4_RELEASE_HANDOFF,
-          CORAL_L1_RIGHT_APPROACH,
+          CORAL_L4_RELEASE_HANDOFF -> {}
+
+      case CORAL_L1_RIGHT_APPROACH,
           CORAL_L2_LEFT_APPROACH,
           CORAL_L2_RIGHT_APPROACH,
           CORAL_L3_LEFT_APPROACH,
           CORAL_L3_RIGHT_APPROACH,
           CORAL_L4_LEFT_APPROACH,
-          CORAL_L4_RIGHT_APPROACH -> {}
+          CORAL_L4_RIGHT_APPROACH ->
+          setStateFromRequest(getState().getLeftApproachToLineupState());
 
       case ALGAE_FLING_WAIT -> setStateFromRequest(RobotState.ALGAE_FLING_PREPARE);
 
