@@ -881,7 +881,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     switch (getState()) {
       case CLAW_EMPTY -> {
-if(groundManager.hasCoral()) {
+        if (groundManager.hasCoral()) {
           vision.setState(VisionState.HANDOFF);
         } else {
           vision.setState(VisionState.TAGS);
