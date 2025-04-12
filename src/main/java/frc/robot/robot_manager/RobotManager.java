@@ -1433,7 +1433,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void preloadCoralRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.CLAW_EMPTY);
+      setStateFromRequest(RobotState.STARTING_POSITION_CORAL);
     }
   }
 

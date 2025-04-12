@@ -24,6 +24,8 @@ public class RedFivePiece2JKLABAuto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
+      autoCommands.preloadCoralCommand(),
+      autoCommands.homeDeployCommand(),
         blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
         blocks.intakeGroundForL4(new Pose2d(12.978, 2.132, Rotation2d.fromDegrees(-18))),
         blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
