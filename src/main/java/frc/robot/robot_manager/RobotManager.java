@@ -25,6 +25,7 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.robot_manager.ground_manager.GroundManager;
+import frc.robot.robot_manager.ground_manager.GroundState;
 import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -935,7 +936,7 @@ public class RobotManager extends StateMachine<RobotState> {
         if (scoringAlignActive) {
           swerve.scoringAlignmentRequest(reefSnapAngle);
         } else {
-          swerve.normalDriveRequest();
+          swerve.snapsDriveRequest(reefSnapAngle);
         }
 
         lights.setState(getLightStateForScoring());
@@ -949,6 +950,13 @@ public class RobotManager extends StateMachine<RobotState> {
             lollipopVisionResult.isPresent()
                 ? LightsState.LOLLIPOP_SEES_ALGAE
                 : LightsState.LOLLIPOP_NO_ALGAE);
+      }
+      case LOW_STOW, CLAW_EMPTY, CLAW_ALGAE, STARTING_POSITION -> {
+        if (groundManager.getState() == GroundState.L1_WAIT) {
+          swerve.snapsDriveRequest(reefSnapAngle);
+        } else {
+          swerve.normalDriveRequest();
+        }
       }
       default -> {}
     }
@@ -988,7 +996,11 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     shouldLoopAroundToScoreObstruction = autoAlign.getObstruction();
-    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
+    reefSnapAngle =
+        switch (getState()) {
+          case LOW_STOW -> SnapUtil.getNearestReefAngle(robotPose);
+          default -> autoAlign.getUsedScoringPose().getRotation().getDegrees();
+        };
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_RIGHT_APPROACH,

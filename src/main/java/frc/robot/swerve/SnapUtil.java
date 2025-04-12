@@ -1,10 +1,20 @@
 package frc.robot.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.fms.FmsSubsystem;
+import java.util.stream.Stream;
 
 public class SnapUtil {
+  private static final double[] RED_REEF_SIDE_ANGLES =
+      Stream.of(ReefSide.values())
+          .mapToDouble(side -> side.getPose(true).getRotation().getDegrees())
+          .toArray();
+  private static final double[] BLUE_REEF_SIDE_ANGLES =
+      Stream.of(ReefSide.values())
+          .mapToDouble(side -> side.getPose(true).getRotation().getDegrees())
+          .toArray();
 
   public static double getProcessorAngle() {
     return FmsSubsystem.isRedAlliance() ? 190 : 370;
@@ -43,6 +53,21 @@ public class SnapUtil {
       // Coral station blue, processor side
       return 54.0;
     }
+  }
+
+  public static double getNearestReefAngle(Pose2d robotPose) {
+    var angles = FmsSubsystem.isRedAlliance() ? RED_REEF_SIDE_ANGLES : BLUE_REEF_SIDE_ANGLES;
+    var currentAngle = robotPose.getRotation().getDegrees();
+
+    var best = Double.MAX_VALUE;
+    for (var angle : angles) {
+      var error = Math.abs(angle - currentAngle);
+      if (error < best) {
+        best = error;
+      }
+    }
+
+    return best;
   }
 
   private SnapUtil() {}
