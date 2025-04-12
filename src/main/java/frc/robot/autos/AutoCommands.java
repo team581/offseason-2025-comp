@@ -111,6 +111,17 @@ public class AutoCommands {
         });
   }
 
+  public Command l2LineupCommand(RobotScoringSide scoringSide) {
+    return Commands.runOnce(
+        () -> {
+          if (scoringSide == RobotScoringSide.LEFT) {
+            robotManager.l2CoralLeftAutoLineupRequest();
+          } else {
+            robotManager.l2CoralRightAutoLineupRequest();
+          }
+        });
+  }
+
   public Command l4LeftReleaseCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
         () -> {
