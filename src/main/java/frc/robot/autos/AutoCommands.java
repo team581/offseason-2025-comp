@@ -132,4 +132,12 @@ public class AutoCommands {
     }
     return Commands.waitUntil(this::alignedForScore).withTimeout(5);
   }
+
+  public Command groundIntakeToL4Command() {
+    return Commands.runOnce(
+        () -> {
+          robotManager.groundManager.intakeThenHandoffRequest();
+          robotManager.l4CoralApproachRequest();
+        });
+  }
 }

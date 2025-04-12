@@ -33,9 +33,9 @@ public class RedHybrid4PieceAuto extends BaseAuto {
             new AutoSegment(
                 AutoBlocks.MAX_CONSTRAINTS,
                 AutoBlocks.APPROACH_REEF_TOLERANCE,
-                new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(30))),
+                new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(-30))),
                 new AutoPoint(
-                    new Pose2d(10.916, 1.423, Rotation2d.fromDegrees(30)),
+                    new Pose2d(10.916, 1.423, Rotation2d.fromDegrees(-30)),
                     Commands.runOnce(
                             () -> robotManager.autoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I))
                         .andThen(autoCommands.l4ApproachCommand(RobotScoringSide.LEFT))),
@@ -44,13 +44,16 @@ public class RedHybrid4PieceAuto extends BaseAuto {
             ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
         blocks.intakeLollipop(
-            new Pose2d(15.3, 2.168, Rotation2d.fromDegrees(0))
+            new Pose2d(15.7, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         //
-        blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
+        blocks.scoreL4(
+            ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
+        blocks.scoreL4(
+            ReefPipe.PIPE_K, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
         blocks.intakeCoralGroundPoints(Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT));
+        blocks.scoreL4(
+            ReefPipe.PIPE_J, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()));
   }
 }

@@ -46,7 +46,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.5, 57, 3.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(3.5, 57, 2, 30);
+      new AutoConstraintOptions(4.0, 57, 2.5, 30);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
@@ -148,18 +148,20 @@ public class AutoBlocks {
   }
 
   public Command intakeCoralGroundPoints(Points intakingPoint) {
-    return trailblazer
-        .followSegment(
-            new AutoSegment(
-                BASE_CONSTRAINTS,
-                new AutoPoint(
-                    intakingPoint.redPose.transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET),
-                    Commands.runOnce(robotManager.groundManager::intakeRequest)),
-                new AutoPoint(
-                    intakingPoint.redPose,
-                    Commands.runOnce(() -> robotManager.l4WaitingHandoffRequest()))),
-            false)
-        .withDeadline(autoCommands.waitForIntakeDone());
+    return autoCommands.groundIntakeToL4Command()
+        .alongWith(
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        BASE_CONSTRAINTS,
+                        new AutoPoint(
+                            () ->
+                                intakingPoint
+                                    .getPose()
+                                    .transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET)),
+                        new AutoPoint(intakingPoint::getPose)),
+                    false)
+                .withDeadline(autoCommands.waitForIntakeDone()));
   }
 
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
@@ -244,7 +246,7 @@ public class AutoBlocks {
                     Commands.runOnce(
                         () -> {
                           robotManager.groundManager.intakeRequest();
-                          robotManager.l4WaitingHandoffRequest();
+                          robotManager.l4CoralApproachRequest();
                         }))),
             false)
         .withDeadline(autoCommands.waitForIntakeDone());
