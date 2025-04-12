@@ -994,6 +994,11 @@ if(groundManager.hasCoral()) {
   @Override
   protected void collectInputs() {
     super.collectInputs();
+
+    if (DriverStation.isAutonomous()) {
+      scoringAlignActive = true;
+    }
+
     vision.setEstimatedPoseAngle(localization.getPose().getRotation().getDegrees());
     nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
