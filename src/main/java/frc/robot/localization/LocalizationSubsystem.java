@@ -76,9 +76,13 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
+    var maybeLeftBackResult = vision.getLeftBackTagResult();
+    if (maybeLeftBackResult.isEmpty()) {
+      vision.getLeftFrontTagResult().ifPresent(this::ingestTagResult);
+    } else {
+      ingestTagResult(maybeLeftBackResult.get());
+    }
     vision.getLeftBackTagResult().ifPresent(this::ingestTagResult);
-    vision.getLeftFrontTagResult().ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
     DogLog.log("Localization/EstimatedPose", getPose());
