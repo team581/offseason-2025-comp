@@ -111,7 +111,7 @@ public class RobotManager extends StateMachine<RobotState> {
           STARTING_POSITION_CORAL,
           STARTING_POSITION,
           CLAW_ALGAE_STOW_INWARD,
-          ENDGAME_STOWED,
+          LOW_STOW,
           ALGAE_INTAKE_FLOOR,
           ALGAE_PROCESSOR_WAITING,
           ALGAE_NET_LEFT_WAITING,
@@ -312,7 +312,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
-      case STARTING_POSITION, ENDGAME_STOWED -> {
+      case STARTING_POSITION, LOW_STOW -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
@@ -1134,7 +1134,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L3_LEFT,
           ALGAE_INTAKE_L3_RIGHT ->
           setStateFromRequest(RobotState.CLAW_EMPTY);
-      case ENDGAME_STOWED -> {}
+      case LOW_STOW -> {}
       default -> {
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
@@ -1474,7 +1474,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
-      case ENDGAME_STOWED -> groundManager.l1Request();
+      case LOW_STOW -> groundManager.l1Request();
 
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
@@ -1508,7 +1508,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void rehomeElevatorRequest() {
+  public void lowStowRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
@@ -1522,7 +1522,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void endgameStowRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.ENDGAME_STOWED);
+      setStateFromRequest(RobotState.LOW_STOW);
     }
   }
 

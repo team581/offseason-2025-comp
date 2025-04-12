@@ -264,7 +264,7 @@ public class Robot extends TimedRobot {
 
     hardware.driverController.povUp().onTrue(robotCommands.climbUpCommand());
     hardware.driverController.povDown().onTrue(robotCommands.climbStopCommand());
-    hardware.driverController.povLeft().onTrue(robotCommands.endgameStowCommand());
+    hardware.driverController.povLeft().onTrue(robotCommands.lowStowCommand());
     hardware
         .driverController
         .povRight()
