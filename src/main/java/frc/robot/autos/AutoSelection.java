@@ -7,7 +7,6 @@ import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopDescoreKL;
 import frc.robot.autos.auto_path_commands.red.RedLollipopL2AB;
 import frc.robot.autos.auto_path_commands.red.RedLollipopVariantAuto;
-import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedStraightLineAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2ILKAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3GHJ;
@@ -26,8 +25,7 @@ public enum AutoSelection {
 
   LOLLIPOP_VARIANT(RedLollipopVariantAuto::new, RedLollipopVariantAuto::new),
   THREE_PIECE_3GHJ(RedThreePiece3GHJ::new, RedThreePiece3GHJ::new),
-  HYBRID_AUTO(RedHybrid4PieceAuto::new, RedHybrid4PieceAuto::new),
-  PUSH_PARTNER(RedPushPartnerAuto::new, RedPushPartnerAuto::new);
+  HYBRID_AUTO(RedHybrid4PieceAuto::new, RedHybrid4PieceAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> blueAuto;
