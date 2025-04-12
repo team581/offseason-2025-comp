@@ -279,4 +279,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     motorSim.setRotorVelocity(
         predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
   }
+
+  @Override
+  public void disabledInit() {
+      // reset position to be 0*
+      var motorSim = motor.getSimState();
+      motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+  }
 }

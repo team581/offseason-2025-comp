@@ -266,4 +266,16 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     rightSim.setRotorVelocity(
         predictedState.velocity * simRightConfig.Feedback.SensorToMechanismRatio);
   }
+
+  @Override
+  public void disabledInit() {
+      // reset position to be 0
+      var leftSim = leftMotor.getSimState();
+    var rightSim = rightMotor.getSimState();
+
+    leftSim.setRawRotorPosition(0);
+    rightSim.setRawRotorPosition(0);
+
+
+  }
 }

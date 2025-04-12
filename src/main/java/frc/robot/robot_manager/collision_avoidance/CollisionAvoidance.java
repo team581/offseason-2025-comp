@@ -130,15 +130,12 @@ public class CollisionAvoidance {
     var closestToCurrent = Waypoint.getClosest(currentPosition);
     var closestToDesired = Waypoint.getClosest(desiredPosition);
 
-    if (DriverStation.isDisabled()) {
-      return Optional.empty();
-    }
     if (closestToCurrent == closestToDesired) {
       return Optional.empty();
     }
     DogLog.log("CollisionAvoidance/DesiredWaypoint", closestToDesired);
     // Check if the desired position is the same, then use the same path
-    if (!lastQuery.goalWaypoint().equals(closestToDesired)) {
+    if (!lastQuery.goalWaypoint().equals(closestToDesired)||DriverStation.isDisabled()) {
       lastQuery =
           new CollisionAvoidanceQuery(
               closestToCurrent, closestToDesired, obstructionKind, DriverStation.isTeleop());
