@@ -31,8 +31,8 @@ public class AutoBlocks {
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
-  private static final Transform2d CENTER_LOLLIPOP_OFFSET =
-      new Transform2d(0, Units.inchesToMeters(10), Rotation2d.kZero);
+      private static final Transform2d CENTER_LOLLIPOP_OFFSET =
+      new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
       new Transform2d(
