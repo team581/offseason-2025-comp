@@ -899,7 +899,15 @@ public class RobotManager extends StateMachine<RobotState> {
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
-    arm.setCoralTx(vision.getHandoffOffsetTx());
+    switch (getState()) {
+      case CORAL_L1_RELEASE_HANDOFF,
+          CORAL_L2_RELEASE_HANDOFF,
+          CORAL_L3_RELEASE_HANDOFF,
+          CORAL_L4_RELEASE_HANDOFF -> {
+        // Do nothing, don't change the handoff angle when we are releasing
+      }
+      default -> arm.setCoralTx(vision.getHandoffOffsetTx());
+    }
 
     switch (getState()) {
       case ALGAE_INTAKE_L2_LEFT_APPROACH,
