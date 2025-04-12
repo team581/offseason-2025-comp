@@ -38,11 +38,8 @@ public class CollisionAvoidance {
           Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE, true);
   private static double lastSolution = 90.0;
   private static boolean lastClimberRisky = true;
-  private static ObstructionKind lastObstruction = ObstructionKind.NONE;
-  private static ObstructionStrategy lastLeftStrategy = ObstructionStrategy.IGNORE_BLOCKED;
-  private static ObstructionStrategy lastRightStrategy = ObstructionStrategy.IGNORE_BLOCKED;
+  private static SuperstructurePosition lastDesiredPosition = new SuperstructurePosition(0.0, 0.0);
   private static Waypoint lastWaypoint = Waypoint.L1_UPRIGHT;
-  private static final Waypoint lastPreviousWaypoint = Waypoint.L1_UPRIGHT;
 
   private static Deque<Waypoint> lastPath = new ArrayDeque<>();
 
@@ -90,9 +87,6 @@ public class CollisionAvoidance {
               edge.get().rightSideStrategy(),
               rawArmAngle);
       lastClimberRisky = edge.get().hitsClimber();
-      lastObstruction = obstructionKind;
-      lastLeftStrategy = edge.get().leftSideStrategy();
-      lastRightStrategy = edge.get().rightSideStrategy();
       lastWaypoint = waypoint;
     }
 
@@ -205,20 +199,6 @@ public class CollisionAvoidance {
 
   public static double[] getCollisionAvoidanceSolutions(
       double currentRawAngle, double normalizedGoalAngle) {
-    // var normalizedCurrent = MathHelpers.angleModulus(currentRawAngle);
-    // var dif = 0.0;
-    // var expected1 = 0.0;
-    // var expected2 = 0.0;
-
-    // dif = normalizedGoalAngle - normalizedCurrent;
-    // if (normalizedGoalAngle >= 0) {
-    //   expected1 = currentRawAngle + dif;
-    //   expected2 = currentRawAngle + (dif - 360);
-    // } else {
-    //   expected1 = currentRawAngle - (dif);
-    //   expected2 = (currentRawAngle + 360) - dif;
-    // }
-    // return new double[] {expected1, expected2};
 
     // Find the closest lower multiple of 360 so that the unwrapped angle is near current
 
@@ -231,30 +211,6 @@ public class CollisionAvoidance {
     sorted.sort(Comparator.comparingDouble(solution -> Math.abs(solution - currentRawAngle)));
     var closest = sorted.get(0);
     var secondClosest = sorted.get(1);
-
-    // if (Math.abs(baseUnwrappedGoal - currentRawAngle)
-    //     < Math.abs(altUnwrappedGoal - currentRawAngle)) {
-    //   smallGoal = baseUnwrappedGoal;
-    //   if (Math.abs(altUnwrappedGoal - currentRawAngle)
-    //       < Math.abs(secondAltGoal - currentRawAngle)) {
-    //     otherSmallGoal = altUnwrappedGoal;
-    //   }
-    //   {
-    //     otherSmallGoal = secondAltGoal;
-    //   }
-    // } else {
-    //   smallGoal = altUnwrappedGoal;
-    //   if (Math.abs(baseUnwrappedGoal - currentRawAngle)
-    //       < Math.abs(secondAltGoal - currentRawAngle)) {
-    //     otherSmallGoal = baseUnwrappedGoal;
-    //   } else {
-    //     otherSmallGoal = secondAltGoal;
-    //   }
-    // }
-
-    // System.out.println("1="+baseUnwrappedGoal);
-    // System.out.println("2="+altUnwrappedGoal);
-    // System.out.println("3="+otherSmallGoal);
 
     // Return both — determine which is CW/CCW externally if needed
     return new double[] {closest, secondClosest};
@@ -270,8 +226,6 @@ public class CollisionAvoidance {
     double[] solutions = getCollisionAvoidanceSolutions(currentRawMotorAngle, angle);
     double solution1 = solutions[0];
     double solution2 = solutions[1];
-    // System.out.println("1="+solution1);
-    // System.out.println("2="+solution2);
 
     double shortSolution;
     double longSolution;
@@ -299,16 +253,6 @@ public class CollisionAvoidance {
       }
 
     } else {
-      // System.out.println("1 = "+solution1);
-      // System.out.println("2 = "+solution2);
-      // double solution1Difference = Math.abs(Math.max(solution1,
-      // currentRawMotorAngle)-Math.min(solution1, currentRawMotorAngle));
-      // double solution2Difference = Math.abs(Math.max(solution2,
-      // currentRawMotorAngle)-Math.min(solution2, currentRawMotorAngle));
-      // System.out.println("sol 1 diff"+solution1Difference);
-      // System.out.println("sol 2 diff"+solution2Difference);
-
-      //       if (solution2Difference > solution1Difference) {
       if (Math.abs(solution2 - currentRawMotorAngle) > Math.abs(solution1 - currentRawMotorAngle)) {
         shortSolution = solution1;
         longSolution = solution2;
@@ -316,8 +260,6 @@ public class CollisionAvoidance {
         shortSolution = solution2;
         longSolution = solution1;
       }
-      // System.out.println("short=" + shortSolution);
-      // System.out.println("long=" + longSolution);
 
       return switch (currentObstructionKind) {
         case LEFT_OBSTRUCTED ->
@@ -335,17 +277,6 @@ public class CollisionAvoidance {
         default -> shortSolution;
       };
     }
-
-    // System.out.println("1 = "+solution1);
-    // System.out.println("2 = "+solution2);
-    // double solution1Difference = Math.abs(Math.max(solution1,
-    // currentRawMotorAngle)-Math.min(solution1, currentRawMotorAngle));
-    // double solution2Difference = Math.abs(Math.max(solution2,
-    // currentRawMotorAngle)-Math.min(solution2, currentRawMotorAngle));
-    // System.out.println("sol 1 diff"+solution1Difference);
-    // System.out.println("sol 2 diff"+solution2Difference);
-
-    //       if (solution2Difference > solution1Difference) {
     if (Math.abs(solution2 - currentRawMotorAngle) > Math.abs(solution1 - currentRawMotorAngle)) {
       shortSolution = solution1;
       longSolution = solution2;
@@ -559,13 +490,13 @@ public class CollisionAvoidance {
     }
 
     /* Scoring coral directly from handoff, depends a lot on obstructions */
-    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberLeftSideSpecial(
+    Waypoint.HANDOFF_CLEARS_CLIMBER.leftSideSpecial(
         graph,
         ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_LEFT_LINEUP,
         Waypoint.L3_LEFT_LINEUP,
         Waypoint.L4_LEFT_LINEUP);
-    Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberRightSideSpecial(
+    Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
         graph,
         ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_RIGHT_LINEUP,
