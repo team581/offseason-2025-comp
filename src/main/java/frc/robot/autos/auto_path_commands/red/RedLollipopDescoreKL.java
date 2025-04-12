@@ -14,7 +14,7 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedLollipopDescoreKL extends BaseAuto{
+public class RedLollipopDescoreKL extends BaseAuto {
   public RedLollipopDescoreKL(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
@@ -26,7 +26,7 @@ public class RedLollipopDescoreKL extends BaseAuto{
 
   @Override
   protected Command createAutoCommand() {
-     return Commands.sequence(
+    return Commands.sequence(
         timing.time(
             "Preload",
             autoCommands.preloadCoralCommand(),
@@ -43,7 +43,9 @@ public class RedLollipopDescoreKL extends BaseAuto{
                                     () ->
                                         robotManager.autoAlign.setAutoReefPipeOverride(
                                             ReefPipe.PIPE_L))
-                                .andThen(autoCommands.l4ApproachCommand(ReefPipe.PIPE_L,RobotScoringSide.LEFT))),
+                                .andThen(
+                                    autoCommands.l4ApproachCommand(
+                                        ReefPipe.PIPE_L, RobotScoringSide.LEFT))),
                         new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30)))))),
             blocks.scoreL4(
                 ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
@@ -62,7 +64,8 @@ public class RedLollipopDescoreKL extends BaseAuto{
                 new Pose2d(15.799, 2.496, Rotation2d.fromDegrees(-30))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL3(
-                ReefPipe.PIPE_K, RobotScoringSide.LEFT, autoCommands.moveToStartingPositionCommand())));
-
-}
+                ReefPipe.PIPE_K,
+                RobotScoringSide.LEFT,
+                autoCommands.moveToStartingPositionCommand())));
+  }
 }

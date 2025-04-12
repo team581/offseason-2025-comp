@@ -47,7 +47,6 @@ public class CollisionAvoidance {
   private static Optional<Waypoint> maybePreviousWaypoint = Optional.of(Waypoint.L1_UPRIGHT);
   private static Waypoint previousWaypoint = Waypoint.L1_UPRIGHT;
 
-
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
    * an empty Optional if there is no possible routing (impossible to avoid a collision or you are
@@ -68,10 +67,10 @@ public class CollisionAvoidance {
       return Optional.empty();
     }
     Waypoint waypoint = maybeWaypoint.get();
-    if(maybePreviousWaypoint.isEmpty()){
-previousWaypoint = Waypoint.getClosest(currentPosition);
-    }else{
-       previousWaypoint = maybePreviousWaypoint.get();
+    if (maybePreviousWaypoint.isEmpty()) {
+      previousWaypoint = Waypoint.getClosest(currentPosition);
+    } else {
+      previousWaypoint = maybePreviousWaypoint.get();
     }
 
     var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
@@ -83,18 +82,17 @@ previousWaypoint = Waypoint.getClosest(currentPosition);
     // var edge = maybeEdge;
     // DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_PRESENT");
 
+    if ( // edge.get().hitsClimber() != lastClimberRisky
+    // || obstructionKind != lastObstruction
+    // || edge.get().leftSideStrategy() != lastLeftStrategy
+    // || edge.get().rightSideStrategy() != lastRightStrategy
+    waypoint != lastWaypoint) {
+      if (maybeEdge.isEmpty()) {
+        DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
 
-    if (//edge.get().hitsClimber() != lastClimberRisky
-        // || obstructionKind != lastObstruction
-        // || edge.get().leftSideStrategy() != lastLeftStrategy
-        // || edge.get().rightSideStrategy() != lastRightStrategy
-        waypoint != lastWaypoint) {
-          if (maybeEdge.isEmpty()) {
-            DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
-
-            return Optional.empty();
-          }
-          var edge = maybeEdge;
+        return Optional.empty();
+      }
+      var edge = maybeEdge;
       DogLog.timestamp("New Arm Goal Calculation");
       lastSolution =
           getCollisionAvoidanceAngleGoal(
@@ -112,10 +110,8 @@ previousWaypoint = Waypoint.getClosest(currentPosition);
         "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalAngle",
         waypoint.position.armAngle());
 
-
     DogLog.log(
         "CollisionAvoidance/CollisionAvoidanceAngleVariables/obstructionKind", obstructionKind);
-
 
     //  DogLog.log("CollisionAvoidance/CollisionAvoidanceAngleVariables/edge", edge.get());
     DogLog.log(
@@ -156,7 +152,6 @@ previousWaypoint = Waypoint.getClosest(currentPosition);
         lastPath = maybePath.orElseThrow();
       } else {
         return Optional.empty();
-
       }
       // if (lastPath.isEmpty()) {
       //   DogLog.timestamp("DEBUG_ELEV_ROUTE/PATH_EMPTY_AGAIN");
@@ -474,10 +469,7 @@ previousWaypoint = Waypoint.getClosest(currentPosition);
 
     /* Switching coral level on the same side is okay if you won't hit the reef */
     var leftCoralScoreWaypoints =
-        List.of(
-          Waypoint.L2_LEFT_LINEUP,
-          Waypoint.L3_LEFT_LINEUP,
-          Waypoint.L4_LEFT_LINEUP);
+        List.of(Waypoint.L2_LEFT_LINEUP, Waypoint.L3_LEFT_LINEUP, Waypoint.L4_LEFT_LINEUP);
     var rightCoralScoreWaypoints =
         List.of(
             Waypoint.L1_RIGHT_LINEUP,
@@ -509,20 +501,21 @@ previousWaypoint = Waypoint.getClosest(currentPosition);
 
     /* Scoring coral directly from handoff, depends a lot on obstructions */
     Waypoint.HANDOFF_CLEARS_CLIMBER.leftSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED,Waypoint.L4_LEFT_LINEUP);
+        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.L4_LEFT_LINEUP);
 
     Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED,Waypoint.L4_RIGHT_LINEUP);
-        Waypoint.HANDOFF.alwaysSafe(
-        graph, Waypoint.L2_LEFT_ARM,Waypoint.L3_LEFT_ARM,Waypoint.L2_RIGHT_ARM,Waypoint.L3_RIGHT_ARM);
-
-
+        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.L4_RIGHT_LINEUP);
+    Waypoint.HANDOFF.alwaysSafe(
+        graph,
+        Waypoint.L2_LEFT_ARM,
+        Waypoint.L3_LEFT_ARM,
+        Waypoint.L2_RIGHT_ARM,
+        Waypoint.L3_RIGHT_ARM);
 
     Waypoint.L2_LEFT_ARM.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP);
     Waypoint.L3_LEFT_ARM.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP);
     Waypoint.L2_RIGHT_ARM.alwaysSafe(graph, Waypoint.L2_RIGHT_LINEUP);
     Waypoint.L3_RIGHT_ARM.alwaysSafe(graph, Waypoint.L3_RIGHT_LINEUP);
-
 
     Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, Waypoint.ALGAE_NET_UP);
 

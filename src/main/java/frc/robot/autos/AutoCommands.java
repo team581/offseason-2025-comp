@@ -89,7 +89,7 @@ public class AutoCommands {
         });
   }
 
-  public Command l3ApproachCommand( RobotScoringSide scoringSide) {
+  public Command l3ApproachCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
         () -> {
           if (scoringSide == RobotScoringSide.LEFT) {
@@ -100,7 +100,7 @@ public class AutoCommands {
         });
   }
 
-  public Command l2ApproachCommand( RobotScoringSide scoringSide) {
+  public Command l2ApproachCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
         () -> {
           if (scoringSide == RobotScoringSide.LEFT) {

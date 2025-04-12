@@ -2,7 +2,6 @@ package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
-import frc.robot.autos.auto_path_commands.red.RedThreePiece3GHJ;
 import frc.robot.autos.auto_path_commands.red.RedHybrid4PieceAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopDescoreKL;
@@ -11,6 +10,7 @@ import frc.robot.autos.auto_path_commands.red.RedLollipopVariantAuto;
 import frc.robot.autos.auto_path_commands.red.RedPushPartnerAuto;
 import frc.robot.autos.auto_path_commands.red.RedStraightLineAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2ILKAuto;
+import frc.robot.autos.auto_path_commands.red.RedThreePiece3GHJ;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3IKLAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
