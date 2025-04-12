@@ -37,8 +37,8 @@ public class RedLollipopAuto extends BaseAuto {
                     new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
                     Commands.runOnce(
                             () -> robotManager.autoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_L))
-                            .andThen(autoCommands.l4ApproachCommand(RobotScoringSide.LEFT))),
-                            new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
+                        .andThen(autoCommands.l4ApproachCommand(RobotScoringSide.LEFT))),
+                new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30))))),
         blocks.scoreL4(
             ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 2

@@ -31,7 +31,7 @@ public class AutoBlocks {
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
       new Transform2d(-0.6, 0, Rotation2d.kZero);
 
-      private static final Transform2d CENTER_LOLLIPOP_OFFSET =
+  private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(10), Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
@@ -117,7 +117,12 @@ public class AutoBlocks {
                     new AutoPoint(
                         () -> robotManager.autoAlign.getUsedScoringPose(pipe),
                         Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
-                            .andThen(robotManager.waitForStates(RobotState.CLAW_CORAL, RobotState.CORAL_L4_LEFT_APPROACH, RobotState.CORAL_L4_RIGHT_APPROACH, RobotState.STARTING_POSITION_CORAL))
+                            .andThen(
+                                robotManager.waitForStates(
+                                    RobotState.CLAW_CORAL,
+                                    RobotState.CORAL_L4_LEFT_APPROACH,
+                                    RobotState.CORAL_L4_RIGHT_APPROACH,
+                                    RobotState.STARTING_POSITION_CORAL))
                             .andThen(autoCommands.l4ApproachCommand(scoringSide)),
                         BASE_CONSTRAINTS)),
                 false)
@@ -179,21 +184,21 @@ public class AutoBlocks {
         trailblazer
             .followSegment(new AutoSegment(BASE_CONSTRAINTS, new AutoPoint(approachPoint)), false)
             .withDeadline(autoCommands.waitForElevatorAndArmNearGoal()),
-        trailblazer
-            .followSegment(
-                new AutoSegment(
-                    BASE_CONSTRAINTS,
-                    new AutoPoint(
-                        () ->
-                            new Pose2d(
-                                robotManager
-                                    .coralMap
-                                    .getLollipopIntakePose()
-                                    .orElse(defaultIntakingPoint).transformBy(CENTER_LOLLIPOP_OFFSET)
-                                    .getTranslation(),
-                                defaultIntakingPoint.getRotation()),
-                        LOLLIPOP_CONSTRAINTS)),
-                true),
+        trailblazer.followSegment(
+            new AutoSegment(
+                BASE_CONSTRAINTS,
+                new AutoPoint(
+                    () ->
+                        new Pose2d(
+                            robotManager
+                                .coralMap
+                                .getLollipopIntakePose()
+                                .orElse(defaultIntakingPoint)
+                                .transformBy(CENTER_LOLLIPOP_OFFSET)
+                                .getTranslation(),
+                            defaultIntakingPoint.getRotation()),
+                    LOLLIPOP_CONSTRAINTS)),
+            true),
         trailblazer
             .followSegment(
                 new AutoSegment(
