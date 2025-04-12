@@ -40,7 +40,8 @@ public class RedHybrid4PieceAuto extends BaseAuto {
                             () -> robotManager.autoAlign.setAutoReefPipeOverride(ReefPipe.PIPE_I))
                         .andThen(autoCommands.l4ApproachCommand(RobotScoringSide.LEFT))),
                 new AutoPoint(new Pose2d(11.57, 2.342, Rotation2d.fromDegrees(30))))),
-        blocks.scoreL4(ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
+        blocks.scoreL4(
+            ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
         blocks.intakeLollipop(
             new Pose2d(13.9, 2.168, Rotation2d.fromDegrees(0))
