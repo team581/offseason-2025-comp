@@ -44,7 +44,9 @@ public class CollisionAvoidance {
   private static Deque<Waypoint> lastPath = new ArrayDeque<>();
 
   private static boolean hasGeneratedPath = false;
+  private static Optional<Waypoint> maybePreviousWaypoint = Optional.of(Waypoint.L1_UPRIGHT);
   private static Waypoint previousWaypoint = Waypoint.L1_UPRIGHT;
+
 
   /**
    * Returns an {@link Optional} containing the next {@link Waypoint} in the graph to go to. Returns
@@ -66,17 +68,33 @@ public class CollisionAvoidance {
       return Optional.empty();
     }
     Waypoint waypoint = maybeWaypoint.get();
-    var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
-    if (maybeEdge.isEmpty()) {
-      return Optional.empty();
+    if(maybePreviousWaypoint.isEmpty()){
+previousWaypoint = Waypoint.getClosest(currentPosition);
+    }else{
+       previousWaypoint = maybePreviousWaypoint.get();
     }
-    var edge = maybeEdge;
 
-    if (edge.get().hitsClimber() != lastClimberRisky
+    var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
+    // if (maybeEdge.isEmpty()) {
+    //   DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
+
+    //   return Optional.empty();
+    // }
+    // var edge = maybeEdge;
+    // DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_PRESENT");
+
+
+    if (//edge.get().hitsClimber() != lastClimberRisky
         // || obstructionKind != lastObstruction
         // || edge.get().leftSideStrategy() != lastLeftStrategy
         // || edge.get().rightSideStrategy() != lastRightStrategy
-        || waypoint != lastWaypoint) {
+        waypoint != lastWaypoint) {
+          if (maybeEdge.isEmpty()) {
+            DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
+
+            return Optional.empty();
+          }
+          var edge = maybeEdge;
       DogLog.timestamp("New Arm Goal Calculation");
       lastSolution =
           getCollisionAvoidanceAngleGoal(
@@ -93,20 +111,12 @@ public class CollisionAvoidance {
     DogLog.log(
         "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalAngle",
         waypoint.position.armAngle());
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/hitsClimber",
-        edge.get().hitsClimber());
+
 
     DogLog.log(
         "CollisionAvoidance/CollisionAvoidanceAngleVariables/obstructionKind", obstructionKind);
 
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/leftStrat",
-        edge.get().leftSideStrategy());
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/rightStrat",
-        edge.get().rightSideStrategy());
-    DogLog.log("CollisionAvoidance/CollisionAvoidanceAngleVariables/RawArmAngle", rawArmAngle);
+
     //  DogLog.log("CollisionAvoidance/CollisionAvoidanceAngleVariables/edge", edge.get());
     DogLog.log(
         "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalanglefar",
@@ -146,7 +156,15 @@ public class CollisionAvoidance {
         lastPath = maybePath.orElseThrow();
       } else {
         return Optional.empty();
+
       }
+      // if (lastPath.isEmpty()) {
+      //   DogLog.timestamp("DEBUG_ELEV_ROUTE/PATH_EMPTY_AGAIN");
+
+      //   return Optional.empty();
+      // }
+
+      // previousWaypoint = lastPath.getFirst();
     }
 
     if (lastPath.isEmpty()) {
@@ -177,7 +195,7 @@ public class CollisionAvoidance {
       if (lastPath.isEmpty()) {
         return Optional.empty();
       }
-      previousWaypoint = currentWaypoint;
+      maybePreviousWaypoint = Optional.of(currentWaypoint);
 
       return Optional.of(lastPath.pop());
     }
@@ -571,7 +589,6 @@ public class CollisionAvoidance {
       current = cameFrom.get(current);
       totalPath.addFirst(current);
     }
-
     return ImmutableList.copyOf(totalPath);
   }
 
@@ -628,6 +645,7 @@ public class CollisionAvoidance {
       if (current == goalWaypoint) {
         var totalPath = reconstructPath(cameFrom, current);
         DogLog.clearFault("Collision avoidance path not possible");
+        maybePreviousWaypoint = Optional.of(totalPath.get(0));
         return Optional.of(totalPath);
       }
       openSet.remove(current);

@@ -161,9 +161,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   @Override
   protected void afterTransition(ArmState newState) {}
 
-  @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
+  public void customPeriodic() {
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);

@@ -989,6 +989,9 @@ if(groundManager.hasCoral()) {
       }
       default -> {}
     }
+
+    elevator.customPeriodic();
+    arm.customPeriodic();
   }
 
   @Override

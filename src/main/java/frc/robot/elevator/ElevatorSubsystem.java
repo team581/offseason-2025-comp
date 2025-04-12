@@ -121,9 +121,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     }
   }
 
-  @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
+  public void customPeriodic() {
     DogLog.log("Elevator/Left/StatorCurrent", leftMotorCurrent);
     DogLog.log("Elevator/Right/StatorCurrent", rightMotorCurrent);
     DogLog.log("Elevator/AverageStatorCurrent", averageMotorCurrent);
