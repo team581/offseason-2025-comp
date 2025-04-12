@@ -122,7 +122,6 @@ public class RobotCommands {
   }
 
   public Command lowStowCommand() {
-    return Commands.runOnce(robot::endgameStowRequest, rmRequirements)
-        .withName("LowStowCommand");
+    return Commands.runOnce(robot::endgameStowRequest, rmRequirements).withName("LowStowCommand");
   }
 }
