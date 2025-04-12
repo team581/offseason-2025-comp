@@ -44,8 +44,6 @@ public class RedHybrid4PieceAuto extends BaseAuto {
             ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
         blocks.intakeLollipop(
-            new Pose2d(13.9, 2.168, Rotation2d.fromDegrees(0))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.3, 2.168, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         //

@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -22,7 +23,8 @@ public class AutoBlocks {
    */
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
       new PoseErrorTolerance(0.2, 10);
-
+      private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
+      new PoseErrorTolerance(0.4, 5);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
@@ -33,6 +35,8 @@ public class AutoBlocks {
 
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
+      private static final Transform2d APPROACH_LOLLIPOP_OFFSET =
+      new Transform2d(0, Units.inchesToMeters(25), Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
       new Transform2d(
@@ -46,7 +50,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(1.0).withMaxLinearVelocity(1.5);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.5).withMaxLinearVelocity(1.5);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -109,6 +113,7 @@ public class AutoBlocks {
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
+
     return Commands.sequence(
         trailblazer
             .followSegment(
@@ -133,7 +138,7 @@ public class AutoBlocks {
                 AFTER_SCORE_POSITION_TOLERANCE,
                 new AutoPoint(
                     () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                    Commands.waitSeconds(0.15).andThen(onFinish)))));
+                    Commands.waitSeconds(0.15).andThen(onFinish))))).onlyIf(()->robotManager.claw.getHasGP()||robotManager.groundManager.hasCoral());
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
@@ -180,12 +185,14 @@ public class AutoBlocks {
     return scoreL3(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
-  public Command intakeLollipop(Pose2d approachPoint, Pose2d defaultIntakingPoint) {
+  public Command intakeLollipop(Pose2d defaultIntakingPoint) {
     return Commands.sequence(
         autoCommands.intakeLollipopCommand(),
         trailblazer
-            .followSegment(new AutoSegment(BASE_CONSTRAINTS, new AutoPoint(approachPoint)), false)
+            .followSegment(new AutoSegment(MAX_CONSTRAINTS, new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))), false)
             .withDeadline(autoCommands.waitForElevatorAndArmNearGoal()),
+            trailblazer
+            .followSegment(new AutoSegment(MAX_CONSTRAINTS,  LOLLIPOP_APPROACH_TOLERANCE, new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))), true),
         trailblazer.followSegment(
             new AutoSegment(
                 BASE_CONSTRAINTS,
@@ -198,13 +205,12 @@ public class AutoBlocks {
                                 .orElse(defaultIntakingPoint)
                                 .transformBy(CENTER_LOLLIPOP_OFFSET)
                                 .getTranslation(),
-                            defaultIntakingPoint.getRotation()),
-                    LOLLIPOP_CONSTRAINTS)),
+                            defaultIntakingPoint.getRotation()))),
             true),
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    BASE_CONSTRAINTS,
+                    LOLLIPOP_CONSTRAINTS,
                     new AutoPoint(
                         () ->
                             new Pose2d(
@@ -213,8 +219,8 @@ public class AutoBlocks {
                                     .getLollipopIntakePose()
                                     .orElse(defaultIntakingPoint)
                                     .getTranslation(),
-                                defaultIntakingPoint.getRotation()),
-                        LOLLIPOP_CONSTRAINTS)),
+                                defaultIntakingPoint.getRotation())
+                        )),
                 false)
             .withDeadline(autoCommands.waitForLollipopIntakeDone()));
   }

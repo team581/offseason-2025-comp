@@ -36,22 +36,16 @@ public class RedLollipopVariantAuto extends BaseAuto {
         blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
         // LOLLIPOP 2
         blocks.intakeLollipop(
-            new Pose2d(15.5, 3.996, Rotation2d.fromDegrees(0))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.7, 3.996, Rotation2d.fromDegrees(0))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
         // LOLLIPOP 1
         blocks.intakeLollipop(
-            new Pose2d(15.22, 3.313, Rotation2d.fromDegrees(-50))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.852, 2.622, Rotation2d.fromDegrees(-50))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL3(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
         // LOLLIPOP 3
         blocks.intakeLollipop(
-            new Pose2d(14.8, 5.106, Rotation2d.fromDegrees(32))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET),
             new Pose2d(15.795, 5.473, Rotation2d.fromDegrees(32))
                 .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
         blocks.scoreL4(ReefPipe.PIPE_C, RobotScoringSide.LEFT));
