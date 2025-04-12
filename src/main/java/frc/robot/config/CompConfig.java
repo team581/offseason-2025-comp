@@ -205,7 +205,7 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(3.0)
+                          .withMotionMagicAcceleration(2.0)
                           .withMotionMagicCruiseVelocity(3.0))
                   .withFeedback(
                       new FeedbackConfigs()
