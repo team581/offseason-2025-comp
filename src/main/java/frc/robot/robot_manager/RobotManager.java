@@ -97,6 +97,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
+  private boolean canSkipCollisionAvoidanceForReefAlgae = false;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -1368,25 +1369,28 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private boolean canSkipCollisionAvoidanceForReefAlgae = false;
-
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming) {
       scoringAlignActive = true;
       if (robotScoringSide == RobotScoringSide.LEFT) {
 
         switch (getState()) {
+          case ALGAE_INTAKE_L2_LEFT_APPROACH,
+              ALGAE_INTAKE_L2_LEFT,
+              ALGAE_INTAKE_L2_LEFT_HOLDING,
+              ALGAE_INTAKE_L3_LEFT_APPROACH,
+              ALGAE_INTAKE_L3_LEFT,
+              ALGAE_INTAKE_L3_LEFT_HOLDING -> {
+            // Do nothing, prevent multiple presses from forcing collision avoidance to trigger
+          }
           case CORAL_L2_LEFT_PLACE,
               CORAL_L2_LEFT_RELEASE,
               CORAL_L3_LEFT_PLACE,
               CORAL_L3_LEFT_RELEASE,
               CORAL_L4_LEFT_PLACE,
-              CORAL_L4_LEFT_RELEASE -> {
-            canSkipCollisionAvoidanceForReefAlgae = true;
-          }
-          default -> {
-            canSkipCollisionAvoidanceForReefAlgae = false;
-          }
+              CORAL_L4_LEFT_RELEASE ->
+              canSkipCollisionAvoidanceForReefAlgae = true;
+          default -> canSkipCollisionAvoidanceForReefAlgae = false;
         }
 
         if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
@@ -1396,17 +1400,22 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       } else {
         switch (getState()) {
+          case ALGAE_INTAKE_L2_RIGHT_APPROACH,
+              ALGAE_INTAKE_L2_RIGHT,
+              ALGAE_INTAKE_L2_RIGHT_HOLDING,
+              ALGAE_INTAKE_L3_RIGHT_APPROACH,
+              ALGAE_INTAKE_L3_RIGHT,
+              ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
+            // Do nothing, prevent multiple presses from forcing collision avoidance to trigger
+          }
           case CORAL_L2_RIGHT_PLACE,
               CORAL_L2_RIGHT_RELEASE,
               CORAL_L3_RIGHT_PLACE,
               CORAL_L3_RIGHT_RELEASE,
               CORAL_L4_RIGHT_PLACE,
-              CORAL_L4_RIGHT_RELEASE -> {
-            canSkipCollisionAvoidanceForReefAlgae = true;
-          }
-          default -> {
-            canSkipCollisionAvoidanceForReefAlgae = false;
-          }
+              CORAL_L4_RIGHT_RELEASE ->
+              canSkipCollisionAvoidanceForReefAlgae = true;
+          default -> canSkipCollisionAvoidanceForReefAlgae = false;
         }
 
         if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
