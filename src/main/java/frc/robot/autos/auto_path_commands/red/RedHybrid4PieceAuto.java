@@ -39,7 +39,7 @@ public class RedHybrid4PieceAuto extends BaseAuto {
                     autoCommands.l4ApproachCommand(ReefPipe.PIPE_I, RobotScoringSide.LEFT)),
                 new AutoPoint(new Pose2d(11.57, 2.342, Rotation2d.fromDegrees(-30))))),
         blocks.scoreL4(
-            ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
+            ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
         blocks.intakeCoralGroundPoints(
             new Pose2d(13.886, 1.616, Rotation2d.fromDegrees(0)),
             new Pose2d(13.925, 0.66, Rotation2d.fromDegrees(0)),
