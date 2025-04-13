@@ -2,11 +2,11 @@ package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
-import frc.robot.autos.auto_path_commands.red.RedThreePiece1IKLAuto;
+import frc.robot.autos.auto_path_commands.red.RedLollipopAB1L2;
 import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopDescoreKL;
-import frc.robot.autos.auto_path_commands.red.RedLollipopAB1L2;
 import frc.robot.autos.auto_path_commands.red.RedLollipopVariantAuto;
+import frc.robot.autos.auto_path_commands.red.RedThreePiece1IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2ILKAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3GHJ;
 import frc.robot.robot_manager.RobotManager;

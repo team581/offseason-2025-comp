@@ -36,9 +36,10 @@ public class RedLollipopAB1L2 extends BaseAuto {
                     new AutoSegment(
                         AutoBlocks.MAX_CONSTRAINTS,
                         AutoBlocks.APPROACH_REEF_TOLERANCE,
-                        new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(85.0-90.0))),
                         new AutoPoint(
-                            new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(140-90)),
+                            new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(85.0 - 90.0))),
+                        new AutoPoint(
+                            new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(140 - 90)),
                             autoCommands.l4ApproachCommand(ReefPipe.PIPE_A, RobotScoringSide.LEFT)),
                         new AutoPoint(new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90)))))),
             blocks.scoreL4(

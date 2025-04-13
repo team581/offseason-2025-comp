@@ -10,22 +10,30 @@ import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
   @Test
-  public void test(){
-    var currentPosition = new SuperstructurePosition(ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
-    var desiredPosition = new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-    var result = CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.LEFT_OBSTRUCTED);
+  public void test() {
+    var currentPosition =
+        new SuperstructurePosition(
+            ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
+    var desiredPosition =
+        new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+    var result =
+        CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.LEFT_OBSTRUCTED);
     var expected = List.of(Waypoint.L3_LEFT_PLACE, Waypoint.L3_LEFT_ARM, Waypoint.HANDOFF);
-    assertEquals(expected,result.get());
+    assertEquals(expected, result.get());
+  }
 
-  }
   @Test
-  public void test1(){
-    var currentPosition = new SuperstructurePosition(ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
-    var desiredPosition = new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+  public void test1() {
+    var currentPosition =
+        new SuperstructurePosition(
+            ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
+    var desiredPosition =
+        new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
     var result = CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.NONE);
-    var expected = List.of(Waypoint.L3_LEFT_PLACE, Waypoint.L3_LEFT_ARM,Waypoint.HANDOFF);
-    assertEquals(expected,result.get());
+    var expected = List.of(Waypoint.L3_LEFT_PLACE, Waypoint.L3_LEFT_ARM, Waypoint.HANDOFF);
+    assertEquals(expected, result.get());
   }
+
   @Test
   public void hectorTest() {
     var currentRawAngle = 720;
