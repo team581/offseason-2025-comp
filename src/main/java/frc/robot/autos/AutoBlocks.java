@@ -55,6 +55,11 @@ public class AutoBlocks {
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(0.8).withMaxLinearVelocity(2.5);
 
+  public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
+      new AutoConstraintOptions(3.75, 57, 2.0, 25);
+  private static final AutoConstraintOptions SCORING_CONSTRAINTS_FOR_GROUND_AUTOS =
+      BASE_CONSTRAINTS_FOR_GROUND_AUTOS.withMaxLinearAcceleration(1.25);
+
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
   private final AutoCommands autoCommands;
@@ -115,7 +120,7 @@ public class AutoBlocks {
                             pipe, ReefPipeLevel.L4, RobotScoringSide.LEFT)))));
   }
 
-  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
+  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.sequence(
             Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
             trailblazer
@@ -139,13 +144,36 @@ public class AutoBlocks {
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
                     new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                        Commands.waitSeconds(0.15).andThen(onFinish)))))
+                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
-  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
-    return scoreL4(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
+  public Command scoreL4AfterGroundIntake(
+      ReefPipe pipe, RobotScoringSide scoringSide) {
+    return Commands.sequence(
+            Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        SCORING_CONSTRAINTS_FOR_GROUND_AUTOS,
+                        new AutoPoint(
+                            () -> pipe.getPose(ReefPipeLevel.L4, scoringSide),
+                            robotManager
+                                .waitForStates(
+                                    RobotState.CLAW_CORAL,
+                                    RobotState.CORAL_L4_LEFT_APPROACH,
+                                    RobotState.CORAL_L4_RIGHT_APPROACH,
+                                    RobotState.STARTING_POSITION_CORAL)
+                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)))),
+                    false)
+                .withDeadline(autoCommands.waitForReleaseCommand()),
+            trailblazer.followSegment(
+                new AutoSegment(
+                    BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
+                    AFTER_SCORE_POSITION_TOLERANCE,
+                    new AutoPoint(
+                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+        .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
   public Command intakeCoralGroundPoints(
@@ -156,12 +184,14 @@ public class AutoBlocks {
             trailblazer
                 .followSegment(
                     new AutoSegment(
-                        BASE_CONSTRAINTS,
+                        BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
                         new AutoPoint(lineup),
                         new AutoPoint(approachToIntake),
                         new AutoPoint(intakingPoint::getPose)),
-                    false)
-                .withDeadline(autoCommands.waitForIntakeDone()));
+                    true)
+                .repeatedly()
+                .withDeadline(autoCommands.waitForIntakeDone())
+                );
   }
 
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
@@ -198,7 +228,7 @@ public class AutoBlocks {
     return scoreL3(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
-  public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
+  public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.sequence(
             trailblazer
                 .followSegment(
@@ -223,8 +253,7 @@ public class AutoBlocks {
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
                     new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                        Commands.waitSeconds(0.15).andThen(onFinish)))))
+                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -282,8 +311,7 @@ public class AutoBlocks {
                     () -> robotManager.coralMap.getBestCoralPose().orElse(defaultIntakingPose),
                     Commands.runOnce(
                         () -> {
-                          robotManager.groundManager.intakeRequest();
-                          robotManager.l4CoralApproachRequest();
+                          autoCommands.groundIntakeToL4Command();
                         }))),
             false)
         .withDeadline(autoCommands.waitForIntakeDone());
