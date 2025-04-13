@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
+import frc.robot.util.ReusableOptional;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.CameraHealth;
-import frc.robot.vision.results.GamePieceResult;
-import frc.robot.vision.results.TagResult;
-import java.util.Optional;
+import frc.robot.vision.results.OptionalGamePieceResult;
+import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
 public class Limelight extends StateMachine<LimelightState> {
@@ -36,11 +36,11 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private double lastTimestamp = 0.0;
 
-  private Optional<TagResult> lastGoodTagResult = Optional.empty();
-  private Optional<TagResult> tagResult = Optional.empty();
+  private OptionalTagResult lastGoodTagResult = new OptionalTagResult();
+  private OptionalTagResult tagResult = new OptionalTagResult();
 
-  private Optional<GamePieceResult> coralResult = Optional.empty();
-  private Optional<GamePieceResult> algaeResult = Optional.empty();
+  private OptionalGamePieceResult coralResult = new OptionalGamePieceResult();
+  private OptionalGamePieceResult algaeResult = new OptionalGamePieceResult();
 
   private double angularVelocity = 0.0;
 
@@ -72,35 +72,35 @@ public class Limelight extends StateMachine<LimelightState> {
     setStateFromRequest(state);
   }
 
-  public Optional<GamePieceResult> getCoralResult() {
-    return getState() == LimelightState.CORAL ? coralResult : Optional.empty();
+  public OptionalGamePieceResult getCoralResult() {
+    return getState() == LimelightState.CORAL ? coralResult : coralResult.empty();
   }
 
-  public Optional<GamePieceResult> getAlgaeResult() {
-    return getState() == LimelightState.ALGAE ? algaeResult : Optional.empty();
+  public OptionalGamePieceResult getAlgaeResult() {
+    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
   }
 
-  public Optional<TagResult> getTagResult() {
+  public OptionalTagResult getTagResult() {
     if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
-      return Optional.empty();
+      return tagResult.empty();
     }
 
     var mT2Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
     if (mT2Estimate == null) {
-      return Optional.empty();
+      return tagResult.empty();
     }
     if (Math.abs(angularVelocity) > 360) {
-      return Optional.empty();
+      return tagResult.empty();
     }
     if (mT2Estimate.tagCount == 0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
-      return Optional.empty();
+      return tagResult.empty();
     }
     if (mT2Estimate.rawFiducials.length == 1) {
       double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
       if (ambiguity >= 0.7) {
-        return Optional.empty();
+        return tagResult.empty();
       }
     }
     DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
@@ -110,7 +110,7 @@ public class Limelight extends StateMachine<LimelightState> {
         DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", 0.0);
 
         DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-        return Optional.empty();
+        return tagResult.empty();
       }
 
       lastTimestamp = newTimestamp;
@@ -121,7 +121,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (mt2Pose.getX() == 0.0 && mt2Pose.getY() == 0.0) {
       DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
-      return Optional.empty();
+      return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
     if (FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
@@ -145,21 +145,21 @@ public class Limelight extends StateMachine<LimelightState> {
     }
 
     DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", mt2Pose);
-    return Optional.of(new TagResult(mt2Pose, mT2Estimate.timestampSeconds, devs));
+    return tagResult.update(mt2Pose, mT2Estimate.timestampSeconds, devs);
   }
 
-  private Optional<GamePieceResult> getRawCoralResult() {
+  private OptionalGamePieceResult getRawCoralResult() {
     if (getState() != LimelightState.CORAL) {
-      return Optional.empty();
+      return coralResult.empty();
     }
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
     if (t2d.length == 0) {
-      return Optional.empty();
+      return coralResult.empty();
     }
     var coralTx = t2d[4];
     var coralTy = t2d[5];
     if (coralTx == 0.0 || coralTy == 0.0) {
-      return Optional.empty();
+      return coralResult.empty();
     }
 
     DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
@@ -169,7 +169,7 @@ public class Limelight extends StateMachine<LimelightState> {
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
 
-    return Optional.of(new GamePieceResult(coralTx, coralTy, timestamp));
+    return coralResult.update(coralTx, coralTy, timestamp);
   }
 
   public OptionalDouble handoffTx() {
@@ -196,18 +196,18 @@ public class Limelight extends StateMachine<LimelightState> {
     return OptionalDouble.of(tx);
   }
 
-  private Optional<GamePieceResult> getRawAlgaeResult() {
+  private OptionalGamePieceResult getRawAlgaeResult() {
     if (getState() != LimelightState.ALGAE) {
-      return Optional.empty();
+      return algaeResult.empty();
     }
     var t2d = LimelightHelpers.getT2DArray(limelightTableName);
     if (t2d.length == 0) {
-      return Optional.empty();
+      return algaeResult.empty();
     }
     var algaeTx = t2d[4];
     var algaeTy = t2d[5];
     if (algaeTx == 0.0 || algaeTy == 0.0) {
-      return Optional.empty();
+      return algaeResult.empty();
     }
 
     DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
@@ -217,7 +217,7 @@ public class Limelight extends StateMachine<LimelightState> {
     var latencySeconds = latency / 1000.0;
     var timestamp = Timer.getFPGATimestamp() - latencySeconds;
 
-    return Optional.of(new GamePieceResult(algaeTx, algaeTy, timestamp));
+    return algaeResult.update(algaeTx, algaeTy, timestamp);
   }
 
   public void setClosestScoringReefTag(int tagID) {
@@ -239,7 +239,10 @@ public class Limelight extends StateMachine<LimelightState> {
     super.robotPeriodic();
     DogLog.log("Vision/" + name + "/State", getState());
 
-    var lastTagTimestamp = lastGoodTagResult.map(TagResult::timestamp).orElse(Double.MIN_VALUE);
+    var lastTagTimestamp =
+        lastGoodTagResult.isPresent()
+            ? lastGoodTagResult.orElseThrow().timestamp()
+            : Double.MIN_VALUE;
 
     if (Timer.getTimestamp() - lastTagTimestamp > 30) {
       DogLog.logFault(
@@ -277,7 +280,7 @@ public class Limelight extends StateMachine<LimelightState> {
     seedImuTimer.start();
   }
 
-  private void updateHealth(Optional<?> result) {
+  private void updateHealth(ReusableOptional<?> result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
     DogLog.log("Vision/" + name + "/Heartbeat", newHeartbeat);
     if (limelightHeartbeat != newHeartbeat) {
@@ -293,7 +296,7 @@ public class Limelight extends StateMachine<LimelightState> {
       DogLog.clearFault(limelightTableName + " is offline");
     }
 
-    if (!result.isEmpty()) {
+    if (result.isPresent()) {
       cameraHealth = CameraHealth.GOOD;
       return;
     }

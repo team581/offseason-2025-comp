@@ -1,0 +1,25 @@
+package frc.robot.vision.results;
+
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N3;
+import frc.robot.util.ReusableOptional;
+
+public class OptionalTagResult extends ReusableOptional<TagResult> {
+  public OptionalTagResult() {
+    super(new TagResult());
+  }
+
+  public OptionalTagResult update(Pose2d pose, double timestamp, Vector<N3> standardDevs) {
+    this.value.update(pose, timestamp, standardDevs);
+    this.isPresent = true;
+
+    return this;
+  }
+
+  public OptionalTagResult empty() {
+    this.value.update(null, 0, null);
+    this.isPresent = false;
+    return this;
+  }
+}

@@ -24,6 +24,7 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightHelpers;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
+import frc.robot.vision.results.OptionalGamePieceResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -72,6 +73,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   private Optional<Pose2d> filteredLollipopPose = Optional.empty();
   private double lastLollipopTime = 0.0;
+  private GamePieceResult gamePieceResult = new GamePieceResult();
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve, Limelight limelight) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
@@ -91,25 +93,28 @@ public class CoralMap extends StateMachine<CoralMapState> {
     }
   }
 
-  public void updateLollipopResult(Optional<GamePieceResult> lollipopResult) {
-    if (lollipopResult.isEmpty()) {
+  public void updateLollipopResult(OptionalGamePieceResult maybeLollipopResult) {
+    if (maybeLollipopResult.isEmpty()) {
       return;
     }
+
+    var lollipopResult = maybeLollipopResult.orElseThrow();
+
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
-            lollipopResult.get(), localization.getPose(lollipopResult.get().timestamp()));
-    if (safeToTrack() && isLollipopInSafeSpotForAuto(newPose.get().getTranslation())) {
+            lollipopResult, localization.getPose(lollipopResult.timestamp()));
+    if (safeToTrack() && isLollipopInSafeSpotForAuto(newPose.getTranslation())) {
       if (filteredLollipopPose.isEmpty()) {
-        resetLollipopFilter(newPose.get().getTranslation());
+        resetLollipopFilter(newPose.getTranslation());
       }
-      filteredLollipopX = lollipopXFilter.calculate(newPose.get().getX());
-      filteredLollipopY = lollipopYFilter.calculate(newPose.get().getY());
+      filteredLollipopX = lollipopXFilter.calculate(newPose.getX());
+      filteredLollipopY = lollipopYFilter.calculate(newPose.getY());
       filteredLollipopPose =
           Optional.of(
               new Pose2d(
                   filteredLollipopX,
                   filteredLollipopY,
-                  Rotation2d.fromDegrees(newPose.get().getRotation().getDegrees())));
+                  Rotation2d.fromDegrees(newPose.getRotation().getDegrees())));
       lastLollipopTime = Timer.getFPGATimestamp();
     } else {
       if (Timer.getFPGATimestamp() - lastLollipopTime >= LOLLIPOP_LIFTEIME_SECONDS) {
@@ -160,9 +165,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
         double angleX = (((centerX / CAMERA_IMAGE_WIDTH) * FOV_HORIZONTAL) - HORIZONTAL_LEFT_VIEW);
         double angleY =
             -1.0 * (((centerY / CAMERA_IMAGE_HEIGHT) * FOV_VERTICAL) - VERTICAL_TOP_VIEW);
+        gamePieceResult.update(angleX, angleY, 0);
         var maybeCoralPose =
             GamePieceDetectionUtil.calculateFieldRelativeCoralTranslationFromCamera(
-                robotPoseAtCapture, new GamePieceResult(angleX, angleY, 0));
+                robotPoseAtCapture, gamePieceResult);
 
         coralTranslations.add(maybeCoralPose);
       }
