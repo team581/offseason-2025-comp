@@ -134,21 +134,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     DogLog.log("Elevator/AtGoal", atGoal());
 
     switch (getState()) {
-      case PRE_MATCH_HOMING -> {
-        if (DriverStation.isEnabled()) {
-          // We are enabled and still in pre match homing
-          // Reset the motor positions, and then transition to idle state
-          double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
-          var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
-          var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
-          // TODO: Restore elevator homing
-          leftMotor.setPosition(homingEndHeight);
-          rightMotor.setPosition(homingEndHeight);
-
-          setStateFromRequest(ElevatorState.STOWED);
-        }
-      }
-
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
@@ -176,15 +161,36 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   @Override
   protected ElevatorState getNextState(ElevatorState currentState) {
-    if (currentState == ElevatorState.MID_MATCH_HOMING
-        && averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
-      leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
-      rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
-      return ElevatorState.STOWED;
-    }
+    return switch (currentState) {
+      case MID_MATCH_HOMING -> {
+        if (averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
+          leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+          rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+          yield ElevatorState.STOWED;
+        }
 
-    // Don't do anything
-    return currentState;
+        yield currentState;
+      }
+
+      case PRE_MATCH_HOMING -> {
+        if (DriverStation.isEnabled()) {
+          // We are enabled and still in pre match homing
+          // Reset the motor positions, and then transition to idle state
+          double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+          var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
+          var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
+          // TODO: Restore elevator homing
+          leftMotor.setPosition(homingEndHeight);
+          rightMotor.setPosition(homingEndHeight);
+
+          yield (ElevatorState.STOWED);
+        }
+
+        yield currentState;
+      }
+
+      default -> currentState;
+    };
   }
 
   public boolean atGoal() {

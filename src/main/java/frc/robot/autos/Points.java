@@ -20,7 +20,7 @@ public enum Points {
   LEFT_CORAL_STATION(new Pose2d(16.194, 0.861, Rotation2d.fromDegrees(125.309))),
   RIGHT_CORAL_STATION(new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(-131.807))),
 
-  GROUND_INTAKE_LEFT_STATION(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0)));
+  GROUND_INTAKE_LEFT_STATION(new Pose2d(16.045, 0.997, Rotation2d.fromDegrees(0)));
 
   public Pose2d redPose;
   public Pose2d bluePose;

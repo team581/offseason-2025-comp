@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S2StateValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
@@ -33,6 +34,17 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         candi.getS2State().getValue()
             != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
     sensorDebounced = debouncer.calculate(sensorRaw);
+
+    if (RobotBase.isSimulation()) {
+      sensorRaw =
+          switch (getState()) {
+            case CORAL_HANDOFF, UNJAM -> timeout(0.5);
+            case IDLE_NO_GP -> false;
+            case IDLE_GP -> true;
+            case INTAKING -> timeout(3);
+            case SCORING -> timeout(3);
+          };
+    }
   }
 
   public boolean getHasGP() {

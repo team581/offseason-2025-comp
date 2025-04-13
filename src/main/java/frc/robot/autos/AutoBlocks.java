@@ -25,13 +25,15 @@ public class AutoBlocks {
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.4, 5);
+  private static final PoseErrorTolerance LOLLIPOP_CENTER_TOLERANCE =
+      new PoseErrorTolerance(0.3, 5);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
-      new Transform2d(-1.3, 0, Rotation2d.kZero);
+      new Transform2d(-0.6, -0.9, Rotation2d.kZero);
 
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
-      new Transform2d(-0.6, 0, Rotation2d.kZero);
+      new Transform2d(0, Units.inchesToMeters(-60), Rotation2d.kZero);
 
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
@@ -47,10 +49,13 @@ public class AutoBlocks {
       new AutoConstraintOptions(4.5, 57, 3.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 57, 2.5, 30);
+
+  public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
+      new AutoConstraintOptions(4.0, 10, 2.5, 10);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.5).withMaxLinearVelocity(1.5);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.5).withMaxLinearVelocity(2.0);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -130,7 +135,7 @@ public class AutoBlocks {
                                 .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)),
                             BASE_CONSTRAINTS)),
                     false)
-                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
+                .withDeadline(autoCommands.waitForReleaseCommand()),
             trailblazer.followSegment(
                 new AutoSegment(
                     BASE_CONSTRAINTS,
@@ -145,7 +150,8 @@ public class AutoBlocks {
     return scoreL4(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
-  public Command intakeCoralGroundPoints(Points intakingPoint) {
+  public Command intakeCoralGroundPoints(
+      Pose2d lineup, Pose2d approachToIntake, Points intakingPoint) {
     return autoCommands
         .groundIntakeToL4Command()
         .alongWith(
@@ -153,11 +159,8 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         BASE_CONSTRAINTS,
-                        new AutoPoint(
-                            () ->
-                                intakingPoint
-                                    .getPose()
-                                    .transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET)),
+                        new AutoPoint(lineup),
+                        new AutoPoint(approachToIntake),
                         new AutoPoint(intakingPoint::getPose)),
                     false)
                 .withDeadline(autoCommands.waitForIntakeDone()));
@@ -209,7 +212,7 @@ public class AutoBlocks {
                                         RobotState.CORAL_L2_LEFT_APPROACH,
                                         RobotState.CORAL_L2_RIGHT_APPROACH,
                                         RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l2ApproachCommand(scoringSide)),
+                                .andThen(autoCommands.l2LineupCommand(scoringSide)),
                             BASE_CONSTRAINTS)),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
@@ -245,7 +248,8 @@ public class AutoBlocks {
             true),
         trailblazer.followSegment(
             new AutoSegment(
-                BASE_CONSTRAINTS,
+                MAX_CONSTRAINTS,
+                LOLLIPOP_CENTER_TOLERANCE,
                 new AutoPoint(
                     () ->
                         new Pose2d(
@@ -278,7 +282,7 @@ public class AutoBlocks {
     return trailblazer
         .followSegment(
             new AutoSegment(
-                BASE_CONSTRAINTS,
+                CORAL_MAP_CONSTRAINTS,
                 new AutoPoint(
                     () -> robotManager.coralMap.getBestCoralPose().orElse(defaultIntakingPose),
                     Commands.runOnce(

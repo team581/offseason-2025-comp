@@ -59,17 +59,12 @@ public class AutoCommands {
     if (RobotBase.isSimulation()) {
       return Commands.waitSeconds(1.0);
     }
-    return robotManager
-        .groundManager
-        .waitForStates(
-            GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE)
-        .withTimeout(4);
+    return robotManager.groundManager.waitForStates(
+        GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE);
   }
 
   public Command waitForLollipopIntakeDone() {
-    return robotManager
-        .waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL)
-        .withTimeout(1.5);
+    return robotManager.waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL);
   }
 
   public Command waitForElevatorAndArmNearGoal() {
@@ -107,6 +102,17 @@ public class AutoCommands {
             robotManager.l2CoralLeftAutoApproachRequest();
           } else {
             robotManager.l2CoralRightAutoApproachRequest();
+          }
+        });
+  }
+
+  public Command l2LineupCommand(RobotScoringSide scoringSide) {
+    return Commands.runOnce(
+        () -> {
+          if (scoringSide == RobotScoringSide.LEFT) {
+            robotManager.l2CoralLeftAutoLineupRequest();
+          } else {
+            robotManager.l2CoralRightAutoLineupRequest();
           }
         });
   }

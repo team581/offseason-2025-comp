@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.CompBotTunerConstants;
@@ -98,6 +99,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
 
   private final ChassisSpeeds previousSpeeds = new ChassisSpeeds();
   private static final double PREVIOUS_TIMESTAMP = 0.0;
+  private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
@@ -137,10 +139,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     driveToAngle.HeadingController.setTolerance(0.01);
 
     drivetrain.setStateStdDevs(new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002)));
+    timeSinceAutoSpeeds.start();
   }
 
   public void setFieldRelativeAutoSpeeds(ChassisSpeeds speeds) {
     autoSpeeds = speeds;
+    timeSinceAutoSpeeds.reset();
     sendSwerveRequest();
   }
 
@@ -380,6 +384,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
       DogLog.logFault("Swerve odometry frequency too low", AlertType.kWarning);
     } else {
       DogLog.clearFault("Swerve odometry frequency too low");
+    }
+
+    if (timeSinceAutoSpeeds.hasElapsed(0.25) && DriverStation.isAutonomous()) {
+      DogLog.logFault("Timeout since auto speeds last set");
+    } else {
+      DogLog.clearFault("Timeout since auto speeds last set");
     }
   }
 
