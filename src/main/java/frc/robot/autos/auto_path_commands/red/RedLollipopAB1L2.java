@@ -43,7 +43,8 @@ public class RedLollipopAB1L2 extends BaseAuto {
                             autoCommands.l4ApproachCommand(
                                 ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
             blocks.scoreL4(
-                ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
+                ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+                autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 2 (MIDDLE)
         timing.time(
             "Piece 1",
@@ -51,7 +52,8 @@ public class RedLollipopAB1L2 extends BaseAuto {
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL4(
-                ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
+                ReefPipe.PIPE_B, RobotScoringSide.LEFT)),
+                autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 1
         timing.time(
             "Piece 2",
@@ -59,7 +61,8 @@ public class RedLollipopAB1L2 extends BaseAuto {
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-51.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
-                ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
+                ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+                autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 3
         timing.time(
             "Piece 3",
@@ -68,7 +71,7 @@ public class RedLollipopAB1L2 extends BaseAuto {
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
                 ReefPipe.PIPE_B,
-                RobotScoringSide.LEFT,
-                autoCommands.moveToStartingPositionCommand())));
+                RobotScoringSide.LEFT),
+                autoCommands.moveToStartingPositionCommand()));
   }
 }
