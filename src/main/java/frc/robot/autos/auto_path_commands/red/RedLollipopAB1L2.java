@@ -36,10 +36,12 @@ public class RedLollipopAB1L2 extends BaseAuto {
                     new AutoSegment(
                         AutoBlocks.MAX_CONSTRAINTS,
                         AutoBlocks.APPROACH_REEF_TOLERANCE,
+                        new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(90.0))),
+                        new AutoPoint(new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(90.0))),
                         new AutoPoint(
-                            new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(140-90))),
-                        new AutoPoint(new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90)),
-                        autoCommands.l4ApproachCommand(ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
+                            new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90.0)),
+                            autoCommands.l4ApproachCommand(
+                                ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
             blocks.scoreL4(
                 ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 2 (MIDDLE)
@@ -59,8 +61,6 @@ public class RedLollipopAB1L2 extends BaseAuto {
             blocks.scoreL2(
                 ReefPipe.PIPE_A,
                 RobotScoringSide.LEFT,
-                autoCommands.moveToStartingPositionCommand())),
-        trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(15.0, 2.6, Rotation2d.fromDegrees(90))))));
+                autoCommands.moveToStartingPositionCommand())));
   }
 }
