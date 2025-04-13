@@ -20,11 +20,11 @@ public class AutoCommands {
   }
 
   public Command stowRequest() {
-    return Commands.runOnce(robotManager::stowRequest);
+    return Commands.runOnce(robotManager::stowRequest).withName("StowRequestCommand");
   }
 
   public Command preloadCoralCommand() {
-    return Commands.runOnce(robotManager::preloadCoralRequest);
+    return Commands.runOnce(robotManager::preloadCoralRequest).withName("PreloadCoralCommand");
   }
 
   public boolean alignedForScore() {
@@ -35,121 +35,141 @@ public class AutoCommands {
   }
 
   public Command intakeCoralHorizontalCommand() {
-    return Commands.runOnce(robotManager.groundManager::intakeRequest);
+    return Commands.runOnce(robotManager.groundManager::intakeRequest)
+        .withName("IntakeCoralHorizontalCommand");
   }
 
   public Command lollipopApproachCommand() {
-    return Commands.runOnce(robotManager::lollipopIntakeApproachRequest);
+    return Commands.runOnce(robotManager::lollipopIntakeApproachRequest)
+        .withName("LollipopApproachCommand");
   }
 
   public Command intakeLollipopCommand() {
-    return Commands.runOnce(robotManager::lollipopIntakeGrabRequest);
+    return Commands.runOnce(robotManager::lollipopIntakeGrabRequest)
+        .withName("LollipopIntakeCommand");
   }
 
   public Command homeDeployCommand() {
-    return Commands.runOnce(robotManager.groundManager::rehomeDeployRequest);
+    return Commands.runOnce(robotManager.groundManager::rehomeDeployRequest)
+        .withName("HomeDeployCommand");
   }
 
   public Command waitForIntakeDone() {
     if (RobotBase.isSimulation()) {
       return Commands.waitSeconds(1.0);
     }
-    return robotManager.groundManager.waitForStates(
-        GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE);
+    return robotManager
+        .groundManager
+        .waitForStates(
+            GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE)
+        .withName("WaitForIntakeDoneCommand");
   }
 
   public Command waitForLollipopIntakeDone() {
-    return robotManager.waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL);
+    return robotManager
+        .waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL)
+        .withName("WaitForLollipopIntakeDoneCommand");
   }
 
   public Command waitForElevatorAndArmNearGoal() {
-    return Commands.waitUntil(
-        () -> robotManager.elevator.nearGoal() && robotManager.arm.nearGoal());
+    return Commands.waitUntil(() -> robotManager.elevator.nearGoal() && robotManager.arm.nearGoal())
+        .withName("WaitForElevatorAndArmNearGoalCommand");
   }
 
   public Command l4ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
-        () -> {
-          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
-          if (scoringSide == RobotScoringSide.LEFT) {
-            robotManager.l4CoralLeftAutoApproachRequest();
-          } else {
-            robotManager.l4CoralRightAutoApproachRequest();
-          }
-        });
+            () -> {
+              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+              if (scoringSide == RobotScoringSide.LEFT) {
+                robotManager.l4CoralLeftAutoApproachRequest();
+              } else {
+                robotManager.l4CoralRightAutoApproachRequest();
+              }
+            })
+        .withName("L4ApproachCommand");
   }
 
   public Command l3ApproachCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
-        () -> {
-          if (scoringSide == RobotScoringSide.LEFT) {
-            robotManager.l3CoralLeftAutoApproachRequest();
-          } else {
-            robotManager.l3CoralRightAutoApproachRequest();
-          }
-        });
+            () -> {
+              if (scoringSide == RobotScoringSide.LEFT) {
+                robotManager.l3CoralLeftAutoApproachRequest();
+              } else {
+                robotManager.l3CoralRightAutoApproachRequest();
+              }
+            })
+        .withName("L3ApproachCommand");
   }
 
   public Command l2ApproachCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
-        () -> {
-          if (scoringSide == RobotScoringSide.LEFT) {
-            robotManager.l2CoralLeftAutoApproachRequest();
-          } else {
-            robotManager.l2CoralRightAutoApproachRequest();
-          }
-        });
+            () -> {
+              if (scoringSide == RobotScoringSide.LEFT) {
+                robotManager.l2CoralLeftAutoApproachRequest();
+              } else {
+                robotManager.l2CoralRightAutoApproachRequest();
+              }
+            })
+        .withName("L2ApproachCommand");
   }
 
   public Command l2LineupCommand(RobotScoringSide scoringSide) {
     return Commands.runOnce(
-        () -> {
-          if (scoringSide == RobotScoringSide.LEFT) {
-            robotManager.l2CoralLeftAutoLineupRequest();
-          } else {
-            robotManager.l2CoralRightAutoLineupRequest();
-          }
-        });
+            () -> {
+              if (scoringSide == RobotScoringSide.LEFT) {
+                robotManager.l2CoralLeftAutoLineupRequest();
+              } else {
+                robotManager.l2CoralRightAutoLineupRequest();
+              }
+            })
+        .withName("L2LineupCommand");
   }
 
   public Command l4LeftReleaseCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
-        () -> {
-          robotManager.autoAlign.setAutoReefPipeOverride(pipe);
-          robotManager.l4CoralLeftReleaseRequest();
-        });
+            () -> {
+              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+              robotManager.l4CoralLeftReleaseRequest();
+            })
+        .withName("L4LeftReleaseCommand");
   }
 
   public Command l3LeftReleaseCommand() {
-    return Commands.runOnce(robotManager::l3CoralLeftReleaseRequest);
+    return Commands.runOnce(robotManager::l3CoralLeftReleaseRequest).withName("L3ReleaseCommand");
   }
 
   public Command moveToStartingPositionCommand() {
-    return Commands.runOnce(robotManager::startingPositionRequest);
+    return Commands.runOnce(robotManager::startingPositionRequest)
+        .withName("MoveToStartingPositionCommand");
   }
 
   public Command waitForReleaseCommand() {
-    return robotManager.waitForStates(
-        RobotState.CORAL_L2_LEFT_RELEASE,
-        RobotState.CORAL_L4_LEFT_RELEASE,
-        RobotState.CORAL_L3_LEFT_RELEASE,
-        RobotState.CORAL_L2_RIGHT_RELEASE,
-        RobotState.CORAL_L3_RIGHT_RELEASE,
-        RobotState.CORAL_L4_RIGHT_RELEASE);
+    return robotManager
+        .waitForStates(
+            RobotState.CORAL_L2_LEFT_RELEASE,
+            RobotState.CORAL_L4_LEFT_RELEASE,
+            RobotState.CORAL_L3_LEFT_RELEASE,
+            RobotState.CORAL_L2_RIGHT_RELEASE,
+            RobotState.CORAL_L3_RIGHT_RELEASE,
+            RobotState.CORAL_L4_RIGHT_RELEASE)
+        .withName("WaitForReleaseCommand");
   }
 
   public Command waitForAlignedForScore() {
     if (RobotBase.isSimulation()) {
       return Commands.waitSeconds(1.0);
     }
-    return Commands.waitUntil(this::alignedForScore).withTimeout(5);
+    return Commands.waitUntil(this::alignedForScore)
+        .withTimeout(5)
+        .withName("WaitForAlignedForScore");
   }
 
   public Command groundIntakeToL4Command() {
     return Commands.runOnce(
-        () -> {
-          robotManager.groundManager.intakeThenHandoffRequest();
-          robotManager.l4CoralApproachRequest();
-        });
+            () -> {
+              robotManager.groundManager.intakeThenHandoffRequest();
+              robotManager.l4CoralApproachRequest();
+            })
+        .withName("GroundIntakeL4Command");
   }
 }
