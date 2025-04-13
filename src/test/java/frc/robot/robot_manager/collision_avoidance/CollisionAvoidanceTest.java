@@ -484,6 +484,7 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.orElseThrow());
   }
+
   @Test
   void l2PlaceToLollipop() {
     var result =
@@ -493,7 +494,12 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH),
             ObstructionKind.LEFT_OBSTRUCTED);
-    var expected = List.of(Waypoint.L2_LEFT_PLACE, Waypoint.L2_LEFT_LINEUP, Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.LOLLIPOP_INTAKE_RIGHT);
+    var expected =
+        List.of(
+            Waypoint.L2_LEFT_PLACE,
+            Waypoint.L2_LEFT_LINEUP,
+            Waypoint.LOLLIPOP_INTAKE_PUSH,
+            Waypoint.LOLLIPOP_INTAKE_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -510,6 +516,7 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.orElseThrow());
   }
+
   @Test
   void l3PlaceToLollipop() {
     var result =
@@ -536,6 +543,7 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.orElseThrow());
   }
+
   @Test
   void leftObstructedL2toL3Test() {
     var result =
