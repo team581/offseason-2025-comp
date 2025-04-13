@@ -31,7 +31,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
 
   private static final double TOLERANCE = 2.0;
-  private static final double NEAR_TOLERANCE = 35.0;
+  private static final double NEAR_TOLERANCE =35.0;
   private static final double CLIMBER_UNSAFE_ANGLE = 225.0;
   private final TalonFX motor;
   private double rawMotorAngle;
@@ -154,6 +154,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
     };
+  }
+
+  public boolean nearGoal(ArmState state) {
+    return MathUtil.isNear(state.getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
   }
 
   @Override
