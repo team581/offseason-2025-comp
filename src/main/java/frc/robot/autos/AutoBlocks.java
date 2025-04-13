@@ -232,6 +232,7 @@ public class AutoBlocks {
 
   public Command intakeLollipop(Pose2d defaultIntakingPoint) {
     return Commands.sequence(
+        Commands.runOnce(()->robotManager.coralMap.clearLollipop()),
         autoCommands.intakeLollipopCommand(),
         trailblazer
             .followSegment(
