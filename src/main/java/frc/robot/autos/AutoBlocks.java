@@ -24,7 +24,7 @@ public class AutoBlocks {
       new PoseErrorTolerance(0.2, 10);
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
-      new PoseErrorTolerance(0.5, 6);
+      new PoseErrorTolerance(0.7, 10);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
