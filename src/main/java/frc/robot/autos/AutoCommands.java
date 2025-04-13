@@ -60,8 +60,7 @@ public class AutoCommands {
     }
     return robotManager
         .groundManager
-        .waitForStates(
-            GroundState.IDLE_CORAL, GroundState.HANDOFF_WAIT, GroundState.HANDOFF_RELEASE)
+        .waitForStates(GroundState.HANDOFF_WAIT)
         .withName("WaitForIntakeDoneCommand");
   }
 
