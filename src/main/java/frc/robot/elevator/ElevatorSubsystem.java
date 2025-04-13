@@ -183,7 +183,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           leftMotor.setPosition(homingEndHeight);
           rightMotor.setPosition(homingEndHeight);
 
-          yield (ElevatorState.STOWED);
+          yield ElevatorState.STOWED;
         }
 
         yield currentState;

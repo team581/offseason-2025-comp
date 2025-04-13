@@ -48,7 +48,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
   private static final double VERTICAL_TOP_VIEW = 48.9 / 2;
 
-  private Limelight limelight;
+  private final Limelight limelight;
   private static final String LIMELIGHT_NAME = "limelight-gp";
   private static final NetworkTableEntry LL_TCORNXY =
       NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
@@ -73,7 +73,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
 
   private Optional<Pose2d> filteredLollipopPose = Optional.empty();
   private double lastLollipopTime = 0.0;
-  private GamePieceResult gamePieceResult = new GamePieceResult();
+  private final GamePieceResult gamePieceResult = new GamePieceResult();
 
   public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve, Limelight limelight) {
     super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);

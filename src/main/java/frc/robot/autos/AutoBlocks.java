@@ -194,6 +194,10 @@ public class AutoBlocks {
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
+  public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide) {
+    return scoreL3(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
+  }
+
   public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
     return Commands.sequence(
             trailblazer
@@ -222,10 +226,6 @@ public class AutoBlocks {
                         () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
                         Commands.waitSeconds(0.15).andThen(onFinish)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
-  }
-
-  public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide) {
-    return scoreL3(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
   public Command intakeLollipop(Pose2d defaultIntakingPoint) {
