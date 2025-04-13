@@ -2,6 +2,7 @@ package frc.robot.arm;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -50,6 +51,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
+  private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
+      new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
 
   // TODO: tune velocity
   private final PositionVoltage algaeFling =
@@ -94,6 +97,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public double getRawAngle() {
     return rawMotorAngle;
+  }
+
+  private void makeGetMotionMagicRequest(double armRotations) {
+    if (DriverStation.isAutonomous()) {
+      motor.setControl(autoMotionMagicExpoRequest.withPosition(armRotations));
+    } else {
+      motor.setControl(motionMagicRequest.withPosition(armRotations));
+    }
   }
 
   private double getSetpoint(double angle) {
@@ -189,8 +200,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
+        makeGetMotionMagicRequest(Units.degreesToRotations(collisionAvoidanceGoal));
       }
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
@@ -208,15 +218,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         motor.setControl(algaeFling);
       }
       case CORAL_HANDOFF -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
+        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(usedHandoffAngle)));
+        ;
         DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
       }
       default -> {
-        motor.setControl(
-            motionMagicRequest.withPosition(
-                Units.degreesToRotations(getSetpoint(getState().getAngle()))));
+        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(getState().getAngle())));
         DogLog.log("Arm/defaultSetPosition", getSetpoint(getState().getAngle()));
       }
     }
