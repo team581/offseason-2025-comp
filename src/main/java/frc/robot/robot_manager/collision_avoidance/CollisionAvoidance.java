@@ -75,8 +75,6 @@ public class CollisionAvoidance {
     if (
     waypoint != lastWaypoint) {
       if (maybeEdge.isEmpty()) {
-        DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
-
         return Optional.empty();
       }
       var edge = maybeEdge;
@@ -91,7 +89,7 @@ public class CollisionAvoidance {
               rawArmAngle);
       lastWaypoint = waypoint;
     }
-
+    DogLog.log("CollisionAvoidance/ArmSolution", lastSolution);
     return Optional.of(
         new SuperstructurePosition(waypoint.position.elevatorHeight(), lastSolution));
   }
