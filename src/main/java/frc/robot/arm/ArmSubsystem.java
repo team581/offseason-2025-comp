@@ -234,9 +234,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return switch (currentState) {
       case PRE_MATCH_HOMING -> {
         if (DriverStation.isEnabled()) {
-          motor.setPosition(
-              Units.degreesToRotations(
-                  RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
+          var actualArmAngle =
+              RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+          motor.setPosition(Units.degreesToRotations(actualArmAngle));
+          // Refresh sensor data now that position is set
+          collectInputs();
 
           yield ArmState.HOLDING_UPRIGHT;
         }

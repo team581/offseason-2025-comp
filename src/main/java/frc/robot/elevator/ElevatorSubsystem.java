@@ -166,6 +166,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
         if (averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
           leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
           rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
+
+          // Refresh sensor data now that position is set
+          collectInputs();
+
           yield ElevatorState.STOWED;
         }
 
