@@ -98,8 +98,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
             lollipopResult.get(), localization.getPose(lollipopResult.get().timestamp()));
-    if (safeToTrack()
-        && isLollipopInSafeSpotForAuto(newPose.get().getTranslation())) {
+    if (safeToTrack() && isLollipopInSafeSpotForAuto(newPose.get().getTranslation())) {
       if (filteredLollipopPose.isEmpty()) {
         resetLollipopFilter(newPose.get().getTranslation());
       }
