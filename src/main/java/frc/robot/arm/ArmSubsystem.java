@@ -194,13 +194,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
-          if (DriverStation.isEnabled()) {
-            motor.setPosition(
-                Units.degreesToRotations(
-                    RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
-
-            setStateFromRequest(ArmState.HOLDING_UPRIGHT);
-          } else {
+          if (DriverStation.isDisabled()) {
             motor.setControl(brakeNeutralRequest);
           }
         } else {
@@ -226,6 +220,20 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         DogLog.log("Arm/defaultSetPosition", getSetpoint(getState().getAngle()));
       }
     }
+  }
+
+  @Override
+  protected ArmState getNextState(ArmState currentState) {
+    return switch (currentState) {
+      case PRE_MATCH_HOMING -> {
+        motor.setPosition(
+            Units.degreesToRotations(
+                RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
+
+        yield ArmState.HOLDING_UPRIGHT;
+      }
+      default -> currentState;
+    };
   }
 
   public boolean rangeOfMotionGood() {
