@@ -30,10 +30,10 @@ public class AutoBlocks {
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
-      new Transform2d(-1.3, 0, Rotation2d.kZero);
+      new Transform2d(-0.6, -0.9, Rotation2d.kZero);
 
   private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
-      new Transform2d(-0.6, 0, Rotation2d.kZero);
+      new Transform2d(0, Units.inchesToMeters(-60), Rotation2d.kZero);
 
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
@@ -135,7 +135,7 @@ public class AutoBlocks {
                                 .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)),
                             BASE_CONSTRAINTS)),
                     false)
-                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
+                .withDeadline(autoCommands.waitForReleaseCommand()),
             trailblazer.followSegment(
                 new AutoSegment(
                     BASE_CONSTRAINTS,
@@ -150,7 +150,7 @@ public class AutoBlocks {
     return scoreL4(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
-  public Command intakeCoralGroundPoints(Points intakingPoint) {
+  public Command intakeCoralGroundPoints(Pose2d lineup, Pose2d approachToIntake, Points intakingPoint) {
     return autoCommands
         .groundIntakeToL4Command()
         .alongWith(
@@ -158,11 +158,8 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         BASE_CONSTRAINTS,
-                        new AutoPoint(
-                            () ->
-                                intakingPoint
-                                    .getPose()
-                                    .transformBy(INTAKE_CORAL_GROUND_APPROACH_OFFSET)),
+                        new AutoPoint(lineup),
+                        new AutoPoint(approachToIntake),
                         new AutoPoint(intakingPoint::getPose)),
                     false)
                 .withDeadline(autoCommands.waitForIntakeDone()));
