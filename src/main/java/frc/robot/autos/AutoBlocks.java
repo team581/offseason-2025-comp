@@ -51,7 +51,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 10, 2.5, 10);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
+      BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(0.8).withMaxLinearVelocity(2.5);
 
