@@ -189,28 +189,27 @@ public class AutoBlocks {
                 .withDeadline(autoCommands.waitForIntakeDone()));
   }
 
-  public Command intakeCoralPath(
-    Pose2d lineup, Pose2d approachToIntake, Pose2d intakingPoint) {
-  return autoCommands
-      .groundIntakeToL4Command()
-      .alongWith(
-          trailblazer
-              .followSegment(
-                  new AutoSegment(
-                      BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
-                      new AutoPoint(lineup),
-                      new AutoPoint(approachToIntake),
-                      new AutoPoint(
-                        () -> robotManager.coralMap.getBestCoralPose().orElse(intakingPoint),
-                        Commands.runOnce(
-                            () -> {
-                              autoCommands.groundIntakeToL4Command();
-                            }))),
-                  true)
-              .repeatedly()
-              .withDeadline(autoCommands.waitForIntakeDone())
-              );
-}
+  public Command intakeCoralPath(Pose2d lineup, Pose2d approachToIntake, Pose2d intakingPoint) {
+    return autoCommands
+        .groundIntakeToL4Command()
+        .alongWith(
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
+                        new AutoPoint(lineup),
+                        new AutoPoint(approachToIntake),
+                        new AutoPoint(
+                            () -> robotManager.coralMap.getBestCoralPose().orElse(intakingPoint),
+                            Commands.runOnce(
+                                () -> {
+                                  autoCommands.groundIntakeToL4Command();
+                                }))),
+                    true)
+                .repeatedly()
+                .withDeadline(autoCommands.waitForIntakeDone()));
+  }
+
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
     return Commands.sequence(
             trailblazer
