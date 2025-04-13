@@ -40,13 +40,11 @@ public final class IntakeAssistUtil {
   }
 
   public static Optional<Pose2d> getLollipopIntakePoseFromVisionResult(
-      Optional<GamePieceResult> result, Pose2d robotPose) {
-    if (result.isEmpty()) {
-      return Optional.empty();
-    }
+      GamePieceResult result, Pose2d robotPose) {
+
     var translation =
         GamePieceDetectionUtil.calculateRobotRelativeLollipopTranslationFromCamera(
-            robotPose, result.get());
+            robotPose, result);
 
     var fieldRelativePose =
         new Pose2d(

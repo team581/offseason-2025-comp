@@ -80,6 +80,10 @@ public class CoralMap extends StateMachine<CoralMapState> {
     this.limelight = limelight;
   }
 
+  public void clearLollipop() {
+    filteredLollipopPose = Optional.empty();
+  }
+
   private void resetLollipopFilter(Translation2d expectedTranslation) {
     for (var i = 0; i < LOLLIPOP_FILTER_TAPS; i++) {
       lollipopXFilter.calculate(expectedTranslation.getX());
@@ -88,12 +92,13 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public void updateLollipopResult(Optional<GamePieceResult> lollipopResult) {
+    if (lollipopResult.isEmpty()) {
+      return;
+    }
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
-            lollipopResult, localization.getPose());
-    if (newPose.isPresent()
-        && safeToTrack()
-        && isLollipopInSafeSpotForAuto(newPose.get().getTranslation())) {
+            lollipopResult.get(), localization.getPose(lollipopResult.get().timestamp()));
+    if (safeToTrack() && isLollipopInSafeSpotForAuto(newPose.get().getTranslation())) {
       if (filteredLollipopPose.isEmpty()) {
         resetLollipopFilter(newPose.get().getTranslation());
       }

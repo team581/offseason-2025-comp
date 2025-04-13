@@ -24,9 +24,7 @@ public class AutoBlocks {
       new PoseErrorTolerance(0.2, 10);
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
-      new PoseErrorTolerance(0.4, 5);
-  private static final PoseErrorTolerance LOLLIPOP_CENTER_TOLERANCE =
-      new PoseErrorTolerance(0.3, 5);
+      new PoseErrorTolerance(0.5, 6);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
@@ -38,7 +36,7 @@ public class AutoBlocks {
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
   private static final Transform2d APPROACH_LOLLIPOP_OFFSET =
-      new Transform2d(0, Units.inchesToMeters(25), Rotation2d.kZero);
+      new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
       new Transform2d(
@@ -55,7 +53,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.5).withMaxLinearVelocity(2.0);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.8).withMaxLinearVelocity(2.5);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -232,6 +230,7 @@ public class AutoBlocks {
 
   public Command intakeLollipop(Pose2d defaultIntakingPoint) {
     return Commands.sequence(
+        Commands.runOnce(() -> robotManager.coralMap.clearLollipop()),
         autoCommands.intakeLollipopCommand(),
         trailblazer
             .followSegment(
@@ -246,25 +245,21 @@ public class AutoBlocks {
                 LOLLIPOP_APPROACH_TOLERANCE,
                 new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
             true),
-        trailblazer.followSegment(
-            new AutoSegment(
-                MAX_CONSTRAINTS,
-                LOLLIPOP_CENTER_TOLERANCE,
-                new AutoPoint(
-                    () ->
-                        new Pose2d(
-                            robotManager
-                                .coralMap
-                                .getLollipopIntakePose()
-                                .orElse(defaultIntakingPoint)
-                                .transformBy(CENTER_LOLLIPOP_OFFSET)
-                                .getTranslation(),
-                            defaultIntakingPoint.getRotation()))),
-            true),
         trailblazer
             .followSegment(
                 new AutoSegment(
                     LOLLIPOP_CONSTRAINTS,
+                    new AutoPoint(
+                      () ->
+                          new Pose2d(
+                              robotManager
+                                  .coralMap
+                                  .getLollipopIntakePose()
+                                  .orElse(defaultIntakingPoint)
+                                  .transformBy(CENTER_LOLLIPOP_OFFSET)
+                                  .getTranslation(),
+                              defaultIntakingPoint.getRotation()),
+                              MAX_CONSTRAINTS),
                     new AutoPoint(
                         () ->
                             new Pose2d(
