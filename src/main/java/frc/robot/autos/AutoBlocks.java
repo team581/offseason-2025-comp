@@ -150,7 +150,8 @@ public class AutoBlocks {
     return scoreL4(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
-  public Command intakeCoralGroundPoints(Pose2d lineup, Pose2d approachToIntake, Points intakingPoint) {
+  public Command intakeCoralGroundPoints(
+      Pose2d lineup, Pose2d approachToIntake, Points intakingPoint) {
     return autoCommands
         .groundIntakeToL4Command()
         .alongWith(
