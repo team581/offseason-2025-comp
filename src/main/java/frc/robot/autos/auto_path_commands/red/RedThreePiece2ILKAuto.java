@@ -39,10 +39,15 @@ public class RedThreePiece2ILKAuto extends BaseAuto {
                     autoCommands.l4ApproachCommand(ReefPipe.PIPE_I, RobotScoringSide.LEFT)))),
         blocks.scoreL4(ReefPipe.PIPE_I, RobotScoringSide.LEFT),
         autoCommands.groundIntakeToL4Command(),
-        blocks.intakeGroundForL4(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
+        blocks.intakeCoralPath(new Pose2d(12.813, 1.693, Rotation2d.fromDegrees(-45)),
+        new Pose2d(13.967, 0.640, Rotation2d.fromDegrees(0)),
+        new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(0))),
         blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
         autoCommands.groundIntakeToL4Command(),
-        blocks.intakeGroundForL4(new Pose2d(15.884, 0.994, Rotation2d.fromDegrees(0))),
+        blocks.intakeCoralPath(
+          new Pose2d(14.149, 2.075, Rotation2d.fromDegrees(0)),
+          new Pose2d(14.608, 0.746, Rotation2d.fromDegrees(0)),
+        new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(0))),
         blocks.scoreL4(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
         autoCommands.moveToStartingPositionCommand());
   }
