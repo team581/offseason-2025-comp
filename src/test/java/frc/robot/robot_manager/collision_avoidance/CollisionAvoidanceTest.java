@@ -451,8 +451,7 @@ public class CollisionAvoidanceTest {
     var expected =
         List.of(
             Waypoint.HANDOFF,
-            Waypoint.HANDOFF_CLEARS_CLIMBER,
-            Waypoint.L2_UPRIGHT,
+            Waypoint.L2_RIGHT_ARM,
             Waypoint.LOLLIPOP_INTAKE_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
