@@ -40,13 +40,6 @@ public class RedHybrid4PieceAuto extends BaseAuto {
                 new AutoPoint(new Pose2d(11.57, 2.342, Rotation2d.fromDegrees(-30))))),
         blocks.scoreL4(
             ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand()),
-        // LOLLIPOP 1
-        blocks.intakeLollipop(
-            new Pose2d(15.9, 2.168, Rotation2d.fromDegrees(0))
-                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-        //
-        blocks.scoreL4(
-            ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
         blocks.intakeCoralGroundPoints(
             new Pose2d(13.886, 1.616, Rotation2d.fromDegrees(0)),
             new Pose2d(13.925, 0.66, Rotation2d.fromDegrees(0)),
@@ -57,6 +50,6 @@ public class RedHybrid4PieceAuto extends BaseAuto {
             new Pose2d(13.708, 1.615, Rotation2d.fromDegrees(0)),
             new Pose2d(13.925, 0.66, Rotation2d.fromDegrees(0)),
             Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT, autoCommands.stowRequest()));
+        blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.stowRequest()));
   }
 }
