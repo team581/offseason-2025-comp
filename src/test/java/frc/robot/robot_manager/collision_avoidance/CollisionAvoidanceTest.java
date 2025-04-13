@@ -484,7 +484,58 @@ public class CollisionAvoidanceTest {
 
     assertEquals(expected, result.orElseThrow());
   }
+  @Test
+  void l2PlaceToLollipop() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_LEFT_RELEASE_L2),
+            new SuperstructurePosition(
+                ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH),
+            ObstructionKind.LEFT_OBSTRUCTED);
+    var expected = List.of(Waypoint.L2_LEFT_PLACE, Waypoint.L2_LEFT_LINEUP, Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.LOLLIPOP_INTAKE_RIGHT);
 
+    assertEquals(expected, result.orElseThrow());
+  }
+
+  @Test
+  void lollipopPushToL2LineupTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            Waypoint.LOLLIPOP_INTAKE_PUSH,
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
+            ObstructionKind.NONE);
+    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.L2_LEFT_LINEUP);
+
+    assertEquals(expected, result.orElseThrow());
+  }
+  @Test
+  void l3PlaceToLollipop() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3),
+            new SuperstructurePosition(
+                ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH),
+            ObstructionKind.LEFT_OBSTRUCTED);
+    var expected = List.of(Waypoint.L3_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE_RIGHT);
+
+    assertEquals(expected, result.orElseThrow());
+  }
+
+  @Test
+  void lollipopPushToL3LineupTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            Waypoint.LOLLIPOP_INTAKE_PUSH,
+            new SuperstructurePosition(
+                ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3),
+            ObstructionKind.NONE);
+    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.L3_LEFT_LINEUP);
+
+    assertEquals(expected, result.orElseThrow());
+  }
   @Test
   void leftObstructedL2toL3Test() {
     var result =

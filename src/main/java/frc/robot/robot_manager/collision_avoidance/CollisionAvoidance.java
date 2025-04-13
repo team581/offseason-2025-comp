@@ -420,7 +420,7 @@ public class CollisionAvoidance {
     Waypoint.LOLLIPOP_INTAKE_RIGHT.alwaysSafe(graph, Waypoint.LOLLIPOP_INTAKE_PUSH);
     // Used in lollipop auto to go directly to/from scoring L4/L3
     Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
-        graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L4_LEFT_LINEUP);
+        graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L3_LEFT_LINEUP, Waypoint.L4_LEFT_LINEUP);
     Waypoint.LOLLIPOP_INTAKE_RIGHT.avoidClimberAlwaysSafe(
         graph, Waypoint.L3_LEFT_PLACE, Waypoint.L4_LEFT_PLACE);
 
