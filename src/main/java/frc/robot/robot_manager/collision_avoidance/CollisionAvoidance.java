@@ -37,13 +37,10 @@ public class CollisionAvoidance {
       new CollisionAvoidanceQuery(
           Waypoint.L1_UPRIGHT, Waypoint.L1_UPRIGHT, ObstructionKind.NONE, true);
   private static double lastSolution = 90.0;
-  private static boolean lastClimberRisky = true;
-  private static SuperstructurePosition lastDesiredPosition = new SuperstructurePosition(0.0, 0.0);
   private static Waypoint lastWaypoint = Waypoint.L1_UPRIGHT;
 
   private static Deque<Waypoint> lastPath = new ArrayDeque<>();
 
-  private static boolean hasGeneratedPath = false;
   private static Optional<Waypoint> maybePreviousWaypoint = Optional.of(Waypoint.L1_UPRIGHT);
   private static Waypoint previousWaypoint = Waypoint.L1_UPRIGHT;
 
@@ -102,26 +99,8 @@ public class CollisionAvoidance {
               edge.get().leftSideStrategy(),
               edge.get().rightSideStrategy(),
               rawArmAngle);
-      lastClimberRisky = edge.get().hitsClimber();
       lastWaypoint = waypoint;
     }
-
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalAngle",
-        waypoint.position.armAngle());
-
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/obstructionKind", obstructionKind);
-
-    //  DogLog.log("CollisionAvoidance/CollisionAvoidanceAngleVariables/edge", edge.get());
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalanglefar",
-        desiredPosition.armAngle());
-    DogLog.log(
-        "CollisionAvoidance/CollisionAvoidanceAngleVariables/goalheightfar",
-        desiredPosition.elevatorHeight());
-
-    DogLog.log("CollisionAvoidance/CollisionAvoidanceAngleVariables/armsolution", lastSolution);
 
     return Optional.of(
         new SuperstructurePosition(waypoint.position.elevatorHeight(), lastSolution));
@@ -148,7 +127,6 @@ public class CollisionAvoidance {
 
       var maybePath = cachedAStar(lastQuery).map(ArrayDeque::new);
       if (maybePath.isPresent()) {
-        hasGeneratedPath = true;
         lastPath = maybePath.orElseThrow();
       } else {
         return Optional.empty();
@@ -450,12 +428,12 @@ public class CollisionAvoidance {
     Waypoint.L3_RIGHT_LINEUP.alwaysSafe(graph, Waypoint.L3_RIGHT_PLACE);
     Waypoint.L4_RIGHT_LINEUP.alwaysSafe(graph, Waypoint.L4_RIGHT_PLACE);
 
-    Waypoint.L2_LEFT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP,Waypoint.L2_LEFT_ARM);
-    Waypoint.L3_LEFT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP,Waypoint.L3_LEFT_ARM);
+    Waypoint.L2_LEFT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L2_LEFT_ARM);
+    Waypoint.L3_LEFT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L3_LEFT_ARM);
     Waypoint.L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.L4_LEFT_LINEUP);
 
-    Waypoint.L2_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP,Waypoint.L2_LEFT_ARM);
-    Waypoint.L3_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP,Waypoint.L3_LEFT_ARM);
+    Waypoint.L2_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L2_LEFT_ARM);
+    Waypoint.L3_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L3_LEFT_ARM);
     Waypoint.L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L4_LEFT_LINEUP);
 
     // Place
@@ -519,7 +497,6 @@ public class CollisionAvoidance {
         Waypoint.L3_LEFT_ARM,
         Waypoint.L2_RIGHT_ARM,
         Waypoint.L3_RIGHT_ARM);
-
 
     Waypoint.L2_LEFT_ARM.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP);
     Waypoint.L3_LEFT_ARM.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP);
