@@ -37,19 +37,17 @@ public class RedThreePiece1IKLAuto extends BaseAuto {
                 new AutoPoint(
                     new Pose2d(11.473, 2.076, Rotation2d.fromDegrees(-30)),
                     autoCommands.l4ApproachCommand(ReefPipe.PIPE_I, RobotScoringSide.LEFT)))),
-        blocks.scoreL4AfterGroundIntake(
-            ReefPipe.PIPE_I, RobotScoringSide.LEFT),
-            autoCommands.groundIntakeToL4Command(),
+        blocks.scoreL4AfterGroundIntake(ReefPipe.PIPE_I, RobotScoringSide.LEFT),
+        autoCommands.groundIntakeToL4Command(),
         blocks.intakeCoralGroundPoints(
             new Pose2d(12.813, 1.693, Rotation2d.fromDegrees(-45)),
             new Pose2d(13.967, 0.640, Rotation2d.fromDegrees(0)),
             Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4AfterGroundIntake(
-            ReefPipe.PIPE_K, RobotScoringSide.LEFT),
-            autoCommands.groundIntakeToL4Command(),
+        blocks.scoreL4AfterGroundIntake(ReefPipe.PIPE_K, RobotScoringSide.LEFT),
+        autoCommands.groundIntakeToL4Command(),
         blocks.intakeCoralGroundPoints(
-          new Pose2d(14.149, 2.075, Rotation2d.fromDegrees(0)),
-          new Pose2d(14.608, 0.746, Rotation2d.fromDegrees(0)),
+            new Pose2d(14.149, 2.075, Rotation2d.fromDegrees(0)),
+            new Pose2d(14.608, 0.746, Rotation2d.fromDegrees(0)),
             Points.GROUND_INTAKE_LEFT_STATION),
         blocks.scoreL4AfterGroundIntake(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
         autoCommands.moveToStartingPositionCommand());

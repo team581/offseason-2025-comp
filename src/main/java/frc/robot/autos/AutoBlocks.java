@@ -142,13 +142,11 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
-  public Command scoreL4AfterGroundIntake(
-      ReefPipe pipe, RobotScoringSide scoringSide) {
+  public Command scoreL4AfterGroundIntake(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.sequence(
             Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
             trailblazer
@@ -170,8 +168,7 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -189,8 +186,7 @@ public class AutoBlocks {
                         new AutoPoint(intakingPoint::getPose)),
                     true)
                 .repeatedly()
-                .withDeadline(autoCommands.waitForIntakeDone())
-                );
+                .withDeadline(autoCommands.waitForIntakeDone()));
   }
 
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
@@ -249,30 +245,28 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
   public Command intakeLollipop(Pose2d defaultIntakingPoint) {
     return Commands.sequence(
-        Commands.runOnce(() -> robotManager.coralMap.clearLollipop()),
-        autoCommands.intakeLollipopCommand(),
-        trailblazer
-            .followSegment(
+            Commands.runOnce(() -> robotManager.coralMap.clearLollipop()),
+            autoCommands.intakeLollipopCommand(),
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        BASE_CONSTRAINTS,
+                        new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
+                    false)
+                .withDeadline(autoCommands.waitForElevatorAndArmNearLollipop()),
+            trailblazer.followSegment(
                 new AutoSegment(
                     BASE_CONSTRAINTS,
+                    LOLLIPOP_APPROACH_TOLERANCE,
                     new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
-                false)
-            .withDeadline(autoCommands.waitForElevatorAndArmNearLollipop()),
-        trailblazer.followSegment(
-            new AutoSegment(
-                BASE_CONSTRAINTS,
-                LOLLIPOP_APPROACH_TOLERANCE,
-                new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
-            true),
-        trailblazer
-            .followSegment(
+                true),
+            trailblazer.followSegment(
                 new AutoSegment(
                     LOLLIPOP_CONSTRAINTS,
                     new AutoPoint(
@@ -295,8 +289,8 @@ public class AutoBlocks {
                                     .orElse(defaultIntakingPoint)
                                     .getTranslation(),
                                 defaultIntakingPoint.getRotation()))),
-                false)
-           ).withDeadline(autoCommands.waitForLollipopIntakeDone());
+                false))
+        .withDeadline(autoCommands.waitForLollipopIntakeDone());
   }
 
   public Command intakeGroundForL4(Pose2d defaultIntakingPose) {
