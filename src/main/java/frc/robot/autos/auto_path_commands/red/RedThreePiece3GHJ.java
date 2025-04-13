@@ -26,16 +26,13 @@ public class RedThreePiece3GHJ extends BaseAuto {
     return Commands.sequence(
         autoCommands.preloadCoralCommand(),
         autoCommands.homeDeployCommand(),
-        blocks.scoreL4(
-            ReefPipe.PIPE_G, RobotScoringSide.LEFT),
+        blocks.scoreL4(ReefPipe.PIPE_G, RobotScoringSide.LEFT),
         autoCommands.groundIntakeToL4Command(),
         blocks.intakeGroundForL4(new Pose2d(11.374, 2.2, Rotation2d.fromDegrees(-40))),
-        blocks.scoreL4(
-            ReefPipe.PIPE_H, RobotScoringSide.LEFT),
-            autoCommands.groundIntakeToL4Command(),
+        blocks.scoreL4(ReefPipe.PIPE_H, RobotScoringSide.LEFT),
+        autoCommands.groundIntakeToL4Command(),
         blocks.intakeGroundForL4(new Pose2d(11.374, 2.25, Rotation2d.fromDegrees(-40))),
-        blocks.scoreL4(
-            ReefPipe.PIPE_J, RobotScoringSide.LEFT),
-            autoCommands.moveToStartingPositionCommand());
+        blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
+        autoCommands.moveToStartingPositionCommand());
   }
 }

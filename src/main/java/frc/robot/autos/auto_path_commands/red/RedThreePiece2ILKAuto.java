@@ -29,7 +29,7 @@ public class RedThreePiece2ILKAuto extends BaseAuto {
     return Commands.sequence(
         autoCommands.preloadCoralCommand(),
         autoCommands.homeDeployCommand(),
-         trailblazer.followSegment(
+        trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
                 AutoBlocks.APPROACH_REEF_TOLERANCE,

@@ -41,36 +41,31 @@ public class RedLollipopAuto extends BaseAuto {
                             new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
                             autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
                         new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30)))))),
-            blocks.scoreL4(
-                ReefPipe.PIPE_L, RobotScoringSide.LEFT),
-                autoCommands.intakeLollipopCommand()),
+            blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
+            autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 2
         timing.time(
             "Piece 1",
             blocks.intakeLollipop(
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-            blocks.scoreL4(
-                ReefPipe.PIPE_A, RobotScoringSide.LEFT)),
-                autoCommands.intakeLollipopCommand(),
+            blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT)),
+        autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 1
         timing.time(
             "Piece 2",
             blocks.intakeLollipop(
                 new Pose2d(15.799, 2.496, Rotation2d.fromDegrees(-30))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-            blocks.scoreL4(
-                ReefPipe.PIPE_B, RobotScoringSide.LEFT)),
-                autoCommands.intakeLollipopCommand(),
+            blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT)),
+        autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 3
         timing.time(
             "Piece 3",
             blocks.intakeLollipop(
                 new Pose2d(15.807, 5.560, Rotation2d.fromDegrees(30))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-            blocks.scoreL4(
-                ReefPipe.PIPE_C,
-                RobotScoringSide.LEFT),
-                autoCommands.moveToStartingPositionCommand()));
+            blocks.scoreL4(ReefPipe.PIPE_C, RobotScoringSide.LEFT),
+            autoCommands.moveToStartingPositionCommand()));
   }
 }

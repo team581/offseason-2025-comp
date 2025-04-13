@@ -47,9 +47,8 @@ public class RedLollipopDescoreKL extends BaseAuto {
                                     autoCommands.l4ApproachCommand(
                                         ReefPipe.PIPE_L, RobotScoringSide.LEFT))),
                         new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30)))))),
-            blocks.scoreL4(
-                ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
-                autoCommands.intakeLollipopCommand(),
+            blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
+        autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 2
         timing.time(
             "Piece 1",
