@@ -112,8 +112,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double getSetpoint(double angle) {
     if ((Math.abs(collisionAvoidanceGoal % 360) != Math.abs(angle))
         || (Math.abs((360 - collisionAvoidanceGoal) % 360) != Math.abs(angle))) {
-      DogLog.log("Arm/getRawAngleFromNormalAngleBad", true);
-      // return getRawAngleFromNormalAngle(angle, rawMotorAngle);
       return CollisionAvoidance.getCollisionAvoidanceAngleGoal(
           angle,
           true,
@@ -122,7 +120,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
           ObstructionStrategy.IGNORE_BLOCKED,
           rawMotorAngle);
     }
-    DogLog.log("Arm/getRawAngleFromNormalAngleBad", false);
     return collisionAvoidanceGoal;
   }
 
@@ -140,6 +137,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setCollisionAvoidanceGoal(double angle) {
     collisionAvoidanceGoal = angle;
+    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
   }
 
   public boolean atGoal() {
@@ -181,7 +179,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/RawAngle", rawMotorAngle);
 
     DogLog.log("Arm/AtGoal", atGoal());
-    DogLog.log("Arm/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
 
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
@@ -192,13 +189,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     } else if (RobotConfig.IS_PRACTICE_BOT) {
       DogLog.logFault("Arm not seen range of motion", AlertType.kWarning);
     }
-
-    if (motor.getDeviceTemp().getValueAsDouble() > 40) {
-      DogLog.logFault("Arm above 40°C", AlertType.kWarning);
-    } else {
-      DogLog.clearFault("Arm above 40°C");
-    }
-    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
@@ -221,12 +211,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
       case CORAL_HANDOFF -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(usedHandoffAngle)));
-
-        DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
       }
       default -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(getState().getAngle())));
-        DogLog.log("Arm/defaultSetPosition", getSetpoint(getState().getAngle()));
       }
     }
   }
