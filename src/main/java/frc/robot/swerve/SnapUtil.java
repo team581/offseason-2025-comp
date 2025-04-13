@@ -4,16 +4,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.fms.FmsSubsystem;
+import frc.robot.util.MathHelpers;
 import java.util.stream.Stream;
 
 public class SnapUtil {
   private static final double[] RED_REEF_SIDE_ANGLES =
       Stream.of(ReefSide.values())
-          .mapToDouble(side -> side.getPose(true).getRotation().getDegrees())
+          .mapToDouble(
+              side -> MathHelpers.angleModulus(side.getPose(true).getRotation().getDegrees()))
           .toArray();
   private static final double[] BLUE_REEF_SIDE_ANGLES =
       Stream.of(ReefSide.values())
-          .mapToDouble(side -> side.getPose(true).getRotation().getDegrees())
+          .mapToDouble(
+              side -> MathHelpers.angleModulus(side.getPose(false).getRotation().getDegrees()))
           .toArray();
 
   public static double getProcessorAngle() {
@@ -59,11 +62,15 @@ public class SnapUtil {
     var angles = FmsSubsystem.isRedAlliance() ? RED_REEF_SIDE_ANGLES : BLUE_REEF_SIDE_ANGLES;
     var currentAngle = robotPose.getRotation().getDegrees();
 
-    var best = Double.MAX_VALUE;
+    var best = currentAngle;
+    var bestError = Double.MAX_VALUE;
     for (var angle : angles) {
+      System.out.println(angle);
+
       var error = Math.abs(angle - currentAngle);
-      if (error < best) {
+      if (error < bestError) {
         best = angle;
+        bestError = error;
       }
     }
 
