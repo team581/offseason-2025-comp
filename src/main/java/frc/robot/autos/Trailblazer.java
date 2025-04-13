@@ -138,7 +138,9 @@ public class Trailblazer {
     DogLog.log(
         "Autos/Trailblazer/Constraints/VelocityCalculation/CalculatedLinearVelocity",
         usedConstraints.maxLinearVelocity());
-    DogLog.log("Autos/Trailblazer/Constraints/Acceleration/CalulatedLinearAcceleration", usedConstraints.maxLinearAcceleration());
+    DogLog.log(
+        "Autos/Trailblazer/Constraints/Acceleration/CalulatedLinearAcceleration",
+        usedConstraints.maxLinearAcceleration());
     DogLog.log("Autos/Trailblazer/Tracker/RawOutput", originalTargetPose);
 
     DogLog.log("Autos/Trailblazer/Follower/RawOutput", originalVelocityGoal);
