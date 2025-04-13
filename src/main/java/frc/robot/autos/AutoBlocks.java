@@ -46,7 +46,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.5, 57, 3.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
-      new AutoConstraintOptions(4.0, 57, 2.5, 30);
+      new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
   public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 10, 2.5, 10);
