@@ -142,8 +142,7 @@ public class AutoBlocks {
                     AFTER_SCORE_POSITION_TOLERANCE,
                     new AutoPoint(
                         () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
-                        Commands.waitSeconds(0.15).andThen(onFinish)))))
-        .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
+                        Commands.waitSeconds(0.15).andThen(onFinish)))));
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
