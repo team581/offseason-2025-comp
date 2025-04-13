@@ -448,11 +448,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.NONE);
-    var expected =
-        List.of(
-            Waypoint.HANDOFF,
-            Waypoint.L2_RIGHT_ARM,
-            Waypoint.LOLLIPOP_INTAKE_RIGHT);
+    var expected = List.of(Waypoint.HANDOFF, Waypoint.L2_RIGHT_ARM, Waypoint.LOLLIPOP_INTAKE_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
