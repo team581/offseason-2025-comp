@@ -14,8 +14,8 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedLollipopL2AB extends BaseAuto {
-  public RedLollipopL2AB(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedLollipopAB1L2 extends BaseAuto {
+  public RedLollipopAB1L2(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
@@ -36,20 +36,20 @@ public class RedLollipopL2AB extends BaseAuto {
                     new AutoSegment(
                         AutoBlocks.MAX_CONSTRAINTS,
                         AutoBlocks.APPROACH_REEF_TOLERANCE,
-                        new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(30))),
+                        new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(85.0-90.0))),
                         new AutoPoint(
-                            new Pose2d(12.242, 1.278, Rotation2d.fromDegrees(30)),
-                            autoCommands.l4ApproachCommand(ReefPipe.PIPE_L, RobotScoringSide.LEFT)),
-                        new AutoPoint(new Pose2d(13.672, 2.019, Rotation2d.fromDegrees(30)))))),
+                            new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(140-90)),
+                            autoCommands.l4ApproachCommand(ReefPipe.PIPE_A, RobotScoringSide.LEFT)),
+                        new AutoPoint(new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90)))))),
             blocks.scoreL4(
-                ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
-        // LOLLIPOP 2
+                ReefPipe.PIPE_A, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
+        // LOLLIPOP 2 (MIDDLE)
         timing.time(
             "Piece 1",
             blocks.intakeLollipop(
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-            blocks.scoreL2(
+            blocks.scoreL4(
                 ReefPipe.PIPE_B, RobotScoringSide.LEFT, autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 1
         timing.time(
