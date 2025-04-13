@@ -84,10 +84,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setState(ArmState newState) {
     switch (getState()) {
-      case PRE_MATCH_HOMING -> {}
-      default -> {
-        setStateFromRequest(newState);
+      case PRE_MATCH_HOMING -> {
+        if (DriverStation.isEnabled() && rangeOfMotionGood()) {
+          setStateFromRequest(newState);
+        }
       }
+      default -> setStateFromRequest(newState);
     }
   }
 
@@ -240,7 +242,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
           // Refresh sensor data now that position is set
           collectInputs();
 
-          yield ArmState.HOLDING_UPRIGHT;
+          yield currentState;
         }
 
         yield currentState;
