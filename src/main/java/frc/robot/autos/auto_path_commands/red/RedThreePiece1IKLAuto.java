@@ -21,7 +21,7 @@ public class RedThreePiece1IKLAuto extends BaseAuto {
 
   @Override
   protected Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.redPose;
+    return Points.START_R2_AND_B2.redPose;
   }
 
   @Override
@@ -31,25 +31,27 @@ public class RedThreePiece1IKLAuto extends BaseAuto {
         autoCommands.homeDeployCommand(),
         trailblazer.followSegment(
             new AutoSegment(
-                AutoBlocks.MAX_CONSTRAINTS,
+                AutoBlocks.BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
                 AutoBlocks.APPROACH_REEF_TOLERANCE,
-                new AutoPoint(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(-30))),
+                new AutoPoint(new Pose2d(10.7, 1.903, Rotation2d.fromDegrees(0))),
                 new AutoPoint(
-                    new Pose2d(10.916, 1.423, Rotation2d.fromDegrees(-30)),
-                    autoCommands.l4ApproachCommand(ReefPipe.PIPE_I, RobotScoringSide.LEFT)),
-                new AutoPoint(new Pose2d(11.57, 2.342, Rotation2d.fromDegrees(-30))))),
-        blocks.scoreL4(
-            ReefPipe.PIPE_I, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
+                    new Pose2d(11.473, 2.076, Rotation2d.fromDegrees(-30)),
+                    autoCommands.l4ApproachCommand(ReefPipe.PIPE_I, RobotScoringSide.LEFT)))),
+        blocks.scoreL4AfterGroundIntake(
+            ReefPipe.PIPE_I, RobotScoringSide.LEFT),
+            autoCommands.groundIntakeToL4Command(),
         blocks.intakeCoralGroundPoints(
-            new Pose2d(13.886, 1.616, Rotation2d.fromDegrees(0)),
-            new Pose2d(13.925, 0.66, Rotation2d.fromDegrees(0)),
+            new Pose2d(12.813, 1.693, Rotation2d.fromDegrees(-45)),
+            new Pose2d(13.967, 0.640, Rotation2d.fromDegrees(0)),
             Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4(
-            ReefPipe.PIPE_K, RobotScoringSide.LEFT, autoCommands.groundIntakeToL4Command()),
+        blocks.scoreL4AfterGroundIntake(
+            ReefPipe.PIPE_K, RobotScoringSide.LEFT),
+            autoCommands.groundIntakeToL4Command(),
         blocks.intakeCoralGroundPoints(
-            new Pose2d(13.708, 1.615, Rotation2d.fromDegrees(0)),
-            new Pose2d(13.925, 0.66, Rotation2d.fromDegrees(0)),
+          new Pose2d(14.149, 2.075, Rotation2d.fromDegrees(0)),
+          new Pose2d(14.608, 0.746, Rotation2d.fromDegrees(0)),
             Points.GROUND_INTAKE_LEFT_STATION),
-        blocks.scoreL4(ReefPipe.PIPE_L, RobotScoringSide.LEFT, autoCommands.stowRequest()));
+        blocks.scoreL4AfterGroundIntake(ReefPipe.PIPE_L, RobotScoringSide.LEFT),
+        autoCommands.moveToStartingPositionCommand());
   }
 }
