@@ -226,11 +226,15 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   protected ArmState getNextState(ArmState currentState) {
     return switch (currentState) {
       case PRE_MATCH_HOMING -> {
-        motor.setPosition(
-            Units.degreesToRotations(
-                RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
+        if (DriverStation.isEnabled()) {
+          motor.setPosition(
+              Units.degreesToRotations(
+                  RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle)));
 
-        yield ArmState.HOLDING_UPRIGHT;
+          yield ArmState.HOLDING_UPRIGHT;
+        }
+
+        yield currentState;
       }
       default -> currentState;
     };
