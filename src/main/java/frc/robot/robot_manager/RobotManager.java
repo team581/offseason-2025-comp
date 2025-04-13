@@ -42,7 +42,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public final ImuSubsystem imu;
 
   public final CoralMap coralMap;
-  private final SwerveSubsystem swerve;
+  public final SwerveSubsystem swerve;
   public final ClawSubsystem claw;
   public final ArmSubsystem arm;
   public final ElevatorSubsystem elevator;

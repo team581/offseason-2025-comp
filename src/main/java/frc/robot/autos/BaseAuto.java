@@ -2,6 +2,7 @@ package frc.robot.autos;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -58,6 +59,9 @@ public abstract class BaseAuto {
             createAutoCommand())
         .finallyDo(
             interrupted -> {
+              // Stop driving once the auto finishes
+              robotManager.swerve.setFieldRelativeAutoSpeeds(new ChassisSpeeds());
+
               // Check if we are enabled, since auto commands are cancelled during disable
               if (interrupted && DriverStation.isAutonomousEnabled()) {
                 DogLog.logFault("Auto command interrupted outside teleop");
