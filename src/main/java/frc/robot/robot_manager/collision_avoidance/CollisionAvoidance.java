@@ -422,7 +422,7 @@ public class CollisionAvoidance {
     Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
         graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L3_LEFT_LINEUP, Waypoint.L4_LEFT_LINEUP);
     Waypoint.LOLLIPOP_INTAKE_RIGHT.avoidClimberAlwaysSafe(
-        graph, Waypoint.L3_LEFT_PLACE, Waypoint.L4_LEFT_PLACE);
+        graph, Waypoint.L3_LEFT_PLACE, Waypoint.L4_LEFT_PLACE,Waypoint.L2_LEFT_ARM);
 
     // Additional ways to exit the push state, mostly just to help cover weird edge cases
     // Putting L1_UPRIGHT here is safe, but makes going L4_LEFT_PLACE to L1_UPRIGHT weird
