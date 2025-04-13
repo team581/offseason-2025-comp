@@ -71,18 +71,8 @@ public class CollisionAvoidance {
     }
 
     var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
-    // if (maybeEdge.isEmpty()) {
-    //   DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
 
-    //   return Optional.empty();
-    // }
-    // var edge = maybeEdge;
-    // DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_PRESENT");
-
-    if ( // edge.get().hitsClimber() != lastClimberRisky
-    // || obstructionKind != lastObstruction
-    // || edge.get().leftSideStrategy() != lastLeftStrategy
-    // || edge.get().rightSideStrategy() != lastRightStrategy
+    if (
     waypoint != lastWaypoint) {
       if (maybeEdge.isEmpty()) {
         DogLog.timestamp("DEBUG_ELEV_ROUTE_POSITION/3_EDGE_EMPTY");
@@ -131,13 +121,6 @@ public class CollisionAvoidance {
       } else {
         return Optional.empty();
       }
-      // if (lastPath.isEmpty()) {
-      //   DogLog.timestamp("DEBUG_ELEV_ROUTE/PATH_EMPTY_AGAIN");
-
-      //   return Optional.empty();
-      // }
-
-      // previousWaypoint = lastPath.getFirst();
     }
 
     if (lastPath.isEmpty()) {
