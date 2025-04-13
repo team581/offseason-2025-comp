@@ -56,9 +56,9 @@ public class AutoBlocks {
       BASE_CONSTRAINTS.withMaxLinearAcceleration(0.8).withMaxLinearVelocity(2.5);
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
-      new AutoConstraintOptions(3.75, 57, 2.0, 25);
+      new AutoConstraintOptions(3.75, 57, 1.75, 25);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS_FOR_GROUND_AUTOS =
-      BASE_CONSTRAINTS_FOR_GROUND_AUTOS.withMaxLinearAcceleration(1.25);
+      BASE_CONSTRAINTS_FOR_GROUND_AUTOS.withMaxLinearAcceleration(1.25).withMaxLinearVelocity(3);
 
   private final Trailblazer trailblazer;
   private final RobotManager robotManager;
@@ -189,6 +189,28 @@ public class AutoBlocks {
                 .withDeadline(autoCommands.waitForIntakeDone()));
   }
 
+  public Command intakeCoralPath(
+    Pose2d lineup, Pose2d approachToIntake, Pose2d intakingPoint) {
+  return autoCommands
+      .groundIntakeToL4Command()
+      .alongWith(
+          trailblazer
+              .followSegment(
+                  new AutoSegment(
+                      BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
+                      new AutoPoint(lineup),
+                      new AutoPoint(approachToIntake),
+                      new AutoPoint(
+                        () -> robotManager.coralMap.getBestCoralPose().orElse(intakingPoint),
+                        Commands.runOnce(
+                            () -> {
+                              autoCommands.groundIntakeToL4Command();
+                            }))),
+                  true)
+              .repeatedly()
+              .withDeadline(autoCommands.waitForIntakeDone())
+              );
+}
   public Command scoreL3(ReefPipe pipe, RobotScoringSide scoringSide, Command onFinish) {
     return Commands.sequence(
             trailblazer
