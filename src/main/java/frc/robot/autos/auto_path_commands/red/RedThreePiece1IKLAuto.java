@@ -14,8 +14,8 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedHybrid4PieceAuto extends BaseAuto {
-  public RedHybrid4PieceAuto(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedThreePiece1IKLAuto extends BaseAuto {
+  public RedThreePiece1IKLAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
