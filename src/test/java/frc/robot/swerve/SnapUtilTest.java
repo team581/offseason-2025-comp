@@ -12,6 +12,6 @@ class SnapUtilTest {
     var pose = new Pose2d(11.807, 5.586, Rotation2d.fromDegrees(-81));
     var result = SnapUtil.getNearestReefAngle(pose);
 
-    assertEquals(-60, result);
+    assertEquals(300, result);
   }
 }

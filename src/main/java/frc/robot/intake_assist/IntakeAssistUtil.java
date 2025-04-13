@@ -10,7 +10,6 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
 import frc.robot.vision.game_piece_detection.GamePieceDetectionUtil;
 import frc.robot.vision.results.GamePieceResult;
-import java.util.Optional;
 
 public final class IntakeAssistUtil {
   private static final double CORAL_ASSIST_KP = 3.0;
@@ -39,9 +38,8 @@ public final class IntakeAssistUtil {
         Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
   }
 
-  public static Optional<Pose2d> getLollipopIntakePoseFromVisionResult(
+  public static Pose2d getLollipopIntakePoseFromVisionResult(
       GamePieceResult result, Pose2d robotPose) {
-
     var translation =
         GamePieceDetectionUtil.calculateRobotRelativeLollipopTranslationFromCamera(
             robotPose, result);
@@ -58,7 +56,7 @@ public final class IntakeAssistUtil {
                 LOLLIPOP_INTAKE_OFFSET,
                 Rotation2d.kZero));
     DogLog.log("CoralMap/Lollipop/WantedIntakePose", offset);
-    return Optional.of(offset);
+    return offset;
   }
 
   private IntakeAssistUtil() {}

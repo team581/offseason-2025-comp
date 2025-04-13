@@ -72,8 +72,7 @@ public class CollisionAvoidance {
 
     var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
 
-    if (
-    waypoint != lastWaypoint) {
+    if (waypoint != lastWaypoint) {
       if (maybeEdge.isEmpty()) {
         return Optional.empty();
       }
@@ -475,11 +474,8 @@ public class CollisionAvoidance {
         ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_RIGHT_ARM,
         Waypoint.L3_RIGHT_ARM);
-        Waypoint.HANDOFF.leftSideSpecial(
-        graph,
-        ObstructionStrategy.LONG_WAY_IF_BLOCKED,
-        Waypoint.L2_LEFT_ARM,
-        Waypoint.L3_LEFT_ARM);
+    Waypoint.HANDOFF.leftSideSpecial(
+        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.L2_LEFT_ARM, Waypoint.L3_LEFT_ARM);
 
     Waypoint.L2_LEFT_ARM.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP);
     Waypoint.L3_LEFT_ARM.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP);

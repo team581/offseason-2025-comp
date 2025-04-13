@@ -11,9 +11,8 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
-import frc.robot.vision.results.GamePieceResult;
-import frc.robot.vision.results.TagResult;
-import java.util.Optional;
+import frc.robot.vision.results.OptionalGamePieceResult;
+import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
@@ -28,9 +27,9 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private final Limelight rightLimelight;
   private final Limelight gamePieceDetectionLimelight;
 
-  private Optional<TagResult> leftBackTagResult = Optional.empty();
-  private Optional<TagResult> leftFrontTagResult = Optional.empty();
-  private Optional<TagResult> rightTagResult = Optional.empty();
+  private OptionalTagResult leftBackTagResult = new OptionalTagResult();
+  private OptionalTagResult leftFrontTagResult = new OptionalTagResult();
+  private OptionalTagResult rightTagResult = new OptionalTagResult();
 
   private double robotHeading;
   private double pitch;
@@ -86,15 +85,15 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     this.robotHeading = robotHeading;
   }
 
-  public Optional<TagResult> getLeftBackTagResult() {
+  public OptionalTagResult getLeftBackTagResult() {
     return leftBackTagResult;
   }
 
-  public Optional<TagResult> getLeftFrontTagResult() {
+  public OptionalTagResult getLeftFrontTagResult() {
     return leftFrontTagResult;
   }
 
-  public Optional<TagResult> getRightTagResult() {
+  public OptionalTagResult getRightTagResult() {
     return rightTagResult;
   }
 
@@ -160,7 +159,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     }
   }
 
-  public Optional<GamePieceResult> getLollipopVisionResult() {
+  public OptionalGamePieceResult getLollipopVisionResult() {
     return rightLimelight.getAlgaeResult();
   }
 
