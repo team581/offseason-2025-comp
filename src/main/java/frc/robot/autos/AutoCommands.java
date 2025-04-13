@@ -3,8 +3,10 @@ package frc.robot.autos;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.arm.ArmState;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.RobotScoringSide;
+import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
@@ -70,8 +72,11 @@ public class AutoCommands {
         .withName("WaitForLollipopIntakeDoneCommand");
   }
 
-  public Command waitForElevatorAndArmNearGoal() {
-    return Commands.waitUntil(() -> robotManager.elevator.nearGoal() && robotManager.arm.nearGoal())
+  public Command waitForElevatorAndArmNearLollipop() {
+    return Commands.waitUntil(
+            () ->
+                robotManager.elevator.nearGoal(ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE)
+                    && robotManager.arm.nearGoal(ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE))
         .withName("WaitForElevatorAndArmNearGoalCommand");
   }
 

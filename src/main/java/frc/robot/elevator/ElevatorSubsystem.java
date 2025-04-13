@@ -205,6 +205,10 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     };
   }
 
+  public boolean nearGoal(ElevatorState state) {
+    return MathUtil.isNear(state.getHeight(), averageMeasuredHeight, NEAR_TOLERANCE);
+  }
+
   public boolean nearGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;

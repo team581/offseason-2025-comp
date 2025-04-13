@@ -21,10 +21,10 @@ public class AutoBlocks {
    * scoring L4.
    */
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
-      new PoseErrorTolerance(0.2, 10);
+      new PoseErrorTolerance(0.3, 25);
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
-      new PoseErrorTolerance(0.7, 10);
+      new PoseErrorTolerance(0.6, 10);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
@@ -34,9 +34,9 @@ public class AutoBlocks {
       new Transform2d(0, Units.inchesToMeters(-60), Rotation2d.kZero);
 
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
-      new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
+      new Transform2d(0, Units.inchesToMeters(15), Rotation2d.kZero);
   private static final Transform2d APPROACH_LOLLIPOP_OFFSET =
-      new Transform2d(0, Units.inchesToMeters(20), Rotation2d.kZero);
+      new Transform2d(0, Units.inchesToMeters(15), Rotation2d.kZero);
 
   public static final Transform2d LOLLIPOP_OFFSET =
       new Transform2d(
@@ -135,8 +135,7 @@ public class AutoBlocks {
                                     RobotState.CORAL_L4_LEFT_APPROACH,
                                     RobotState.CORAL_L4_RIGHT_APPROACH,
                                     RobotState.STARTING_POSITION_CORAL)
-                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)),
-                            BASE_CONSTRAINTS)),
+                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand()),
             trailblazer.followSegment(
@@ -210,8 +209,7 @@ public class AutoBlocks {
                                         RobotState.CORAL_L3_LEFT_APPROACH,
                                         RobotState.CORAL_L3_RIGHT_APPROACH,
                                         RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l3ApproachCommand(scoringSide)),
-                            BASE_CONSTRAINTS)),
+                                .andThen(autoCommands.l3ApproachCommand(scoringSide)))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
             trailblazer.followSegment(
@@ -244,8 +242,7 @@ public class AutoBlocks {
                                         RobotState.CORAL_L2_LEFT_APPROACH,
                                         RobotState.CORAL_L2_RIGHT_APPROACH,
                                         RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l2LineupCommand(scoringSide)),
-                            BASE_CONSTRAINTS)),
+                                .andThen(autoCommands.l2LineupCommand(scoringSide)))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
             trailblazer.followSegment(
@@ -264,13 +261,13 @@ public class AutoBlocks {
         trailblazer
             .followSegment(
                 new AutoSegment(
-                    MAX_CONSTRAINTS,
+                    BASE_CONSTRAINTS,
                     new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
                 false)
-            .withDeadline(autoCommands.waitForElevatorAndArmNearGoal()),
+            .withDeadline(autoCommands.waitForElevatorAndArmNearLollipop()),
         trailblazer.followSegment(
             new AutoSegment(
-                MAX_CONSTRAINTS,
+                BASE_CONSTRAINTS,
                 LOLLIPOP_APPROACH_TOLERANCE,
                 new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
             true),
@@ -288,7 +285,7 @@ public class AutoBlocks {
                                     .transformBy(CENTER_LOLLIPOP_OFFSET)
                                     .getTranslation(),
                                 defaultIntakingPoint.getRotation()),
-                        MAX_CONSTRAINTS),
+                        BASE_CONSTRAINTS),
                     new AutoPoint(
                         () ->
                             new Pose2d(
@@ -299,7 +296,7 @@ public class AutoBlocks {
                                     .getTranslation(),
                                 defaultIntakingPoint.getRotation()))),
                 false)
-            .withDeadline(autoCommands.waitForLollipopIntakeDone()));
+           ).withDeadline(autoCommands.waitForLollipopIntakeDone());
   }
 
   public Command intakeGroundForL4(Pose2d defaultIntakingPose) {
