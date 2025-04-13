@@ -889,6 +889,7 @@ public class RobotManager extends StateMachine<RobotState> {
         } else {
           vision.setState(VisionState.TAGS);
         }
+        arm.setCoralTx(vision.getHandoffOffsetTx());
       }
 
       case CORAL_L1_RELEASE_HANDOFF,
