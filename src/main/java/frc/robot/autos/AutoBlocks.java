@@ -250,16 +250,16 @@ public class AutoBlocks {
                 new AutoSegment(
                     LOLLIPOP_CONSTRAINTS,
                     new AutoPoint(
-                      () ->
-                          new Pose2d(
-                              robotManager
-                                  .coralMap
-                                  .getLollipopIntakePose()
-                                  .orElse(defaultIntakingPoint)
-                                  .transformBy(CENTER_LOLLIPOP_OFFSET)
-                                  .getTranslation(),
-                              defaultIntakingPoint.getRotation()),
-                              MAX_CONSTRAINTS),
+                        () ->
+                            new Pose2d(
+                                robotManager
+                                    .coralMap
+                                    .getLollipopIntakePose()
+                                    .orElse(defaultIntakingPoint)
+                                    .transformBy(CENTER_LOLLIPOP_OFFSET)
+                                    .getTranslation(),
+                                defaultIntakingPoint.getRotation()),
+                        MAX_CONSTRAINTS),
                     new AutoPoint(
                         () ->
                             new Pose2d(
