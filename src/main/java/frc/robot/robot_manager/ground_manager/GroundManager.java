@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.ground_manager;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeployState;
@@ -131,7 +132,7 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void intakeThenHandoffRequest() {
-    if (getState() == GroundState.INTAKING) {
+    if (getState() == GroundState.INTAKING || DriverStation.isAutonomous()) {
       setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
     } else {
       setState(GroundState.HANDOFF_WAIT);

@@ -227,15 +227,17 @@ public class Robot extends TimedRobot {
 
   private void configureBindings() {
     swerve.setDefaultCommand(
-        swerve.run(
-            () -> {
-              if (DriverStation.isTeleop()) {
-                swerve.driveTeleop(
-                    hardware.driverController.getLeftX(),
-                    hardware.driverController.getLeftY(),
-                    hardware.driverController.getRightX());
-              }
-            }));
+        swerve
+            .run(
+                () -> {
+                  if (DriverStation.isTeleop()) {
+                    swerve.driveTeleop(
+                        hardware.driverController.getLeftX(),
+                        hardware.driverController.getLeftY(),
+                        hardware.driverController.getRightX());
+                  }
+                })
+            .withName("DefaultSwerveCommand"));
 
     hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
     hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());

@@ -17,7 +17,7 @@ public enum LightsState {
   HOLDING_CORAL(Color.kWhite, BlinkPattern.SOLID),
   HOLDING_ALGAE(Color.kTeal, BlinkPattern.SOLID),
 
-  LOLLIPOP_SEES_ALGAE(Color.kTeal, BlinkPattern.BLINK_FAST),
+  LOLLIPOP_SEES_ALGAE(Color.kTeal, BlinkPattern.SOLID),
   LOLLIPOP_NO_ALGAE(Color.kBlack, BlinkPattern.SOLID),
 
   CORAL_HANDOFF(Color.kWhite, BlinkPattern.BLINK_FAST),
