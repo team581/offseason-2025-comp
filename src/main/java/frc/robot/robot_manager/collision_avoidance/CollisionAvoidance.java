@@ -411,13 +411,11 @@ public class CollisionAvoidance {
     Waypoint.L3_RIGHT_LINEUP.alwaysSafe(graph, Waypoint.L3_RIGHT_PLACE);
     Waypoint.L4_RIGHT_LINEUP.alwaysSafe(graph, Waypoint.L4_RIGHT_PLACE);
 
-    Waypoint.L2_LEFT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L2_LEFT_ARM);
-    Waypoint.L3_LEFT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L3_LEFT_ARM);
-    Waypoint.L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.L4_LEFT_LINEUP);
+    Waypoint.L2_LEFT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_ARM);
+    Waypoint.L3_LEFT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_ARM);
 
-    Waypoint.L2_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP, Waypoint.L2_LEFT_ARM);
-    Waypoint.L3_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP, Waypoint.L3_LEFT_ARM);
-    Waypoint.L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L4_LEFT_LINEUP);
+    Waypoint.L2_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L2_RIGHT_ARM);
+    Waypoint.L3_RIGHT_PLACE.alwaysSafe(graph, Waypoint.L3_RIGHT_ARM);
 
     // Place
 
@@ -474,12 +472,16 @@ public class CollisionAvoidance {
 
     Waypoint.HANDOFF_CLEARS_CLIMBER.rightSideSpecial(
         graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.L4_RIGHT_LINEUP);
-    Waypoint.HANDOFF.alwaysSafe(
+    Waypoint.HANDOFF.rightSideSpecial(
         graph,
-        Waypoint.L2_LEFT_ARM,
-        Waypoint.L3_LEFT_ARM,
+        ObstructionStrategy.LONG_WAY_IF_BLOCKED,
         Waypoint.L2_RIGHT_ARM,
         Waypoint.L3_RIGHT_ARM);
+        Waypoint.HANDOFF.leftSideSpecial(
+        graph,
+        ObstructionStrategy.LONG_WAY_IF_BLOCKED,
+        Waypoint.L2_LEFT_ARM,
+        Waypoint.L3_LEFT_ARM);
 
     Waypoint.L2_LEFT_ARM.alwaysSafe(graph, Waypoint.L2_LEFT_LINEUP);
     Waypoint.L3_LEFT_ARM.alwaysSafe(graph, Waypoint.L3_LEFT_LINEUP);

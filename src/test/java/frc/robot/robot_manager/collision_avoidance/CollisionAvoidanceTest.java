@@ -115,29 +115,6 @@ public class CollisionAvoidanceTest {
     assertEquals(expected, result);
   }
 
-  //  @Test
-  // public void routePositionTest() {
-  //   SuperstructurePosition current = new SuperstructurePosition(ElevatorState.CORAL_HANDOFF,
-  // ArmState.CORAL_HANDOFF);
-  //   SuperstructurePosition goal = new
-  // SuperstructurePosition(ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L4,
-  // ArmState.CORAL_SCORE_RIGHT_LINEUP_L4);
-
-  //   boolean climberRisky = false;
-  //   double currentAngle = -90.0;
-  //   ObstructionKind obstructionKind = ObstructionKind.RIGHT_OBSTRUCTED;
-  //   ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
-  //   ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
-
-  //   var result =
-  //       CollisionAvoidance.routePosition(
-  //           current, goal, obstructionKind, currentAngle);
-
-  //   double expected = -360.0;
-
-  //   assertEquals(expected, result);
-  // }
-
   @Test
   public void armSetCollisionAvoidanceGoalTest() {
     double goalAngle = -90.0;
