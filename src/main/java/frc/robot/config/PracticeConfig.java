@@ -206,9 +206,7 @@ class PracticeConfig {
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(2.5)
-                          .withMotionMagicCruiseVelocity(3.0))
-                  .withMotionMagic(
-                      new MotionMagicConfigs()
+                          .withMotionMagicCruiseVelocity(3.0)
                           .withMotionMagicExpo_kA(4.5)
                           .withMotionMagicExpo_kV(6.885))
                   .withFeedback(

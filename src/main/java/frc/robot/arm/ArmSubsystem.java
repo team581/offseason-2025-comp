@@ -219,7 +219,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       }
       case CORAL_HANDOFF -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(usedHandoffAngle)));
-        ;
+
         DogLog.log("Arm/CoralHandoffSetPostion", getSetpoint(usedHandoffAngle));
       }
       default -> {
