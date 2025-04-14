@@ -279,7 +279,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CORAL_INTAKE_LOLLIPOP_GRAB ->
           claw.getHasGP() ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH : currentState;
-      case CORAL_INTAKE_LOLLIPOP_PUSH -> timeout(0.2) ? RobotState.CLAW_CORAL : currentState;
+      case CORAL_INTAKE_LOLLIPOP_PUSH -> timeout(0.3) ? RobotState.CLAW_CORAL : currentState;
 
       case CLIMBING_1_LINEUP ->
           climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
