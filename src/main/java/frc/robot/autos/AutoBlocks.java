@@ -44,16 +44,16 @@ public class AutoBlocks {
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90));
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
-      new AutoConstraintOptions(4.5, 57, 3.0, 30);
+      new AutoConstraintOptions(4.5, 57, 4.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
   public static final AutoConstraintOptions CORAL_MAP_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 10, 2.5, 10);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.0);
+      BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.75);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(0.8).withMaxLinearVelocity(2.5);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(1.5).withMaxLinearVelocity(3.0);
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
       new AutoConstraintOptions(3.75, 57, 1.75, 25);
