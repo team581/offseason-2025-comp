@@ -207,8 +207,8 @@ class PracticeConfig {
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(2.5)
                           .withMotionMagicCruiseVelocity(3.0)
-                          .withMotionMagicExpo_kA(3.0)
-                          .withMotionMagicExpo_kV(5.0))
+                          .withMotionMagicExpo_kA(6.0)
+                          .withMotionMagicExpo_kV(3.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
