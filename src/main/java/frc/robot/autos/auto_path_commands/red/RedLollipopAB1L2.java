@@ -27,6 +27,7 @@ public class RedLollipopAB1L2 extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
+      autoCommands.homeDeployCommand(),
         timing.time(
             "Preload",
             autoCommands.preloadCoralCommand(),
