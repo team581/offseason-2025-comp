@@ -11,6 +11,7 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.config.RobotConfig;
+import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import frc.robot.util.PoseErrorTolerance;
@@ -128,7 +129,9 @@ public class AutoBlocks {
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
                         new AutoPoint(
-                            () -> pipe.getPose(ReefPipeLevel.L4, scoringSide),
+                            () ->
+                                pipe.getPose(
+                                    ReefPipeLevel.L4, FmsSubsystem.isRedAlliance(), scoringSide),
                             robotManager
                                 .waitForStates(
                                     RobotState.CLAW_CORAL,
@@ -142,7 +145,12 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(
+                        () ->
+                            pipe.getPose(
+                                ReefPipeLevel.BACK_AWAY,
+                                FmsSubsystem.isRedAlliance(),
+                                scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -154,7 +162,9 @@ public class AutoBlocks {
                     new AutoSegment(
                         SCORING_CONSTRAINTS_FOR_GROUND_AUTOS,
                         new AutoPoint(
-                            () -> pipe.getPose(ReefPipeLevel.L4, scoringSide),
+                            () ->
+                                pipe.getPose(
+                                    ReefPipeLevel.L4, FmsSubsystem.isRedAlliance(), scoringSide),
                             robotManager
                                 .waitForStates(
                                     RobotState.CLAW_CORAL,
@@ -168,7 +178,12 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS_FOR_GROUND_AUTOS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(
+                        () ->
+                            pipe.getPose(
+                                ReefPipeLevel.BACK_AWAY,
+                                FmsSubsystem.isRedAlliance(),
+                                scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -234,7 +249,9 @@ public class AutoBlocks {
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
                     new AutoPoint(
-                        () -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide),
+                        () ->
+                            pipe.getPose(
+                                ReefPipeLevel.BACK_AWAY, FmsSubsystem.isRedAlliance(), scoringSide),
                         Commands.waitSeconds(0.15).andThen(onFinish)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
@@ -266,7 +283,12 @@ public class AutoBlocks {
                 new AutoSegment(
                     BASE_CONSTRAINTS,
                     AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(() -> pipe.getPose(ReefPipeLevel.BACK_AWAY, scoringSide)))))
+                    new AutoPoint(
+                        () ->
+                            pipe.getPose(
+                                ReefPipeLevel.BACK_AWAY,
+                                FmsSubsystem.isRedAlliance(),
+                                scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 

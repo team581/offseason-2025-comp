@@ -149,7 +149,7 @@ public class TagAlign {
   }
 
   public Pose2d getUsedScoringPose(ReefPipe pipe) {
-    return pipe.getPose(pipeLevel, robotScoringSide);
+    return pipe.getPose(pipeLevel, robotScoringSide, localization.getPose());
   }
 
   /** Returns the best reef pipe for scoring, based on the robot's current state. */

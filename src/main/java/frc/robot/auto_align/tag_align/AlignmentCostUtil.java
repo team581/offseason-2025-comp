@@ -117,7 +117,7 @@ public class AlignmentCostUtil {
     return Comparator.comparingDouble(
         pipe ->
             getAlignCost(
-                    pipe.getPose(level, side).getTranslation(),
+                    pipe.getPose(level, side, localization.getPose()).getTranslation(),
                     localization.getPose().getTranslation(),
                     swerve.getTeleopSpeeds())
                 + (reefState.isScored(pipe, level) ? 0.4 : 0));

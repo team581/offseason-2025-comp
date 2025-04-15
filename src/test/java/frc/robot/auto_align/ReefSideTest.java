@@ -3,21 +3,23 @@ package frc.robot.auto_align;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.util.MathHelpers;
 import org.junit.jupiter.api.Test;
 
 public class ReefSideTest {
-  private static void assertSidePoseCorect(boolean isRed, ReefSide side) {
+  private static void assertSidePoseCorect(boolean isRed, Pose2d robotPose, ReefSide side) {
     var pipe1Distance =
         side.pipe1
             .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
-            .getDistance(side.getPose(isRed).getTranslation());
+            .getDistance(side.getPose(robotPose).getTranslation());
     var pipe2Distance =
         side.pipe2
             .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
-            .getDistance(side.getPose(isRed).getTranslation());
+            .getDistance(side.getPose(robotPose).getTranslation());
 
     assertEquals(MathHelpers.roundTo(pipe1Distance, 2), MathHelpers.roundTo(pipe2Distance, 2));
   }
@@ -33,15 +35,15 @@ public class ReefSideTest {
     };
   }
 
-  private static void assertSideSpacingCorrect(boolean isRed, ReefSide side) {
+  private static void assertSideSpacingCorrect(Pose2d robotPose, ReefSide side) {
     var neighbors = getNeighbors(side);
 
-    var sideTranslation = side.getPose(isRed).getTranslation();
+    var sideTranslation = side.getPose(robotPose).getTranslation();
 
     var distanceToPrevious =
-        sideTranslation.getDistance(neighbors.getFirst().getPose(isRed).getTranslation());
+        sideTranslation.getDistance(neighbors.getFirst().getPose(robotPose).getTranslation());
     var distanceToNext =
-        sideTranslation.getDistance(neighbors.getSecond().getPose(isRed).getTranslation());
+        sideTranslation.getDistance(neighbors.getSecond().getPose(robotPose).getTranslation());
 
     assertEquals(
         MathHelpers.roundTo(distanceToPrevious, 2), MathHelpers.roundTo(distanceToNext, 2));
@@ -49,73 +51,73 @@ public class ReefSideTest {
 
   @Test
   void sideAbRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_AB);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_AB);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_AB);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_AB);
   }
 
   @Test
   void sideAbBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_AB);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_AB);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_AB);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_AB);
   }
 
   @Test
   void sideCdRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_CD);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_CD);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_CD);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_CD);
   }
 
   @Test
   void sideCdBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_CD);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_CD);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_CD);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_CD);
   }
 
   @Test
   void sideEfRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_EF);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_EF);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_EF);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_EF);
   }
 
   @Test
   void sideEfBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_EF);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_EF);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_EF);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_EF);
   }
 
   @Test
   void sideGhRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_GH);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_GH);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_GH);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_GH);
   }
 
   @Test
   void sideGhBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_GH);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_GH);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_GH);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_GH);
   }
 
   @Test
   void sideIjRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_IJ);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_IJ);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_IJ);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_IJ);
   }
 
   @Test
   void sideIjBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_IJ);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_IJ);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_IJ);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_IJ);
   }
 
   @Test
   void sideKlRedTest() {
-    assertSidePoseCorect(true, ReefSide.SIDE_KL);
-    assertSideSpacingCorrect(true, ReefSide.SIDE_KL);
+    assertSidePoseCorect(true, new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_KL);
+    assertSideSpacingCorrect(new Pose2d(15, 0, Rotation2d.kZero), ReefSide.SIDE_KL);
   }
 
   @Test
   void sideKlBlueTest() {
-    assertSidePoseCorect(false, ReefSide.SIDE_KL);
-    assertSideSpacingCorrect(false, ReefSide.SIDE_KL);
+    assertSidePoseCorect(false, new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_KL);
+    assertSideSpacingCorrect(new Pose2d(1, 0, Rotation2d.kZero), ReefSide.SIDE_KL);
   }
 }

@@ -245,7 +245,7 @@ public class Robot extends TimedRobot {
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware
         .driverController
-        .y()
+        .povDownLeft()
         .onTrue(robotCommands.highLineupCommand())
         .onFalse(robotCommands.scoringAlignOffCommand());
     hardware
@@ -269,7 +269,7 @@ public class Robot extends TimedRobot {
     hardware.driverController.povLeft().onTrue(robotCommands.lowStowCommand());
     hardware
         .driverController
-        .povRight()
+        .y()
         .onTrue(robotCommands.algaeReefIntakeCommand())
         .onFalse(robotCommands.scoringAlignOffCommand());
 

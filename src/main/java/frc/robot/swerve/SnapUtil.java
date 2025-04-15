@@ -51,9 +51,12 @@ public class SnapUtil {
     return Stream.of(ReefSide.values())
         .min(
             Comparator.comparingDouble(
-                side -> side.getPose().getTranslation().getDistance(robotPose.getTranslation())))
+                side ->
+                    side.getPose(robotPose)
+                        .getTranslation()
+                        .getDistance(robotPose.getTranslation())))
         .orElseThrow()
-        .getPose()
+        .getPose(robotPose)
         .getRotation()
         .getDegrees();
   }

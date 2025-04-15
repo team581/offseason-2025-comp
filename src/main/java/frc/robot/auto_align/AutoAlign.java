@@ -11,7 +11,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.tag_align.TagAlign;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.swerve.SwerveSubsystem;
@@ -53,8 +52,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return RobotScoringSide.RIGHT;
   }
 
-  public static Translation2d getAllianceCenterOfReef() {
-    return FmsSubsystem.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
+  public static Translation2d getAllianceCenterOfReef(boolean isRedAliance) {
+    return isRedAliance ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
   public static RobotScoringSide getScoringSideFromRobotPose(
@@ -65,7 +64,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     if (!rightLimelightOnline) {
       return RobotScoringSide.LEFT;
     }
-    var centerOfReef = getAllianceCenterOfReef();
+    var centerOfReef = getAllianceCenterOfReef(robotPose.getX() > (17.5 / 2));
     var angleToAim =
         MathUtil.angleModulus(
             Math.atan2(
@@ -97,6 +96,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private final TagAlign tagAlign;
   private final SwerveSubsystem swerve;
 
+  private Pose2d robotPose = Pose2d.kZero;
   private ChassisSpeeds tagAlignSpeeds = new ChassisSpeeds();
   private ChassisSpeeds algaeAlignSpeeds = new ChassisSpeeds();
   private boolean isAligned = false;
@@ -127,6 +127,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   @Override
   protected void collectInputs() {
+    robotPose = localization.getPose();
     bestReefPipe = tagAlign.getBestPipe();
     usedScoringPose = tagAlign.getUsedScoringPose(bestReefPipe);
     isAligned = tagAlign.isAligned(bestReefPipe);
@@ -134,7 +135,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlignSpeeds = tagAlign.getPoseAlignmentChassisSpeeds(usedScoringPose);
     algaeAlignSpeeds =
         tagAlign.getPoseAlignmentChassisSpeeds(
-            ReefSide.fromPipe(bestReefPipe).getPose(reefSideOffset, robotScoringSide));
+            ReefSide.fromPipe(bestReefPipe).getPose(reefSideOffset, robotScoringSide, robotPose));
     var controllerValues = swerve.getControllerValues();
     tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
   }
@@ -154,7 +155,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         lookaheadPose
             .getTranslation()
             .getDistance(
-                bestReefPipe.getPose(ReefPipeLevel.BASE, robotScoringSide).getTranslation());
+                bestReefPipe
+                    .getPose(ReefPipeLevel.BASE, robotScoringSide, robotPose)
+                    .getTranslation());
     if (lookaheadPoseDistance < OBSTRUCTION_DISTANCE.get()) {
       return robotScoringSide == RobotScoringSide.RIGHT
           ? ObstructionKind.RIGHT_OBSTRUCTED
