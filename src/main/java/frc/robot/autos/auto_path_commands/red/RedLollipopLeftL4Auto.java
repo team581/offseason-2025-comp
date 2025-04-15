@@ -14,8 +14,8 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedLollipopL4Auto extends BaseAuto {
-  public RedLollipopL4Auto(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedLollipopLeftL4Auto extends BaseAuto {
+  public RedLollipopLeftL4Auto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 

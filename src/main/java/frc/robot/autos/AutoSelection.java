@@ -2,9 +2,9 @@ package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
-import frc.robot.autos.auto_path_commands.red.RedLollipopAB1L2Auto;
+import frc.robot.autos.auto_path_commands.red.RedLollipopLeftABAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
-import frc.robot.autos.auto_path_commands.red.RedLollipopL4Auto;
+import frc.robot.autos.auto_path_commands.red.RedLollipopLeftL4Auto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece1IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2ILKAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece3GHJ;
@@ -14,8 +14,8 @@ import java.util.function.BiFunction;
 public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
   THREE_PIECE_2ILK(RedThreePiece2ILKAuto::new, RedThreePiece2ILKAuto::new),
-  LOLLIPOP_L4(RedLollipopL4Auto::new, BlueDoNothingAuto::new),
-  LOLLIPOP_AB_1L2(RedLollipopAB1L2Auto::new, BlueDoNothingAuto::new),
+  LOLLIPOP_LEFT_L4(RedLollipopLeftL4Auto::new, BlueDoNothingAuto::new),
+  LOLLIPOP_LEFT_AB(RedLollipopLeftABAuto::new, BlueDoNothingAuto::new),
 
   THREE_PIECE_3GHJ(RedThreePiece3GHJ::new, RedThreePiece3GHJ::new),
   GROUND_THREE_PIECE_1IKL(RedThreePiece1IKLAuto::new, RedThreePiece1IKLAuto::new);
