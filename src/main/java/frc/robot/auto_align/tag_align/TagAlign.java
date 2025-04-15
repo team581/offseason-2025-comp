@@ -45,8 +45,6 @@ public class TagAlign {
 
   private boolean pipeSwitchActive = false;
 
-  public ReefState reefState = new ReefState();
-
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
     alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState, robotScoringSide);
