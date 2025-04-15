@@ -1,5 +1,7 @@
 package frc.robot.autos.constraints;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public record AutoConstraintOptions(
     /** Max linear velocity allowed in meters per second. Set to 0 to disable. */
     double maxLinearVelocity,
@@ -32,5 +34,13 @@ public record AutoConstraintOptions(
   public AutoConstraintOptions withMaxAngularAcceleration(double maxAngularAcceleration) {
     return new AutoConstraintOptions(
         maxLinearVelocity(), maxAngularVelocity(), maxLinearAcceleration(), maxAngularAcceleration);
+  }
+
+  public TrapezoidProfile.Constraints getLinearConstraints() {
+    return new TrapezoidProfile.Constraints(maxLinearVelocity, maxLinearAcceleration);
+  }
+
+  public TrapezoidProfile.Constraints getAngularConstraints() {
+    return new TrapezoidProfile.Constraints(maxAngularVelocity, maxAngularAcceleration);
   }
 }
