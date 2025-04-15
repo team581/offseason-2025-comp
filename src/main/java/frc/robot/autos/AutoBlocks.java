@@ -272,7 +272,10 @@ public class AutoBlocks {
 
   public Command intakeLollipop(Pose2d defaultIntakingPoint) {
     return Commands.sequence(
-            Commands.runOnce(() -> robotManager.coralMap.clearLollipop()),
+            Commands.runOnce(() -> {
+              robotManager.coralMap.clearLollipop();
+              robotManager.swerve.snapsDriveRequest(defaultIntakingPoint.getRotation().getDegrees());
+            }),
             autoCommands.intakeLollipopCommand(),
             trailblazer
                 .followSegment(
@@ -311,7 +314,7 @@ public class AutoBlocks {
                                     .getTranslation(),
                                 defaultIntakingPoint.getRotation()))),
                 false))
-        .withDeadline(autoCommands.waitForLollipopIntakeDone());
+        .withDeadline(autoCommands.waitForLollipopIntakeDone()).andThen(Commands.runOnce(()->robotManager.swerve.normalDriveRequest()));
   }
 
   public Command intakeGroundForL4(Pose2d defaultIntakingPose) {
