@@ -34,7 +34,7 @@ public class TagAlign {
 
   private final AlignmentCostUtil alignmentCostUtil;
   private final LocalizationSubsystem localization;
-  private static final double LAST_PIPE_SWITCH_TIMESTAMP = 0.0;
+  private final ReefState reefState = new ReefState();
 
   private ReefPipeLevel pipeLevel = ReefPipeLevel.RAISING;
   private ReefPipeLevel preferedScoringLevel = ReefPipeLevel.L4;
@@ -72,7 +72,7 @@ public class TagAlign {
       return;
     }
     if (pipeSwitchActive
-        && (Timer.getFPGATimestamp() > LAST_PIPE_SWITCH_TIMESTAMP + PIPE_SWITCH_TIMEOUT)
+        && (Timer.getFPGATimestamp() > PIPE_SWITCH_TIMEOUT)
         && rawControllerXValue == 0.0) {
       pipeSwitchActive = false;
     }
