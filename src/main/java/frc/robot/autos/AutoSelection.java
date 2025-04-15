@@ -3,7 +3,6 @@ package frc.robot.autos;
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopLeftABAuto;
-import frc.robot.autos.auto_path_commands.red.RedLollipopAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopLeftL4Auto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece1IKLAuto;
 import frc.robot.autos.auto_path_commands.red.RedThreePiece2ILKAuto;
