@@ -42,6 +42,7 @@ public class TagAlign {
   private Optional<ReefPipe> reefPipeOverride = Optional.empty();
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
+  private double lastPipeSwitchTimestamp = 0.0;
 
   private boolean pipeSwitchActive = false;
 
@@ -72,7 +73,7 @@ public class TagAlign {
       return;
     }
     if (pipeSwitchActive
-        && (Timer.getFPGATimestamp() > PIPE_SWITCH_TIMEOUT)
+        && (Timer.getFPGATimestamp() > (lastPipeSwitchTimestamp+PIPE_SWITCH_TIMEOUT))
         && rawControllerXValue == 0.0) {
       pipeSwitchActive = false;
     }
@@ -82,6 +83,7 @@ public class TagAlign {
     if ((rawControllerXValue < -0.98 || rawControllerXValue > 0.98)) {
       var storedPipe = getBestPipe();
       pipeSwitchActive = true;
+      lastPipeSwitchTimestamp = Timer.getFPGATimestamp();
       ReefPipe leftPipe =
           switch (storedPipe) {
             case PIPE_A -> ReefPipe.PIPE_L;
