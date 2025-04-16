@@ -15,7 +15,8 @@ public enum Points {
 
   START_R4_AND_B4(new Pose2d(10.289, 5.069, Rotation2d.kZero)),
   START_R5_AND_B5(new Pose2d(10.289, 6.127, Rotation2d.kZero)),
-  START_R6_AND_B6(new Pose2d(10.289, 7.292, Rotation2d.kZero)),
+  START_R6_AND_B6_FORWARD(new Pose2d(10.289, 7.292, Rotation2d.kZero)),
+  START_R6_AND_B6(new Pose2d(10.289, 7.58, Rotation2d.fromDegrees(90))),
 
   LEFT_CORAL_STATION(new Pose2d(16.194, 0.861, Rotation2d.fromDegrees(125.309))),
   RIGHT_CORAL_STATION(new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(-131.807))),
