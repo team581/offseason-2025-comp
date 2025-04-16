@@ -73,6 +73,16 @@ public class RobotCommands {
         .withName("StowCommand");
   }
 
+  public Command forcedLowStowCommand() {
+    return Commands.runOnce(robot::forcedLowStowRequest, rmRequirements)
+        .withName("ForcedLowStowCommand");
+  }
+
+  public Command forcedHandoffCommand() {
+    return Commands.runOnce(robot::forcedHandoffRequest, rmRequirements)
+        .withName("ForcedHandoffCommand");
+  }
+
   public Command scoringAlignOffCommand() {
     return Commands.runOnce(robot::scoringAlignOffRequest, bothRequirements)
         .withName("ScoringAlignOffCommand");
