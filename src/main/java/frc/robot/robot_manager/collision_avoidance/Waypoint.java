@@ -18,7 +18,8 @@ import java.util.stream.Stream;
  */
 public enum Waypoint {
   ELEVATOR_HANDOFF_ARM_GROUND_ALGAE_INTAKE(
-      new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF.getHeight()+15.0, ArmState.ALGAE_INTAKE_FLOOR)),
+      new SuperstructurePosition(
+          ElevatorState.PRE_CORAL_HANDOFF.getHeight() + 15.0, ArmState.ALGAE_INTAKE_FLOOR)),
   GROUND_ALGAE_INTAKE(
       new SuperstructurePosition(ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR)),
   LOLLIPOP_INTAKE_RIGHT(
