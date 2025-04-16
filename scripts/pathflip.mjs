@@ -39,7 +39,7 @@ function colorFlip(x, y) {
   const halfFieldHeight = FIELD_HEIGHT / 2;
   return {
     x: (x - halfFieldLength) * -1 - (x - halfFieldHeight) * 0 + halfFieldLength,
-    y: (x - halfFieldLength) * 0 + (y - halfFieldHeight) * -1 + halfFieldHeight
+    y: (x - halfFieldLength) * 0 + (y - halfFieldHeight) * -1 + halfFieldHeight,
   };
 }
 
