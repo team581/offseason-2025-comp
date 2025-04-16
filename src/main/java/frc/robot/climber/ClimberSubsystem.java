@@ -17,6 +17,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
+  private static final double CLIMBER_BACKWARD_VELOCITY_TRHESHOLD = 0.1;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
@@ -124,7 +125,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
-    runningBackwards = cancoderVelocity > 0.3;
+    runningBackwards = cancoderVelocity > CLIMBER_BACKWARD_VELOCITY_TRHESHOLD;
 
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
