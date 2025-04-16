@@ -68,7 +68,7 @@ public class AutoCommands {
 
   public Command waitForLollipopIntakeDone() {
     return robotManager
-        .waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL)
+        .waitForStates(RobotState.CORAL_INTAKE_LOLLIPOP_PUSH, RobotState.CLAW_CORAL).withTimeout(3.0)
         .withName("WaitForLollipopIntakeDoneCommand");
   }
 
