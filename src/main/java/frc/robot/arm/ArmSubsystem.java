@@ -47,7 +47,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
   public static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
       InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.0, 3.0), Map.entry(-4.9, 0.0), Map.entry(-11.0, -3.0));
+          Map.entry(2.66, 5.54), Map.entry(3.89, 0.0), Map.entry(-10.9, -4.0));
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
