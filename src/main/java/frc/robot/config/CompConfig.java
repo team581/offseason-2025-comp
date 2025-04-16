@@ -254,11 +254,12 @@ class CompConfig {
               24,
               -55.0,
               100.0,
+              // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
-                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withPeakReverseDutyCycle(0))
                   .withVoltage(new VoltageConfigs().withPeakReverseVoltage(0))
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(75.0))
@@ -266,12 +267,14 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(100)
                           .withSupplyCurrentLimit(100)),
+              // Cancoder
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
                           .withMagnetOffset(-0.44921875)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5)),
+              // Grab motor
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
