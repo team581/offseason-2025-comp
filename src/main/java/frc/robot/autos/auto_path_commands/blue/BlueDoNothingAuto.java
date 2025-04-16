@@ -31,6 +31,6 @@ public class BlueDoNothingAuto extends BaseAuto {
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(Points.START_R1_AND_B1.bluePose),
-                new AutoPoint(new Pose2d(6.92, 7.29, Rotation2d.fromDegrees(180))))));
+                new AutoPoint(new Pose2d(6.924, 0.758, Rotation2d.kZero)))));
   }
 }
