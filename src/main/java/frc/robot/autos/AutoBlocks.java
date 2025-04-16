@@ -54,7 +54,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.75);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(1.5).withMaxLinearVelocity(3.0);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(3.0);
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
       new AutoConstraintOptions(3.75, 57, 1.75, 25);
