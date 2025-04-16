@@ -45,8 +45,8 @@ public class RedLollipopRightABAuto extends BaseAuto {
                                 ReefPipe.PIPE_B, RobotScoringSide.LEFT))))),
             blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
             autoCommands.intakeLollipopCommand()),
-          // LOLLIPOP 2 (MIDDLE)
-          timing.time(
+        // LOLLIPOP 2 (MIDDLE)
+        timing.time(
             "Piece 1",
             blocks.intakeLollipop(
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))

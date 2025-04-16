@@ -73,7 +73,7 @@ public class TagAlign {
       return;
     }
     if (pipeSwitchActive
-        && (Timer.getFPGATimestamp() > (lastPipeSwitchTimestamp+PIPE_SWITCH_TIMEOUT))
+        && (Timer.getFPGATimestamp() > (lastPipeSwitchTimestamp + PIPE_SWITCH_TIMEOUT))
         && rawControllerXValue == 0.0) {
       pipeSwitchActive = false;
     }
