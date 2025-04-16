@@ -12,8 +12,12 @@ public class SnapUtil {
     return FmsSubsystem.isRedAlliance() ? 190 : 370;
   }
 
-  public static double getCageAngle() {
-    return FmsSubsystem.isRedAlliance() ? 90 : 270;
+  public static double getCageAngle(boolean isRedAlliance) {
+    return isRedAlliance ? 90 : 270;
+  }
+
+  public static double getCageAngle(Pose2d robotPose) {
+    return getCageAngle(robotPose.getX()>(17.55/2.0));
   }
 
   public static double getNetScoringAngle(RobotScoringSide scoringSide, Pose2d robotPose) {

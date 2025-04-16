@@ -818,7 +818,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         groundManager.climbRequest();
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
-        swerve.climbRequest();
+        swerve.climbRequest(SnapUtil.getCageAngle(robotPose));
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CLIMB_LINEUP);
         climber.setState(ClimberState.LINEUP_FORWARD);

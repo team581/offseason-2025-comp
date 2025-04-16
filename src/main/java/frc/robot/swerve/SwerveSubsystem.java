@@ -362,8 +362,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     }
   }
 
-  public void climbRequest() {
-    setSnapToAngle(SnapUtil.getCageAngle());
+  public void climbRequest(double snapAngle) {
+    setSnapToAngle(snapAngle);
     setStateFromRequest(SwerveState.CLIMBING);
   }
 
