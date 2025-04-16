@@ -1,6 +1,6 @@
 // pathflip if it sucked in every way but worked with trailblazer
 // node scripts/pathflip.mjs -t vertical -i src/main/java/frc/robot/autos/auto_path_commands/red/RedFourPiece2IJKLAuto.java
-// node scripts/pathflip.mjs -t color -i src/main/java/frc/robot/autos/auto_path_commands/red/RedFourPiece2IJKLAuto.java
+// node scripts/pathflip.mjs -t color -i src/main/java/frc/robot/autos/auto_path_commands/red/RedStraightLineAuto.java
 
 import { parseArgs } from "node:util";
 import assert from "node:assert/strict";
@@ -35,10 +35,11 @@ function stupidRound(value, precision) {
 }
 
 function colorFlip(x, y) {
-  const yAxis = FIELD_LENGTH / 2;
+  const halfFieldLength = FIELD_LENGTH / 2;
+  const halfFieldHeight = FIELD_HEIGHT / 2;
   return {
-    x: yAxis - (x - yAxis),
-    y,
+    x: (x - halfFieldLength) * -1 - (x - halfFieldHeight) * 0 + halfFieldLength,
+    y: (x - halfFieldLength) * 0 + (y - halfFieldHeight) * -1 + halfFieldHeight
   };
 }
 
@@ -68,7 +69,7 @@ function angleModulusDegrees(angle) {
 }
 
 function transformRotationColor(rotationDeg) {
-  return angleModulusDegrees(-rotationDeg + 180);
+  return angleModulusDegrees(rotationDeg + 180);
 }
 
 function transformRotationVertical(rotationDeg) {

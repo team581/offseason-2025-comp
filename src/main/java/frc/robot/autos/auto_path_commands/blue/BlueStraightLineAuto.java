@@ -32,7 +32,7 @@ public class BlueStraightLineAuto extends BaseAuto {
             new AutoSegment(
                 CONSTRAINTS,
                 new AutoPoint(Points.START_R1_AND_B1_FORWARD.bluePose),
-                new AutoPoint(new Pose2d(5.626, 0.758, Rotation2d.kZero)),
-                new AutoPoint(new Pose2d(2.55, 0.758, Rotation2d.kZero)))));
+                new AutoPoint(new Pose2d(5.626, 7.292, Rotation2d.kZero)),
+                new AutoPoint(new Pose2d(2.55, 7.292, Rotation2d.kZero)))));
   }
 }
