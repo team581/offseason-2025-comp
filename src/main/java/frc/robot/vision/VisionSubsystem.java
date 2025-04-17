@@ -124,7 +124,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
-        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
       }
       case CLOSEST_REEF_TAG -> {
         if (FeatureFlags.USE_ANY_REEF_TAG.getAsBoolean()) {
@@ -136,13 +136,13 @@ public class VisionSubsystem extends StateMachine<VisionState> {
           leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
           rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
         }
-        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
       }
       case CORAL_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
-        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
       }
       case HANDOFF -> {
         leftBackLimelight.setState(LimelightState.TAGS);
@@ -154,7 +154,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.OFF);
         leftFrontLimelight.setState(LimelightState.OFF);
         rightLimelight.setState(LimelightState.ALGAE);
-        gamePieceDetectionLimelight.setState(LimelightState.CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
       }
     }
   }
