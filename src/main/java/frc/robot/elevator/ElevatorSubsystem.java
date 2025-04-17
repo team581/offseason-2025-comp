@@ -40,8 +40,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   // Homing
   private double leftHeight = 0;
   private double rightHeight = 0;
-  private double lowestSeenHeightLeft = 0.0;
-  private double lowestSeenHeightRight = 0.0;
+  private double lowestSeenHeightLeft = Double.POSITIVE_INFINITY;
+  private double lowestSeenHeightRight = Double.POSITIVE_INFINITY;
 
   private double averageMeasuredHeight = 0;
   private double collisionAvoidanceGoal = ElevatorState.STOWED.getHeight();
@@ -183,9 +183,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
           double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
           var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
           var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
-          // TODO: Restore elevator homing
-          leftMotor.setPosition(homingEndHeight);
-          rightMotor.setPosition(homingEndHeight);
+          leftMotor.setPosition(leftHomedHeight);
+          rightMotor.setPosition(rightHomedHeight);
 
           yield ElevatorState.STOWED;
         }
@@ -201,7 +200,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     return switch (getState()) {
       case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE -> false;
-      default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, TOLERANCE);
+      default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, getState().getHeight()==0.0?TOLERANCE+1.0: TOLERANCE);
     };
   }
 
