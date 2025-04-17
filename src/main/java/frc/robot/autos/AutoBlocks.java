@@ -26,6 +26,9 @@ public class AutoBlocks {
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.6, 10);
+
+      private static final PoseErrorTolerance SUPER_FAST_LOLLIPOP_APPROACH_TOLERANCE =
+      new PoseErrorTolerance(0.8, 20);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
@@ -45,7 +48,7 @@ public class AutoBlocks {
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90));
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
-      new AutoConstraintOptions(4.5, 57, 4.0, 30);
+      new AutoConstraintOptions(4.75, 57, 4.0, 30);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
@@ -55,6 +58,9 @@ public class AutoBlocks {
       BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.75);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(3.0);
+
+      private static final AutoConstraintOptions SUPER_FAST_LOLLIPOP_CONSTRAINTS =
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(3.0).withMaxLinearVelocity(4.5);
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
       new AutoConstraintOptions(3.75, 57, 1.75, 25);
@@ -328,6 +334,56 @@ public class AutoBlocks {
                                     .getTranslation(),
                                 defaultIntakingPoint.getRotation()),
                         BASE_CONSTRAINTS),
+                    new AutoPoint(
+                        () ->
+                            new Pose2d(
+                                robotManager
+                                    .coralMap
+                                    .getLollipopIntakePose()
+                                    .orElse(defaultIntakingPoint)
+                                    .getTranslation(),
+                                defaultIntakingPoint.getRotation()))),
+                false))
+        .withDeadline(autoCommands.waitForLollipopIntakeDone())
+        .andThen(Commands.runOnce(() -> robotManager.swerve.normalDriveRequest()));
+  }
+
+  public Command intakeLollipopSuperFast(Pose2d defaultIntakingPoint) {
+    return Commands.sequence(
+            Commands.runOnce(
+                () -> {
+                  robotManager.coralMap.clearLollipop();
+                  robotManager.swerve.snapsDriveRequest(
+                      defaultIntakingPoint.getRotation().getDegrees());
+                }),
+            autoCommands.intakeLollipopCommand(),
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        MAX_CONSTRAINTS,
+                        new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
+                    false)
+                .withDeadline(autoCommands.waitForElevatorAndArmNearLollipop()),
+            trailblazer.followSegment(
+                new AutoSegment(
+                    MAX_CONSTRAINTS,
+                    LOLLIPOP_APPROACH_TOLERANCE,
+                    new AutoPoint(defaultIntakingPoint.transformBy(APPROACH_LOLLIPOP_OFFSET))),
+                true),
+            trailblazer.followSegment(
+                new AutoSegment(
+                    SUPER_FAST_LOLLIPOP_CONSTRAINTS,
+                    new AutoPoint(
+                        () ->
+                            new Pose2d(
+                                robotManager
+                                    .coralMap
+                                    .getLollipopIntakePose()
+                                    .orElse(defaultIntakingPoint)
+                                    .transformBy(CENTER_LOLLIPOP_OFFSET)
+                                    .getTranslation(),
+                                defaultIntakingPoint.getRotation()),
+                        MAX_CONSTRAINTS),
                     new AutoPoint(
                         () ->
                             new Pose2d(
