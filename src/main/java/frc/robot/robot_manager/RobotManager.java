@@ -179,8 +179,13 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState(robotScoringSide)
+          claw.getHasGP() ? currentState.getHandoffReleaseToAfterRelease() : currentState;
+      case CORAL_L1_AFTER_RELEASE_HANDOFF,
+          CORAL_L2_AFTER_RELEASE_HANDOFF,
+          CORAL_L3_AFTER_RELEASE_HANDOFF,
+          CORAL_L4_AFTER_RELEASE_HANDOFF ->
+          elevator.atGoal() && arm.atGoal()
+              ? currentState.getHandoffAfterReleaseToApproachState(robotScoringSide)
               : currentState;
 
       // Approach
@@ -564,6 +569,18 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
+      case CORAL_L1_AFTER_RELEASE_HANDOFF,
+          CORAL_L2_AFTER_RELEASE_HANDOFF,
+          CORAL_L3_AFTER_RELEASE_HANDOFF,
+          CORAL_L4_AFTER_RELEASE_HANDOFF -> {
+        claw.setState(ClawState.CORAL_HANDOFF);
+        groundManager.handoffReleaseRequest();
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.HANDOFF);
+        lights.setState(LightsState.CORAL_HANDOFF);
+        climber.setState(ClimberState.STOPPED);
+      }
 
       // L1
       case CORAL_L1_RIGHT_APPROACH -> {
@@ -931,7 +948,11 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L4_RELEASE_HANDOFF -> {
+          CORAL_L4_RELEASE_HANDOFF,
+          CORAL_L1_AFTER_RELEASE_HANDOFF,
+          CORAL_L2_AFTER_RELEASE_HANDOFF,
+          CORAL_L3_AFTER_RELEASE_HANDOFF,
+          CORAL_L4_AFTER_RELEASE_HANDOFF -> {
         // Do nothing, don't change the handoff angle when we are releasing
       }
       default -> arm.setCoralTx(vision.getHandoffOffsetTx());
@@ -1543,7 +1564,11 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L4_RELEASE_HANDOFF -> {}
+          CORAL_L4_RELEASE_HANDOFF,
+          CORAL_L1_AFTER_RELEASE_HANDOFF,
+          CORAL_L2_AFTER_RELEASE_HANDOFF,
+          CORAL_L3_AFTER_RELEASE_HANDOFF,
+          CORAL_L4_AFTER_RELEASE_HANDOFF -> {}
 
       case CORAL_L1_RIGHT_APPROACH,
           CORAL_L2_LEFT_APPROACH,
