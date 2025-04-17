@@ -1014,7 +1014,7 @@ public class RobotManager extends StateMachine<RobotState> {
         if (scoringAlignActive) {
           swerve.scoringAlignmentRequest(reefSnapAngle);
         } else {
-          swerve.normalDriveRequest();;
+          swerve.normalDriveRequest();
         }
 
         lights.setState(getLightStateForScoring());
