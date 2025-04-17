@@ -1217,9 +1217,9 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_INTAKE_L2_LEFT,
           ALGAE_INTAKE_L2_RIGHT,
           ALGAE_INTAKE_L3_LEFT,
+          LOW_STOW,
           ALGAE_INTAKE_L3_RIGHT ->
           setStateFromRequest(RobotState.CLAW_EMPTY);
-      case LOW_STOW -> {}
       default -> {
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
