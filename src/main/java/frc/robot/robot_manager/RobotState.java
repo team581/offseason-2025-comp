@@ -211,6 +211,27 @@ public enum RobotState {
           Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_RIGHT_APPROACH),
           Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_RIGHT_APPROACH));
 
+  public static boolean isLineupOrApproachState(RobotState state) {
+    return switch (state) {
+      case CORAL_L4_LEFT_APPROACH,
+          CORAL_L4_RIGHT_APPROACH,
+          CORAL_L4_LEFT_LINEUP,
+          CORAL_L4_RIGHT_LINEUP,
+          CORAL_L3_LEFT_APPROACH,
+          CORAL_L3_RIGHT_APPROACH,
+          CORAL_L3_LEFT_LINEUP,
+          CORAL_L3_RIGHT_LINEUP,
+          CORAL_L2_LEFT_APPROACH,
+          CORAL_L2_RIGHT_APPROACH,
+          CORAL_L2_LEFT_LINEUP,
+          CORAL_L2_RIGHT_LINEUP,
+          CORAL_L1_RIGHT_LINEUP,
+          CORAL_L1_RIGHT_APPROACH ->
+          true;
+      default -> false;
+    };
+  }
+
   public RobotState getLineupToPlaceState() {
     return lineupToPlace.getOrDefault(this, this);
   }

@@ -190,11 +190,6 @@ public class RobotManager extends StateMachine<RobotState> {
               : currentState;
 
       case CORAL_L2_LEFT_APPROACH -> {
-        // Support switching from left to right if in teleop & robot is closer to the right side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.RIGHT) {
-          yield currentState.getLeftToRightApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L2)
                 && arm.nearGoal(ArmState.CORAL_SCORE_LEFT_LINEUP_L2)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -202,11 +197,6 @@ public class RobotManager extends StateMachine<RobotState> {
             : currentState;
       }
       case CORAL_L3_LEFT_APPROACH -> {
-        // Support switching from left to right if in teleop & robot is closer to the right side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.RIGHT) {
-          yield currentState.getLeftToRightApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L3)
                 && arm.nearGoal(ArmState.CORAL_SCORE_LEFT_LINEUP_L3)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -214,11 +204,6 @@ public class RobotManager extends StateMachine<RobotState> {
             : currentState;
       }
       case CORAL_L4_LEFT_APPROACH -> {
-        // Support switching from left to right if in teleop & robot is closer to the right side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.RIGHT) {
-          yield currentState.getLeftToRightApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L4)
                 && arm.nearGoal(ArmState.CORAL_SCORE_LEFT_LINEUP_L4)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -227,11 +212,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_L2_RIGHT_APPROACH -> {
-        // Support switching from right to left if in teleop & robot is closer to the left side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.LEFT) {
-          yield currentState.getRightToLeftApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L2)
                 && arm.nearGoal(ArmState.CORAL_SCORE_RIGHT_LINEUP_L2)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -239,11 +219,6 @@ public class RobotManager extends StateMachine<RobotState> {
             : currentState;
       }
       case CORAL_L3_RIGHT_APPROACH -> {
-        // Support switching from right to left if in teleop & robot is closer to the left side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.LEFT) {
-          yield currentState.getRightToLeftApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L3)
                 && arm.nearGoal(ArmState.CORAL_SCORE_RIGHT_LINEUP_L3)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -251,11 +226,6 @@ public class RobotManager extends StateMachine<RobotState> {
             : currentState;
       }
       case CORAL_L4_RIGHT_APPROACH -> {
-        // Support switching from right to left if in teleop & robot is closer to the left side
-        if (DriverStation.isTeleop() && robotScoringSide == RobotScoringSide.LEFT) {
-          yield currentState.getRightToLeftApproachState();
-        }
-
         yield elevator.nearGoal(ElevatorState.CORAL_SCORE_LINEUP_L4)
                 && arm.nearGoal(ArmState.CORAL_SCORE_RIGHT_LINEUP_L4)
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
@@ -1376,7 +1346,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
     scoringAlignActive = true;
-    if (claw.getHasGP()) {
+    if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       switch (robotScoringSide) {
         case LEFT -> setStateFromRequest(RobotState.CORAL_L4_LEFT_APPROACH);
         case RIGHT -> setStateFromRequest(RobotState.CORAL_L4_RIGHT_APPROACH);
@@ -1392,7 +1362,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
-    if (claw.getHasGP()) {
+    if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       switch (robotScoringSide) {
         case LEFT -> setStateFromRequest(RobotState.CORAL_L3_LEFT_APPROACH);
         case RIGHT -> setStateFromRequest(RobotState.CORAL_L3_RIGHT_APPROACH);
@@ -1408,7 +1378,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
-    if (claw.getHasGP()) {
+    if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       switch (robotScoringSide) {
         case LEFT -> setStateFromRequest(RobotState.CORAL_L2_LEFT_APPROACH);
         case RIGHT -> setStateFromRequest(RobotState.CORAL_L2_RIGHT_APPROACH);
@@ -1423,7 +1393,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
 
-    if (claw.getHasGP()) {
+    if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       setStateFromRequest(RobotState.CORAL_L1_RIGHT_APPROACH);
     } else {
       setStateFromRequest(RobotState.CORAL_L1_PREPARE_HANDOFF);
