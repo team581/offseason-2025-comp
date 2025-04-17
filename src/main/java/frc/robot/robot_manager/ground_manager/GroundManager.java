@@ -53,6 +53,10 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.L1_SCORE);
         intake.setState(IntakeState.SCORING);
       }
+      case L1_HARD_SCORE -> {
+        deploy.setState(DeployState.L1_SCORE);
+        intake.setState(IntakeState.HARD_SCORING);
+      }
       case HANDOFF_WAIT -> {
         deploy.setState(DeployState.HANDOFF);
         intake.setState(IntakeState.IDLE_GP);
@@ -93,12 +97,22 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void intakeRequest() {
-    setState(GroundState.INTAKING);
+    switch (getState()) {
+      case L1_WAIT -> setState(GroundState.L1_HARD_SCORE);
+      default -> setState(GroundState.INTAKING);
+    }
   }
 
   public void l1Request() {
     switch (getState()) {
       case L1_WAIT -> setState(GroundState.L1_SCORE);
+      default -> setState(GroundState.L1_WAIT);
+    }
+  }
+
+  public void hardL1Request() {
+    switch (getState()) {
+      case L1_WAIT -> setState(GroundState.L1_HARD_SCORE);
       default -> setState(GroundState.L1_WAIT);
     }
   }

@@ -42,7 +42,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
             case INTAKING -> timeout(3);
-            case SCORING -> timeout(3);
+            case SCORING, HARD_SCORING -> timeout(3);
           };
     }
   }
@@ -68,7 +68,10 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         motor.setVoltage(12);
       }
       case SCORING -> {
-        motor.setVoltage(-7);
+        motor.setVoltage(-4);
+      }
+      case HARD_SCORING -> {
+        motor.setVoltage(-6);
       }
       case CORAL_HANDOFF -> {
         motor.setVoltage(-12);

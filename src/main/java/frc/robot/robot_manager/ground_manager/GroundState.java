@@ -13,6 +13,7 @@ public enum GroundState {
 
   L1_WAIT,
   L1_SCORE,
+  L1_HARD_SCORE,
 
   CLIMB,
 
