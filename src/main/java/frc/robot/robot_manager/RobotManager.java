@@ -1691,6 +1691,8 @@ public class RobotManager extends StateMachine<RobotState> {
     var maybeCollisionAvoidanceResult =
         CollisionAvoidance.routePosition(currentPosition, goal, obstructionKind, arm.getRawAngle());
 
+    DogLog.log("CollisionAvoidance/LatestResultPresent", maybeCollisionAvoidanceResult.isPresent());
+
     if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
       elevator.setState(elevatorGoal);
       arm.setState(armGoal);

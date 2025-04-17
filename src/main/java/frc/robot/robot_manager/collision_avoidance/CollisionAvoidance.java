@@ -63,6 +63,7 @@ public class CollisionAvoidance {
     if (maybeWaypoint.isEmpty()) {
       return Optional.empty();
     }
+    DogLog.log("CollisionAvoidance/PreviousWaypoint", previousWaypoint);
     Waypoint waypoint = maybeWaypoint.get();
     if (maybePreviousWaypoint.isEmpty()) {
       previousWaypoint = Waypoint.getClosest(currentPosition);
