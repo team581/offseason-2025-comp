@@ -18,6 +18,7 @@ import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
   private static final double CLIMBER_BACKWARD_VELOCITY_TRHESHOLD = 0.1;
+  private static final double PASS_ANGLE_CHECK = -10;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
@@ -28,7 +29,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
   private final CoastOut coastNeutralRequest = new CoastOut();
   private double cancoderVelocity = 0;
-  private boolean runningBackwards = false;
   private double currentAngle = 0.0;
   private double climberMotorAngle = 0.0;
   private boolean holdingCage = false;
@@ -64,7 +64,8 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
         grabMotor.disable();
-        if (runningBackwards) {
+
+        if (currentAngle < PASS_ANGLE_CHECK) {
           setStateFromRequest(ClimberState.LINEUP_BACKWARD);
           DogLog.timestamp("Climber/LineupForwardStartedFlip");
         }
@@ -76,11 +77,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
         if (holdingCage) {
-          grabMotor.disable();
           setStateFromRequest(ClimberState.HANGING);
-        } else {
-          grabMotor.setVoltage(12.0);
         }
+        grabMotor.setVoltage(12.0);
       }
       case HANGING -> {
         if (atGoal()) {
@@ -125,13 +124,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
-    runningBackwards = cancoderVelocity > CLIMBER_BACKWARD_VELOCITY_TRHESHOLD;
-
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
     DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
 
-    DogLog.log("Climber/RunningBackwards", runningBackwards);
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
