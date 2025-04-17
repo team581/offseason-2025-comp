@@ -90,7 +90,7 @@ class CompConfig {
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
                               1.0 / ((8.0 / 40.0) * (2.0 / 1.0) * (Math.PI * 1.274)))),
-              0.375,
+              0.0,
               25,
               0,
               61.5),
