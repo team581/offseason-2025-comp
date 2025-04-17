@@ -56,7 +56,7 @@ public class BlueLollipopRightABAuto extends BaseAuto {
         // LOLLIPOP 3
         timing.time(
             "Piece 3",
-            blocks.intakeLollipop(
+            blocks.intakeLollipopSuperFast(
                 new Pose2d(1.583, 2.658, Rotation2d.fromDegrees(-128.05))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
