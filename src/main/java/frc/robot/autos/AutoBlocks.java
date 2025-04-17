@@ -27,7 +27,7 @@ public class AutoBlocks {
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.6, 10);
 
-      private static final PoseErrorTolerance SUPER_FAST_LOLLIPOP_APPROACH_TOLERANCE =
+  private static final PoseErrorTolerance SUPER_FAST_LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.8, 20);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
@@ -59,7 +59,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(3.0);
 
-      private static final AutoConstraintOptions SUPER_FAST_LOLLIPOP_CONSTRAINTS =
+  private static final AutoConstraintOptions SUPER_FAST_LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(3.0).withMaxLinearVelocity(4.5);
 
   public static final AutoConstraintOptions BASE_CONSTRAINTS_FOR_GROUND_AUTOS =
