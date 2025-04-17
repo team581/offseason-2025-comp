@@ -285,8 +285,9 @@ class CompConfig {
               new CANrangeConfiguration()
                   .withProximityParams(
                       new ProximityParamsConfigs()
-                          .withProximityThreshold(0.06)
-                          .withMinSignalStrengthForValidMeasurement(14000))),
+                          .withProximityThreshold(0.05)
+                          .withProximityHysteresis(0.01)
+                          .withMinSignalStrengthForValidMeasurement(7000))),
           new LightsConfig(CANIVORE_NAME, 17));
 
   private CompConfig() {}
