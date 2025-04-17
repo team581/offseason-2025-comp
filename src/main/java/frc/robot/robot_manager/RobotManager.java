@@ -1278,7 +1278,14 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+      if (getState() == RobotState.CLAW_EMPTY) {
+        if (elevator.atGoal() && arm.atGoal()) {
+          // Ignore algae intake until stow motion is finished
+          setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+        }
+      } else {
+        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+      }
     }
   }
 
