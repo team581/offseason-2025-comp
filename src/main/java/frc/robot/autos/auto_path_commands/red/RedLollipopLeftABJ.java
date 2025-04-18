@@ -68,6 +68,6 @@ public class RedLollipopLeftABJ extends BaseAuto {
                         new Pose2d(12.0, 2.0, Rotation2d.fromDegrees(-30.0)),
                         autoCommands.l4ApproachCommand(ReefPipe.PIPE_J, RobotScoringSide.LEFT)))),
             blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
-            autoCommands.moveToStartingPositionCommand()));
+            Commands.none()));
   }
 }

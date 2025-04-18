@@ -69,6 +69,6 @@ public class BlueLollipopRightABAuto extends BaseAuto {
                 new Pose2d(1.583, 5.392, Rotation2d.fromDegrees(128.05))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
-            autoCommands.moveToStartingPositionCommand()));
+            Commands.none()));
   }
 }

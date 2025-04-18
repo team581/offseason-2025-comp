@@ -61,6 +61,6 @@ public class RedLollipopRightL4Auto extends BaseAuto {
                 new Pose2d(15.967, 5.392, Rotation2d.fromDegrees(51.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL4(ReefPipe.PIPE_C, RobotScoringSide.LEFT),
-            autoCommands.moveToStartingPositionCommand()));
+            Commands.none()));
   }
 }
