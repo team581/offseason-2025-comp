@@ -157,7 +157,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   public boolean nearGoal(ArmState state) {
-    return MathUtil.isNear(state.getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
+    return nearGoal(state, NEAR_TOLERANCE);
+  }
+
+  public boolean nearGoal(ArmState state, double tolerance) {
+    return MathUtil.isNear(state.getAngle(), rawMotorAngle, tolerance, -180, 180);
   }
 
   @Override

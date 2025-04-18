@@ -77,7 +77,7 @@ public class AutoCommands {
     return Commands.waitUntil(
             () ->
                 robotManager.elevator.nearGoal(ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE)
-                    && robotManager.arm.nearGoal(ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE))
+                    && robotManager.arm.nearGoal(ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE, 50))
         .withName("WaitForElevatorAndArmNearGoalCommand");
   }
 
