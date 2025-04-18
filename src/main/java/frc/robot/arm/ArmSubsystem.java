@@ -48,6 +48,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   public static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
       InterpolatingDoubleTreeMap.ofEntries(
           Map.entry(2.66, 5.54), Map.entry(3.89, 0.0), Map.entry(-10.9, -2.5));
+  private boolean lollipopMode = false;
+
+  public void setLollipopMode(boolean lollipopMode) {
+    this.lollipopMode = lollipopMode;
+    DogLog.log("Arm/LollipopMode", lollipopMode);
+  }
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -102,10 +108,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   private void makeGetMotionMagicRequest(double armRotations) {
-    if (DriverStation.isAutonomous()) {
-      motor.setControl(autoMotionMagicExpoRequest.withPosition(armRotations));
-    } else {
+    if (DriverStation.isTeleop() || lollipopMode) {
       motor.setControl(motionMagicRequest.withPosition(armRotations));
+      DogLog.log("Arm/MotionMagicStrategy", "Teleop");
+    } else {
+      motor.setControl(autoMotionMagicExpoRequest.withPosition(armRotations));
+      DogLog.log("Arm/MotionMagicStrategy", "Expo");
     }
   }
 

@@ -932,6 +932,10 @@ public class RobotManager extends StateMachine<RobotState> {
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
+    arm.setLollipopMode(
+        getState() == RobotState.CORAL_INTAKE_LOLLIPOP_GRAB
+            || getState() == RobotState.CORAL_INTAKE_LOLLIPOP_APPROACH);
+
     switch (getState()) {
       case CLAW_EMPTY,
           CORAL_L4_PREPARE_HANDOFF,
