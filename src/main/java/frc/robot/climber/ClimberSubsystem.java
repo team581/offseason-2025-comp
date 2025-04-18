@@ -18,7 +18,7 @@ import frc.robot.util.state_machines.StateMachine;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
   private static final double CLIMBER_BACKWARD_VELOCITY_TRHESHOLD = 0.1;
-  private static final double PASS_ANGLE_CHECK = -10;
+  private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
