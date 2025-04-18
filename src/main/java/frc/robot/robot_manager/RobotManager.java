@@ -1625,7 +1625,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void nextClimbStateRequest() {
     switch (getState()) {
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
-      case LOW_STOW, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
+      case STARTING_POSITION, LOW_STOW, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
         if (arm.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
