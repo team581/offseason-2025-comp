@@ -200,7 +200,11 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     return switch (getState()) {
       case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE -> false;
-      default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, getState().getHeight()==0.0?TOLERANCE+1.0: TOLERANCE);
+      default ->
+          MathUtil.isNear(
+              getState().getHeight(),
+              averageMeasuredHeight,
+              getState().getHeight() == 0.0 ? TOLERANCE + 1.0 : TOLERANCE);
     };
   }
 

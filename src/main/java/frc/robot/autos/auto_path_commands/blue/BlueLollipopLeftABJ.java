@@ -59,15 +59,13 @@ public class BlueLollipopLeftABJ extends BaseAuto {
             blocks.intakeLollipopSuperFast(
                 new Pose2d(1.583, 5.392, Rotation2d.fromDegrees(128.05))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-
-           trailblazer.followSegment(
-                      new AutoSegment(
-                          AutoBlocks.MAX_CONSTRAINTS,
-                          AutoBlocks.APPROACH_REEF_TOLERANCE,
-                          new AutoPoint(
-                              new Pose2d(5.55, 6.05, Rotation2d.fromDegrees(150)),
-                              autoCommands.l4ApproachCommand(
-                                  ReefPipe.PIPE_J, RobotScoringSide.LEFT)))),
+            trailblazer.followSegment(
+                new AutoSegment(
+                    AutoBlocks.MAX_CONSTRAINTS,
+                    AutoBlocks.APPROACH_REEF_TOLERANCE,
+                    new AutoPoint(
+                        new Pose2d(5.55, 6.05, Rotation2d.fromDegrees(150)),
+                        autoCommands.l4ApproachCommand(ReefPipe.PIPE_J, RobotScoringSide.LEFT)))),
             blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
             autoCommands.moveToStartingPositionCommand()));
   }

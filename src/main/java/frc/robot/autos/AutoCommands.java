@@ -109,7 +109,7 @@ public class AutoCommands {
   public Command l2ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-            robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l2CoralLeftAutoApproachRequest();
               } else {

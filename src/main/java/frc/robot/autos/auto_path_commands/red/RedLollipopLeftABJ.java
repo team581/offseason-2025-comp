@@ -59,15 +59,13 @@ public class RedLollipopLeftABJ extends BaseAuto {
             blocks.intakeLollipopSuperFast(
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-51.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
-
-           trailblazer.followSegment(
-                      new AutoSegment(
-                          AutoBlocks.MAX_CONSTRAINTS,
-                          AutoBlocks.APPROACH_REEF_TOLERANCE,
-                          new AutoPoint(
-                              new Pose2d(12.0, 2.0, Rotation2d.fromDegrees(-30.0)),
-                              autoCommands.l4ApproachCommand(
-                                  ReefPipe.PIPE_J, RobotScoringSide.LEFT)))),
+            trailblazer.followSegment(
+                new AutoSegment(
+                    AutoBlocks.MAX_CONSTRAINTS,
+                    AutoBlocks.APPROACH_REEF_TOLERANCE,
+                    new AutoPoint(
+                        new Pose2d(12.0, 2.0, Rotation2d.fromDegrees(-30.0)),
+                        autoCommands.l4ApproachCommand(ReefPipe.PIPE_J, RobotScoringSide.LEFT)))),
             blocks.scoreL4(ReefPipe.PIPE_J, RobotScoringSide.LEFT),
             autoCommands.moveToStartingPositionCommand()));
   }
