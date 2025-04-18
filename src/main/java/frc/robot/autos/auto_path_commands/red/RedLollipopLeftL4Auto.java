@@ -35,8 +35,8 @@ public class RedLollipopLeftL4Auto extends BaseAuto {
                 "Preload race",
                 trailblazer.followSegment(
                     new AutoSegment(
-                        AutoBlocks.MAX_CONSTRAINTS,
-                        AutoBlocks.APPROACH_REEF_TOLERANCE,
+                      AutoBlocks.LOLLIPOP_RACE_CONSTRAINTS,
+                      AutoBlocks.APPROACH_REEF_TOLERANCE,
                         new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(90.0))),
                         new AutoPoint(new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(90.0))),
                         new AutoPoint(

@@ -49,6 +49,8 @@ public class AutoBlocks {
           Rotation2d.fromDegrees(90));
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4.0, 30);
+  public static final AutoConstraintOptions LOLLIPOP_RACE_CONSTRAINTS =
+      MAX_CONSTRAINTS.withMaxLinearVelocity(4.25).withMaxLinearAcceleration(4.25);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
@@ -56,7 +58,7 @@ public class AutoBlocks {
       new AutoConstraintOptions(4.0, 10, 2.5, 10);
   private static final AutoConstraintOptions SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(3.0).withMaxLinearAcceleration(1.75);
-      private static final AutoConstraintOptions L2_SCORING_CONSTRAINTS =
+  private static final AutoConstraintOptions L2_SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(3.3).withMaxLinearAcceleration(2.15);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(3.0);
