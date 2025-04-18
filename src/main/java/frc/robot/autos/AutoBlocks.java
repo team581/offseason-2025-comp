@@ -50,7 +50,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4.0, 30);
   public static final AutoConstraintOptions LOLLIPOP_RACE_CONSTRAINTS =
-      MAX_CONSTRAINTS.withMaxLinearVelocity(5).withMaxLinearAcceleration(4.25);
+      MAX_CONSTRAINTS.withMaxLinearVelocity(5).withMaxLinearAcceleration(4.5);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
