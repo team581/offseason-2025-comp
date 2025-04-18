@@ -2,6 +2,7 @@ package frc.robot.autos;
 
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueLollipopLeftABAuto;
+import frc.robot.autos.auto_path_commands.blue.BlueLollipopLeftABJ;
 import frc.robot.autos.auto_path_commands.blue.BlueLollipopLeftL4Auto;
 import frc.robot.autos.auto_path_commands.blue.BlueLollipopRightABAuto;
 import frc.robot.autos.auto_path_commands.blue.BlueLollipopRightL4Auto;
@@ -26,7 +27,7 @@ public enum AutoSelection {
   LOLLIPOP_LEFT_AB(RedLollipopLeftABAuto::new, BlueLollipopLeftABAuto::new),
   LOLLIPOP_RIGHT_AB(RedLollipopRightABAuto::new, BlueLollipopRightABAuto::new),
 
-  LOLLIPOP_LEFT_ABJ(RedLollipopLeftABJ::new, BlueDoNothingAuto::new),
+  LOLLIPOP_LEFT_ABJ(RedLollipopLeftABJ::new, BlueLollipopLeftABJ::new),
 
   THREE_PIECE_2ILK(RedThreePiece2ILKAuto::new, RedThreePiece2ILKAuto::new),
   THREE_PIECE_3GHJ(RedThreePiece3GHJ::new, RedThreePiece3GHJ::new),
