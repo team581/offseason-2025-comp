@@ -27,24 +27,25 @@ public class BlueLollipopRightL4Auto extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        autoCommands.homeDeployCommand(),
-        timing.time(
-            "Preload",
+        Commands.parallel(
+            autoCommands.homeDeployCommand(),
             autoCommands.preloadCoralCommand(),
             timing.time(
-                "Preload race",
-                trailblazer.followSegment(
-                    new AutoSegment(
-                        AutoBlocks.LOLLIPOP_RACE_CONSTRAINTS,
-                        AutoBlocks.APPROACH_REEF_TOLERANCE,
-                        new AutoPoint(new Pose2d(4.714, 1.085, Rotation2d.fromDegrees(-90))),
-                        new AutoPoint(new Pose2d(2.906, 2.24, Rotation2d.fromDegrees(-90))),
-                        new AutoPoint(
-                            new Pose2d(2.516, 3.629, Rotation2d.fromDegrees(-90)),
-                            autoCommands.l4ApproachCommand(
-                                ReefPipe.PIPE_B, RobotScoringSide.LEFT))))),
-            blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
-            autoCommands.intakeLollipopCommand()),
+                "Preload",
+                timing.time(
+                    "Preload race",
+                    trailblazer.followSegment(
+                        new AutoSegment(
+                            AutoBlocks.LOLLIPOP_RACE_CONSTRAINTS,
+                            AutoBlocks.APPROACH_REEF_TOLERANCE,
+                            new AutoPoint(new Pose2d(4.714, 1.085, Rotation2d.fromDegrees(-90))),
+                            new AutoPoint(new Pose2d(2.906, 2.24, Rotation2d.fromDegrees(-90))),
+                            new AutoPoint(
+                                new Pose2d(2.516, 3.629, Rotation2d.fromDegrees(-90)),
+                                autoCommands.l4ApproachCommand(
+                                    ReefPipe.PIPE_B, RobotScoringSide.LEFT))))),
+                blocks.scoreL4(ReefPipe.PIPE_B, RobotScoringSide.LEFT),
+                autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 2 (MIDDLE)
         timing.time(
             "Piece 1",

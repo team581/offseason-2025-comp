@@ -27,24 +27,25 @@ public class RedLollipopLeftABJ extends BaseAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        autoCommands.homeDeployCommand(),
-        timing.time(
-            "Preload",
+        Commands.parallel(
+            autoCommands.homeDeployCommand(),
             autoCommands.preloadCoralCommand(),
             timing.time(
-                "Preload race",
-                trailblazer.followSegment(
-                    new AutoSegment(
-                        AutoBlocks.LOLLIPOP_RACE_CONSTRAINTS,
-                        AutoBlocks.APPROACH_REEF_TOLERANCE,
-                        new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(90.0))),
-                        new AutoPoint(new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(90.0))),
-                        new AutoPoint(
-                            new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90.0)),
-                            autoCommands.l2ApproachCommand(
-                                ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
-            blocks.scoreL2(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
-            autoCommands.intakeLollipopCommand()),
+                "Preload",
+                timing.time(
+                    "Preload race",
+                    trailblazer.followSegment(
+                        new AutoSegment(
+                            AutoBlocks.LOLLIPOP_RACE_CONSTRAINTS,
+                            AutoBlocks.APPROACH_REEF_TOLERANCE,
+                            new AutoPoint(new Pose2d(12.836, 1.085, Rotation2d.fromDegrees(90.0))),
+                            new AutoPoint(new Pose2d(14.644, 2.240, Rotation2d.fromDegrees(90.0))),
+                            new AutoPoint(
+                                new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90.0)),
+                                autoCommands.l2ApproachCommand(
+                                    ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
+                blocks.scoreL2(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+                autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 2 (MIDDLE)
         timing.time(
             "Piece 1",
