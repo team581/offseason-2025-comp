@@ -3,6 +3,8 @@ package frc.robot.auto_align;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.config.RobotConfig;
+
 import java.util.EnumSet;
 
 public class ReefState {
@@ -11,7 +13,9 @@ public class ReefState {
   private final EnumSet<ReefPipe> scoredL4Pipes = EnumSet.noneOf(ReefPipe.class);
 
   public ReefState() {
-    SmartDashboard.putData("ReefState/Clear", Commands.runOnce(this::clear));
+    if (RobotConfig.IS_DEVELOPMENT) {
+      SmartDashboard.putData("ReefState/Clear", Commands.runOnce(this::clear));
+    }
   }
 
   public void clear() {
