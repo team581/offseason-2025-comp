@@ -16,12 +16,11 @@ import java.util.function.BiFunction;
 public enum AutoSelection {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
 
-    LOLLIPOP_LEFT_AB(RedLollipopLeftABAuto::new, BlueLollipopLeftABAuto::new),
-    LOLLIPOP_RIGHT_AB(RedLollipopRightABAuto::new, BlueLollipopRightABAuto::new),
+  LOLLIPOP_LEFT_AB(RedLollipopLeftABAuto::new, BlueLollipopLeftABAuto::new),
+  LOLLIPOP_RIGHT_AB(RedLollipopRightABAuto::new, BlueLollipopRightABAuto::new),
 
   LOLLIPOP_LEFT_L4(RedLollipopLeftL4Auto::new, BlueLollipopLeftL4Auto::new),
   LOLLIPOP_RIGHT_L4(RedLollipopRightL4Auto::new, BlueLollipopRightL4Auto::new);
-
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> blueAuto;

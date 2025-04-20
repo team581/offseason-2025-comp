@@ -14,8 +14,8 @@ import frc.robot.autos.Points;
 import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedLollipopLeftABSwitchAuto extends BaseAuto{
-public RedLollipopLeftABSwitchAuto(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedLollipopLeftABSwitchAuto extends BaseAuto {
+  public RedLollipopLeftABSwitchAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
@@ -71,5 +71,4 @@ public RedLollipopLeftABSwitchAuto(RobotManager robotManager, Trailblazer trailb
             blocks.scoreL2(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
             Commands.none()));
   }
-
 }

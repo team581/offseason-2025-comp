@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
-
 import java.util.EnumSet;
 
 public class ReefState {
