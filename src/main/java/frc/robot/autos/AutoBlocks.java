@@ -9,12 +9,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
-import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import frc.robot.util.PoseErrorTolerance;
+import frc.robot.util.trailblazer.AutoPoint;
+import frc.robot.util.trailblazer.AutoSegment;
+import frc.robot.util.trailblazer.Trailblazer;
+import frc.robot.util.trailblazer.constraints.AutoConstraintOptions;
 
 public class AutoBlocks {
   /**

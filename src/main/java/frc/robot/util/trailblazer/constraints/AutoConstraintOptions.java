@@ -1,4 +1,4 @@
-package frc.robot.autos.constraints;
+package frc.robot.util.trailblazer.constraints;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 

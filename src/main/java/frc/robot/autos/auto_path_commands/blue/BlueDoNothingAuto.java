@@ -4,13 +4,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.AutoPoint;
-import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Points;
-import frc.robot.autos.Trailblazer;
-import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.trailblazer.AutoPoint;
+import frc.robot.util.trailblazer.AutoSegment;
+import frc.robot.util.trailblazer.Trailblazer;
+import frc.robot.util.trailblazer.constraints.AutoConstraintOptions;
 
 public class BlueDoNothingAuto extends BaseAuto {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);

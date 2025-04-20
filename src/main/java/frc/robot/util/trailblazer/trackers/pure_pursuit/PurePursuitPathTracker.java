@@ -1,13 +1,13 @@
-package frc.robot.autos.trackers.pure_pursuit;
+package frc.robot.util.trailblazer.trackers.pure_pursuit;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.autos.AutoPoint;
-import frc.robot.autos.trackers.PathTracker;
 import frc.robot.config.FeatureFlags;
+import frc.robot.util.trailblazer.AutoPoint;
+import frc.robot.util.trailblazer.trackers.PathTracker;
 import java.util.List;
 
 public class PurePursuitPathTracker implements PathTracker {

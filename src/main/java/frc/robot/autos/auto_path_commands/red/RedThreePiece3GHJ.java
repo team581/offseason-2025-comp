@@ -8,8 +8,8 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Points;
-import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.trailblazer.Trailblazer;
 
 public class RedThreePiece3GHJ extends BaseAuto {
   public RedThreePiece3GHJ(RobotManager robotManager, Trailblazer trailblazer) {

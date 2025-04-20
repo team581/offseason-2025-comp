@@ -1,8 +1,8 @@
-package frc.robot.autos;
+package frc.robot.util.trailblazer;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.autos.constraints.AutoConstraintOptions;
 import frc.robot.util.PoseErrorTolerance;
+import frc.robot.util.trailblazer.constraints.AutoConstraintOptions;
 import java.util.List;
 
 /**
@@ -89,5 +89,9 @@ public class AutoSegment {
     }
 
     return positionTolerance.atPose(points.get(points.size() - 1).poseSupplier.get(), robotPose);
+  }
+
+  public AutoConstraintOptions getConstraints(AutoPoint point) {
+    return point.constraints.orElse(defaultConstraints);
   }
 }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.trailblazer.Trailblazer;
 
 public abstract class BaseAuto {
   protected final RobotManager robotManager;

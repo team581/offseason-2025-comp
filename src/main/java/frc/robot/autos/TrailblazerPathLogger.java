@@ -3,6 +3,7 @@ package frc.robot.autos;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.config.RobotConfig;
+import frc.robot.util.trailblazer.AutoSegment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

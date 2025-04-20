@@ -1,4 +1,4 @@
-package frc.robot.autos;
+package frc.robot.util.trailblazer;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
@@ -7,27 +7,17 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.constraints.AutoConstraintCalculator;
-import frc.robot.autos.constraints.AutoConstraintOptions;
-import frc.robot.autos.followers.PathFollower;
-import frc.robot.autos.followers.PidPathFollower;
-import frc.robot.autos.trackers.PathTracker;
-import frc.robot.autos.trackers.pure_pursuit.PurePursuitPathTracker;
+import frc.robot.autos.TrailblazerPathLogger;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.TimestampedChassisSpeeds;
+import frc.robot.util.trailblazer.constraints.AutoConstraintCalculator;
+import frc.robot.util.trailblazer.followers.PathFollower;
+import frc.robot.util.trailblazer.followers.PidPathFollower;
+import frc.robot.util.trailblazer.trackers.PathTracker;
+import frc.robot.util.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
 
 public class Trailblazer {
-  /**
-   * Given a point and the constraints for its parent segment, resolve the constraint options to use
-   * while following that point.
-   */
-  private static AutoConstraintOptions resolveConstraints(
-      AutoPoint point, AutoConstraintOptions segmentConstraints) {
-    var constraints = point.constraints.orElse(segmentConstraints);
-    return constraints;
-  }
-
   private final SwerveSubsystem swerve;
   private final LocalizationSubsystem localization;
   private final PathTracker pathTracker = new PurePursuitPathTracker();
@@ -71,8 +61,7 @@ public class Trailblazer {
                               localization.getPose(), currentAutoPointIndex);
 
                       var constrainedVelocityGoal =
-                          getSwerveSetpoint(
-                              currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
+                          getSwerveSetpoint(currentAutoPoint, segment, distanceToSegmentEnd);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
                       DogLog.log(
@@ -112,7 +101,7 @@ public class Trailblazer {
   }
 
   private ChassisSpeeds getSwerveSetpoint(
-      AutoPoint point, AutoConstraintOptions segmentConstraints, double distanceToSegmentEnd) {
+      AutoPoint point, AutoSegment segment, double distanceToSegmentEnd) {
     if (previousSpeeds.timestampSeconds == 0) {
       previousSpeeds = new TimestampedChassisSpeeds(Timer.getFPGATimestamp() - 0.02);
     }
@@ -121,17 +110,17 @@ public class Trailblazer {
     var originalTargetPose = pathTracker.getTargetPose();
     var originalVelocityGoal =
         new TimestampedChassisSpeeds(pathFollower.calculateSpeeds(robotPose, originalTargetPose));
-    var originalConstraints = resolveConstraints(point, segmentConstraints);
+    var originalConstraints = segment.getConstraints(point);
 
     /*
-    var newLinearVelocity =
-        AutoConstraintCalculator.getDynamicVelocityConstraint(
-            robotPose,
-            endPose,
-            swerve.getFieldRelativeSpeeds(),
-            originalConstraints.maxLinearVelocity(),
-            originalConstraints.maxLinearAcceleration());
-    */
+     * var newLinearVelocity =
+     * AutoConstraintCalculator.getDynamicVelocityConstraint(
+     * robotPose,
+     * endPose,
+     * swerve.getFieldRelativeSpeeds(),
+     * originalConstraints.maxLinearVelocity(),
+     * originalConstraints.maxLinearAcceleration());
+     */
     var usedConstraints =
         originalConstraints.withMaxLinearVelocity(originalConstraints.maxLinearVelocity());
 

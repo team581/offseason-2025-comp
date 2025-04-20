@@ -11,6 +11,7 @@ import frc.robot.autos.auto_path_commands.red.RedLollipopLeftL4Auto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopRightABAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopRightL4Auto;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.trailblazer.Trailblazer;
 import java.util.function.BiFunction;
 
 public enum AutoSelection {

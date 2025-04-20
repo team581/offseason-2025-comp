@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.AutoBlocks;
-import frc.robot.autos.AutoPoint;
-import frc.robot.autos.AutoSegment;
 import frc.robot.autos.BaseAuto;
 import frc.robot.autos.Points;
-import frc.robot.autos.Trailblazer;
 import frc.robot.robot_manager.RobotManager;
+import frc.robot.util.trailblazer.AutoPoint;
+import frc.robot.util.trailblazer.AutoSegment;
+import frc.robot.util.trailblazer.Trailblazer;
 
 public class BlueLollipopLeftABJ extends BaseAuto {
   public BlueLollipopLeftABJ(RobotManager robotManager, Trailblazer trailblazer) {

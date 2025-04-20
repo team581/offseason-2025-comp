@@ -9,6 +9,7 @@ import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.scheduling.LifecycleSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.util.trailblazer.Trailblazer;
 
 public class Autos extends LifecycleSubsystem {
   private final AutoChooser autoChooser;

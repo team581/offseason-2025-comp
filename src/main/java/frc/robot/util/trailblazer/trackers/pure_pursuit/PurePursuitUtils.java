@@ -1,9 +1,9 @@
-package frc.robot.autos.trackers.pure_pursuit;
+package frc.robot.util.trailblazer.trackers.pure_pursuit;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.autos.AutoPoint;
+import frc.robot.util.trailblazer.AutoPoint;
 import java.util.List;
 
 public class PurePursuitUtils {
