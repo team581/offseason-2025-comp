@@ -51,12 +51,8 @@ public class Trailblazer {
                           localization.getPose(), swerve.getFieldRelativeSpeeds());
                       var currentAutoPointIndex = pathTracker.getCurrentPointIndex();
                       var currentAutoPoint = segment.points.get(currentAutoPointIndex);
-                      double distanceToSegmentEnd =
-                          segment.getRemainingDistance(
-                              localization.getPose(), currentAutoPointIndex);
 
-                      var constrainedVelocityGoal =
-                          getSwerveSetpoint(currentAutoPoint, segment, distanceToSegmentEnd);
+                      var constrainedVelocityGoal = getSwerveSetpoint(currentAutoPoint, segment);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
                       DogLog.log("Autos/Trailblazer/Tracker/Output", pathTracker.getTargetPose());
@@ -116,16 +112,26 @@ public class Trailblazer {
     return command;
   }
 
-  private ChassisSpeeds getSwerveSetpoint(
-      AutoPoint point, AutoSegment segment, double distanceToSegmentEnd) {
+  private ChassisSpeeds getSwerveSetpoint(AutoPoint point, AutoSegment segment) {
+    var lastPoint = segment.points.get(segment.points.size() - 1);
     var robotPose = localization.getPose();
     var goalPose = pathTracker.getTargetPose();
-    var constraints = segment.getConstraints(point);
-    var velocityGoal = pathFollower.calculateSpeeds(robotPose, goalPose, constraints);
+    var distanceToSegmentEnd =
+        segment.getRemainingDistance(localization.getPose(), pathTracker.getCurrentPointIndex());
 
-    DogLog.log("Autos/Trailblazer/Tracker/Output", goalPose);
-    DogLog.log("Autos/Trailblazer/Follower/Output", velocityGoal);
+    // TODO: Calling this calculate speeds function has side effects, need a better method for
+    // deciding if we are going to overshoot
+    // var speedsForRemainingPath =
+    //     pathFollower.calculateSpeeds(
+    //         Pose2d.kZero,
+    //         new Pose2d(distanceToSegmentEnd, 0, Rotation2d.kZero),
+    //         segment.getConstraints(lastPoint));
+    var speedsForCurrentPoint =
+        pathFollower.calculateSpeeds(robotPose, goalPose, segment.getConstraints(point));
 
-    return velocityGoal;
+    // speedsForCurrentPoint.vMetersPerSecond = Math.min(speedsForRemainingPath.vMetersPerSecond,
+    // speedsForCurrentPoint.vMetersPerSecond);
+
+    return speedsForCurrentPoint;
   }
 }
