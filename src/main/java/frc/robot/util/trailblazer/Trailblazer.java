@@ -59,6 +59,31 @@ public class Trailblazer {
                           getSwerveSetpoint(currentAutoPoint, segment, distanceToSegmentEnd);
                       swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
 
+                      DogLog.log("Autos/Trailblazer/Tracker/Output", pathTracker.getTargetPose());
+                      DogLog.log("Autos/Trailblazer/Follower/Output", constrainedVelocityGoal);
+
+                      DogLog.log(
+                          "Autos/Trailblazer/UsedConstraints/MaxLinearV",
+                          segment.getConstraints(currentAutoPoint).linearConstraints().maxVelocity);
+                      DogLog.log(
+                          "Autos/Trailblazer/UsedConstraints/MaxLinearA",
+                          segment
+                              .getConstraints(currentAutoPoint)
+                              .linearConstraints()
+                              .maxAcceleration);
+                      DogLog.log(
+                          "Autos/Trailblazer/UsedConstraints/MaxAngularV",
+                          segment
+                              .getConstraints(currentAutoPoint)
+                              .angularConstraints()
+                              .maxVelocity);
+                      DogLog.log(
+                          "Autos/Trailblazer/UsedConstraints/MaxAngularA",
+                          segment
+                              .getConstraints(currentAutoPoint)
+                              .angularConstraints()
+                              .maxAcceleration);
+
                       DogLog.log(
                           "Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
                       if (previousAutoPointIndex != currentAutoPointIndex) {
