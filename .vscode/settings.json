@@ -14,7 +14,7 @@
   }],
   "java.server.launchMode": "Standard",
   "wpilib.autoStartRioLog": false,
-  "[java]": {"editor.defaultFormatter": "redhat.java"},
+  "[java]": {"editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"},
   "[json]": {"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"},
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.test.defaultConfig": "WPIlibUnitTests",
