@@ -15,5 +15,8 @@ public interface PathFollower {
    * @return The desired robot velocity to drive at.
    */
   public PolarChassisSpeeds calculateSpeeds(
-      Pose2d currentPose, Pose2d targetPose, AutoConstraintOptions constraints);
+      Pose2d currentPose,
+      Pose2d targetPose,
+      PolarChassisSpeeds currentSpeeds,
+      AutoConstraintOptions constraints);
 }

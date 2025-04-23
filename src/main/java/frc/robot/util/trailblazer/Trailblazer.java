@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.TrailblazerPathLogger;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.kinematics.PolarChassisSpeeds;
 import frc.robot.util.trailblazer.followers.PathFollower;
-import frc.robot.util.trailblazer.followers.ProfiledPidPathFollower;
+import frc.robot.util.trailblazer.followers.PidPathFollower;
 import frc.robot.util.trailblazer.trackers.PathTracker;
 import frc.robot.util.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
 
@@ -19,7 +20,7 @@ public class Trailblazer {
   private final LocalizationSubsystem localization;
   private final PathTracker pathTracker = new PurePursuitPathTracker();
   private final PathFollower pathFollower =
-      new ProfiledPidPathFollower(new PIDController(7, 0, 0), new PIDController(7, 0, 0));
+      new PidPathFollower(new PIDController(5, 0, 0), new PIDController(7, 0, 0));
   private int previousAutoPointIndex = -1;
 
   public Trailblazer(SwerveSubsystem swerve, LocalizationSubsystem localization) {
@@ -113,24 +114,32 @@ public class Trailblazer {
   }
 
   private ChassisSpeeds getSwerveSetpoint(AutoPoint point, AutoSegment segment) {
-    var lastPoint = segment.points.get(segment.points.size() - 1);
     var robotPose = localization.getPose();
     var goalPose = pathTracker.getTargetPose();
     var distanceToSegmentEnd =
         segment.getRemainingDistance(localization.getPose(), pathTracker.getCurrentPointIndex());
+    var constraints = segment.getConstraints(point);
 
-    // TODO: Calling this calculate speeds function has side effects, need a better method for
-    // deciding if we are going to overshoot
-    // var speedsForRemainingPath =
-    //     pathFollower.calculateSpeeds(
-    //         Pose2d.kZero,
-    //         new Pose2d(distanceToSegmentEnd, 0, Rotation2d.kZero),
-    //         segment.getConstraints(lastPoint));
+    var currentSpeeds = new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds());
+    var decelerationDistance =
+        (currentSpeeds.vMetersPerSecond * currentSpeeds.vMetersPerSecond)
+            / (2.0 * constraints.linearConstraints().maxAcceleration);
+    var perfectVelocity =
+        Math.sqrt(2.0 * (constraints.linearConstraints().maxAcceleration * distanceToSegmentEnd));
+
     var speedsForCurrentPoint =
-        pathFollower.calculateSpeeds(robotPose, goalPose, segment.getConstraints(point));
+        pathFollower.calculateSpeeds(robotPose, goalPose, currentSpeeds, constraints);
 
-    // speedsForCurrentPoint.vMetersPerSecond = Math.min(speedsForRemainingPath.vMetersPerSecond,
-    // speedsForCurrentPoint.vMetersPerSecond);
+    if (distanceToSegmentEnd < decelerationDistance) {
+      // Need to start decelerating
+      speedsForCurrentPoint.vMetersPerSecond =
+          Math.min(perfectVelocity, speedsForCurrentPoint.vMetersPerSecond);
+    }
+
+    DogLog.log("Autos/Trailblazer/Follower/OutputLinV", speedsForCurrentPoint.vMetersPerSecond);
+    DogLog.log(
+        "Autos/Trailblazer/Follower/Decelerating",
+        speedsForCurrentPoint.vMetersPerSecond == perfectVelocity);
 
     return speedsForCurrentPoint;
   }
