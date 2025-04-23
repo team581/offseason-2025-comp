@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.TrailblazerPathLogger;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
-import frc.robot.util.kinematics.PolarChassisSpeeds;
 import frc.robot.util.trailblazer.followers.PathFollower;
 import frc.robot.util.trailblazer.followers.PidPathFollower;
 import frc.robot.util.trailblazer.trackers.PathTracker;
@@ -20,7 +19,7 @@ public class Trailblazer {
   private final LocalizationSubsystem localization;
   private final PathTracker pathTracker = new PurePursuitPathTracker();
   private final PathFollower pathFollower =
-      new PidPathFollower(new PIDController(5, 0, 0), new PIDController(7, 0, 0));
+      new PidPathFollower(new PIDController(3.5, 0, 0), new PIDController(7, 0, 0));
   private int previousAutoPointIndex = -1;
 
   public Trailblazer(SwerveSubsystem swerve, LocalizationSubsystem localization) {
@@ -120,7 +119,7 @@ public class Trailblazer {
         segment.getRemainingDistance(localization.getPose(), pathTracker.getCurrentPointIndex());
     var constraints = segment.getConstraints(point);
 
-    var currentSpeeds = new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds());
+    var currentSpeeds = swerve.getFieldRelativeSpeeds();
     var decelerationDistance =
         (currentSpeeds.vMetersPerSecond * currentSpeeds.vMetersPerSecond)
             / (2.0 * constraints.linearConstraints().maxAcceleration);
