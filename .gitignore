@@ -170,3 +170,7 @@ simgui*.json
 
 # Compiled files
 bin
+
+# Java
+.factorypath
+.settings
