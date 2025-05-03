@@ -13,6 +13,7 @@
     "vmargs": ["-Djava.library.path=${workspaceFolder}/build/jni/release"]
   }],
   "java.server.launchMode": "Standard",
+  "git.blame.editorDecoration.enabled": true,
   "wpilib.autoStartRioLog": false,
   "[java]": {"editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"},
   "[json]": {"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"},
