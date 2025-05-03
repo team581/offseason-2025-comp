@@ -1061,8 +1061,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
   @Override
   protected void collectInputs() {
-    super.collectInputs();
-
     if (DriverStation.isAutonomous()) {
       scoringAlignActive = true;
     }
