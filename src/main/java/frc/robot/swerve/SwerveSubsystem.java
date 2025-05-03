@@ -111,10 +111,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     return fieldRelativeSpeeds;
   }
 
-  public SwerveDriveState getDrivetrainState() {
-    return drivetrainState;
-  }
-
   public void setSnapToAngle(double angle) {
     goalSnapAngle = angle;
 

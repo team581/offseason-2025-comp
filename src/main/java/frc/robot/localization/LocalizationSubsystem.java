@@ -37,6 +37,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
+  private Pose2d robotPose = Pose2d.kZero;
 
   public LocalizationSubsystem(ImuSubsystem imu, VisionSubsystem vision, SwerveSubsystem swerve) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
@@ -60,8 +61,19 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
     }
   }
 
+  @Override
+  protected void collectInputs() {
+    vision
+        .getLeftFrontTagResult()
+        .or(vision::getLeftBackTagResult)
+        .ifPresent(this::ingestTagResult);
+    vision.getRightTagResult().ifPresent(this::ingestTagResult);
+
+    robotPose = swerve.drivetrain.getState().Pose;
+  }
+
   public Pose2d getPose() {
-    return swerve.getDrivetrainState().Pose;
+    return robotPose;
   }
 
   public Pose2d getPose(double timestamp) {
@@ -76,11 +88,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    vision
-        .getLeftFrontTagResult()
-        .or(vision::getLeftBackTagResult)
-        .ifPresent(this::ingestTagResult);
-    vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
     DogLog.log("Localization/EstimatedPose", getPose());
   }
