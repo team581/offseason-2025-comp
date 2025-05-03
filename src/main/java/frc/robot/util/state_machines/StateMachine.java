@@ -102,7 +102,17 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
   }
 
   /**
-   * Runs once after entering a new state. This is where you should run state actions.
+   * Runs once before exiting the current state. This is where you should run state exit actions.
+   *
+   * <p>Default behavior is to do nothing.
+   *
+   * @param oldState The state being exited.
+   * @param newState The state being entered.
+   */
+  protected void beforeTransition(S oldState, S newState) {}
+
+  /**
+   * Runs once after entering a new state. This is where you should run one-off state actions.
    *
    * @param newState The newly entered state.
    */
@@ -119,6 +129,9 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
       // No change
       return;
     }
+
+    // Call beforeTransition before changing state
+    beforeTransition(state, requestedState);
 
     state = requestedState;
     doTransition();
