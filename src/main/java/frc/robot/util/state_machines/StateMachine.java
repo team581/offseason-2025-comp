@@ -40,6 +40,8 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
     collectInputs();
 
     setStateFromRequest(getNextState(state));
+
+    whileInState(state);
   }
 
   /**
@@ -117,6 +119,15 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
    * @param newState The newly entered state.
    */
   protected void afterTransition(S newState) {}
+
+  /**
+   * Called each loop while in the current state. Used for continuous state actions.
+   *
+   * <p>Default behavior is to do nothing.
+   *
+   * @param state The current state.
+   */
+  protected void whileInState(S state) {}
 
   /**
    * Used to change to a new state when a request is made. Will also trigger all logic that should
