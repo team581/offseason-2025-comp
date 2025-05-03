@@ -4,9 +4,9 @@ import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 public final class LifecycleSubsystemManager {
@@ -37,15 +37,14 @@ public final class LifecycleSubsystemManager {
     }
   }
 
-  private static final List<LifecycleSubsystem> subsystems = new ArrayList<>();
+  private static final Queue<LifecycleSubsystem> subsystems =
+      new PriorityQueue<>(
+          Comparator.comparingInt((LifecycleSubsystem subsystem) -> subsystem.priority.value)
+              .reversed());
   private static final CommandScheduler commandScheduler = CommandScheduler.getInstance();
   private static final Set<Command> scheduledCommands = getScheduledCommands();
 
   public static void ready() {
-    subsystems.sort(
-        Comparator.comparingInt((LifecycleSubsystem subsystem) -> subsystem.priority.value)
-            .reversed());
-
     for (LifecycleSubsystem lifecycleSubsystem : subsystems) {
       commandScheduler.registerSubsystem(lifecycleSubsystem);
     }
