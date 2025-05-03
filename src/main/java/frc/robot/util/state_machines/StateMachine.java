@@ -11,6 +11,8 @@ import java.util.Set;
 
 /** A state machine backed by {@link LifecycleSubsystem}. */
 public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem {
+  private static final StateMachineInputManager manager = new StateMachineInputManager();
+
   private S state;
   private boolean isInitialized = false;
   private double lastTransitionTimestamp = Timer.getFPGATimestamp();
@@ -24,6 +26,7 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
   protected StateMachine(SubsystemPriority priority, S initialState) {
     super(priority);
     state = initialState;
+    manager.register(this);
   }
 
   /** Processes collecting inputs, state transitions, and state actions. */
@@ -36,8 +39,6 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
       doTransition();
       isInitialized = true;
     }
-
-    collectInputs();
 
     setStateFromRequest(getNextState(state));
 
@@ -85,7 +86,9 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
   }
 
   /**
-   * Called each loop before processing transitions. Used for retrieving sensor values, etc.
+   * {@link StateMachineInputManager} will call this method for each state machine. Used for
+   * retrieving sensor values, etc. Inputs are collected in a special phase before any subsystem
+   * periodic methods are run.
    *
    * <p>Default behavior is to do nothing.
    */

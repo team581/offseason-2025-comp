@@ -10,7 +10,7 @@ import frc.robot.Robot;
  * similar to {@link Robot}.
  */
 public class LifecycleSubsystem extends SubsystemBase {
-  final SubsystemPriority priority;
+  public final SubsystemPriority priority;
 
   private final String loggerName;
 

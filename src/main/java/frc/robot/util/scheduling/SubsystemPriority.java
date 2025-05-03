@@ -1,39 +1,35 @@
 package frc.robot.util.scheduling;
 
 public enum SubsystemPriority {
-  // 20-29 is for sensor subsystems
+  // Ensures that state machine inputs are gathered at the right time
+  // Subsystem inputs are collected in reverse order of priority (so lowest priority first)
+  STATE_MACHINE_INPUT_MANAGER(999),
 
-  // IMU runs before vision so that it has fresh data to pass to MegaTag2
-  IMU(23),
+  // 20-30 is for manager subsystems
+  AUTOS(30),
+  ROBOT_MANAGER(29),
+  GROUND_MANAGER(28),
+
+  // 10-19 is for sensor subsystems
+  SWERVE(11),
+  LOCALIZATION(11),
+  AUTO_ALIGN(11),
+  FMS(11),
+  IMU(11),
   // Vision runs before localization so that it has fresh vision data for pose estimator
-  VISION(22),
-  // Swerve needs to have fresh data for localization
-  SWERVE(21),
-  // Localization runs before arm and shooter so that they have fresh speaker distance values
-  LOCALIZATION(20),
-  AUTO_ALIGN(20),
-  FMS(20),
+  VISION(10),
 
-  // 10-19 is for actuator subsystems
-  // Intake must run before roll so that it has fresh sensor data
-  DEPLOY(11),
-  INTAKE(11),
-  CLAW(10),
-  ROLL(10),
-  ELEVATOR(10),
-  ARM(10),
-  CLIMBER(10),
-  LIGHTS(10),
+  // 0-9 is for actuator subsystems
+  DEPLOY(0),
+  INTAKE(0),
+  CLAW(0),
+  ELEVATOR(0),
+  ARM(0),
+  CLIMBER(0),
+  LIGHTS(0),
+  RUMBLE_CONTROLLER(0);
 
-  // 0-9 is for manager subsystems
-  GROUND_MANAGER(9),
-  ROBOT_MANAGER(8),
-  RUMBLE_CONTROLLER(7),
-
-  // Robot manager runs last so that all sensor data is fresh before processing state transitions
-  AUTOS(0);
-
-  final int value;
+  public final int value;
 
   private SubsystemPriority(int priority) {
     this.value = priority;
