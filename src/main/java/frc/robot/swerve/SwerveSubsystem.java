@@ -173,6 +173,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
   public void driveTeleop(double x, double y, double theta) {
     rawControllerXValue = x;
     rawControllerYValue = y;
+
+    if (RobotConfig.IS_DEVELOPMENT) {
+      DogLog.log("Swerve/RawJoystickInput", new Translation2d(x, y));
+    }
+
     double leftY =
         -1.0
             * MathHelpers.signedExp(
