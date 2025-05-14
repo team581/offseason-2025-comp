@@ -237,6 +237,7 @@ public class Robot extends TimedRobot {
                         hardware.driverController.getRightX());
                   }
                 })
+                .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
     hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
