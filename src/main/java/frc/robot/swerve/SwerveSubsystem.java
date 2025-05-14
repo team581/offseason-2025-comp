@@ -204,7 +204,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> {
     DogLog.log("Swerve/LeftY", leftY);
     DogLog.log("Swerve/RightX", rightX);
 
-
     Translation2d mappedpose = ControllerHelpers.fromCircularDiscCoordinates(leftX, leftY);
     double mappedX = mappedpose.getX();
     double mappedY = mappedpose.getY();
