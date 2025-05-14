@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
@@ -45,9 +46,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
-  public static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
+  private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
       InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.66, 5.54), Map.entry(3.89, 0.0), Map.entry(-10.9, -2.5));
+          Map.entry(2.66, 5.0), Map.entry(3.89, 0.0), Map.entry(-10.9, -5.0));
   private boolean lollipopMode = false;
 
   public void setLollipopMode(boolean lollipopMode) {
@@ -85,7 +86,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   public void setCoralTx(OptionalDouble tx) {
-    handoffOffset = tx.orElse(0);
+    handoffOffset = CORAL_TX_TO_ARM_ANGLE_TABLE.get(tx.orElse(0));
   }
 
   public void setState(ArmState newState) {
@@ -193,8 +194,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/RawAngle", rawMotorAngle);
+    DogLog.log("Arm/RangeOfMotionGood", rangeOfMotionGood());
 
     DogLog.log("Arm/AtGoal", atGoal());
+    DogLog.log(
+        "Arm/AfterHomingAngle",
+        RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle));
 
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
@@ -234,24 +239,16 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
+
   @Override
-  protected ArmState getNextState(ArmState currentState) {
-    return switch (currentState) {
-      case PRE_MATCH_HOMING -> {
-        if (DriverStation.isEnabled()) {
-          var actualArmAngle =
-              RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
-          motor.setPosition(Units.degreesToRotations(actualArmAngle));
-          // Refresh sensor data now that position is set
-          collectInputs();
-
-          yield currentState;
-        }
-
-        yield currentState;
+  protected void beforeTransition(ArmState oldState, ArmState newState) {
+      if (oldState == ArmState.PRE_MATCH_HOMING && newState != ArmState.PRE_MATCH_HOMING) {
+        var actualArmAngle =
+        RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+        motor.setPosition(Units.degreesToRotations(actualArmAngle));
+        // Refresh sensor data now that position is set
+        collectInputs();
       }
-      default -> currentState;
-    };
   }
 
   public boolean rangeOfMotionGood() {
@@ -306,8 +303,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   public void disabledInit() {
-    // reset position to be 0*
-    var motorSim = motor.getSimState();
-    motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+    if (RobotBase.isSimulation()) {
+      // reset position to be 0*
+      var motorSim = motor.getSimState();
+      motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+    }
   }
 }
