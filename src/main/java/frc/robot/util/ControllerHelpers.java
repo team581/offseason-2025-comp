@@ -9,19 +9,17 @@ public final class ControllerHelpers {
   }
 
   public static Translation2d fromCircularDiscCoordinates(double x, double y) {
-    // https://stackoverflow.com/a/32391780
-    var mappedX =
-        0.5 * MathHelpers.signedSqrt(2 + Math.pow(x, 2) - Math.pow(y, 2) + 2 * x * Math.sqrt(2))
-            - 0.5
-                * MathHelpers.signedSqrt(
-                    2 + Math.pow(x, 2) - Math.pow(y, 2) - 2 * x * Math.sqrt(2));
-    var mappedY =
-        0.5 * MathHelpers.signedSqrt(2 - Math.pow(x, 2) + Math.pow(y, 2) + 2 * y * Math.sqrt(2))
-            - 0.5
-                * MathHelpers.signedSqrt(
-                    2 - Math.pow(x, 2) + Math.pow(y, 2) - 2 * y * Math.sqrt(2));
+    var rawInputs = new Translation2d(x, y);
 
-    return desaturate(mappedX, mappedY);
+    var magnitude = rawInputs.getNorm();
+
+    if (Math.abs(magnitude) > 0.9) {
+      magnitude = 1;
+    } else if (magnitude) {
+      magnitude = asdasd;
+    }
+
+    return new Translation2d(magnitude, rawInputs.getAngle());
   }
 
   private static Translation2d desaturate(double x, double y) {
