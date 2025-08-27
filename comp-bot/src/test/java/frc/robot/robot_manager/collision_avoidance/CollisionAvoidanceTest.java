@@ -362,10 +362,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF),
             ObstructionKind.NONE);
     var expected =
-        List.of(
-            Waypoint.ALGAE_NET_OUT_RIGHT,
-            Waypoint.HANDOFF_CLEARS_CLIMBER,
-            Waypoint.HANDOFF);
+        List.of(Waypoint.ALGAE_NET_OUT_RIGHT, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.HANDOFF);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -376,8 +373,7 @@ public class CollisionAvoidanceTest {
         CollisionAvoidance.aStar(
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT),
+            new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT),
             ObstructionKind.NONE);
     var expected = List.of(Waypoint.GROUND_ALGAE_INTAKE, Waypoint.ALGAE_NET_OUT_LEFT);
 
@@ -390,8 +386,7 @@ public class CollisionAvoidanceTest {
         CollisionAvoidance.aStar(
             new SuperstructurePosition(
                 ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
-            new SuperstructurePosition(
-                ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT),
+            new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT),
             ObstructionKind.NONE);
     var expected = List.of(Waypoint.GROUND_ALGAE_INTAKE, Waypoint.ALGAE_NET_OUT_RIGHT);
 
