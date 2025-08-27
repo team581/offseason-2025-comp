@@ -63,8 +63,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(240.0)
-                          .withMotionMagicCruiseVelocity(240.0))
+                          .withMotionMagicAcceleration(320.0)
+                          .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -84,8 +84,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(240.0)
-                          .withMotionMagicCruiseVelocity(240.0))
+                          .withMotionMagicAcceleration(320.0)
+                          .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -201,8 +201,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(2.5)
-                          .withMotionMagicCruiseVelocity(3.0)
+                          .withMotionMagicAcceleration(5.0)
+                          .withMotionMagicCruiseVelocity(6.0)
                           .withMotionMagicExpo_kA(6.0)
                           .withMotionMagicExpo_kV(3.0))
                   .withFeedback(
