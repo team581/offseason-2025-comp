@@ -10,6 +10,7 @@ import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipop4L4Auto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopLeftABAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopRightABAuto;
+import frc.robot.autos.auto_path_commands.red.RedLollipopMT;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
@@ -18,6 +19,7 @@ public enum AutoSelection implements AutoSelectionBase {
 
   LOLLIPOP_LEFT_FRONT_SIDE(RedLollipopLeftABAuto::new, BlueLollipopLeftABAuto::new),
   LOLLIPOP_RIGHT_FRONT_SIDE(RedLollipopRightABAuto::new, BlueLollipopRightABAuto::new),
+  LOLLIPOP_MT_ORDER(RedLollipopMT::new, RedLollipopMT::new),
   LOLLIPOP_4_L4(RedLollipop4L4Auto::new, BlueLollipop4L4Auto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;
