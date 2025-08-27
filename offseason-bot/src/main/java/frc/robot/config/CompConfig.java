@@ -1,9 +1,13 @@
 package frc.robot.config;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
@@ -12,6 +16,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.DeployConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
@@ -75,6 +80,35 @@ class CompConfig {
               0.0,
               new TalonFXConfiguration()
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2 * Math.PI))),
+            new ArmConfig(
+                    RIO_CAN_NAME,
+                    999,
+                    new TalonFXConfiguration()
+                        .withMotorOutput(
+                            new MotorOutputConfigs()
+                                .withNeutralMode(NeutralModeValue.Brake)
+                                .withInverted(InvertedValue.CounterClockwise_Positive))
+                        .withSlot0(
+                            new Slot0Configs()
+                                .withKP(0.0)
+                                .withKV(0.0)
+                                .withKD(0.0)
+                                .withKG(0.0)
+                                .withGravityType(GravityTypeValue.Arm_Cosine))
+                        .withMotionMagic(
+                            new MotionMagicConfigs()
+                                .withMotionMagicAcceleration(0.0)
+                                .withMotionMagicCruiseVelocity(0.0)
+                                .withMotionMagicExpo_kA(0.0)
+                                .withMotionMagicExpo_kV(0.0))
+                        .withFeedback(
+                            new FeedbackConfigs()
+                                .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
+                        .withCurrentLimits(
+                            new CurrentLimitsConfigs()
+                                .withSupplyCurrentLimit(60.0)
+                                .withStatorCurrentLimit(60.0)),
+                    0.0),
           new VisionConfig(
               0.005,
               0.8,
