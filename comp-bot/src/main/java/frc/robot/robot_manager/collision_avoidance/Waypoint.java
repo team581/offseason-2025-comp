@@ -25,11 +25,14 @@ public enum Waypoint {
   LOLLIPOP_INTAKE_RIGHT(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE)),
+          
   LOLLIPOP_INTAKE_PUSH(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH)),
   HANDOFF(new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF)),
-  HANDOFF_CLEARS_CLIMBER(new SuperstructurePosition(55, ArmState.CORAL_HANDOFF)),
+  HANDOFF_CLEARS_CLIMBER(
+      new SuperstructurePosition(
+          ElevatorState.PRE_CORAL_HANDOFF.getHeight() + 4.0, ArmState.CORAL_HANDOFF)),
 
   PROCESSOR(new SuperstructurePosition(ElevatorState.PROCESSOR, ArmState.ALGAE_PROCESSOR)),
   CLIMB(new SuperstructurePosition(ElevatorState.CLIMBING, ArmState.CLIMBING)),
@@ -106,7 +109,6 @@ public enum Waypoint {
   L4_LEFT_PLACE(
       new SuperstructurePosition(
           ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4)),
-  ALGAE_NET_UP(new SuperstructurePosition(48.0, ArmState.HOLDING_UPRIGHT)),
   ALGAE_NET_OUT_RIGHT(
       new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT)),
   ALGAE_NET_OUT_LEFT(new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT)),

@@ -356,9 +356,6 @@ public class CollisionAvoidance {
         Waypoint.PROCESSOR,
         Waypoint.LOLLIPOP_INTAKE_RIGHT,
         Waypoint.LOLLIPOP_INTAKE_PUSH);
-    Waypoint.ALGAE_NET_UP.alwaysSafe(
-        graph, Waypoint.ALGAE_NET_OUT_LEFT, Waypoint.ALGAE_NET_OUT_RIGHT);
-
     // If you aren't going to hit reef poles, you can skip the in between upright waypoints
     Waypoint.L2_UPRIGHT.avoidClimberLeftSideSpecial(
         graph,
@@ -488,7 +485,15 @@ public class CollisionAvoidance {
     Waypoint.L2_RIGHT_ARM.alwaysSafe(graph, Waypoint.L2_RIGHT_LINEUP);
     Waypoint.L3_RIGHT_ARM.alwaysSafe(graph, Waypoint.L3_RIGHT_LINEUP);
 
-    Waypoint.HANDOFF_CLEARS_CLIMBER.alwaysSafe(graph, Waypoint.ALGAE_NET_UP);
+    Waypoint.ALGAE_NET_OUT_LEFT.alwaysSafe(graph, Waypoint.L1_UPRIGHT);
+    Waypoint.ALGAE_NET_OUT_RIGHT.alwaysSafe(graph, Waypoint.L1_UPRIGHT);
+    Waypoint.ALGAE_NET_OUT_LEFT.alwaysSafe(graph, Waypoint.GROUND_ALGAE_INTAKE);
+    Waypoint.ALGAE_NET_OUT_RIGHT.alwaysSafe(graph, Waypoint.GROUND_ALGAE_INTAKE);
+
+    Waypoint.ALGAE_NET_OUT_LEFT.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
+    Waypoint.ALGAE_NET_OUT_RIGHT.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
+
+
 
     // L1 movements
     var l1AreaWaypoints =
