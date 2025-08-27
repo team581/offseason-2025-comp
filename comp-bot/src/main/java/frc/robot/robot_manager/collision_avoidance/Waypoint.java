@@ -25,7 +25,7 @@ public enum Waypoint {
   LOLLIPOP_INTAKE_RIGHT(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE)),
-          
+
   LOLLIPOP_INTAKE_PUSH(
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH)),

@@ -493,8 +493,6 @@ public class CollisionAvoidance {
     Waypoint.ALGAE_NET_OUT_LEFT.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
     Waypoint.ALGAE_NET_OUT_RIGHT.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
 
-
-
     // L1 movements
     var l1AreaWaypoints =
         List.of(
