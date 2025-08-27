@@ -50,7 +50,6 @@ public record RobotConfig(
       double homingEndPosition,
       TalonFXConfiguration motorConfig) {}
 
-
   public record ElevatorConfig(
       String canBusName,
       int motorId,
@@ -60,11 +59,9 @@ public record RobotConfig(
       double maxHeight,
       double minHeight,
       TalonFXConfiguration motorConfig) {}
-      public record ArmConfig(
-      String canBusName,
-      int motorId,
-      TalonFXConfiguration motorConfig,
-      double homingPosition) {}
+
+  public record ArmConfig(
+      String canBusName, int motorId, TalonFXConfiguration motorConfig, double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,
