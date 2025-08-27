@@ -17,11 +17,14 @@ public enum SubsystemPriority implements SubsystemPriorityBase {
   VISION(10),
 
   // 0-9 is for actuator subsystems
+  ARM(0),
+  CLAW(0),
   ELEVATOR(0),
   SWERVE(0),
   DEPLOY(0),
   SINGULATOR(0),
-  INTAKE(0);
+  INTAKE(0),
+  RUMBLE_CONTROLLER(0);
 
   public final int value;
 
