@@ -364,9 +364,36 @@ public class CollisionAvoidanceTest {
     var expected =
         List.of(
             Waypoint.ALGAE_NET_OUT_RIGHT,
-            Waypoint.ALGAE_NET_UP,
             Waypoint.HANDOFF_CLEARS_CLIMBER,
             Waypoint.HANDOFF);
+
+    assertEquals(expected, result.orElseThrow());
+  }
+
+  @Test
+  void algaeGroundIntakeToLeftNetScoreTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(
+                ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
+            new SuperstructurePosition(
+                ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT),
+            ObstructionKind.NONE);
+    var expected = List.of(Waypoint.GROUND_ALGAE_INTAKE, Waypoint.ALGAE_NET_OUT_LEFT);
+
+    assertEquals(expected, result.orElseThrow());
+  }
+
+  @Test
+  void algaeGroundIntakeToRightNetScoreTest() {
+    var result =
+        CollisionAvoidance.aStar(
+            new SuperstructurePosition(
+                ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
+            new SuperstructurePosition(
+                ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT),
+            ObstructionKind.NONE);
+    var expected = List.of(Waypoint.GROUND_ALGAE_INTAKE, Waypoint.ALGAE_NET_OUT_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
