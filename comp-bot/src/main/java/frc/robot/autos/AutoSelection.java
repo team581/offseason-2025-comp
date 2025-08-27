@@ -9,8 +9,8 @@ import frc.robot.autos.auto_path_commands.blue.BlueLollipopRightABAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipop4L4Auto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopLeftABAuto;
-import frc.robot.autos.auto_path_commands.red.RedLollipopRightABAuto;
 import frc.robot.autos.auto_path_commands.red.RedLollipopMT;
+import frc.robot.autos.auto_path_commands.red.RedLollipopRightABAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
