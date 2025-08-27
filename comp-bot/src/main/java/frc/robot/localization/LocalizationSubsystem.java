@@ -11,6 +11,9 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +23,6 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.odometry.CustomOdometry;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
@@ -43,8 +45,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
-  private final CustomOdometry customOdometry;
-  private final PoseEstimator<?> poseEstimator;
+  private final Odometry<SwerveModulePosition[]> odometry;
+  private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
@@ -54,19 +56,17 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       ImuSubsystem imu,
       VisionSubsystem vision,
       SwerveSubsystem swerve,
-      CustomOdometry customOdometry) {
+      SwerveDriveKinematics kinematics,
+      Odometry<SwerveModulePosition[]> odometry) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
     this.swerve = swerve;
     this.imu = imu;
     this.vision = vision;
-    this.customOdometry = customOdometry;
+    this.odometry = odometry;
 
     this.poseEstimator =
         new PoseEstimator<>(
-            customOdometry.getKinematics(),
-            customOdometry,
-            ODOMETRY_STATE_STD_DEVS,
-            VISION_MEASURMENT_STD_DEVS);
+            kinematics, odometry, ODOMETRY_STATE_STD_DEVS, VISION_MEASURMENT_STD_DEVS);
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
@@ -92,7 +92,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    customOdometry.updatePose();
     robotPose = poseEstimator.getEstimatedPosition();
   }
 
@@ -115,7 +114,10 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     super.robotPeriodic();
 
     DogLog.log("Localization/EstimatedPose", getPose());
-    DogLog.log("Odometry/Pose", customOdometry.getPoseMeters());
+    DogLog.log("Odometry/Pose", odometry.getPoseMeters());
+    var swerveState = swerve.drivetrain.getState();
+    // TODO: Use the timestamp from the state
+    poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }
 
   private void ingestTagResult(TagResult result) {
@@ -124,7 +126,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
+    swerve.drivetrain.addVisionMeasurement(
+        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {

@@ -7,6 +7,7 @@ import com.team581.util.scheduling.LifecycleSubsystemManager;
 import com.team581.util.tuning.ElasticLayoutUtil;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -32,7 +33,6 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.odometry.CustomOdometry;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
@@ -67,9 +67,17 @@ public class Robot extends TimedRobot {
   private final VisionSubsystem vision =
       new VisionSubsystem(
           imu, leftBackLimelight, leftFrontLimelight, rightLimelight, gamePieceDetectionLimelight);
-  private final CustomOdometry customOdometry = new CustomOdometry(imu, swerve);
+  // private final CustomOdometry customOdometry = new CustomOdometry(imu, swerve);
   private final LocalizationSubsystem localization =
-      new LocalizationSubsystem(imu, vision, swerve, customOdometry);
+      new LocalizationSubsystem(
+          imu,
+          vision,
+          swerve,
+          swerve.drivetrain.getKinematics(),
+          new SwerveDriveOdometry(
+              swerve.drivetrain.getKinematics(),
+              swerve.drivetrain.getState().RawHeading,
+              swerve.drivetrain.getState().ModulePositions));
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
