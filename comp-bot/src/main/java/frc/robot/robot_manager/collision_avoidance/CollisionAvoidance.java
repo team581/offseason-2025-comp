@@ -34,8 +34,7 @@ public class CollisionAvoidance {
       new HashMap<>();
 
   private static CollisionAvoidanceQuery lastQuery =
-      new CollisionAvoidanceQuery(
-          Waypoint.LOW_STOW, Waypoint.LOW_STOW, ObstructionKind.NONE, true);
+      new CollisionAvoidanceQuery(Waypoint.LOW_STOW, Waypoint.LOW_STOW, ObstructionKind.NONE, true);
   private static double lastSolution = 90.0;
   private static Waypoint lastWaypoint = Waypoint.LOW_STOW;
 
@@ -328,8 +327,7 @@ public class CollisionAvoidance {
 
     // TODO: If it's possible, allow going HANDOFF_CLEARS_CLIMBER to L1_UPRIGHT
     Waypoint.HANDOFF_CLEARS_CLIMBER.avoidClimberAlwaysSafe(graph, Waypoint.CORAL_L2_UPRIGHT);
-    Waypoint.HANDOFF.avoidClimberAlwaysSafe(
-        graph, Waypoint.ALGAE_GROUND_INTAKE_ARM_ONLY);
+    Waypoint.HANDOFF.avoidClimberAlwaysSafe(graph, Waypoint.ALGAE_GROUND_INTAKE_ARM_ONLY);
 
     /* Arm up to left/right is always safe */
     Waypoint.CORAL_L2_UPRIGHT.avoidClimberAlwaysSafe(
@@ -418,7 +416,10 @@ public class CollisionAvoidance {
     Waypoint.LOLLIPOP_INTAKE.alwaysSafe(graph, Waypoint.LOLLIPOP_INTAKE_PUSH);
     // Used in lollipop auto to go directly to/from scoring L4/L3
     Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
-        graph, Waypoint.CORAL_L2_LEFT_LINEUP, Waypoint.CORAL_L3_LEFT_LINEUP, Waypoint.CORAL_L4_LEFT_LINEUP);
+        graph,
+        Waypoint.CORAL_L2_LEFT_LINEUP,
+        Waypoint.CORAL_L3_LEFT_LINEUP,
+        Waypoint.CORAL_L4_LEFT_LINEUP);
     Waypoint.LOLLIPOP_INTAKE.avoidClimberAlwaysSafe(
         graph,
         Waypoint.CORAL_L3_LEFT_PLACE,
@@ -435,7 +436,10 @@ public class CollisionAvoidance {
 
     /* Switching coral level on the same side is okay if you won't hit the reef */
     var leftCoralScoreWaypoints =
-        List.of(Waypoint.CORAL_L2_LEFT_LINEUP, Waypoint.CORAL_L3_LEFT_LINEUP, Waypoint.CORAL_L4_LEFT_LINEUP);
+        List.of(
+            Waypoint.CORAL_L2_LEFT_LINEUP,
+            Waypoint.CORAL_L3_LEFT_LINEUP,
+            Waypoint.CORAL_L4_LEFT_LINEUP);
     var rightCoralScoreWaypoints =
         List.of(
             Waypoint.CORAL_L1_RIGHT_LINEUP,
@@ -477,7 +481,10 @@ public class CollisionAvoidance {
         Waypoint.CORAL_L2_RIGHT_ARM_ONLY,
         Waypoint.CORAL_L3_RIGHT_ARM_ONLY);
     Waypoint.HANDOFF.leftSideSpecial(
-        graph, ObstructionStrategy.LONG_WAY_IF_BLOCKED, Waypoint.CORAL_L2_LEFT_ARM_ONLY, Waypoint.CORAL_L3_LEFT_ARM_ONLY);
+        graph,
+        ObstructionStrategy.LONG_WAY_IF_BLOCKED,
+        Waypoint.CORAL_L2_LEFT_ARM_ONLY,
+        Waypoint.CORAL_L3_LEFT_ARM_ONLY);
 
     Waypoint.CORAL_L2_LEFT_ARM_ONLY.alwaysSafe(graph, Waypoint.CORAL_L2_LEFT_LINEUP);
 
@@ -516,8 +523,7 @@ public class CollisionAvoidance {
       }
     }
 
-    Waypoint.ALGAE_GROUND_INTAKE_ARM_ONLY.alwaysSafe(
-        graph, Waypoint.ALGAE_GROUND_INTAKE);
+    Waypoint.ALGAE_GROUND_INTAKE_ARM_ONLY.alwaysSafe(graph, Waypoint.ALGAE_GROUND_INTAKE);
 
     /* Reef algae */
     Waypoint.HANDOFF.alwaysSafe(

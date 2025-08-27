@@ -18,7 +18,8 @@ public class CollisionAvoidanceTest {
         new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
     var result =
         CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.LEFT_OBSTRUCTED);
-    var expected = List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
+    var expected =
+        List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
     assertEquals(expected, result.get());
   }
 
@@ -30,7 +31,8 @@ public class CollisionAvoidanceTest {
     var desiredPosition =
         new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
     var result = CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.NONE);
-    var expected = List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
+    var expected =
+        List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
     assertEquals(expected, result.get());
   }
 
@@ -341,7 +343,8 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4),
             ObstructionKind.RIGHT_OBSTRUCTED);
     // Moves elevator first, only extends arm at the end
-    var expected = List.of(Waypoint.LOW_STOW, Waypoint.CORAL_L4_UPRIGHT, Waypoint.CORAL_L4_RIGHT_LINEUP);
+    var expected =
+        List.of(Waypoint.LOW_STOW, Waypoint.CORAL_L4_UPRIGHT, Waypoint.CORAL_L4_RIGHT_LINEUP);
 
     assertEquals(expected, result.get());
   }
@@ -362,10 +365,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF),
             ObstructionKind.NONE);
     var expected =
-        List.of(
-            Waypoint.ALGAE_NET_RIGHT,
-            Waypoint.HANDOFF_CLEARS_CLIMBER,
-            Waypoint.HANDOFF);
+        List.of(Waypoint.ALGAE_NET_RIGHT, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.HANDOFF);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -404,7 +404,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.HANDOFF, Waypoint.CORAL_L2_RIGHT_ARM_ONLY, Waypoint.LOLLIPOP_INTAKE);
+    var expected =
+        List.of(Waypoint.HANDOFF, Waypoint.CORAL_L2_RIGHT_ARM_ONLY, Waypoint.LOLLIPOP_INTAKE);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -446,7 +447,10 @@ public class CollisionAvoidanceTest {
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.LEFT_OBSTRUCTED);
     var expected =
-        List.of(Waypoint.CORAL_L2_LEFT_PLACE, Waypoint.CORAL_L2_LEFT_ARM_ONLY, Waypoint.LOLLIPOP_INTAKE);
+        List.of(
+            Waypoint.CORAL_L2_LEFT_PLACE,
+            Waypoint.CORAL_L2_LEFT_ARM_ONLY,
+            Waypoint.LOLLIPOP_INTAKE);
 
     assertEquals(expected, result.orElseThrow());
   }
