@@ -126,6 +126,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
+    // swerve.drivetrain.addVisionMeasurement(
+    //     visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(
         visionPose, result.timestamp(), result.standardDevs());
   }
@@ -133,6 +135,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private void resetGyro(Rotation2d gyroAngle) {
     imu.setAngle(gyroAngle.getDegrees());
     poseEstimator.resetRotation(gyroAngle);
+    swerve.drivetrain.resetRotation(gyroAngle);
   }
 
   public void resetPose(Pose2d estimatedPose) {
@@ -144,6 +147,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       imu.setAngle(estimatedPose.getRotation().getDegrees());
     }
 
+    swerve.drivetrain.resetPose(estimatedPose);
     poseEstimator.resetPose(estimatedPose);
   }
 
