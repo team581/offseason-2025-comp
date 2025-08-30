@@ -126,8 +126,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    poseEstimator.addVisionMeasurement(
-        visionPose, result.timestamp(), result.standardDevs());
+    poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
