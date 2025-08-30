@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PurePursuitUtils {
   public static final double DYNAMIC_LOOKAHEAD_MAX = 1.5;
-  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.35;
+  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.4;
 
   public static Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
     var x1 = startPoint.getX();

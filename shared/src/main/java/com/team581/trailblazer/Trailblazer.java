@@ -29,7 +29,7 @@ public class Trailblazer {
   private final SwerveBase swerve;
   private final LocalizationBase localization;
 
-  private final PathTracker pathTracker = new PurePursuitPathTracker(false, false);
+  private final PathTracker pathTracker = new PurePursuitPathTracker(false, true);
   private final PathFollower pathFollower =
       new PidPathFollower(
           new PIDController(3.7, 0, 0), new PIDController(3.7, 0, 0), new PIDController(6.5, 0, 0));
