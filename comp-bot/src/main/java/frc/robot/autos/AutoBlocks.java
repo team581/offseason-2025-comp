@@ -18,6 +18,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
+import java.util.Optional;
 
 public class AutoBlocks {
   /**
@@ -275,25 +276,46 @@ public class AutoBlocks {
     return scoreL3(pipe, scoringSide, Commands.runOnce(robotManager::stowRequest));
   }
 
+  public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
+    return scoreL2(Optional.of(approachPose), pipe, scoringSide);
+  }
+
   public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide) {
-    return Commands.sequence(
-            trailblazer
+    return scoreL2(Optional.empty(), pipe, scoringSide);
+  }
+
+  private Command scoreL2(
+      Optional<Pose2d> approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
+    var firstCommand =
+        approachPose.isPresent()
+            ? trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        L2_SCORING_CONSTRAINTS,
+                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(() -> robotManager.autoAlign.getUsedScoringPose(pipe))),
+                    false)
+                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
+            : trailblazer
                 .followSegment(
                     new AutoSegment(
                         L2_SCORING_CONSTRAINTS,
                         new AutoPoint(
-                            () -> robotManager.autoAlign.getUsedScoringPose(pipe),
-                            Commands.runOnce(
-                                    () -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
-                                .andThen(
-                                    robotManager.waitForStates(
-                                        RobotState.CLAW_CORAL,
-                                        RobotState.CORAL_L2_LEFT_APPROACH,
-                                        RobotState.CORAL_L2_RIGHT_APPROACH,
-                                        RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l2LineupCommand(scoringSide)))),
+                            () -> robotManager.autoAlign.getUsedScoringPose(pipe)
+                            )),
                     false)
-                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3)),
+                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3));
+    return Commands.sequence(
+            Commands.parallel(
+                firstCommand,
+                Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
+                    .andThen(
+                        robotManager.waitForStates(
+                            RobotState.CLAW_CORAL,
+                            RobotState.CORAL_L2_LEFT_APPROACH,
+                            RobotState.CORAL_L2_RIGHT_APPROACH,
+                            RobotState.STARTING_POSITION_CORAL))
+                    .andThen(autoCommands.l2LineupCommand(scoringSide))),
             trailblazer.followSegment(
                 new AutoSegment(
                     BASE_CONSTRAINTS,
