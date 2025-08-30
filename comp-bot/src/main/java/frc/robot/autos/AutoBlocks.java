@@ -300,9 +300,7 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         L2_SCORING_CONSTRAINTS,
-                        new AutoPoint(
-                            () -> robotManager.autoAlign.getUsedScoringPose(pipe)
-                            )),
+                        new AutoPoint(() -> robotManager.autoAlign.getUsedScoringPose(pipe))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3));
     return Commands.sequence(
