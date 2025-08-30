@@ -22,6 +22,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -51,7 +52,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private double handoffOffset = 0;
+  private OptionalDouble handoffOffset = OptionalDouble.empty();
   private double collisionAvoidanceGoal;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
@@ -64,6 +65,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double previousElevatorHeight = Double.POSITIVE_INFINITY;
   private final Debouncer debouncer = new Debouncer(1.0, DebounceType.kBoth);
   private final LinearFilter handoffAdjustmentTxFilter = LinearFilter.movingAverage(7);
+  private static final double TRACKING_TIMEOUT = 15.0;
+  private double lastAddedTimestamp = 0.0;
 
   public void setLollipopMode(boolean lollipopMode) {
     this.lollipopMode = lollipopMode;
@@ -101,8 +104,25 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   public void setCoralHandoffOffset(OptionalDouble tx) {
-    handoffOffset =
-        CORAL_TX_TO_ARM_ANGLE_TABLE.get(handoffAdjustmentTxFilter.calculate(tx.orElse(0)));
+    var expired = Timer.getFPGATimestamp() - lastAddedTimestamp > TRACKING_TIMEOUT;
+    if (expired) {
+      handoffOffset = OptionalDouble.empty();
+    }
+    if (tx.isEmpty()) {
+      return;
+    }
+    var offset = CORAL_TX_TO_ARM_ANGLE_TABLE.get(handoffAdjustmentTxFilter.calculate(tx.orElse(0)));
+    lastAddedTimestamp = Timer.getFPGATimestamp();
+    if (handoffOffset.isEmpty()) {
+      for (int i = 0; i < 7; i++) {
+        handoffAdjustmentTxFilter.calculate(offset);
+      }
+    }
+    handoffOffset = OptionalDouble.of(handoffAdjustmentTxFilter.calculate(offset));
+  }
+
+  public void resetHandoffOffset() {
+    handoffOffset = OptionalDouble.empty();
   }
 
   public void setState(ArmState newState) {
@@ -191,7 +211,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   protected void collectInputs() {
-    usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle() + handoffOffset;
+    usedHandoffAngle =
+        ArmState.CORAL_HANDOFF.getAngle()
+            + (handoffOffset.isPresent() ? handoffOffset.getAsDouble() : 0.0);
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     motorAngle = MathHelpers.angleModulus(rawMotorAngle);
 

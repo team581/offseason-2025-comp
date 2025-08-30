@@ -1393,9 +1393,13 @@ public class RobotManager extends StateMachine<RobotState> {
         } else {
           intakeAssistActive = true;
           groundManager.intakeRequest();
+          arm.resetHandoffOffset();
         }
       }
-      default -> groundManager.intakeRequest();
+      default -> {
+        groundManager.intakeRequest();
+        arm.resetHandoffOffset();
+      }
     }
   }
 
