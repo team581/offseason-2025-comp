@@ -114,7 +114,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     super.robotPeriodic();
 
     DogLog.log("Localization/EstimatedPose", getPose());
-    DogLog.log("Odometry/Pose", odometry.getPoseMeters());
+    // DogLog.log("Odometry/Pose", odometry.getPoseMeters());
     var swerveState = swerve.drivetrain.getState();
     // TODO: Use the timestamp from the state
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
@@ -126,8 +126,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+    poseEstimator.addVisionMeasurement(
+        visionPose, result.timestamp(), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
