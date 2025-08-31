@@ -1575,6 +1575,7 @@ public class RobotManager extends StateMachine<RobotState> {
     if (getState().climbingOrRehoming) {
       return;
     }
+    autoAlign.reset();
     scoringAlignActive = true;
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
@@ -1593,6 +1594,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
 
+    autoAlign.reset();
     scoringAlignActive = true;
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
@@ -1610,6 +1612,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
 
+    autoAlign.reset();
     scoringAlignActive = true;
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
@@ -1676,6 +1679,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming) {
+      autoAlign.reset();
       scoringAlignActive = true;
       if (robotScoringSide == RobotScoringSide.LEFT) {
 
@@ -1813,6 +1817,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_ALGAE -> {
         if (groundManager.hasCoral()) {
           groundManager.l1WaitRequest();
+          autoAlign.reset();
           scoringAlignActive = true;
         } else {
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
@@ -1822,6 +1827,7 @@ public class RobotManager extends StateMachine<RobotState> {
         if (groundManager.hasCoral()) {
           lowStowRequest();
           groundManager.l1WaitRequest();
+          autoAlign.reset();
           scoringAlignActive = true;
         } else {
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
@@ -1831,6 +1837,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
       case LOW_STOW -> {
         groundManager.l1WaitRequest();
+        autoAlign.reset();
         scoringAlignActive = true;
       }
 

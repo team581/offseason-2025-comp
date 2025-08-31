@@ -1,19 +1,20 @@
 package frc.robot.auto_align.tag_align;
 
-import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.google.common.collect.ImmutableList;
 import com.team581.math.MathHelpers;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,8 +40,41 @@ public class TagAlign {
       ImmutableList.copyOf(ReefSide.values());
   public static final double L1_TRACKING_TIMEOUT = 15.0;
 
-  private static final PhoenixPIDController ROTATION_CONTROLLER =
-      new PhoenixPIDController(5.75, 0.0, 0.0);
+  private ProfiledPIDController REEF_PIPE_ROTATION_CONTROLLER =
+      new ProfiledPIDController(
+          5.75,
+          0.0,
+          0.0,
+          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+  private ProfiledPIDController ALGAE_ROTATION_CONTROLLER =
+      new ProfiledPIDController(
+          5.75,
+          0.0,
+          0.0,
+          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+  private ProfiledPIDController L1_ROTATION_CONTROLLER =
+      new ProfiledPIDController(
+          5.75,
+          0.0,
+          0.0,
+          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+
+  private ProfiledPIDController REEF_PIPE_TRANSLATION_CONTROLLER =
+      new ProfiledPIDController(
+          4.0,
+          0.0,
+          0.0,
+          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+
+  private ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
+      new ProfiledPIDController(
+          4.0,
+          0.0,
+          0.0,
+          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+
+  private ProfiledPIDController L1_TRANSLATION_CONTROLLER =
+      new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(3.0, 2.0));
 
   private static final InterpolatingDoubleTreeMap CORAL_TX_TO_L1_OFFSET =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -72,7 +106,6 @@ public class TagAlign {
 
   private static final double MAX_SPEED = 2.0;
   private static final double MAX_ROTATION_SPEED = Units.rotationsToRadians(3.0);
-  private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
   private static final double PIPE_SWITCH_TIMEOUT = 0.5;
 
   private final AlignmentCostUtil alignmentCostUtil;
@@ -89,7 +122,14 @@ public class TagAlign {
   private boolean aligned = false;
   private boolean translationGood = false;
   private boolean rotationGood = false;
+  private boolean resetReefPipeNextLoop = false;
+  private boolean resetAlgaeNextLoop = false;
+  private boolean resetL1NextLoop = false;
+
   private OptionalDouble coralL1Offset = OptionalDouble.empty();
+  private Pose2d lastReefPipeTargetPose = new Pose2d();
+  private Pose2d lastL1TargetPose = new Pose2d();
+  private Pose2d lastAlgaeTargetPose = new Pose2d();
 
   private final LinearFilter l1AdjustmentFilter = LinearFilter.movingAverage(7);
 
@@ -102,8 +142,9 @@ public class TagAlign {
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
     alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState, robotScoringSide);
-    ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
-    ROTATION_CONTROLLER.setTolerance(0.01);
+    ALGAE_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
+    L1_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
+    REEF_PIPE_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   public void setLevel(ReefPipeLevel level, ReefPipeLevel preferredLevel, RobotScoringSide side) {
@@ -284,6 +325,12 @@ public class TagAlign {
     return reefState.isAlgaeRemoved(side);
   }
 
+  public void reset() {
+    resetL1NextLoop = true;
+    resetAlgaeNextLoop = true;
+    resetReefPipeNextLoop = true;
+  }
+
   private void resetL1() {
     coralL1Offset = OptionalDouble.empty();
   }
@@ -385,11 +432,75 @@ public class TagAlign {
     return ALL_REEF_SIDES.stream().min(alignmentCostUtil.getAlgaeComparator()).orElseThrow();
   }
 
-  public PolarChassisSpeeds getPoseAlignmentChassisSpeeds(
+  public PolarChassisSpeeds getReefPipeAlignmentChassisSpeeds(
       Pose2d targetPose,
       Pose2d currentPose,
       AutoConstraintOptions constraints,
       PolarChassisSpeeds currentSpeeds) {
+    var reset = false;
+    if (resetReefPipeNextLoop) {
+      reset = true;
+    }
+    resetReefPipeNextLoop = false;
+    return getPoseAlignmentChassisSpeeds(
+        targetPose,
+        currentPose,
+        REEF_PIPE_TRANSLATION_CONTROLLER,
+        REEF_PIPE_ROTATION_CONTROLLER,
+        constraints,
+        currentSpeeds,
+        reset);
+  }
+
+  public PolarChassisSpeeds getAlgaeAlignmentChassisSpeeds(
+      Pose2d targetPose,
+      Pose2d currentPose,
+      AutoConstraintOptions constraints,
+      PolarChassisSpeeds currentSpeeds) {
+        var reset = false;
+        if (resetAlgaeNextLoop) {
+          reset = true;
+        }
+        resetAlgaeNextLoop = false;
+    return getPoseAlignmentChassisSpeeds(
+        targetPose,
+        currentPose,
+        ALGAE_TRANSLATION_CONTROLLER,
+        ALGAE_ROTATION_CONTROLLER,
+        constraints,
+        currentSpeeds,
+        reset);
+  }
+
+  public PolarChassisSpeeds getL1AlignmentChassisSpeeds(
+      Pose2d targetPose,
+      Pose2d currentPose,
+      AutoConstraintOptions constraints,
+      PolarChassisSpeeds currentSpeeds) {
+        var reset = false;
+        if (resetL1NextLoop) {
+          reset = true;
+        }
+        resetL1NextLoop = false;
+    return getPoseAlignmentChassisSpeeds(
+        targetPose,
+        currentPose,
+        L1_TRANSLATION_CONTROLLER,
+        L1_ROTATION_CONTROLLER,
+        constraints,
+        currentSpeeds,
+        reset);
+  }
+
+  private PolarChassisSpeeds getPoseAlignmentChassisSpeeds(
+      Pose2d targetPose,
+      Pose2d currentPose,
+      ProfiledPIDController translationController,
+      ProfiledPIDController rotationController,
+      AutoConstraintOptions constraints,
+      PolarChassisSpeeds currentSpeeds,
+      boolean reset) {
+    rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
     if (FeatureFlags.AUTO_ALIGN_DEADBAND.getAsBoolean()) {
       if (aligned || inRange(targetPose)) {
@@ -406,24 +517,46 @@ public class TagAlign {
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
-    var driveVelocityMagnitude = VELOCITY_CONTROLLER.calculate(distanceToGoalMeters);
+    if (reset) {
+      DogLog.timestamp("AutoAlign/ResetControllers");
+      rotationController.reset(
+          currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
+      rotationController.setGoal(targetPose.getRotation().getRadians());
+      translationController.reset(
+                    distanceToGoalMeters,
+                    Math.min(
+                            0.0,
+                            -new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
+                                    .rotateBy(targetPose.getTranslation()
+                                            .minus(currentPose.getTranslation())
+                                            .getAngle()
+                                            .unaryMinus())
+                                    .getX()));
+            translationController.setGoal(0);
+    }
+
+    var driveVelocityMagnitude =
+        translationController.calculate(
+            distanceToGoalMeters,
+            new State(0, 0),
+            new Constraints(constraints.maxLinearVelocity(), constraints.maxLinearAcceleration()));
 
     if (!translationGood) {
       driveVelocityMagnitude += Math.copySign(FEED_FORWARD.get(), driveVelocityMagnitude);
     }
 
+    DogLog.log("AutoAlign/setpoint", Units.radiansToDegrees(distanceToGoalMeters));
+    if (MathUtil.isNear(
+        targetPose.getRotation().getRadians(), rotationController.getSetpoint().position, 1e-6)) {}
+
+    ;
+
     var rotationSpeed =
-        ROTATION_CONTROLLER.calculate(
+        rotationController.calculate(
             currentPose.getRotation().getRadians(),
-            targetPose.getRotation().getRadians(),
-            Timer.getFPGATimestamp());
+            new State(targetPose.getRotation().getRadians(), 0),
+            constraints.getAngularConstraints());
 
-    var maxSpeed = preferedScoringLevel.equals(ReefPipeLevel.L1) ? 1.0 : MAX_SPEED;
-    driveVelocityMagnitude = MathUtil.clamp(driveVelocityMagnitude, -maxSpeed, maxSpeed);
-
-    if (FeatureFlags.AUTO_ALIGN_MAX_ROTATION_LIMIT.getAsBoolean()) {
-      rotationSpeed = MathUtil.clamp(rotationSpeed, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-    }
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
     DogLog.log("AutoAlign/DistanceToGoal", distanceToGoalMeters);
