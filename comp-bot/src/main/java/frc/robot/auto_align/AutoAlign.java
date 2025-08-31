@@ -25,9 +25,11 @@ import java.util.OptionalDouble;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(4.0, Units.rotationsToRadians(3.0), 6.0, Units.rotationsToRadians(3.0));
-      private static final AutoConstraintOptions L1_CONSTRAINTS =
-      new AutoConstraintOptions(3.0, Units.rotationsToRadians(2.0), 6.0, Units.rotationsToRadians(3.0));
+      new AutoConstraintOptions(
+          4.0, Units.rotationsToRadians(3.0), 6.0, Units.rotationsToRadians(3.0));
+  private static final AutoConstraintOptions L1_CONSTRAINTS =
+      new AutoConstraintOptions(
+          3.0, Units.rotationsToRadians(2.0), 6.0, Units.rotationsToRadians(3.0));
   private static final Translation2d CENTER_OF_REEF_RED =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
@@ -166,11 +168,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             CONSTRAINTS,
             new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
     l1AlignSpeeds =
-            tagAlign.getL1AlignmentChassisSpeeds(
-                usedScoringPose,
-                robotPose,
-                L1_CONSTRAINTS,
-                new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
+        tagAlign.getL1AlignmentChassisSpeeds(
+            usedScoringPose,
+            robotPose,
+            L1_CONSTRAINTS,
+            new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
     var controllerValues = swerve.getControllerValues();
     tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
   }
