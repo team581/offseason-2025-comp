@@ -107,7 +107,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     return swerve.drivetrain.samplePoseAt(newTimestamp).orElseGet(this::getPose);
   }
 
-  private Pose2d getWPIPose() {
+  private Pose2d getWpiPose() {
     return wpiRobotPose;
   }
 
@@ -125,7 +125,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     super.robotPeriodic();
 
     DogLog.log("Localization/EstimatedPose CTR", getPose());
-    DogLog.log("Localization/EstimatedPose WPI", getWPIPose());
+    DogLog.log("Localization/EstimatedPose WPI", getWpiPose());
     var swerveState = swerve.drivetrain.getState();
     // TODO: Use the timestamp from the state
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
@@ -139,8 +139,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     }
     swerve.drivetrain.addVisionMeasurement(
         visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
-    poseEstimator.addVisionMeasurement(
-        visionPose, result.timestamp(), result.standardDevs());
+    poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
