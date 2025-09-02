@@ -40,40 +40,40 @@ public class TagAlign {
       ImmutableList.copyOf(ReefSide.values());
   public static final double L1_TRACKING_TIMEOUT = 15.0;
 
-  private final static final ProfiledPIDController REEF_PIPE_ROTATION_CONTROLLER =
+  private static final ProfiledPIDController REEF_PIPE_ROTATION_CONTROLLER =
       new ProfiledPIDController(
           5.75,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
-  private final static final ProfiledPIDController ALGAE_ROTATION_CONTROLLER =
+  private static final ProfiledPIDController ALGAE_ROTATION_CONTROLLER =
       new ProfiledPIDController(
           5.75,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
-  private final static final ProfiledPIDController L1_ROTATION_CONTROLLER =
+  private  static final ProfiledPIDController L1_ROTATION_CONTROLLER =
       new ProfiledPIDController(
           5.75,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
-  private final static final ProfiledPIDController REEF_PIPE_TRANSLATION_CONTROLLER =
+  private static final ProfiledPIDController REEF_PIPE_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(
           4.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
-  private final static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
+  private  static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(
           4.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
-  private final static final ProfiledPIDController L1_TRANSLATION_CONTROLLER =
+  private static final ProfiledPIDController L1_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(3.0, 2.0));
 
   private static final InterpolatingDoubleTreeMap CORAL_TX_TO_L1_OFFSET =
