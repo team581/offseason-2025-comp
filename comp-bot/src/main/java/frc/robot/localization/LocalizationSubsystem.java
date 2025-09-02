@@ -48,6 +48,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final Odometry<SwerveModulePosition[]> odometry;
   private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
+  private Pose2d wpiRobotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0, 0, 0);
@@ -92,7 +93,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    robotPose = poseEstimator.getEstimatedPosition();
+    robotPose = swerve.drivetrain.getState().Pose;
+    wpiRobotPose = poseEstimator.getEstimatedPosition();
   }
 
   @Override
@@ -101,6 +103,15 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   }
 
   public Pose2d getPose(double timestamp) {
+    var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
+    return swerve.drivetrain.samplePoseAt(newTimestamp).orElseGet(this::getPose);
+  }
+
+  private Pose2d getWPIPose() {
+    return wpiRobotPose;
+  }
+
+  public Pose2d getWPIPose(double timestamp) {
     var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
     return poseEstimator.sampleAt(newTimestamp).orElseGet(this::getPose);
   }
@@ -113,8 +124,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Localization/EstimatedPose", getPose());
-    // DogLog.log("Odometry/Pose", odometry.getPoseMeters());
+    DogLog.log("Localization/EstimatedPose CTR", getPose());
+    DogLog.log("Localization/EstimatedPose WPI", getWPIPose());
     var swerveState = swerve.drivetrain.getState();
     // TODO: Use the timestamp from the state
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
@@ -126,8 +137,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    // swerve.drivetrain.addVisionMeasurement(
-    //     visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+    swerve.drivetrain.addVisionMeasurement(
+        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(
         visionPose, result.timestamp(), result.standardDevs());
   }
