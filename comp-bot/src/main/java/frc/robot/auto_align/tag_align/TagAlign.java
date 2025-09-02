@@ -52,7 +52,7 @@ public class TagAlign {
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
-  private  static final ProfiledPIDController L1_ROTATION_CONTROLLER =
+  private static final ProfiledPIDController L1_ROTATION_CONTROLLER =
       new ProfiledPIDController(
           5.75,
           0.0,
@@ -66,7 +66,7 @@ public class TagAlign {
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
-  private  static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
+  private static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(
           4.0,
           0.0,
@@ -457,11 +457,11 @@ public class TagAlign {
       Pose2d currentPose,
       AutoConstraintOptions constraints,
       PolarChassisSpeeds currentSpeeds) {
-        var reset = false;
-        if (resetAlgaeNextLoop) {
-          reset = true;
-        }
-        resetAlgaeNextLoop = false;
+    var reset = false;
+    if (resetAlgaeNextLoop) {
+      reset = true;
+    }
+    resetAlgaeNextLoop = false;
     return getPoseAlignmentChassisSpeeds(
         targetPose,
         currentPose,
@@ -477,11 +477,11 @@ public class TagAlign {
       Pose2d currentPose,
       AutoConstraintOptions constraints,
       PolarChassisSpeeds currentSpeeds) {
-        var reset = false;
-        if (resetL1NextLoop) {
-          reset = true;
-        }
-        resetL1NextLoop = false;
+    var reset = false;
+    if (resetL1NextLoop) {
+      reset = true;
+    }
+    resetL1NextLoop = false;
     return getPoseAlignmentChassisSpeeds(
         targetPose,
         currentPose,
@@ -523,16 +523,18 @@ public class TagAlign {
           currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
       rotationController.setGoal(targetPose.getRotation().getRadians());
       translationController.reset(
-                    distanceToGoalMeters,
-                    Math.min(
-                            0.0,
-                            -new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
-                                    .rotateBy(targetPose.getTranslation()
-                                            .minus(currentPose.getTranslation())
-                                            .getAngle()
-                                            .unaryMinus())
-                                    .getX()));
-            translationController.setGoal(0);
+          distanceToGoalMeters,
+          Math.min(
+              0.0,
+              -new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
+                  .rotateBy(
+                      targetPose
+                          .getTranslation()
+                          .minus(currentPose.getTranslation())
+                          .getAngle()
+                          .unaryMinus())
+                  .getX()));
+      translationController.setGoal(0);
     }
 
     var driveVelocityMagnitude =
