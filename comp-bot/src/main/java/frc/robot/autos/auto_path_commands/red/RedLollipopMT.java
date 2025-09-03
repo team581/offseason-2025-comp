@@ -43,7 +43,7 @@ public class RedLollipopMT extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90.0)),
                                 autoCommands.l4ApproachCommand(
-                                    ReefPipe.PIPE_A, RobotScoringSide.LEFT))))),
+                                    ReefPipe.PIPE_A, RobotScoringSide.LEFT), AutoBlocks.BASE_CONSTRAINTS)))),
                 blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
                 autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 3
@@ -69,7 +69,7 @@ public class RedLollipopMT extends BaseAuto {
         timing.time(
             "Piece 2",
             blocks.intakeLollipop(
-                new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-51.95))
+                new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-47.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(90)),
