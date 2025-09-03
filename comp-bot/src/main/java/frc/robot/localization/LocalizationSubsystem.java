@@ -128,7 +128,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     DogLog.log("Localization/EstimatedPose WPI", getWpiPose());
     var swerveState = swerve.drivetrain.getState();
     // TODO: Use the timestamp from the state
-    poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
+    poseEstimator.updateWithTime(swerveState.Timestamp, swerveState.RawHeading, swerveState.ModulePositions);
   }
 
   private void ingestTagResult(TagResult result) {
@@ -137,15 +137,15 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+    // swerve.drivetrain.addVisionMeasurement(
+    //   visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
     imu.setAngle(gyroAngle.getDegrees());
     poseEstimator.resetRotation(gyroAngle);
-    swerve.drivetrain.resetRotation(gyroAngle);
+    // swerve.drivetrain.resetRotation(gyroAngle);
   }
 
   public void resetPose(Pose2d estimatedPose) {
@@ -157,7 +157,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       imu.setAngle(estimatedPose.getRotation().getDegrees());
     }
 
-    swerve.drivetrain.resetPose(estimatedPose);
+    // swerve.drivetrain.resetPose(estimatedPose);
     poseEstimator.resetPose(estimatedPose);
   }
 
