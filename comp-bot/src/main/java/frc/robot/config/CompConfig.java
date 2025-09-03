@@ -63,7 +63,7 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(320.0)
+                          .withMotionMagicAcceleration(300.0)
                           .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
@@ -84,7 +84,7 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(320.0)
+                          .withMotionMagicAcceleration(300.0)
                           .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
