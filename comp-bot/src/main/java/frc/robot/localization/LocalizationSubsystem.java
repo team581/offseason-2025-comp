@@ -128,7 +128,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     DogLog.log("Localization/EstimatedPose WPI", getWpiPose());
     var swerveState = swerve.drivetrain.getState();
     // TODO: Use the timestamp from the state
-    poseEstimator.updateWithTime(swerveState.Timestamp, swerveState.RawHeading, swerveState.ModulePositions);
+    poseEstimator.updateWithTime(
+        swerveState.Timestamp, swerveState.RawHeading, swerveState.ModulePositions);
   }
 
   private void ingestTagResult(TagResult result) {
