@@ -131,22 +131,3 @@ gversion {
 	timeZone     = "America/Los_Angeles"
 	indent       = "  "
 }
-
-// Configuration cache exclusions
-tasks.configureEach {
-	switch (name) {
-		case 'createVersionFile':
-			notCompatibleWithConfigurationCache('gversion plugin uses Project object')
-			break
-		case 'simulateJava':
-		case 'simulateJavaRelease':
-			notCompatibleWithConfigurationCache('simulate Java tasks are not compatible with configuration cache')
-			break
-		case 'deploy':
-		case ~/.*roborio.*/:
-		case 'writeDebugInfo':
-		case ~/.*DebugInfo.*/:
-			notCompatibleWithConfigurationCache('GradleRIO tasks are not compatible with configuration cache')
-			break
-	}
-}
