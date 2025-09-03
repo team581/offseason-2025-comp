@@ -43,7 +43,8 @@ public class RedLollipopMT extends BaseAuto {
                             new AutoPoint(
                                 new Pose2d(15.034, 3.629, Rotation2d.fromDegrees(90.0)),
                                 autoCommands.l4ApproachCommand(
-                                    ReefPipe.PIPE_A, RobotScoringSide.LEFT), AutoBlocks.BASE_CONSTRAINTS)))),
+                                    ReefPipe.PIPE_A, RobotScoringSide.LEFT),
+                                AutoBlocks.BASE_CONSTRAINTS)))),
                 blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
                 autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 3
