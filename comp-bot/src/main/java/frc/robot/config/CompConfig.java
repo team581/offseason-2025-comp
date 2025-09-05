@@ -40,7 +40,6 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          "comp",
           new ElevatorConfig(
               CANIVORE_NAME,
               15,

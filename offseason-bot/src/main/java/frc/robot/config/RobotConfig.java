@@ -6,7 +6,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 
 public record RobotConfig(
-    String robotName,
     IntakeConfig intake,
     ClawConfig claw,
     DeployConfig deploy,
@@ -81,8 +80,6 @@ public record RobotConfig(
       boolean invertRotation,
       boolean invertX,
       boolean invertY) {}
-
-  public static final String SERIAL_NUMBER = System.getenv("serialnum");
 
   public static RobotConfig get() {
     return CompConfig.competitionBot;

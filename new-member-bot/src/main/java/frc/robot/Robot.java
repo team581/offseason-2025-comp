@@ -1,59 +1,20 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import com.team581.Base581Robot;
+import frc.robot.generated.BuildConstants;
 
-public class Robot extends TimedRobot {
-
+public class Robot extends Base581Robot {
   public Robot() {
+    logMetadata(
+        BuildConstants.MAVEN_NAME,
+        BuildConstants.BUILD_DATE,
+        BuildConstants.GIT_SHA,
+        BuildConstants.GIT_DATE,
+        BuildConstants.GIT_BRANCH,
+        BuildConstants.DIRTY);
+
     configureBindings();
   }
 
-  @Override
-  public void robotInit() {}
-
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-  }
-
-  @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {}
-
-  @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void autonomousExit() {}
-
-  @Override
-  public void teleopInit() {}
-
-  @Override
-  public void teleopPeriodic() {}
-
-  @Override
-  public void teleopExit() {}
-
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  @Override
-  public void testPeriodic() {}
-
-  @Override
-  public void testExit() {}
-
-  private static void configureBindings() {}
+  private void configureBindings() {}
 }
