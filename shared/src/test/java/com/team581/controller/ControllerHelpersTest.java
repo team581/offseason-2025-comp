@@ -1,4 +1,4 @@
-package com.team581.math;
+package com.team581.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

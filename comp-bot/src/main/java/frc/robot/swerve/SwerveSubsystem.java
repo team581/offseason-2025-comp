@@ -7,7 +7,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.GlobalConfig;
-import com.team581.math.ControllerHelpers;
+import com.team581.controller.ControllerHelpers;
 import com.team581.trailblazer.SwerveBase;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
