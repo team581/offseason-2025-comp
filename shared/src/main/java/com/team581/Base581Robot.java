@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public abstract class Base581Robot extends TimedRobot {
+  private static final String FINALIZE_INIT_FAULT = "Robot finalizeInit() never called";
+
+  private boolean isInitialized = false;
+
   public Base581Robot() {
     DriverStation.silenceJoystickConnectionWarning(RobotBase.isSimulation());
 
@@ -30,10 +34,25 @@ public abstract class Base581Robot extends TimedRobot {
         RobotKind.fromSerialNumber().map(RobotKind::toString).orElse("Unknown"));
     DogLog.log("Metadata/RoborioSerialNumber", GlobalConfig.SERIAL_NUMBER);
 
+    ElasticLayoutUtil.onBoot();
+  }
+
+  /** Must be called by subclasses to finalize initialization */
+  protected void finalizeInit() {
+    isInitialized = true;
+    DogLog.clearFault(FINALIZE_INIT_FAULT);
+
     // This must be run before any commands are scheduled
     LifecycleSubsystemManager.ready();
 
-    ElasticLayoutUtil.onBoot();
+    configureBindings();
+  }
+
+  @Override
+  public void robotInit() {
+    if (!isInitialized) {
+      DogLog.logFault(FINALIZE_INIT_FAULT);
+    }
   }
 
   @Override
@@ -92,4 +111,6 @@ public abstract class Base581Robot extends TimedRobot {
       default -> DogLog.log("Metadata/GitDirty", "Unknown");
     }
   }
+
+  protected abstract void configureBindings();
 }

@@ -42,7 +42,7 @@ public class Robot extends Base581Robot {
         BuildConstants.GIT_BRANCH,
         BuildConstants.DIRTY);
 
-    configureBindings();
+    finalizeInit();
   }
 
   @Override
@@ -69,7 +69,8 @@ public class Robot extends Base581Robot {
     autonomousCommand.cancel();
   }
 
-  private void configureBindings() {
+  @Override
+  protected void configureBindings() {
     swerve.setDefaultCommand(
         swerve
             .run(

@@ -13,8 +13,9 @@ public class Robot extends Base581Robot {
         BuildConstants.GIT_BRANCH,
         BuildConstants.DIRTY);
 
-    configureBindings();
+    finalizeInit();
   }
 
-  private static void configureBindings() {}
+  @Override
+  protected void configureBindings() {}
 }

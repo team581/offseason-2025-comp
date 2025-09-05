@@ -110,7 +110,7 @@ public class Robot extends Base581Robot {
 
     CollisionAvoidance.warmup();
 
-    configureBindings();
+    finalizeInit();
   }
 
   @Override
@@ -143,7 +143,8 @@ public class Robot extends Base581Robot {
     }
   }
 
-  private void configureBindings() {
+  @Override
+  protected void configureBindings() {
     swerve.setDefaultCommand(
         swerve
             .run(
