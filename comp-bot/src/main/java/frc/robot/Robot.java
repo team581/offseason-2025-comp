@@ -15,7 +15,6 @@ import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
 import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
@@ -35,7 +34,6 @@ import frc.robot.vision.limelight.LimelightState;
 
 public class Robot extends Base581Robot {
   private Command autonomousCommand = Commands.none();
-  private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
 
   private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);

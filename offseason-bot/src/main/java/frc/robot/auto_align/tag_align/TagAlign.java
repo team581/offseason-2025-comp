@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.team581.math.MathHelpers;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
+import com.team581.util.FmsUtil;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,7 +24,6 @@ import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.ReefState;
 import frc.robot.config.FeatureFlags;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import java.util.Comparator;
@@ -155,11 +155,11 @@ public class TagAlign {
 
       var inputVector = new Translation2d(rawControllerXValue, -rawControllerYValue);
       var viewOffset = 0;
-      if (FmsSubsystem.isRedAlliance()) {
+      if (FmsUtil.isRedAlliance()) {
         viewOffset = 180;
       }
 
-      var sideAngle = ReefSide.fromPipe(storedPipe).getPose(FmsSubsystem.isRedAlliance());
+      var sideAngle = ReefSide.fromPipe(storedPipe).getPose(FmsUtil.isRedAlliance());
 
       var rotatedVector =
           inputVector.rotateBy(

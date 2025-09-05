@@ -1,9 +1,9 @@
 package frc.robot.autos;
 
 import com.team581.math.MathHelpers;
+import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.fms.FmsSubsystem;
 
 public enum Points {
   START_R1_AND_B1(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(90))),
@@ -36,6 +36,6 @@ public enum Points {
   }
 
   public Pose2d getPose() {
-    return FmsSubsystem.isRedAlliance() ? redPose : bluePose;
+    return FmsUtil.isRedAlliance() ? redPose : bluePose;
   }
 }

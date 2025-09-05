@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.GlobalConfig;
 import com.team581.math.ControllerHelpers;
 import com.team581.trailblazer.SwerveBase;
+import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
@@ -23,7 +24,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.RobotConfig;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.RobotTunerConstants;
 import frc.robot.generated.RobotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -195,7 +195,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
       leftY *= -1.0;
     }
 
-    if (FmsSubsystem.isRedAlliance()) {
+    if (FmsUtil.isRedAlliance()) {
       leftX *= -1.0;
       leftY *= -1.0;
     }

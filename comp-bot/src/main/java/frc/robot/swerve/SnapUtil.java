@@ -1,15 +1,15 @@
 package frc.robot.swerve;
 
+import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.RobotScoringSide;
-import frc.robot.fms.FmsSubsystem;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class SnapUtil {
   public static double getProcessorAngle() {
-    return FmsSubsystem.isRedAlliance() ? 190 : 370;
+    return FmsUtil.isRedAlliance() ? 190 : 370;
   }
 
   public static double getCageAngle(boolean isRedAlliance) {
@@ -34,7 +34,7 @@ public class SnapUtil {
 
   public static double getCoralStationAngle(Pose2d robotPose) {
     if (robotPose.getY() > 4.025) {
-      if (FmsSubsystem.isRedAlliance()) {
+      if (FmsUtil.isRedAlliance()) {
         // Coral station red, processor side
         return 234.0;
       }
@@ -42,7 +42,7 @@ public class SnapUtil {
       // Coral station blue, non processor side
       return 306.0;
     } else {
-      if (FmsSubsystem.isRedAlliance()) {
+      if (FmsUtil.isRedAlliance()) {
         // Coral station red, non processor side
         return 126.0;
       }

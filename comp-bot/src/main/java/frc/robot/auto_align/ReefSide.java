@@ -1,9 +1,9 @@
 package frc.robot.auto_align;
 
+import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.fms.FmsSubsystem;
 
 public enum ReefSide {
   SIDE_AB(
@@ -126,6 +126,6 @@ public enum ReefSide {
   }
 
   public int getTagID() {
-    return FmsSubsystem.isRedAlliance() ? redTagID : blueTagID;
+    return FmsUtil.isRedAlliance() ? redTagID : blueTagID;
   }
 }

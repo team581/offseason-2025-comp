@@ -3,6 +3,7 @@ package frc.robot.localization;
 import com.ctre.phoenix6.Utils;
 import com.team581.math.MathHelpers;
 import com.team581.trailblazer.LocalizationBase;
+import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -124,6 +124,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
 
   public Command getZeroCommand() {
     return Commands.runOnce(
-        () -> resetGyro(Rotation2d.fromDegrees((FmsSubsystem.isRedAlliance() ? 180 : 0))));
+        () -> resetGyro(Rotation2d.fromDegrees((FmsUtil.isRedAlliance() ? 180 : 0))));
   }
 }

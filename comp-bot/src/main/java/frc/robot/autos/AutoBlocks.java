@@ -5,6 +5,7 @@ import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
+import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -15,7 +16,6 @@ import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.config.RobotConfig;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.Optional;
@@ -145,7 +145,7 @@ public class AutoBlocks {
                         new AutoPoint(
                             () ->
                                 pipe.getPose(
-                                    ReefPipeLevel.L4, FmsSubsystem.isRedAlliance(), scoringSide),
+                                    ReefPipeLevel.L4, FmsUtil.isRedAlliance(), scoringSide),
                             robotManager
                                 .waitForStates(
                                     RobotState.CLAW_CORAL,
@@ -163,7 +163,7 @@ public class AutoBlocks {
                         () ->
                             pipe.getPose(
                                 ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsSubsystem.isRedAlliance(),
+                                FmsUtil.isRedAlliance(),
                                 scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
@@ -178,7 +178,7 @@ public class AutoBlocks {
                         new AutoPoint(
                             () ->
                                 pipe.getPose(
-                                    ReefPipeLevel.L4, FmsSubsystem.isRedAlliance(), scoringSide),
+                                    ReefPipeLevel.L4, FmsUtil.isRedAlliance(), scoringSide),
                             robotManager
                                 .waitForStates(
                                     RobotState.CLAW_CORAL,
@@ -196,7 +196,7 @@ public class AutoBlocks {
                         () ->
                             pipe.getPose(
                                 ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsSubsystem.isRedAlliance(),
+                                FmsUtil.isRedAlliance(),
                                 scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
@@ -265,9 +265,7 @@ public class AutoBlocks {
                     new AutoPoint(
                         () ->
                             pipe.getPose(
-                                ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsSubsystem.isRedAlliance(),
-                                scoringSide),
+                                ReefPipeLevel.BACK_AWAY_AUTO, FmsUtil.isRedAlliance(), scoringSide),
                         Commands.waitSeconds(0.15).andThen(onFinish)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
@@ -322,7 +320,7 @@ public class AutoBlocks {
                         () ->
                             pipe.getPose(
                                 ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsSubsystem.isRedAlliance(),
+                                FmsUtil.isRedAlliance(),
                                 scoringSide)))))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }

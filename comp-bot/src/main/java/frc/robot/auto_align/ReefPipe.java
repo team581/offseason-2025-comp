@@ -1,8 +1,8 @@
 package frc.robot.auto_align;
 
+import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.fms.FmsSubsystem;
 
 public enum ReefPipe {
   PIPE_A(new Pose2d(3.71, 4.19, Rotation2d.kZero), new Pose2d(13.84, 3.86, Rotation2d.k180deg)),
@@ -44,14 +44,10 @@ public enum ReefPipe {
 
   public Pose2d getPose(ReefPipeLevel level, RobotScoringSide side) {
     if (side == RobotScoringSide.LEFT) {
-      return FmsSubsystem.isRedAlliance()
-          ? redPoses.getLeftPose(level)
-          : bluePoses.getLeftPose(level);
+      return FmsUtil.isRedAlliance() ? redPoses.getLeftPose(level) : bluePoses.getLeftPose(level);
     }
 
-    return FmsSubsystem.isRedAlliance()
-        ? redPoses.getRightPose(level)
-        : bluePoses.getRightPose(level);
+    return FmsUtil.isRedAlliance() ? redPoses.getRightPose(level) : bluePoses.getRightPose(level);
   }
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance, RobotScoringSide side) {

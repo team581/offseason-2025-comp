@@ -4,7 +4,6 @@ import com.team581.Base581Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
@@ -17,7 +16,6 @@ import frc.robot.swerve.SwerveSubsystem;
 
 public class Robot extends Base581Robot {
   private final Command autonomousCommand = Commands.none();
-  private final FmsSubsystem fms = new FmsSubsystem();
   private final Hardware hardware = new Hardware();
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
