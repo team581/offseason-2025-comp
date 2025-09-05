@@ -16,5 +16,5 @@ public class Robot extends Base581Robot {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private static void configureBindings() {}
 }
