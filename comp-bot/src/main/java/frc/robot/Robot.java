@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.team581.Base581Robot;
 import com.team581.GlobalConfig;
+import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +14,6 @@ import frc.robot.autos.Autos;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
-import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
@@ -26,6 +26,7 @@ import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.vision.limelight.Limelight;
@@ -59,7 +60,8 @@ public class Robot extends Base581Robot {
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
   private final RumbleControllerSubsystem rumbleController =
-      new RumbleControllerSubsystem(hardware.driverController, true);
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCandi);
   private final IntakeSubsystem intake =

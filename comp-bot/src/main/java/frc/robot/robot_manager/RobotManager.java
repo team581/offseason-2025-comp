@@ -1,5 +1,6 @@
 package frc.robot.robot_manager;
 
+import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
@@ -20,7 +21,6 @@ import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.FeatureFlags;
-import frc.robot.controller.RumbleControllerSubsystem;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
