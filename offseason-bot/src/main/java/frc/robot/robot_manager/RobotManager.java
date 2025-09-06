@@ -24,8 +24,6 @@ import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
-import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.robot_manager.ground_manager.GroundState;
 import frc.robot.swerve.SnapUtil;
@@ -94,7 +92,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
-  private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
   private boolean canSkipCollisionAvoidanceForReefAlgae = false;
