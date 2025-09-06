@@ -25,9 +25,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
-import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
-import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
-import frc.robot.robot_manager.collision_avoidance.ObstructionStrategy;
 import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -52,7 +49,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private double handoffOffset = 0;
-  private double collisionAvoidanceGoal;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
@@ -134,50 +130,19 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-  private double getSetpoint(double angle) {
-    if ((Math.abs(collisionAvoidanceGoal % 360) != Math.abs(angle))
-        || (Math.abs((360 - collisionAvoidanceGoal) % 360) != Math.abs(angle))) {
-      return CollisionAvoidance.getCollisionAvoidanceAngleGoal(
-          angle,
-          true,
-          ObstructionKind.NONE,
-          ObstructionStrategy.IGNORE_BLOCKED,
-          ObstructionStrategy.IGNORE_BLOCKED,
-          rawMotorAngle);
-    }
-    return collisionAvoidanceGoal;
-  }
-
-  public static double getRawAngleFromNormalAngle(double angle, double rawAngle) {
-    double[] solutions = CollisionAvoidance.getCollisionAvoidanceSolutions(rawAngle, angle);
-    double solution1 = solutions[0];
-    double solution2 = solutions[1];
-
-    if (Math.abs(solution2 - rawAngle) > Math.abs(solution1 - rawAngle)) {
-      return solution1;
-    } else {
-      return solution2;
-    }
-  }
-
-  public void setCollisionAvoidanceGoal(double angle) {
-    collisionAvoidanceGoal = angle;
-    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
-  }
-
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
       case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
       case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
-      case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
+      case PRE_MATCH_HOMING -> false;
     };
   }
 
   public boolean nearGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
-      case PRE_MATCH_HOMING, COLLISION_AVOIDANCE -> false;
+      case PRE_MATCH_HOMING -> false;
     };
   }
 
@@ -237,9 +202,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
 
     switch (getState()) {
-      case COLLISION_AVOIDANCE -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(collisionAvoidanceGoal));
-      }
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
@@ -256,10 +218,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         motor.setControl(algaeFling);
       }
       case CORAL_HANDOFF -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(usedHandoffAngle)));
+        makeGetMotionMagicRequest(Units.degreesToRotations(usedHandoffAngle));
       }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(getState().getAngle())));
+        makeGetMotionMagicRequest(Units.degreesToRotations(getState().getAngle()));
       }
     }
   }
@@ -336,7 +298,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     if (RobotBase.isSimulation()) {
       // reset position to be 0*
       var motorSim = motor.getSimState();
-      motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+      motorSim.setRawRotorPosition(rawMotorAngle);
     }
   }
 }
