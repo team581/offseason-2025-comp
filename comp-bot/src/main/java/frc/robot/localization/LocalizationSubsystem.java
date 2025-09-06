@@ -127,9 +127,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     DogLog.log("Localization/EstimatedPose CTR", getPose());
     DogLog.log("Localization/EstimatedPose WPI", getWpiPose());
     var swerveState = swerve.drivetrain.getState();
-    // TODO: Use the timestamp from the state
-    poseEstimator.updateWithTime(
-        swerveState.Timestamp, swerveState.RawHeading, swerveState.ModulePositions);
+    poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }
 
   private void ingestTagResult(TagResult result) {
@@ -138,8 +136,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    // swerve.drivetrain.addVisionMeasurement(
-    //   visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+    swerve.drivetrain.addVisionMeasurement(
+      visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
     DogLog.log("Localization/Vision Pose", visionPose);
   }
