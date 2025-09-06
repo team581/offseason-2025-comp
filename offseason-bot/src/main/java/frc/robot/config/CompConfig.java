@@ -72,7 +72,7 @@ class CompConfig {
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
-                          new ClimberConfig(
+          new ClimberConfig(
               CANIVORE_NAME,
               21,
               22,

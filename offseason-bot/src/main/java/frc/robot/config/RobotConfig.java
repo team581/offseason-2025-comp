@@ -52,7 +52,7 @@ public record RobotConfig(
       double homingEndPosition,
       TalonFXConfiguration motorConfig) {}
 
-      public record ClimberConfig(
+  public record ClimberConfig(
       String canBusName,
       int climbMotorId,
       int cancoderId,
