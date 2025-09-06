@@ -316,7 +316,7 @@ public class TagAlign {
               .sorted(
                   Comparator.comparingDouble(
                       p ->
-                          p.getPose(pipeLevel, robotScoringSide, localization.getPose())
+                          p.getPose(pipeLevel, localization.getPose())
                               .getTranslation()
                               .getDistance(localization.getPose().getTranslation())))
               .limit(2)
@@ -334,8 +334,7 @@ public class TagAlign {
                       robotPose
                           .getTranslation()
                           .getDistance(
-                              pipe.getPose(ReefPipeLevel.BACK_AWAY, robotScoringSide, robotPose)
-                                  .getTranslation())))
+                              pipe.getPose(ReefPipeLevel.BACK_AWAY, robotPose).getTranslation())))
           .orElseThrow();
     }
     if (pipeLevel.equals(ReefPipeLevel.RAISING)) {
@@ -359,8 +358,7 @@ public class TagAlign {
                     robotPose
                         .getTranslation()
                         .getDistance(
-                            pipe.getPose(ReefPipeLevel.BACK_AWAY, robotScoringSide, robotPose)
-                                .getTranslation())))
+                            pipe.getPose(ReefPipeLevel.BACK_AWAY, robotPose).getTranslation())))
         .orElseThrow();
   }
 

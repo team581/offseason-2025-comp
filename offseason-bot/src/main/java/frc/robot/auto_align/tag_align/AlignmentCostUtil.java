@@ -121,18 +121,18 @@ public class AlignmentCostUtil {
               var allPipes =
                   TagAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
               return allPipes.stream()
-                  .filter(p -> p.getPose(level, side, localization.getPose()) != null)
+                  .filter(p -> p.getPose(level, localization.getPose()) != null)
                   .min(
                       Comparator.comparingDouble(
                           p ->
-                              p.getPose(level, side, localization.getPose())
+                              p.getPose(level, localization.getPose())
                                       .getTranslation()
                                       .getDistance(localization.getPose().getTranslation())
                                   + reefState.getL1Count(p)))
                   .map(
                       p ->
                           getAlignCost(
-                              p.getPose(level, side, localization.getPose()),
+                              p.getPose(level, localization.getPose()),
                               localization.getPose(),
                               swerve.getTeleopSpeeds()))
                   .orElse(Double.MAX_VALUE);
