@@ -135,7 +135,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       resetPose(visionPose);
     }
     swerve.drivetrain.addVisionMeasurement(
-      visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
     DogLog.log("Localization/Vision Pose", visionPose);
   }
