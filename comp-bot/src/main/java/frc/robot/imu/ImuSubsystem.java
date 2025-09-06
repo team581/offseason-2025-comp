@@ -64,10 +64,6 @@ public class ImuSubsystem extends StateMachine<ImuState> {
             && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD));
   }
 
-  public void setAngle(double zeroAngle) {
-    this.imu.setYaw(zeroAngle);
-  }
-
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();

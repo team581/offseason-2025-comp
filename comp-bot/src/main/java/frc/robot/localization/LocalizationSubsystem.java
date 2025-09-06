@@ -51,7 +51,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private Pose2d wpiRobotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-  private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0, 0, 0);
+  private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
 
   public LocalizationSubsystem(
       ImuSubsystem imu,
@@ -141,24 +141,16 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     // swerve.drivetrain.addVisionMeasurement(
     //   visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
+    DogLog.log("Localization/Vision Pose", visionPose);
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
-    imu.setAngle(gyroAngle.getDegrees());
     poseEstimator.resetRotation(gyroAngle);
-    // swerve.drivetrain.resetRotation(gyroAngle);
+    swerve.drivetrain.resetRotation(gyroAngle);
   }
 
   public void resetPose(Pose2d estimatedPose) {
-    // Reset the gyro when requested in teleop
-    // Otherwise, if we are in auto, only reset it if we aren't already at the correct heading
-    if (DriverStation.isTeleop()
-        || !MathUtil.isNear(
-            estimatedPose.getRotation().getDegrees(), imu.getRobotHeading(), 1.5, -180, 180)) {
-      imu.setAngle(estimatedPose.getRotation().getDegrees());
-    }
-
-    // swerve.drivetrain.resetPose(estimatedPose);
+    swerve.drivetrain.resetPose(estimatedPose);
     poseEstimator.resetPose(estimatedPose);
   }
 
