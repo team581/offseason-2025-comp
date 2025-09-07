@@ -65,9 +65,9 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
-              new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0)),
-              ReefPipe.PIPE_B,
-              RobotScoringSide.LEFT),
+                new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0)),
+                ReefPipe.PIPE_B,
+                RobotScoringSide.LEFT),
             autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
         timing.time(
@@ -76,9 +76,8 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-47.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL4(
-              //  new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(90)),
-                ReefPipe.PIPE_A,
-                RobotScoringSide.LEFT),
+                //  new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(90)),
+                ReefPipe.PIPE_A, RobotScoringSide.LEFT),
             Commands.none()));
   }
 }
