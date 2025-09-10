@@ -20,23 +20,18 @@ public class GroundManager extends StateMachine<GroundState> {
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;
 
-  private final CANdi topSensor;
-  private final CANdi bottomSensor;
+  private final CANdi sensor;
 
-  private final Debouncer topDebouncer = RobotConfig.get().intake().topDebouncer();
-  private final Debouncer bottomDebouncer = RobotConfig.get().intake().bottomDebouncer();
+  private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
 
-  private boolean topRaw = false;
-  private boolean bottomRaw = false;
-  private boolean topDebounced = false;
-  private boolean bottomDebounced = false;
+  private boolean raw = false;
+  private boolean debounced = false;
 
   public GroundManager(
       IntakeSubsystem intake,
       DeploySubsystem deploy,
       SingulatorSubsystem singulator,
-      CANdi topSensor,
-      CANdi bottomSensor) {
+      CANdi sensor) {
     super(
         SubsystemPriority.GROUND_MANAGER,
         RobotBase.isSimulation() ? GroundState.IDLE_NO_GP : GroundState.DEPLOY_NOT_HOMED);
@@ -44,8 +39,7 @@ public class GroundManager extends StateMachine<GroundState> {
     this.intake = intake;
     this.deploy = deploy;
     this.singulator = singulator;
-    this.topSensor = topSensor;
-    this.bottomSensor = bottomSensor;
+    this.sensor = sensor;
   }
 
   @Override
@@ -53,7 +47,7 @@ public class GroundManager extends StateMachine<GroundState> {
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
-      case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
   }
@@ -99,10 +93,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    topDebounced = topDebouncer.calculate(topRaw);
-    bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    raw = sensor.getS2State().getValue() == S2StateValue.High;
+    debounced = topDebouncer.calculate(raw);
 
     homingOrUnhomed =
         getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
@@ -112,18 +104,12 @@ public class GroundManager extends StateMachine<GroundState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("GroundManager/TopSensor/Debounced", topDebounced);
-    DogLog.log("GroundManager/TopSensor/Raw", topRaw);
-    DogLog.log("GroundManager/BottomSensor/Debounced", bottomDebounced);
-    DogLog.log("GroundManager/BottomSensor/Raw", bottomRaw);
+    DogLog.log("GroundManager/Sensor/Debounced", debounced);
+    DogLog.log("GroundManager/Sensor/Raw", raw);
   }
 
-  public boolean getTopHasGP() {
-    return topDebounced;
-  }
-
-  public boolean getBottomHasGP() {
-    return bottomDebounced;
+  public boolean getHasGP() {
+    return debounced;
   }
 
   public void rehomeRequest() {
@@ -143,7 +129,7 @@ public class GroundManager extends StateMachine<GroundState> {
       return;
     }
 
-    if (getTopHasGP()) {
+    if (getHasGP()) {
       setStateFromRequest(GroundState.IDLE_GP);
       return;
     }

@@ -40,10 +40,8 @@ class CompConfig {
       new RobotConfig(
           new IntakeConfig(
               CANIVORE_NAME,
-              99,
-              99,
-              99,
-              new Debouncer(0.3, DebounceType.kBoth),
+              25,
+              26,
               new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(

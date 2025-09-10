@@ -21,10 +21,8 @@ public record RobotConfig(
   public record IntakeConfig(
       String canBusName,
       int motorId,
-      int topCaNdiId,
-      int bottomCaNdiId,
-      Debouncer topDebouncer,
-      Debouncer bottomDebouncer,
+      int CaNdiId,
+      Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
