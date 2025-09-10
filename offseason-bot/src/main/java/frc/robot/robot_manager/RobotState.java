@@ -25,20 +25,14 @@ public enum RobotState {
   CORAL_INTAKE_LOLLIPOP_GRAB(ClawGamePiece.EMPTY, false),
 
   ALGAE_INTAKE_FLOOR(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L2_LEFT_APPROACH(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_LEFT_APPROACH(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L2_RIGHT_APPROACH(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_RIGHT_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L3_APPROACH(ClawGamePiece.ALGAE, false),
 
-  ALGAE_INTAKE_L2_LEFT_HOLDING(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_LEFT_HOLDING(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L2_RIGHT_HOLDING(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_RIGHT_HOLDING(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L2_HOLDING(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L3_HOLDING(ClawGamePiece.ALGAE, false),
 
-  ALGAE_INTAKE_L2_LEFT(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_LEFT(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L2_RIGHT(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_RIGHT(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L2(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_L3(ClawGamePiece.ALGAE, false),
 
   ALGAE_FLING_WAIT(ClawGamePiece.ALGAE, false),
   ALGAE_FLING_PREPARE(ClawGamePiece.ALGAE, false),
@@ -51,9 +45,9 @@ public enum RobotState {
   CORAL_L1_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L1. */
-  CORAL_L1_RIGHT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L1_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L1_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
+  CORAL_L1_LINEUP(ClawGamePiece.CORAL, false),
+  CORAL_L1_RELEASE(ClawGamePiece.CORAL, false),
 
   // L2 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -62,15 +56,11 @@ public enum RobotState {
   CORAL_L2_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L2. */
-  CORAL_L2_LEFT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L2_RIGHT_APPROACH(ClawGamePiece.CORAL, false),
+  CORAL_L2_APPROACH(ClawGamePiece.CORAL, false),
 
-  CORAL_L2_LEFT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L2_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L2_LEFT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L2_RIGHT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L2_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L2_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L2_LINEUP(ClawGamePiece.CORAL, false),
+  CORAL_L2_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L2_RELEASE(ClawGamePiece.CORAL, false),
 
   // L3 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -79,14 +69,10 @@ public enum RobotState {
   CORAL_L3_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L3. */
-  CORAL_L3_LEFT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L3_RIGHT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L3_LEFT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L3_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L3_LEFT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L3_RIGHT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L3_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L3_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L3_APPROACH(ClawGamePiece.CORAL, false),
+  CORAL_L3_LINEUP(ClawGamePiece.CORAL, false),
+  CORAL_L3_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L3_RELEASE(ClawGamePiece.CORAL, false),
 
   // L4 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -95,21 +81,14 @@ public enum RobotState {
   CORAL_L4_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L4. */
-  CORAL_L4_LEFT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L4_RIGHT_APPROACH(ClawGamePiece.CORAL, false),
-  CORAL_L4_LEFT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L4_RIGHT_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L4_LEFT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L4_RIGHT_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L4_LEFT_RELEASE(ClawGamePiece.CORAL, false),
-  CORAL_L4_RIGHT_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L4_APPROACH(ClawGamePiece.CORAL, false),
+  CORAL_L4_LINEUP(ClawGamePiece.CORAL, false),
+  CORAL_L4_PLACE(ClawGamePiece.CORAL, false),
+  CORAL_L4_RELEASE(ClawGamePiece.CORAL, false),
 
   // Algae scoring states
-  ALGAE_NET_LEFT_WAITING(ClawGamePiece.ALGAE, false),
-  ALGAE_NET_LEFT_RELEASE(ClawGamePiece.ALGAE, false),
-
-  ALGAE_NET_RIGHT_WAITING(ClawGamePiece.ALGAE, false),
-  ALGAE_NET_RIGHT_RELEASE(ClawGamePiece.ALGAE, false),
+  ALGAE_NET_WAITING(ClawGamePiece.ALGAE, false),
+  ALGAE_NET_RELEASE(ClawGamePiece.ALGAE, false),
 
   ALGAE_PROCESSOR_WAITING(ClawGamePiece.ALGAE, false),
   ALGAE_PROCESSOR_RELEASE(ClawGamePiece.ALGAE, false),
@@ -140,22 +119,16 @@ public enum RobotState {
 
   private static final ImmutableMap<RobotState, RobotState> lineupToPlace =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_LEFT_LINEUP, CORAL_L2_LEFT_PLACE),
-          Map.entry(CORAL_L3_LEFT_LINEUP, CORAL_L3_LEFT_PLACE),
-          Map.entry(CORAL_L4_LEFT_LINEUP, CORAL_L4_LEFT_PLACE),
-          Map.entry(CORAL_L1_RIGHT_LINEUP, CORAL_L1_RIGHT_RELEASE),
-          Map.entry(CORAL_L2_RIGHT_LINEUP, CORAL_L2_RIGHT_PLACE),
-          Map.entry(CORAL_L3_RIGHT_LINEUP, CORAL_L3_RIGHT_PLACE),
-          Map.entry(CORAL_L4_RIGHT_LINEUP, CORAL_L4_RIGHT_PLACE));
+          Map.entry(CORAL_L1_LINEUP, CORAL_L1_RELEASE),
+          Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
+          Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
+          Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE));
   private static final ImmutableMap<RobotState, RobotState> placeToRelease =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_LEFT_PLACE, CORAL_L2_LEFT_RELEASE),
-          Map.entry(CORAL_L3_LEFT_PLACE, CORAL_L3_LEFT_RELEASE),
-          Map.entry(CORAL_L4_LEFT_PLACE, CORAL_L4_LEFT_RELEASE),
-          Map.entry(CORAL_L1_RIGHT_RELEASE, CORAL_L1_RIGHT_RELEASE),
-          Map.entry(CORAL_L2_RIGHT_PLACE, CORAL_L2_RIGHT_RELEASE),
-          Map.entry(CORAL_L3_RIGHT_PLACE, CORAL_L3_RIGHT_RELEASE),
-          Map.entry(CORAL_L4_RIGHT_PLACE, CORAL_L4_RIGHT_RELEASE));
+          Map.entry(CORAL_L1_RELEASE, CORAL_L1_RELEASE),
+          Map.entry(CORAL_L2_PLACE, CORAL_L2_RELEASE),
+          Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
+          Map.entry(CORAL_L4_PLACE, CORAL_L4_RELEASE));
 
   private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =
       ImmutableMap.ofEntries(
@@ -169,76 +142,29 @@ public enum RobotState {
           Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF));
-  private static final ImmutableMap<RobotState, RobotState> handoffAfterReleaseToLeftApproach =
-      ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_RIGHT_APPROACH),
-          Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_LEFT_APPROACH),
-          Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_LEFT_APPROACH),
-          Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_LEFT_APPROACH));
-  private static final ImmutableMap<RobotState, RobotState> handoffAfterReleaseToRightApproach =
-      ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_RIGHT_APPROACH),
-          Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_RIGHT_APPROACH),
-          Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_RIGHT_APPROACH),
-          Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_RIGHT_APPROACH));
-  private static final ImmutableMap<RobotState, RobotState> approachToLineupLeftStates =
-      ImmutableMap.ofEntries(
-          // Go to right l1 since robot can't do left l1
-          Map.entry(CORAL_L1_RIGHT_APPROACH, CORAL_L1_RIGHT_LINEUP),
-          Map.entry(CORAL_L2_LEFT_APPROACH, CORAL_L2_LEFT_LINEUP),
-          Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_LEFT_LINEUP),
-          Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_LEFT_LINEUP));
 
   private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
-          Map.entry(ALGAE_INTAKE_L2_LEFT_APPROACH, ALGAE_INTAKE_L2_LEFT),
-          Map.entry(ALGAE_INTAKE_L3_LEFT_APPROACH, ALGAE_INTAKE_L3_LEFT),
-          Map.entry(ALGAE_INTAKE_L2_RIGHT_APPROACH, ALGAE_INTAKE_L2_RIGHT),
-          Map.entry(ALGAE_INTAKE_L3_RIGHT_APPROACH, ALGAE_INTAKE_L3_RIGHT));
+          Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
+          Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3));
 
   private static final ImmutableMap<RobotState, RobotState> algaeIntakeToHoldingStates =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
-          Map.entry(ALGAE_INTAKE_L2_LEFT, ALGAE_INTAKE_L2_LEFT_HOLDING),
-          Map.entry(ALGAE_INTAKE_L3_LEFT, ALGAE_INTAKE_L3_LEFT_HOLDING),
-          Map.entry(ALGAE_INTAKE_L2_RIGHT, ALGAE_INTAKE_L2_RIGHT_HOLDING),
-          Map.entry(ALGAE_INTAKE_L3_RIGHT, ALGAE_INTAKE_L3_RIGHT_HOLDING));
-  private static final ImmutableMap<RobotState, RobotState> approachToLineupRightStates =
-      ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_RIGHT_APPROACH, CORAL_L1_RIGHT_LINEUP),
-          Map.entry(CORAL_L2_RIGHT_APPROACH, CORAL_L2_RIGHT_LINEUP),
-          Map.entry(CORAL_L3_RIGHT_APPROACH, CORAL_L3_RIGHT_LINEUP),
-          Map.entry(CORAL_L4_RIGHT_APPROACH, CORAL_L4_RIGHT_LINEUP));
-
-  private static final ImmutableMap<RobotState, RobotState> rightToLeftApproachStates =
-      ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_RIGHT_APPROACH, CORAL_L2_LEFT_APPROACH),
-          Map.entry(CORAL_L3_RIGHT_APPROACH, CORAL_L3_LEFT_APPROACH),
-          Map.entry(CORAL_L4_RIGHT_APPROACH, CORAL_L4_LEFT_APPROACH));
-
-  private static final ImmutableMap<RobotState, RobotState> leftToRightApproachStates =
-      ImmutableMap.ofEntries(
-          Map.entry(CORAL_L2_LEFT_APPROACH, CORAL_L2_RIGHT_APPROACH),
-          Map.entry(CORAL_L3_LEFT_APPROACH, CORAL_L3_RIGHT_APPROACH),
-          Map.entry(CORAL_L4_LEFT_APPROACH, CORAL_L4_RIGHT_APPROACH));
+          Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
+          Map.entry(ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING));
 
   public static boolean isLineupOrApproachState(RobotState state) {
     return switch (state) {
-      case CORAL_L4_LEFT_APPROACH,
-          CORAL_L4_RIGHT_APPROACH,
-          CORAL_L4_LEFT_LINEUP,
-          CORAL_L4_RIGHT_LINEUP,
-          CORAL_L3_LEFT_APPROACH,
-          CORAL_L3_RIGHT_APPROACH,
-          CORAL_L3_LEFT_LINEUP,
-          CORAL_L3_RIGHT_LINEUP,
-          CORAL_L2_LEFT_APPROACH,
-          CORAL_L2_RIGHT_APPROACH,
-          CORAL_L2_LEFT_LINEUP,
-          CORAL_L2_RIGHT_LINEUP,
-          CORAL_L1_RIGHT_LINEUP,
-          CORAL_L1_RIGHT_APPROACH ->
+      case CORAL_L4_APPROACH,
+          CORAL_L4_LINEUP,
+          CORAL_L3_APPROACH,
+          CORAL_L3_LINEUP,
+          CORAL_L2_APPROACH,
+          CORAL_L2_LINEUP,
+          CORAL_L1_LINEUP,
+          CORAL_L1_APPROACH ->
           true;
       default -> false;
     };
@@ -246,13 +172,10 @@ public enum RobotState {
 
   public static boolean isReleaseState(RobotState state) {
     return switch (state) {
-      case CORAL_L1_RIGHT_RELEASE,
-          CORAL_L2_LEFT_RELEASE,
-          CORAL_L2_RIGHT_RELEASE,
-          CORAL_L3_LEFT_RELEASE,
-          CORAL_L3_RIGHT_RELEASE,
-          CORAL_L4_LEFT_RELEASE,
-          CORAL_L4_RIGHT_RELEASE ->
+      case CORAL_L1_RELEASE,
+          CORAL_L2_RELEASE,
+          CORAL_L3_RELEASE,
+          CORAL_L4_RELEASE ->
           true;
       default -> false;
     };
@@ -280,18 +203,5 @@ public enum RobotState {
 
   public RobotState getHandoffReleaseToAfterRelease() {
     return handoffReleaseToAfterRelease.getOrDefault(this, this);
-  }
-
-  public RobotState getHandoffAfterReleaseToApproachState() {
-    return handoffAfterReleaseToLeftApproach.getOrDefault(this, this);
-  }
-
-  public RobotState getLeftApproachToLineupState() {
-
-    return approachToLineupLeftStates.getOrDefault(this, this);
-  }
-
-  public RobotState getLeftToRightApproachState() {
-    return leftToRightApproachStates.getOrDefault(this, this);
   }
 }
