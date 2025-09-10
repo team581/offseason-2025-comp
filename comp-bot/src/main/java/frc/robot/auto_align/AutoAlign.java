@@ -26,7 +26,7 @@ import java.util.OptionalDouble;
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(
-          5.0, Units.rotationsToRadians(4.0), 15.0, Units.rotationsToRadians(8.0));
+          5.0, Units.rotationsToRadians(4.0), 13.0, Units.rotationsToRadians(6.0));
   private static final AutoConstraintOptions L1_CONSTRAINTS =
       new AutoConstraintOptions(
           5.0, Units.rotationsToRadians(4.0), 15.0, Units.rotationsToRadians(8.0));
