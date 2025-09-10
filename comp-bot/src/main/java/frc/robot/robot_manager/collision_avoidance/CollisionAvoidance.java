@@ -424,7 +424,7 @@ public class CollisionAvoidance {
         graph,
         Waypoint.CORAL_L3_LEFT_PLACE,
         Waypoint.CORAL_L4_LEFT_PLACE,
-        Waypoint.CORAL_L2_UPRIGHT,
+        Waypoint.CORAL_L2_LEFT_PLACE,
         Waypoint.CORAL_L3_RIGHT_PLACE);
 
     // Additional ways to exit the push state, mostly just to help cover weird edge cases
