@@ -44,19 +44,19 @@ public class TagAlign {
 
   private static final ProfiledPIDController REEF_PIPE_ROTATION_CONTROLLER =
       new ProfiledPIDController(
-          5.75,
+          5.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
   private static final ProfiledPIDController ALGAE_ROTATION_CONTROLLER =
       new ProfiledPIDController(
-          5.75,
+          5.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
   private static final ProfiledPIDController L1_ROTATION_CONTROLLER =
       new ProfiledPIDController(
-          5.75,
+          5.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
@@ -66,17 +66,17 @@ public class TagAlign {
           4.0,
           0.0,
           0.0,
-          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+          new Constraints(4.0, 4.0));
 
   private static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(
           4.0,
           0.0,
           0.0,
-          new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+          new Constraints(4.0, 4.0));
 
   private static final PhoenixPIDController ROTATION_CONTROLLER =
-      new PhoenixPIDController(5.75, 0.0, 0.0);
+      new PhoenixPIDController(5.0, 0.0, 0.0);
   private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
 
   private static final ProfiledPIDController L1_TRANSLATION_CONTROLLER =
@@ -133,13 +133,12 @@ public class TagAlign {
   private boolean resetL1NextLoop = false;
 
   private OptionalDouble coralL1Offset = OptionalDouble.empty();
-  private final Pose2d lastReefPipeTargetPose = new Pose2d();
-  private final Pose2d lastL1TargetPose = new Pose2d();
-  private final Pose2d lastAlgaeTargetPose = new Pose2d();
 
   private final LinearFilter l1AdjustmentFilter = LinearFilter.movingAverage(7);
 
-  private static final DoubleSubscriber FEED_FORWARD = DogLog.tunable("AutoAlign/FeedForward", 0.0);
+  private static final DoubleSubscriber TRANSLATION_FEED_FORWARD = DogLog.tunable("AutoAlign/TranslationFeedForward", 0.0);
+  private static final DoubleSubscriber ROTATION_FEED_FORWARD = DogLog.tunable("AutoAlign/RotationFeedForward", 0.0);
+
 
   private boolean pipeSwitchActive = false;
 
@@ -549,9 +548,7 @@ public class TagAlign {
             new State(0, 0),
             new Constraints(constraints.maxLinearVelocity(), constraints.maxLinearAcceleration()));
 
-    if (!translationGood) {
-      driveVelocityMagnitude += Math.copySign(FEED_FORWARD.get(), driveVelocityMagnitude);
-    }
+
 
     DogLog.log("AutoAlign/setpoint", Units.radiansToDegrees(distanceToGoalMeters));
     if (MathUtil.isNear(
@@ -573,6 +570,15 @@ public class TagAlign {
               targetPose.getRotation().getRadians(),
               Timer.getFPGATimestamp());
     }
+
+    if (Math.abs(distanceToGoalMeters)>Units.inchesToMeters(1.0)) {
+      driveVelocityMagnitude += Math.copySign(TRANSLATION_FEED_FORWARD.get(), driveVelocityMagnitude);
+    }
+
+    if (!MathUtil.isNear(targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+      rotationSpeed += Math.copySign(Units.rotationsToRadians(ROTATION_FEED_FORWARD.get()), rotationSpeed);
+    }
+
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
     DogLog.log("AutoAlign/DistanceToGoal", distanceToGoalMeters);
