@@ -93,7 +93,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     robotPose = poseEstimator.getEstimatedPosition();
   }
 
-  public Pose2d getPose() {
+  @Override public Pose2d getPose() {
     return robotPose;
   }
 
