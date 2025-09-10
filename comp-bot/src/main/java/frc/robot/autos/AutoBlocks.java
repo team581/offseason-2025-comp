@@ -330,6 +330,8 @@ public class AutoBlocks {
             Commands.runOnce(
                 () -> {
                   robotManager.coralMap.clearLollipop();
+                  robotManager.coralMap.setExpectedLollipopTranslation(defaultIntakingPoint);
+
                   robotManager.swerve.snapsDriveRequest(
                       defaultIntakingPoint.getRotation().getDegrees());
                 }),
@@ -380,6 +382,7 @@ public class AutoBlocks {
             Commands.runOnce(
                 () -> {
                   robotManager.coralMap.clearLollipop();
+                  robotManager.coralMap.setExpectedLollipopTranslation(defaultIntakingPoint);
                   robotManager.swerve.snapsDriveRequest(
                       defaultIntakingPoint.getRotation().getDegrees());
                 }),
