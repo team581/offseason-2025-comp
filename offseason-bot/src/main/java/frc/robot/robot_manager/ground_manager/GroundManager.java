@@ -49,8 +49,8 @@ public class GroundManager extends StateMachine<GroundState> {
       return GroundState.UNJAM_RIGHT;
     }
     return switch (currentState) {
-      // case DEPLOY_HOMING ->
-      // deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
+      case DEPLOY_HOMING ->
+          deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
@@ -194,6 +194,10 @@ public class GroundManager extends StateMachine<GroundState> {
   public void stowRequest() {
     if (getTopHasGP()) {
       setState(GroundState.IDLE_GP);
+    }
+
+    if (getHasGP()) {
+      setStateFromRequest(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
