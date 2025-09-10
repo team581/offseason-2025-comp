@@ -5,11 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import frc.robot.arm.ArmState;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
-
-import java.io.Console;
 import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 
 public class CollisionAvoidanceTest {
@@ -409,7 +405,11 @@ public class CollisionAvoidanceTest {
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.NONE);
     var expected =
-        List.of(Waypoint.HANDOFF, Waypoint.CORAL_L3_RIGHT_ARM_ONLY, Waypoint.CORAL_L3_RIGHT_PLACE, Waypoint.LOLLIPOP_INTAKE);
+        List.of(
+            Waypoint.HANDOFF,
+            Waypoint.CORAL_L3_RIGHT_ARM_ONLY,
+            Waypoint.CORAL_L3_RIGHT_PLACE,
+            Waypoint.LOLLIPOP_INTAKE);
     assertEquals(expected, result.orElseThrow());
   }
 
@@ -449,11 +449,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.LEFT_OBSTRUCTED);
-    var expected =
-        List.of(
-            Waypoint.CORAL_L2_LEFT_PLACE,
-            Waypoint.LOLLIPOP_INTAKE);
-System.out.println(result.orElseThrow());
+    var expected = List.of(Waypoint.CORAL_L2_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
+    System.out.println(result.orElseThrow());
     assertEquals(expected, result.orElseThrow());
   }
 
