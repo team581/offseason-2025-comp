@@ -130,10 +130,11 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    topDebounced = topDebouncer.calculate(topRaw);
-    bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    raw = sensor.getS2State().getValue() == S2StateValue.High;
+    debounced = topDebouncer.calculate(raw);
+
+    homingOrUnhomed =
+        getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
   }
 
   @Override
@@ -171,8 +172,12 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
+    if (homingOrUnhomed) {
+      return;
+    }
+
     if (getTopHasGP()) {
-      setState(GroundState.IDLE_GP);
+      setStateFromRequest(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
