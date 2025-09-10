@@ -259,6 +259,9 @@ public class Limelight extends StateMachine<LimelightState> {
     switch (getState()) {
       case TAGS -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        if (limelightTimer.hasElapsed(5.0)) {
+          LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        }
         updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
@@ -282,8 +285,14 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void autonomousInit() {
+    LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     seedImuTimer.reset();
     seedImuTimer.start();
+  }
+
+  @Override
+  public void teleopInit() {
+    LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
   }
 
   private void updateHealth(ReusableOptional<?> result) {
