@@ -90,7 +90,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public void setExpectedLollipopTranslation(Pose2d expectedTranslation) {
-    nextExpectedTranslation =  Optional.of(expectedTranslation);
+    nextExpectedTranslation = Optional.of(expectedTranslation);
   }
 
   private void resetLollipopFilter(Translation2d expectedTranslation) {
@@ -218,10 +218,11 @@ public class CoralMap extends StateMachine<CoralMapState> {
     return true;
   }
 
-  public  boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
+  public boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
 
-    if ( nextExpectedTranslation.isPresent()&& coralPose.getDistance(nextExpectedTranslation.get().getTranslation())>1.0) {
-return false;
+    if (nextExpectedTranslation.isPresent()
+        && coralPose.getDistance(nextExpectedTranslation.get().getTranslation()) > 1.0) {
+      return false;
     }
     if ((FmsUtil.isRedAlliance()
             && (coralPose.getX() < Units.inchesToMeters(603) || coralPose.getX() > 16.5))
