@@ -1,5 +1,6 @@
 package frc.robot.auto_align.tag_align;
 
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.google.common.collect.ImmutableList;
 import com.team581.math.MathHelpers;
 import com.team581.math.PolarChassisSpeeds;
@@ -7,6 +8,7 @@ import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import com.team581.util.FmsUtil;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -72,6 +74,12 @@ public class TagAlign {
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
+
+
+          private static final PhoenixPIDController ROTATION_CONTROLLER =
+      new PhoenixPIDController(5.75, 0.0, 0.0);
+        private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
+
 
   private static final ProfiledPIDController L1_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(3.0, 2.0));
@@ -553,12 +561,21 @@ public class TagAlign {
 
     ;
 
+
     var rotationSpeed =
         rotationController.calculate(
             currentPose.getRotation().getRadians(),
             new State(targetPose.getRotation().getRadians(), 0),
             constraints.getAngularConstraints());
 
+
+            if (!FeatureFlags.AUTO_ALIGN_TRAPEZOIDAL.getAsBoolean()) {
+               driveVelocityMagnitude = VELOCITY_CONTROLLER.calculate(distanceToGoalMeters);
+                rotationSpeed =
+               ROTATION_CONTROLLER.calculate(
+                   currentPose.getRotation().getRadians(),
+                   targetPose.getRotation().getRadians(),
+                   Timer.getFPGATimestamp());            }
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
     DogLog.log("AutoAlign/DistanceToGoal", distanceToGoalMeters);
