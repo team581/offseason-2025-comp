@@ -26,7 +26,7 @@ public class SnapUtil {
 
     if (robotX < halfFieldLength) {
       return 90.0;
-    } else{
+    } else {
       return 270.0;
     }
   }
