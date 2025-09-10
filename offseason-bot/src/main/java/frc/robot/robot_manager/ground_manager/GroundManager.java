@@ -190,6 +190,10 @@ public class GroundManager extends StateMachine<GroundState> {
   public void stowRequest() {
     if (getTopHasGP()) {
       setState(GroundState.IDLE_GP);
+    }
+
+    if (getHasGP()) {
+      setStateFromRequest(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
