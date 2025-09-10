@@ -69,11 +69,11 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
     DogLog.log("Singulator/Right/Current", filteredRightCurrent);
   }
 
-  public boolean isLeftJammed() {
+  private boolean isLeftJammed() {
     return filteredLeftCurrent > JAM_CURRENT_THRESHOLD;
   }
 
-  public boolean isRightJammed() {
+  private boolean isRightJammed() {
     return filteredRightCurrent > JAM_CURRENT_THRESHOLD;
   }
 
