@@ -97,7 +97,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (afterIntakingCoralState.isPresent() && groundManager.getTopHasGP()) {
+    if (afterIntakingCoralState.isPresent() && groundManager.getHasGP()) {
       return afterIntakingCoralState.orElseThrow();
     }
 
@@ -156,7 +156,7 @@ public class RobotManager extends StateMachine<RobotState> {
                   && arm.atGoal()
                   && groundManager.deploy.atGoal()
                   && groundManager.getState().equals(GroundState.HANDOFF_WAIT)
-                  && groundManager.getTopHasGP()
+                  && groundManager.getHasGP()
               ? currentState.getNextScoreState()
               : currentState;
 
@@ -678,7 +678,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
     switch (getState()) {
       case LOW_STOW, CLAW_ALGAE, STARTING_POSITION -> {
-        if (groundManager.getTopHasGP() && !groundManager.deploy.atGoal()) {
+        if (groundManager.getHasGP() && !groundManager.deploy.atGoal()) {
           vision.setState(VisionState.HANDOFF);
         } else {
           vision.setState(VisionState.TAGS);
@@ -689,7 +689,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF -> {
-        if (groundManager.getTopHasGP()) {
+        if (groundManager.getHasGP()) {
           vision.setState(VisionState.HANDOFF);
         } else {
           vision.setState(VisionState.TAGS);
@@ -805,7 +805,7 @@ public class RobotManager extends StateMachine<RobotState> {
         } else {
           lights.setState(LightsState.IDLE_EMPTY);
 
-          if (groundManager.getTopHasGP() && vision.isAnyTagLimelightOnline()) {
+          if (groundManager.getHasGP() && vision.isAnyTagLimelightOnline()) {
             swerve.snapsDriveRequest(
                 MathHelpers.getDriveDirection(
                         robotPose,
@@ -1349,7 +1349,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_ALGAE -> {
-        if (groundManager.getTopHasGP()) {
+        if (groundManager.getHasGP()) {
           groundManager.l1Request();
           scoringAlignActive = true;
         } else {
@@ -1357,7 +1357,7 @@ public class RobotManager extends StateMachine<RobotState> {
         }
       }
       case CLAW_EMPTY, STARTING_POSITION -> {
-        if (groundManager.getTopHasGP()) {
+        if (groundManager.getHasGP()) {
           endgameStowRequest();
           groundManager.l1Request();
           scoringAlignActive = true;
