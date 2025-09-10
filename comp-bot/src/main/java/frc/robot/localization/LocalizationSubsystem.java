@@ -46,7 +46,6 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final Odometry<SwerveModulePosition[]> odometry;
   private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
-  private Pose2d wpiRobotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
@@ -91,25 +90,14 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    robotPose = swerve.drivetrain.getState().Pose;
-    wpiRobotPose = poseEstimator.getEstimatedPosition();
+    robotPose = poseEstimator.getEstimatedPosition();
   }
 
-  @Override
   public Pose2d getPose() {
     return robotPose;
   }
 
   public Pose2d getPose(double timestamp) {
-    var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
-    return swerve.drivetrain.samplePoseAt(newTimestamp).orElseGet(this::getPose);
-  }
-
-  private Pose2d getWpiPose() {
-    return wpiRobotPose;
-  }
-
-  public Pose2d getWPIPose(double timestamp) {
     var newTimestamp = Utils.fpgaToCurrentTime(timestamp);
     return poseEstimator.sampleAt(newTimestamp).orElseGet(this::getPose);
   }
@@ -122,8 +110,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Localization/EstimatedPose CTR", getPose());
-    DogLog.log("Localization/EstimatedPose WPI", getWpiPose());
+    DogLog.log("Localization/EstimatedPose", getPose());
     var swerveState = swerve.drivetrain.getState();
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }
@@ -134,19 +121,16 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       resetPose(visionPose);
     }
-    swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()), result.standardDevs());
+
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
     DogLog.log("Localization/Vision Pose", visionPose);
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
     poseEstimator.resetRotation(gyroAngle);
-    swerve.drivetrain.resetRotation(gyroAngle);
   }
 
   public void resetPose(Pose2d estimatedPose) {
-    swerve.drivetrain.resetPose(estimatedPose);
     poseEstimator.resetPose(estimatedPose);
   }
 
