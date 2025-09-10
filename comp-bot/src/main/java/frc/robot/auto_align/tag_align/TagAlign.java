@@ -75,11 +75,9 @@ public class TagAlign {
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
-
-          private static final PhoenixPIDController ROTATION_CONTROLLER =
+  private static final PhoenixPIDController ROTATION_CONTROLLER =
       new PhoenixPIDController(5.75, 0.0, 0.0);
-        private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
-
+  private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
 
   private static final ProfiledPIDController L1_TRANSLATION_CONTROLLER =
       new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(3.0, 2.0));
@@ -561,21 +559,20 @@ public class TagAlign {
 
     ;
 
-
     var rotationSpeed =
         rotationController.calculate(
             currentPose.getRotation().getRadians(),
             new State(targetPose.getRotation().getRadians(), 0),
             constraints.getAngularConstraints());
 
-
-            if (!FeatureFlags.AUTO_ALIGN_TRAPEZOIDAL.getAsBoolean()) {
-               driveVelocityMagnitude = VELOCITY_CONTROLLER.calculate(distanceToGoalMeters);
-                rotationSpeed =
-               ROTATION_CONTROLLER.calculate(
-                   currentPose.getRotation().getRadians(),
-                   targetPose.getRotation().getRadians(),
-                   Timer.getFPGATimestamp());            }
+    if (!FeatureFlags.AUTO_ALIGN_TRAPEZOIDAL.getAsBoolean()) {
+      driveVelocityMagnitude = VELOCITY_CONTROLLER.calculate(distanceToGoalMeters);
+      rotationSpeed =
+          ROTATION_CONTROLLER.calculate(
+              currentPose.getRotation().getRadians(),
+              targetPose.getRotation().getRadians(),
+              Timer.getFPGATimestamp());
+    }
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
     DogLog.log("AutoAlign/DistanceToGoal", distanceToGoalMeters);
