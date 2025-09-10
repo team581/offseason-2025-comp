@@ -2,10 +2,6 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-<<<<<<< HEAD
-=======
-import edu.wpi.first.math.filter.Debouncer;
->>>>>>> 6d53129f (robot manager compile changes (offseason))
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.intake.IntakeState;
@@ -54,11 +50,7 @@ public class GroundManager extends StateMachine<GroundState> {
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
-      case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
-      case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
-      case FORCED_HARD_SCORE -> timeout(0.5) ? GroundState.IDLE_NO_GP : currentState;
-      case HANDOFF_RELEASE, OUTTAKING, L1_HARD_SCORE, L1_SCORE ->
-          getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
+      case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
   }
@@ -179,19 +171,8 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
-  private void setState(GroundState newState) {
-    switch (deploy.getState()) {
-      case UNHOMED, REHOME -> {}
-      default -> setStateFromRequest(newState);
-    }
-  }
-
-  public boolean getTopHasGP() {
-    return topDebounced;
-  }
-
-  public boolean getBottomHasGP() {
-    return bottomDebounced;
+  public boolean getHasGP() {
+    return debounced;
   }
 
   public void rehomeRequest() {
@@ -203,8 +184,12 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
-    if (getTopHasGP()) {
-      setState(GroundState.IDLE_GP);
+    if (homingOrUnhomed) {
+      return;
+    }
+
+    if (getHasGP()) {
+      setStateFromRequest(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
