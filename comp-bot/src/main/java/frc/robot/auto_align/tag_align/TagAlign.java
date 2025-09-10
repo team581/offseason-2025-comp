@@ -62,18 +62,10 @@ public class TagAlign {
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
 
   private static final ProfiledPIDController REEF_PIPE_TRANSLATION_CONTROLLER =
-      new ProfiledPIDController(
-          4.0,
-          0.0,
-          0.0,
-          new Constraints(4.0, 4.0));
+      new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(4.0, 4.0));
 
   private static final ProfiledPIDController ALGAE_TRANSLATION_CONTROLLER =
-      new ProfiledPIDController(
-          4.0,
-          0.0,
-          0.0,
-          new Constraints(4.0, 4.0));
+      new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(4.0, 4.0));
 
   private static final PhoenixPIDController ROTATION_CONTROLLER =
       new PhoenixPIDController(5.0, 0.0, 0.0);
@@ -136,9 +128,10 @@ public class TagAlign {
 
   private final LinearFilter l1AdjustmentFilter = LinearFilter.movingAverage(7);
 
-  private static final DoubleSubscriber TRANSLATION_FEED_FORWARD = DogLog.tunable("AutoAlign/TranslationFeedForward", 0.0);
-  private static final DoubleSubscriber ROTATION_FEED_FORWARD = DogLog.tunable("AutoAlign/RotationFeedForward", 0.0);
-
+  private static final DoubleSubscriber TRANSLATION_FEED_FORWARD =
+      DogLog.tunable("AutoAlign/TranslationFeedForward", 0.0);
+  private static final DoubleSubscriber ROTATION_FEED_FORWARD =
+      DogLog.tunable("AutoAlign/RotationFeedForward", 0.0);
 
   private boolean pipeSwitchActive = false;
 
@@ -548,8 +541,6 @@ public class TagAlign {
             new State(0, 0),
             new Constraints(constraints.maxLinearVelocity(), constraints.maxLinearAcceleration()));
 
-
-
     DogLog.log("AutoAlign/setpoint", Units.radiansToDegrees(distanceToGoalMeters));
     if (MathUtil.isNear(
         targetPose.getRotation().getRadians(), rotationController.getSetpoint().position, 1e-6)) {}
@@ -571,12 +562,15 @@ public class TagAlign {
               Timer.getFPGATimestamp());
     }
 
-    if (Math.abs(distanceToGoalMeters)>Units.inchesToMeters(1.0)) {
-      driveVelocityMagnitude += Math.copySign(TRANSLATION_FEED_FORWARD.get(), driveVelocityMagnitude);
+    if (Math.abs(distanceToGoalMeters) > Units.inchesToMeters(1.0)) {
+      driveVelocityMagnitude +=
+          Math.copySign(TRANSLATION_FEED_FORWARD.get(), driveVelocityMagnitude);
     }
 
-    if (!MathUtil.isNear(targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
-      rotationSpeed += Math.copySign(Units.rotationsToRadians(ROTATION_FEED_FORWARD.get()), rotationSpeed);
+    if (!MathUtil.isNear(
+        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+      rotationSpeed +=
+          Math.copySign(Units.rotationsToRadians(ROTATION_FEED_FORWARD.get()), rotationSpeed);
     }
 
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
