@@ -11,8 +11,8 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ElevatorSubsystem extends StateMachine<ElevatorState> {
-  private final double TOLERANCE = 5.0;
-  private final double NEAR_TOLERANCE = 20.0;
+  private static final double TOLERANCE = 5.0;
+  private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
   private double height = 0.0;
@@ -31,7 +31,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     this.motor = motor;
   }
 
-  private double clampHeight(double unclamped) {
+  private static double clampHeight(double unclamped) {
     return MathUtil.clamp(
         unclamped,
         RobotConfig.get().elevator().minHeight(),
@@ -86,7 +86,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   }
 
   public void setState(ElevatorState newState) {
-    if (getState() != ElevatorState.REHOME) setStateFromRequest(newState);
+    if (getState() != ElevatorState.REHOME) {
+      setStateFromRequest(newState);
+    }
   }
 
   public boolean atGoal() {
