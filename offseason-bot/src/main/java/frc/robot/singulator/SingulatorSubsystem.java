@@ -3,6 +3,7 @@ package frc.robot.singulator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
