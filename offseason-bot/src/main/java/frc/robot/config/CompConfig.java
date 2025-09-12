@@ -41,7 +41,6 @@ class CompConfig {
           new IntakeConfig(
               CANIVORE_NAME,
               25,
-              26,
               new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(

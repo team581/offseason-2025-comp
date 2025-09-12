@@ -106,6 +106,7 @@ public class GroundManager extends StateMachine<GroundState> {
 
     DogLog.log("GroundManager/Sensor/Debounced", debounced);
     DogLog.log("GroundManager/Sensor/Raw", raw);
+    Doglog.log("GroundManager/State", getState());
   }
 
   public boolean getHasGP() {
