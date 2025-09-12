@@ -164,13 +164,6 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
-  private void setState(GroundState newState) {
-    switch (deploy.getState()) {
-      case UNHOMED, REHOME -> {}
-      default -> setStateFromRequest(newState);
-    }
-  }
-
   public boolean getHasGP() {
     return debounced;
   }
