@@ -19,10 +19,7 @@ public record RobotConfig(
     SwerveConfig swerve) {
 
   public record IntakeConfig(
-      String canBusName,
-      int motorId,
-      Debouncer debouncer,
-      TalonFXConfiguration motorConfig) {}
+      String canBusName, int motorId, Debouncer debouncer, TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
