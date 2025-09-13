@@ -90,53 +90,21 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
       }
-      case L1_WAIT, L1_HARD_WAIT -> {
+      case L1_WAIT -> {
         intake.setState(IntakeState.SCORING);
         deploy.setState(DeployState.L1_SCORE);
         singulator.setState(SingulatorState.IDLE);
       }
-      case CLIMB -> {
-        intake.setState(IntakeState.STOPPED);
-        deploy.setState(DeployState.STOWED);
-        singulator.setState(SingulatorState.STOPPED);
-      }
-      case L1_SCORE -> {
-        intake.setState(IntakeState.SCORING);
-        deploy.setState(DeployState.L1_SCORE);
-        singulator.setState(SingulatorState.L1_SCORE);
-      }
-      case L1_HARD_SCORE -> {
-        intake.setState(IntakeState.HARD_SCORING);
-        deploy.setState(DeployState.L1_SCORE);
-        singulator.setState(SingulatorState.L1_SCORE);
-      }
-      case OUTTAKING -> {
-        intake.setState(IntakeState.OUTTAKING);
-        deploy.setState(DeployState.OUTTAKE);
-        singulator.setState(SingulatorState.OUTTAKING);
-      }
-      case HANDOFF_WAIT -> {
-        intake.setState(IntakeState.HANDOFF);
-        deploy.setState(DeployState.HANDOFF);
-        singulator.setState(SingulatorState.IDLE);
-      }
-      case HANDOFF_RELEASE -> {
-        intake.setState(IntakeState.HANDOFF);
-        deploy.setState(DeployState.HANDOFF);
-        singulator.setState(SingulatorState.HANDOFF);
-      }
+      default -> {}
     }
   }
 
   @Override
   protected void collectInputs() {
-    // raw = sensor.getS2State().getValue() == S2StateValue.High;
-    // debounced = topDebouncer.calculate(raw);
-
-    // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    // bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    //  topDebounced = topDebouncer.calculate(topRaw);
-    //  bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    topDebounced = topDebouncer.calculate(topRaw);
+    bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -148,8 +116,15 @@ public class GroundManager extends StateMachine<GroundState> {
     DogLog.log("GroundManager/State", getState());
   }
 
-  public boolean getHasGP() {
-    return DEBOUNCED;
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, REHOME -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
+  public boolean getTopHasGP() {
+    return topDebounced;
   }
   private void setState(GroundState newState) {
     switch (deploy.getState()) {
@@ -167,15 +142,7 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
-    if (getHasGP()) {
-      setState(GroundState.IDLE_GP);
-    }
-
-    if (getHasGP()) {
-      setState(GroundState.IDLE_GP);
-    }
-
-    if (getHasGP()) {
+    if (getTopHasGP()) {
       setState(GroundState.IDLE_GP);
       return;
     }
@@ -187,9 +154,7 @@ public class GroundManager extends StateMachine<GroundState> {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_SCORE);
       default -> setState(GroundState.L1_WAIT);
     }
-    setState(GroundState.IDLE_NO_GP);
   }
-
 
   public void l1Request() {
     switch (getState()) {

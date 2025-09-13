@@ -145,7 +145,7 @@ public enum RobotState {
           Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
           Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_APPROACH));
 
-  private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
+  private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
       ImmutableMap.ofEntries(
           Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
           Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
@@ -189,4 +189,5 @@ public enum RobotState {
   public RobotState getHandoffAfterReleaseToApproachState() {
     return handoffAfterReleaseToApproach.getOrDefault(this, this);
   }
+
 }
