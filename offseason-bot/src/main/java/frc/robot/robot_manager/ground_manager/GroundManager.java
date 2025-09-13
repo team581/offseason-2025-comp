@@ -2,6 +2,8 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
@@ -22,6 +24,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   private static final boolean RAW = false;
   private static final boolean DEBOUNCED = false;
+  private boolean topDebounced = false;
+  private boolean bottomDebounced = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
@@ -79,19 +83,24 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
       }
+      case L1_WAIT -> {
+        intake.setState(IntakeState.SCORING);
+        deploy.setState(DeployState.L1_SCORE);
+        singulator.setState(SingulatorState.IDLE);
+      }
       default -> {}
     }
   }
-
-  private boolean homingOrUnhomed = true;
 
   @Override
   protected void collectInputs() {
     // raw = sensor.getS2State().getValue() == S2StateValue.High;
     // debounced = topDebouncer.calculate(raw);
 
-    homingOrUnhomed =
-        getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
+   // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+   // bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+  //  topDebounced = topDebouncer.calculate(topRaw);
+  //  bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -106,30 +115,79 @@ public class GroundManager extends StateMachine<GroundState> {
   public boolean getHasGP() {
     return DEBOUNCED;
   }
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, REHOME -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
+  public boolean getTopHasGP() {
+    return topDebounced;
+  }
+
+  public boolean getBottomHasGP() {
+    return bottomDebounced;
+  }
 
   public void rehomeRequest() {
     setStateFromRequest(GroundState.DEPLOY_HOMING);
   }
 
   public void intakeRequest() {
-    // DogLog.timestamp("aksjhd");
-
-    // if (homingOrUnhomed) {
-    //   return;
-    // }
-
-    setStateFromRequest(GroundState.INTAKING);
+    setState(GroundState.INTAKING);
   }
 
   public void stowRequest() {
-    if (homingOrUnhomed) {
+    if (getTopHasGP()) {
+      setState(GroundState.IDLE_GP);
       return;
     }
+    setState(GroundState.IDLE_NO_GP);
+  }
 
-    if (getHasGP()) {
-      setStateFromRequest(GroundState.IDLE_GP);
-      return;
+  public void hardL1Request() {
+    switch (getState()) {
+      case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_SCORE);
+      default -> setState(GroundState.L1_WAIT);
     }
-    setStateFromRequest(GroundState.IDLE_NO_GP);
+  }
+
+  public void l1Request() {
+    switch (getState()) {
+      case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_SCORE);
+      default -> setState(GroundState.L1_WAIT);
+    }
+  }
+
+  public void hardL1WaitRequest() {
+    switch (getState()) {
+      case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_WAIT);
+      default -> setState(GroundState.L1_WAIT);
+    }
+  }
+
+  public void l1WaitRequest() {
+    setState(GroundState.L1_WAIT);
+  }
+
+
+  public void intakeThenHandoffRequest() {
+    if (getState() == GroundState.INTAKING
+        || DriverStation.isAutonomous()
+        || getState() == GroundState.HANDOFF_WAIT
+        || getState() == GroundState.HANDOFF_RELEASE) {
+      setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
+    } else {
+      setState(GroundState.HANDOFF_WAIT);
+    }
+  }
+
+  public void handoffReleaseRequest() {
+    setState(GroundState.HANDOFF_RELEASE);
+  }
+
+  public void climbRequest() {
+    setState(GroundState.CLIMB);
   }
 }
