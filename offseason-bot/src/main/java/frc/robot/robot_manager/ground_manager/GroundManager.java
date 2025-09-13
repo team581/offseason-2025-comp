@@ -20,8 +20,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   // private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
 
-  private final boolean raw = false;
-  private final boolean debounced = false;
+  private static final boolean RAW = false;
+  private static final boolean DEBOUNCED = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
@@ -98,13 +98,13 @@ public class GroundManager extends StateMachine<GroundState> {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("GroundManager/Sensor/Debounced", debounced);
-    DogLog.log("GroundManager/Sensor/Raw", raw);
+    DogLog.log("GroundManager/Sensor/Debounced", DEBOUNCED);
+    DogLog.log("GroundManager/Sensor/Raw", RAW);
     DogLog.log("GroundManager/State", getState());
   }
 
   public boolean getHasGP() {
-    return debounced;
+    return DEBOUNCED;
   }
 
   public void rehomeRequest() {
