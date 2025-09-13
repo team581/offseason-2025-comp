@@ -35,13 +35,13 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   @Override
   protected DeployState getNextState(DeployState currentState) {
     return switch (currentState) {
-      case REHOME -> {
-        if (filteredCurrent > currentThreshold) {
-          motor.setPosition(Units.degreesToRotations(endPosition));
-          yield DeployState.STOWED;
-        }
-        yield currentState;
-      }
+      // case REHOME -> {
+      //   if (filteredCurrent > currentThreshold) {
+      //     motor.setPosition(Units.degreesToRotations(endPosition));
+      //     yield DeployState.STOWED;
+      //   }
+      //   yield currentState;
+      // }
       default -> currentState;
     };
   }
