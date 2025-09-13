@@ -253,14 +253,16 @@ public class Limelight extends StateMachine<LimelightState> {
     if (Timer.getTimestamp() - lastTagTimestamp > 30) {
       DogLog.logFault(
           limelightTableName + " has not seen a tag in the last 30 seconds", AlertType.kWarning);
+    } else {
+      DogLog.clearFault(
+          limelightTableName + " has not seen a tag in the last 30 seconds");
     }
 
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
         if (limelightTimer.hasElapsed(5.0)) {
-          LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+          // LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
         }
         updateHealth(tagResult);
       }
@@ -268,7 +270,7 @@ public class Limelight extends StateMachine<LimelightState> {
       case ALGAE -> updateHealth(algaeResult);
       case HELD_CORAL -> updateHealth(coralResult);
       case CLOSEST_REEF_TAG -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
+        // LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);
       }
     }
@@ -285,15 +287,20 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    if (!limelightModel.equals(LimelightModel.THREE)){
+
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }
     seedImuTimer.reset();
     seedImuTimer.start();
   }
 
   @Override
   public void teleopInit() {
-    LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
-  }
+    if (!limelightModel.equals(LimelightModel.THREE)){
+
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }  }
 
   private void updateHealth(ReusableOptional<?> result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
