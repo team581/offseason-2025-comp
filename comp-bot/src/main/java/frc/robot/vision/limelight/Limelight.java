@@ -254,8 +254,7 @@ public class Limelight extends StateMachine<LimelightState> {
       DogLog.logFault(
           limelightTableName + " has not seen a tag in the last 30 seconds", AlertType.kWarning);
     } else {
-      DogLog.clearFault(
-          limelightTableName + " has not seen a tag in the last 30 seconds");
+      DogLog.clearFault(limelightTableName + " has not seen a tag in the last 30 seconds");
     }
 
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
@@ -287,7 +286,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)){
+    if (!limelightModel.equals(LimelightModel.THREE)) {
 
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
@@ -297,10 +296,11 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void teleopInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)){
+    if (!limelightModel.equals(LimelightModel.THREE)) {
 
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
-    }  }
+    }
+  }
 
   private void updateHealth(ReusableOptional<?> result) {
     var newHeartbeat = LimelightHelpers.getLimelightNTDouble(limelightTableName, "hb");
