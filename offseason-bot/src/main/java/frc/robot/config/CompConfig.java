@@ -112,15 +112,20 @@ class CompConfig {
                           .withProximityHysteresis(0.01)
                           .withMinSignalStrengthForValidMeasurement(7000))),
           new SingulatorConfig(
-              CANIVORE_NAME, 28, 29, new TalonFXConfiguration().withCurrentLimits(
-                new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(150)
-                    .withSupplyCurrentLimit(150))
-            .withMotorOutput(
-                new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Coast)),
-                new TalonFXConfiguration().withCurrentLimits(
+              CANIVORE_NAME,
+              28,
+              29,
+              new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(150)
+                          .withSupplyCurrentLimit(150))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast)),
+              new TalonFXConfiguration()
+                  .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(150)
                           .withSupplyCurrentLimit(150))

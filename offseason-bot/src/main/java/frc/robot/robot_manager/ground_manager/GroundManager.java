@@ -39,8 +39,8 @@ public class GroundManager extends StateMachine<GroundState> {
   @Override
   protected GroundState getNextState(GroundState currentState) {
     return switch (currentState) {
-      //case DEPLOY_HOMING ->
-         // deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
+      // case DEPLOY_HOMING ->
+      // deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
@@ -112,7 +112,7 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void intakeRequest() {
-// DogLog.timestamp("aksjhd");
+    // DogLog.timestamp("aksjhd");
 
     // if (homingOrUnhomed) {
     //   return;
