@@ -43,8 +43,8 @@ public class GroundManager extends StateMachine<GroundState> {
   @Override
   protected GroundState getNextState(GroundState currentState) {
     return switch (currentState) {
-      case DEPLOY_HOMING ->
-          deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
+      //case DEPLOY_HOMING ->
+         // deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
