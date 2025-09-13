@@ -20,8 +20,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   // private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
 
-  private boolean raw = false;
-  private boolean debounced = false;
+  private final boolean raw = false;
+  private final boolean debounced = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
