@@ -1,12 +1,8 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.ctre.phoenix6.hardware.CANdi;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeployState;
@@ -20,18 +16,16 @@ public class GroundManager extends StateMachine<GroundState> {
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;
 
-  private final CANdi sensor;
+  // private final CANdi sensor;
 
-  private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
+  // private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
 
   private boolean raw = false;
   private boolean debounced = false;
 
   public GroundManager(
-      IntakeSubsystem intake,
-      DeploySubsystem deploy,
-      SingulatorSubsystem singulator,
-      CANdi sensor) {
+      IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
+      CANdi sensor */) {
     super(
         SubsystemPriority.GROUND_MANAGER,
         RobotBase.isSimulation() ? GroundState.IDLE_NO_GP : GroundState.DEPLOY_NOT_HOMED);
@@ -39,7 +33,7 @@ public class GroundManager extends StateMachine<GroundState> {
     this.intake = intake;
     this.deploy = deploy;
     this.singulator = singulator;
-    this.sensor = sensor;
+    // this.sensor = sensor;
   }
 
   @Override
@@ -93,8 +87,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    raw = sensor.getS2State().getValue() == S2StateValue.High;
-    debounced = topDebouncer.calculate(raw);
+    // raw = sensor.getS2State().getValue() == S2StateValue.High;
+    // debounced = topDebouncer.calculate(raw);
 
     homingOrUnhomed =
         getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
@@ -106,7 +100,7 @@ public class GroundManager extends StateMachine<GroundState> {
 
     DogLog.log("GroundManager/Sensor/Debounced", debounced);
     DogLog.log("GroundManager/Sensor/Raw", raw);
-    Doglog.log("GroundManager/State", getState());
+    DogLog.log("GroundManager/State", getState());
   }
 
   public boolean getHasGP() {
