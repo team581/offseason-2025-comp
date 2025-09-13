@@ -1826,7 +1826,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY, STARTING_POSITION -> {
         if (groundManager.hasCoral()) {
           lowStowRequest();
-          groundManager.l1WaitRequest();
+          groundManager.l1Request();
           autoAlign.reset();
           scoringAlignActive = true;
         } else {
@@ -1836,7 +1836,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
       case LOW_STOW -> {
-        groundManager.l1WaitRequest();
+        groundManager.l1Request();
         autoAlign.reset();
         scoringAlignActive = true;
       }
