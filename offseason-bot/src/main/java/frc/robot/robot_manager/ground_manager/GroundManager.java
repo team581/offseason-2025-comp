@@ -151,20 +151,11 @@ public class GroundManager extends StateMachine<GroundState> {
   public boolean getHasGP() {
     return DEBOUNCED;
   }
-
   private void setState(GroundState newState) {
     switch (deploy.getState()) {
       case UNHOMED, REHOME -> {}
       default -> setStateFromRequest(newState);
     }
-  }
-
-  public boolean getTopHasGP() {
-    return TOP_DEBOUNCED;
-  }
-
-  public boolean getBottomHasGP() {
-    return BOTTOM_DEBOUNCED;
   }
 
   public void rehomeRequest() {
@@ -176,7 +167,7 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
-    if (getTopHasGP()) {
+    if (getHasGP()) {
       setState(GroundState.IDLE_GP);
     }
 
@@ -198,6 +189,7 @@ public class GroundManager extends StateMachine<GroundState> {
     }
     setState(GroundState.IDLE_NO_GP);
   }
+
 
   public void l1Request() {
     switch (getState()) {
