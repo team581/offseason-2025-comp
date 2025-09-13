@@ -1,8 +1,6 @@
 package frc.robot.intake;
 
-import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
@@ -28,8 +26,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   @Override
   protected void collectInputs() {
 
-   // sensorRaw =
-   //     candi.getS2State().getValue()
+    // sensorRaw =
+    //     candi.getS2State().getValue()
     //        != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
 
     if (RobotBase.isSimulation()) {
