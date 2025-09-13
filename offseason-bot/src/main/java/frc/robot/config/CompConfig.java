@@ -55,7 +55,7 @@ class CompConfig {
               CANIVORE_NAME, 99, 99, false, new Debouncer(0), new TalonFXConfiguration()),
           new DeployConfig(
               CANIVORE_NAME,
-              99,
+              20,
               99,
               0.0,
               0.0,
@@ -112,7 +112,22 @@ class CompConfig {
                           .withProximityHysteresis(0.01)
                           .withMinSignalStrengthForValidMeasurement(7000))),
           new SingulatorConfig(
-              CANIVORE_NAME, 99, 99, 99, new TalonFXConfiguration(), new TalonFXConfiguration()),
+              CANIVORE_NAME, 28, 29, new TalonFXConfiguration().withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(150)
+                    .withSupplyCurrentLimit(150))
+            .withMotorOutput(
+                new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Coast)),
+                new TalonFXConfiguration().withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(150)
+                          .withSupplyCurrentLimit(150))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))),
           // TODO: add radius and sensor-mechanism ratio
           new ElevatorConfig(
               CANIVORE_NAME,

@@ -33,7 +33,6 @@ public record RobotConfig(
       String canBusName,
       int leftMotorId,
       int rightMotorId,
-      int candiId,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig) {}
 

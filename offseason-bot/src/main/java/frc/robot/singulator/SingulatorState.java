@@ -8,7 +8,7 @@ public enum SingulatorState {
 
   STOPPED(0.0),
   IDLE(UNTUNED),
-  INTAKING(UNTUNED),
+  INTAKING(6),
   OUTTAKING(UNTUNED),
   HANDOFF(UNTUNED);
 
