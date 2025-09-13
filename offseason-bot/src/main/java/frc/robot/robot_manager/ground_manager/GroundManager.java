@@ -180,7 +180,7 @@ public class GroundManager extends StateMachine<GroundState> {
     }
 
     if (getHasGP()) {
-      setStateFromRequest(GroundState.IDLE_GP);
+      setState(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
@@ -191,6 +191,7 @@ public class GroundManager extends StateMachine<GroundState> {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_SCORE);
       default -> setState(GroundState.L1_WAIT);
     }
+    setState(GroundState.IDLE_NO_GP);
   }
 
   public void l1Request() {

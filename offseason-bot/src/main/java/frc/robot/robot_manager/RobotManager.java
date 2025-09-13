@@ -1046,7 +1046,6 @@ public class RobotManager extends StateMachine<RobotState> {
         if (groundManager.getState().equals(GroundState.L1_WAIT) && scoringAlignActive) {
           groundManager.hardL1WaitRequest();
         } else {
-
           groundManager.intakeRequest();
         }
       }
@@ -1055,7 +1054,6 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void hardL1OffRequest() {
-
     switch (getState()) {
       case LOW_STOW -> {
         if (groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
