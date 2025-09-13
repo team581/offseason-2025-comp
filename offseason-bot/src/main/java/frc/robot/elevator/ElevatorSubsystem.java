@@ -97,12 +97,16 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     };
   }
 
-  public boolean nearGoal() {
-    return switch (getState()) {
+  public boolean nearGoal(ElevatorState goal) {
+    return switch (goal) {
       case UNJAM -> true;
       case UNTUNED, REHOME -> false;
-      default -> MathUtil.isNear(clampHeight(getState().height), height, NEAR_TOLERANCE);
+      default -> MathUtil.isNear(clampHeight(goal.height), height, NEAR_TOLERANCE);
     };
+  }
+
+  public boolean nearGoal() {
+    return nearGoal(getState());
   }
 
   public double getHeight() {

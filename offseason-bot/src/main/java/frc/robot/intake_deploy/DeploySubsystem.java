@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig;
@@ -75,6 +76,12 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
   public void setState(DeployState newState) {
     setStateFromRequest(newState);
+  }
+
+  public boolean atGoal() {
+    return switch (getState()) {
+      default -> MathUtil.isNear(getState().angle, angle, 3.0);
+    };
   }
 
   public void rehome() {
