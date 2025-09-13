@@ -137,7 +137,9 @@ public enum RobotState {
           Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF),
+          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF));
+  private static final ImmutableMap<RobotState, RobotState> handoffAfterReleaseToApproach =
+      ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_APPROACH),
           Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_APPROACH),
           Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
@@ -182,5 +184,9 @@ public enum RobotState {
 
   public RobotState getNextHandoffState() {
     return handoffSequence.getOrDefault(this, this);
+  }
+
+  public RobotState getHandoffAfterReleaseToApproachState() {
+    return handoffAfterReleaseToApproach.getOrDefault(this, this);
   }
 }
