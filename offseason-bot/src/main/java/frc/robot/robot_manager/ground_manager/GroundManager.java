@@ -175,7 +175,6 @@ public class GroundManager extends StateMachine<GroundState> {
     setState(GroundState.L1_WAIT);
   }
 
-
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
