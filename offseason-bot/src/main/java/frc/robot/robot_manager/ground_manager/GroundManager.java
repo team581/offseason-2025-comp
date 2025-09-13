@@ -130,8 +130,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    raw = sensor.getS2State().getValue() == S2StateValue.High;
-    debounced = topDebouncer.calculate(raw);
+    // raw = sensor.getS2State().getValue() == S2StateValue.High;
+    // debounced = topDebouncer.calculate(raw);
 
     homingOrUnhomed =
         getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
