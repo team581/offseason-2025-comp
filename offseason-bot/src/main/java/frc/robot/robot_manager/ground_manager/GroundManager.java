@@ -133,8 +133,10 @@ public class GroundManager extends StateMachine<GroundState> {
     // raw = sensor.getS2State().getValue() == S2StateValue.High;
     // debounced = topDebouncer.calculate(raw);
 
-    homingOrUnhomed =
-        getState() == GroundState.DEPLOY_HOMING || getState() == GroundState.DEPLOY_NOT_HOMED;
+   // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+   // bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+  //  topDebounced = topDebouncer.calculate(topRaw);
+  //  bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -162,6 +164,20 @@ public class GroundManager extends StateMachine<GroundState> {
       default -> setStateFromRequest(newState);
     }
   }
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, REHOME -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
+  public boolean getTopHasGP() {
+    return topDebounced;
+  }
+
+  public boolean getBottomHasGP() {
+    return bottomDebounced;
+  }
 
   public void rehomeRequest() {
     setStateFromRequest(GroundState.DEPLOY_HOMING);
@@ -172,12 +188,8 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
-    if (homingOrUnhomed) {
-      return;
-    }
-
     if (getTopHasGP()) {
-      setStateFromRequest(GroundState.IDLE_GP);
+      setState(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
