@@ -189,4 +189,8 @@ public enum RobotState {
   public RobotState getHandoffAfterReleaseToApproachState() {
     return handoffAfterReleaseToApproach.getOrDefault(this, this);
   }
+
+  public RobotState getHandoffAfterReleaseToApproachState() {
+    return handoffAfterReleaseToApproach.getOrDefault(this, this);
+  }
 }

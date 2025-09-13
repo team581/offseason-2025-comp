@@ -2,6 +2,10 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
+<<<<<<< HEAD
+=======
+import edu.wpi.first.math.filter.Debouncer;
+>>>>>>> 6d53129f (robot manager compile changes (offseason))
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.intake.IntakeState;
@@ -171,6 +175,13 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, REHOME -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
   public boolean getTopHasGP() {
     return topDebounced;
   }
@@ -188,12 +199,8 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void stowRequest() {
-    if (getHasGP()) {
+    if (getTopHasGP()) {
       setState(GroundState.IDLE_GP);
-    }
-
-    if (getHasGP()) {
-      setStateFromRequest(GroundState.IDLE_GP);
       return;
     }
     setState(GroundState.IDLE_NO_GP);
@@ -224,6 +231,10 @@ public class GroundManager extends StateMachine<GroundState> {
     setState(GroundState.L1_WAIT);
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6d53129f (robot manager compile changes (offseason))
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
