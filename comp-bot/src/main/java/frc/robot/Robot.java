@@ -65,7 +65,7 @@ public class Robot extends Base581Robot {
 
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCandi);
   private final IntakeSubsystem intake =
-      new IntakeSubsystem(hardware.intakeMotor, hardware.intakeCandi);
+      new IntakeSubsystem(hardware.intakeMotor);
 
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
