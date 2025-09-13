@@ -26,6 +26,7 @@ public class GroundManager extends StateMachine<GroundState> {
   private static final boolean TOP_DEBOUNCED = false;
   private static final boolean BOTTOM_DEBOUNCED = false;
 
+
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
       CANdi sensor */) {
