@@ -117,47 +117,41 @@ public enum RobotState {
     this.climbingOrRehoming = climbingOrRehoming;
   }
 
-  private static final ImmutableMap<RobotState, RobotState> lineupToPlace =
+  private static final ImmutableMap<RobotState, RobotState> scoreSequence =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_LINEUP, CORAL_L1_RELEASE),
           Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
           Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
-          Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE));
-  private static final ImmutableMap<RobotState, RobotState> placeToRelease =
-      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE),
+
           Map.entry(CORAL_L1_RELEASE, CORAL_L1_RELEASE),
           Map.entry(CORAL_L2_PLACE, CORAL_L2_RELEASE),
           Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
           Map.entry(CORAL_L4_PLACE, CORAL_L4_RELEASE));
 
-  private static final ImmutableMap<RobotState, RobotState> handoffPrepareToRelease =
+  private static final ImmutableMap<RobotState, RobotState> handoffSequence =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_PREPARE_HANDOFF, CORAL_L1_RELEASE_HANDOFF),
           Map.entry(CORAL_L2_PREPARE_HANDOFF, CORAL_L2_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_PREPARE_HANDOFF, CORAL_L3_RELEASE_HANDOFF),
-          Map.entry(CORAL_L4_PREPARE_HANDOFF, CORAL_L4_RELEASE_HANDOFF));
-  private static final ImmutableMap<RobotState, RobotState> handoffReleaseToAfterRelease =
-      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L4_PREPARE_HANDOFF, CORAL_L4_RELEASE_HANDOFF),
+
           Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF));
-  private static final ImmutableMap<RobotState, RobotState> handoffAfterReleaseToApproach =
-      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF),
+
           Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_APPROACH),
           Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_APPROACH),
           Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
           Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_APPROACH));
 
-  private static final ImmutableMap<RobotState, RobotState> algaeApproachToIntakeStates =
+  private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
-          Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3));
+          Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
 
-  private static final ImmutableMap<RobotState, RobotState> algaeIntakeToHoldingStates =
-      ImmutableMap.ofEntries(
-          // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
           Map.entry(ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING));
 
@@ -183,31 +177,14 @@ public enum RobotState {
     };
   }
 
-  public RobotState getLineupToPlaceState() {
-    return lineupToPlace.getOrDefault(this, this);
+  public RobotState getNextScoreState() {
+    return scoreSequence.getOrDefault(this, this);
+  }
+  public RobotState getNextAlgaeIntakeState() {
+    return algaeIntakeSequence.getOrDefault(this, this);
   }
 
-  public RobotState getPlaceToReleaseState() {
-    return placeToRelease.getOrDefault(this, this);
-  }
-
-  public RobotState getAlgaeApproachToIntakeState() {
-    return algaeApproachToIntakeStates.getOrDefault(this, this);
-  }
-
-  public RobotState getAlgaeIntakeToHoldingState() {
-    return algaeIntakeToHoldingStates.getOrDefault(this, this);
-  }
-
-  public RobotState getHandoffPrepareToReleaseState() {
-    return handoffPrepareToRelease.getOrDefault(this, this);
-  }
-
-  public RobotState getHandoffReleaseToAfterRelease() {
-    return handoffReleaseToAfterRelease.getOrDefault(this, this);
-  }
-
-  public RobotState getHandoffAfterReleaseToApproachState() {
-    return handoffAfterReleaseToApproach.getOrDefault(this, this);
+  public RobotState getNextHandoffState() {
+    return handoffSequence.getOrDefault(this, this);
   }
 }
