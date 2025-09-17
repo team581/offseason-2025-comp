@@ -36,12 +36,12 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   protected DeployState getNextState(DeployState currentState) {
     return switch (currentState) {
       case REHOME -> {
-        if (filteredCurrent > currentThreshold) {
+         if (filteredCurrent > currentThreshold) {
           motor.setPosition(Units.degreesToRotations(endPosition));
           yield DeployState.STOWED;
         }
-        yield currentState;
-      }
+         yield currentState;
+       }
       default -> currentState;
     };
   }
@@ -55,8 +55,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
         motor.setVoltage(homingVoltage);
       }
       default ->
-          motor.setControl(
-              positionRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
+          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.angle)));
     }
   }
 
@@ -81,7 +80,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), angle, 3.0);
+      default -> MathUtil.isNear(getState().angle, angle, 3.0);
     };
   }
 
