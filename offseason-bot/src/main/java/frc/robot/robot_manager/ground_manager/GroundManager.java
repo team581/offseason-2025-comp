@@ -2,7 +2,6 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.intake.IntakeState;
@@ -24,8 +23,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   private static final boolean RAW = false;
   private static final boolean DEBOUNCED = false;
-  private boolean topDebounced = false;
-  private boolean bottomDebounced = false;
+  private final boolean topDebounced = false;
+  private final boolean bottomDebounced = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
@@ -97,10 +96,10 @@ public class GroundManager extends StateMachine<GroundState> {
     // raw = sensor.getS2State().getValue() == S2StateValue.High;
     // debounced = topDebouncer.calculate(raw);
 
-   // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-   // bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-  //  topDebounced = topDebouncer.calculate(topRaw);
-  //  bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+    // bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    //  topDebounced = topDebouncer.calculate(topRaw);
+    //  bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -115,6 +114,7 @@ public class GroundManager extends StateMachine<GroundState> {
   public boolean getHasGP() {
     return DEBOUNCED;
   }
+
   private void setState(GroundState newState) {
     switch (deploy.getState()) {
       case UNHOMED, REHOME -> {}
