@@ -55,6 +55,8 @@ public class GroundManager extends StateMachine<GroundState> {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
+      case HANDOFF_RELEASE, OUTTAKING, L1_HARD_SCORE, L1_SCORE -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
       default -> currentState;
     };
   }
