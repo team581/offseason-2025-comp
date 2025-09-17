@@ -84,6 +84,10 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     };
   }
 
+  public double getAngle() {
+    return angle;
+  }
+
   public void rehome() {
     if (getState() == DeployState.REHOME) {
       return;

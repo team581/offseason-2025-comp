@@ -5,6 +5,7 @@ import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.config.RobotConfig;
+import frc.robot.singulator.SingulatorState;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class SingulatorSubsystem extends StateMachine<SingulatorState> {
