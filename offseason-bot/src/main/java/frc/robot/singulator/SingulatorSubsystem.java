@@ -19,7 +19,7 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   private double filteredRightCurrent = 0.0;
   private double filteredLeftCurrent = 0.0;
 
-  private static final double JAM_CURRENT_THRESHOLD = 999.0;
+  private final double jamCurrentThreshold = 999.0;
 
   public SingulatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.SINGULATOR, SingulatorState.IDLE);
@@ -85,11 +85,11 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   }
 
   private boolean isLeftJammed() {
-    return filteredLeftCurrent > JAM_CURRENT_THRESHOLD;
+    return filteredLeftCurrent > jamCurrentThreshold;
   }
 
   private boolean isRightJammed() {
-    return filteredRightCurrent > JAM_CURRENT_THRESHOLD;
+    return filteredRightCurrent > jamCurrentThreshold;
   }
 
   public void setState(SingulatorState newState) {
