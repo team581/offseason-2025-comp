@@ -51,10 +51,18 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected GroundState getNextState(GroundState currentState) {
+    if (singulator.isLeftJammed()) {
+      return GroundState.UNJAM_LEFT;
+    }
+    if (singulator.isRightJammed()) {
+      return GroundState.UNJAM_RIGHT;
+    }
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
+      case HANDOFF_RELEASE, OUTTAKING, L1_HARD_SCORE, L1_SCORE -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
       default -> currentState;
     };
   }
@@ -77,7 +85,7 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.STOWED);
         singulator.setState(SingulatorState.IDLE);
       }
-      case INTAKING -> {
+      case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> {
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
         singulator.setState(SingulatorState.INTAKING);
@@ -92,12 +100,41 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
       }
-      case L1_WAIT -> {
+      case L1_WAIT, L1_HARD_WAIT -> {
         intake.setState(IntakeState.SCORING);
         deploy.setState(DeployState.L1_SCORE);
         singulator.setState(SingulatorState.IDLE);
       }
-      default -> {}
+      case CLIMB -> {
+        intake.setState(IntakeState.STOPPED);
+        deploy.setState(DeployState.STOWED);
+        singulator.setState(SingulatorState.STOPPED);
+      }
+      case L1_SCORE -> {
+        intake.setState(IntakeState.SCORING);
+        deploy.setState(DeployState.L1_SCORE);
+        singulator.setState(SingulatorState.L1_SCORE);
+      }
+      case L1_HARD_SCORE -> {
+        intake.setState(IntakeState.HARD_SCORING);
+        deploy.setState(DeployState.L1_SCORE);
+        singulator.setState(SingulatorState.L1_SCORE);
+      }
+      case OUTTAKING -> {
+        intake.setState(IntakeState.OUTTAKING);
+        deploy.setState(DeployState.OUTTAKE);
+        singulator.setState(SingulatorState.OUTTAKING);
+      }
+      case HANDOFF_WAIT -> {
+        intake.setState(IntakeState.HANDOFF);
+        deploy.setState(DeployState.HANDOFF);
+        singulator.setState(SingulatorState.IDLE);
+      }
+      case HANDOFF_RELEASE -> {
+        intake.setState(IntakeState.HANDOFF);
+        deploy.setState(DeployState.HANDOFF);
+        singulator.setState(SingulatorState.HANDOFF);
+      }
     }
   }
 

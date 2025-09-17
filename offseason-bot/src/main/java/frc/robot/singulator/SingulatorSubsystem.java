@@ -31,21 +31,6 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   }
 
   @Override
-  protected SingulatorState getNextState(SingulatorState currentState) {
-    return switch (currentState) {
-      default -> {
-        if (isLeftJammed()) {
-          yield SingulatorState.UNJAM_LEFT_ONLY;
-        }
-        if (isRightJammed()) {
-          yield SingulatorState.UNJAM_RIGHT_ONLY;
-        }
-        yield currentState;
-      }
-    };
-  }
-
-  @Override
   protected void afterTransition(SingulatorState newState) {
     switch (newState) {
       case UNTUNED, STOPPED -> {
@@ -84,11 +69,11 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
     DogLog.log("Singulator/Right/Current", filteredRightCurrent);
   }
 
-  private boolean isLeftJammed() {
+  public boolean isLeftJammed() {
     return filteredLeftCurrent > jamCurrentThreshold;
   }
 
-  private boolean isRightJammed() {
+  public boolean isRightJammed() {
     return filteredRightCurrent > jamCurrentThreshold;
   }
 
