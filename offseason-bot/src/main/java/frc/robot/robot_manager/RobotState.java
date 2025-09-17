@@ -145,7 +145,6 @@ public enum RobotState {
 
   private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
       ImmutableMap.ofEntries(
-          // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
           Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
           Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
