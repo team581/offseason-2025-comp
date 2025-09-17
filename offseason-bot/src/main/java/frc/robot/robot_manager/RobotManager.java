@@ -172,9 +172,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_AFTER_RELEASE_HANDOFF,
           CORAL_L3_AFTER_RELEASE_HANDOFF,
           CORAL_L4_AFTER_RELEASE_HANDOFF ->
-          elevator.atGoal() && arm.atGoal()
-              ? currentState.getNextScoreState()
-              : currentState;
+          elevator.atGoal() && arm.atGoal() ? currentState.getNextScoreState() : currentState;
 
       // Approach
       case CORAL_L1_APPROACH ->

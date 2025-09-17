@@ -123,7 +123,6 @@ public enum RobotState {
           Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
           Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
           Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE),
-
           Map.entry(CORAL_L1_RELEASE, CORAL_L1_RELEASE),
           Map.entry(CORAL_L2_PLACE, CORAL_L2_RELEASE),
           Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
@@ -135,12 +134,10 @@ public enum RobotState {
           Map.entry(CORAL_L2_PREPARE_HANDOFF, CORAL_L2_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_PREPARE_HANDOFF, CORAL_L3_RELEASE_HANDOFF),
           Map.entry(CORAL_L4_PREPARE_HANDOFF, CORAL_L4_RELEASE_HANDOFF),
-
           Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_RELEASE_HANDOFF),
           Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF),
-
           Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_APPROACH),
           Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_APPROACH),
           Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
@@ -151,7 +148,6 @@ public enum RobotState {
           // Go to right l1 since robot can't do left l1
           Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
           Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
-
           Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
           Map.entry(ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING));
 
@@ -180,6 +176,7 @@ public enum RobotState {
   public RobotState getNextScoreState() {
     return scoreSequence.getOrDefault(this, this);
   }
+
   public RobotState getNextAlgaeIntakeState() {
     return algaeIntakeSequence.getOrDefault(this, this);
   }
