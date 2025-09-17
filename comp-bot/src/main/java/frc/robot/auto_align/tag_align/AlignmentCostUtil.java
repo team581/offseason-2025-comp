@@ -16,7 +16,7 @@ import frc.robot.swerve.SwerveSubsystem;
 import java.util.Comparator;
 
 public class AlignmentCostUtil {
-  private static final double REEF_STATE_COST = 0.6;
+  private static final double REEF_STATE_COST = 0.3;
   private static final double ALGAE_STATE_COST = 0.3;
 
   private static final double DRIVE_DIRECTION_SCALAR = 0.02;
