@@ -51,7 +51,7 @@ public class GroundManager extends StateMachine<GroundState> {
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
-      case INTAKING -> getHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
       default -> currentState;
     };
   }
@@ -89,7 +89,7 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
       }
-      case L1_WAIT -> {
+      case L1_WAIT, L1_HARD_WAIT -> {
         intake.setState(IntakeState.SCORING);
         deploy.setState(DeployState.L1_SCORE);
         singulator.setState(SingulatorState.IDLE);
