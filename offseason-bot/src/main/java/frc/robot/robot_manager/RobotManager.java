@@ -909,7 +909,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
     autoAlign.setCoralL1Offset(vision.getHandoffOffsetTx());
 
-    // elevator.customPeriodic();
     arm.customPeriodic();
   }
 

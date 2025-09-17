@@ -8,7 +8,8 @@ public enum IntakeState {
   INTAKING(12),
   OUTTAKING(UNTUNED),
   HANDOFF(UNTUNED),
-  SCORING(UNTUNED);
+  SCORING(UNTUNED),
+  HARD_SCORING(UNTUNED);
 
   public final double volts;
 
