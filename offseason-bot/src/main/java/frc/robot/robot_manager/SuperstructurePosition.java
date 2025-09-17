@@ -25,8 +25,8 @@ public record SuperstructurePosition(
   private static final TrapezoidProfile ELEVATOR_PROFILE =
       new TrapezoidProfile(
           new TrapezoidProfile.Constraints(
-              RobotConfig.get().elevator().leftMotorConfig().MotionMagic.MotionMagicCruiseVelocity,
-              RobotConfig.get().elevator().leftMotorConfig().MotionMagic.MotionMagicAcceleration));
+              RobotConfig.get().elevator().motorConfig().MotionMagic.MotionMagicCruiseVelocity,
+              RobotConfig.get().elevator().motorConfig().MotionMagic.MotionMagicAcceleration));
   private static final TrapezoidProfile ARM_PROFILE =
       new TrapezoidProfile(
           new TrapezoidProfile.Constraints(

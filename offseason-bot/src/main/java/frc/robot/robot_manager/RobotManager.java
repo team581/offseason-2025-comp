@@ -986,12 +986,11 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L4_RELEASE ->
               ReefPipeLevel.L4;
           case LOW_STOW -> ReefPipeLevel.L1; // Prefer L1 when stowing low
-          default -> {
-            yield switch (groundManager.getState()) {
-              case L1_WAIT, L1_SCORE, L1_HARD_SCORE -> ReefPipeLevel.L1;
-              default -> ReefPipeLevel.RAISING;
-            };
-          }
+          default ->
+              switch (groundManager.getState()) {
+                case L1_WAIT, L1_SCORE, L1_HARD_SCORE -> ReefPipeLevel.L1;
+                default -> ReefPipeLevel.RAISING;
+              };
         };
 
     autoAlign.setScoringLevel(scoringLevel, preferredScoringLevel);
@@ -1471,35 +1470,35 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
-    latestElevatorGoal = elevatorGoal;
-    latestArmGoal = armGoal;
-    latestUnsafe = unsafe;
+    // latestElevatorGoal = elevatorGoal;
+    // latestArmGoal = armGoal;
+    // latestUnsafe = unsafe;
 
-    var currentPosition = new SuperstructurePosition(elevator.getHeight(), arm.getAngle());
-    var goal = new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle());
+    // var currentPosition = new SuperstructurePosition(elevator.getHeight(), arm.getAngle());
+    // var goal = new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle());
 
-    MechanismVisualizer.log(currentPosition, groundManager.deploy.getAngle());
-    var obstructionKind =
-        FeatureFlags.COLLISION_AVOIDANCE_OBSTRUCTION.getAsBoolean()
-            ? shouldLoopAroundToScoreObstruction
-            : ObstructionKind.NONE;
-    var maybeCollisionAvoidanceResult =
-        CollisionAvoidance.routePosition(currentPosition, goal, obstructionKind, arm.getRawAngle());
+    // MechanismVisualizer.log(currentPosition, groundManager.deploy.getAngle());
 
-    DogLog.log("CollisionAvoidance/LatestResultPresent", maybeCollisionAvoidanceResult.isPresent());
+    // var maybeCollisionAvoidanceResult =
+    //     CollisionAvoidance.routePosition(currentPosition, goal, arm.getRawAngle());
 
-    if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
-      elevator.setState(elevatorGoal);
-      arm.setState(armGoal);
-    } else {
-      var collisionAvoidanceResult = maybeCollisionAvoidanceResult.orElseThrow();
+    // DogLog.log("CollisionAvoidance/LatestResultPresent",
+    // maybeCollisionAvoidanceResult.isPresent());
 
-      elevator.setCollisionAvoidanceGoal(collisionAvoidanceResult.elevatorHeight());
-      elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+    // if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
+    //   elevator.setState(elevatorGoal);
+    //   arm.setState(armGoal);
+    // } else {
+    //   var collisionAvoidanceResult = maybeCollisionAvoidanceResult.orElseThrow();
 
-      arm.setCollisionAvoidanceGoal(collisionAvoidanceResult.armAngle());
-      arm.setState(ArmState.COLLISION_AVOIDANCE);
-    }
+    //   elevator.setCollisionAvoidanceGoal(collisionAvoidanceResult.elevatorHeight());
+    //   elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
+
+    //   arm.setCollisionAvoidanceGoal(collisionAvoidanceResult.armAngle());
+    //   arm.setState(ArmState.COLLISION_AVOIDANCE);
+    // }
+    elevator.setState(elevatorGoal);
+    arm.setState(armGoal);
   }
 
   private LightsState getLightStateFoAlgaeIntaking() {
