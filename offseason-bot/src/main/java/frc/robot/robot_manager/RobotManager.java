@@ -1461,9 +1461,9 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
-  private ArmState latestArmGoal = ArmState.HOLDING_UPRIGHT;
-  private boolean latestUnsafe = false;
+  private final ElevatorState latestElevatorGoal = ElevatorState.STOWED;
+  private final ArmState latestArmGoal = ArmState.HOLDING_UPRIGHT;
+  private final boolean latestUnsafe = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     moveSuperstructure(elevatorGoal, armGoal, false);
