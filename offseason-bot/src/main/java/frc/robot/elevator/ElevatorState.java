@@ -36,6 +36,10 @@ public enum ElevatorState {
 
   public final double height;
 
+  public double getHeight() {
+    return this.height;
+  }
+
   private ElevatorState(double height) {
     this.height = height;
   }
