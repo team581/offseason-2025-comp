@@ -215,8 +215,11 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         ArmState.CORAL_HANDOFF.getAngle()
             + (handoffOffset.isPresent() ? handoffOffset.getAsDouble() : 0.0);
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    motorAngle = MathHelpers.angleModulus(rawMotorAngle);
-
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      motorAngle = RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+    } else {
+      motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+    }
     if (DriverStation.isDisabled()) {
       elevatorIsGoingDown = elevator.getHeight() < previousElevatorHeight;
       elevatorIsGoingDownDebounced = debouncer.calculate(elevatorIsGoingDown);
@@ -305,9 +308,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         && newState != ArmState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
       DogLog.logFault("Arm/ARM_HOMED");
-      var actualArmAngle =
-          RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
-      motor.setPosition(Units.degreesToRotations(actualArmAngle));
+      motor.setPosition(Units.degreesToRotations(motorAngle));
       // Refresh sensor data now that position is set
       collectInputs();
     }
