@@ -683,9 +683,9 @@ public class RobotManager extends StateMachine<RobotState> {
     super.robotPeriodic();
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
-    DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
+    DogLog.log("CollisionAvoidance/latestUnsafe", LATEST_UNSAFE);
     // Continuous state actions
-    moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
+    moveSuperstructure(LATEST_ELEVATOR_GOAL, LATEST_ARM_GOAL, LATEST_UNSAFE);
 
     arm.setLollipopMode(
         getState() == RobotState.CORAL_INTAKE_LOLLIPOP_GRAB
@@ -1460,9 +1460,9 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
-  private ArmState latestArmGoal = ArmState.HOLDING_UPRIGHT;
-  private boolean latestUnsafe = false;
+  private static final ElevatorState LATEST_ELEVATOR_GOAL = ElevatorState.STOWED;
+  private static final ArmState LATEST_ARM_GOAL = ArmState.HOLDING_UPRIGHT;
+  private static final boolean LATEST_UNSAFE = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     moveSuperstructure(elevatorGoal, armGoal, false);
