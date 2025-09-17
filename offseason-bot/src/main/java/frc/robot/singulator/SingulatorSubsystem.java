@@ -70,11 +70,11 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   }
 
   public boolean isLeftJammed() {
-    return filteredLeftCurrent > jamCurrentThreshold;
+    return filteredLeftCurrent > JAM_CURRENT_THRESHOLD;
   }
 
   public boolean isRightJammed() {
-    return filteredRightCurrent > jamCurrentThreshold;
+    return filteredRightCurrent > JAM_CURRENT_THRESHOLD;
   }
 
   public void setState(SingulatorState newState) {
