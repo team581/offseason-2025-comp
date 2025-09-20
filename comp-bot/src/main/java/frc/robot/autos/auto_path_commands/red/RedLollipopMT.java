@@ -54,7 +54,6 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.967, 5.392, Rotation2d.fromDegrees(51.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
-                new Pose2d(15.967, 5.392, Rotation2d.fromDegrees(90)),
                 ReefPipe.PIPE_B,
                 RobotScoringSide.LEFT)),
         autoCommands.intakeLollipopCommand(),
@@ -65,7 +64,6 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL2(
-                new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(90)),
                 ReefPipe.PIPE_A,
                 RobotScoringSide.LEFT),
             autoCommands.intakeLollipopCommand()),
@@ -76,7 +74,6 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-47.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             blocks.scoreL4(
-                //  new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(90)),
                 ReefPipe.PIPE_B, RobotScoringSide.LEFT),
             Commands.none()));
   }
