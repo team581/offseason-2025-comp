@@ -129,7 +129,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     DogLog.log("Climber/HoldingCage", holdingCage);
 
-    DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
   }
 
   public boolean atGoal() {
