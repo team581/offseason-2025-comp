@@ -114,7 +114,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
     var outsideExpectedLocation =
         nextExpectedTranslation.isPresent()
             && newPose.getTranslation().getDistance(nextExpectedTranslation.get().getTranslation())
-                > 1.5;
+                > 1.0;
 
     if (!outsideExpectedLocation
         && safeToTrack()
