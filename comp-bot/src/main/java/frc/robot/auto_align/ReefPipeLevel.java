@@ -68,11 +68,11 @@ public enum ReefPipeLevel {
           Rotation2d.fromDegrees(90))),
   BACK_AWAY_AUTO(
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 35.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 38.0),
           Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(270)),
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 35.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 38.0),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90)));
 
