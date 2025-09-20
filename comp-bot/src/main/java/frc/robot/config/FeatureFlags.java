@@ -27,7 +27,7 @@ public class FeatureFlags {
       FeatureFlag.of("CollisionAvoidance/AlternateClosestWaypointChooser", true);
 
   public static final BooleanSupplier MANUAL_L1_HARD_SOFT =
-      FeatureFlag.of("Controls/ManualL1HardSoft", true);
+      FeatureFlag.of("Controls/ManualL1HardSoft", false);
 
   public static final BooleanSupplier APPROACH_TAG_CHECK =
       FeatureFlag.of("Vision/ApproachTagCheck", true);
