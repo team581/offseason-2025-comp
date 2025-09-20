@@ -1,9 +1,14 @@
 package frc.robot;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+
 import com.team581.Base581Robot;
 import com.team581.GlobalConfig;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -112,6 +117,8 @@ public class Robot extends Base581Robot {
     finalizeInit();
   }
 
+  private final OperatingSystemMXBean operatingSystemMXBean =  ManagementFactory.getOperatingSystemMXBean();
+
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
@@ -119,6 +126,9 @@ public class Robot extends Base581Robot {
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       fieldCalibrationUtil.log();
     }
+
+    var cpuLoad = operatingSystemMXBean.getSystemLoadAverage() / operatingSystemMXBean.getAvailableProcessors();
+    DogLog.log("Debug/CpuLoad", cpuLoad);
   }
 
   @Override
