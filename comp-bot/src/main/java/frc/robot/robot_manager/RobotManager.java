@@ -164,8 +164,6 @@ public class RobotManager extends StateMachine<RobotState> {
         }
         yield currentState;
       }
-      case REHOME_ELEVATOR ->
-          elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY : currentState;
       case PREPARE_SPIN_TO_WIN ->
           elevator.atGoal() && arm.atGoal() ? RobotState.SPIN_TO_WIN : currentState;
 
@@ -868,14 +866,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.OUTTAKING);
         groundManager.unjamRequest();
         moveSuperstructure(ElevatorState.UNJAM, ArmState.UNJAM);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.OTHER);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case REHOME_ELEVATOR -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.MID_MATCH_HOMING, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -1877,12 +1867,6 @@ public class RobotManager extends StateMachine<RobotState> {
   public void unjamRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.UNJAM);
-    }
-  }
-
-  public void rehomeElevatorRequest() {
-    if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
   }
 

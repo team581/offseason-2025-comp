@@ -102,11 +102,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, bothRequirements).withName("UnjamCommand");
   }
 
-  public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorRequest, rmRequirements)
-        .withName("RehomeElevatorCommand");
-  }
-
   public Command floorIntakeCommand() {
     return Commands.runOnce(robot::intakeRequest, gmRequirements).withName("FloorIntakeCommand");
   }
