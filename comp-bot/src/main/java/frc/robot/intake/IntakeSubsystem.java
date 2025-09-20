@@ -10,7 +10,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final TalonFX motor;
- // private final CANdi candi;
+  // private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().intake().debouncer();
 
   private boolean sensorRaw = false;
@@ -22,7 +22,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
     this.motor = motor;
-  //  this.candi = candi;
+    //  this.candi = candi;
   }
 
   @Override

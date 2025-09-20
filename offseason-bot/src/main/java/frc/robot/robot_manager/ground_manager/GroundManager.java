@@ -23,8 +23,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   private static final boolean RAW = false;
   private static final boolean DEBOUNCED = false;
-  private final boolean topDebounced = false;
-  private final boolean bottomDebounced = false;
+  private static final boolean TOP_DEBOUNCED = false;
+  private static final boolean BOTTOM_DEBOUNCED = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
@@ -123,11 +123,11 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public boolean getTopHasGP() {
-    return topDebounced;
+    return TOP_DEBOUNCED;
   }
 
   public boolean getBottomHasGP() {
-    return bottomDebounced;
+    return BOTTOM_DEBOUNCED;
   }
 
   public void rehomeRequest() {
