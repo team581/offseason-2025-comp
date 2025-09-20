@@ -112,15 +112,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   private Pose2d robotPose = Pose2d.kZero;
   private ChassisSpeeds tagAlignSpeeds = new ChassisSpeeds();
-  private ChassisSpeeds l1AlignSpeeds = new ChassisSpeeds();
-
-  private ChassisSpeeds algaeAlignSpeeds = new ChassisSpeeds();
   private boolean isAligned = false;
   private boolean isNearRotation = false;
   private boolean isAlignedDebounced = false;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefPipe bestReefPipe = ReefPipe.PIPE_A;
-  private ReefPipeLevel preferredLevel = ReefPipeLevel.BASE;
   private Pose2d usedScoringPose = Pose2d.kZero;
   private ReefSideOffset reefSideOffset = ReefSideOffset.BASE;
   private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
@@ -128,7 +124,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public AutoAlign(
       VisionSubsystem vision, LocalizationSubsystem localization, SwerveSubsystem swerve) {
-    super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.DEFAULT_STATE);
+    super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.PIPE);
 
     this.tagAlign = new TagAlign(swerve, localization);
     this.vision = vision;
@@ -155,26 +151,41 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
     bestAlgaeSide = tagAlign.getBestAlgaeSide();
     closestSide = getClosestReefSide();
-    algaeAlignSpeeds =
-        tagAlign.getAlgaeAlignmentChassisSpeeds(
-            bestAlgaeSide.getPose(reefSideOffset, robotScoringSide, robotPose),
-            robotPose,
-            CONSTRAINTS,
-            new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
-    tagAlignSpeeds =
-        tagAlign.getReefPipeAlignmentChassisSpeeds(
-            usedScoringPose,
-            robotPose,
-            CONSTRAINTS,
-            new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
-    l1AlignSpeeds =
-        tagAlign.getL1AlignmentChassisSpeeds(
-            usedScoringPose,
-            robotPose,
-            L1_CONSTRAINTS,
-            new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
+
+    switch (getState()) {
+      case PIPE -> {
+        tagAlignSpeeds =
+            tagAlign.getReefPipeAlignmentChassisSpeeds(
+                usedScoringPose,
+                robotPose,
+                CONSTRAINTS,
+                new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
+      }
+      case ALGAE -> {
+        tagAlignSpeeds =
+            tagAlign.getAlgaeAlignmentChassisSpeeds(
+                bestAlgaeSide.getPose(reefSideOffset, robotScoringSide, robotPose),
+                robotPose,
+                CONSTRAINTS,
+                new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
+      }
+      case L1 -> {
+        tagAlignSpeeds =
+            tagAlign.getL1AlignmentChassisSpeeds(
+                usedScoringPose,
+                robotPose,
+                L1_CONSTRAINTS,
+                new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
+      }
+    }
+
     var controllerValues = swerve.getControllerValues();
     tagAlign.setControllerValues(controllerValues.getX(), controllerValues.getY());
+  }
+
+  public void setState(AutoAlignState newState) {
+
+    setStateFromRequest(newState);
   }
 
   public void reset() {
@@ -226,15 +237,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public ChassisSpeeds getTagAlignSpeeds() {
     DogLog.log("AutoAlign/TagAlignSpeeds", tagAlignSpeeds);
-    if (preferredLevel.equals(ReefPipeLevel.L1)) {
-      return l1AlignSpeeds;
-    }
+
     return tagAlignSpeeds;
   }
 
-  public ChassisSpeeds getAlgaeAlignSpeeds() {
-    return algaeAlignSpeeds;
-  }
 
   public ReefPipe getBestReefPipe() {
     return bestReefPipe;
@@ -255,8 +261,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public void setScoringLevel(
       ReefPipeLevel level, ReefPipeLevel preferredLevel, RobotScoringSide side) {
     robotScoringSide = side;
-
-    this.preferredLevel = preferredLevel;
     tagAlign.setLevel(level, preferredLevel, side);
   }
 
