@@ -26,10 +26,8 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private final CANrange canRange;
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
-  private final LinearFilter cancoderVelocityFilter = LinearFilter.movingAverage(7);
 
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private double cancoderVelocity = 0;
   private double currentAngle = 0.0;
   private double climberMotorAngle = 0.0;
   private boolean holdingCage = false;
@@ -123,10 +121,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
-    cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
-
-    DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
 
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
