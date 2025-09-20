@@ -1,7 +1,6 @@
 package frc.robot.climber;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,21 +10,18 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClimberSubsystem extends StateMachine<ClimberState> {
-  private static final double CLIMBER_BACKWARD_VELOCITY_TRHESHOLD = 0.1;
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
   private final CANrange canRange;
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
-  private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
   private final CoastOut coastNeutralRequest = new CoastOut();
   private double currentAngle = 0.0;
