@@ -6,6 +6,8 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+// TODO: 1) Get odometry in a usable state, then implement fixes for 2) Wheel slip, 3) Accounting
+// for downtime when wheels turn
 public class CustomOdometry extends Odometry<SwerveModulePosition[]> {
 
   public CustomOdometry(
