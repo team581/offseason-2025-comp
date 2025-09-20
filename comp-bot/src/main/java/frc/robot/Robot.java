@@ -1,13 +1,9 @@
 package frc.robot;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-
 import com.team581.Base581Robot;
 import com.team581.GlobalConfig;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +33,8 @@ import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 public class Robot extends Base581Robot {
   private Command autonomousCommand = Commands.none();
@@ -118,7 +116,8 @@ public class Robot extends Base581Robot {
     finalizeInit();
   }
 
-  private final OperatingSystemMXBean operatingSystemMXBean =  ManagementFactory.getOperatingSystemMXBean();
+  private final OperatingSystemMXBean operatingSystemMxBean =
+      ManagementFactory.getOperatingSystemMXBean();
 
   @Override
   public void robotPeriodic() {
@@ -128,7 +127,9 @@ public class Robot extends Base581Robot {
       fieldCalibrationUtil.log();
     }
 
-    var cpuLoad = operatingSystemMXBean.getSystemLoadAverage() / operatingSystemMXBean.getAvailableProcessors();
+    var cpuLoad =
+        operatingSystemMxBean.getSystemLoadAverage()
+            / operatingSystemMxBean.getAvailableProcessors();
     DogLog.log("Debug/CpuLoad", cpuLoad);
   }
 
