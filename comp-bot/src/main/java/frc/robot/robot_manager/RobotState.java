@@ -122,7 +122,6 @@ public enum RobotState {
   SPIN_TO_WIN(ClawGamePiece.EMPTY, false),
   ALGAE_OUTTAKE(ClawGamePiece.ALGAE, false),
   UNJAM(ClawGamePiece.EMPTY, false),
-  REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),
 
   FORCED_HANDOFF(ClawGamePiece.EMPTY, false),
   FORCED_LOWSTOW(ClawGamePiece.EMPTY, false);

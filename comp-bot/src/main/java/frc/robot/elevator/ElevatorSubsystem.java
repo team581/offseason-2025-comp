@@ -10,7 +10,6 @@ import com.team581.util.state_machines.StateMachine;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
@@ -29,11 +28,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
 
-  private double leftMotorCurrent;
-  private double rightMotorCurrent;
-
-  private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
-
   private final MotionMagicVoltage positionRequest =
       new MotionMagicVoltage(ElevatorState.STOWED.getHeight());
 
@@ -45,8 +39,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   private double averageMeasuredHeight = 0;
   private double collisionAvoidanceGoal = ElevatorState.STOWED.getHeight();
-  // Mid-match homing
-  private double averageMotorCurrent;
   private final CoastOut coastRequest = new CoastOut();
 
   public ElevatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
@@ -64,11 +56,8 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   public void setState(ElevatorState newState) {
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
-        if (newState == ElevatorState.MID_MATCH_HOMING) {
-          setStateFromRequest(newState);
-        }
+        setStateFromRequest(newState);
       }
-      case MID_MATCH_HOMING -> {}
       default -> {
         setStateFromRequest(newState);
       }
@@ -92,11 +81,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
     averageMeasuredHeight = (leftHeight + rightHeight) / 2.0;
 
-    leftMotorCurrent = leftMotor.getStatorCurrent().getValueAsDouble();
-    rightMotorCurrent = rightMotor.getStatorCurrent().getValueAsDouble();
-
-    averageMotorCurrent = currentFilter.calculate((leftMotorCurrent + rightMotorCurrent) / 2.0);
-
     if (DriverStation.isDisabled()) {
       lowestSeenHeightLeft = Math.min(lowestSeenHeightLeft, leftHeight);
       lowestSeenHeightRight = Math.min(lowestSeenHeightRight, rightHeight);
@@ -106,10 +90,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
-      case MID_MATCH_HOMING -> {
-        leftMotor.setVoltage(-0.0);
-        rightMotor.setVoltage(-0.0);
-      }
       case COLLISION_AVOIDANCE -> {
         leftMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
         rightMotor.setControl(positionRequest.withPosition(clampHeight(collisionAvoidanceGoal)));
@@ -122,9 +102,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   }
 
   public void customPeriodic() {
-    DogLog.log("Elevator/Left/StatorCurrent", leftMotorCurrent);
-    DogLog.log("Elevator/Right/StatorCurrent", rightMotorCurrent);
-    DogLog.log("Elevator/AverageStatorCurrent", averageMotorCurrent);
     DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
 
@@ -151,9 +128,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
             ? collisionAvoidanceGoal
             : getState().getHeight();
 
-    if (MathUtil.isNear(0, usedHeight, 0.25)
-        && MathUtil.isNear(0, getHeight(), 0.25)
-        && getState() != ElevatorState.MID_MATCH_HOMING) {
+    if (MathUtil.isNear(0, usedHeight, 0.25) && MathUtil.isNear(0, getHeight(), 0.25)) {
       leftMotor.disable();
       rightMotor.disable();
     }
@@ -162,20 +137,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   @Override
   protected ElevatorState getNextState(ElevatorState currentState) {
     return switch (currentState) {
-      case MID_MATCH_HOMING -> {
-        if (averageMotorCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
-          leftMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
-          rightMotor.setPosition(RobotConfig.get().elevator().homingEndHeight());
-
-          // Refresh sensor data now that position is set
-          collectInputs();
-
-          yield ElevatorState.STOWED;
-        }
-
-        yield currentState;
-      }
-
       case PRE_MATCH_HOMING -> {
         if (DriverStation.isEnabled()) {
           // We are enabled and still in pre match homing
@@ -198,7 +159,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
+      case PRE_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE -> false;
       default ->
           MathUtil.isNear(
@@ -218,7 +179,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
   public boolean nearGoal() {
     return switch (getState()) {
-      case PRE_MATCH_HOMING, MID_MATCH_HOMING, UNJAM -> true;
+      case PRE_MATCH_HOMING, UNJAM -> true;
       case COLLISION_AVOIDANCE -> false;
       default -> MathUtil.isNear(getState().getHeight(), averageMeasuredHeight, NEAR_TOLERANCE);
     };
