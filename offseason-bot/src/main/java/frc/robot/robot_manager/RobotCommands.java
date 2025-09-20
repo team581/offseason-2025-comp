@@ -129,7 +129,6 @@ public class RobotCommands {
   public Command lowStowCommand() {
     return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");
   }
-
   public Command rehomeCommand() {
     return Commands.runOnce(groundManager::rehomeRequest, gmRequirements).withName("RehomeCommand");
   }
