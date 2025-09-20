@@ -49,7 +49,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final TalonFX motor;
   private double rawMotorAngle;
   private double motorAngle;
-  private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private OptionalDouble handoffOffset = OptionalDouble.empty();
@@ -235,14 +234,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       previousElevatorHeight = elevator.getHeight();
     }
 
-    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
   @Override
   protected void afterTransition(ArmState newState) {}
 
   public void customPeriodic() {
-    DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/RawAngle", rawMotorAngle);
