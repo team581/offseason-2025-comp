@@ -115,6 +115,10 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
   @Override
   protected void collectInputs() {
+    if (getState() == ClimberState.STOPPED) {
+      return;
+    }
+
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
