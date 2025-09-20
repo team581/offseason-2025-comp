@@ -26,7 +26,7 @@ public class AutoBlocks {
    * scoring L4.
    */
   private static final PoseErrorTolerance AFTER_SCORE_POSITION_TOLERANCE =
-      new PoseErrorTolerance(0.6, 25);
+      new PoseErrorTolerance(0.8, 25);
 
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.6, 10);
@@ -54,7 +54,7 @@ public class AutoBlocks {
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4.0, 30);
   public static final AutoConstraintOptions LOLLIPOP_RACE_CONSTRAINTS =
-      MAX_CONSTRAINTS.withMaxLinearVelocity(5).withMaxLinearAcceleration(4.5);
+      MAX_CONSTRAINTS.withMaxLinearVelocity(5.5).withMaxLinearAcceleration(4.5);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
