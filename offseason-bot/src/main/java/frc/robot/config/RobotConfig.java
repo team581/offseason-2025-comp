@@ -40,6 +40,8 @@ public record RobotConfig(
       String canBusName,
       int motorId,
       int candiId,
+      double minAngle,
+      double maxAngle,
       double homingVoltage,
       double homingCurrentThreshold,
       double homingEndPosition,

@@ -86,6 +86,7 @@ public class Robot extends Base581Robot {
 
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+    hardware.operatorController.y().onTrue(actions.rehomeCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
   }
 }

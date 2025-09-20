@@ -57,17 +57,20 @@ class CompConfig {
               CANIVORE_NAME,
               20,
               99,
-              0.0,
-              0.0,
-              0.0,
+              148,
+              1.75,
+              1.0,
+              20.0,
+              1,
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(150)
                           .withSupplyCurrentLimit(150))
+                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(48))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               CANIVORE_NAME,

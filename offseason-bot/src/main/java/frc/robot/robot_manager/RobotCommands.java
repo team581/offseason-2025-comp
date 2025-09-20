@@ -39,4 +39,7 @@ public class RobotCommands {
   public Command stowCommand() {
     return Commands.runOnce(groundManager::stowRequest, gmRequirements).withName("StowCommand");
   }
+  public Command rehomeCommand() {
+    return Commands.runOnce(groundManager::rehomeRequest, gmRequirements).withName("RehomeCommand");
+  }
 }
