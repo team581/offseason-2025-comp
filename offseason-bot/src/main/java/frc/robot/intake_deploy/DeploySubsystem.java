@@ -56,7 +56,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
         motor.setVoltage(homingVoltage);
       }
       default ->
-          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.angle)));
+          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
     }
   }
 
