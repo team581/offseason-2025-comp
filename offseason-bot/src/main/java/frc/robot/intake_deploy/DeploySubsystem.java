@@ -55,7 +55,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
         motor.setVoltage(homingVoltage);
       }
       default ->
-          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.angle)));
+          motor.setControl(positionRequest.withPosition(Units.degreesToRotations(newState.getAngle())));
     }
   }
 
@@ -80,7 +80,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().angle, angle, 3.0);
+      default -> MathUtil.isNear(getState().getAngle(), angle, 3.0);
     };
   }
 
