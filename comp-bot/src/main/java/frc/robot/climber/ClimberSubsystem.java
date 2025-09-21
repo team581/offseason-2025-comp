@@ -128,7 +128,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
 
     DogLog.log("Climber/HoldingCage", holdingCage);
-
   }
 
   public boolean atGoal() {

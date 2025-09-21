@@ -241,7 +241,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return tagAlignSpeeds;
   }
 
-
   public ReefPipe getBestReefPipe() {
     return bestReefPipe;
   }

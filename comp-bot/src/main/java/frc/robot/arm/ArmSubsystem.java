@@ -233,7 +233,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
       previousElevatorHeight = elevator.getHeight();
     }
-
   }
 
   @Override

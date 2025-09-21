@@ -399,7 +399,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -411,7 +411,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
 
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -424,7 +424,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_RIGHT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
 
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -451,7 +451,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -465,7 +465,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
 
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -478,7 +478,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
 
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -492,7 +492,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-            autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.setState(AutoAlignState.ALGAE);
 
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
@@ -909,7 +909,6 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_RIGHT_RELEASE_L4, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         autoAlign.setState(AutoAlignState.PIPE);
-
 
         lights.setState(LightsState.SCORING_CORAL);
         climber.setState(ClimberState.STOPPED);
