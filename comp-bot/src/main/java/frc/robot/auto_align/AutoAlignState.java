@@ -5,5 +5,4 @@ public enum AutoAlignState {
   PIPE,
   ALGAE,
   L1;
-
 }
