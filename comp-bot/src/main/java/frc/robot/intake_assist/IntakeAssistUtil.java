@@ -14,7 +14,7 @@ import frc.robot.vision.results.GamePieceResult;
 
 public final class IntakeAssistUtil {
   private static final double ASSIST_KP = 3.7;
-  private static final double INTAKE_OFFSET = Units.inchesToMeters(18);
+
   private static final double LOLLIPOP_INTAKE_OFFSET = Units.inchesToMeters(29.0);
 
   public static ChassisSpeeds getAssistSpeedsFromPose(

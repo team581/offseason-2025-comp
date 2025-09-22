@@ -13,11 +13,11 @@ import frc.robot.robot_manager.RobotState;
 import frc.robot.robot_manager.ground_manager.GroundState;
 
 public class AutoCommands {
-  private final RobotCommands robotCommands;
+
   private final RobotManager robotManager;
 
   public AutoCommands(RobotCommands robotCommands, RobotManager robotManager) {
-    this.robotCommands = robotCommands;
+
     this.robotManager = robotManager;
   }
 

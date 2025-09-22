@@ -84,12 +84,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   private ChassisSpeeds autoSpeeds = new ChassisSpeeds();
 
-  private ChassisSpeeds coralAssistSpeeds = new ChassisSpeeds();
-
   private ChassisSpeeds autoAlignSpeeds = new ChassisSpeeds();
 
-  private final ChassisSpeeds previousSpeeds = new ChassisSpeeds();
-  private static final double PREVIOUS_TIMESTAMP = 0.0;
   private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
@@ -142,9 +138,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
         ChassisSpeeds.fromRobotRelativeSpeeds(speeds, drivetrainState.Pose.getRotation()));
   }
 
-  public void setFieldRelativeCoralAssistSpeeds(ChassisSpeeds speeds) {
-    coralAssistSpeeds = speeds;
-  }
+  public void setFieldRelativeCoralAssistSpeeds(ChassisSpeeds speeds) {}
 
   public void setAutoAlignSpeeds(ChassisSpeeds speeds) {
     autoAlignSpeeds = speeds;

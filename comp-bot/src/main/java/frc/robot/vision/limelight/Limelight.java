@@ -45,8 +45,6 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private double angularVelocity = 0.0;
 
-  private final int[] closestScoringReefTag = {0};
-
   public Limelight(
       String name,
       LimelightState initialState,

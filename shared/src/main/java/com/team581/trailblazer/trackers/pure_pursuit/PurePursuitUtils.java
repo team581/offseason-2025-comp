@@ -116,7 +116,7 @@ public class PurePursuitUtils {
       double lookaheadDistance,
       Pose2d startingRobotPose) {
     var lastTargetWaypoint = Pose2d.kZero;
-    var currentTargetWaypoint = Pose2d.kZero;
+    
 
     if (points.isEmpty()) {
       return Pose2d.kZero;
@@ -126,7 +126,7 @@ public class PurePursuitUtils {
     } else {
       lastTargetWaypoint = points.get(currentPointIndex - 1).poseSupplier.get();
     }
-    currentTargetWaypoint = points.get(currentPointIndex).poseSupplier.get();
+    null currentTargetWaypoint = points.get(currentPointIndex).poseSupplier.get();
     var perpendicularPoint =
         getPerpendicularPoint(lastTargetWaypoint, currentTargetWaypoint, currentPose);
 

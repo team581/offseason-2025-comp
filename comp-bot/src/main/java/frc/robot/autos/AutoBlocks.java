@@ -31,15 +31,10 @@ public class AutoBlocks {
   private static final PoseErrorTolerance LOLLIPOP_APPROACH_TOLERANCE =
       new PoseErrorTolerance(0.6, 10);
 
-  private static final PoseErrorTolerance SUPER_FAST_LOLLIPOP_APPROACH_TOLERANCE =
-      new PoseErrorTolerance(0.8, 20);
   public static final PoseErrorTolerance APPROACH_REEF_TOLERANCE = new PoseErrorTolerance(0.6, 10);
 
   public static final Transform2d INTAKE_CORAL_GROUND_LINEUP_OFFSET =
       new Transform2d(-0.6, -0.9, Rotation2d.kZero);
-
-  private static final Transform2d INTAKE_CORAL_GROUND_APPROACH_OFFSET =
-      new Transform2d(0, Units.inchesToMeters(-60), Rotation2d.kZero);
 
   private static final Transform2d CENTER_LOLLIPOP_OFFSET =
       new Transform2d(0, Units.inchesToMeters(5), Rotation2d.kZero);

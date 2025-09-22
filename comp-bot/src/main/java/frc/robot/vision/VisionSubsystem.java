@@ -17,7 +17,7 @@ import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
-  private static final double REEF_CLOSEUP_DISTANCE = 0.7;
+
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final Debouncer seeingTagForPoseResetDebouncer =
       new Debouncer(5.0, DebounceType.kFalling);
@@ -34,11 +34,8 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private OptionalTagResult gamePieceTagResult = new OptionalTagResult();
 
   private double robotHeading;
-  private double pitch;
+
   private double angularVelocity;
-  private double pitchRate;
-  private double roll;
-  private double rollRate;
 
   private boolean hasSeenTag = false;
   private boolean seeingTag = false;
