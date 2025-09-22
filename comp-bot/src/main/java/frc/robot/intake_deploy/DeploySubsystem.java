@@ -82,15 +82,22 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
     DogLog.log("Deploy/AtGoal", atGoal());
     DogLog.log("Deploy/Angle", currentAngle);
-    DogLog.log("Deploy/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Deploy/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
-    DogLog.log("Deploy/CurrentThreshold", RobotConfig.get().deploy().homingCurrentThreshold());
+    DogLog.log("Deploy/FilteredStatorCurrent", filteredCurrent);
   }
 
   @Override
   protected void collectInputs() {
-    rawCurrent = motor.getStatorCurrent().getValueAsDouble();
-    filteredCurrent = currentFilter.calculate(rawCurrent);
+    switch (getState()) {
+      case UNHOMED, HOMING -> {
+        rawCurrent = motor.getStatorCurrent().getValueAsDouble();
+        filteredCurrent = currentFilter.calculate(rawCurrent);
+      }
+      default -> {
+        rawCurrent = 0;
+        filteredCurrent = 0;
+      }
+    }
+
 
     currentAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
   }
