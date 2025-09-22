@@ -103,9 +103,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
   private boolean canSkipCollisionAvoidanceForReefAlgae = false;
-  private final Debouncer l1VisionAdjustReadyDebouncer = new Debouncer(0.2, DebounceType.kRising);
 
-  private static final boolean INTAKE_ASSIST_ACTIVE = false;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
