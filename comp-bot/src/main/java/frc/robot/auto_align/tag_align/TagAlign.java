@@ -86,15 +86,12 @@ public class TagAlign {
   private boolean translationGood = false;
   private boolean rotationGood = false;
   private boolean resetReefPipeNextLoop = false;
+  private boolean pipeSwitchActive = false;
 
   private static final DoubleSubscriber TRANSLATION_FEED_FORWARD =
       DogLog.tunable("AutoAlign/TranslationFeedForward", 0.0);
   private static final DoubleSubscriber ROTATION_FEED_FORWARD =
       DogLog.tunable("AutoAlign/RotationFeedForward", 0.0);
-
-  private boolean pipeSwitchActive = false;
-
-  private static final double LAST_ADDED_TIMESTAMP = 0.0;
 
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
