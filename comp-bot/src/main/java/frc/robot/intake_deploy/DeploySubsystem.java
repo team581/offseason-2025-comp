@@ -98,7 +98,6 @@ public class DeploySubsystem extends StateMachine<DeployState> {
       }
     }
 
-
     currentAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
   }
 
