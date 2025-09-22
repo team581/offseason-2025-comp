@@ -4,8 +4,6 @@ import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -103,7 +101,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
   private boolean canSkipCollisionAvoidanceForReefAlgae = false;
-
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
