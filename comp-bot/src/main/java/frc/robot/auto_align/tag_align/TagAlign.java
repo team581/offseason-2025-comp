@@ -94,7 +94,7 @@ public class TagAlign {
 
   private boolean pipeSwitchActive = false;
 
-  private final double lastAddedTimestamp = 0.0;
+  private static final double LAST_ADDED_TIMESTAMP = 0.0;
 
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
