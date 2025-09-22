@@ -136,19 +136,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
-        gamePieceDetectionLimelight.setState(LimelightState.TAGS);
-      }
-      case CLOSEST_REEF_TAG -> {
-        if (FeatureFlags.USE_ANY_REEF_TAG.getAsBoolean()) {
-          leftBackLimelight.setState(LimelightState.TAGS);
-          leftFrontLimelight.setState(LimelightState.TAGS);
-          rightLimelight.setState(LimelightState.TAGS);
-        } else {
-          leftBackLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
-          leftFrontLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
-          rightLimelight.setState(LimelightState.CLOSEST_REEF_TAG);
-        }
-        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HANDOFF);
       }
       case CORAL_DETECTION -> {
         leftBackLimelight.setState(LimelightState.TAGS);
@@ -160,13 +148,13 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         leftBackLimelight.setState(LimelightState.TAGS);
         leftFrontLimelight.setState(LimelightState.TAGS);
         rightLimelight.setState(LimelightState.TAGS);
-        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HANDOFF);
       }
       case ALGAE_DETECTION -> {
         leftBackLimelight.setState(LimelightState.OFF);
         leftFrontLimelight.setState(LimelightState.OFF);
         rightLimelight.setState(LimelightState.ALGAE);
-        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
+        gamePieceDetectionLimelight.setState(LimelightState.HANDOFF);
       }
     }
   }
@@ -198,13 +186,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
 
     DogLog.log("Vision/SeeingTag", seeingTag);
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);
-  }
-
-  public void setClosestScoringReefAndPipe(int tagID) {
-    leftFrontLimelight.setClosestScoringReefTag(tagID);
-    rightLimelight.setClosestScoringReefTag(tagID);
-    leftBackLimelight.setClosestScoringReefTag(tagID);
-    gamePieceDetectionLimelight.setClosestScoringReefTag(tagID);
   }
 
   public boolean isAnyCameraOffline() {
