@@ -15,7 +15,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private LightsState storedState = LightsState.IDLE_EMPTY;
   private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
-  private final Color8Bit COLOR_BLACK = new Color8Bit();
+  private static final Color8Bit COLOR_BLACK = new Color8Bit();
   private Color8Bit previousColor = new Color8Bit();
 
   public LightsSubsystem(CANdle candle) {
@@ -45,8 +45,8 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     };
   }
 
-  private void setLEDs(Color8Bit color){
-    if (!color.equals(previousColor)){
+  private void setLeDs(Color8Bit color) {
+    if (!color.equals(previousColor)) {
       candle.setLEDs(color.red, color.green, color.blue);
     }
     previousColor = color;
@@ -58,7 +58,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
     var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {
-      setLEDs(color8Bit);
+      setLeDs(color8Bit);
     } else {
       double time = blinkTimer.get();
       double onDuration = 0;
@@ -74,10 +74,10 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
       if (time >= offDuration) {
         blinkTimer.reset();
-        setLEDs(COLOR_BLACK);
+        setLeDs(COLOR_BLACK);
 
       } else if (time >= onDuration) {
-        setLEDs(color8Bit);
+        setLeDs(color8Bit);
       }
     }
 
