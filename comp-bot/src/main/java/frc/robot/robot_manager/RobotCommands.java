@@ -106,7 +106,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::intakeRequest, gmRequirements).withName("FloorIntakeCommand");
   }
 
-
   public Command rehomeDeployCommand() {
     return Commands.runOnce(robot.groundManager::rehomeDeployRequest, gmRequirements)
         .withName("RehomeDeployCommand");

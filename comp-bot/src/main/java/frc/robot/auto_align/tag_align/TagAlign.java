@@ -94,7 +94,7 @@ public class TagAlign {
 
   private boolean pipeSwitchActive = false;
 
-  private double lastAddedTimestamp = 0.0;
+  private final double lastAddedTimestamp = 0.0;
 
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
@@ -337,7 +337,7 @@ public class TagAlign {
       TRAPEZOIDAL_ROTATION_CONTROLLER.reset(
           currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
       TRAPEZOIDAL_ROTATION_CONTROLLER.setGoal(targetPose.getRotation().getRadians());
-      Translation2d linearFieldVelocity =
+      var linearFieldVelocity =
           new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
       TRAPEZOIDAL_TRANSLATION_CONTROLLER.reset(
           distanceToGoalMeters,

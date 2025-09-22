@@ -21,7 +21,6 @@ import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
-import java.util.OptionalDouble;
 
 public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final AutoConstraintOptions CONSTRAINTS =
