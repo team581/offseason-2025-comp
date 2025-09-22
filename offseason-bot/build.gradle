@@ -102,7 +102,7 @@ wpi.java.configureTestTasks(test)
 
 // Error Prone configs
 tasks.withType(JavaCompile).configureEach {
-	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "UnusedVariable", "InconsistentCapitalization", "Var", "BooleanParameter", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
+	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "InconsistentCapitalization", "Var", "BooleanParameter", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
 
 	// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
 	if (System.getenv().containsKey("ERRORPRONE_AUTOFIX")) {
