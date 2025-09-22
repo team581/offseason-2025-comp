@@ -434,9 +434,8 @@ public class CollisionAvoidance {
     Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
         graph, Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L3_UPRIGHT, Waypoint.CORAL_L4_UPRIGHT);
 
-
-        Waypoint.CORAL_L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
-        Waypoint.CORAL_L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
+    Waypoint.CORAL_L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
+    Waypoint.CORAL_L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
 
     /* Switching coral level on the same side is okay if you won't hit the reef */
     var leftCoralScoreWaypoints =
