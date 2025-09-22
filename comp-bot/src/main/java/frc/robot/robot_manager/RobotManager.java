@@ -25,7 +25,6 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -1142,7 +1141,6 @@ public class RobotManager extends StateMachine<RobotState> {
           swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
           lights.setState(LightsState.IDLE_EMPTY);
-
           swerve.normalDriveRequest();
         }
       }
@@ -1311,17 +1309,6 @@ public class RobotManager extends StateMachine<RobotState> {
       swerve.setAutoAlignSpeeds(autoAlign.getTagAlignSpeeds());
     } else {
       swerve.setAutoAlignSpeeds(swerve.getTeleopSpeeds());
-    }
-
-    var maybeCoralPose = coralMap.getBestCoralPose();
-    if (maybeCoralPose.isPresent()) {
-
-      var coralAlignSpeeds =
-          IntakeAssistUtil.getAssistSpeedsFromPose(
-              maybeCoralPose.get(), robotPose, swerve.getTeleopSpeeds());
-      swerve.setFieldRelativeCoralAssistSpeeds(coralAlignSpeeds);
-    } else {
-      swerve.setFieldRelativeCoralAssistSpeeds(swerve.getTeleopSpeeds());
     }
 
     swerve.setElevatorHeight(elevator.getHeight());
