@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.tag_align.TagAlign;
 import frc.robot.localization.LocalizationSubsystem;
@@ -27,9 +26,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.5));
-
-  private static final DoubleSubscriber OBSTRUCTION_DISTANCE =
-      DogLog.tunable("AutoAlign/ObstructionDistance", 0.75);
 
   private final PoseErrorTolerance positionTolerance = new PoseErrorTolerance(0.2, 4);
 

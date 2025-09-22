@@ -27,7 +27,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private static final double USE_MT1_DISTANCE_THRESHOLD = Units.inchesToMeters(40.0);
   private final String limelightTableName;
   private final String name;
-  private final LimelightModel limelightModel;
+
   private final boolean mt1Compatible;
 
   private final Timer limelightTimer = new Timer();
@@ -58,7 +58,7 @@ public class Limelight extends StateMachine<LimelightState> {
     limelightTableName = "limelight-" + name;
     this.name = name;
     limelightTimer.start();
-    this.limelightModel = limelightModel;
+
     this.mt1Compatible = mt1Compatible;
   }
 

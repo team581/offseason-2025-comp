@@ -7,17 +7,13 @@ import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.FeatureFlags;
-import frc.robot.config.RobotConfig;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -26,16 +22,7 @@ import frc.robot.vision.results.TagResult;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState>
     implements LocalizationBase {
-  private static final Vector<N3> MT1_VISION_STD_DEVS =
-      VecBuilder.fill(
-          RobotConfig.get().vision().xyStdDev(),
-          RobotConfig.get().vision().xyStdDev(),
-          RobotConfig.get().vision().thetaStdDev());
-  private static final Vector<N3> MT2_VISION_STD_DEVS =
-      VecBuilder.fill(
-          RobotConfig.get().vision().xyStdDev(),
-          RobotConfig.get().vision().xyStdDev(),
-          Double.MAX_VALUE);
+
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;

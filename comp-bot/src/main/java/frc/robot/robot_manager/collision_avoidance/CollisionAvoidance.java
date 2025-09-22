@@ -57,7 +57,7 @@ public class CollisionAvoidance {
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind,
       double rawArmAngle) {
-    double armGoal;
+
     var maybeWaypoint = route(currentPosition, desiredPosition, obstructionKind);
     if (maybeWaypoint.isEmpty()) {
       return Optional.empty();

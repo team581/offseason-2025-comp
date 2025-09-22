@@ -216,7 +216,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = false;
     double currentAngle = -90.0;
     ObstructionKind obstructionKind = ObstructionKind.RIGHT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.RIGHT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =
@@ -234,7 +234,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = true;
     double currentAngle = 0.0;
     ObstructionKind obstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =
@@ -252,7 +252,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = true;
     double currentAngle = 360.0;
     ObstructionKind obstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =
@@ -270,7 +270,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = true;
     double currentAngle = -360.0;
     ObstructionKind obstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =
@@ -288,7 +288,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = true;
     double currentAngle = -360.0;
     ObstructionKind obstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =
@@ -306,7 +306,7 @@ public class CollisionAvoidanceTest {
     boolean climberRisky = true;
     double currentAngle = 360.0;
     ObstructionKind obstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
-    ObstructionKind edgeObstructionKind = ObstructionKind.LEFT_OBSTRUCTED;
+
     ObstructionStrategy leftStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     ObstructionStrategy rightStrategy = ObstructionStrategy.LONG_WAY_IF_BLOCKED;
     double result =

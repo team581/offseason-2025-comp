@@ -96,8 +96,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private boolean scoringAlignActive = false;
   private boolean canSkipCollisionAvoidanceForReefAlgae = false;
 
-  private boolean intakeAssistActive = false;
-
   @Override
   protected RobotState getNextState(RobotState currentState) {
     if (afterIntakingCoralState.isPresent() && groundManager.getTopHasGP()) {
@@ -298,7 +296,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case FORCED_LOWSTOW -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT, true);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -306,7 +304,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case FORCED_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF, true);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -330,10 +328,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(
-            ElevatorState.ALGAE_INTAKE_L2,
-            ArmState.ALGAE_INTAKE_L2,
-            canSkipCollisionAvoidanceForReefAlgae);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_L2);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -341,10 +336,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L2_APPROACH -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(
-            ElevatorState.ALGAE_INTAKE_L2,
-            ArmState.ALGAE_INTAKE_L2,
-            canSkipCollisionAvoidanceForReefAlgae);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L2, ArmState.ALGAE_INTAKE_L2);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -353,10 +345,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L3_APPROACH -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(
-            ElevatorState.ALGAE_INTAKE_L3,
-            ArmState.ALGAE_INTAKE_L3,
-            canSkipCollisionAvoidanceForReefAlgae);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_L3);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -365,10 +354,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING -> {
         claw.setState(ClawState.INTAKING_ALGAE);
-        moveSuperstructure(
-            ElevatorState.ALGAE_INTAKE_L3,
-            ArmState.ALGAE_INTAKE_L3,
-            canSkipCollisionAvoidanceForReefAlgae);
+        moveSuperstructure(ElevatorState.ALGAE_INTAKE_L3, ArmState.ALGAE_INTAKE_L3);
         swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -396,7 +382,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         // You are only ever doing this from the grab state, so this is fine
         moveSuperstructure(
-            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH, true);
+            ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.LOLLIPOP_NO_ALGAE);
@@ -492,7 +478,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L1_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
-        moveSuperstructure(ElevatorState.L1_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L1, true);
+        moveSuperstructure(ElevatorState.L1_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L1);
         swerve.normalDriveRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING_CORAL);
@@ -519,14 +505,14 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L2_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2, true);
+        moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
-        moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2, true);
+        moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING_CORAL);
 
@@ -552,14 +538,14 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L3_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.L3_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L3, true);
+        moveSuperstructure(ElevatorState.L3_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L3);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
-        moveSuperstructure(ElevatorState.L3_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L3, true);
+        moveSuperstructure(ElevatorState.L3_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L3);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING_CORAL);
 
@@ -586,14 +572,14 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CORAL_L4_PLACE -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.L4_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L4, true);
+        moveSuperstructure(ElevatorState.L4_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L4);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_RELEASE -> {
         claw.setState(ClawState.SCORE_CORAL);
-        moveSuperstructure(ElevatorState.L4_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L4, true);
+        moveSuperstructure(ElevatorState.L4_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L4);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING_CORAL);
 
@@ -661,7 +647,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case SPIN_TO_WIN -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.SPIN_TO_WIN, true);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.SPIN_TO_WIN);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -685,7 +671,7 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     DogLog.log("CollisionAvoidance/latestUnsafe", LATEST_UNSAFE);
     // Continuous state actions
-    moveSuperstructure(LATEST_ELEVATOR_GOAL, LATEST_ARM_GOAL, LATEST_UNSAFE);
+    moveSuperstructure(LATEST_ELEVATOR_GOAL, LATEST_ARM_GOAL);
 
     arm.setLollipopMode(
         getState() == RobotState.CORAL_INTAKE_LOLLIPOP_GRAB
@@ -1061,7 +1047,7 @@ public class RobotManager extends StateMachine<RobotState> {
         if (groundManager.getState().equals(GroundState.L1_WAIT) && scoringAlignActive) {
           groundManager.hardL1WaitRequest();
         } else {
-          intakeAssistActive = true;
+
           groundManager.intakeRequest();
         }
       }
@@ -1070,7 +1056,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void hardL1OffRequest() {
-    intakeAssistActive = false;
+
     switch (getState()) {
       case LOW_STOW -> {
         if (groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
@@ -1465,10 +1451,10 @@ public class RobotManager extends StateMachine<RobotState> {
   private static final boolean LATEST_UNSAFE = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
-    moveSuperstructure(elevatorGoal, armGoal, false);
+    moveSuperstructure(elevatorGoal, armGoal);
   }
 
-  private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal, boolean unsafe) {
+  private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     // latestElevatorGoal = elevatorGoal;
     // latestArmGoal = armGoal;
     // latestUnsafe = unsafe;
