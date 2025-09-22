@@ -1022,24 +1022,15 @@ public class RobotManager extends StateMachine<RobotState> {
             || getState() == RobotState.CORAL_INTAKE_LOLLIPOP_APPROACH);
 
     switch (getState()) {
-      case LOW_STOW, CLAW_ALGAE, STARTING_POSITION -> {
-        if (groundManager.hasCoral()
-            && !l1VisionAdjustReadyDebouncer.calculate(groundManager.deploy.atGoal())) {
-          vision.setState(VisionState.HANDOFF);
-        } else {
-          vision.setState(VisionState.TAGS);
-        }
-        arm.setCoralHandoffOffset(vision.getHandoffOffsetTx());
-      }
-      case CLAW_EMPTY,
+      case LOW_STOW,
+          CLAW_ALGAE,
+          STARTING_POSITION,
+          CLAW_EMPTY,
           CORAL_L4_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF -> {
-        if (groundManager.hasCoral()) {
-          vision.setState(VisionState.HANDOFF);
-        } else {
-          vision.setState(VisionState.TAGS);
-        }
+        vision.setState(VisionState.HANDOFF);
+
         arm.setCoralHandoffOffset(vision.getHandoffOffsetTx());
       }
 

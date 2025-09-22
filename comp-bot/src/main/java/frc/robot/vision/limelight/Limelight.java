@@ -87,7 +87,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public OptionalTagResult getTagResult() {
-    if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
+    if (getState() != LimelightState.TAGS) {
       return tagResult.empty();
     }
 
@@ -179,7 +179,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public OptionalDouble handoffTx() {
-    if (getState() != LimelightState.HELD_CORAL) {
+    if (getState() != LimelightState.HANDOFF) {
       return OptionalDouble.empty();
     }
 
@@ -226,9 +226,6 @@ public class Limelight extends StateMachine<LimelightState> {
     return algaeResult.update(algaeTx, algaeTy, timestamp);
   }
 
-  public void setClosestScoringReefTag(int tagID) {
-    closestScoringReefTag[0] = tagID;
-  }
 
   @Override
   protected void collectInputs() {
@@ -267,11 +264,7 @@ public class Limelight extends StateMachine<LimelightState> {
       }
       case CORAL -> updateHealth(coralResult);
       case ALGAE -> updateHealth(algaeResult);
-      case HELD_CORAL -> updateHealth(coralResult);
-      case CLOSEST_REEF_TAG -> {
-        // LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
-        updateHealth(tagResult);
-      }
+      case HANDOFF -> updateHealth(coralResult);
     }
 
     // TODO: Remove once Limelights are upgraded
@@ -359,7 +352,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   public boolean isOnlineForTags() {
     return switch (getState()) {
-      case TAGS, CLOSEST_REEF_TAG, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
+      case TAGS, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
       default -> false;
     };
   }
