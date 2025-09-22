@@ -355,7 +355,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
-        autoAlign.setState(AutoAlignState.L1);
 
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -1127,43 +1126,10 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY -> {
         if (groundManager.getState() == GroundState.L1_WAIT
             || groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
-          if (scoringAlignActive) {
-            autoAlign.setState(AutoAlignState.L1);
-
-            if (autoAlign.isAlignedDebounced()
-                && FeatureFlags.AUTO_ALIGN_AUTO_SCORE.getAsBoolean()) {
-              if (FeatureFlags.MANUAL_L1_HARD_SOFT.getAsBoolean()) {
-                if (groundManager.getState() == GroundState.L1_WAIT) {
-                  autoAlign.markPipeScored();
-                  groundManager.l1Request();
-                } else {
-                  autoAlign.markPipeScored();
-                  groundManager.hardL1Request();
-                }
-              } else {
-                switch (autoAlign.getL1ScoredCount()) {
-                  case 0 -> {
-                    autoAlign.markPipeScored();
-                    groundManager.l1Request();
-                  }
-                  case 1, 2 -> {
-                    autoAlign.markPipeScored();
-                    groundManager.hardL1Request();
-                  }
-                  default -> {
-                    // Do nothing, we have scored enough
-                  }
-                }
-              }
-            }
-            swerve.scoringAlignmentRequest(reefSnapAngle);
-            lights.setState(getLightStateForScoring());
-          } else {
-            swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
-          }
+          lights.setState(LightsState.SCORING_CORAL);
+          swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
           lights.setState(LightsState.IDLE_EMPTY);
-
           if (groundManager.hasCoral() && vision.isAnyTagLimelightOnline()) {
             swerve.snapsDriveRequest(
                 MathHelpers.getDriveDirection(
@@ -1181,40 +1147,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case LOW_STOW, CLAW_ALGAE, STARTING_POSITION -> {
         if (groundManager.getState() == GroundState.L1_WAIT
             || groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
-          if (scoringAlignActive) {
-            autoAlign.setState(AutoAlignState.L1);
-
-            if (autoAlign.isAlignedDebounced()
-                && FeatureFlags.AUTO_ALIGN_AUTO_SCORE.getAsBoolean()) {
-              if (FeatureFlags.MANUAL_L1_HARD_SOFT.getAsBoolean()) {
-                if (groundManager.getState() == GroundState.L1_WAIT) {
-                  autoAlign.markPipeScored();
-                  groundManager.l1Request();
-                } else {
-                  autoAlign.markPipeScored();
-                  groundManager.hardL1Request();
-                }
-              } else {
-                switch (autoAlign.getL1ScoredCount()) {
-                  case 0 -> {
-                    autoAlign.markPipeScored();
-                    groundManager.l1Request();
-                  }
-                  case 1, 2 -> {
-                    autoAlign.markPipeScored();
-                    groundManager.hardL1Request();
-                  }
-                  default -> {
-                    // Do nothing, we have scored enough
-                  }
-                }
-              }
-            }
-            swerve.scoringAlignmentRequest(reefSnapAngle);
-            lights.setState(getLightStateForScoring());
-          } else {
-            swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
-          }
+          lights.setState(LightsState.SCORING_CORAL);
+          swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
           lights.setState(LightsState.IDLE_EMPTY);
 
@@ -1257,9 +1191,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       default -> {}
     }
-
-    autoAlign.setCoralL1Offset(vision.getHandoffOffsetTx());
-
     elevator.customPeriodic();
     arm.customPeriodic();
   }
@@ -1368,18 +1299,12 @@ public class RobotManager extends StateMachine<RobotState> {
               CORAL_L4_RIGHT_PLACE,
               CORAL_L4_RIGHT_RELEASE ->
               ReefPipeLevel.L4;
-          case LOW_STOW -> ReefPipeLevel.L1; // Prefer L1 when stowing low
-          default -> {
-            yield switch (groundManager.getState()) {
-              case L1_WAIT, L1_SCORE, L1_HARD_SCORE -> ReefPipeLevel.L1;
-              default -> ReefPipeLevel.RAISING;
-            };
-          }
+          default -> ReefPipeLevel.L1; // Prefer L1 when stowing low
         };
 
     autoAlign.setScoringLevel(scoringLevel, preferredScoringLevel, robotScoringSide);
 
-    var reefSideOffset =
+    var reefAlgaeIntakingOffset =
         switch (getState()) {
           case ALGAE_INTAKE_L2_LEFT,
               ALGAE_INTAKE_L3_LEFT,
@@ -1388,9 +1313,8 @@ public class RobotManager extends StateMachine<RobotState> {
               ReefSideOffset.ALGAE_INTAKING;
           default -> ReefSideOffset.ALGAE_RAISING;
         };
-    autoAlign.setAlgaeIntakingOffset(reefSideOffset);
 
-    vision.setClosestScoringReefAndPipe(nearestReefSide.getTagID());
+    autoAlign.setReefAlgaeIntakingOffset(reefAlgaeIntakingOffset);
 
     if (vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
       swerve.setAutoAlignSpeeds(autoAlign.getTagAlignSpeeds());
@@ -1443,10 +1367,9 @@ public class RobotManager extends StateMachine<RobotState> {
   public void intakeRequest() {
     switch (getState()) {
       case LOW_STOW -> {
-        if (groundManager.getState().equals(GroundState.L1_WAIT) && scoringAlignActive) {
-          groundManager.hardL1WaitRequest();
+        if (groundManager.getState().equals(GroundState.L1_WAIT)) {
+          groundManager.hardL1Request();
         } else {
-          intakeAssistActive = true;
           groundManager.intakeRequest();
           arm.resetHandoffOffset();
         }
@@ -1455,18 +1378,6 @@ public class RobotManager extends StateMachine<RobotState> {
         groundManager.intakeRequest();
         arm.resetHandoffOffset();
       }
-    }
-  }
-
-  public void hardL1OffRequest() {
-    intakeAssistActive = false;
-    switch (getState()) {
-      case LOW_STOW -> {
-        if (groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
-          groundManager.l1WaitRequest();
-        }
-      }
-      default -> {}
     }
   }
 
@@ -1871,10 +1782,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case CLAW_ALGAE -> {
         if (groundManager.hasCoral()) {
-          groundManager.l1WaitRequest();
-          autoAlign.setState(AutoAlignState.L1);
-          autoAlign.reset();
-          scoringAlignActive = true;
+          groundManager.l1Request();
         } else {
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
         }
@@ -1883,9 +1791,6 @@ public class RobotManager extends StateMachine<RobotState> {
         if (groundManager.hasCoral()) {
           lowStowRequest();
           groundManager.l1Request();
-          autoAlign.setState(AutoAlignState.L1);
-          autoAlign.reset();
-          scoringAlignActive = true;
         } else {
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
         }
@@ -1894,9 +1799,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
       case LOW_STOW -> {
         groundManager.l1Request();
-        autoAlign.setState(AutoAlignState.L1);
-        autoAlign.reset();
-        scoringAlignActive = true;
       }
 
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
