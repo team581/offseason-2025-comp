@@ -155,7 +155,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     switch (getState()) {
       case PIPE -> {
         tagAlignSpeeds =
-            tagAlign.getReefPipeAlignmentChassisSpeeds(
+            tagAlign.getPoseAlignmentChassisSpeeds(
                 usedScoringPose,
                 robotPose,
                 CONSTRAINTS,
@@ -163,7 +163,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case ALGAE -> {
         tagAlignSpeeds =
-            tagAlign.getAlgaeAlignmentChassisSpeeds(
+            tagAlign.getPoseAlignmentChassisSpeeds(
                 bestAlgaeSide.getPose(reefSideOffset, robotScoringSide, robotPose),
                 robotPose,
                 CONSTRAINTS,
@@ -196,7 +196,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    DogLog.log("AutoAlign/UsedScoringPose", usedScoringPose);
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
   }
@@ -220,8 +219,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   public ChassisSpeeds getTagAlignSpeeds() {
-    DogLog.log("AutoAlign/TagAlignSpeeds", tagAlignSpeeds);
-
     return tagAlignSpeeds;
   }
 
@@ -247,7 +244,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlign.setLevel(level, preferredLevel, side);
   }
 
-  public void setAlgaeIntakingOffset(ReefSideOffset offset) {
+  public void setReefAlgaeIntakingOffset(ReefSideOffset offset) {
     reefSideOffset = offset;
   }
 
