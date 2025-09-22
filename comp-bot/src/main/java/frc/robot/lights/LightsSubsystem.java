@@ -1,5 +1,6 @@
 package frc.robot.lights;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.led.CANdle;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
@@ -45,9 +46,13 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     };
   }
 
-  private void setLeDs(Color8Bit color) {
+  private void setLEDs(Color8Bit color) {
     if (!color.equals(previousColor)) {
-      candle.setLEDs(color.red, color.green, color.blue);
+      ErrorCode errorCode = candle.setLEDs(color.red, color.green, color.blue);
+      if (errorCode != ErrorCode.OK){
+        DogLog.timestamp("Lights/UnableToSetColor");
+        return;
+      }
     }
     previousColor = color;
   }
@@ -58,7 +63,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
     var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {
-      setLeDs(color8Bit);
+      setLEDs(color8Bit);
     } else {
       double time = blinkTimer.get();
       double onDuration = 0;
@@ -74,10 +79,10 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
       if (time >= offDuration) {
         blinkTimer.reset();
-        setLeDs(COLOR_BLACK);
+        setLEDs(COLOR_BLACK);
 
       } else if (time >= onDuration) {
-        setLeDs(color8Bit);
+        setLEDs(color8Bit);
       }
     }
 
