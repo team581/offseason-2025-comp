@@ -1027,7 +1027,6 @@ public class RobotManager extends StateMachine<RobotState> {
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
-    DogLog.log("AutoAlign/ScoringLoopAroundObstruction", shouldLoopAroundToScoreObstruction);
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
 
