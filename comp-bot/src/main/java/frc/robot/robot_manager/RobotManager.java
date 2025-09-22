@@ -183,8 +183,13 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP()
-              ? currentState.getHandoffReleaseToApproachState(robotScoringSide)
+          claw.getHasGP() ? currentState.getHandoffReleaseToAfterHandoffState() : currentState;
+      case CORAL_L1_AFTER_HANDOFF,
+          CORAL_L2_AFTER_HANDOFF,
+          CORAL_L3_AFTER_HANDOFF,
+          CORAL_L4_AFTER_HANDOFF ->
+          elevator.atGoal()
+              ? currentState.getAfterHandoffToApproachState(robotScoringSide)
               : currentState;
 
       // Approach
@@ -592,6 +597,21 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF, true);
+        swerve.normalDriveRequest();
+        autoAlign.setState(AutoAlignState.PIPE);
+
+        vision.setState(VisionState.HANDOFF);
+        lights.setState(LightsState.CORAL_HANDOFF);
+        climber.setState(ClimberState.STOPPED);
+      }
+
+      case CORAL_L1_AFTER_HANDOFF,
+          CORAL_L2_AFTER_HANDOFF,
+          CORAL_L3_AFTER_HANDOFF,
+          CORAL_L4_AFTER_HANDOFF -> {
+        claw.setState(ClawState.CORAL_HANDOFF);
+        groundManager.handoffReleaseRequest();
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF, true);
         swerve.normalDriveRequest();
         autoAlign.setState(AutoAlignState.PIPE);
 
