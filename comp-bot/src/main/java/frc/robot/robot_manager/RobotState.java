@@ -49,6 +49,7 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L1_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L1_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
+  CORAL_L1_AFTER_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L1. */
   CORAL_L1_RIGHT_APPROACH(ClawGamePiece.CORAL, false),
@@ -59,6 +60,7 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L2_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L2_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
+  CORAL_L2_AFTER_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L2. */
   CORAL_L2_LEFT_APPROACH(ClawGamePiece.CORAL, false),
@@ -75,6 +77,7 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L3_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L3_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
+  CORAL_L3_AFTER_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L3. */
   CORAL_L3_LEFT_APPROACH(ClawGamePiece.CORAL, false),
@@ -90,6 +93,7 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L4_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L4_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
+  CORAL_L4_AFTER_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L4. */
   CORAL_L4_LEFT_APPROACH(ClawGamePiece.CORAL, false),
@@ -159,18 +163,25 @@ public enum RobotState {
           Map.entry(CORAL_L2_PREPARE_HANDOFF, CORAL_L2_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_PREPARE_HANDOFF, CORAL_L3_RELEASE_HANDOFF),
           Map.entry(CORAL_L4_PREPARE_HANDOFF, CORAL_L4_RELEASE_HANDOFF));
-  private static final ImmutableMap<RobotState, RobotState> handoffReleaseToLeftApproach =
+
+  private static final ImmutableMap<RobotState, RobotState> handoffReleaseToAfterHandoff =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_RIGHT_APPROACH),
-          Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_LEFT_APPROACH),
-          Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_LEFT_APPROACH),
-          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_LEFT_APPROACH));
-  private static final ImmutableMap<RobotState, RobotState> handoffReleaseToRightApproach =
+          Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_AFTER_HANDOFF),
+          Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_HANDOFF),
+          Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_HANDOFF),
+          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_HANDOFF));
+  private static final ImmutableMap<RobotState, RobotState> afterHandoffToLeftApproach =
       ImmutableMap.ofEntries(
-          Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_RIGHT_APPROACH),
-          Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_RIGHT_APPROACH),
-          Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_RIGHT_APPROACH),
-          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_RIGHT_APPROACH));
+          Map.entry(CORAL_L1_AFTER_HANDOFF, CORAL_L1_RIGHT_APPROACH),
+          Map.entry(CORAL_L2_AFTER_HANDOFF, CORAL_L2_LEFT_APPROACH),
+          Map.entry(CORAL_L3_AFTER_HANDOFF, CORAL_L3_LEFT_APPROACH),
+          Map.entry(CORAL_L4_AFTER_HANDOFF, CORAL_L4_LEFT_APPROACH));
+  private static final ImmutableMap<RobotState, RobotState> afterHandoffToRightApproach =
+      ImmutableMap.ofEntries(
+          Map.entry(CORAL_L1_AFTER_HANDOFF, CORAL_L1_RIGHT_APPROACH),
+          Map.entry(CORAL_L2_AFTER_HANDOFF, CORAL_L2_RIGHT_APPROACH),
+          Map.entry(CORAL_L3_AFTER_HANDOFF, CORAL_L3_RIGHT_APPROACH),
+          Map.entry(CORAL_L4_AFTER_HANDOFF, CORAL_L4_RIGHT_APPROACH));
   private static final ImmutableMap<RobotState, RobotState> approachToLineupLeftStates =
       ImmutableMap.ofEntries(
           // Go to right l1 since robot can't do left l1
@@ -268,12 +279,16 @@ public enum RobotState {
     return handoffPrepareToRelease.getOrDefault(this, this);
   }
 
-  public RobotState getHandoffReleaseToApproachState(RobotScoringSide scoringSide) {
+  public RobotState getAfterHandoffToApproachState(RobotScoringSide scoringSide) {
     var map =
         scoringSide == RobotScoringSide.LEFT
-            ? handoffReleaseToLeftApproach
-            : handoffReleaseToRightApproach;
+            ? afterHandoffToLeftApproach
+            : afterHandoffToRightApproach;
     return map.getOrDefault(this, this);
+  }
+
+  public RobotState getHandoffReleaseToAfterHandoffState() {
+    return handoffReleaseToAfterHandoff.getOrDefault(this, this);
   }
 
   public RobotState getLeftApproachToLineupState() {
