@@ -83,8 +83,6 @@ public class TagAlign {
   private double rawControllerYValue = 0.0;
   private double lastPipeSwitchTimestamp = 0.0;
   private boolean aligned = false;
-  private boolean translationGood = false;
-  private boolean rotationGood = false;
   private boolean resetReefPipeNextLoop = false;
   private boolean pipeSwitchActive = false;
 
@@ -184,19 +182,16 @@ public class TagAlign {
     var robotPose = localization.getPose();
     var targetPose = getUsedScoringPose(pipe);
 
-    translationGood =
+    var translationGood =
         (robotPose.getTranslation().getDistance(targetPose.getTranslation())
             <= TRANSLATION_GOOD_THRESHOLD.get());
-    rotationGood =
+    var rotationGood =
         MathUtil.isNear(
             targetPose.getRotation().getDegrees(),
             robotPose.getRotation().getDegrees(),
             ROTATION_GOOD_THRESHOLD.get(),
             -180.0,
             180.0);
-
-    DogLog.log("AutoAlign/TranslationGood", translationGood);
-    DogLog.log("AutoAlign/RotationGood", rotationGood);
 
     return translationGood && rotationGood;
   }
@@ -393,10 +388,6 @@ public class TagAlign {
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
     var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
-    DogLog.log("AutoAlign/DistanceToGoal", distanceToGoalMeters);
-    DogLog.log("AutoAlign/DriveVelocityMagnitude", driveVelocityMagnitude);
-    DogLog.log("AutoAlign/RotationSpeed", rotationSpeed);
-    DogLog.log("AutoAlign/DriveDirection", driveDirection.getDegrees());
     DogLog.log("AutoAlign/TargetPose", targetPose);
     DogLog.log("AutoAlign/Speeds", speeds);
 

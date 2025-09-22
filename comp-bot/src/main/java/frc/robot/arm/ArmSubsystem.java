@@ -69,7 +69,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setLollipopMode(boolean lollipopMode) {
     this.lollipopMode = lollipopMode;
-    DogLog.log("Arm/LollipopMode", lollipopMode);
   }
 
   private final MotionMagicVoltage motionMagicRequest =
@@ -181,7 +180,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   public void setCollisionAvoidanceGoal(double angle) {
     collisionAvoidanceGoal = angle;
-    DogLog.log("Arm/CollisionAvoidanceGoalAngle", collisionAvoidanceGoal);
+    DogLog.log("Arm/CollisionAvoidance/GoalAngle", collisionAvoidanceGoal);
   }
 
   public boolean atGoal() {
@@ -239,22 +238,20 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   protected void afterTransition(ArmState newState) {}
 
   public void customPeriodic() {
-    DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/RawAngle", rawMotorAngle);
-
     DogLog.log("Arm/AtGoal", atGoal());
 
     if (DriverStation.isDisabled()) {
-      DogLog.log("Arm/LowestAngle", lowestSeenAngle);
-      DogLog.log("Arm/HighestAngle", highestSeenAngle);
-      DogLog.log("Arm/ElevatorIsGoingDown", elevatorIsGoingDown);
-      DogLog.log("Arm/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
-    }
-    if (rangeOfMotionGood()) {
-      DogLog.clearFault("ARM NOT HOMED");
-    } else {
-      DogLog.logFault("ARM NOT HOMED", AlertType.kWarning);
+      DogLog.log("Arm/Homing/LowestAngle", lowestSeenAngle);
+      DogLog.log("Arm/Homing/HighestAngle", highestSeenAngle);
+      DogLog.log("Arm/Homing/ElevatorIsGoingDown", elevatorIsGoingDown);
+      DogLog.log("Arm/Homing/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
+      if (rangeOfMotionGood()) {
+        DogLog.clearFault("ARM NOT HOMED");
+      } else {
+        DogLog.logFault("ARM NOT HOMED", AlertType.kWarning);
+      }
     }
 
     switch (getState()) {
@@ -297,13 +294,12 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
-    DogLog.log("Arm/OldState", oldState);
-    DogLog.log("Arm/NewState", newState);
+    DogLog.log("Arm/CollisionAvoidance/OldState", oldState);
+    DogLog.log("Arm/CollisionAvoidance/NewState", newState);
 
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
-      DogLog.logFault("Arm/ARM_HOMED");
       motor.setPosition(Units.degreesToRotations(motorAngle));
       // Refresh sensor data now that position is set
       collectInputs();
