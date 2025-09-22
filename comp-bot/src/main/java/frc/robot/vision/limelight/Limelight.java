@@ -226,7 +226,6 @@ public class Limelight extends StateMachine<LimelightState> {
     return algaeResult.update(algaeTx, algaeTy, timestamp);
   }
 
-
   @Override
   protected void collectInputs() {
     tagResult = getTagResult();

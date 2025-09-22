@@ -175,10 +175,7 @@ public class Robot extends Base581Robot {
         .rightTrigger()
         .onTrue(robotCommands.confirmScoreCommand())
         .onFalse(robotCommands.scoringAlignOffCommand());
-    hardware
-        .driverController
-        .leftTrigger()
-        .onTrue(robotCommands.floorIntakeCommand());
+    hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware
