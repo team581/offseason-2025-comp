@@ -162,25 +162,6 @@ public class TagAlign {
     checkControllerForSwitch();
   }
 
-  public void setCoralL1Offset(OptionalDouble tx) {
-    var expired = Timer.getFPGATimestamp() - lastAddedTimestamp > L1_TRACKING_TIMEOUT;
-    if (expired) {
-      coralL1Offset = OptionalDouble.empty();
-    }
-    if (tx.isEmpty()) {
-      return;
-    }
-
-    var offset = CORAL_TX_TO_L1_OFFSET.get(tx.getAsDouble());
-    lastAddedTimestamp = Timer.getFPGATimestamp();
-    if (coralL1Offset.isEmpty()) {
-      for (int i = 0; i < 7; i++) {
-        l1AdjustmentFilter.calculate(offset);
-      }
-    }
-    coralL1Offset = OptionalDouble.of(l1AdjustmentFilter.calculate(offset));
-  }
-
   private void checkControllerForSwitch() {
     if (!DriverStation.isTeleop()) {
       return;
@@ -309,9 +290,6 @@ public class TagAlign {
   }
 
   public void markScored(ReefPipe pipe) {
-    if (preferedScoringLevel.equals(ReefPipeLevel.L1)) {
-      resetL1();
-    }
     reefState.markCoralScored(pipe, preferedScoringLevel);
   }
 
@@ -327,10 +305,6 @@ public class TagAlign {
     resetL1NextLoop = true;
     resetAlgaeNextLoop = true;
     resetReefPipeNextLoop = true;
-  }
-
-  private void resetL1() {
-    coralL1Offset = OptionalDouble.empty();
   }
 
   public void clearReefState() {
@@ -372,34 +346,10 @@ public class TagAlign {
       return reefPipeOverride.orElseThrow();
     }
     var level = pipeLevel;
-    var robotPose = localization.getPose();
-    if (pipeLevel.equals(ReefPipeLevel.L1)) {
-      var closestTwoPipes =
-          ALL_REEF_PIPES.stream()
-              .sorted(
-                  Comparator.comparingDouble(
-                      p ->
-                          p.getPose(pipeLevel, robotScoringSide, localization.getPose())
-                              .getTranslation()
-                              .getDistance(localization.getPose().getTranslation())))
-              .limit(2)
-              .toList();
 
-      return closestTwoPipes.stream()
-          .min(Comparator.comparingDouble(p -> reefState.getL1Count(p)))
-          .orElse(getClosestPipe());
-    }
-    if (pipeLevel.equals(ReefPipeLevel.BACK_AWAY)) {
-      return ALL_REEF_PIPES.stream()
-          .min(
-              Comparator.comparingDouble(
-                  pipe ->
-                      robotPose
-                          .getTranslation()
-                          .getDistance(
-                              pipe.getPose(ReefPipeLevel.BACK_AWAY, robotScoringSide, robotPose)
-                                  .getTranslation())))
-          .orElseThrow();
+    if (pipeLevel.equals(ReefPipeLevel.BACK_AWAY)
+        || preferedScoringLevel.equals(ReefPipeLevel.L1)) {
+      return getClosestPipe();
     }
     if (pipeLevel.equals(ReefPipeLevel.RAISING)) {
       level = preferedScoringLevel;
@@ -407,10 +357,6 @@ public class TagAlign {
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level))
         .orElseThrow();
-  }
-
-  public int getL1ScoredCount(ReefPipe pipe) {
-    return reefState.getL1Count(pipe);
   }
 
   public ReefPipe getClosestPipe() {

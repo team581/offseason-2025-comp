@@ -169,14 +169,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 CONSTRAINTS,
                 new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
       }
-      case L1 -> {
-        tagAlignSpeeds =
-            tagAlign.getL1AlignmentChassisSpeeds(
-                usedScoringPose,
-                robotPose,
-                L1_CONSTRAINTS,
-                new PolarChassisSpeeds(swerve.getFieldRelativeSpeeds()));
-      }
     }
 
     var controllerValues = swerve.getControllerValues();
@@ -199,14 +191,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public boolean isNearRotationGoal() {
     return isNearRotation;
-  }
-
-  public int getL1ScoredCount() {
-    return tagAlign.getL1ScoredCount(bestReefPipe);
-  }
-
-  public void setCoralL1Offset(OptionalDouble tx) {
-    tagAlign.setCoralL1Offset(tx);
   }
 
   @Override

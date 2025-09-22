@@ -177,8 +177,7 @@ public class Robot extends Base581Robot {
     hardware
         .driverController
         .leftTrigger()
-        .onTrue(robotCommands.floorIntakeCommand())
-        .onFalse(robotCommands.l1HardOffCommand());
+        .onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
     hardware
