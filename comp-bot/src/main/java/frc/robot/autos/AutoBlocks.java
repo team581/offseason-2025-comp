@@ -131,6 +131,14 @@ public class AutoBlocks {
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
+    return scoreL4(pipe, scoringSide, Optional.empty());
+  }
+
+  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+    return scoreL4(pipe, scoringSide, Optional.of(backupPoint));
+  }
+
+  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Optional<Pose2d> backupPoint) {
     return Commands.sequence(
             Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
             trailblazer
@@ -150,16 +158,19 @@ public class AutoBlocks {
                                 .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand()),
-            trailblazer.followSegment(
-                new AutoSegment(
-                    BASE_CONSTRAINTS,
-                    AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(
-                        () ->
-                            pipe.getPose(
-                                ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsUtil.isRedAlliance(),
-                                scoringSide)))))
+                trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        BASE_CONSTRAINTS,
+                        AFTER_SCORE_POSITION_TOLERANCE,
+                        new AutoPoint(
+                            () ->
+                                backupPoint.orElse(
+                                    pipe.getPose(
+                                        ReefPipeLevel.BACK_AWAY_AUTO,
+                                        FmsUtil.isRedAlliance(),
+                                        scoringSide)))))
+                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReef()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -270,15 +281,22 @@ public class AutoBlocks {
   }
 
   public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
-    return scoreL2(Optional.of(approachPose), pipe, scoringSide);
+    return scoreL2(Optional.of(approachPose), pipe, scoringSide, Optional.empty());
   }
 
   public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide) {
-    return scoreL2(Optional.empty(), pipe, scoringSide);
+    return scoreL2(Optional.empty(), pipe, scoringSide, Optional.empty());
+  }
+
+  public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+    return scoreL2(Optional.empty(), pipe, scoringSide, Optional.of(backupPoint));
   }
 
   private Command scoreL2(
-      Optional<Pose2d> approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
+      Optional<Pose2d> approachPose,
+      ReefPipe pipe,
+      RobotScoringSide scoringSide,
+      Optional<Pose2d> backupPoint) {
     var firstCommand =
         approachPose.isPresent()
             ? trailblazer
@@ -307,16 +325,19 @@ public class AutoBlocks {
                             RobotState.CORAL_L2_RIGHT_APPROACH,
                             RobotState.STARTING_POSITION_CORAL))
                     .andThen(autoCommands.l2LineupCommand(scoringSide))),
-            trailblazer.followSegment(
-                new AutoSegment(
-                    BASE_CONSTRAINTS,
-                    AFTER_SCORE_POSITION_TOLERANCE,
-                    new AutoPoint(
-                        () ->
-                            pipe.getPose(
-                                ReefPipeLevel.BACK_AWAY_AUTO,
-                                FmsUtil.isRedAlliance(),
-                                scoringSide)))))
+            trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        BASE_CONSTRAINTS,
+                        AFTER_SCORE_POSITION_TOLERANCE,
+                        new AutoPoint(
+                            () ->
+                                backupPoint.orElse(
+                                    pipe.getPose(
+                                        ReefPipeLevel.BACK_AWAY_AUTO,
+                                        FmsUtil.isRedAlliance(),
+                                        scoringSide)))))
+                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReef()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 

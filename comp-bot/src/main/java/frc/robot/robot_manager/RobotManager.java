@@ -1328,7 +1328,7 @@ public class RobotManager extends StateMachine<RobotState> {
     swerve.setElevatorHeight(elevator.getHeight());
   }
 
-  private boolean cameraOnlineAndFarEnoughFromReef() {
+  public boolean cameraOnlineAndFarEnoughFromReef() {
     var tagCameraOnline = vision.isAnyTagLimelightOnline();
 
     if (!tagCameraOnline) {
