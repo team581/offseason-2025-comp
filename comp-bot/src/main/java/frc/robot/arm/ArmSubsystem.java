@@ -143,13 +143,9 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   private void makeGetMotionMagicRequest(double armRotations) {
-    if (DriverStation.isTeleop() || lollipopMode) {
       motor.setControl(motionMagicRequest.withPosition(armRotations));
       DogLog.log("Arm/MotionMagicStrategy", "Teleop");
-    } else {
-      motor.setControl(autoMotionMagicExpoRequest.withPosition(armRotations));
-      DogLog.log("Arm/MotionMagicStrategy", "Expo");
-    }
+
   }
 
   private double getSetpoint(double angle) {
