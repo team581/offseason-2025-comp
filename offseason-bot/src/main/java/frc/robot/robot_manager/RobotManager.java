@@ -94,7 +94,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private Pose2d robotPose;
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
-  
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -1290,24 +1289,6 @@ public class RobotManager extends StateMachine<RobotState> {
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming) {
       scoringAlignActive = true;
-      switch (getState()) {
-        case ALGAE_INTAKE_L2_APPROACH,
-            ALGAE_INTAKE_L2,
-            ALGAE_INTAKE_L2_HOLDING,
-            ALGAE_INTAKE_L3_APPROACH,
-            ALGAE_INTAKE_L3,
-            ALGAE_INTAKE_L3_HOLDING -> {
-          // Do nothing, prevent multiple presses from forcing collision avoidance to trigger
-        }
-        case CORAL_L2_PLACE,
-            CORAL_L2_RELEASE,
-            CORAL_L3_PLACE,
-            CORAL_L3_RELEASE,
-            CORAL_L4_PLACE,
-            CORAL_L4_RELEASE ->
-            
-        default -> 
-      }
 
       if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
         setStateFromRequest(RobotState.ALGAE_INTAKE_L3_APPROACH);
