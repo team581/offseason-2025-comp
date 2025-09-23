@@ -1451,10 +1451,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private static final boolean LATEST_UNSAFE = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
-    moveSuperstructure(elevatorGoal, armGoal);
-  }
-
-  private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     // latestElevatorGoal = elevatorGoal;
     // latestArmGoal = armGoal;
     // latestUnsafe = unsafe;
