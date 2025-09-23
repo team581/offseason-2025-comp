@@ -94,7 +94,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private Pose2d robotPose;
   private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
-  private boolean canSkipCollisionAvoidanceForReefAlgae = false;
+  
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -1305,8 +1305,8 @@ public class RobotManager extends StateMachine<RobotState> {
             CORAL_L3_RELEASE,
             CORAL_L4_PLACE,
             CORAL_L4_RELEASE ->
-            canSkipCollisionAvoidanceForReefAlgae = true;
-        default -> canSkipCollisionAvoidanceForReefAlgae = false;
+            
+        default -> 
       }
 
       if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
