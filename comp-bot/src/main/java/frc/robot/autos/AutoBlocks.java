@@ -138,7 +138,8 @@ public class AutoBlocks {
     return scoreL4(pipe, scoringSide, Optional.of(backupPoint));
   }
 
-  public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Optional<Pose2d> backupPoint) {
+  public Command scoreL4(
+      ReefPipe pipe, RobotScoringSide scoringSide, Optional<Pose2d> backupPoint) {
     return Commands.sequence(
             Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
             trailblazer
@@ -158,7 +159,7 @@ public class AutoBlocks {
                                 .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand()),
-                trailblazer
+            trailblazer
                 .followSegment(
                     new AutoSegment(
                         BASE_CONSTRAINTS,

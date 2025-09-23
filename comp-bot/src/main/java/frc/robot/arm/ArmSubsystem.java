@@ -2,7 +2,6 @@ package frc.robot.arm;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -57,7 +56,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
-  private boolean lollipopMode = false;
+
   private final ElevatorSubsystem elevator;
   private boolean elevatorIsGoingDown = false;
   private boolean elevatorIsGoingDownDebounced = false;
@@ -67,14 +66,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private static final double TRACKING_TIMEOUT = 15.0;
   private double lastAddedTimestamp = 0.0;
 
-  public void setLollipopMode(boolean lollipopMode) {
-    this.lollipopMode = lollipopMode;
-  }
+  public void setLollipopMode(boolean lollipopMode) {}
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
-  private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
-      new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
 
   // TODO: tune velocity
   private final PositionVoltage algaeFling =
@@ -143,9 +138,8 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   }
 
   private void makeGetMotionMagicRequest(double armRotations) {
-      motor.setControl(motionMagicRequest.withPosition(armRotations));
-      DogLog.log("Arm/MotionMagicStrategy", "Teleop");
-
+    motor.setControl(motionMagicRequest.withPosition(armRotations));
+    DogLog.log("Arm/MotionMagicStrategy", "Teleop");
   }
 
   private double getSetpoint(double angle) {
