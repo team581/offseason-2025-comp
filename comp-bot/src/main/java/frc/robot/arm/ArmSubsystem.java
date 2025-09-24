@@ -65,6 +65,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final LinearFilter handoffAdjustmentTxFilter = LinearFilter.movingAverage(7);
   private static final double TRACKING_TIMEOUT = 15.0;
   private double lastAddedTimestamp = 0.0;
+  private boolean armIsHomed = false;
 
   public void setLollipopMode(boolean lollipopMode) {}
 
@@ -237,6 +238,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       DogLog.log("Arm/Homing/HighestAngle", highestSeenAngle);
       DogLog.log("Arm/Homing/ElevatorIsGoingDown", elevatorIsGoingDown);
       DogLog.log("Arm/Homing/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
+      DogLog.log("Arm/Homing/ArmIsHomed", armIsHomed);
       if (rangeOfMotionGood()) {
         DogLog.clearFault("ARM NOT HOMED");
       } else {
@@ -253,8 +255,10 @@ public class ArmSubsystem extends StateMachine<ArmState> {
           if (DriverStation.isDisabled()) {
             motor.setControl(brakeNeutralRequest);
           }
+          armIsHomed = true;
         } else {
           motor.setControl(coastNeutralRequest);
+          armIsHomed = false;
         }
       }
       case SPIN_TO_WIN -> {
