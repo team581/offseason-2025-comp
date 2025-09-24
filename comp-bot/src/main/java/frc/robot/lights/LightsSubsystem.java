@@ -14,10 +14,9 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
   private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_EMPTY;
-  private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
-  private final double BLINK_FAST_FRAMERATE = 500.0;
-  private final double BLINK_SLOW_FRAMERATE = 50.0;
+  private static final double BLINK_FAST_FRAMERATE = 500.0;
+  private static final double BLINK_SLOW_FRAMERATE = 50.0;
 
   public LightsSubsystem(CANdle candle) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_EMPTY);
@@ -34,9 +33,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     setStateFromRequest(LightsState.BLINK);
   }
 
-  public void setDisabledState(LightsState newDisabledState) {
-    disabledState = newDisabledState;
-  }
+  public void setDisabledState(LightsState newDisabledState) {}
 
   @Override
   protected LightsState getNextState(LightsState currentState) {
@@ -47,58 +44,106 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-  }
-
-  @Override
   protected void afterTransition(LightsState newState) {
-      switch (newState) {
-        case BLINK -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+    switch (newState) {
+      case BLINK ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kWhite))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
 
-        case ERROR -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kRed)).withFrameRate(BLINK_FAST_FRAMERATE));
-        case UNHOMED -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_SLOW_FRAMERATE));
-        case HOMED_NO_TAGS -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
-        case HOMED_SEES_TAGS -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
+      case ERROR ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kRed))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
+      case UNHOMED ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kWhite))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
+      case HOMED_NO_TAGS ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
+      case HOMED_SEES_TAGS ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
 
-        case INTAKING_CORAL -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_SLOW_FRAMERATE));
-        case INTAKING_ALGAE -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kTeal)).withFrameRate(BLINK_SLOW_FRAMERATE));
+      case INTAKING_CORAL ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kWhite))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
+      case INTAKING_ALGAE ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kTeal))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
 
-        case IDLE_EMPTY -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
-        case HOLDING_CORAL -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kWhite)));
-        case HOLDING_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
+      case IDLE_EMPTY ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
+      case HOLDING_CORAL ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kWhite)));
+      case HOLDING_ALGAE ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
 
-        case LOLLIPOP_SEES_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
-        case LOLLIPOP_NO_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
+      case LOLLIPOP_SEES_ALGAE ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
+      case LOLLIPOP_NO_ALGAE ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
 
-        case CORAL_HANDOFF -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+      case CORAL_HANDOFF ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kWhite))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
 
-        case CLIMB_LINEUP -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
-        case CLIMB_HANG -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
-        case CLIMB_STOP -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_SLOW_FRAMERATE));
+      case CLIMB_LINEUP ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
+      case CLIMB_HANG ->
+          candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
+      case CLIMB_STOP ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kGreen))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
 
-        case SCORE_NO_ALIGN_NO_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kYellow)).withFrameRate(BLINK_SLOW_FRAMERATE));
-        case SCORE_NO_ALIGN_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_SLOW_FRAMERATE));
-        case SCORE_ALIGN_NO_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kYellow)).withFrameRate(BLINK_FAST_FRAMERATE));
-        case SCORE_ALIGN_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_FAST_FRAMERATE));
+      case SCORE_NO_ALIGN_NO_TAGS ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kYellow))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
+      case SCORE_NO_ALIGN_TAGS ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kGreen))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
+      case SCORE_ALIGN_NO_TAGS ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kYellow))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
+      case SCORE_ALIGN_TAGS ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kGreen))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
 
-        case SCORING_ALGAE -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kTeal)).withFrameRate(BLINK_FAST_FRAMERATE));
-        case SCORING_CORAL -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+      case SCORING_ALGAE ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kTeal))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
+      case SCORING_CORAL ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kWhite))
+                  .withFrameRate(BLINK_FAST_FRAMERATE));
 
-        case OTHER -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kPurple)).withFrameRate(BLINK_SLOW_FRAMERATE));
-        default -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
-
-
-
-
-
-
-
-
-
-
-
-
-
+      case OTHER ->
+          candle.setControl(
+              new StrobeAnimation(0, 0)
+                  .withColor(new RGBWColor(Color.kPurple))
+                  .withFrameRate(BLINK_SLOW_FRAMERATE));
+      default -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
+    }
   }
-}}
+}
