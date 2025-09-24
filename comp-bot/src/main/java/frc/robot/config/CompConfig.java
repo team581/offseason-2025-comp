@@ -56,7 +56,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // kp 30.0
-                          .withKP(40.0)
+                          .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
                           // kg 0.8
@@ -79,7 +79,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // kp 30.0
-                          .withKP(40.0)
+                          .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
                           // kg 0.8
