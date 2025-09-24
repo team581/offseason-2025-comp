@@ -55,11 +55,11 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                      // kp 30.0
+                          // kp 30.0
                           .withKP(40.0)
                           .withKD(0.0)
                           .withKV(0)
-                      //kg 0.8
+                          // kg 0.8
                           .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
@@ -78,11 +78,11 @@ class CompConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                      //kp 30.0
+                          // kp 30.0
                           .withKP(40.0)
                           .withKD(0.0)
                           .withKV(0)
-                      //kg 0.8
+                          // kg 0.8
                           .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
