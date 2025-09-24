@@ -1,6 +1,6 @@
 package frc.robot.lights;
 
-import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix6.hardware.CANdle;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,32 +45,9 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    var usedState = DriverStation.isDisabled() ? disabledState : getState();
-    var color8Bit = new Color8Bit(usedState.color);
-    if (usedState.pattern == BlinkPattern.SOLID) {
-      candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
-    } else {
-      double time = blinkTimer.get();
-      double onDuration = 0;
-      double offDuration = 0;
-
-      if (usedState.pattern == BlinkPattern.BLINK_FAST) {
-        onDuration = BlinkPattern.BLINK_FAST.duration;
-        offDuration = BlinkPattern.BLINK_FAST.duration * 2;
-      } else if (usedState.pattern == BlinkPattern.BLINK_SLOW) {
-        onDuration = BlinkPattern.BLINK_SLOW.duration;
-        offDuration = BlinkPattern.BLINK_SLOW.duration * 2;
-      }
-
-      if (time >= offDuration) {
-        blinkTimer.reset();
-        candle.setLEDs(0, 0, 0);
-      } else if (time >= onDuration) {
-        candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
-      }
-    }
-
-    DogLog.log("Lights/Color", usedState.color.toString());
-    DogLog.log("Lights/Pattern", usedState.pattern);
+  }
+  @Override
+  protected void afterTransition(LightsState newState) {
+      // TODO Auto-generated method stub
   }
 }

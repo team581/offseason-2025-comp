@@ -1,16 +1,12 @@
 package frc.robot.lights;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.team581.util.state_machines.StateMachine;
-import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class LightsSubsystem extends StateMachine<LightsState> {
@@ -90,8 +86,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
         case SCORING_CORAL -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
 
         case OTHER -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kPurple)).withFrameRate(BLINK_SLOW_FRAMERATE));
-
-
+        default -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
 
 
 
