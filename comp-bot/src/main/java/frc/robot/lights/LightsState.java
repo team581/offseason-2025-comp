@@ -3,50 +3,42 @@ package frc.robot.lights;
 import edu.wpi.first.wpilibj.util.Color;
 
 public enum LightsState {
-  ERROR(Color.kRed, BlinkPattern.BLINK_FAST),
-  UNHOMED(Color.kOrangeRed, BlinkPattern.BLINK_SLOW),
-  HOMED_NO_TAGS(Color.kYellow, BlinkPattern.SOLID),
-  HOMED_SEES_TAGS(Color.kGreen, BlinkPattern.SOLID),
+  ERROR,
+  UNHOMED,
+  HOMED_NO_TAGS,
+  HOMED_SEES_TAGS,
 
-  BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
+  BLINK,
 
-  INTAKING_CORAL(Color.kWhite, BlinkPattern.BLINK_SLOW),
-  INTAKING_ALGAE(Color.kTeal, BlinkPattern.BLINK_SLOW),
+  INTAKING_CORAL,
+  INTAKING_ALGAE,
 
-  IDLE_EMPTY(Color.kBlack, BlinkPattern.SOLID),
-  HOLDING_CORAL(Color.kWhite, BlinkPattern.SOLID),
-  HOLDING_ALGAE(Color.kTeal, BlinkPattern.SOLID),
+  IDLE_EMPTY,
+  HOLDING_CORAL,
+  HOLDING_ALGAE,
 
-  LOLLIPOP_SEES_ALGAE(Color.kTeal, BlinkPattern.SOLID),
-  LOLLIPOP_NO_ALGAE(Color.kBlack, BlinkPattern.SOLID),
+  LOLLIPOP_SEES_ALGAE,
+  LOLLIPOP_NO_ALGAE,
 
-  CORAL_HANDOFF(Color.kWhite, BlinkPattern.BLINK_FAST),
+  CORAL_HANDOFF,
 
-  CLIMB_LINEUP(Color.kYellow, BlinkPattern.SOLID),
-  CLIMB_HANG(Color.kGreen, BlinkPattern.SOLID),
-  CLIMB_STOP(Color.kGreen, BlinkPattern.BLINK_SLOW),
+  CLIMB_LINEUP,
+  CLIMB_HANG,
+  CLIMB_STOP,
 
-  SCORE_NO_ALIGN_NO_TAGS(Color.kYellow, BlinkPattern.BLINK_SLOW),
-  SCORE_NO_ALIGN_TAGS(Color.kGreen, BlinkPattern.BLINK_SLOW),
-  SCORE_ALIGN_NO_TAGS(Color.kYellow, BlinkPattern.BLINK_FAST),
-  SCORE_ALIGN_TAGS(Color.kGreen, BlinkPattern.BLINK_FAST),
+  SCORE_NO_ALIGN_NO_TAGS,
+  SCORE_NO_ALIGN_TAGS,
+  SCORE_ALIGN_NO_TAGS,
+  SCORE_ALIGN_TAGS,
 
-  SCORING_ALGAE(Color.kTeal, BlinkPattern.BLINK_FAST),
-  SCORING_CORAL(Color.kWhite, BlinkPattern.BLINK_FAST),
+  SCORING_ALGAE,
+  SCORING_CORAL,
 
-  OTHER(Color.kPurple, BlinkPattern.BLINK_SLOW),
+  OTHER,
 
   /**
    * @deprecated Replace placeholder lights with actual light patterns.
    */
   @Deprecated
-  PLACEHOLDER(Color.kBlack, BlinkPattern.SOLID);
-
-  public final BlinkPattern pattern;
-  public final Color color;
-
-  LightsState(Color color, BlinkPattern pattern) {
-    this.pattern = pattern;
-    this.color = color;
-  }
+  PLACEHOLDER;
 }

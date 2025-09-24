@@ -1,11 +1,15 @@
 package frc.robot.lights;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix6.controls.SolidColor;
+import com.ctre.phoenix6.controls.StrobeAnimation;
+import com.ctre.phoenix6.hardware.CANdle;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -16,8 +20,8 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private LightsState storedState = LightsState.IDLE_EMPTY;
   private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
-  private static final Color8Bit COLOR_BLACK = new Color8Bit();
-  private Color8Bit previousColor = new Color8Bit();
+  private final double BLINK_FAST_FRAMERATE = 500.0;
+  private final double BLINK_SLOW_FRAMERATE = 50.0;
 
   public LightsSubsystem(CANdle candle) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_EMPTY);
@@ -46,47 +50,60 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     };
   }
 
-  private void setLeDs(Color8Bit color) {
-    if (!color.equals(previousColor)) {
-      ErrorCode errorCode = candle.setLEDs(color.red, color.green, color.blue);
-      if (errorCode != ErrorCode.OK) {
-        DogLog.timestamp("Lights/UnableToSetColor");
-        return;
-      }
-    }
-    previousColor = color;
-  }
-
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-    var usedState = DriverStation.isDisabled() ? disabledState : getState();
-    var color8Bit = new Color8Bit(usedState.color);
-    if (usedState.pattern == BlinkPattern.SOLID) {
-      setLeDs(color8Bit);
-    } else {
-      double time = blinkTimer.get();
-      double onDuration = 0;
-      double offDuration = 0;
-
-      if (usedState.pattern == BlinkPattern.BLINK_FAST) {
-        onDuration = BlinkPattern.BLINK_FAST.duration;
-        offDuration = BlinkPattern.BLINK_FAST.duration * 2;
-      } else if (usedState.pattern == BlinkPattern.BLINK_SLOW) {
-        onDuration = BlinkPattern.BLINK_SLOW.duration;
-        offDuration = BlinkPattern.BLINK_SLOW.duration * 2;
-      }
-
-      if (time >= offDuration) {
-        blinkTimer.reset();
-        setLeDs(COLOR_BLACK);
-
-      } else if (time >= onDuration) {
-        setLeDs(color8Bit);
-      }
-    }
-
-    DogLog.log("Lights/Color", usedState.color.toString());
-    DogLog.log("Lights/Pattern", usedState.pattern);
   }
-}
+
+  @Override
+  protected void afterTransition(LightsState newState) {
+      switch (newState) {
+        case BLINK -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+
+        case ERROR -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kRed)).withFrameRate(BLINK_FAST_FRAMERATE));
+        case UNHOMED -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_SLOW_FRAMERATE));
+        case HOMED_NO_TAGS -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
+        case HOMED_SEES_TAGS -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
+
+        case INTAKING_CORAL -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_SLOW_FRAMERATE));
+        case INTAKING_ALGAE -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kTeal)).withFrameRate(BLINK_SLOW_FRAMERATE));
+
+        case IDLE_EMPTY -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
+        case HOLDING_CORAL -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kWhite)));
+        case HOLDING_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
+
+        case LOLLIPOP_SEES_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kTeal)));
+        case LOLLIPOP_NO_ALGAE -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kBlack)));
+
+        case CORAL_HANDOFF -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+
+        case CLIMB_LINEUP -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kYellow)));
+        case CLIMB_HANG -> candle.setControl(new SolidColor(0, 0).withColor(new RGBWColor(Color.kGreen)));
+        case CLIMB_STOP -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_SLOW_FRAMERATE));
+
+        case SCORE_NO_ALIGN_NO_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kYellow)).withFrameRate(BLINK_SLOW_FRAMERATE));
+        case SCORE_NO_ALIGN_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_SLOW_FRAMERATE));
+        case SCORE_ALIGN_NO_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kYellow)).withFrameRate(BLINK_FAST_FRAMERATE));
+        case SCORE_ALIGN_TAGS -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kGreen)).withFrameRate(BLINK_FAST_FRAMERATE));
+
+        case SCORING_ALGAE -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kTeal)).withFrameRate(BLINK_FAST_FRAMERATE));
+        case SCORING_CORAL -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kWhite)).withFrameRate(BLINK_FAST_FRAMERATE));
+
+        case OTHER -> candle.setControl(new StrobeAnimation(0, 0).withColor(new RGBWColor(Color.kPurple)).withFrameRate(BLINK_SLOW_FRAMERATE));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+}}
