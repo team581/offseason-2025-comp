@@ -68,7 +68,7 @@ public class RedLollipopMT extends BaseAuto {
             blocks.scoreL2(
                 ReefPipe.PIPE_A,
                 RobotScoringSide.LEFT,
-                new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-47.95))
+                new Pose2d(13.0, 2.658, Rotation2d.fromDegrees(-47.95))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
             autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
