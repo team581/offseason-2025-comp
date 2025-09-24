@@ -14,7 +14,6 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
   private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_EMPTY;
-  private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
   private final double BLINK_FAST_FRAMERATE = 500.0; //The frame rate of the animation, from [1, 500] Hz.
   private final double BLINK_SLOW_FRAMERATE = 50.0;
@@ -34,9 +33,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     setStateFromRequest(LightsState.BLINK);
   }
 
-  public void setDisabledState(LightsState newDisabledState) {
-    disabledState = newDisabledState;
-  }
+  public void setDisabledState(LightsState newDisabledState) {}
 
   @Override
   protected LightsState getNextState(LightsState currentState) {
@@ -92,4 +89,5 @@ private void setControlStrobed(RGBWColor color, double frameRate){
         case OTHER -> setControlStrobed(new RGBWColor(Color.kPurple), BLINK_SLOW_FRAMERATE);
         default -> setControlSolid(new RGBWColor(Color.kBlack));
   }
-}}
+}
+}

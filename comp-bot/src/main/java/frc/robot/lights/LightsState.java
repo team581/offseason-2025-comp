@@ -1,7 +1,5 @@
 package frc.robot.lights;
 
-import edu.wpi.first.wpilibj.util.Color;
-
 public enum LightsState {
   ERROR,
   UNHOMED,
