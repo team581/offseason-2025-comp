@@ -56,7 +56,9 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   public void setState(ElevatorState newState) {
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
-        setStateFromRequest(newState);
+        if (DriverStation.isEnabled()) {
+          setStateFromRequest(newState);
+        }
       }
       default -> {
         setStateFromRequest(newState);
