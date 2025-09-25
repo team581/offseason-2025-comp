@@ -47,9 +47,9 @@ public class AutoBlocks {
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90));
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
-      new AutoConstraintOptions(4.8, 57, 4.0, 30);
+      new AutoConstraintOptions(4.75, 57, 4.0, 30);
   public static final AutoConstraintOptions LOLLIPOP_RACE_CONSTRAINTS =
-      MAX_CONSTRAINTS.withMaxLinearVelocity(5.65).withMaxLinearAcceleration(4.5);
+      MAX_CONSTRAINTS.withMaxLinearVelocity(5.5).withMaxLinearAcceleration(4.5);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
 
@@ -131,34 +131,53 @@ public class AutoBlocks {
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide) {
-    return scoreL4(pipe, scoringSide, Optional.empty());
+    return scoreL4(Optional.empty(), pipe, scoringSide, Optional.empty());
+  }
+
+  public Command scoreL4(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
+    return scoreL4(Optional.of(approachPose), pipe, scoringSide, Optional.empty());
+  }
+
+  public Command scoreL4(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+    return scoreL4(Optional.of(approachPose), pipe, scoringSide, Optional.of(backupPoint));
   }
 
   public Command scoreL4(ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
-    return scoreL4(pipe, scoringSide, Optional.of(backupPoint));
+    return scoreL4(Optional.empty(), pipe, scoringSide, Optional.of(backupPoint));
   }
 
   public Command scoreL4(
+    Optional<Pose2d> approachPose,
       ReefPipe pipe, RobotScoringSide scoringSide, Optional<Pose2d> backupPoint) {
-    return Commands.sequence(
-            Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe)),
-            trailblazer
+        var firstCommand =
+        approachPose.isPresent()
+            ? trailblazer
                 .followSegment(
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
-                        new AutoPoint(
-                            () ->
-                                pipe.getPose(
-                                    ReefPipeLevel.L4, FmsUtil.isRedAlliance(), scoringSide),
+                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(() -> robotManager.autoAlign.getUsedScoringPose(pipe))),
+                    false)
+                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
+            : trailblazer
+                .followSegment(
+                    new AutoSegment(
+                        SCORING_CONSTRAINTS,
+                        new AutoPoint(() -> robotManager.autoAlign.getUsedScoringPose(pipe))),
+                    false)
+                .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3));
+        return Commands.sequence(
+            Commands.parallel(
+              firstCommand,
+              Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
+              .andThen(
                             robotManager
                                 .waitForStates(
                                     RobotState.CLAW_CORAL,
                                     RobotState.CORAL_L4_LEFT_APPROACH,
                                     RobotState.CORAL_L4_RIGHT_APPROACH,
-                                    RobotState.STARTING_POSITION_CORAL)
-                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide)))),
-                    false)
-                .withDeadline(autoCommands.waitForReleaseCommand()),
+                                    RobotState.STARTING_POSITION_CORAL))
+                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide))),
             trailblazer
                 .followSegment(
                     new AutoSegment(
@@ -284,7 +303,9 @@ public class AutoBlocks {
   public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
     return scoreL2(Optional.of(approachPose), pipe, scoringSide, Optional.empty());
   }
-
+  public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+    return scoreL2(Optional.of(approachPose), pipe, scoringSide, Optional.of(backupPoint));
+  }
   public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide) {
     return scoreL2(Optional.empty(), pipe, scoringSide, Optional.empty());
   }
