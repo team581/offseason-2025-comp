@@ -138,7 +138,8 @@ public class AutoBlocks {
     return scoreL4(Optional.of(approachPose), pipe, scoringSide, Optional.empty());
   }
 
-  public Command scoreL4(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+  public Command scoreL4(
+      Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
     return scoreL4(Optional.of(approachPose), pipe, scoringSide, Optional.of(backupPoint));
   }
 
@@ -147,9 +148,11 @@ public class AutoBlocks {
   }
 
   public Command scoreL4(
-    Optional<Pose2d> approachPose,
-      ReefPipe pipe, RobotScoringSide scoringSide, Optional<Pose2d> backupPoint) {
-        var firstCommand =
+      Optional<Pose2d> approachPose,
+      ReefPipe pipe,
+      RobotScoringSide scoringSide,
+      Optional<Pose2d> backupPoint) {
+    var firstCommand =
         approachPose.isPresent()
             ? trailblazer
                 .followSegment(
@@ -166,18 +169,17 @@ public class AutoBlocks {
                         new AutoPoint(() -> robotManager.autoAlign.getUsedScoringPose(pipe))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3));
-        return Commands.sequence(
+    return Commands.sequence(
             Commands.parallel(
-              firstCommand,
-              Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
-              .andThen(
-                            robotManager
-                                .waitForStates(
-                                    RobotState.CLAW_CORAL,
-                                    RobotState.CORAL_L4_LEFT_APPROACH,
-                                    RobotState.CORAL_L4_RIGHT_APPROACH,
-                                    RobotState.STARTING_POSITION_CORAL))
-                                .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide))),
+                firstCommand,
+                Commands.runOnce(() -> robotManager.autoAlign.setAutoReefPipeOverride(pipe))
+                    .andThen(
+                        robotManager.waitForStates(
+                            RobotState.CLAW_CORAL,
+                            RobotState.CORAL_L4_LEFT_APPROACH,
+                            RobotState.CORAL_L4_RIGHT_APPROACH,
+                            RobotState.STARTING_POSITION_CORAL))
+                    .andThen(autoCommands.l4ApproachCommand(pipe, scoringSide))),
             trailblazer
                 .followSegment(
                     new AutoSegment(
@@ -303,9 +305,12 @@ public class AutoBlocks {
   public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide) {
     return scoreL2(Optional.of(approachPose), pipe, scoringSide, Optional.empty());
   }
-  public Command scoreL2(Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
+
+  public Command scoreL2(
+      Pose2d approachPose, ReefPipe pipe, RobotScoringSide scoringSide, Pose2d backupPoint) {
     return scoreL2(Optional.of(approachPose), pipe, scoringSide, Optional.of(backupPoint));
   }
+
   public Command scoreL2(ReefPipe pipe, RobotScoringSide scoringSide) {
     return scoreL2(Optional.empty(), pipe, scoringSide, Optional.empty());
   }
