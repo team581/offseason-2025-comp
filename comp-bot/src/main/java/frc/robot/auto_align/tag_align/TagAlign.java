@@ -39,7 +39,7 @@ public class TagAlign {
 
   private static final ProfiledPIDController TRAPEZOIDAL_ROTATION_CONTROLLER =
       new ProfiledPIDController(
-          5.0,
+          3.0,
           0.0,
           0.0,
           new Constraints(Units.rotationsToRadians(4.0), Units.rotationsToRadians(1.0)));
@@ -48,7 +48,7 @@ public class TagAlign {
       new ProfiledPIDController(4.0, 0.0, 0.0, new Constraints(4.0, 4.0));
 
   private static final PhoenixPIDController ROTATION_CONTROLLER =
-      new PhoenixPIDController(5.0, 0.0, 0.0);
+      new PhoenixPIDController(3.0, 0.0, 0.0);
   private static final PIDController VELOCITY_CONTROLLER = new PIDController(3.7, 0.0, 0.0);
 
   private static final DoubleSubscriber TRANSLATION_GOOD_THRESHOLD =
@@ -89,7 +89,7 @@ public class TagAlign {
   private static final DoubleSubscriber TRANSLATION_FEED_FORWARD =
       DogLog.tunable("AutoAlign/TranslationFeedForward", 0.0);
   private static final DoubleSubscriber ROTATION_FEED_FORWARD =
-      DogLog.tunable("AutoAlign/RotationFeedForward", 0.0);
+      DogLog.tunable("AutoAlign/RotationFeedForward", 0.01);
 
   public TagAlign(SwerveSubsystem swerve, LocalizationSubsystem localization) {
     this.localization = localization;
