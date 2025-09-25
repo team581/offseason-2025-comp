@@ -59,7 +59,7 @@ public class RedLollipopMT extends BaseAuto {
                 new Pose2d(15.967, 5.392, Rotation2d.fromDegrees(90)),
                 ReefPipe.PIPE_B,
                 RobotScoringSide.LEFT,
-                new Pose2d(15.0, 4.0, Rotation2d.fromDegrees(0))
+                new Pose2d(15.0, 5.392, Rotation2d.fromDegrees(0))
                     .transformBy(AutoBlocks.LOLLIPOP_OFFSET))),
         autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 2 (MIDDLE)
