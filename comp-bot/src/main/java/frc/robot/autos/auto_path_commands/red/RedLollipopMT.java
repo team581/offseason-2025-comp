@@ -45,9 +45,7 @@ public class RedLollipopMT extends BaseAuto {
                                 autoCommands.l4ApproachCommand(
                                     ReefPipe.PIPE_A, RobotScoringSide.LEFT),
                                 AutoBlocks.BASE_CONSTRAINTS)))),
-                blocks.scoreL4(
-                    ReefPipe.PIPE_A,
-                    RobotScoringSide.LEFT),
+                blocks.scoreL4(ReefPipe.PIPE_A, RobotScoringSide.LEFT),
                 autoCommands.intakeLollipopCommand())),
         // LOLLIPOP 3
         timing.time(

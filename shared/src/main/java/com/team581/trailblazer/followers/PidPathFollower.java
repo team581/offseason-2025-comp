@@ -25,10 +25,11 @@ public class PidPathFollower implements PathFollower {
 
   @Override
   public ChassisSpeeds calculateSpeeds(Pose2d currentPose, Pose2d targetPose) {
-    double rotationSpeed = thetaController.calculate(
-        currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+    double rotationSpeed =
+        thetaController.calculate(
+            currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
- if (!MathUtil.isNear(
+    if (!MathUtil.isNear(
         targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
       rotationSpeed +=
           Math.copySign(Units.rotationsToRadians(ROTATION_FEED_FORWARD), rotationSpeed);
