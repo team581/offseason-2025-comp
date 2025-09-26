@@ -1340,6 +1340,18 @@ public class RobotManager extends StateMachine<RobotState> {
 
     return isFarEnoughFromReefSide;
   }
+  public boolean cameraOnlineAndFarEnoughFromReefForAuto() {
+    var tagCameraOnline = vision.isAnyTagLimelightOnline();
+
+    if (!tagCameraOnline) {
+      return timeout(0.5);
+    }
+
+    var isFarEnoughFromReefSide =
+        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.2);
+
+    return isFarEnoughFromReefSide;
+  }
 
   private boolean drivingAwayFromReef() {
     var tagCameraOnline = vision.isAnyTagLimelightOnline();
