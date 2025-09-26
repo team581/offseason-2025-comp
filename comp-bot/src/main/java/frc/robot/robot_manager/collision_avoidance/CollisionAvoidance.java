@@ -335,25 +335,19 @@ public class CollisionAvoidance {
         Waypoint.CORAL_L2_LEFT_LINEUP,
         Waypoint.CORAL_L2_RIGHT_LINEUP,
         Waypoint.ALGAE_GROUND_INTAKE,
-        Waypoint.ALGAE_PROCESSOR,
-        Waypoint.LOLLIPOP_INTAKE,
-        Waypoint.LOLLIPOP_INTAKE_PUSH);
+        Waypoint.ALGAE_PROCESSOR);
     Waypoint.CORAL_L3_UPRIGHT.avoidClimberAlwaysSafe(
         graph,
         Waypoint.CORAL_L3_LEFT_LINEUP,
         Waypoint.CORAL_L3_RIGHT_LINEUP,
         Waypoint.ALGAE_GROUND_INTAKE,
-        Waypoint.ALGAE_PROCESSOR,
-        Waypoint.LOLLIPOP_INTAKE,
-        Waypoint.LOLLIPOP_INTAKE_PUSH);
+        Waypoint.ALGAE_PROCESSOR);
     Waypoint.CORAL_L4_UPRIGHT.avoidClimberAlwaysSafe(
         graph,
         Waypoint.CORAL_L4_LEFT_LINEUP,
         Waypoint.CORAL_L4_RIGHT_LINEUP,
         Waypoint.ALGAE_GROUND_INTAKE,
-        Waypoint.ALGAE_PROCESSOR,
-        Waypoint.LOLLIPOP_INTAKE,
-        Waypoint.LOLLIPOP_INTAKE_PUSH);
+        Waypoint.ALGAE_PROCESSOR);
     // If you aren't going to hit reef poles, you can skip the in between upright waypoints
     Waypoint.CORAL_L2_UPRIGHT.avoidClimberLeftSideSpecial(
         graph,
@@ -429,10 +423,7 @@ public class CollisionAvoidance {
 
     // Additional ways to exit the push state, mostly just to help cover weird edge cases
     // Putting L1_UPRIGHT here is safe, but makes going L4_LEFT_PLACE to L1_UPRIGHT weird
-    Waypoint.LOLLIPOP_INTAKE.avoidClimberAlwaysSafe(
-        graph, Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L3_UPRIGHT, Waypoint.CORAL_L4_UPRIGHT);
-    Waypoint.LOLLIPOP_INTAKE_PUSH.avoidClimberAlwaysSafe(
-        graph, Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L3_UPRIGHT, Waypoint.CORAL_L4_UPRIGHT);
+
 
     Waypoint.CORAL_L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
     Waypoint.CORAL_L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
