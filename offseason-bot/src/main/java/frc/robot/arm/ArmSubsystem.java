@@ -244,7 +244,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
-      DogLog.logFault("Arm/ARM_HOMED");
+      DogLog.clearFault("Arm/ARM NOT HOMED");
       var actualArmAngle =
           RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
       motor.setPosition(Units.degreesToRotations(actualArmAngle));
