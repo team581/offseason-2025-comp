@@ -424,7 +424,6 @@ public class CollisionAvoidance {
     // Additional ways to exit the push state, mostly just to help cover weird edge cases
     // Putting L1_UPRIGHT here is safe, but makes going L4_LEFT_PLACE to L1_UPRIGHT weird
 
-
     Waypoint.CORAL_L4_LEFT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
     Waypoint.CORAL_L4_RIGHT_PLACE.alwaysSafe(graph, Waypoint.HANDOFF_CLEARS_CLIMBER);
 
