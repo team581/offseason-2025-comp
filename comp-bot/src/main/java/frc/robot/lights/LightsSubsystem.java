@@ -1,6 +1,5 @@
 package frc.robot.lights;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.led.CANdle;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
@@ -15,9 +14,6 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_EMPTY;
   private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
-
-  private static final Color8Bit COLOR_BLACK = new Color8Bit();
-  private Color8Bit previousColor = new Color8Bit();
 
   public LightsSubsystem(CANdle candle) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_EMPTY);
@@ -46,24 +42,13 @@ public class LightsSubsystem extends StateMachine<LightsState> {
     };
   }
 
-  private void setLeDs(Color8Bit color) {
-    if (!color.equals(previousColor)) {
-      ErrorCode errorCode = candle.setLEDs(color.red, color.green, color.blue);
-      if (errorCode != ErrorCode.OK) {
-        DogLog.timestamp("Lights/UnableToSetColor");
-        return;
-      }
-    }
-    previousColor = color;
-  }
-
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
     var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {
-      setLeDs(color8Bit);
+      candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
     } else {
       double time = blinkTimer.get();
       double onDuration = 0;
@@ -79,10 +64,9 @@ public class LightsSubsystem extends StateMachine<LightsState> {
 
       if (time >= offDuration) {
         blinkTimer.reset();
-        setLeDs(COLOR_BLACK);
-
+        candle.setLEDs(0, 0, 0);
       } else if (time >= onDuration) {
-        setLeDs(color8Bit);
+        candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
       }
     }
 
