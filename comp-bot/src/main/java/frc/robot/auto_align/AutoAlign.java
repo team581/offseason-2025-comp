@@ -249,11 +249,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     tagAlign.clearReefState();
   }
 
-  public boolean isAligned() {
-    return isAligned;
-  }
 
-  public boolean isAlignedDebounced() {
+  public boolean isAligned() {
     return isAlignedDebounced;
   }
 
