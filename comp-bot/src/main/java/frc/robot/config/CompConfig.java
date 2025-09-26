@@ -243,7 +243,7 @@ class CompConfig {
               -34.0,
               120.673828125,
               3,
-              20,
+              25,
               120.673828125),
           new ClimberConfig(
               CANIVORE_NAME,
