@@ -11,9 +11,7 @@ import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.arm.ArmState;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -138,7 +136,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     }
   }
 
- @Override
+  @Override
   protected void beforeTransition(ElevatorState oldState, ElevatorState newState) {
     DogLog.log("Elevator/OldState", oldState);
     DogLog.log("Elevator/NewState", newState);
@@ -146,22 +144,21 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     if (oldState == ElevatorState.PRE_MATCH_HOMING
         && newState != ElevatorState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
-       // We are enabled and still in pre match homing
-          // Reset the motor positions, and then transition to idle state
-          double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
-          var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
-          var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
+      // We are enabled and still in pre match homing
+      // Reset the motor positions, and then transition to idle state
+      double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+      var leftHomedHeight = homingEndHeight + (leftHeight - lowestSeenHeightLeft);
+      var rightHomedHeight = homingEndHeight + (rightHeight - lowestSeenHeightRight);
 
-          if (!MathUtil.isNear(leftHomedHeight, rightHomedHeight, 0.8)) {
-            DogLog.logFault("Elevator/Left-Right Motor Height Mismatch");
-          }
-          leftMotor.setPosition(leftHomedHeight);
-          rightMotor.setPosition(rightHomedHeight);
+      if (!MathUtil.isNear(leftHomedHeight, rightHomedHeight, 0.8)) {
+        DogLog.logFault("Elevator/Left-Right Motor Height Mismatch");
+      }
+      leftMotor.setPosition(leftHomedHeight);
+      rightMotor.setPosition(rightHomedHeight);
       // Refresh sensor data now that position is set
       collectInputs();
     }
   }
-
 
   public boolean atGoal() {
     return switch (getState()) {
