@@ -60,7 +60,7 @@ public class AutoBlocks {
   private static final AutoConstraintOptions L2_SCORING_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearVelocity(3.3).withMaxLinearAcceleration(2.15);
   private static final AutoConstraintOptions LOLLIPOP_CONSTRAINTS =
-      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(1.7);
+      BASE_CONSTRAINTS.withMaxLinearAcceleration(2.0).withMaxLinearVelocity(1.6);
 
   private static final AutoConstraintOptions SUPER_FAST_LOLLIPOP_CONSTRAINTS =
       BASE_CONSTRAINTS.withMaxLinearAcceleration(3.0).withMaxLinearVelocity(4.5);
@@ -192,7 +192,7 @@ public class AutoBlocks {
                                         ReefPipeLevel.BACK_AWAY_AUTO,
                                         FmsUtil.isRedAlliance(),
                                         scoringSide)))))
-                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReef()))
+                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
@@ -364,7 +364,7 @@ public class AutoBlocks {
                                         ReefPipeLevel.BACK_AWAY_AUTO,
                                         FmsUtil.isRedAlliance(),
                                         scoringSide)))))
-                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReef()))
+                .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
 
