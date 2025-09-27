@@ -190,7 +190,8 @@ public class AutoBlocks {
                                     pipe.getPose(
                                         ReefPipeLevel.BACK_AWAY_AUTO,
                                         FmsUtil.isRedAlliance(),
-                                        scoringSide)))),false)
+                                        scoringSide)))),
+                    false)
                 .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
@@ -361,7 +362,8 @@ public class AutoBlocks {
                                     pipe.getPose(
                                         ReefPipeLevel.BACK_AWAY_AUTO,
                                         FmsUtil.isRedAlliance(),
-                                        scoringSide)))),false)
+                                        scoringSide)))),
+                    false)
                 .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
   }
