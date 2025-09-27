@@ -169,10 +169,7 @@ public class Robot extends Base581Robot {
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
-    hardware
-        .driverController
-        .rightTrigger()
-        .onTrue(robotCommands.confirmScoreCommand());
+    hardware.driverController.rightTrigger().onTrue(robotCommands.confirmScoreCommand());
     hardware.driverController.leftTrigger().onTrue(robotCommands.floorIntakeCommand());
     hardware.driverController.leftBumper().onTrue(robotCommands.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(robotCommands.stowCommand());
