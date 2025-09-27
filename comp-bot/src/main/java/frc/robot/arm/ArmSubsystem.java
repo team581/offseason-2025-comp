@@ -18,6 +18,9 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -228,12 +231,14 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   @Override
   protected void afterTransition(ArmState newState) {}
 
+private DoublePublisher armAngleLive =  NetworkTableInstance.getDefault().getDoubleTopic("Arm/AngleLive").publish();
   public void customPeriodic() {
     DogLog.log("Arm/Angle", motorAngle);
     DogLog.log("Arm/RawAngle", rawMotorAngle);
     DogLog.log("Arm/AtGoal", atGoal());
 
     if (DriverStation.isDisabled()) {
+      armAngleLive.set(motorAngle );
       DogLog.log("Arm/Homing/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/Homing/HighestAngle", highestSeenAngle);
       DogLog.log("Arm/Homing/ElevatorIsGoingDown", elevatorIsGoingDown);
