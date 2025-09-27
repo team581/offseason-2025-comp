@@ -533,6 +533,13 @@ public class CollisionAvoidance {
         Waypoint.ALGAE_INTAKE_L3_RIGHT,
         Waypoint.ALGAE_INTAKE_L3_LEFT);
 
+        Waypoint.LOLLIPOP_INTAKE.avoidClimberAlwaysSafe(
+          graph,
+          Waypoint.ALGAE_INTAKE_L2_LEFT,
+          Waypoint.ALGAE_INTAKE_L2_RIGHT,
+          Waypoint.ALGAE_INTAKE_L3_RIGHT,
+          Waypoint.ALGAE_INTAKE_L3_LEFT);
+
     Waypoint.ALGAE_INTAKE_L2_LEFT_ARM_ONLY.alwaysSafe(
         graph, Waypoint.ALGAE_INTAKE_L2_LEFT, Waypoint.ALGAE_INTAKE_L3_LEFT);
 
