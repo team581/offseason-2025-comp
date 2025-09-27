@@ -57,8 +57,9 @@ public class RedLollipop4PieceR1AB extends BaseAuto {
                 new Pose2d(15.967, 5.392, Rotation2d.fromDegrees(90)),
                 ReefPipe.PIPE_B,
                 RobotScoringSide.LEFT,
-                new Pose2d(15.0, 4.0, Rotation2d.fromDegrees(0))
-                    .transformBy(AutoBlocks.LOLLIPOP_OFFSET))),
+                new Pose2d(15.7, 4.0, Rotation2d.fromDegrees(0))
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)
+                .transformBy(AutoBlocks.APPROACH_LOLLIPOP_OFFSET))),
         autoCommands.intakeLollipopCommand(),
         // LOLLIPOP 2 (MIDDLE)
         timing.time(
@@ -71,7 +72,8 @@ public class RedLollipop4PieceR1AB extends BaseAuto {
                 ReefPipe.PIPE_A,
                 RobotScoringSide.LEFT,
                 new Pose2d(15.967, 2.658, Rotation2d.fromDegrees(-47.95))
-                    .transformBy(AutoBlocks.LOLLIPOP_OFFSET)),
+                .transformBy(AutoBlocks.LOLLIPOP_OFFSET)
+                    .transformBy(AutoBlocks.APPROACH_LOLLIPOP_OFFSET)),
             autoCommands.intakeLollipopCommand()),
         // LOLLIPOP 1
         timing.time(
