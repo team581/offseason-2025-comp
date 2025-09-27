@@ -35,7 +35,7 @@ public class FeatureFlags {
   public static final BooleanSupplier AUTO_STOW_ALGAE = FeatureFlag.of("AutoStowAlgaeScore", false);
 
   public static final BooleanSupplier AUTO_ALIGN_AUTO_SCORE =
-      FeatureFlag.of("AutoAlign/AutoScore", true);
+      FeatureFlag.of("AutoAlign/AutoScore", false);
   public static final BooleanSupplier AUTO_ALIGN_TRAPEZOIDAL =
       FeatureFlag.of("AutoAlign/TrapezoidalProfiles", true);
   public static final BooleanSupplier AUTO_ALIGN_MAX_ROTATION_LIMIT =
