@@ -1348,7 +1348,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
+        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.75);
     return isFarEnoughFromReefSide || timeout(0.75);
   }
 
