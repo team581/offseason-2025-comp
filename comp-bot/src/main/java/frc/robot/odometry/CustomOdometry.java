@@ -6,8 +6,6 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-// TODO: 1) Get odometry in a usable state, then implement fixes for 2) Wheel slip, 3) Accounting
-// for downtime when wheels turn
 public class CustomOdometry extends Odometry<SwerveModulePosition[]> {
 
   public CustomOdometry(
@@ -20,6 +18,7 @@ public class CustomOdometry extends Odometry<SwerveModulePosition[]> {
 
   @Override
   public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions) {
-    return Pose2d.kZero;
+    Pose2d updatedPose = new Pose2d();
+    return updatedPose;
   }
 }
