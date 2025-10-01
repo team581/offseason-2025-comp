@@ -25,6 +25,8 @@ public class GroundManager extends StateMachine<GroundState> {
       case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
       case HANDOFF_RELEASE, L1_SCORE, L1_HARD_SCORE ->
           !hasCoral ? GroundState.IDLE_EMPTY : currentState;
+      case FORCED_HARD_SCORE ->
+          timeout(0.5) ? GroundState.IDLE_EMPTY : currentState;
       case REHOME_DEPLOY -> deploy.atGoal() ? GroundState.IDLE_EMPTY : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> hasCoral ? GroundState.HANDOFF_WAIT : currentState;
       default -> currentState;
@@ -54,7 +56,7 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.L1_SCORE);
         intake.setState(IntakeState.SCORING);
       }
-      case L1_HARD_SCORE -> {
+      case L1_HARD_SCORE, FORCED_HARD_SCORE -> {
         deploy.setState(DeployState.L1_SCORE);
         intake.setState(IntakeState.HARD_SCORING);
       }
@@ -122,6 +124,10 @@ public class GroundManager extends StateMachine<GroundState> {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_SCORE);
       default -> setState(GroundState.L1_WAIT);
     }
+  }
+
+  public void forcedHardScoreRequest() {
+    setState(GroundState.FORCED_HARD_SCORE);
   }
 
   public void hardL1Request() {

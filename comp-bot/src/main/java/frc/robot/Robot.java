@@ -203,8 +203,9 @@ public class Robot extends Base581Robot {
         .onTrue(robotCommands.algaeReefIntakeCommand())
         .onFalse(robotCommands.scoringAlignOffCommand());
 
-    hardware.driverController.start().onTrue(robotCommands.unjamCommand());
+    hardware.driverController.start().onTrue(robotCommands.forcedL1Request());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
+
 
     hardware.operatorController.y().onTrue(robotCommands.rehomeDeployCommand());
 

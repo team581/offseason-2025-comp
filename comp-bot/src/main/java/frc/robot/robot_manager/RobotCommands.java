@@ -62,6 +62,11 @@ public class RobotCommands {
         .withName("ConfirmScoreCommand");
   }
 
+  public Command forcedL1Request() {
+    return Commands.runOnce(robot::forcedL1Request, bothRequirements)
+        .withName("ForcedSensorCommand");
+  }
+
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, bothRequirements)
         .andThen(
