@@ -359,9 +359,12 @@ public class TagAlign {
     DogLog.log("AutoAlign/TranslationProfile/VelocityError", profileVelocityError);
     DogLog.log("AutoAlign/DistanceToGoalMeters", distanceToGoalMeters);
     DogLog.log("AutoAlign/TranslationProfile/Magnitude", driveVelocityMagnitude);
-    DogLog.log("AutoAlign/TranslationProfile/SetpointPostion", TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().position);
-    DogLog.log("AutoAlign/TranslationProfile/SetpointVelocity", TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().velocity);
-
+    DogLog.log(
+        "AutoAlign/TranslationProfile/SetpointPostion",
+        TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().position);
+    DogLog.log(
+        "AutoAlign/TranslationProfile/SetpointVelocity",
+        TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().velocity);
 
     if (MathUtil.isNear(
         targetPose.getRotation().getRadians(),

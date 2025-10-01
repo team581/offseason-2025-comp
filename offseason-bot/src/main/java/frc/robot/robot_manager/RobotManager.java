@@ -1110,7 +1110,7 @@ public class RobotManager extends StateMachine<RobotState> {
       groundManager.forcedHardScoreRequest();
       return;
     }
-      groundManager.l1Request();
+    groundManager.l1Request();
   }
 
   public void forcedLowStowRequest() {
