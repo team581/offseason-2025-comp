@@ -20,21 +20,16 @@ public class RobotCommands {
     var requirementsList =
         List.of(groundManager.deploy, groundManager.intake, groundManager.singulator);
     gmRequirements = requirementsList.toArray(Subsystem[]::new);
-    requirementsList =
-      List.of(
-      robot.elevator,
-      robot.arm,
-      robot.claw,
-      robot.climber);
+    requirementsList = List.of(robot.elevator, robot.arm, robot.claw, robot.climber);
     rmRequirements = requirementsList.toArray(Subsystem[]::new);
     requirementsList =
-      List.of(
-        robot.elevator,
-        robot.arm,
-        robot.claw,
-        robot.climber,
-        robot.groundManager.deploy,
-        robot.groundManager.intake);
+        List.of(
+            robot.elevator,
+            robot.arm,
+            robot.claw,
+            robot.climber,
+            robot.groundManager.deploy,
+            robot.groundManager.intake);
     bothRequirements = requirementsList.toArray(Subsystem[]::new);
   }
 
