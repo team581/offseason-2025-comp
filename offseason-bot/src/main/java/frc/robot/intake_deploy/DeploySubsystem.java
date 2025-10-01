@@ -16,6 +16,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   private final CoastOut coastRequest = new CoastOut();
   private final PositionVoltage positionRequest = new PositionVoltage(0.0);
   private final LinearFilter currentFilter = LinearFilter.movingAverage(6);
+  private final double TOLERANCE = 3.0;
 
   final double homingVoltage = RobotConfig.get().deploy().homingVoltage();
   final double currentThreshold = RobotConfig.get().deploy().homingCurrentThreshold();
@@ -80,7 +81,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().angle, angle, 3.0);
+      default -> MathUtil.isNear(getState().angle, angle, TOLERANCE);
     };
   }
 
