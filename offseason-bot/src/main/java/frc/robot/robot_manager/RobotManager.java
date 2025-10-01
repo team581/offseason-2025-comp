@@ -1101,6 +1101,18 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
+  public void forcedL1Request() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+
+    if (groundManager.getState().equals(GroundState.L1_WAIT)) {
+      groundManager.forcedHardScoreRequest();
+      return;
+    }
+      groundManager.l1Request();
+  }
+
   public void forcedLowStowRequest() {
     if (getState().climbingOrRehoming) {
       return;
