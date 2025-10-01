@@ -571,7 +571,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF -> {
-        claw.setState(ClawState.CORAL_HANDOFF);
+        claw.setState(ClawState.IDLE_NO_GP);
         afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
