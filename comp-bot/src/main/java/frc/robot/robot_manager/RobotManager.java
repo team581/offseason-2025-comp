@@ -311,7 +311,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CORAL_INTAKE_LOLLIPOP_GRAB ->
-      // Make sure we've waited at least 200ms intaking before moving on
+          // Make sure we've waited at least 200ms intaking before moving on
           claw.getHasGP() && timeout(0.2) ? RobotState.CORAL_INTAKE_LOLLIPOP_PUSH : currentState;
       case CORAL_INTAKE_LOLLIPOP_PUSH -> timeout(0.6) ? RobotState.CLAW_CORAL : currentState;
 
@@ -691,7 +691,8 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L2_RIGHT_APPROACH -> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
-            ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);        autoAlign.setState(AutoAlignState.PIPE);
+            ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);
+        autoAlign.setState(AutoAlignState.PIPE);
 
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -1791,12 +1792,11 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void forcedL1Request() {
-    if (groundManager.getState().equals(GroundState.L1_WAIT))
-    {
+    if (groundManager.getState().equals(GroundState.L1_WAIT)) {
       groundManager.forcedHardScoreRequest();
       return;
     }
-      groundManager.l1Request();
+    groundManager.l1Request();
   }
 
   public void nextClimbStateRequest() {
