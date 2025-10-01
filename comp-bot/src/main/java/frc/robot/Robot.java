@@ -207,7 +207,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.start().onTrue(robotCommands.forcedL1Request());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
-
     hardware.operatorController.y().onTrue(robotCommands.rehomeDeployCommand());
 
     hardware.operatorController.back().onTrue(robotCommands.spinToWinCommand());
