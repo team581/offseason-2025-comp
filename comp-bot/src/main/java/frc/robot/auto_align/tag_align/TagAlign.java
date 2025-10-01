@@ -353,6 +353,16 @@ public class TagAlign {
             new State(0, 0),
             new Constraints(constraints.maxLinearVelocity(), constraints.maxLinearAcceleration()));
 
+    var profilePositionError = TRAPEZOIDAL_TRANSLATION_CONTROLLER.getPositionError();
+    var profileVelocityError = TRAPEZOIDAL_TRANSLATION_CONTROLLER.getVelocityError();
+    DogLog.log("AutoAlign/TranslationProfile/PositionError", profilePositionError);
+    DogLog.log("AutoAlign/TranslationProfile/VelocityError", profileVelocityError);
+    DogLog.log("AutoAlign/DistanceToGoalMeters", distanceToGoalMeters);
+    DogLog.log("AutoAlign/TranslationProfile/Magnitude", driveVelocityMagnitude);
+    DogLog.log("AutoAlign/TranslationProfile/SetpointPostion", TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().position);
+    DogLog.log("AutoAlign/TranslationProfile/SetpointVelocity", TRAPEZOIDAL_TRANSLATION_CONTROLLER.getSetpoint().velocity);
+
+
     if (MathUtil.isNear(
         targetPose.getRotation().getRadians(),
         TRAPEZOIDAL_ROTATION_CONTROLLER.getSetpoint().position,
