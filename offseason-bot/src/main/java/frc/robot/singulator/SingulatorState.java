@@ -3,8 +3,8 @@ package frc.robot.singulator;
 public enum SingulatorState {
   UNTUNED(0.0),
 
-  UNJAM_RIGHT_ONLY(0.0, 0.0),
-  UNJAM_LEFT_ONLY(0.0, 0.0),
+  UNJAM_RIGHT_ONLY(UNTUNED),
+  UNJAM_LEFT_ONLY(UNTUNED),
 
   STOPPED(0.0),
   IDLE(UNTUNED),
