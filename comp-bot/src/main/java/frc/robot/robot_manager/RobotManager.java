@@ -92,7 +92,6 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("RobotManager/StateCount", stateCount);
   }
 
-  private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
@@ -698,7 +697,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);
-            autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -738,7 +737,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3);
-            autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -779,7 +778,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3);
-            autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -863,7 +862,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4);
-            autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -1029,7 +1028,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L3_LEFT_HOLDING,
           ALGAE_INTAKE_L2_RIGHT_HOLDING,
           ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
-        if (scoringAlignActive&&vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
           swerve.driveToPointRequest(autoAlign.getTargetPose());
         } else {
           swerve.normalDriveRequest();
@@ -1069,7 +1068,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RIGHT_RELEASE,
           CORAL_L3_RIGHT_RELEASE,
           CORAL_L4_RIGHT_RELEASE -> {
-        if (scoringAlignActive&&vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
           swerve.driveToPointRequest(autoAlign.getTargetPose());
         } else {
           swerve.normalDriveRequest();
@@ -1174,10 +1173,13 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     shouldLoopAroundToScoreObstruction = autoAlign.getObstruction();
-    reefSnapAngle = autoAlign.getTargetPose().getRotation().getDegrees();
+
     scoringLevel =
         switch (getState()) {
-          case LOW_STOW, CORAL_L1_PREPARE_HANDOFF, CORAL_L1_RELEASE_HANDOFF, CORAL_L1_RIGHT_APPROACH ->
+          case LOW_STOW,
+              CORAL_L1_PREPARE_HANDOFF,
+              CORAL_L1_RELEASE_HANDOFF,
+              CORAL_L1_RIGHT_APPROACH ->
               ReefPipeLevel.L1;
 
           case CORAL_L2_PREPARE_HANDOFF,

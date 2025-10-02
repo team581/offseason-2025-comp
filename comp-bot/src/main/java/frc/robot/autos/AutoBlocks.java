@@ -323,14 +323,16 @@ public class AutoBlocks {
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3));
     return Commands.sequence(
-      Commands.parallel(
-        firstCommand,
-                robotManager.waitForStates(
-                    RobotState.CLAW_CORAL,
-                    RobotState.CORAL_L2_LEFT_APPROACH,
-                    RobotState.CORAL_L2_RIGHT_APPROACH,
-                    RobotState.STARTING_POSITION_CORAL)
-            .andThen(autoCommands.l2LineupCommand(pipe,scoringSide))),          trailblazer
+            Commands.parallel(
+                firstCommand,
+                robotManager
+                    .waitForStates(
+                        RobotState.CLAW_CORAL,
+                        RobotState.CORAL_L2_LEFT_APPROACH,
+                        RobotState.CORAL_L2_RIGHT_APPROACH,
+                        RobotState.STARTING_POSITION_CORAL)
+                    .andThen(autoCommands.l2LineupCommand(pipe, scoringSide))),
+            trailblazer
                 .followSegment(
                     new AutoSegment(
                         BASE_CONSTRAINTS,
