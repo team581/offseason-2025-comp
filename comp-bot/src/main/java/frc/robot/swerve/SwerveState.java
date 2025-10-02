@@ -5,7 +5,7 @@ public enum SwerveState {
   TELEOP_SNAPS,
   AUTO,
   AUTO_SNAPS,
-  REEF_ALIGN_TELEOP,
+  DRIVE_TO_POINT,
   CORAL_ALIGN,
   CLIMBING;
 }
