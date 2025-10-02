@@ -213,7 +213,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public static boolean isCoralInSafeSpotForAuto(Translation2d coralPose) {
-    var centerOfReef = AutoAlign.getAllianceCenterOfReef(FmsUtil.isRedAlliance());
+    var centerOfReef = AutoAlign.getAllianceCenterOfReef();
     if (coralPose.getDistance(centerOfReef) < Units.inchesToMeters(37.2)) {
       return false;
     }

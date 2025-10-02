@@ -326,7 +326,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_WAITING);
         lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
@@ -623,7 +623,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1);
         swerve.normalDriveRequest();
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -659,7 +659,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
@@ -697,7 +697,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -737,7 +737,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -778,7 +778,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -823,7 +823,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
         lights.setState(getLightStateForScoring());
 
         climber.setState(ClimberState.STOPPED);
@@ -862,7 +862,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE_SELECTION);
+        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -1031,7 +1031,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L2_RIGHT_HOLDING,
           ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
         if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
-          swerve.driveToPointRequest(autoAlign.getTargetPose());
+          swerve.driveToPointRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();
         }
@@ -1071,7 +1071,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L3_RIGHT_RELEASE,
           CORAL_L4_RIGHT_RELEASE -> {
         if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
-          swerve.driveToPointRequest(autoAlign.getTargetPose());
+          swerve.driveToPointRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();
         }
