@@ -198,10 +198,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   private Pose2d findTargetPose() {
     return switch (getState()) {
-      case SAFE_PREPARE,
-          SAFE_WAITING,
-          SAFE_WAITING_LEFT,
-          SAFE_WAITING_RIGHT ->
+      case SAFE_PREPARE, SAFE_WAITING, SAFE_WAITING_LEFT, SAFE_WAITING_RIGHT ->
           getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
       case LEFT_PIPE ->
           getClosestReefSide().leftPipe.getPose(currentReefPipeLevel, currentScoringSide);
