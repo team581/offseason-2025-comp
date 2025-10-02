@@ -5,6 +5,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
@@ -137,7 +138,7 @@ public class AlignmentCostUtil {
         yield Comparator.comparingDouble(
             pipe -> {
               var allPipes =
-                  TagAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
+                  AutoAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
               return allPipes.stream()
                   .filter(p -> p.getPose(level, side, localization.getPose()) != null)
                   .min(

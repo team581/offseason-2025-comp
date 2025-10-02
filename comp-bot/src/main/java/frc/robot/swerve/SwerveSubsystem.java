@@ -7,31 +7,52 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.GlobalConfig;
 import com.team581.controller.ControllerHelpers;
+import com.team581.math.MathHelpers;
+import com.team581.math.PolarChassisSpeeds;
 import com.team581.trailblazer.SwerveBase;
+import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.generated.CompBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
+
+import java.nio.file.attribute.PosixFileAttributeView;
 import java.util.Map;
 
 public class SwerveSubsystem extends StateMachine<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
+
+  private static final PIDController DRIVE_TO_POINT_TRANSLATION_CONTROLLER =
+      new PIDController(0.0, 0.0, 0.0);
+  private static final PIDController DRIVE_TO_POINT_ROTATION_CONTROLLER =
+      new PIDController(0.0, 0.0, 0.0);
+      private static final DoubleSubscriber DRIVE_TO_POINT_TRANSLATION_FF =
+      DogLog.tunable("Swerve/DriveToPoint/TranslationFF", 0.0);
+  private static final DoubleSubscriber DRIVE_TO_POINT_ROTATION_FF =
+      DogLog.tunable("Swerve/DriveToPoint/RotationFF", 0.0);
 
   public static final double MaxSpeed = 4.75;
   private static final double maxAngularRate = Units.rotationsToRadians(4);
@@ -91,7 +112,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   private ChassisSpeeds coralAssistSpeeds = new ChassisSpeeds();
 
-  private ChassisSpeeds autoAlignSpeeds = new ChassisSpeeds();
+  private ChassisSpeeds driveToPointSpeeds = new ChassisSpeeds();
+
+  private Pose2d lastDriveToPointTarget = new Pose2d();
 
   private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
@@ -149,18 +172,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     coralAssistSpeeds = speeds;
   }
 
-  public void setAutoAlignSpeeds(ChassisSpeeds speeds) {
-    autoAlignSpeeds = speeds;
-    sendSwerveRequest();
-  }
 
   @Override
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
-      case REEF_ALIGN_TELEOP ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.REEF_ALIGN_TELEOP;
+      case DRIVE_TO_POINT ->
+          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.DRIVE_TO_POINT;
       case CORAL_ALIGN -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CORAL_ALIGN;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
@@ -224,6 +243,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     robotRelativeSpeeds = drivetrainState.Speeds;
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
+    if (getState().equals(SwerveState.DRIVE_TO_POINT)) {
+      driveToPointSpeeds = getDriveToPointSpeeds(lastDriveToPointTarget, drivetrainState.Pose);
+    }
   }
 
   public ChassisSpeeds getTeleopSpeeds() {
@@ -271,12 +293,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
                   .withVelocityY(coralAssistSpeeds.vyMetersPerSecond)
                   .withRotationalRate(coralAssistSpeeds.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-      case REEF_ALIGN_TELEOP -> {
+      case DRIVE_TO_POINT -> {
         drivetrain.setControl(
             drive
-                .withVelocityX(autoAlignSpeeds.vxMetersPerSecond)
-                .withVelocityY(autoAlignSpeeds.vyMetersPerSecond)
-                .withRotationalRate(autoAlignSpeeds.omegaRadiansPerSecond)
+                .withVelocityX(driveToPointSpeeds.vxMetersPerSecond)
+                .withVelocityY(driveToPointSpeeds.vyMetersPerSecond)
+                .withRotationalRate(driveToPointSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
 
@@ -335,7 +357,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   }
 
   public Translation2d getControllerValues() {
-    if (getState() != SwerveState.REEF_ALIGN_TELEOP) {
+    if (getState() != SwerveState.DRIVE_TO_POINT) {
       return Translation2d.kZero;
     }
 
@@ -355,12 +377,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     }
   }
 
-  public void scoringAlignmentRequest(double snapAngle) {
-    if (DriverStation.isAutonomous()) {
-      normalDriveRequest();
-    } else {
-      setSnapToAngle(snapAngle);
-      setStateFromRequest(SwerveState.REEF_ALIGN_TELEOP);
+
+  public void driveToPointRequest(Pose2d point) {
+    if (DriverStation.isTeleop()) {
+      lastDriveToPointTarget = point;
+      driveToPointSpeeds = getDriveToPointSpeeds(lastDriveToPointTarget, drivetrainState.Pose);
+      setStateFromRequest(SwerveState.DRIVE_TO_POINT);
+      sendSwerveRequest();
     }
   }
 
@@ -402,5 +425,44 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   public void setElevatorHeight(double height) {
     elevatorHeight = height;
+  }
+
+
+  private PolarChassisSpeeds getDriveToPointSpeeds(
+      Pose2d targetPose,
+      Pose2d currentPose) {
+
+    // Calculate x and y velocities
+    double distanceToGoalMeters =
+        currentPose.getTranslation().getDistance(targetPose.getTranslation());
+
+    var driveVelocityMagnitude =
+        DRIVE_TO_POINT_TRANSLATION_CONTROLLER.calculate(
+            distanceToGoalMeters, 0);
+
+    var rotationSpeed =
+        DRIVE_TO_POINT_ROTATION_CONTROLLER.calculate(
+            currentPose.getRotation().getRadians(),
+            targetPose.getRotation().getRadians());
+
+
+    if (Math.abs(distanceToGoalMeters) > Units.inchesToMeters(1.0)) {
+      driveVelocityMagnitude +=
+          Math.copySign(DRIVE_TO_POINT_TRANSLATION_FF.get(), driveVelocityMagnitude);
+    }
+
+    if (!MathUtil.isNear(
+        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+      rotationSpeed +=
+          Math.copySign(Units.rotationsToRadians(DRIVE_TO_POINT_ROTATION_FF.get()), rotationSpeed);
+    }
+
+    var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
+
+    var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
+    DogLog.log("Swerve/DriveToPoint/TargetPose", targetPose);
+    DogLog.log("Swerve/DriveToPoint/Speeds", speeds);
+
+    return speeds;
   }
 }

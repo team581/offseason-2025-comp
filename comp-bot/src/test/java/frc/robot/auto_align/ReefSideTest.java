@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 public class ReefSideTest {
   private static void assertSidePoseCorect(boolean isRed, Pose2d robotPose, ReefSide side) {
     var pipe1Distance =
-        side.pipe1
+        side.leftPipe
             .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
             .getDistance(side.getPose(robotPose).getTranslation());
     var pipe2Distance =
-        side.pipe2
+        side.rightPipe
             .getPose(ReefPipeLevel.BASE, isRed, RobotScoringSide.RIGHT)
             .getTranslation()
             .getDistance(side.getPose(robotPose).getTranslation());
