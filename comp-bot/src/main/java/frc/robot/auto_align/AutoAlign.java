@@ -3,7 +3,6 @@ package frc.robot.auto_align;
 import com.team581.auto_align.TagAlignState;
 import com.google.common.collect.ImmutableList;
 import com.team581.math.MathHelpers;
-import com.team581.math.PoseErrorTolerance;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,8 +43,13 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final DoubleSubscriber OBSTRUCTION_DISTANCE =
       DogLog.tunable("AutoAlign/ObstructionDistance", 0.75);
 
-  private final PoseErrorTolerance positionTolerance = new PoseErrorTolerance(0.2, 4);
-
+  /**
+   * Determines which side of the robot to score algae in net based on the robot's position on the
+   * field
+   *
+   * @param robotPose
+   * @return
+   */
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
     double theta = MathHelpers.angleModulus(robotPose.getRotation().getDegrees());
@@ -69,14 +72,27 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return RobotScoringSide.RIGHT;
   }
 
-  public static Translation2d getAllianceCenterOfReef(boolean isRedAliance) {
+  private static Translation2d getAllianceCenterOfReef(boolean isRedAliance) {
     return isRedAliance ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
+  }
+
+  public static Translation2d getAllianceCenterOfReef() {
+    return FmsUtil.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
   public static Translation2d getAllianceCenterOfReef(Pose2d robotPose) {
     return robotPose.getX() > 17.55 / 2 ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
+  /**
+   * Determines which side of the robot to score coral on based on the robot's position on the field
+   * and which limelights are online
+   *
+   * @param robotPose
+   * @param leftLimelightsOnline
+   * @param rightLimelightOnline
+   * @return
+   */
   public static RobotScoringSide getScoringSideFromRobotPose(
       Pose2d robotPose, boolean leftLimelightsOnline, boolean rightLimelightOnline) {
     if (!leftLimelightsOnline) {
@@ -111,35 +127,32 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         < thresholdMeters;
   }
 
-  private final Debouncer isAlignedDebouncer = new Debouncer(0.1, DebounceType.kRising);
   private final VisionSubsystem vision;
   private final LocalizationSubsystem localization;
   private final SwerveSubsystem swerve;
   private final AlignmentCostUtil alignmentCostUtil;
-
-  private Pose2d robotPose = Pose2d.kZero;
-  private final ChassisSpeeds tagAlignSpeeds = new ChassisSpeeds();
-  private boolean isAligned = false;
-  private boolean isNearRotation = false;
-  private boolean isAlignedDebounced = false;
-  private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
-  private final ReefPipe bestReefPipe = ReefPipe.PIPE_A;
-  private Pose2d targetPose = Pose2d.kZero;
-  private ReefSideOffset reefSideOffset = ReefSideOffset.BASE;
-  private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
-  private ReefSide closestSide = ReefSide.SIDE_AB;
-  private ReefPipeLevel pipeLevel = ReefPipeLevel.L1;
-  private AutoAlignState wantedLeftRightState = AutoAlignState.SAFE_PREPARE_SELECTION;
+  private final Debouncer isAlignedDebouncer = new Debouncer(0.1, DebounceType.kRising);
   private final ReefState reefState = new ReefState();
-  private Pose2d autoTargetPoseOverride = new Pose2d();
+
+  private boolean isAligned = false;
+  private boolean isAlignedDebounced = false;
+  private boolean pipeSelected = false;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
-  private boolean pipeSelected = false;
+  private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
+  private ReefSide closestReefSide = ReefSide.SIDE_AB;
+  private RobotScoringSide currentScoringSide = RobotScoringSide.RIGHT;
+  private ReefSideOffset currentAlgaeIntakingReefSideOffset = ReefSideOffset.BASE;
+  private ReefPipeLevel currentReefPipeLevel = ReefPipeLevel.L1;
+  private AutoAlignState wantedLeftRightState = AutoAlignState.SAFE_WAITING;
+  private Pose2d currentPose = Pose2d.kZero;
+  private Pose2d currentTargetPose = Pose2d.kZero;
+  private Pose2d autoTargetPoseOverride = new Pose2d();
 
   public AutoAlign(
       VisionSubsystem vision, LocalizationSubsystem localization, SwerveSubsystem swerve) {
-    super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.SAFE_PREPARE_SELECTION);
-    alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState, robotScoringSide);
+    super(SubsystemPriority.AUTO_ALIGN, AutoAlignState.SAFE_WAITING);
+    alignmentCostUtil = new AlignmentCostUtil(localization, swerve, reefState, currentScoringSide);
 
     this.vision = vision;
     this.localization = localization;
@@ -149,34 +162,87 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   @Override
   protected AutoAlignState getNextState(AutoAlignState currentState) {
     return switch (getState()) {
-      case SAFE_PREPARE_SELECTION -> {
-        if (pipeSelected) {
-          pipeSelected = false;
-          yield wantedLeftRightState;
-        }
-        yield currentState;
+      case SAFE_WAITING -> {
+        var wantedState = getWantedPipeSideState(closestReefSide);
+        yield wantedState.equals(AutoAlignState.LEFT_PIPE)
+            ? AutoAlignState.SAFE_WAITING_LEFT
+            : wantedState.equals(AutoAlignState.RIGHT_PIPE)
+                ? AutoAlignState.SAFE_WAITING_RIGHT
+                : currentState;
+      }
+      case SAFE_PREPARE -> {
+        var wantedState = getWantedPipeSideState(closestReefSide);
+        yield wantedState.equals(AutoAlignState.LEFT_PIPE)
+            ? AutoAlignState.LEFT_PIPE
+            : wantedState.equals(AutoAlignState.RIGHT_PIPE)
+                ? AutoAlignState.RIGHT_PIPE
+                : currentState;
       }
       default -> currentState;
     };
   }
 
+  @Override
+  protected void collectInputs() {
+    currentPose = localization.getPose();
+    bestAlgaeSide = getBestAlgaeSide();
+    closestReefSide = getClosestReefSide();
+    currentTargetPose = findTargetPose();
+    isAligned = isRobotPoseAlignedWithTargetPose();
+    isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
+
+    var controllerValues = swerve.getControllerValues();
+    rawControllerXValue = controllerValues.getX();
+    rawControllerYValue = controllerValues.getY();
+  }
+
+  private Pose2d findTargetPose() {
+    return switch (getState()) {
+      case SAFE_PREPARE,
+          SAFE_WAITING,
+          SAFE_WAITING_LEFT,
+          SAFE_WAITING_RIGHT ->
+          getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+      case LEFT_PIPE ->
+          getClosestReefSide().leftPipe.getPose(currentReefPipeLevel, currentScoringSide);
+      case RIGHT_PIPE ->
+          getClosestReefSide().rightPipe.getPose(currentReefPipeLevel, currentScoringSide);
+      case ALGAE ->
+          bestAlgaeSide.getPose(
+              currentAlgaeIntakingReefSideOffset, currentScoringSide, currentPose);
+    };
+  }
+
+  /**
+   * Sets an override target pose for auto period. If set to Pose2d.kZero, the normal logic will be
+   * used.
+   *
+   * @param target The target pose to use during auto.
+   */
   public void setAutoTargetPoseOverride(Pose2d target) {
     autoTargetPoseOverride = target;
   }
 
-  private AutoAlignState getLeftRightState(ReefSide closestSide) {
+  /**
+   * Determines if the driver is commanding left or right pipe selection based on controller
+   * joystick input.
+   *
+   * @param closestSide The closest reef side to the robot.
+   * @return The desired AutoAlignState based on controller input.
+   */
+  private AutoAlignState getWantedPipeSideState(ReefSide closestSide) {
     if (!DriverStation.isTeleop()) {
-      return AutoAlignState.SAFE_WAITING;
+      return getState();
     }
 
-    if ((Math.hypot(rawControllerXValue, rawControllerYValue) > 0.5)) {
+    if ((Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
       var inputVector = new Translation2d(rawControllerXValue, -rawControllerYValue);
       var viewOffset = 0;
       if (FmsUtil.isRedAlliance()) {
         viewOffset = 180;
       }
 
-      var sideAngle = closestSide.getPose(robotPose);
+      var sideAngle = closestSide.getPose(currentPose);
 
       var rotatedVector =
           inputVector.rotateBy(
@@ -188,33 +254,30 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         return AutoAlignState.RIGHT_PIPE;
       }
     }
-    return AutoAlignState.SAFE_WAITING;
-  }
-
-  public void setControllerValues(double controllerXValue, double controllerYValue) {
-    rawControllerXValue = controllerXValue;
-    rawControllerYValue = controllerYValue;
+    return getState();
   }
 
   private boolean isRobotPoseAlignedWithTargetPose() {
     if (DriverStation.isTeleop()
-        && (getState().equals(AutoAlignState.SAFE_PREPARE_SELECTION)
-            || getState().equals(AutoAlignState.SAFE_WAITING))) {
+        && (!getState().equals(AutoAlignState.LEFT_PIPE)
+            && !getState().equals(AutoAlignState.RIGHT_PIPE))) {
       return false;
     }
 
     var correctTargetPose =
         DriverStation.isTeleop()
-            ? targetPose
-            : autoTargetPoseOverride.equals(Pose2d.kZero) ? targetPose : autoTargetPoseOverride;
+            ? currentTargetPose
+            : autoTargetPoseOverride.equals(Pose2d.kZero)
+                ? currentTargetPose
+                : autoTargetPoseOverride;
 
     var translationGood =
-        (robotPose.getTranslation().getDistance(correctTargetPose.getTranslation())
+        (currentPose.getTranslation().getDistance(correctTargetPose.getTranslation())
             <= TRANSLATION_GOOD_THRESHOLD.get());
     var rotationGood =
         MathUtil.isNear(
             correctTargetPose.getRotation().getDegrees(),
-            robotPose.getRotation().getDegrees(),
+            currentPose.getRotation().getDegrees(),
             ROTATION_GOOD_THRESHOLD.get(),
             -180.0,
             180.0);
@@ -222,35 +285,49 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return translationGood && rotationGood;
   }
 
-  private boolean isNearRotationGoal() {
+  /**
+   * @return true if the robot's rotation is within 10 degrees of the target pose's rotation
+   */
+  public boolean isNearRotationGoal() {
     var rotationGood =
         MathUtil.isNear(
-            targetPose.getRotation().getDegrees(),
-            robotPose.getRotation().getDegrees(),
+            currentTargetPose.getRotation().getDegrees(),
+            currentPose.getRotation().getDegrees(),
             10.0,
             -180.0,
             180.0);
     return rotationGood;
   }
 
-  public void markAlgaeRemoved() {
-    reefState.markAlgaeRemoved(closestSide);
-  }
-
+  /**
+   * Checks if algae has been removed from the specified reef side.
+   *
+   * @param side The reef side to check.
+   * @return true if algae has been removed from the specified side
+   */
   public boolean isAlgaeRemoved(ReefSide side) {
     return reefState.isAlgaeRemoved(side);
   }
 
   public boolean isAlgaeRemoved() {
-    return isAlgaeRemoved(closestSide);
+    return isAlgaeRemoved(closestReefSide);
   }
 
   public void clearReefState() {
     reefState.clear();
   }
 
+  public void markAlgaeRemoved() {
+    reefState.markAlgaeRemoved(closestReefSide);
+  }
+
+  /**
+   * Marks the specified pipe as having been scored on at the current pipe level.
+   *
+   * @param pipe The reef pipe that has been scored on.
+   */
   public void markScored(ReefPipe pipe) {
-    reefState.markCoralScored(pipe, pipeLevel);
+    reefState.markCoralScored(pipe, currentReefPipeLevel);
   }
 
   public ReefSide getClosestReefSide() {
@@ -258,72 +335,38 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         .min(
             Comparator.comparingDouble(
                 side ->
-                    robotPose
+                    currentPose
                         .getTranslation()
                         .getDistance(
-                            side.getPose(ReefSideOffset.SAFE, robotScoringSide, robotPose)
+                            side.getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose)
                                 .getTranslation())))
         .orElseThrow();
   }
 
-  private Pose2d findTargetPose() {
-    return switch (getState()) {
-      case SAFE_PREPARE_SELECTION, SAFE_WAITING ->
-          getClosestReefSide().getPose(ReefSideOffset.SAFE, robotScoringSide, robotPose);
-      case LEFT_PIPE -> getClosestReefSide().leftPipe.getPose(pipeLevel, robotScoringSide);
-      case RIGHT_PIPE -> getClosestReefSide().rightPipe.getPose(pipeLevel, robotScoringSide);
-      case ALGAE -> bestAlgaeSide.getPose(reefSideOffset, robotScoringSide, robotPose);
-    };
+  public Pose2d getCurrentTargetPose() {
+    return currentTargetPose;
   }
 
-  public Pose2d getTargetPose() {
-    return targetPose;
-  }
-
+  /** Finds the best side to intake algae from based on algae state in reef */
   public ReefSide getBestAlgaeSide() {
     return ALL_REEF_SIDES.stream().min(alignmentCostUtil.getAlgaeComparator()).orElseThrow();
   }
 
-  @Override
-  protected void collectInputs() {
-    robotPose = localization.getPose();
-    bestAlgaeSide = getBestAlgaeSide();
-    closestSide = getClosestReefSide();
-    targetPose = findTargetPose();
-    isAligned = isRobotPoseAlignedWithTargetPose();
-    isNearRotation = isNearRotationGoal();
-    isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-
-    var controllerValues = swerve.getControllerValues();
-    rawControllerXValue = controllerValues.getX();
-    rawControllerYValue = controllerValues.getY();
-    DogLog.log("AutoAlign/PipeSelected", pipeSelected);
+  public void setState(AutoAlignState newState) {
     switch (getState()) {
-      case SAFE_WAITING, SAFE_PREPARE_SELECTION -> {
-        if (!pipeSelected) {
-          var wantedSide = getLeftRightState(closestSide);
-          var controllerFlicked =
-              wantedSide.equals(AutoAlignState.LEFT_PIPE)
-                  || wantedSide.equals(AutoAlignState.RIGHT_PIPE);
-          if (controllerFlicked) {
-            wantedLeftRightState = wantedSide;
-            pipeSelected = true;
-          } else {
-            wantedLeftRightState = AutoAlignState.SAFE_PREPARE_SELECTION;
-          }
+      case SAFE_WAITING_LEFT -> {
+        if (newState == AutoAlignState.SAFE_PREPARE) {
+          setStateFromRequest(AutoAlignState.LEFT_PIPE);
         }
       }
+      case SAFE_WAITING_RIGHT -> {
+        if (newState == AutoAlignState.SAFE_PREPARE) {
+          setStateFromRequest(AutoAlignState.RIGHT_PIPE);
+        }
+      }
+
+      default -> setStateFromRequest(newState);
     }
-    DogLog.log("AutoAlign/Wanted", wantedLeftRightState);
-  }
-
-  public void setState(AutoAlignState newState) {
-    setStateFromRequest(newState);
-  }
-
-  public boolean isNearRaisingPoint() {
-    return positionTolerance.atPose(
-        bestReefPipe.getPose(ReefPipeLevel.RAISING, robotScoringSide, robotPose), robotPose);
   }
 
   @Override
@@ -338,33 +381,22 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     var lookaheadPoseDistance =
         lookaheadPose
             .getTranslation()
-            .getDistance(
-                bestReefPipe
-                    .getPose(ReefPipeLevel.BASE, robotScoringSide, robotPose)
-                    .getTranslation());
+            .getDistance(closestReefSide.getPose(currentPose).getTranslation());
     if (lookaheadPoseDistance < OBSTRUCTION_DISTANCE.get()) {
-      return robotScoringSide == RobotScoringSide.RIGHT
+      return currentScoringSide == RobotScoringSide.RIGHT
           ? ObstructionKind.RIGHT_OBSTRUCTED
           : ObstructionKind.LEFT_OBSTRUCTED;
     }
     return ObstructionKind.NONE;
   }
 
-  public ChassisSpeeds getTagAlignSpeeds() {
-    return tagAlignSpeeds;
-  }
-
-  public ReefPipe getBestReefPipe() {
-    return bestReefPipe;
-  }
-
   public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
-    robotScoringSide = side;
-    pipeLevel = level;
+    currentScoringSide = side;
+    currentReefPipeLevel = level;
   }
 
   public void setReefAlgaeIntakingOffset(ReefSideOffset offset) {
-    reefSideOffset = offset;
+    currentAlgaeIntakingReefSideOffset = offset;
   }
 
   public boolean isAligned() {
