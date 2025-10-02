@@ -85,7 +85,8 @@ public class AutoCommands {
   public Command l4ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L4, scoringSide));
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L4, scoringSide));
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l4CoralLeftAutoApproachRequest();
               } else {
@@ -98,7 +99,8 @@ public class AutoCommands {
   public Command l3ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L3, scoringSide));
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L3, scoringSide));
 
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l3CoralLeftAutoApproachRequest();
@@ -112,7 +114,8 @@ public class AutoCommands {
   public Command l2ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L2, scoringSide));
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L2, scoringSide));
 
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l2CoralLeftAutoApproachRequest();
@@ -123,10 +126,11 @@ public class AutoCommands {
         .withName("L2ApproachCommand");
   }
 
-  public Command l2LineupCommand(ReefPipe pipe,RobotScoringSide scoringSide) {
+  public Command l2LineupCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L2, scoringSide));
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L2, scoringSide));
 
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l2CoralLeftAutoLineupRequest();
