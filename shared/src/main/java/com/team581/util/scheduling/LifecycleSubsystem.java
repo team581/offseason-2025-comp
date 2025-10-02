@@ -5,8 +5,11 @@ import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Extends {@link SubsystemBase} by adding in lifecycle methods for robotInit, teleopPeriodic, etc.,
- * similar to a robot class.
+ * The Robot class has a bunch of helper methods like robotInit, teleopPeriodic, etc. which help
+ * organize code to run during different stages in the match "lifecycle".
+ *
+ * <p>This class extends {@link SubsystemBase} to add those same helper methods, since by default
+ * there's only {@link SubsystemBase#periodic()}.
  */
 public class LifecycleSubsystem extends SubsystemBase {
   public final SubsystemPriorityBase priority;
