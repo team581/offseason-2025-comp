@@ -68,7 +68,7 @@ dependencies {
 	nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
 	simulationRelease wpi.sim.enableRelease()
 
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+	testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	errorprone "com.google.errorprone:error_prone_core:2.42.0"
