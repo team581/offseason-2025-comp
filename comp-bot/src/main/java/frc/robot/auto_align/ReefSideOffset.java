@@ -11,11 +11,11 @@ public enum ReefSideOffset {
       new Transform2d(0, 0, Rotation2d.fromDegrees(270))),
   SAFE(
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 30.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 20.0),
           Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(270)),
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 30.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 20.0),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90))),
   ALGAE_INTAKING(
