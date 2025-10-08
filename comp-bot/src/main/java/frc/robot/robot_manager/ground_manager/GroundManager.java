@@ -25,8 +25,7 @@ public class GroundManager extends StateMachine<GroundState> {
       case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
       case HANDOFF_RELEASE, L1_SCORE, L1_HARD_SCORE ->
           !hasCoral ? GroundState.IDLE_EMPTY : currentState;
-      case FORCED_HARD_SCORE ->
-          timeout(0.5) ? GroundState.IDLE_EMPTY : currentState;
+      case FORCED_HARD_SCORE -> timeout(0.5) ? GroundState.IDLE_EMPTY : currentState;
       case REHOME_DEPLOY -> deploy.atGoal() ? GroundState.IDLE_EMPTY : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> hasCoral ? GroundState.HANDOFF_WAIT : currentState;
       default -> currentState;
