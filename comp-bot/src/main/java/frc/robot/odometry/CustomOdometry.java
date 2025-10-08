@@ -2,23 +2,24 @@ package frc.robot.odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.Odometry;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-public class CustomOdometry extends Odometry<SwerveModulePosition[]> {
+// TODO: Start basic, then add more complexity over time
+public class CustomOdometry {
+  private Rotation2d gyroAngle;
+  private Pose2d pose;
 
   public CustomOdometry(
-      SwerveDriveKinematics kinematics,
-      Rotation2d gyroAngle,
-      SwerveModulePosition[] wheelPositions,
+      Rotation2d initialGyroAngle,
       Pose2d initialPoseMeters) {
-    super(kinematics, gyroAngle, wheelPositions, initialPoseMeters);
+    this.gyroAngle = initialGyroAngle;
+    this.pose = initialPoseMeters;
   }
 
-  @Override
-  public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions) {
-    Pose2d updatedPose = new Pose2d();
-    return updatedPose;
+  public Pose2d update(SwerveModulePosition[] previousWheelPositions, SwerveModulePosition[] currentWheelPositions) {
+      double frontLeftModuledisplacement = previousWheelPositions[0].distanceMeters + currentWheelPositions[0].distanceMeters;
+
+    return new Pose2d(new Translation2d(), gyroAngle);
   }
 }
