@@ -115,6 +115,10 @@ public enum ReefSide {
     return isRedAlliance ? redPose : bluePose;
   }
 
+  public Pose2d getPose() {
+    return getPose(FmsUtil.isRedAlliance());
+  }
+
   public Pose2d getPose(Pose2d robotPose) {
     return getPose(robotPose.getX() > (17.55 / 2));
   }
@@ -127,5 +131,35 @@ public enum ReefSide {
 
   public int getTagID() {
     return FmsUtil.isRedAlliance() ? redTagID : blueTagID;
+  }
+
+  public static ReefSide getAdjacentRightSide(ReefSide side) {
+    return switch (side) {
+      case SIDE_AB -> SIDE_CD;
+      case SIDE_CD -> SIDE_EF;
+      case SIDE_EF -> SIDE_GH;
+      case SIDE_GH -> SIDE_IJ;
+      case SIDE_IJ -> SIDE_KL;
+      case SIDE_KL -> SIDE_AB;
+    };
+  }
+
+  public static ReefSide getAdjacentLeftSide(ReefSide side) {
+    return switch (side) {
+      case SIDE_CD -> SIDE_AB;
+      case SIDE_EF -> SIDE_CD;
+      case SIDE_GH -> SIDE_EF;
+      case SIDE_IJ -> SIDE_GH;
+      case SIDE_KL -> SIDE_IJ;
+      case SIDE_AB -> SIDE_KL;
+    };
+  }
+
+  public ReefSide getAdjacentLeftSide() {
+    return getAdjacentLeftSide(this);
+  }
+
+  public ReefSide getAdjacentRightSide() {
+    return getAdjacentRightSide(this);
   }
 }

@@ -40,6 +40,13 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
 
+  // private double switchReefSideThreshold = 0.35;
+
+  // private boolean switchReefSideLeft = false;
+  // private boolean switchReefSideRight = false;
+  private boolean isSwitchedLeft = false;
+  private boolean isSwitchedRight = false;
+
   private static final PhoenixPIDController ORIGINAL_HEADING_PID =
       RobotConfig.get().swerve().snapController();
 
@@ -212,6 +219,25 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
       leftY *= -1.0;
     }
 
+    // switchReefSideLeft = rightX > switchReefSideThreshold;
+    // switchReefSideRight = rightX < -switchReefSideThreshold;
+
+    // // Not Switched
+    // if (!(isSwitchedLeft||isSwitchedRight)) {
+    //   isSwitchedLeft = switchReefSideLeft;
+    //   isSwitchedRight = switchReefSideRight;
+    // // Switched Left
+    // } else if (isSwitchedLeft && !isSwitchedRight) {
+    //   isSwitchedLeft = !switchReefSideRight;
+    // // Switched Right
+    // } else if (!isSwitchedLeft && isSwitchedRight) {
+    //   isSwitchedRight = !switchReefSideLeft;
+    // } else {
+    // // Literally impossible
+    //   isSwitchedLeft = false;
+    //   isSwitchedRight = false;
+    // }
+
     teleopSpeeds =
         new ChassisSpeeds(
             -1.0 * leftY * MaxSpeed * teleopSlowModePercent,
@@ -321,6 +347,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     }
   }
 
+  public boolean switchReefSideLeft() {
+    return isSwitchedLeft;
+  }
+
+  public boolean switchReefSideRight() {
+    return isSwitchedRight;
+  }
+
   public void normalDriveRequest() {
     if (DriverStation.isAutonomous()) {
       setStateFromRequest(SwerveState.AUTO);
@@ -407,5 +441,15 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   public void setElevatorHeight(double height) {
     elevatorHeight = height;
+  }
+
+  public void switchLeftRequest() {
+    isSwitchedLeft = !isSwitchedRight;
+    isSwitchedRight = false;
+  }
+
+  public void switchRightRequest() {
+    isSwitchedRight = !isSwitchedLeft;
+    isSwitchedLeft = false;
   }
 }

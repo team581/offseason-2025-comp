@@ -95,6 +95,7 @@ public class RobotManager extends StateMachine<RobotState> {
   private double reefSnapAngle = 0.0;
   private RobotScoringSide robotScoringSide = RobotScoringSide.RIGHT;
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
+  private ReefSide nearestReefSideForAngle = nearestReefSide;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
   private ObstructionKind shouldLoopAroundToScoreObstruction = ObstructionKind.NONE;
@@ -1002,6 +1003,8 @@ public class RobotManager extends StateMachine<RobotState> {
     super.robotPeriodic();
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
+    DogLog.log("RobotManager/ReefSide", nearestReefSide);
+    DogLog.log("RobotManager/ReefSideForAngle", nearestReefSideForAngle);
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
     // Continuous state actions
     moveSuperstructure(latestElevatorGoal, latestArmGoal, latestUnsafe);
@@ -1179,10 +1182,18 @@ public class RobotManager extends StateMachine<RobotState> {
     if (DriverStation.isAutonomous()) {
       scoringAlignActive = true;
     }
-
-    vision.setEstimatedPoseAngle(localization.getPose().getRotation().getDegrees());
-    nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
+
+    vision.setEstimatedPoseAngle(robotPose.getRotation().getDegrees());
+
+    nearestReefSide = autoAlign.getClosestReefSide();
+    if (swerve.switchReefSideRight()) {
+      nearestReefSideForAngle = nearestReefSide.getAdjacentRightSide();
+    } else if (swerve.switchReefSideLeft()) {
+      nearestReefSideForAngle = nearestReefSide.getAdjacentLeftSide();
+    } else {
+      nearestReefSideForAngle = nearestReefSide;
+    }
 
     robotScoringSide =
         AutoAlign.getScoringSideFromRobotPose(
@@ -1190,7 +1201,11 @@ public class RobotManager extends StateMachine<RobotState> {
             vision.isAnyLeftScoringTagLimelightOnline(),
             vision.isAnyRightScoringTagLimelightOnline());
     shouldLoopAroundToScoreObstruction = autoAlign.getObstruction();
-    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
+    if (getState() == RobotState.LOW_STOW) {
+      reefSnapAngle = nearestReefSideForAngle.getPose().getRotation().getDegrees();
+    } else {
+      reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
+    }
     scoringLevel =
         switch (getState()) {
           case CORAL_L1_PREPARE_HANDOFF,

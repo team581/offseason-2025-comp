@@ -215,5 +215,8 @@ public class Robot extends Base581Robot {
     hardware.operatorController.leftTrigger().onTrue(robotCommands.testNextLollipopCommand());
     hardware.operatorController.povUp().onTrue(robotCommands.forcedHandoffCommand());
     hardware.operatorController.povDown().onTrue(robotCommands.forcedLowStowCommand());
+
+    hardware.operatorController.povLeft().onTrue(robotCommands.manualReefSwitchLeftCommand());
+    hardware.operatorController.povRight().onTrue(robotCommands.manualReefSwitchRightCommand());
   }
 }

@@ -133,4 +133,12 @@ public class RobotCommands {
   public Command lowStowCommand() {
     return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");
   }
+
+  public Command manualReefSwitchLeftCommand() {
+    return Commands.runOnce(robot.swerve::switchLeftRequest, rmRequirements).withName("ManualReefSwitchLeftCommand");
+  }
+
+  public Command manualReefSwitchRightCommand() {
+    return Commands.runOnce(robot.swerve::switchRightRequest, rmRequirements).withName("ManualReefSwitchRightCommand");
+  }
 }

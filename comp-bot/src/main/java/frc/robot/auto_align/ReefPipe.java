@@ -42,6 +42,21 @@ public enum ReefPipe {
     this.bluePoses = new ReefPipePoses(blueBase);
   }
 
+  public static ReefSide getReefSide(ReefPipe pipe) {
+    return switch (pipe) {
+      case PIPE_A, PIPE_B -> ReefSide.SIDE_AB;
+      case PIPE_C, PIPE_D -> ReefSide.SIDE_CD;
+      case PIPE_E, PIPE_F -> ReefSide.SIDE_EF;
+      case PIPE_G, PIPE_H -> ReefSide.SIDE_GH;
+      case PIPE_I, PIPE_J -> ReefSide.SIDE_IJ;
+      case PIPE_K, PIPE_L -> ReefSide.SIDE_KL;
+    };
+  }
+
+  public ReefSide getReefSide() {
+    return getReefSide(this);
+  }
+
   public Pose2d getPose(ReefPipeLevel level, RobotScoringSide side) {
     if (side == RobotScoringSide.LEFT) {
       return FmsUtil.isRedAlliance() ? redPoses.getLeftPose(level) : bluePoses.getLeftPose(level);
