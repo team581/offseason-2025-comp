@@ -24,8 +24,8 @@ public class GroundManager extends StateMachine<GroundState> {
 
   private static final boolean RAW = false;
   private static final boolean DEBOUNCED = false;
-  private static final boolean TOP_DEBOUNCED = false;
-  private static final boolean BOTTOM_DEBOUNCED = false;
+  private static final boolean topDebounced = false;
+  private static final boolean bottomDebounced = false;
 
   public GroundManager(
       IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
@@ -133,10 +133,10 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    topDebounced = topDebouncer.calculate(topRaw);
-    bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+   // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+  //  bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+   // topDebounced = topDebouncer.calculate(topRaw);
+   // bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -146,34 +146,6 @@ public class GroundManager extends StateMachine<GroundState> {
     DogLog.log("GroundManager/Sensor/Debounced", DEBOUNCED);
     DogLog.log("GroundManager/Sensor/Raw", RAW);
     DogLog.log("GroundManager/State", getState());
-  }
-
-  private void setState(GroundState newState) {
-    switch (deploy.getState()) {
-      case UNHOMED, REHOME -> {}
-      default -> setStateFromRequest(newState);
-    }
-  }
-
-  public boolean getTopHasGP() {
-    return topDebounced;
-  }
-
-  private void setState(GroundState newState) {
-    switch (deploy.getState()) {
-      case UNHOMED, REHOME -> {}
-      default -> setStateFromRequest(newState);
-    }
-  }
-
-  public boolean getHasGP() {
-    return debounced;
-  }
-  private void setState(GroundState newState) {
-    switch (deploy.getState()) {
-      case UNHOMED, REHOME -> {}
-      default -> setStateFromRequest(newState);
-    }
   }
 
   private void setState(GroundState newState) {
@@ -225,6 +197,7 @@ public class GroundManager extends StateMachine<GroundState> {
     switch (getState()) {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_WAIT);
       default -> setState(GroundState.L1_WAIT);
+    }}
 
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING
@@ -239,17 +212,6 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void l1WaitRequest() {
     setState(GroundState.L1_WAIT);
-  }
-
-  public void intakeThenHandoffRequest() {
-    if (getState() == GroundState.INTAKING
-        || DriverStation.isAutonomous()
-        || getState() == GroundState.HANDOFF_WAIT
-        || getState() == GroundState.HANDOFF_RELEASE) {
-      setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
-    } else {
-      setState(GroundState.HANDOFF_WAIT);
-    }
   }
 
   public void handoffReleaseRequest() {

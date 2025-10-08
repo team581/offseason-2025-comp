@@ -4,12 +4,14 @@ import com.team581.Base581Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.claw.ClawSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -29,8 +31,9 @@ public class Robot extends Base581Robot {
 
   private final GroundManager groundManager =
       new GroundManager(intake, deploy, singulator /* , hardware.intakeCANdi */);
+  private final RobotManager robotManager = new RobotManager(groundManager, null, null, null, null, imu, swerve, localization, null, null, null, null, null);
 
-  private final RobotCommands actions = new RobotCommands(groundManager);
+  private final RobotCommands actions = new RobotCommands(robotManager, groundManager);
 
   public Robot() {
     logMetadata(
@@ -86,7 +89,6 @@ public class Robot extends Base581Robot {
 
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
-    hardware.operatorController.y().onTrue(actions.rehomeCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
   }
 }
