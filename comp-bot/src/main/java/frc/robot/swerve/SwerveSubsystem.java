@@ -40,9 +40,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
 
   private static final PIDController DRIVE_TO_POINT_TRANSLATION_CONTROLLER =
-      new PIDController(0.0, 0.0, 0.0);
+      new PIDController(3.5, 0.0, 0.0);
   private static final PIDController DRIVE_TO_POINT_ROTATION_CONTROLLER =
-      new PIDController(0.0, 0.0, 0.0);
+      new PIDController(4.0, 0.0, 0.0);
   private static final DoubleSubscriber DRIVE_TO_POINT_TRANSLATION_FF =
       DogLog.tunable("Swerve/DriveToPoint/TranslationFF", 0.0);
   private static final DoubleSubscriber DRIVE_TO_POINT_ROTATION_FF =
@@ -79,14 +79,14 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
       new SwerveRequest.FieldCentric()
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.015)
-          .withRotationalDeadband(maxAngularRate * 0.005);
+          .withDeadband(0.07)
+          .withRotationalDeadband(0.05);
 
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.01)
-          .withRotationalDeadband(maxAngularRate * 0.005)
+          .withDeadband(0.07)
+          .withRotationalDeadband(0.5)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
           .withMaxAbsRotationalRate(maxAngularRate);
@@ -447,6 +447,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
     var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
     DogLog.log("Swerve/DriveToPoint/TargetPose", targetPose);
+    DogLog.log("Swerve/DriveToPoint/DistanceToTarget", distanceToGoalMeters);
     DogLog.log("Swerve/DriveToPoint/Speeds", speeds);
 
     return speeds;
