@@ -82,7 +82,7 @@ public class DeploySubsystem extends StateMachine<DeployState> {
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), angle, 3.0);
+      default -> MathUtil.isNear(getState().angle, angle, TOLERANCE);
     };
   }
 

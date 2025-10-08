@@ -52,6 +52,10 @@ public class GroundManager extends StateMachine<GroundState> {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
+      case FORCED_HARD_SCORE -> timeout(0.5) ? GroundState.IDLE_NO_GP : currentState;
+      case HANDOFF_RELEASE, OUTTAKING, L1_HARD_SCORE, L1_SCORE ->
+          getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
       default -> currentState;
     };
   }
@@ -172,6 +176,13 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
+  private void setState(GroundState newState) {
+    switch (deploy.getState()) {
+      case UNHOMED, REHOME -> {}
+      default -> setStateFromRequest(newState);
+    }
+  }
+
   public boolean getTopHasGP() {
     return topDebounced;
   }
@@ -190,10 +201,6 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void stowRequest() {
     if (getTopHasGP()) {
-      setState(GroundState.IDLE_GP);
-    }
-
-    if (getHasGP()) {
       setState(GroundState.IDLE_GP);
       return;
     }
@@ -218,6 +225,15 @@ public class GroundManager extends StateMachine<GroundState> {
     switch (getState()) {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_WAIT);
       default -> setState(GroundState.L1_WAIT);
+
+  public void intakeThenHandoffRequest() {
+    if (getState() == GroundState.INTAKING
+        || DriverStation.isAutonomous()
+        || getState() == GroundState.HANDOFF_WAIT
+        || getState() == GroundState.HANDOFF_RELEASE) {
+      setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
+    } else {
+      setState(GroundState.HANDOFF_WAIT);
     }
   }
 
@@ -225,10 +241,6 @@ public class GroundManager extends StateMachine<GroundState> {
     setState(GroundState.L1_WAIT);
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6d53129f (robot manager compile changes (offseason))
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
