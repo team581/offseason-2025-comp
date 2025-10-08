@@ -135,10 +135,12 @@ public class RobotCommands {
   }
 
   public Command manualReefSwitchLeftCommand() {
-    return Commands.runOnce(robot.swerve::switchLeftRequest, rmRequirements).withName("ManualReefSwitchLeftCommand");
+    return Commands.runOnce(robot.swerve::switchLeftRequest, rmRequirements)
+        .withName("ManualReefSwitchLeftCommand");
   }
 
   public Command manualReefSwitchRightCommand() {
-    return Commands.runOnce(robot.swerve::switchRightRequest, rmRequirements).withName("ManualReefSwitchRightCommand");
+    return Commands.runOnce(robot.swerve::switchRightRequest, rmRequirements)
+        .withName("ManualReefSwitchRightCommand");
   }
 }

@@ -144,6 +144,10 @@ public enum ReefSide {
     };
   }
 
+  public ReefSide getAdjacentRightSide() {
+    return getAdjacentRightSide(this);
+  }
+
   public static ReefSide getAdjacentLeftSide(ReefSide side) {
     return switch (side) {
       case SIDE_CD -> SIDE_AB;
@@ -157,9 +161,5 @@ public enum ReefSide {
 
   public ReefSide getAdjacentLeftSide() {
     return getAdjacentLeftSide(this);
-  }
-
-  public ReefSide getAdjacentRightSide() {
-    return getAdjacentRightSide(this);
   }
 }
