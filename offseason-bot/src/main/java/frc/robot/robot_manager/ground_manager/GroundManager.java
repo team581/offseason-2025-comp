@@ -2,7 +2,6 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.intake.IntakeState;
@@ -133,10 +132,10 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-   // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-  //  bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-   // topDebounced = topDebouncer.calculate(topRaw);
-   // bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+    //  bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    // topDebounced = topDebouncer.calculate(topRaw);
+    // bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
@@ -197,7 +196,8 @@ public class GroundManager extends StateMachine<GroundState> {
     switch (getState()) {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_WAIT);
       default -> setState(GroundState.L1_WAIT);
-    }}
+    }
+  }
 
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING

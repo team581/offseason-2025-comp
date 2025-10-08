@@ -25,9 +25,4 @@ public enum SingulatorState {
     this.voltsLeft = voltsBoth;
     this.voltsRight = voltsBoth;
   }
-
-  private SingulatorState(double voltsLeft, double voltsRight) {
-    this.voltsLeft = voltsLeft;
-    this.voltsRight = voltsRight;
-  }
 }
