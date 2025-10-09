@@ -15,6 +15,23 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+/**
+ * Trailblazer is Team 581's custom path following library. We built Trailblazer to give us end to
+ * end control over every aspect of how our autos execute.
+ *
+ * <p>Trailblazer is made up of a few components:
+ *
+ * <ol>
+ *   <li>Path segments, which are a list of points to follow with the robot
+ *   <li>Can include constraints on robot motion per point or per segment
+ *   <li>Commands can be attached to points to run side effects
+ *   <li>Path trackers, which determine the pose setpoint for the robot
+ *   <li>Path followers, which calculate a velocity setpoint to reach the pose setpoint
+ * </ol>
+ *
+ * Trailblazer paths are executed by the {@link #followSegment} method, which returns a command that
+ * can be composed in autos.
+ */
 public class Trailblazer {
   /**
    * Given a point and the constraints for its parent segment, resolve the constraint options to use
