@@ -46,7 +46,7 @@ public class Robot extends Base581Robot {
           null,
           null);
 
-  private final RobotCommands actions = new RobotCommands(robotManager, groundManager);
+  private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
     logMetadata(
