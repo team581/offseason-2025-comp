@@ -2,6 +2,7 @@ package frc.robot.auto_align;
 
 import com.team581.auto_align.TagAlignState;
 import com.google.common.collect.ImmutableList;
+import com.team581.auto_align.TagAlignState;
 import com.team581.math.MathHelpers;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
@@ -422,7 +423,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return isAlignedDebounced;
   }
 
-  public TagAlignState getReefAlignState() {
+
+  public TagAlignState getTagAlignState() {
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
       return TagAlignState.ALL_CAMERAS_DEAD;
