@@ -1,6 +1,6 @@
-package frc.robot.auto_align;
+package com.team581.auto_align;
 
-public enum ReefAlignState {
+public enum TagAlignState {
   ALL_CAMERAS_DEAD(false),
 
   // Checking based on tags
@@ -11,7 +11,7 @@ public enum ReefAlignState {
 
   public final boolean aligned;
 
-  private ReefAlignState(boolean aligned) {
+  private TagAlignState(boolean aligned) {
     this.aligned = aligned;
   }
 }
