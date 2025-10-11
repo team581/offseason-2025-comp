@@ -1,6 +1,7 @@
 package frc.robot.auto_align;
 
 import com.google.common.collect.ImmutableList;
+import com.team581.auto_align.TagAlignState;
 import com.team581.math.MathHelpers;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
@@ -422,10 +423,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return isAlignedDebounced;
   }
 
-  public ReefAlignState getReefAlignState() {
+  
+  public TagAlignState getTagAlignState() {
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
-      return ReefAlignState.ALL_CAMERAS_DEAD;
+      return TagAlignState.ALL_CAMERAS_DEAD;
     }
 
     if (vision.getLeftBackTagResult().isPresent()
@@ -433,15 +435,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         || vision.getRightTagResult().isPresent()
         || vision.getGamePieceTagResult().isPresent()) {
       if (isAligned) {
-        return ReefAlignState.HAS_TAGS_IN_POSITION;
+        return TagAlignState.HAS_TAGS_IN_POSITION;
       }
 
-      return ReefAlignState.HAS_TAGS_WRONG_POSITION;
+      return TagAlignState.HAS_TAGS_WRONG_POSITION;
     }
 
     if (isAligned) {
-      return ReefAlignState.NO_TAGS_IN_POSITION;
+      return TagAlignState.NO_TAGS_IN_POSITION;
     }
-    return ReefAlignState.NO_TAGS_WRONG_POSITION;
+    return TagAlignState.NO_TAGS_WRONG_POSITION;
   }
 }
