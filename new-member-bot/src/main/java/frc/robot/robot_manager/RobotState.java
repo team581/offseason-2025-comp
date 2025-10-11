@@ -1,7 +1,8 @@
 package frc.robot.robot_manager;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
 
 public enum RobotState {
   // Stowed states
