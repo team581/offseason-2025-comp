@@ -423,6 +423,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return isAlignedDebounced;
   }
 
+
   public TagAlignState getTagAlignState() {
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
