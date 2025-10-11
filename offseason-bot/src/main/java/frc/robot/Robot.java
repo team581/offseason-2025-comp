@@ -33,25 +33,11 @@ public class Robot extends Base581Robot {
   private final SingulatorSubsystem singulator =
       new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
-  private final GroundManager groundManager =
+      private final GroundManager groundManager =
       new GroundManager(
-          intake, deploy, singulator, hardware.intakeTopCANdi, hardware.intakeBottomCANdi);
+        intake, deploy, singulator, hardware.intakeTopCANdi, hardware.intakeBottomCANdi);
 
-  private final RobotManager robotManager =
-      new RobotManager(
-          groundManager,
-          null,
-          null,
-          null,
-          null,
-          imu,
-          swerve,
-          localization,
-          null,
-          null,
-          null,
-          null,
-          null);
+  private final RobotManager robotManager = new RobotManager(groundManager, null, null, null, null, imu, swerve, localization, null, null, null, null, null);
 
   private final RobotCommands actions = new RobotCommands(robotManager);
 
