@@ -115,6 +115,10 @@ public enum ReefSide {
     return isRedAlliance ? redPose : bluePose;
   }
 
+  public Pose2d getPose() {
+    return getPose(FmsUtil.isRedAlliance());
+  }
+
   public Pose2d getPose(Pose2d robotPose) {
     return getPose(robotPose.getX() > (17.55 / 2));
   }
