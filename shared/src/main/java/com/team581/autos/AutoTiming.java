@@ -1,4 +1,4 @@
-package frc.robot.autos;
+package com.team581.autos;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;

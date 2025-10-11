@@ -16,12 +16,12 @@ public enum AutoSelection implements AutoSelectionBase {
   LOLLIPOP_AB_LEFT(RedLollipop4PieceR1AB::new, BlueLollipop4PieceR1AB::new),
   LOLLIPOP_AB_RIGHT(RedLollipop4PieceR6AB::new, BlueLollipop4PieceR6AB::new);
 
-  public final BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto;
-  public final BiFunction<RobotManager, Trailblazer, BaseAuto> blueAuto;
+  public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> redAuto;
+  public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> blueAuto;
 
   private AutoSelection(
-      BiFunction<RobotManager, Trailblazer, BaseAuto> redAuto,
-      BiFunction<RobotManager, Trailblazer, BaseAuto> blueAuto) {
+      BiFunction<RobotManager, Trailblazer, BaseCommandAuto> redAuto,
+      BiFunction<RobotManager, Trailblazer, BaseCommandAuto> blueAuto) {
     this.redAuto = redAuto;
     this.blueAuto = blueAuto;
   }

@@ -8,11 +8,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.BaseAuto;
+import frc.robot.autos.BaseCommandAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 
-public class BlueStraightLineAuto extends BaseAuto {
+public class BlueStraightLineAuto extends BaseCommandAuto {
   private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(4.75, 71.5, 8.5, 35.2);
 
@@ -21,7 +21,7 @@ public class BlueStraightLineAuto extends BaseAuto {
   }
 
   @Override
-  protected Pose2d getStartingPose() {
+  public Pose2d getStartingPose() {
     return Points.START_R1_AND_B1_FORWARD.bluePose;
   }
 

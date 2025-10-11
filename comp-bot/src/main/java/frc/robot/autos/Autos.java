@@ -17,8 +17,8 @@ public class Autos extends LifecycleSubsystem {
   private final RobotManager robotManager;
   private final Trailblazer trailblazer;
   private boolean hasEnabledAuto = false;
-  private Pair<AutoSelection, BaseAuto> selectedRed;
-  private Pair<AutoSelection, BaseAuto> selectedBlue;
+  private Pair<AutoSelection, BaseCommandAuto> selectedRed;
+  private Pair<AutoSelection, BaseCommandAuto> selectedBlue;
   private Command autoCommand;
 
   public Autos(RobotManager robotManager, Trailblazer trailblazer) {
