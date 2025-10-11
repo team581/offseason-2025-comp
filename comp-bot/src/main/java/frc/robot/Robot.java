@@ -43,7 +43,7 @@ public class Robot extends Base581Robot {
   private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
+  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
   private final Limelight leftBackLimelight =
       new Limelight("leftb", LimelightState.TAGS, LimelightModel.THREEG, true);
   private final Limelight leftFrontLimelight =
