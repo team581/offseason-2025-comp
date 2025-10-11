@@ -1,13 +1,9 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.ctre.phoenix6.hardware.CANdi;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeployState;
@@ -21,23 +17,18 @@ public class GroundManager extends StateMachine<GroundState> {
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;
 
-  private final CANdi topSensor;
-  private final CANdi bottomSensor;
+  // private final CANdi sensor;
 
-  private final Debouncer topDebouncer = RobotConfig.get().intake().topDebouncer();
-  private final Debouncer bottomDebouncer = RobotConfig.get().intake().bottomDebouncer();
+  // private final Debouncer topDebouncer = RobotConfig.get().intake().debouncer();
 
-  private boolean topRaw = false;
-  private boolean bottomRaw = false;
-  private boolean topDebounced = false;
-  private boolean bottomDebounced = false;
+  private static final boolean RAW = false;
+  private static final boolean DEBOUNCED = false;
+  private static final boolean topDebounced = false;
+  private static final boolean bottomDebounced = false;
 
   public GroundManager(
-      IntakeSubsystem intake,
-      DeploySubsystem deploy,
-      SingulatorSubsystem singulator,
-      CANdi topSensor,
-      CANdi bottomSensor) {
+      IntakeSubsystem intake, DeploySubsystem deploy, SingulatorSubsystem singulator /* ,
+      CANdi sensor */) {
     super(
         SubsystemPriority.GROUND_MANAGER,
         RobotBase.isSimulation() ? GroundState.IDLE_NO_GP : GroundState.DEPLOY_NOT_HOMED);
@@ -45,8 +36,7 @@ public class GroundManager extends StateMachine<GroundState> {
     this.intake = intake;
     this.deploy = deploy;
     this.singulator = singulator;
-    this.topSensor = topSensor;
-    this.bottomSensor = bottomSensor;
+    // this.sensor = sensor;
   }
 
   @Override
@@ -142,20 +132,19 @@ public class GroundManager extends StateMachine<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    topDebounced = topDebouncer.calculate(topRaw);
-    bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+    // topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
+    //  bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    // topDebounced = topDebouncer.calculate(topRaw);
+    // bottomDebounced = bottomDebouncer.calculate(bottomRaw);
   }
 
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("GroundManager/TopSensor/Debounced", topDebounced);
-    DogLog.log("GroundManager/TopSensor/Raw", topRaw);
-    DogLog.log("GroundManager/BottomSensor/Debounced", bottomDebounced);
-    DogLog.log("GroundManager/BottomSensor/Raw", bottomRaw);
+    DogLog.log("GroundManager/Sensor/Debounced", DEBOUNCED);
+    DogLog.log("GroundManager/Sensor/Raw", RAW);
+    DogLog.log("GroundManager/State", getState());
   }
 
   private void setState(GroundState newState) {
@@ -210,10 +199,6 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
-  public void l1WaitRequest() {
-    setState(GroundState.L1_WAIT);
-  }
-
   public void intakeThenHandoffRequest() {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
@@ -223,6 +208,10 @@ public class GroundManager extends StateMachine<GroundState> {
     } else {
       setState(GroundState.HANDOFF_WAIT);
     }
+  }
+
+  public void l1WaitRequest() {
+    setState(GroundState.L1_WAIT);
   }
 
   public void handoffReleaseRequest() {

@@ -170,8 +170,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     var rightJoystickMagnitude =
         ControllerHelpers.getJoystickMagnitude(theta, 0, RIGHT_JOYSTICK_EXPONENT);
 
-    var translation = new Translation2d(leftJoystickMagnitude, new Rotation2d(x, y));
-    var rotation = new Translation2d(rightJoystickMagnitude, new Rotation2d(theta, 0));
+    var translation =
+        new Translation2d(
+            leftJoystickMagnitude, x == 0 && y == 0 ? Rotation2d.kZero : new Rotation2d(x, y));
+    var rotation =
+        new Translation2d(
+            rightJoystickMagnitude, theta == 0 ? Rotation2d.kZero : new Rotation2d(theta, 0));
 
     var leftX = translation.getX();
     var leftY = -1 * translation.getY();
@@ -330,6 +334,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   public Translation2d getControllerValues() {
     if (getState() != SwerveState.REEF_ALIGN) {
+      return Translation2d.kZero;
+    }
+
+    if (rawControllerXValue == 0 && rawControllerYValue == 0) {
       return Translation2d.kZero;
     }
 

@@ -10,6 +10,7 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -28,10 +29,24 @@ public class Robot extends Base581Robot {
       new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
   private final GroundManager groundManager =
-      new GroundManager(
-          intake, deploy, singulator, hardware.intakeTopCANdi, hardware.intakeBottomCANdi);
+      new GroundManager(intake, deploy, singulator /* , hardware.intakeCANdi */);
+  private final RobotManager robotManager =
+      new RobotManager(
+          groundManager,
+          null,
+          null,
+          null,
+          null,
+          imu,
+          swerve,
+          localization,
+          null,
+          null,
+          null,
+          null,
+          null);
 
-  private final RobotCommands actions = new RobotCommands(groundManager);
+  private final RobotCommands actions = new RobotCommands(robotManager, groundManager);
 
   public Robot() {
     logMetadata(
