@@ -19,13 +19,7 @@ public record RobotConfig(
     SwerveConfig swerve) {
 
   public record IntakeConfig(
-      String canBusName,
-      int motorId,
-      int topCaNdiId,
-      int bottomCaNdiId,
-      Debouncer topDebouncer,
-      Debouncer bottomDebouncer,
-      TalonFXConfiguration motorConfig) {}
+      String canBusName, int motorId, Debouncer debouncer, TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
@@ -39,7 +33,6 @@ public record RobotConfig(
       String canBusName,
       int leftMotorId,
       int rightMotorId,
-      int candiId,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig) {}
 
@@ -47,6 +40,8 @@ public record RobotConfig(
       String canBusName,
       int motorId,
       int candiId,
+      double minAngle,
+      double maxAngle,
       double homingVoltage,
       double homingCurrentThreshold,
       double homingEndPosition,

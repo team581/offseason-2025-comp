@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
@@ -25,6 +24,5 @@ public class Hardware {
           RobotConfig.get().singulator().rightMotorId(),
           RobotConfig.get().singulator().canBusName());
 
-  public final CANdi intakeTopCANdi = new CANdi(RobotConfig.get().intake().topCaNdiId());
-  public final CANdi intakeBottomCANdi = new CANdi(RobotConfig.get().intake().bottomCaNdiId());
+  // public final CANdi intakeCANdi = new CANdi(RobotConfig.get().intake().caNdiId());
 }
