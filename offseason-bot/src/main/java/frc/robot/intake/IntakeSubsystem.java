@@ -25,9 +25,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(IntakeState currentState) {
     DogLog.log("Intake/Motor/Current", motor.getStatorCurrent().getValueAsDouble());
   }
 

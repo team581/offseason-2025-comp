@@ -81,9 +81,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(IntakeState currentState) {
     DogLog.log("Intake/RawSensor", sensorRaw);
     DogLog.log("Intake/SensorHasGP", sensorDebounced);
   }
