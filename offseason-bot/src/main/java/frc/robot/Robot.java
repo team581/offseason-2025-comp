@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.team581.Base581Robot;
 import com.team581.controller.RumbleControllerSubsystem;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,7 +24,9 @@ public class Robot extends Base581Robot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrainPigeon);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
-  private final RumbleControllerSubsystem rumble = new RumbleControllerSubsystem(hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
+  private final RumbleControllerSubsystem rumble =
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
   private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
   private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
