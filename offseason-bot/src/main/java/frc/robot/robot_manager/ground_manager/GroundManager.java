@@ -139,7 +139,9 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   @Override
-  public void whileInState(GroundState currentState) {
+  public void robotPeriodic() {
+    super.robotPeriodic();
+
     DogLog.log("GroundManager/Sensor/Debounced", DEBOUNCED);
     DogLog.log("GroundManager/Sensor/Raw", RAW);
     DogLog.log("GroundManager/State", getState());
