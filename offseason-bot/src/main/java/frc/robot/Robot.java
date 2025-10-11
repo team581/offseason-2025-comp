@@ -24,7 +24,9 @@ public class Robot extends Base581Robot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
-  private final RumbleControllerSubsystem rumble = new RumbleControllerSubsystem(hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
+  private final RumbleControllerSubsystem rumble =
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
   private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
   private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
