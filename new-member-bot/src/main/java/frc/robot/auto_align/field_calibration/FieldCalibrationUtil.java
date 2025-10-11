@@ -18,7 +18,8 @@
 // import java.util.stream.Stream;
 
 // /**
-//  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with the
+//  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with
+// the
 //  * "FIELD_CALIBRATION" feature flag.
 //  *
 //  * <p>FIELD_CALIBRATION has the following changes:
@@ -141,7 +142,8 @@
 //     }
 
 //     // Use lights to indicate we are in any valid scoring configuration
-//     lights.setDisabledState(anyOk ? LightsState.SCORE_ALIGN_TAGS : LightsState.SCORE_ALIGN_NO_TAGS);
+//     lights.setDisabledState(anyOk ? LightsState.SCORE_ALIGN_TAGS :
+// LightsState.SCORE_ALIGN_NO_TAGS);
 //   }
 
 //   private static void logAllScoringPositions(boolean isRedAlliance) {
