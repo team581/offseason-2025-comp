@@ -8,7 +8,7 @@ public enum SingulatorState {
 
   STOPPED(0.0),
   IDLE(UNTUNED),
-  INTAKING(UNTUNED),
+  INTAKING(6),
   OUTTAKING(UNTUNED),
   L1_SCORE(UNTUNED),
   HANDOFF(UNTUNED);
@@ -24,10 +24,5 @@ public enum SingulatorState {
   private SingulatorState(double voltsBoth) {
     this.voltsLeft = voltsBoth;
     this.voltsRight = voltsBoth;
-  }
-
-  private SingulatorState(double voltsLeft, double voltsRight) {
-    this.voltsLeft = voltsLeft;
-    this.voltsRight = voltsRight;
   }
 }
