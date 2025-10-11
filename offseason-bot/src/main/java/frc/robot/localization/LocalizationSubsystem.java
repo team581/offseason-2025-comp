@@ -66,9 +66,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(LocalizationState currentState) {
     DogLog.log("Localization/EstimatedPose", getPose());
   }
 

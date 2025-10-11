@@ -40,9 +40,7 @@ public class BaseImuSubsystem extends StateMachine<ImuState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(ImuState currentState) {
     DogLog.log("Imu/RobotHeading", robotHeading);
     DogLog.log("Imu/AngularVelocity", robotAngularVelocity);
   }

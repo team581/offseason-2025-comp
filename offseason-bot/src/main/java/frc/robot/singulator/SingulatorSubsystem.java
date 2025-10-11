@@ -62,9 +62,7 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(SingulatorState currentState) {
     DogLog.log("Singulator/Left/Current", filteredLeftCurrent);
     DogLog.log("Singulator/Right/Current", filteredRightCurrent);
   }
