@@ -1,8 +1,7 @@
 package frc.robot.robot_manager;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 
 public enum RobotState {
   // Stowed states
@@ -20,7 +19,6 @@ public enum RobotState {
 
   ALGAE_INTAKE_L2_HOLDING(false),
   ALGAE_INTAKE_L3_HOLDING(false),
-
 
   ALGAE_OUTTAKE(false),
 
