@@ -998,9 +998,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  protected void whileInState(RobotState currentState) {
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     DogLog.log("CollisionAvoidance/latestUnsafe", latestUnsafe);
     // Continuous state actions

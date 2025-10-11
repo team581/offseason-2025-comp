@@ -61,7 +61,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   }
 
   @Override
-  public void robotPeriodic() {
+  public void whileInState(ElevatorState currentState) {
     DogLog.log("Elevator/Motor/Current", filteredCurrent);
     DogLog.log("Elevator/Height", height);
 

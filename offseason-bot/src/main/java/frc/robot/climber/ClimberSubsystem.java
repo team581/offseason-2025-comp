@@ -49,9 +49,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(ClimberState currentState) {
     switch (getState()) {
       case STOPPED -> {
         if (DriverStation.isDisabled()) {

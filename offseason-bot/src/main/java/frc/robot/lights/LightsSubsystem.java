@@ -43,8 +43,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
+  public void whileInState(LightsState currentState) {
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
     var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {

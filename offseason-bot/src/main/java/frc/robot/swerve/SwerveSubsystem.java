@@ -337,9 +337,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(SwerveState currentState) {
     DogLog.log("Swerve/SnapAngle", goalSnapAngle);
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
