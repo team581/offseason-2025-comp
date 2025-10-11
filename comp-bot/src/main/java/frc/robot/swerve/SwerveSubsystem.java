@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.generated.CompBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants;
@@ -419,7 +420,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     elevatorHeight = height;
   }
 
-  private static PolarChassisSpeeds getDriveToPointSpeeds(Pose2d targetPose, Pose2d currentPose) {
+  private PolarChassisSpeeds getDriveToPointSpeeds(Pose2d targetPose, Pose2d currentPose) {
 
     // Calculate x and y velocities
     double distanceToGoalMeters =
@@ -444,6 +445,26 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     }
 
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
+
+    if (FeatureFlags.DRIVE_TO_POSE_ANGLE_BISECTOR.getAsBoolean()
+        && Math.hypot(fieldRelativeSpeeds.vxMetersPerSecond, fieldRelativeSpeeds.vyMetersPerSecond)
+            > 0.1
+        && distanceToGoalMeters > 0.1) {
+
+      var wantedDirection =
+          180 + MathHelpers.getDriveDirection(currentPose, targetPose).getDegrees();
+      var currentSpeedDirection =
+          Rotation2d.fromRadians(
+                  Math.atan2(
+                      fieldRelativeSpeeds.vyMetersPerSecond, fieldRelativeSpeeds.vxMetersPerSecond))
+              .getDegrees();
+      var bisectedAngle =
+          MathHelpers.angleModulus(wantedDirection - currentSpeedDirection) / 2
+              + currentSpeedDirection;
+      DogLog.log("Swerve/DriveToPoint/WantedDirection", wantedDirection);
+      DogLog.log("Swerve/DriveToPoint/CurrentDirection", currentSpeedDirection);
+      driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
+    }
 
     var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
     DogLog.log("Swerve/DriveToPoint/TargetPose", targetPose);
