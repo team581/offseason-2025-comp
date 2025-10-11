@@ -31,7 +31,8 @@ public class Robot extends Base581Robot {
       new GroundManager(
           intake, deploy, singulator, hardware.intakeTopCANdi, hardware.intakeBottomCANdi);
 
-  private final RobotCommands actions = new RobotCommands(groundManager);
+  // TODO: Add RobotManager
+  private final RobotCommands actions = new RobotCommands(null, groundManager);
 
   public Robot() {
     logMetadata(
