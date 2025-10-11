@@ -50,7 +50,7 @@ public class FeatureFlags {
   public static final BooleanSupplier AUTO_ALIGN_REEF_STATE_COST =
       FeatureFlag.of("AutoAlign/Costs/ReefState", true);
 
-      public static final BooleanSupplier DRIVE_TO_POSE_ANGLE_BISECTOR =
+  public static final BooleanSupplier DRIVE_TO_POSE_ANGLE_BISECTOR =
       FeatureFlag.of("Swerve/AngleBisector", false);
 
   public static final BooleanSupplier SPIN_TO_WIN = FeatureFlag.of("Yapping/SpinToWin", false);
