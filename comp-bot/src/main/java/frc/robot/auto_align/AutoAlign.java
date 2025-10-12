@@ -45,9 +45,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   /**
    * Determines which side of the robot to score algae in net based on the robot's position on the
    * field
-   *
-   * @param robotPose
-   * @return
    */
   public static RobotScoringSide getNetScoringSideFromRobotPose(Pose2d robotPose) {
     double robotX = robotPose.getX();
@@ -86,11 +83,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   /**
    * Determines which side of the robot to score coral on based on the robot's position on the field
    * and which limelights are online
-   *
-   * @param robotPose
-   * @param leftLimelightsOnline
-   * @param rightLimelightOnline
-   * @return
    */
   public static RobotScoringSide getScoringSideFromRobotPose(
       Pose2d robotPose, boolean leftLimelightsOnline, boolean rightLimelightOnline) {
@@ -177,7 +169,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case SAFE_WAITING_LEFT_CENTER -> {
         if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-            < Units.inchesToMeters(8.0)&& MathUtil.isNear(currentTargetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 20.0)) {
+                < Units.inchesToMeters(8.0)
+            && MathUtil.isNear(
+                currentTargetPose.getRotation().getDegrees(),
+                currentPose.getRotation().getDegrees(),
+                20.0)) {
           yield AutoAlignState.SAFE_WAITING_LEFT_RAISING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
           yield AutoAlignState.SAFE_WAITING_RIGHT_CENTER;
@@ -186,7 +182,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case SAFE_WAITING_RIGHT_CENTER -> {
         if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-            < Units.inchesToMeters(8.0)&& MathUtil.isNear(currentTargetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 20.0)) {
+                < Units.inchesToMeters(8.0)
+            && MathUtil.isNear(
+                currentTargetPose.getRotation().getDegrees(),
+                currentPose.getRotation().getDegrees(),
+                20.0)) {
           yield AutoAlignState.SAFE_WAITING_RIGHT_RAISING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           yield AutoAlignState.SAFE_WAITING_LEFT_CENTER;
@@ -214,11 +214,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d findTargetPose() {
     return switch (getState()) {
       case SAFE_PREPARE, SAFE_WAITING ->
-      getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
-      case SAFE_WAITING_LEFT_CENTER -> getClosestReefSide().leftPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
-      case SAFE_WAITING_RIGHT_CENTER -> getClosestReefSide().rightPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
-      case SAFE_WAITING_LEFT_RAISING -> getClosestReefSide().leftPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
-      case SAFE_WAITING_RIGHT_RAISING -> getClosestReefSide().rightPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
+          getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+      case SAFE_WAITING_LEFT_CENTER ->
+          getClosestReefSide().leftPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
+      case SAFE_WAITING_RIGHT_CENTER ->
+          getClosestReefSide().rightPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
+      case SAFE_WAITING_LEFT_RAISING ->
+          getClosestReefSide().leftPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
+      case SAFE_WAITING_RIGHT_RAISING ->
+          getClosestReefSide().rightPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
       case LEFT_PIPE ->
           getClosestReefSide().leftPipe.getPose(currentReefPipeLevel, currentScoringSide);
       case RIGHT_PIPE ->
@@ -301,9 +305,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return translationGood && rotationGood;
   }
 
-  /**
-   * @return true if the robot's rotation is within 10 degrees of the target pose's rotation
-   */
+  /** Returns true if the robot's rotation is within 10 degrees of the target pose's rotation. */
   public boolean isNearRotationGoal() {
     var rotationGood =
         MathUtil.isNear(
