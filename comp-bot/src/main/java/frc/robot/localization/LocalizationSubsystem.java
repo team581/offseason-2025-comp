@@ -1,6 +1,5 @@
 package frc.robot.localization;
 
-
 import com.ctre.phoenix6.Utils;
 import com.team581.math.MathHelpers;
 import com.team581.trailblazer.LocalizationBase;
@@ -29,7 +28,8 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
   private Pose2d robotPose = Pose2d.kZero;
-  private static final DoubleSubscriber LATENCY_CONSTANT = DogLog.tunable("Localization/VisionLatencyConstantMS", 20.0);
+  private static final DoubleSubscriber LATENCY_CONSTANT =
+      DogLog.tunable("Localization/VisionLatencyConstantMS", 20.0);
 
   public LocalizationSubsystem(ImuSubsystem imu, VisionSubsystem vision, SwerveSubsystem swerve) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
@@ -90,7 +90,9 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       resetPose(visionPose);
     }
     swerve.drivetrain.addVisionMeasurement(
-        visionPose, Utils.fpgaToCurrentTime(result.timestamp()-(LATENCY_CONSTANT.getAsDouble()/1000)), result.standardDevs());
+        visionPose,
+        Utils.fpgaToCurrentTime(result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000)),
+        result.standardDevs());
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
