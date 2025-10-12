@@ -135,7 +135,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   private boolean isAligned = false;
   private boolean isAlignedDebounced = false;
-  private boolean pipeSelected = false;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
   private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
@@ -143,7 +142,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private RobotScoringSide currentScoringSide = RobotScoringSide.RIGHT;
   private ReefSideOffset currentAlgaeIntakingReefSideOffset = ReefSideOffset.BASE;
   private ReefPipeLevel currentReefPipeLevel = ReefPipeLevel.L1;
-  private AutoAlignState wantedLeftRightState = AutoAlignState.SAFE_WAITING;
   private Pose2d currentPose = Pose2d.kZero;
   private Pose2d currentTargetPose = Pose2d.kZero;
   private Pose2d autoTargetPoseOverride = new Pose2d();
@@ -164,9 +162,9 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       case SAFE_WAITING -> {
         var wantedState = getWantedPipeSideState(closestReefSide);
         yield wantedState.equals(AutoAlignState.LEFT_PIPE)
-            ? AutoAlignState.SAFE_WAITING_LEFT
+            ? AutoAlignState.SAFE_WAITING_LEFT_CENTER
             : wantedState.equals(AutoAlignState.RIGHT_PIPE)
-                ? AutoAlignState.SAFE_WAITING_RIGHT
+                ? AutoAlignState.SAFE_WAITING_RIGHT_CENTER
                 : currentState;
       }
       case SAFE_PREPARE -> {
@@ -176,6 +174,24 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             : wantedState.equals(AutoAlignState.RIGHT_PIPE)
                 ? AutoAlignState.RIGHT_PIPE
                 : currentState;
+      }
+      case SAFE_WAITING_LEFT_CENTER -> {
+        if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
+            < Units.inchesToMeters(8.0)&& MathUtil.isNear(currentTargetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 20.0)) {
+          yield AutoAlignState.SAFE_WAITING_LEFT_RAISING;
+        } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
+          yield AutoAlignState.SAFE_WAITING_RIGHT_CENTER;
+        }
+        yield currentState;
+      }
+      case SAFE_WAITING_RIGHT_CENTER -> {
+        if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
+            < Units.inchesToMeters(8.0)&& MathUtil.isNear(currentTargetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 20.0)) {
+          yield AutoAlignState.SAFE_WAITING_RIGHT_RAISING;
+        } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
+          yield AutoAlignState.SAFE_WAITING_LEFT_CENTER;
+        }
+        yield currentState;
       }
       default -> currentState;
     };
@@ -197,8 +213,12 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   private Pose2d findTargetPose() {
     return switch (getState()) {
-      case SAFE_PREPARE, SAFE_WAITING, SAFE_WAITING_LEFT, SAFE_WAITING_RIGHT ->
-          getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+      case SAFE_PREPARE, SAFE_WAITING ->
+      getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+      case SAFE_WAITING_LEFT_CENTER -> getClosestReefSide().leftPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
+      case SAFE_WAITING_RIGHT_CENTER -> getClosestReefSide().rightPipe.getPose(ReefPipeLevel.CENTER, currentScoringSide);
+      case SAFE_WAITING_LEFT_RAISING -> getClosestReefSide().leftPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
+      case SAFE_WAITING_RIGHT_RAISING -> getClosestReefSide().rightPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide);
       case LEFT_PIPE ->
           getClosestReefSide().leftPipe.getPose(currentReefPipeLevel, currentScoringSide);
       case RIGHT_PIPE ->
@@ -350,12 +370,12 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   public void setState(AutoAlignState newState) {
     switch (getState()) {
-      case SAFE_WAITING_LEFT -> {
+      case SAFE_WAITING_LEFT_CENTER, SAFE_WAITING_LEFT_RAISING -> {
         if (newState == AutoAlignState.SAFE_PREPARE) {
           setStateFromRequest(AutoAlignState.LEFT_PIPE);
         }
       }
-      case SAFE_WAITING_RIGHT -> {
+      case SAFE_WAITING_RIGHT_CENTER, SAFE_WAITING_RIGHT_RAISING -> {
         if (newState == AutoAlignState.SAFE_PREPARE) {
           setStateFromRequest(AutoAlignState.RIGHT_PIPE);
         }

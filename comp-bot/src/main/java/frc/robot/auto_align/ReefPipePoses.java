@@ -11,6 +11,7 @@ record ReefPipePoses(
     Pose2d leftL3,
     Pose2d leftL4,
     Pose2d leftRaising,
+    Pose2d leftCenter,
     Pose2d leftBackaway,
     Pose2d leftBackawayAuto,
     Pose2d rightL1,
@@ -18,6 +19,7 @@ record ReefPipePoses(
     Pose2d rightL3,
     Pose2d rightL4,
     Pose2d rightRaising,
+    Pose2d rightCenter,
     Pose2d rightBackaway,
     Pose2d rightBackawayAuto) {
   public ReefPipePoses(Pose2d base) {
@@ -28,6 +30,7 @@ record ReefPipePoses(
         base.transformBy(ReefPipeLevel.L3.leftOffset),
         base.transformBy(ReefPipeLevel.L4.leftOffset),
         base.transformBy(ReefPipeLevel.RAISING.leftOffset),
+        base.transformBy(ReefPipeLevel.CENTER.leftOffset),
         base.transformBy(ReefPipeLevel.BACK_AWAY.leftOffset),
         base.transformBy(ReefPipeLevel.BACK_AWAY_AUTO.leftOffset),
         base.transformBy(ReefPipeLevel.L1.rightOffset),
@@ -35,6 +38,7 @@ record ReefPipePoses(
         base.transformBy(ReefPipeLevel.L3.rightOffset),
         base.transformBy(ReefPipeLevel.L4.rightOffset),
         base.transformBy(ReefPipeLevel.RAISING.rightOffset),
+        base.transformBy(ReefPipeLevel.CENTER.rightOffset),
         base.transformBy(ReefPipeLevel.BACK_AWAY.rightOffset),
         base.transformBy(ReefPipeLevel.BACK_AWAY_AUTO.rightOffset));
   }
@@ -47,6 +51,7 @@ record ReefPipePoses(
       case L3 -> leftL3;
       case L4 -> leftL4;
       case RAISING -> leftRaising;
+      case CENTER -> leftCenter;
       case BACK_AWAY -> leftBackaway;
       case BACK_AWAY_AUTO -> leftBackawayAuto;
     };
@@ -60,6 +65,7 @@ record ReefPipePoses(
       case L3 -> rightL3;
       case L4 -> rightL4;
       case RAISING -> rightRaising;
+      case CENTER -> rightCenter;
       case BACK_AWAY -> rightBackaway;
       case BACK_AWAY_AUTO -> rightBackawayAuto;
     };
