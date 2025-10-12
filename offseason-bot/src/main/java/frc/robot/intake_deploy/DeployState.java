@@ -1,5 +1,8 @@
 package frc.robot.intake_deploy;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
+
 public enum DeployState {
   UNTUNED(0.0),
   UNHOMED(UNTUNED),
@@ -12,13 +15,19 @@ public enum DeployState {
   FLOOR_INTAKE(UNTUNED),
   L1_SCORE(UNTUNED);
 
-  public final double angle;
+  private final double defaultAngle;
+  private final DoubleSubscriber tunableAngle;
 
-  private DeployState(DeployState state) {
-    this.angle = state.angle;
+  DeployState(double angle) {
+    this.defaultAngle = angle;
+    this.tunableAngle = DogLog.tunable("Deploy/State/" + name(), angle);
   }
 
-  private DeployState(double angleDeg) {
-    this.angle = angleDeg;
+  DeployState(DeployState other) {
+    this(other.defaultAngle);
+  }
+
+  public double getAngle() {
+    return tunableAngle.get();
   }
 }

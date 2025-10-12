@@ -1,6 +1,7 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -51,6 +52,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
           RobotTunerConstants.FrontRight,
           RobotTunerConstants.BackLeft,
           RobotTunerConstants.BackRight);
+
+  public final Pigeon2 drivetrainPigeon = drivetrain.getPigeon2();
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -345,7 +348,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   }
 
   @Override
-  public void whileInState(SwerveState currentState) {
+  public void robotPeriodic() {
+    super.robotPeriodic();
+
     DogLog.log("Swerve/SnapAngle", goalSnapAngle);
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);

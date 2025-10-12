@@ -1,8 +1,6 @@
 package frc.robot.intake;
 
-import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
@@ -12,27 +10,27 @@ import frc.robot.util.scheduling.SubsystemPriority;
 
 public class IntakeSubsystem extends StateMachine<IntakeState> {
   private final TalonFX motor;
-  private final CANdi candi;
+  // private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().intake().debouncer();
 
   private boolean sensorRaw = false;
 
   private boolean sensorDebounced = false;
 
-  public IntakeSubsystem(TalonFX motor, CANdi candi) {
+  public IntakeSubsystem(TalonFX motor) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
     this.motor = motor;
-    this.candi = candi;
+    //  this.candi = candi;
   }
 
   @Override
   protected void collectInputs() {
 
-    sensorRaw =
-        candi.getS2State().getValue()
-            != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
+    // sensorRaw =
+    //     candi.getS2State().getValue()
+    //        != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
 
     if (RobotBase.isSimulation()) {
       sensorRaw =

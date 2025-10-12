@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.team581.Base581Robot;
+import com.team581.controller.RumbleControllerSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -10,9 +11,11 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
 
 public class Robot extends Base581Robot {
   private final Command autonomousCommand = Commands.none();
@@ -21,6 +24,9 @@ public class Robot extends Base581Robot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
+  private final RumbleControllerSubsystem rumble =
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
   private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
   private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
@@ -28,11 +34,24 @@ public class Robot extends Base581Robot {
       new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
   private final GroundManager groundManager =
-      new GroundManager(
-          intake, deploy, singulator, hardware.intakeTopCANdi, hardware.intakeBottomCANdi);
+      new GroundManager(intake, deploy, singulator /* , hardware.intakeCANdi */);
+  private final RobotManager robotManager =
+      new RobotManager(
+          groundManager,
+          null,
+          null,
+          null,
+          null,
+          imu,
+          swerve,
+          localization,
+          null,
+          null,
+          null,
+          null,
+          rumble);
 
-  // TODO: Add RobotManager
-  private final RobotCommands actions = new RobotCommands(null, groundManager);
+  private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
     logMetadata(
@@ -89,5 +108,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
+    hardware.operatorController.y().onTrue(actions.rehomeDeployCommand());
   }
 }

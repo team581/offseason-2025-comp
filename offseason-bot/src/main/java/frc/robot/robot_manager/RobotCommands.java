@@ -13,8 +13,8 @@ public class RobotCommands {
   private final Subsystem[] gmRequirements;
   private final Subsystem[] bothRequirements;
 
-  public RobotCommands(RobotManager robot, GroundManager groundManager) {
-    this.groundManager = groundManager;
+  public RobotCommands(RobotManager robot) {
+    this.groundManager = robot.groundManager;
     this.robot = robot;
 
     var requirementsList =
