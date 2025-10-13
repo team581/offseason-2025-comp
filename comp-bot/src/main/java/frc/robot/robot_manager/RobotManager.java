@@ -1175,12 +1175,14 @@ public class RobotManager extends StateMachine<RobotState> {
           case LOW_STOW,
               CORAL_L1_PREPARE_HANDOFF,
               CORAL_L1_RELEASE_HANDOFF,
+              CORAL_L1_AFTER_HANDOFF,
               CORAL_L1_RIGHT_APPROACH,
               CORAL_L1_RIGHT_RELEASE ->
               ReefPipeLevel.L1;
 
           case CORAL_L2_PREPARE_HANDOFF,
               CORAL_L2_RELEASE_HANDOFF,
+              CORAL_L2_AFTER_HANDOFF,
               CORAL_L2_LEFT_APPROACH,
               CORAL_L2_RIGHT_APPROACH,
               CORAL_L2_LEFT_RELEASE,
@@ -1189,6 +1191,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
           case CORAL_L3_PREPARE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
+              CORAL_L3_AFTER_HANDOFF,
               CORAL_L3_LEFT_APPROACH,
               CORAL_L3_RIGHT_APPROACH,
               CORAL_L3_LEFT_RELEASE,
@@ -1197,6 +1200,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
           case CORAL_L4_PREPARE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF,
+              CORAL_L4_AFTER_HANDOFF,
               CORAL_L4_LEFT_APPROACH,
               CORAL_L4_RIGHT_APPROACH,
               CORAL_L4_LEFT_RELEASE,
