@@ -142,6 +142,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d currentPose = Pose2d.kZero;
   private Pose2d currentTargetPose = Pose2d.kZero;
   private Pose2d autoTargetPoseOverride = new Pose2d();
+  private boolean useAngleBisector = true;
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -249,10 +250,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
     switch (getState()) {
       case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP -> {
-        swerve.enableDriveToPointAngleBisector(false);
+        useAngleBisector = false;
       }
       default -> {
-        swerve.enableDriveToPointAngleBisector(true);
+        useAngleBisector = true;
       }
     }
   }
@@ -289,6 +290,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
           bestAlgaeSide.getPose(
               currentAlgaeIntakingReefSideOffset, currentScoringSide, currentPose);
     };
+  }
+
+  public boolean useAngleBisector() {
+    return useAngleBisector;
   }
 
   /**
