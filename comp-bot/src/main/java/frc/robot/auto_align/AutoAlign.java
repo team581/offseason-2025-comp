@@ -381,10 +381,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   /**
-   * Checks if the robot's current pose is aligned with the target pose within
-   * thresholds.
+   * Checks if the robot's current pose is aligned with the target pose within thresholds.
    *
-   * <p>In teleop, alignment is only checked when in LEFT_PIPE, RIGHT_PIPE, or BEST_PIPE states to ensure no accidental placing.
+   * <p>In teleop, alignment is only checked when in LEFT_PIPE, RIGHT_PIPE, or BEST_PIPE states to
+   * ensure no accidental placing.
    *
    * @return true if the robot's pose is aligned with the target pose
    */
@@ -581,10 +581,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     currentAlgaeIntakingReefSideOffset = offset;
   }
 
-
-  /**
-   * @return true if the robot is aligned with the target pose, debounced over 0.1 seconds.
-   */
+  /** Returns true if the robot is aligned with the target pose, debounced over 0.1 seconds. */
   public boolean isAligned() {
     return isAlignedDebounced;
   }
