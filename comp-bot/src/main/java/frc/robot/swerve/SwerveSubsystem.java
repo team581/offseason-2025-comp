@@ -121,7 +121,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
 
-
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
   }
@@ -244,7 +243,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
     if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
-      driveToPoseSpeeds = getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+      driveToPoseSpeeds =
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
     }
   }
 
@@ -385,12 +385,12 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     if (DriverStation.isTeleop()) {
       lastDriveToPoseTarget = pose;
       lastUseAngleBisector = useAngleBisector;
-      driveToPoseSpeeds = getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+      driveToPoseSpeeds =
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
       setStateFromRequest(SwerveState.DRIVE_TO_POSE);
       sendSwerveRequest();
     }
   }
-
 
   public void climbRequest(double snapAngle) {
     setSnapToAngle(snapAngle);
@@ -432,7 +432,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     elevatorHeight = height;
   }
 
-  private PolarChassisSpeeds getDriveToPoseSpeeds(Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
+  private PolarChassisSpeeds getDriveToPoseSpeeds(
+      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
 
     // Calculate x and y velocities
     double distanceToGoalMeters =
