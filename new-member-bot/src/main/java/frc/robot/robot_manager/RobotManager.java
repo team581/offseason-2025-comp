@@ -5,7 +5,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -38,9 +37,8 @@ public class RobotManager extends StateMachine<RobotState> {
 
   private Pose2d robotPose = new Pose2d();
   private boolean closeEnoughToReefSide = false;
-  private ReefPipe bestReefPipe = ReefPipe.PIPE_I;
   private ReefSide nearestReefSide = ReefSide.SIDE_IJ;
-  private boolean tagCameraOnline = vision.isAnyTagLimelightOnline();
+  private boolean tagCameraOnline = false;
   private boolean drivingFast = false;
   private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
 
@@ -74,7 +72,6 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   protected void collectInputs() {
     robotPose = localization.getPose();
-    bestReefPipe = autoalign.getBestReefPipe();
     nearestReefSide = autoalign.getClosestReefSide();
     closeEnoughToReefSide = AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(), 1.0);
     tagCameraOnline = vision.isAnyTagLimelightOnline();
@@ -137,6 +134,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY);
+      default -> {}
     }
   }
 }
