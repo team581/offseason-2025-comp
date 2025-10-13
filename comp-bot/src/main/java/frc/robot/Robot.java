@@ -77,7 +77,7 @@ public class Robot extends Base581Robot {
           hardware.climberCANcoder,
           hardware.climberGrabMotor,
           hardware.climberCanrange);
-  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final CoralMap coralMap = new CoralMap(localization, swerve, gamePieceDetectionLimelight);
   private final GroundManager gm = new GroundManager(deploy, intake);
   private final RobotManager robotManager =
