@@ -1025,7 +1025,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L2_RIGHT_HOLDING,
           ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
         if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
-          swerve.driveToPointRequest(autoAlign.getCurrentTargetPose());
+          swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();
         }
@@ -1065,7 +1065,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L3_RIGHT_RELEASE,
           CORAL_L4_RIGHT_RELEASE -> {
         if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
-          swerve.driveToPointRequest(autoAlign.getCurrentTargetPose());
+          swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector());
         } else {
           swerve.normalDriveRequest();
         }
