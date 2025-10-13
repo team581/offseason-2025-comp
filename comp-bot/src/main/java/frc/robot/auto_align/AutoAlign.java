@@ -45,8 +45,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final DoubleSubscriber OBSTRUCTION_DISTANCE =
       DogLog.tunable("AutoAlign/ObstructionDistance", 0.75);
 
-    
-
   /**
    * Determines which side of the robot to score algae in net based on the robot's position on the
    * field
