@@ -136,6 +136,8 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_LEFT_PLACE -> {
         if ((scoringAlignActive || DriverStation.isAutonomous())
             && ((arm.atGoal() && elevator.atGoal()) || timeout(0.15))) {
+          autoAlign.markPipeScored();
+
           yield currentState.getPlaceToReleaseState();
         }
         yield currentState;
@@ -326,7 +328,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
+        autoAlign.approachPipeRequest();
         lights.setState(LightsState.IDLE_EMPTY);
         climber.setState(ClimberState.STOPPED);
       }
@@ -342,8 +344,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
+        autoAlign.approachPipeRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
@@ -352,6 +353,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
         swerve.normalDriveRequest();
+        autoAlign.approachPipeRequest();
 
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -395,7 +397,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
@@ -406,7 +408,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -418,7 +420,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_RIGHT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -432,7 +434,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ArmState.ALGAE_INTAKE_RIGHT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
 
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
@@ -443,7 +445,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -456,7 +458,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -468,7 +470,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -481,7 +483,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.setState(AutoAlignState.ALGAE);
+        autoAlign.algaeRequest();;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
@@ -573,7 +575,7 @@ public class RobotManager extends StateMachine<RobotState> {
         afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
+        autoAlign.approachPipeRequest();
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -585,8 +587,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF, true);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -599,8 +599,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF, true);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -612,8 +610,6 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1);
         swerve.normalDriveRequest();
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
@@ -623,8 +619,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RIGHT_LINEUP_L1, ArmState.CORAL_SCORE_RIGHT_LINEUP_L1);
         swerve.normalDriveRequest();
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
-
+        autoAlign.lineupPipeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
@@ -636,7 +631,7 @@ public class RobotManager extends StateMachine<RobotState> {
             ArmState.CORAL_SCORE_RIGHT_RELEASE_L1,
             true);
         swerve.normalDriveRequest();
-
+        autoAlign.backAwayFromPipeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.SCORING_CORAL);
         climber.setState(ClimberState.STOPPED);
@@ -646,8 +641,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
 
@@ -659,7 +652,8 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+        ;
 
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
@@ -678,7 +672,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_LEFT_RELEASE_L2, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
 
         climber.setState(ClimberState.STOPPED);
@@ -687,7 +681,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
+
 
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -697,7 +691,8 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_RIGHT_LINEUP_L2);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+        ;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -718,7 +713,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_RIGHT_RELEASE_L2, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
@@ -727,7 +722,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
 
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -737,7 +731,8 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+        ;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(getLightStateForScoring());
@@ -758,7 +753,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
         autoAlign.markAlgaeRemoved();
         climber.setState(ClimberState.STOPPED);
@@ -767,8 +762,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
 
@@ -778,7 +771,8 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_RIGHT_LINEUP_L3);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+        ;
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -790,7 +784,6 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_RIGHT_RELEASE_L3, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
       }
@@ -799,7 +792,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_RIGHT_RELEASE_L3, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
         autoAlign.markAlgaeRemoved();
 
@@ -810,8 +803,6 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
-
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
 
@@ -823,7 +814,8 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4);
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+        ;
         lights.setState(getLightStateForScoring());
 
         climber.setState(ClimberState.STOPPED);
@@ -842,7 +834,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_LEFT_RELEASE_L4, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
 
         climber.setState(ClimberState.STOPPED);
@@ -851,7 +843,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4);
-        autoAlign.setState(AutoAlignState.SAFE_WAITING);
+
 
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -862,7 +854,8 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_RIGHT_LINEUP_L4);
-        autoAlign.setState(AutoAlignState.SAFE_PREPARE);
+        autoAlign.lineupPipeRequest();
+
 
         vision.setState(VisionState.CLOSEST_REEF_TAG);
 
@@ -883,7 +876,7 @@ public class RobotManager extends StateMachine<RobotState> {
         moveSuperstructure(
             ElevatorState.CORAL_SCORE_RELEASE_L4, ArmState.CORAL_SCORE_RIGHT_RELEASE_L4, true);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
+        autoAlign.backAwayFromPipeRequest();
         lights.setState(LightsState.SCORING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
@@ -1179,34 +1172,33 @@ public class RobotManager extends StateMachine<RobotState> {
           case LOW_STOW,
               CORAL_L1_PREPARE_HANDOFF,
               CORAL_L1_RELEASE_HANDOFF,
-              CORAL_L1_RIGHT_APPROACH ->
+              CORAL_L1_RIGHT_APPROACH,
+              CORAL_L1_RIGHT_RELEASE ->
               ReefPipeLevel.L1;
 
           case CORAL_L2_PREPARE_HANDOFF,
               CORAL_L2_RELEASE_HANDOFF,
               CORAL_L2_LEFT_APPROACH,
-              CORAL_L2_RIGHT_APPROACH ->
+              CORAL_L2_RIGHT_APPROACH,
+              CORAL_L2_LEFT_RELEASE,
+              CORAL_L2_RIGHT_RELEASE ->
               ReefPipeLevel.L2;
 
           case CORAL_L3_PREPARE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
               CORAL_L3_LEFT_APPROACH,
-              CORAL_L3_RIGHT_APPROACH ->
+              CORAL_L3_RIGHT_APPROACH,
+              CORAL_L3_LEFT_RELEASE,
+              CORAL_L3_RIGHT_RELEASE ->
               ReefPipeLevel.L3;
 
           case CORAL_L4_PREPARE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF,
               CORAL_L4_LEFT_APPROACH,
-              CORAL_L4_RIGHT_APPROACH ->
-              ReefPipeLevel.L4;
-
-          case CORAL_L2_LEFT_RELEASE,
-              CORAL_L2_RIGHT_RELEASE,
-              CORAL_L3_LEFT_RELEASE,
-              CORAL_L3_RIGHT_RELEASE,
+              CORAL_L4_RIGHT_APPROACH,
               CORAL_L4_LEFT_RELEASE,
               CORAL_L4_RIGHT_RELEASE ->
-              ReefPipeLevel.BACK_AWAY;
+              ReefPipeLevel.L4;
 
           case CORAL_L2_LEFT_LINEUP,
               CORAL_L2_LEFT_PLACE,
@@ -1682,6 +1674,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RIGHT_LINEUP,
           CORAL_L3_RIGHT_LINEUP,
           CORAL_L4_RIGHT_LINEUP -> {
+        autoAlign.markPipeScored();
         setStateFromRequest(getState().getLineupToPlaceState());
       }
 
@@ -1691,6 +1684,8 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L2_RIGHT_PLACE,
           CORAL_L3_RIGHT_PLACE,
           CORAL_L4_RIGHT_PLACE -> {
+        autoAlign.markPipeScored();
+
         setStateFromRequest(getState().getPlaceToReleaseState());
       }
 
