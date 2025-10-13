@@ -340,6 +340,13 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return getState();
   }
 
+  /**
+   * Calculates a target pose that is centered with the specified pipe, based on the forward
+   * distance of the current pose.
+   *
+   * @param pipe The reef pipe to center on.
+   * @return The target pose centered with the specified pipe.
+   */
   private Pose2d getCenterPoseFromRobotDistance(ReefPipe pipe) {
     var pipePose = pipe.getPose(ReefPipeLevel.RAISING, currentScoringSide, currentPose);
     var robotRelativePipeTranslation =
@@ -347,7 +354,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 currentPose.getTranslation().minus(pipePose.getTranslation()),
                 pipePose.getRotation())
             .rotateBy(pipePose.getRotation().unaryMinus());
-    DogLog.log("Debug/RobotRelativePipeTranslation", robotRelativePipeTranslation);
     var forwardDistanceToPipe = robotRelativePipeTranslation.getY();
 
     // When going around to a different side of the reef, we want to approach from further away
@@ -372,10 +378,17 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 : clampedDistance,
             Rotation2d.fromDegrees(0));
     var targetPose = pipePose.plus(poseTransform);
-    DogLog.log("Debug/TargetPose", targetPose);
     return targetPose;
   }
 
+  /**
+   * Checks if the robot's current pose is aligned with the target pose within
+   * thresholds.
+   *
+   * <p>In teleop, alignment is only checked when in LEFT_PIPE, RIGHT_PIPE, or BEST_PIPE states to ensure no accidental placing.
+   *
+   * @return true if the robot's pose is aligned with the target pose
+   */
   private boolean isRobotPoseAlignedWithTargetPose() {
     if (DriverStation.isTeleop()
         && (!getState().equals(AutoAlignState.LEFT_PIPE)
@@ -427,14 +440,21 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return reefState.isAlgaeRemoved(side);
   }
 
+  /**
+   * Checks if algae has been removed from the closest reef side.
+   *
+   * @return true if algae has been removed from the closest reef side
+   */
   public boolean isAlgaeRemoved() {
     return isAlgaeRemoved(closestReefSide);
   }
 
+  /** Clears the reef state, marking all algae as present and all pipes as unscored. */
   public void clearReefState() {
     reefState.clear();
   }
 
+  /** Marks algae as removed from the closest reef side. */
   public void markAlgaeRemoved() {
     reefState.markAlgaeRemoved(closestReefSide);
   }
@@ -444,6 +464,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     reefState.markCoralScored(getClosestReefPipe(), currentReefPipeLevel);
   }
 
+  /** Finds the closest reef side to the robot's current position. */
   public ReefSide getClosestReefSide() {
     return ALL_REEF_SIDES.stream()
         .min(
@@ -459,6 +480,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   /** Finds the best pipe to score on based on alignment cost and reef state. */
   public ReefPipe getBestPipeForScoring() {
+    if (currentReefPipeLevel == ReefPipeLevel.L1) {
+      // TODO: Update for L1 auto align
+      return getClosestReefPipe();
+    }
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(currentReefPipeLevel))
         .orElseThrow();
@@ -487,10 +512,12 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return ALL_REEF_SIDES.stream().min(alignmentCostUtil.getAlgaeComparator()).orElseThrow();
   }
 
+  /** Switches into algae state */
   public void algaeRequest() {
     setStateFromRequest(AutoAlignState.ALGAE);
   }
 
+  /** Switches into correct approach state based on explicitSelection value */
   public void approachPipeRequest() {
     if (explicitSelection) {
       setStateFromRequest(AutoAlignState.EXPLICIT_SAFE_WAITING);
@@ -499,6 +526,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     }
   }
 
+  /** Switches into correct pipe side state based on current approach state */
   public void lineupPipeRequest() {
     switch (getState()) {
       case EXPLICIT_LEFT_CENTER, EXPLICIT_LEFT_WAITING -> {
@@ -517,6 +545,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     }
   }
 
+  /** Switches into pipe backup state for after placing coral */
   public void backAwayFromPipeRequest() {
     setStateFromRequest(AutoAlignState.PIPE_BACKUP);
   }
@@ -542,15 +571,21 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return ObstructionKind.NONE;
   }
 
+  /** Sets the current scoring level and side for alignment calculations. */
   public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
     currentScoringSide = side;
     currentReefPipeLevel = level;
   }
 
+  /** Sets the current algae intaking offset for alignment calculations. */
   public void setReefAlgaeIntakingOffset(ReefSideOffset offset) {
     currentAlgaeIntakingReefSideOffset = offset;
   }
 
+
+  /**
+   * @return true if the robot is aligned with the target pose, debounced over 0.1 seconds.
+   */
   public boolean isAligned() {
     return isAlignedDebounced;
   }
