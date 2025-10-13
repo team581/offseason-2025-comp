@@ -340,8 +340,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   private Pose2d getCenterPoseFromRobotDistance(ReefPipe pipe) {
-    var pipePose = pipe.getPose(ReefPipeLevel.L2, currentScoringSide, currentPose);
-    DogLog.log("Debug/PipePose", pipePose);
+    var pipePose = pipe.getPose(ReefPipeLevel.RAISING, currentScoringSide, currentPose);
     var robotRelativePipeTranslation =
         new Pose2d(
                 currentPose.getTranslation().minus(pipePose.getTranslation()),
@@ -349,21 +348,28 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
             .rotateBy(pipePose.getRotation().unaryMinus());
     DogLog.log("Debug/RobotRelativePipeTranslation", robotRelativePipeTranslation);
     var forwardDistanceToPipe = robotRelativePipeTranslation.getY();
-    DogLog.log("Debug/ForwardDistanceToPipe", forwardDistanceToPipe);
 
-    // scoring on left side of robot, so move back along negative x axis
+    // When going around to a different side of the reef, we want to approach from further away
+    var minDist = 0.1;
+    if (!explicitSelection && ReefSide.fromPipe(bestPipe) != closestReefSide) {
+      minDist = 0.4;
+    }
 
+    // Clamp the distance to make it faster to approach if we're far away
     var clampedDistance =
         MathUtil.clamp(
             currentScoringSide.equals(RobotScoringSide.LEFT)
                 ? forwardDistanceToPipe * -1
                 : forwardDistanceToPipe,
-            0,
-            1.5);
-    DogLog.log("Debug/ClampedDistance", clampedDistance);
+            minDist,
+            1.2);
     var poseTransform =
         new Transform2d(
-            0, Math.copySign(clampedDistance, forwardDistanceToPipe), Rotation2d.fromDegrees(0));
+            0,
+            currentScoringSide.equals(RobotScoringSide.LEFT)
+                ? clampedDistance * -1
+                : clampedDistance,
+            Rotation2d.fromDegrees(0));
     var targetPose = pipePose.plus(poseTransform);
     DogLog.log("Debug/TargetPose", targetPose);
     return targetPose;
