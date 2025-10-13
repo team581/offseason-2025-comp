@@ -1,6 +1,5 @@
 package frc.robot.auto_align;
 
-import com.team581.auto_align.TagAlignState;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.math.PoseErrorTolerance;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;

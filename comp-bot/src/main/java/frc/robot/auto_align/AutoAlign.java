@@ -1,6 +1,5 @@
 package frc.robot.auto_align;
 
-import com.team581.auto_align.TagAlignState;
 import com.google.common.collect.ImmutableList;
 import com.team581.auto_align.TagAlignState;
 import com.team581.math.MathHelpers;
