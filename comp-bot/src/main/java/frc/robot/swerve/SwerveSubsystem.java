@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.generated.CompBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants;
@@ -48,6 +47,11 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
       DogLog.tunable("Swerve/DriveToPoint/TranslationFF", 0.0);
   private static final DoubleSubscriber DRIVE_TO_POINT_ROTATION_FF =
       DogLog.tunable("Swerve/DriveToPoint/RotationFF", 0.0);
+  private static final DoubleSubscriber MAX_TRANSLATION_VELOCITY_LIMIT =
+      DogLog.tunable("Swerve/DriveToPoint/MaxTranslationVelMet", 4.75);
+
+  private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
+      DogLog.tunable("Swerve/DriveToPoint/MaxRotationVelRot", 4.0);
 
   public static final double MaxSpeed = 4.75;
   private static final double maxAngularRate = Units.rotationsToRadians(4);
@@ -115,6 +119,8 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
+
+  private boolean driveToPointUseAngleBisector = false;
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
@@ -380,6 +386,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     }
   }
 
+  public void enableDriveToPointAngleBisector(boolean enable) {
+    driveToPointUseAngleBisector = enable;
+  }
+
   public void climbRequest(double snapAngle) {
     setSnapToAngle(snapAngle);
     setStateFromRequest(SwerveState.CLIMBING);
@@ -446,7 +456,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
     var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
 
-    if (FeatureFlags.DRIVE_TO_POSE_ANGLE_BISECTOR.getAsBoolean()
+    if (driveToPointUseAngleBisector
         && Math.hypot(fieldRelativeSpeeds.vxMetersPerSecond, fieldRelativeSpeeds.vyMetersPerSecond)
             > 0.1
         && distanceToGoalMeters > 0.1) {
@@ -465,6 +475,17 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
       DogLog.log("Swerve/DriveToPoint/CurrentDirection", currentSpeedDirection);
       driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
     }
+
+    driveVelocityMagnitude =
+        MathUtil.clamp(
+            driveVelocityMagnitude,
+            -MAX_TRANSLATION_VELOCITY_LIMIT.get(),
+            MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    rotationSpeed =
+        MathUtil.clamp(
+            rotationSpeed,
+            Units.rotationsToRadians(-MAX_ROTATION_VELOCITY_LIMIT_ROT.get()),
+            Units.rotationsToRadians(MAX_ROTATION_VELOCITY_LIMIT_ROT.get()));
 
     var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
     DogLog.log("Swerve/DriveToPoint/TargetPose", targetPose);
