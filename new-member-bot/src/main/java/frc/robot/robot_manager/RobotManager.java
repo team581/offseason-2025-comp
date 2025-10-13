@@ -123,9 +123,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void climberSequenceForward() {
     switch (getState()) {
-      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
+      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
 
