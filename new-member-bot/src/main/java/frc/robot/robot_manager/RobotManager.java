@@ -5,7 +5,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -124,9 +123,9 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void climberSequenceForward() {
     switch (getState()) {
-      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
+      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
     }
   }
 
