@@ -249,17 +249,17 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
     if (!explicitSelection) {
       bestPipe = getBestPipeForScoring();
+      DogLog.log("AutoAlign/BestPipe", bestPipe);
     }
     alignmentCostUtil.setSide(currentScoringSide);
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
-    DogLog.log("AutoAlign/BestPipe", bestPipe);
-    DogLog.log("AutoAlign/JoystickReachedCenter", driverJoystickReachedCenter);
+    DogLog.log("AutoAlign/PoleSelectioin/JoystickReachedCenter", driverJoystickReachedCenter);
     var controllerValues = swerve.getControllerValues();
     rawControllerXValue = controllerValues.getX();
     rawControllerYValue = controllerValues.getY();
-    DogLog.log("AutoAlign/RawControllerX", rawControllerXValue);
-    DogLog.log("AutoAlign/RawControllerY", rawControllerYValue);
-    DogLog.log("AutoAlign/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
+    DogLog.log("AutoAlign/PoleSelectioin/RawControllerX", rawControllerXValue);
+    DogLog.log("AutoAlign/PoleSelectioin/RawControllerY", rawControllerYValue);
+    DogLog.log("AutoAlign/PoleSelectioin/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
 
     // Only allow switching pipe sides if the driver has let the joystick return to center
     // Resets when entering BEST_PIPE_CENTER or EXPLICIT_SAFE_WAITING
