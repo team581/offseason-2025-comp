@@ -358,7 +358,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   public Translation2d getControllerValues() {
 
-
     return new Translation2d(
         ControllerHelpers.getJoystickMagnitude(
             rawControllerXValue, rawControllerYValue, LEFT_JOYSTICK_EXPONENT),

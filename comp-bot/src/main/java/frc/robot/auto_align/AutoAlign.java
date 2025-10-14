@@ -261,7 +261,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     DogLog.log("AutoAlign/RawControllerY", rawControllerYValue);
     DogLog.log("AutoAlign/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
 
-
     // Only allow switching pipe sides if the driver has let the joystick return to center
     // Resets when entering BEST_PIPE_CENTER or EXPLICIT_SAFE_WAITING
     if (Math.hypot(rawControllerXValue, rawControllerYValue) < 0.3) {
@@ -339,7 +338,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       return getState();
     }
 
-    if (driverJoystickReachedCenter&&(Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
+    if (driverJoystickReachedCenter
+        && (Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
       var inputVector = new Translation2d(rawControllerXValue, -rawControllerYValue);
       var viewOffset = 0;
       if (FmsUtil.isRedAlliance()) {
