@@ -151,7 +151,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
     }
 
     driveToAngle.HeadingController.setTolerance(0.01);
-
+    DRIVE_TO_POSE_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
     drivetrain.setStateStdDevs(new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002)));
     timeSinceAutoSpeeds.start();
   }
