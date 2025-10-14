@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.tag_align.AlignmentCostUtil;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.collision_avoidance.ObstructionKind;
+import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
@@ -142,6 +143,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d currentTargetPose = Pose2d.kZero;
   private Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
+  private boolean driverJoystickReachedCenter = false;
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -229,6 +231,14 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   }
 
   @Override
+  protected void beforeTransition(AutoAlignState oldState, AutoAlignState newState) {
+    if (newState == AutoAlignState.BEST_PIPE_CENTER
+        || newState == AutoAlignState.EXPLICIT_SAFE_WAITING) {
+      driverJoystickReachedCenter = false;
+    }
+  }
+
+  @Override
   protected void collectInputs() {
     currentPose = localization.getPose();
     bestAlgaeSide = getBestAlgaeSide();
@@ -243,14 +253,26 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     alignmentCostUtil.setSide(currentScoringSide);
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
     DogLog.log("AutoAlign/BestPipe", bestPipe);
+    DogLog.log("AutoAlign/JoystickReachedCenter", driverJoystickReachedCenter);
     var controllerValues = swerve.getControllerValues();
     rawControllerXValue = controllerValues.getX();
     rawControllerYValue = controllerValues.getY();
+    DogLog.log("AutoAlign/RawControllerX", rawControllerXValue);
+    DogLog.log("AutoAlign/RawControllerY", rawControllerYValue);
+    DogLog.log("AutoAlign/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
+
+
+    // Only allow switching pipe sides if the driver has let the joystick return to center
+    // Resets when entering BEST_PIPE_CENTER or EXPLICIT_SAFE_WAITING
+    if (Math.hypot(rawControllerXValue, rawControllerYValue) < 0.3) {
+      driverJoystickReachedCenter = true;
+    }
 
     switch (getState()) {
       case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP -> {
         useAngleBisector = false;
       }
+
       default -> {
         useAngleBisector = true;
       }
@@ -313,11 +335,11 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
    * @return The desired AutoAlignState based on controller input.
    */
   private AutoAlignState getWantedPipeSideState(ReefSide closestSide) {
-    if (!DriverStation.isTeleop()) {
+    if (!DriverStation.isTeleop() || !swerve.getState().equals(SwerveState.DRIVE_TO_POSE)) {
       return getState();
     }
 
-    if ((Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
+    if (driverJoystickReachedCenter&&(Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
       var inputVector = new Translation2d(rawControllerXValue, -rawControllerYValue);
       var viewOffset = 0;
       if (FmsUtil.isRedAlliance()) {
@@ -518,6 +540,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   /** Switches into correct approach state based on explicitSelection value */
   public void approachPipeRequest() {
+    driverJoystickReachedCenter = false;
     if (explicitSelection) {
       setStateFromRequest(AutoAlignState.EXPLICIT_SAFE_WAITING);
     } else {
