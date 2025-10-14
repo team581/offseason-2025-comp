@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.networktables.DoubleSubscriber;
 
 public enum ElevatorState {
-
   UNTUNED(0),
   PRE_MATCH_HOMING(UNTUNED),
   STOWED(0),
