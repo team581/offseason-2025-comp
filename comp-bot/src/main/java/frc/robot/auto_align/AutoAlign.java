@@ -259,7 +259,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     rawControllerYValue = controllerValues.getY();
     DogLog.log("AutoAlign/PoleSelectioin/RawControllerX", rawControllerXValue);
     DogLog.log("AutoAlign/PoleSelectioin/RawControllerY", rawControllerYValue);
-    DogLog.log("AutoAlign/PoleSelectioin/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
+    DogLog.log(
+        "AutoAlign/PoleSelectioin/Hypot", Math.hypot(rawControllerXValue, rawControllerYValue));
 
     // Only allow switching pipe sides if the driver has let the joystick return to center
     // Resets when entering BEST_PIPE_CENTER or EXPLICIT_SAFE_WAITING
