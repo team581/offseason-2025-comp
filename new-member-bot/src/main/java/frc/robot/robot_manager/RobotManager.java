@@ -47,6 +47,9 @@ public class RobotManager extends StateMachine<RobotState> {
     return switch (currentState) {
       case CLAW_EMPTY,
           CLAW_ALGAE,
+          CLAW_CORAL,
+          CORAL_L1_WAIT,
+          CORAL_OUTTAKE,
           ALGAE_NET_WAITING,
           ALGAE_PROCESSOR_WAITING,
           CLIMBER_STOP,
@@ -54,6 +57,12 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_2_HANGING,
           UNJAM ->
           currentState;
+
+      case CORAL_L1_SCORE -> currentState;
+
+      case CORAL_INTAKE_GROUND -> currentState;
+
+      case ALGAE_NET_RELEASE, ALGAE_PROCESSOR_RELEASE -> currentState;
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
           closeEnoughToReefSide ? currentState.getNextAlgaeIntakeState() : currentState;
@@ -121,6 +130,48 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFailsafe(RobotState.ALGAE_INTAKE_L3_APPROACH);
   }
 
+  public void netWaitRequest() {
+    setStateFailsafe(RobotState.ALGAE_NET_WAITING);
+  }
+
+  public void processorWaitRequest() {
+    setStateFailsafe(RobotState.ALGAE_PROCESSOR_WAITING);
+  }
+
+  public void l1WaitRequest() {
+    setStateFailsafe(RobotState.CORAL_L1_WAIT);
+  }
+
+  public void confirmScoreRequest() {
+    switch (getState()) {
+      case ALGAE_INTAKE_FLOOR,
+      ALGAE_INTAKE_L2,
+      ALGAE_INTAKE_L2_APPROACH,
+      ALGAE_INTAKE_L2_HOLDING,
+      ALGAE_INTAKE_L3,
+      ALGAE_INTAKE_L3_APPROACH,
+      ALGAE_INTAKE_L3_HOLDING,
+      ALGAE_NET_RELEASE,
+      ALGAE_OUTTAKE,
+      ALGAE_PROCESSOR_RELEASE,
+      CLIMBER_STOP,
+      CLIMBING_1_LINEUP,
+      CLIMBING_2_HANGING,
+      CORAL_INTAKE_GROUND,
+      CORAL_L1_SCORE,
+      CORAL_OUTTAKE,
+      REHOME_ELEVATOR,
+      UNJAM -> {}
+
+      case CLAW_ALGAE -> netWaitRequest();
+      case CLAW_CORAL -> l1WaitRequest();
+
+      case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
+      case ALGAE_PROCESSOR_WAITING -> setStateFailsafe(RobotState.ALGAE_PROCESSOR_RELEASE);
+      case CORAL_L1_WAIT -> setStateFailsafe(RobotState.CORAL_L1_SCORE);
+    }
+  }
+
   public void climberSequenceForward() {
     switch (getState()) {
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
@@ -131,6 +182,7 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void climberSequenceBack() {
     switch (getState()) {
+      default -> {}
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY);

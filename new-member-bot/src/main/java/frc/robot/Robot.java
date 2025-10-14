@@ -1,9 +1,35 @@
 package frc.robot;
 
 import com.team581.Base581Robot;
+import com.team581.controller.RumbleControllerSubsystem;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.generated.BuildConstants;
+import frc.robot.imu.ImuSubsystem;
+import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
+import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
 
 public class Robot extends Base581Robot {
+  private final Command autonomousCommand = Commands.none();
+  private final Hardware hardware = new Hardware();
+
+  private final SwerveSubsystem swerve = new SwerveSubsystem();
+  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain.getPigeon2());
+  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
+  private final RumbleControllerSubsystem rumble =
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
+
+  private final RobotManager robotManager =
+      new RobotManager(localization, null, null, swerve);
+
+  private final RobotCommands actions = new RobotCommands(robotManager);
+
   public Robot() {
     logMetadata(
         BuildConstants.MAVEN_NAME,
@@ -17,5 +43,47 @@ public class Robot extends Base581Robot {
   }
 
   @Override
-  protected void configureBindings() {}
+  public void robotPeriodic() {
+    super.robotPeriodic();
+
+    // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+    //   fieldCalibrationUtil.log();
+    // }
+  }
+
+  @Override
+  public void autonomousInit() {
+    super.autonomousInit();
+
+    // autonomousCommand = autos.getAutoCommand();
+    // autonomousCommand.schedule();
+  }
+
+  @Override
+  public void teleopInit() {
+    super.teleopInit();
+
+    autonomousCommand.cancel();
+  }
+
+  @Override
+  protected void configureBindings() {
+    swerve.setDefaultCommand(
+        swerve
+            .run(
+                () -> {
+                  if (DriverStation.isTeleop()) {
+                    swerve.driveTeleop(
+                        hardware.driverController.getLeftX(),
+                        hardware.driverController.getLeftY(),
+                        hardware.driverController.getRightX());
+                  }
+                })
+            .ignoringDisable(true)
+            .withName("DefaultSwerveCommand"));
+
+    // hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
+    // hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+    hardware.driverController.back().onTrue(localization.getZeroCommand());
+  }
 }
