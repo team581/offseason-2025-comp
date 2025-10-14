@@ -145,23 +145,23 @@ public class RobotManager extends StateMachine<RobotState> {
   public void confirmScoreRequest() {
     switch (getState()) {
       case ALGAE_INTAKE_FLOOR,
-      ALGAE_INTAKE_L2,
-      ALGAE_INTAKE_L2_APPROACH,
-      ALGAE_INTAKE_L2_HOLDING,
-      ALGAE_INTAKE_L3,
-      ALGAE_INTAKE_L3_APPROACH,
-      ALGAE_INTAKE_L3_HOLDING,
-      ALGAE_NET_RELEASE,
-      ALGAE_OUTTAKE,
-      ALGAE_PROCESSOR_RELEASE,
-      CLIMBER_STOP,
-      CLIMBING_1_LINEUP,
-      CLIMBING_2_HANGING,
-      CORAL_INTAKE_GROUND,
-      CORAL_L1_SCORE,
-      CORAL_OUTTAKE,
-      REHOME_ELEVATOR,
-      UNJAM -> {}
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L2_APPROACH,
+          ALGAE_INTAKE_L2_HOLDING,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L3_APPROACH,
+          ALGAE_INTAKE_L3_HOLDING,
+          ALGAE_NET_RELEASE,
+          ALGAE_OUTTAKE,
+          ALGAE_PROCESSOR_RELEASE,
+          CLIMBER_STOP,
+          CLIMBING_1_LINEUP,
+          CLIMBING_2_HANGING,
+          CORAL_INTAKE_GROUND,
+          CORAL_L1_SCORE,
+          CORAL_OUTTAKE,
+          REHOME_ELEVATOR,
+          UNJAM -> {}
 
       case CLAW_ALGAE -> netWaitRequest();
       case CLAW_CORAL -> l1WaitRequest();
@@ -182,10 +182,10 @@ public class RobotManager extends StateMachine<RobotState> {
 
   public void climberSequenceBack() {
     switch (getState()) {
-      default -> {}
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY);
+      default -> {}
     }
   }
 }
