@@ -24,7 +24,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
     this.motor = motor;
-     this.candi = candi;
+    this.candi = candi;
   }
 
   @Override
@@ -32,7 +32,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
 
     sensorRaw =
         candi.getS2State().getValue()
-           != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
+            != (RobotConfig.IS_PRACTICE_BOT ? S2StateValue.Low : S2StateValue.High);
 
     if (RobotBase.isSimulation()) {
       sensorRaw =
