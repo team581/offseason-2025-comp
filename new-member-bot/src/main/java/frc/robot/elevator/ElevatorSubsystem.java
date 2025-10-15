@@ -12,18 +12,19 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
+public class ElevatorSubsystem extends StateMachine<ElevatorState> {
   private static final double TOLERANCE = 0;
   private static final double NEAR_TOLERANCE = 0;
 
   private static double clampHeight(double height) {
-    return MathUtil.clamp(height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
+    return MathUtil.clamp(
+        height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
   }
 
   private final TalonFX motor;
 
   private final MotionMagicVoltage positionRequest =
-    new MotionMagicVoltage(ElevatorState.STOWED.getHeight());
+      new MotionMagicVoltage(ElevatorState.STOWED.getHeight());
 
   private double height = 0;
   private double lowestSeenHeight = Double.POSITIVE_INFINITY;
@@ -38,18 +39,20 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
 
     TunablePid.of("Elevator/motor", motor, RobotConfig.get().elevator().motorConfig());
   }
-    public void setState(ElevatorState newState){
-      switch (getState()) {
-        case PRE_MATCH_HOMING -> {
-          if (DriverStation.isEnabled()) {
-            setStateFromRequest(newState);
-          }
-        }
-        default -> {
+
+  public void setState(ElevatorState newState) {
+    switch (getState()) {
+      case PRE_MATCH_HOMING -> {
+        if (DriverStation.isEnabled()) {
           setStateFromRequest(newState);
+        }
+      }
+      default -> {
+        setStateFromRequest(newState);
       }
     }
   }
+
   public double getHeight() {
     return height;
   }
@@ -64,7 +67,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
   }
 
   @Override
-  protected void afterTransition(ElevatorState newState){
+  protected void afterTransition(ElevatorState newState) {
     switch (newState) {
       default -> {
         motor.setControl(positionRequest.withPosition(clampHeight(newState.getHeight())));
@@ -72,16 +75,16 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
     }
   }
 
-  public void customPeriodic(){
+  public void customPeriodic() {
     DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Height", height);
     DogLog.log("Elevator/AtGoal", atGoal());
 
-    switch(getState()) {
+    switch (getState()) {
       default -> {}
     }
 
-    if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()){
+    if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       motor.setControl(coastRequest);
     }
   }
@@ -91,11 +94,13 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
     DogLog.log("Elevator/OldState", oldState);
     DogLog.log("Elevator/NewState", newState);
 
-    if (oldState == ElevatorState.PRE_MATCH_HOMING && newState != ElevatorState.PRE_MATCH_HOMING && DriverStation.isEnabled()){
+    if (oldState == ElevatorState.PRE_MATCH_HOMING
+        && newState != ElevatorState.PRE_MATCH_HOMING
+        && DriverStation.isEnabled()) {
       double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
-      var homedHeight = homingEndHeight + (height - lowestSeenHeight);
     }
   }
+
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING, UNJAM -> true;
@@ -127,7 +132,6 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState>  {
     if (DriverStation.isDisabled()) {
       return;
     }
-
   }
 
   @Override
