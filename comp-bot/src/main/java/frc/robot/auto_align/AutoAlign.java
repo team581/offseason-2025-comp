@@ -488,6 +488,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   /** Finds the closest reef side to the robot's current position. */
   public ReefSide getClosestReefSide() {
+    return getClosestReefSide(currentPose, currentScoringSide);
+  }
+
+  public static ReefSide getClosestReefSide(Pose2d currentPose, RobotScoringSide currentScoringSide) {
     return ALL_REEF_SIDES.stream()
         .min(
             Comparator.comparingDouble(
