@@ -11,8 +11,7 @@ record SimMotor(TalonFX motor, ChassisReference orientation, double sensorToMech
     motor.getConfigurator().refresh(config);
     var sensorToMechanismRatio = config.Feedback.SensorToMechanismRatio;
 
-    return new SimMotor(
-        motor, orientation, sensorToMechanismRatio == 0.0 ? 1.0 : sensorToMechanismRatio);
+    return new SimMotor(motor, orientation, sensorToMechanismRatio);
   }
 
   /**
