@@ -241,6 +241,14 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFailsafe(RobotState.CORAL_L1_APPROACH);
   }
 
+  public void algaeReefIntakeRequest() {
+    if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
+      intakeL3AlgaeRequest();
+    } else {
+      intakeL2AlgaeRequest();
+    }
+  }
+
   public void stowRequest() {
     switch (getState()) {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> getState();
