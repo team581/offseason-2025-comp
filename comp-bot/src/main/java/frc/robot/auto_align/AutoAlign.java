@@ -226,6 +226,14 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         }
         yield currentState;
       }
+      case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE ->{
+        if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
+          yield AutoAlignState.LEFT_PIPE;
+        } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
+          yield AutoAlignState.RIGHT_PIPE;
+        }
+        yield currentState;
+      }
       default -> currentState;
     };
   }
