@@ -41,7 +41,6 @@ public class OdometryTest {
             });
 
     assertEquals(new Pose2d(new Translation2d(5.0, 0.0), new Rotation2d(0.0)), actual);
-
   }
 
   // TODO: make this test actually model a curve

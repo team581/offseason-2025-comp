@@ -15,7 +15,7 @@ public class CustomOdometry {
     this.pose = initialPoseMeters;
   }
 
-  private Translation2d getModuleDisplacement(
+  private static Translation2d getModuleDisplacement(
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
@@ -82,7 +82,7 @@ public class CustomOdometry {
                     currentWheelPositions[3].distanceMeters));
 
     // Divide sum of module displacements by the amount of swerve modules, 4
-    Translation2d robotDisplacement =
+    var robotDisplacement =
         new Translation2d(
             sumOfModuleDisplacements.getX() / 4.0, sumOfModuleDisplacements.getY() / 4.0);
 
