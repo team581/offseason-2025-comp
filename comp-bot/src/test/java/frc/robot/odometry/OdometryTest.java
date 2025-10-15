@@ -23,24 +23,46 @@ public class OdometryTest {
 
   @Test
   void testStraightLineDrive() {
-    var start =
-        new SwerveModulePosition[] {
-          new SwerveModulePosition(0.0, new Rotation2d(0.0)), // front-left
-          new SwerveModulePosition(0.0, new Rotation2d(0.0)), // front-right
-          new SwerveModulePosition(0.0, new Rotation2d(0.0)), // back-left
-          new SwerveModulePosition(0.0, new Rotation2d(0.0)) // back-right
-        };
-    var odometry = new CustomOdometry(kinematics, Rotation2d.kZero, start, Pose2d.kZero);
-    var end =
-        new SwerveModulePosition[] {
-          new SwerveModulePosition(5.0, new Rotation2d(0.0)), // front-left
-          new SwerveModulePosition(5.0, new Rotation2d(0.0)), // front-right
-          new SwerveModulePosition(5.0, new Rotation2d(0.0)), // back-left
-          new SwerveModulePosition(5.0, new Rotation2d(0.0)) // back-right
-        };
+    var odometry = new CustomOdometry(Rotation2d.kZero, Pose2d.kZero);
 
-    odometry.update(Rotation2d.kZero, start);
-    var actual = odometry.update(Rotation2d.kZero, end);
+    var actual =
+        odometry.update(
+            new SwerveModulePosition[] {
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0)))
+            },
+            new SwerveModulePosition[] {
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0)))
+            });
+
+    assertEquals(new Pose2d(new Translation2d(5.0, 0.0), new Rotation2d(0.0)), actual);
+
+  }
+
+  // TODO: make this test actually model a curve
+  @Test
+  void curveLineDrive() {
+    var odometry = new CustomOdometry(Rotation2d.kZero, Pose2d.kZero);
+
+    var actual =
+        odometry.update(
+            new SwerveModulePosition[] {
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(0.0, new Rotation2d(Math.toRadians(0)))
+            },
+            new SwerveModulePosition[] {
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0))),
+              new SwerveModulePosition(5.0, new Rotation2d(Math.toRadians(0)))
+            });
 
     assertEquals(new Pose2d(new Translation2d(5.0, 0.0), new Rotation2d(0.0)), actual);
   }
