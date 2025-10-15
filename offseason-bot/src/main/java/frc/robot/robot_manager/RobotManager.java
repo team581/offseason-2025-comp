@@ -766,7 +766,8 @@ public class RobotManager extends StateMachine<RobotState> {
                   autoAlign.markPipeScored();
                   groundManager.l1Request();
                 } else {
-                  autoAlign.markPipeScored();                }
+                  autoAlign.markPipeScored();
+                }
               } else {
                 switch (autoAlign.getL1ScoredCount()) {
                   case 0 -> {
@@ -1038,6 +1039,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
     }
   }
+
   public void processorWaitingRequest() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING);
