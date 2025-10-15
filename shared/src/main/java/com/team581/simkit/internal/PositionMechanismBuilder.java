@@ -13,6 +13,7 @@ public final class PositionMechanismBuilder {
   private OptionalDouble minPosition = OptionalDouble.empty();
   private OptionalDouble maxPosition = OptionalDouble.empty();
 
+  @CanIgnoreReturnValue
   public PositionMechanismBuilder addMotor(TalonFX motor) {
     return addMotor(motor, motor.getSimState().Orientation);
   }
