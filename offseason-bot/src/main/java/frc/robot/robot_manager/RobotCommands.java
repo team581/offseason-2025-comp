@@ -83,16 +83,6 @@ public class RobotCommands {
         .withName("ConfirmScoreCommand");
   }
 
-  public Command forcedL1Request() {
-    return Commands.runOnce(robot::forcedL1Request, bothRequirements)
-        .withName("ForcedSensorCommand");
-  }
-
-  public Command forcedLowStowCommand() {
-    return Commands.runOnce(robot::forcedLowStowRequest, rmRequirements)
-        .withName("ForcedLowStowCommand");
-  }
-
   public Command forcedHandoffCommand() {
     return Commands.runOnce(robot::forcedHandoffRequest, rmRequirements)
         .withName("ForcedHandoffCommand");

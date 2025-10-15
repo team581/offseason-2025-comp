@@ -20,9 +20,6 @@ public enum RobotState {
 
   // Intake states
   // In theory we could have intake upright while holding algae but nobody is going to use that
-  CORAL_INTAKE_LOLLIPOP_APPROACH(ClawGamePiece.EMPTY, false),
-  CORAL_INTAKE_LOLLIPOP_PUSH(ClawGamePiece.CORAL, false),
-  CORAL_INTAKE_LOLLIPOP_GRAB(ClawGamePiece.EMPTY, false),
 
   ALGAE_INTAKE_FLOOR(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.ALGAE, false),
@@ -99,15 +96,13 @@ public enum RobotState {
   CLIMBER_STOP(ClawGamePiece.EMPTY, true),
 
   // Misc states
-  LOW_STOW(ClawGamePiece.EMPTY, false),
   PREPARE_SPIN_TO_WIN(ClawGamePiece.EMPTY, false),
   SPIN_TO_WIN(ClawGamePiece.EMPTY, false),
   ALGAE_OUTTAKE(ClawGamePiece.ALGAE, false),
   UNJAM(ClawGamePiece.EMPTY, false),
   REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),
 
-  FORCED_HANDOFF(ClawGamePiece.EMPTY, false),
-  FORCED_LOWSTOW(ClawGamePiece.EMPTY, false);
+  FORCED_HANDOFF(ClawGamePiece.EMPTY, false);
 
   public final ClawGamePiece clawGp;
   public final boolean climbingOrRehoming;

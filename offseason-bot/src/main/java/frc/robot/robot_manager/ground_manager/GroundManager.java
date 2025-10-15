@@ -52,8 +52,7 @@ public class GroundManager extends StateMachine<GroundState> {
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
-      case FORCED_HARD_SCORE -> timeout(0.5) ? GroundState.IDLE_NO_GP : currentState;
-      case HANDOFF_RELEASE, OUTTAKING, L1_HARD_SCORE, L1_SCORE ->
+      case HANDOFF_RELEASE, OUTTAKING, L1_SCORE ->
           getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
       default -> currentState;
     };
@@ -104,11 +103,6 @@ public class GroundManager extends StateMachine<GroundState> {
       }
       case L1_SCORE -> {
         intake.setState(IntakeState.SCORING);
-        deploy.setState(DeployState.L1_SCORE);
-        singulator.setState(SingulatorState.L1_SCORE);
-      }
-      case L1_HARD_SCORE, FORCED_HARD_SCORE -> {
-        intake.setState(IntakeState.HARD_SCORING);
         deploy.setState(DeployState.L1_SCORE);
         singulator.setState(SingulatorState.L1_SCORE);
       }
@@ -176,13 +170,6 @@ public class GroundManager extends StateMachine<GroundState> {
     setState(GroundState.IDLE_NO_GP);
   }
 
-  public void hardL1Request() {
-    switch (getState()) {
-      case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_SCORE);
-      default -> setState(GroundState.L1_WAIT);
-    }
-  }
-
   public void l1Request() {
     switch (getState()) {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_SCORE);
@@ -214,10 +201,6 @@ public class GroundManager extends StateMachine<GroundState> {
 
   public void handoffReleaseRequest() {
     setState(GroundState.HANDOFF_RELEASE);
-  }
-
-  public void forcedHardScoreRequest() {
-    setState(GroundState.FORCED_HARD_SCORE);
   }
 
   public void climbRequest() {
