@@ -1,87 +1,181 @@
 package frc.robot.robot_manager;
 
+import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.swerve.SnapUtil;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 
 public class RobotManager extends StateMachine<RobotState> {
+    public final LocalizationSubsystem localization;
+    public final AutoAlign autoAlign;
+    public final VisionSubsystem vision;
+    public final SwerveSubsystem swerve;
 
-  public final LocalizationSubsystem localization;
-  public final AutoAlign autoalign;
-  public final VisionSubsystem vision;
-  public final SwerveSubsystem swerve;
+    public RobotManager(
+        LocalizationSubsystem localization,
+        AutoAlign autoalign,
+        VisionSubsystem vision,
+        SwerveSubsystem swerve) {
+      super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
 
-  public RobotManager(
-      LocalizationSubsystem localization,
-      AutoAlign autoalign,
-      VisionSubsystem vision,
-      SwerveSubsystem swerve) {
-    super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
+      this.localization = localization;
+      this.autoAlign = autoalign;
+      this.vision = vision;
+      this.swerve = swerve;
 
-    this.localization = localization;
-    this.autoalign = autoalign;
-    this.vision = vision;
-    this.swerve = swerve;
+      var stateCount = RobotState.values().length;
 
-    var stateCount = RobotState.values().length;
+      DogLog.log("RobotManager/StateCount", stateCount);
+    }
 
-    DogLog.log("RobotManager/StateCount", stateCount);
+    private Pose2d robotPose = new Pose2d();
+    private boolean closeEnoughToReefSide = false;
+    private ReefSide nearestReefSide = ReefSide.SIDE_IJ;
+    private boolean tagCameraOnline = false;
+    private boolean drivingFast = false;
+    private double reefSnapAngle = 0.0;
+    private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
+
+    @Override
+    protected RobotState getNextState(RobotState currentState) {
+      return switch (currentState) {
+              case CLAW_EMPTY,
+                  CLAW_ALGAE,
+                  CLAW_CORAL,
+                  CORAL_L1_LINEUP,
+                  CORAL_OUTTAKE,
+                  ALGAE_NET_WAITING,
+                  ALGAE_PROCESSOR_WAITING,
+                  CLIMBER_STOP,
+                  CLIMBING_1_LINEUP,
+                  CLIMBING_2_HANGING,
+                  UNJAM,
+                  ALGAE_NET_RELEASE,
+                  ALGAE_PROCESSOR_RELEASE,
+                  REHOME_ELEVATOR ->
+                  currentState;
+
+            case CORAL_L1_APPROACH -> closeEnoughToReefSide ? RobotState.CORAL_L1_LINEUP : currentState;
+            case CORAL_L1_PLACE -> currentState;
+            case CORAL_L1_RELEASE -> cameraOnlineAndFarEnoughFromReef() || drivingFast ? RobotState.CLAW_EMPTY : currentState;
+
+            case CORAL_INTAKE_GROUND -> currentState;
+
+            case ALGAE_INTAKE_FLOOR -> currentState;
+
+            case ALGAE_OUTTAKE -> currentState;
+
+            case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
+                closeEnoughToReefSide ? currentState.getNextAlgaeIntakeState() : currentState;
+
+            case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> currentState;
+
+            case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
+                cameraOnlineAndFarEnoughFromReef() || drivingFast
+                    ? currentState.getNextAlgaeIntakeState()
+                    : currentState;
+    };
   }
 
-  private Pose2d robotPose = new Pose2d();
-  private boolean closeEnoughToReefSide = false;
-  private ReefSide nearestReefSide = ReefSide.SIDE_IJ;
-  private boolean tagCameraOnline = false;
-  private boolean drivingFast = false;
-  private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
-
   @Override
-  protected RobotState getNextState(RobotState currentState) {
-    return switch (currentState) {
-      case CLAW_EMPTY,
-          CLAW_ALGAE,
-          CLAW_CORAL,
-          CORAL_L1_WAIT,
-          CORAL_OUTTAKE,
-          ALGAE_NET_WAITING,
-          ALGAE_PROCESSOR_WAITING,
-          CLIMBER_STOP,
-          CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          UNJAM ->
-          currentState;
+  protected void afterTransition(RobotState newState) {
+      switch (newState) {
+        case CLAW_EMPTY -> {
 
-      case CORAL_L1_SCORE -> currentState;
+          swerve.normalDriveRequest();
+        }
+        case CLAW_ALGAE -> {
 
-      case CORAL_INTAKE_GROUND -> currentState;
+          swerve.normalDriveRequest();
+        }
+        case CLAW_CORAL -> {
 
-      case ALGAE_NET_RELEASE, ALGAE_PROCESSOR_RELEASE -> currentState;
+          swerve.normalDriveRequest();
+        }
+        case CORAL_L1_APPROACH -> {
 
-      case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
-          closeEnoughToReefSide ? currentState.getNextAlgaeIntakeState() : currentState;
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case CORAL_L1_LINEUP -> {
 
-      case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> currentState;
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case CORAL_L1_PLACE -> {
 
-      case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
-          cameraOnlineAndFarEnoughFromReef() || drivingFast
-              ? currentState.getNextAlgaeIntakeState()
-              : currentState;
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case CORAL_L1_RELEASE -> {
 
-      default -> currentState;
-    };
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L2_APPROACH -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L2 -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L2_HOLDING -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L3_APPROACH -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L3 -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_INTAKE_L3_HOLDING -> {
+
+          swerve.setSnapToAngle(reefSnapAngle);
+        }
+        case ALGAE_PROCESSOR_WAITING -> {
+
+          swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
+        }
+        case ALGAE_PROCESSOR_RELEASE -> {
+
+          swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
+        }
+        case ALGAE_NET_WAITING -> {
+
+          swerve.setSnapToAngle(SnapUtil.getNetScoringAngle(robotPose));
+        }
+        case ALGAE_NET_RELEASE -> {
+
+          swerve.setSnapToAngle(SnapUtil.getNetScoringAngle(robotPose));
+        }
+        case CLIMBER_STOP -> {
+
+          swerve.setSnapToAngle(SnapUtil.getCageAngle(FmsUtil.isRedAlliance()));
+        }
+        case CLIMBING_1_LINEUP -> {
+
+          swerve.setSnapToAngle(SnapUtil.getCageAngle(FmsUtil.isRedAlliance()));
+        }
+        case CLIMBING_2_HANGING -> {
+
+          swerve.setSnapToAngle(SnapUtil.getCageAngle(FmsUtil.isRedAlliance()));
+        }
+      }
   }
 
   @Override
   protected void collectInputs() {
     robotPose = localization.getPose();
-    nearestReefSide = autoalign.getClosestReefSide();
+    nearestReefSide = autoAlign.getClosestReefSide();
     closeEnoughToReefSide = AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(), 1.0);
     tagCameraOnline = vision.isAnyTagLimelightOnline();
     robotSpeeds = swerve.getTeleopSpeeds();
@@ -90,17 +184,22 @@ public class RobotManager extends StateMachine<RobotState> {
                 Math.pow(robotSpeeds.vxMetersPerSecond, 2)
                     + Math.pow(robotSpeeds.vyMetersPerSecond, 2))
             > 5.0;
+    reefSnapAngle = autoAlign.getUsedScoringPose().getRotation().getDegrees();
+
+    var scoringLevel = switch (getState()) {
+      case CORAL_L1_APPROACH, CORAL_L1_LINEUP -> ReefPipeLevel.RAISING;
+      case CORAL_L1_RELEASE -> ReefPipeLevel.BACK_AWAY;
+      default -> ReefPipeLevel.RAISING;
+    };
+
+    autoAlign.setScoringLevel(scoringLevel, ReefPipeLevel.RAISING);
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
     if (!tagCameraOnline) {
       return timeout(0.5);
     }
-
-    var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
-
-    return isFarEnoughFromReefSide;
+    return !closeEnoughToReefSide;
   }
 
   private void setStateFailsafe(RobotState newState) {
@@ -138,8 +237,17 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFailsafe(RobotState.ALGAE_PROCESSOR_WAITING);
   }
 
-  public void l1WaitRequest() {
-    setStateFailsafe(RobotState.CORAL_L1_WAIT);
+  public void l1ApproachRequest() {
+    setStateFailsafe(RobotState.CORAL_L1_APPROACH);
+  }
+
+  public void stowRequest() {
+    switch (getState()) {
+      case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> getState();
+      case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> setStateFailsafe(RobotState.CLAW_ALGAE);
+      case CORAL_L1_APPROACH, CORAL_L1_LINEUP, CORAL_L1_PLACE -> setStateFailsafe(RobotState.CLAW_CORAL);
+      default -> setStateFailsafe(RobotState.CLAW_EMPTY);
+    }
   }
 
   public void confirmScoreRequest() {
@@ -158,17 +266,20 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
           CORAL_INTAKE_GROUND,
-          CORAL_L1_SCORE,
+          CORAL_L1_APPROACH,
+          CORAL_L1_PLACE,
+          CORAL_L1_RELEASE,
           CORAL_OUTTAKE,
           REHOME_ELEVATOR,
           UNJAM -> {}
 
+      case CLAW_EMPTY -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
       case CLAW_ALGAE -> netWaitRequest();
-      case CLAW_CORAL -> l1WaitRequest();
+      case CLAW_CORAL -> l1ApproachRequest();
 
       case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
       case ALGAE_PROCESSOR_WAITING -> setStateFailsafe(RobotState.ALGAE_PROCESSOR_RELEASE);
-      case CORAL_L1_WAIT -> setStateFailsafe(RobotState.CORAL_L1_SCORE);
+      case CORAL_L1_LINEUP -> setStateFailsafe(RobotState.CORAL_L1_PLACE);
     }
   }
 
