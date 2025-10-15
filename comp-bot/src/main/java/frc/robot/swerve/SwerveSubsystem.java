@@ -48,10 +48,10 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   private static final DoubleSubscriber DRIVE_TO_POSE_ROTATION_FF =
       DogLog.tunable("Swerve/DriveToPose/RotationFF", 0.0);
   private static final DoubleSubscriber MAX_TRANSLATION_VELOCITY_LIMIT =
-      DogLog.tunable("Swerve/DriveToPose/MaxTranslationVelMet", 4.75);
+      DogLog.tunable("Swerve/DriveToPose/MaxTranslationVelMet", 2.5);
 
   private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
-      DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 4.0);
+      DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
 
   public static final double MaxSpeed = 4.75;
   private static final double maxAngularRate = Units.rotationsToRadians(4);
