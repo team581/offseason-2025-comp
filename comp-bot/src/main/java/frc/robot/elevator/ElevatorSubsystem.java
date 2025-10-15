@@ -1,16 +1,14 @@
 package frc.robot.elevator;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
-import com.team581.math.MathHelpers;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachine;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
@@ -188,75 +186,22 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     };
   }
 
-  private final TalonFXConfiguration simLeftConfig = new TalonFXConfiguration();
-  private final TalonFXConfiguration simRightConfig = new TalonFXConfiguration();
-  private TrapezoidProfile.Constraints simConstraints;
-  private boolean simDidInit = false;
-
   @Override
   public void simulationPeriodic() {
-    if (!simDidInit) {
-      leftMotor.getConfigurator().refresh(simLeftConfig);
-      rightMotor.getConfigurator().refresh(simRightConfig);
+    var elevatorSimulation =
+        SimKit.positionMechanism(
+            "elevator",
+            (mechanism) ->
+                mechanism
+                    .addMotor(leftMotor, ChassisReference.Clockwise_Positive)
+                    .addMotor(rightMotor, ChassisReference.CounterClockwise_Positive)
+                    .withMinPosition(RobotConfig.get().elevator().minHeight())
+                    .withMaxPosition(RobotConfig.get().elevator().maxHeight()));
 
-      simConstraints =
-          new TrapezoidProfile.Constraints(
-              MathHelpers.average(
-                  simLeftConfig.MotionMagic.MotionMagicCruiseVelocity,
-                  simRightConfig.MotionMagic.MotionMagicCruiseVelocity),
-              MathHelpers.average(
-                  simLeftConfig.MotionMagic.MotionMagicAcceleration,
-                  simRightConfig.MotionMagic.MotionMagicAcceleration));
-
-      simDidInit = true;
-    }
+    elevatorSimulation.update();
 
     if (DriverStation.isDisabled()) {
-      return;
+      elevatorSimulation.seedPosition(5);
     }
-
-    var currentState =
-        new TrapezoidProfile.State(
-            MathHelpers.average(
-                leftMotor.getPosition().getValueAsDouble(),
-                rightMotor.getPosition().getValueAsDouble()),
-            MathHelpers.average(
-                leftMotor.getVelocity().getValueAsDouble(),
-                rightMotor.getVelocity().getValueAsDouble()));
-    var wantedState =
-        new TrapezoidProfile.State(
-            MathHelpers.average(
-                leftMotor.getClosedLoopReference().getValueAsDouble(),
-                rightMotor.getClosedLoopReference().getValueAsDouble()),
-            0);
-
-    var predictedState =
-        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
-
-    var leftSim = leftMotor.getSimState();
-    var rightSim = rightMotor.getSimState();
-
-    leftSim.Orientation = ChassisReference.Clockwise_Positive;
-    rightSim.Orientation = ChassisReference.CounterClockwise_Positive;
-
-    leftSim.setRawRotorPosition(
-        predictedState.position * simLeftConfig.Feedback.SensorToMechanismRatio);
-    rightSim.setRawRotorPosition(
-        predictedState.position * simRightConfig.Feedback.SensorToMechanismRatio);
-
-    leftSim.setRotorVelocity(
-        predictedState.velocity * simLeftConfig.Feedback.SensorToMechanismRatio);
-    rightSim.setRotorVelocity(
-        predictedState.velocity * simRightConfig.Feedback.SensorToMechanismRatio);
-  }
-
-  @Override
-  public void disabledInit() {
-    // reset position to be 0
-    var leftSim = leftMotor.getSimState();
-    var rightSim = rightMotor.getSimState();
-
-    leftSim.setRawRotorPosition(0);
-    rightSim.setRawRotorPosition(0);
   }
 }
