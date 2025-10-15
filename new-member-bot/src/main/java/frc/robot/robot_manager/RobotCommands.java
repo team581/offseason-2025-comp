@@ -1,10 +1,9 @@
 package frc.robot.robot_manager;
 
-import java.util.List;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.List;
 
 public class RobotCommands {
   private final RobotManager robot;
@@ -26,11 +25,13 @@ public class RobotCommands {
   }
 
   public Command algaeGroundIntakeCommand() {
-    return Commands.runOnce(robot::intakeGroundAlgaeRequest, requirements).withName("AlgaeGroundIntakeCommand");
+    return Commands.runOnce(robot::intakeGroundAlgaeRequest, requirements)
+        .withName("AlgaeGroundIntakeCommand");
   }
 
   public Command algaeReefIntakeCommand() {
-    return Commands.runOnce(robot::algaeReefIntakeRequest, requirements).withName("AlgaeReefIntakeCommand");
+    return Commands.runOnce(robot::algaeReefIntakeRequest, requirements)
+        .withName("AlgaeReefIntakeCommand");
   }
 
   public Command netWaitCommand() {
@@ -38,7 +39,8 @@ public class RobotCommands {
   }
 
   public Command processorWaitCommand() {
-    return Commands.runOnce(robot::processorWaitRequest, requirements).withName("ProcessorWaitCommand");
+    return Commands.runOnce(robot::processorWaitRequest, requirements)
+        .withName("ProcessorWaitCommand");
   }
 
   public Command stowCommand() {
@@ -46,14 +48,17 @@ public class RobotCommands {
   }
 
   public Command confirmScoreCommand() {
-    return Commands.runOnce(robot::confirmScoreRequest, requirements).withName("ConfirmScoreRequest");
+    return Commands.runOnce(robot::confirmScoreRequest, requirements)
+        .withName("ConfirmScoreRequest");
   }
 
   public Command climberSequenceForwardCommand() {
-    return Commands.runOnce(robot::climberSequenceForward, requirements).withName("ClimberSequenceForwardCommand");
+    return Commands.runOnce(robot::climberSequenceForward, requirements)
+        .withName("ClimberSequenceForwardCommand");
   }
 
   public Command climberSequenceBackCommand() {
-    return Commands.runOnce(robot::climberSequenceBack, requirements).withName("ClimberSequenceBackCommand");
+    return Commands.runOnce(robot::climberSequenceBack, requirements)
+        .withName("ClimberSequenceBackCommand");
   }
 }
