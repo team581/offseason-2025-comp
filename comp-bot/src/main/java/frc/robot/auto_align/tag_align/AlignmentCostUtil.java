@@ -1,6 +1,8 @@
 package frc.robot.auto_align.tag_align;
 
 import com.team581.math.MathHelpers;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -159,15 +161,22 @@ public class AlignmentCostUtil {
       }
       default -> {
         yield Comparator.comparingDouble(
-            pipe ->
-                getAlignCost(
-                        pipe.getPose(level, side, localization.getPose()),
-                        localization.getPose(),
-                        swerve.getTeleopSpeeds())
-                    + (reefState.isCoralScored(pipe, level)
-                            && FeatureFlags.AUTO_ALIGN_REEF_STATE_COST.getAsBoolean()
-                        ? REEF_STATE_COST
-                        : 0.0));
+            pipe -> {
+              var lookaheadPose = localization.getLookaheadPose(0.4);
+              var closestReefSide =
+                  AutoAlign.getClosestReefSide(lookaheadPose, side);
+              if (closestReefSide.leftPipe != pipe && closestReefSide.rightPipe != pipe) {
+                return Double.MAX_VALUE;
+              }
+              return getAlignCost(
+                      pipe.getPose(level, side, localization.getPose()),
+                      localization.getPose(),
+                      swerve.getTeleopSpeeds())
+                  + (reefState.isCoralScored(pipe, level)
+                          && FeatureFlags.AUTO_ALIGN_REEF_STATE_COST.getAsBoolean()
+                      ? REEF_STATE_COST
+                      : 0.0);
+            });
       }
     };
   }
