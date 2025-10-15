@@ -96,9 +96,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
 
     if (oldState == ElevatorState.PRE_MATCH_HOMING
         && newState != ElevatorState.PRE_MATCH_HOMING
-        && DriverStation.isEnabled()) {
-      double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
-    }
+        && DriverStation.isEnabled()) {}
   }
 
   public boolean atGoal() {
