@@ -78,8 +78,7 @@ public final class PositionMechanism {
     var currentState = currentMechanismState(devices);
     var wantedState = desiredMechanismState(devices);
     var predictedState =
-        new TrapezoidProfile(constraints)
-            .calculate(updateTimer.get(), currentState, wantedState);
+        new TrapezoidProfile(constraints).calculate(updateTimer.get(), currentState, wantedState);
     var boundedState = applyBounds(predictedState);
 
     for (var motor : devices) {
