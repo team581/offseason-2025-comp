@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
-import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 
 public class Robot extends Base581Robot {
@@ -17,8 +16,6 @@ public class Robot extends Base581Robot {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain.getPigeon2());
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
-
-  private final RobotManager robotManager = new RobotManager(localization, null, null, swerve);
 
   public Robot() {
     logMetadata(
