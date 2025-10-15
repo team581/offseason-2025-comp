@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 
 public enum ElevatorState {
   UNTUNED(0),
+  UNJAM(UNTUNED),
   PRE_MATCH_HOMING(UNTUNED),
   STOWED(0),
   ALGAE_INTAKE_GROUND(0),
