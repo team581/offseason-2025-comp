@@ -15,8 +15,10 @@ public enum RobotState {
   CORAL_OUTTAKE(false),
 
   // Coral score L1
-  CORAL_L1_WAIT(false),
-  CORAL_L1_SCORE(false),
+  CORAL_L1_APPROACH(false),
+  CORAL_L1_LINEUP(false),
+  CORAL_L1_PLACE(false),
+  CORAL_L1_RELEASE(false),
 
   // Algae intake states
   ALGAE_INTAKE_FLOOR(false),
