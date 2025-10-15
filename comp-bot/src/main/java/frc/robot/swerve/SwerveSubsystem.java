@@ -357,6 +357,9 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
   }
 
   public Translation2d getControllerValues() {
+    if (rawControllerXValue == 0 && rawControllerYValue == 0) {
+      return Translation2d.kZero;
+    }
 
     return new Translation2d(
         ControllerHelpers.getJoystickMagnitude(
