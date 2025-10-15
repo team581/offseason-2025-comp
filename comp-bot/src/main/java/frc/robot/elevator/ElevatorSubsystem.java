@@ -201,7 +201,7 @@ public class ElevatorSubsystem extends StateMachine<ElevatorState> {
     elevatorSimulation.update();
 
     if (DriverStation.isDisabled()) {
-      elevatorSimulation.seedPosition(5);
+      elevatorSimulation.seedPosition(0);
     }
   }
 }
