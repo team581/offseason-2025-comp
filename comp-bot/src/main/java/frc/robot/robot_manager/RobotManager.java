@@ -1830,7 +1830,9 @@ public class RobotManager extends StateMachine<RobotState> {
   private LightsState getLightStateForScoring() {
     return switch (autoAlign.getTagAlignState()) {
       case ALL_CAMERAS_DEAD -> LightsState.ERROR;
-      case HAS_TAGS_IN_POSITION, HAS_TAGS_WRONG_POSITION ->
+      case HAS_TAGS_IN_POSITION ->
+          scoringAlignActive ? LightsState.HOLDING_CORAL : LightsState.SCORE_NO_ALIGN_TAGS;
+      case HAS_TAGS_WRONG_POSITION ->
           scoringAlignActive ? LightsState.SCORE_ALIGN_TAGS : LightsState.SCORE_NO_ALIGN_TAGS;
       case NO_TAGS_IN_POSITION, NO_TAGS_WRONG_POSITION ->
           scoringAlignActive ? LightsState.SCORE_ALIGN_NO_TAGS : LightsState.SCORE_NO_ALIGN_NO_TAGS;
