@@ -179,7 +179,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case EXPLICIT_LEFT_CENTER -> {
         if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-                < Units.inchesToMeters(20.0)
+                < Units.inchesToMeters(15.0)
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
@@ -192,7 +192,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case EXPLICIT_RIGHT_CENTER -> {
         if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-                < Units.inchesToMeters(20.0)
+                < Units.inchesToMeters(15.0)
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
@@ -205,7 +205,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       }
       case BEST_PIPE_CENTER -> {
         if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-                < Units.inchesToMeters(20.0)
+                < Units.inchesToMeters(15.0)
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
@@ -291,8 +291,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return switch (getState()) {
       case EXPLICIT_SAFE, EXPLICIT_SAFE_WAITING ->
           getClosestReefSide().getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
-      case EXPLICIT_LEFT_CENTER -> getCenterPoseFromRobotDistance(getClosestReefSide().leftPipe);
-      case EXPLICIT_RIGHT_CENTER -> getCenterPoseFromRobotDistance(getClosestReefSide().rightPipe);
+      case EXPLICIT_LEFT_CENTER ->
+          getCenterPipePoseFromRobotDistance(getClosestReefSide().leftPipe);
+      case EXPLICIT_RIGHT_CENTER ->
+          getCenterPipePoseFromRobotDistance(getClosestReefSide().rightPipe);
       case EXPLICIT_LEFT_WAITING ->
           getClosestReefSide()
               .leftPipe
@@ -309,7 +311,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
           getClosestReefSide()
               .rightPipe
               .getPose(currentReefPipeLevel, currentScoringSide, currentPose);
-      case BEST_PIPE_CENTER -> getCenterPoseFromRobotDistance(bestPipe);
+      case BEST_PIPE_CENTER -> getCenterPipePoseFromRobotDistance(bestPipe);
       case BEST_PIPE_WAITING ->
           bestPipe.getPose(ReefPipeLevel.RAISING, currentScoringSide, currentPose);
       case BEST_PIPE -> bestPipe.getPose(currentReefPipeLevel, currentScoringSide, currentPose);
@@ -377,7 +379,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
    * @param pipe The reef pipe to center on.
    * @return The target pose centered with the specified pipe.
    */
-  private Pose2d getCenterPoseFromRobotDistance(ReefPipe pipe) {
+  private Pose2d getCenterPipePoseFromRobotDistance(ReefPipe pipe) {
     var pipePose = pipe.getPose(ReefPipeLevel.RAISING, currentScoringSide, currentPose);
     var robotRelativePipeTranslation =
         new Pose2d(
@@ -385,21 +387,23 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 pipePose.getRotation())
             .rotateBy(pipePose.getRotation().unaryMinus());
     var forwardDistanceToPipe = robotRelativePipeTranslation.getY();
+    var lookaheadDistance = Math.copySign(0.3, forwardDistanceToPipe);
+    var lookaheadDistanceToPipe = forwardDistanceToPipe - lookaheadDistance;
 
     // When going around to a different side of the reef, we want to approach from further away
-    var minDist = 0.1;
+    var minDist = 0.2;
     if (!explicitSelection && ReefSide.fromPipe(bestPipe) != closestReefSide) {
-      minDist = 0.4;
+      minDist = 0.5;
     }
 
     // Clamp the distance to make it faster to approach if we're far away
     var clampedDistance =
         MathUtil.clamp(
             currentScoringSide.equals(RobotScoringSide.LEFT)
-                ? forwardDistanceToPipe * -1
-                : forwardDistanceToPipe,
+                ? lookaheadDistance * -1
+                : lookaheadDistanceToPipe,
             minDist,
-            1.2);
+            1.0);
     var poseTransform =
         new Transform2d(
             0,
