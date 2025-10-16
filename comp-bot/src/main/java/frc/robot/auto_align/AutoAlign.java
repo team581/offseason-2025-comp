@@ -144,6 +144,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
   private boolean driverJoystickReachedCenter = false;
+  private boolean bestPipeSelected = false;
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -254,10 +255,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     currentTargetPose = findTargetPose();
     isAligned = isRobotPoseAlignedWithTargetPose();
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-
-    if (!explicitSelection) {
+    if (!explicitSelection && !bestPipeSelected && !currentReefPipeLevel.equals(ReefPipeLevel.L1)) {
       bestPipe = getBestPipeForScoring();
       DogLog.log("AutoAlign/BestPipe", bestPipe);
+      bestPipeSelected = true;
     }
     alignmentCostUtil.setSide(currentScoringSide);
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
@@ -542,6 +543,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         .orElseThrow();
   }
 
+  /** Returns true once the best pipe to align to is calculated. */
+  public boolean isReadyToAlign() {
+    return explicitSelection
+        || bestPipeSelected
+        || (getState() != AutoAlignState.BEST_PIPE_CENTER
+            && getState() != AutoAlignState.BEST_PIPE_WAITING
+            && getState() != AutoAlignState.BEST_PIPE);
+  }
+
   public Pose2d getCurrentTargetPose() {
     return currentTargetPose;
   }
@@ -562,6 +572,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     if (explicitSelection) {
       setStateFromRequest(AutoAlignState.EXPLICIT_SAFE_WAITING);
     } else {
+      bestPipeSelected = false;
       setStateFromRequest(AutoAlignState.BEST_PIPE_CENTER);
     }
   }
@@ -587,6 +598,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
   /** Switches into pipe backup state for after placing coral */
   public void backAwayFromPipeRequest() {
+    bestPipeSelected = false;
     setStateFromRequest(AutoAlignState.PIPE_BACKUP);
   }
 
