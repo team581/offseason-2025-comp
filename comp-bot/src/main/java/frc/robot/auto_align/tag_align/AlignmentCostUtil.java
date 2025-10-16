@@ -161,8 +161,7 @@ public class AlignmentCostUtil {
         yield Comparator.comparingDouble(
             pipe -> {
               var lookaheadPose = localization.getLookaheadPose(0.3);
-              var closestReefSide =
-                  AutoAlign.getClosestReefSide(lookaheadPose, side);
+              var closestReefSide = AutoAlign.getClosestReefSide(lookaheadPose, side);
               if (closestReefSide.leftPipe != pipe && closestReefSide.rightPipe != pipe) {
                 return Double.MAX_VALUE;
               }
