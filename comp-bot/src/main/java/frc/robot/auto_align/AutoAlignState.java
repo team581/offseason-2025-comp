@@ -25,6 +25,12 @@ public enum AutoAlignState {
   BEST_PIPE,
   // Backing away from closest pipe after scoring
   PIPE_BACKUP,
+  // Centering with algae
+  ALGAE_CENTER,
+  // Waiting to intake algae
+  ALGAE_WAITING,
   // Intaking algae
-  ALGAE;
+  ALGAE_INTAKE,
+  // Backing away from reef after intake
+  ALGAE_BACKUP;
 }
