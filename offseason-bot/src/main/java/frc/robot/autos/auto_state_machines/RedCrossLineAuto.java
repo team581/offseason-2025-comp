@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.robot_manager.RobotManager;
 
-public class RedCrossLineAuto extends BaseImperativeAuto {
+public class RedCrossLineAuto extends BaseImperativeAuto<CrossLineAutoState> {
   public RedCrossLineAuto(RobotManager robot, Trailblazer trailblazer) {}
 
   @Override
