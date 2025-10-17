@@ -67,7 +67,8 @@ public class Robot extends Base581Robot {
           hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCandi);
-  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
+  private final IntakeSubsystem intake =
+      new IntakeSubsystem(hardware.intakeMotor, hardware.intakeCandi);
 
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
@@ -77,7 +78,7 @@ public class Robot extends Base581Robot {
           hardware.climberCANcoder,
           hardware.climberGrabMotor,
           hardware.climberCanrange);
-  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final CoralMap coralMap = new CoralMap(localization, swerve, gamePieceDetectionLimelight);
   private final GroundManager gm = new GroundManager(deploy, intake);
   private final RobotManager robotManager =

@@ -6,7 +6,19 @@ import java.util.Map;
 public enum RobotState {
   // Stowed states
   CLAW_EMPTY(false),
+  CLAW_CORAL(false),
   CLAW_ALGAE(false),
+
+  // Coral intake
+  CORAL_INTAKE_GROUND(false),
+
+  CORAL_OUTTAKE(false),
+
+  // Coral score L1
+  CORAL_L1_APPROACH(false),
+  CORAL_L1_LINEUP(false),
+  CORAL_L1_PLACE(false),
+  CORAL_L1_RELEASE(false),
 
   // Algae intake states
   ALGAE_INTAKE_FLOOR(false),

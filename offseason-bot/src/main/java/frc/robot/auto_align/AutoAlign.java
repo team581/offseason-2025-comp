@@ -172,7 +172,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return usedScoringPose;
   }
 
-  public TagAlignState getReefAlignState() {
+  public TagAlignState getTagAlignState() {
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
       return TagAlignState.ALL_CAMERAS_DEAD;

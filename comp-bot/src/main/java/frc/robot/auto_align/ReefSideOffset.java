@@ -9,6 +9,15 @@ public enum ReefSideOffset {
   BASE(
       new Transform2d(0, 0, Rotation2d.fromDegrees(90)),
       new Transform2d(0, 0, Rotation2d.fromDegrees(270))),
+  SAFE(
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 20.0),
+          Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(270)),
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 20.0),
+          -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(90))),
   ALGAE_INTAKING(
       new Transform2d(
           // Half of drivebase + bumper side width + reef side to bumper distance
@@ -17,15 +26,6 @@ public enum ReefSideOffset {
           Rotation2d.fromDegrees(270)),
       new Transform2d(
           -Units.inchesToMeters(14.5 + 4.0 + 5.0),
-          -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
-          Rotation2d.fromDegrees(90))),
-  ALGAE_RAISING(
-      new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 30.0),
-          Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
-          Rotation2d.fromDegrees(270)),
-      new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 30.0),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90)));
 

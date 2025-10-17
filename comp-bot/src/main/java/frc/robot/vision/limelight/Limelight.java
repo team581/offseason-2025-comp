@@ -104,6 +104,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (mT2Estimate.rawFiducials.length == 1) {
       double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
       if (ambiguity >= 0.7) {
+        DogLog.timestamp("Vision/" + name + "/Tags/AmbiguityFilter");
         return tagResult.empty();
       }
     }

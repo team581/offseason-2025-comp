@@ -1,0 +1,64 @@
+package frc.robot.robot_manager;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.List;
+
+public class RobotCommands {
+  private final RobotManager robot;
+  private final Subsystem[] requirements;
+
+  public RobotCommands(RobotManager robot) {
+    this.robot = robot;
+
+    var requirementsList = List.of();
+    requirements = requirementsList.toArray(Subsystem[]::new);
+  }
+
+  public Command rehomeElevatorCommand() {
+    return Commands.runOnce(robot::rehomeRequest, requirements).withName("RehomeElevatorCommand");
+  }
+
+  public Command unjamCommand() {
+    return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
+  }
+
+  public Command algaeGroundIntakeCommand() {
+    return Commands.runOnce(robot::intakeGroundAlgaeRequest, requirements)
+        .withName("AlgaeGroundIntakeCommand");
+  }
+
+  public Command algaeReefIntakeCommand() {
+    return Commands.runOnce(robot::algaeReefIntakeRequest, requirements)
+        .withName("AlgaeReefIntakeCommand");
+  }
+
+  public Command netWaitCommand() {
+    return Commands.runOnce(robot::netWaitRequest, requirements).withName("NetWaitCommand");
+  }
+
+  public Command processorWaitCommand() {
+    return Commands.runOnce(robot::processorWaitRequest, requirements)
+        .withName("ProcessorWaitCommand");
+  }
+
+  public Command stowCommand() {
+    return Commands.runOnce(robot::stowRequest, requirements).withName("StowCommand");
+  }
+
+  public Command confirmScoreCommand() {
+    return Commands.runOnce(robot::confirmScoreRequest, requirements)
+        .withName("ConfirmScoreRequest");
+  }
+
+  public Command climberSequenceForwardCommand() {
+    return Commands.runOnce(robot::climberSequenceForward, requirements)
+        .withName("ClimberSequenceForwardCommand");
+  }
+
+  public Command climberSequenceBackCommand() {
+    return Commands.runOnce(robot::climberSequenceBack, requirements)
+        .withName("ClimberSequenceBackCommand");
+  }
+}

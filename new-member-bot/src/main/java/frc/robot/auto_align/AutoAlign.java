@@ -1,6 +1,5 @@
 package frc.robot.auto_align;
 
-import com.team581.auto_align.TagAlignState;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.math.PoseErrorTolerance;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
@@ -173,10 +172,10 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return usedScoringPose;
   }
 
-  public TagAlignState getReefAlignState() {
+  public ReefAlignState getReefAlignState() {
     if (!vision.isAnyLeftScoringTagLimelightOnline()
         && !vision.isAnyRightScoringTagLimelightOnline()) {
-      return TagAlignState.ALL_CAMERAS_DEAD;
+      return ReefAlignState.ALL_CAMERAS_DEAD;
     }
 
     if (vision.getLeftBackTagResult().isPresent()
@@ -184,15 +183,15 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
         || vision.getRightTagResult().isPresent()
         || vision.getGamePieceTagResult().isPresent()) {
       if (isAligned) {
-        return TagAlignState.HAS_TAGS_IN_POSITION;
+        return ReefAlignState.HAS_TAGS_IN_POSITION;
       }
 
-      return TagAlignState.HAS_TAGS_WRONG_POSITION;
+      return ReefAlignState.HAS_TAGS_WRONG_POSITION;
     }
 
     if (isAligned) {
-      return TagAlignState.NO_TAGS_IN_POSITION;
+      return ReefAlignState.NO_TAGS_IN_POSITION;
     }
-    return TagAlignState.NO_TAGS_WRONG_POSITION;
+    return ReefAlignState.NO_TAGS_WRONG_POSITION;
   }
 }
