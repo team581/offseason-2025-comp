@@ -14,7 +14,7 @@ public class Robot extends Base581Robot {
   private final Hardware hardware = new Hardware();
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain.getPigeon2());
+  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
 
   public Robot() {
