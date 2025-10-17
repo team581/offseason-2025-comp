@@ -12,7 +12,6 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
-import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
@@ -167,11 +166,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       }
     }
   }
-
-  public OptionalGamePieceResult getLollipopVisionResult() {
-    return rightLimelight.getAlgaeResult();
-  }
-
+  
   public OptionalDouble getHandoffOffsetTx() {
     return gamePieceDetectionLimelight.handoffTx();
   }

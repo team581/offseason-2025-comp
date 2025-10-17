@@ -48,7 +48,6 @@ public class Robot extends Base581Robot {
           null,
           null,
           null,
-          null,
           rumble);
 
   private final RobotCommands actions = new RobotCommands(robotManager);
