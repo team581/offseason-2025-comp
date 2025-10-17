@@ -65,7 +65,7 @@ public class Trailblazer {
   public Command followSegment(AutoSegment segment, boolean shouldEnd) {
     TrailblazerPathLogger.logSegment(segment);
     var command =
-        Commands.runOnce(() -> followSegment(segment))
+        Commands.runOnce(() -> followSegmentInit(segment))
             .alongWith(Commands.run(() -> followSegmentPeriodic(segment), swerve))
             .withName("FollowSegmentIndefinitely");
 
