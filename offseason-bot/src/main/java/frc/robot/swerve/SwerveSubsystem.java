@@ -101,7 +101,6 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
 
   private ChassisSpeeds autoSpeeds = new ChassisSpeeds();
 
-
   private ChassisSpeeds driveToPoseSpeeds = new ChassisSpeeds();
 
   private Pose2d lastDriveToPoseTarget = new Pose2d();
@@ -272,7 +271,7 @@ public class SwerveSubsystem extends StateMachine<SwerveState> implements Swerve
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
-            case DRIVE_TO_POSE -> {
+      case DRIVE_TO_POSE -> {
         drivetrain.setControl(
             drive
                 .withVelocityX(driveToPoseSpeeds.vxMetersPerSecond)

@@ -99,9 +99,7 @@ public class AlignmentCostUtil {
   private final Comparator<ReefSide> algaeComparator = createAlgaeComparator();
 
   public AlignmentCostUtil(
-      LocalizationSubsystem localization,
-      SwerveSubsystem swerve,
-      ReefState reefState) {
+      LocalizationSubsystem localization, SwerveSubsystem swerve, ReefState reefState) {
     this.localization = localization;
     this.swerve = swerve;
     this.reefState = reefState;
@@ -129,8 +127,7 @@ public class AlignmentCostUtil {
       case L1 -> {
         yield Comparator.comparingDouble(
             pipe -> {
-              var allPipes =
-                  AutoAlign.ALL_REEF_PIPES;
+              var allPipes = AutoAlign.ALL_REEF_PIPES;
               return allPipes.stream()
                   .filter(p -> p.getPose(level, localization.getPose()) != null)
                   .min(
