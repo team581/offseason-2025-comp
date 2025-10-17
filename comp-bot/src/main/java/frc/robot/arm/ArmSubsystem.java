@@ -1,6 +1,5 @@
 package frc.robot.arm;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -8,6 +7,7 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachine;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
@@ -16,13 +16,11 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
@@ -286,10 +284,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
-  private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();
-  private TrapezoidProfile.Constraints simConstraints;
-  private boolean simDidInit = false;
-
   private double usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle();
 
   @Override
@@ -308,50 +302,17 @@ public class ArmSubsystem extends StateMachine<ArmState> {
 
   @Override
   public void simulationPeriodic() {
+    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       motor.setPosition(0);
       setStateFromRequest(ArmState.HOLDING_UPRIGHT);
     }
 
-    if (!simDidInit) {
-      motor.getConfigurator().refresh(simMotorConfig);
-
-      simConstraints =
-          new TrapezoidProfile.Constraints(
-              simMotorConfig.MotionMagic.MotionMagicCruiseVelocity,
-              simMotorConfig.MotionMagic.MotionMagicAcceleration);
-
-      simDidInit = true;
-    }
+    armSimulation.update();
 
     if (DriverStation.isDisabled()) {
-      return;
-    }
-
-    var currentState =
-        new TrapezoidProfile.State(
-            motor.getPosition().getValueAsDouble(), motor.getVelocity().getValueAsDouble());
-    var wantedState =
-        new TrapezoidProfile.State(motor.getClosedLoopReference().getValueAsDouble(), 0);
-
-    var predictedState =
-        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
-
-    var motorSim = motor.getSimState();
-
-    motorSim.setRawRotorPosition(
-        predictedState.position * simMotorConfig.Feedback.SensorToMechanismRatio);
-
-    motorSim.setRotorVelocity(
-        predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
-  }
-
-  @Override
-  public void disabledInit() {
-    if (RobotBase.isSimulation()) {
-      // reset position to be 0*
-      var motorSim = motor.getSimState();
-      motorSim.setRawRotorPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
+      armSimulation.seedPosition(getRawAngleFromNormalAngle(0, rawMotorAngle));
     }
   }
 }
