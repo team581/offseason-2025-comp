@@ -12,7 +12,6 @@ import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
-import frc.robot.auto_align.ReefSideOffset;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.claw.ClawState;
 import frc.robot.claw.ClawSubsystem;
@@ -396,21 +395,29 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
+        autoAlign.approachAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
-      case ALGAE_INTAKE_L2_LEFT, ALGAE_INTAKE_L2_LEFT_HOLDING -> {
+      case ALGAE_INTAKE_L2_LEFT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_LEFT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
-
+        autoAlign.intakeAlgaeRequest();
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        lights.setState(LightsState.INTAKING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ALGAE_INTAKE_L2_LEFT_HOLDING -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        moveSuperstructure(
+            ElevatorState.ALGAE_INTAKE_L2,
+            ArmState.ALGAE_INTAKE_LEFT_L2,
+            canSkipCollisionAvoidanceForReefAlgae);
+        autoAlign.backAwayFromAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
@@ -421,24 +428,30 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_RIGHT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
-
+        autoAlign.approachAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-
         climber.setState(ClimberState.STOPPED);
       }
-      case ALGAE_INTAKE_L2_RIGHT, ALGAE_INTAKE_L2_RIGHT_HOLDING -> {
+      case ALGAE_INTAKE_L2_RIGHT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(
             ElevatorState.ALGAE_INTAKE_L2,
             ArmState.ALGAE_INTAKE_RIGHT_L2,
             canSkipCollisionAvoidanceForReefAlgae);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-        autoAlign.algaeRequest();
-        ;
-
+        autoAlign.intakeAlgaeRequest();
+        lights.setState(LightsState.INTAKING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ALGAE_INTAKE_L2_RIGHT_HOLDING -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        moveSuperstructure(
+            ElevatorState.ALGAE_INTAKE_L2,
+            ArmState.ALGAE_INTAKE_RIGHT_L2,
+            canSkipCollisionAvoidanceForReefAlgae);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        autoAlign.backAwayFromAlgaeRequest();
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
@@ -448,22 +461,29 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
+        autoAlign.approachAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
-
         lights.setState(LightsState.INTAKING_ALGAE);
-
         climber.setState(ClimberState.STOPPED);
       }
-      case ALGAE_INTAKE_L3_LEFT, ALGAE_INTAKE_L3_LEFT_HOLDING -> {
+      case ALGAE_INTAKE_L3_LEFT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_LEFT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-
+        autoAlign.intakeAlgaeRequest();
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        lights.setState(LightsState.INTAKING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ALGAE_INTAKE_L3_LEFT_HOLDING -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        moveSuperstructure(
+            ElevatorState.ALGAE_INTAKE_L3,
+            ArmState.ALGAE_INTAKE_LEFT_L3,
+            canSkipCollisionAvoidanceForReefAlgae);
+        autoAlign.backAwayFromAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
@@ -474,23 +494,29 @@ public class RobotManager extends StateMachine<RobotState> {
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
-
+        autoAlign.approachAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
-
         climber.setState(ClimberState.STOPPED);
       }
-      case ALGAE_INTAKE_L3_RIGHT, ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
+      case ALGAE_INTAKE_L3_RIGHT -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(
             ElevatorState.ALGAE_INTAKE_L3,
             ArmState.ALGAE_INTAKE_RIGHT_L3,
             canSkipCollisionAvoidanceForReefAlgae);
-        autoAlign.algaeRequest();
-        ;
-
+        autoAlign.intakeAlgaeRequest();
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        lights.setState(LightsState.INTAKING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ALGAE_INTAKE_L3_RIGHT_HOLDING -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        moveSuperstructure(
+            ElevatorState.ALGAE_INTAKE_L3,
+            ArmState.ALGAE_INTAKE_RIGHT_L3,
+            canSkipCollisionAvoidanceForReefAlgae);
+        autoAlign.backAwayFromAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         lights.setState(LightsState.INTAKING_ALGAE);
         climber.setState(ClimberState.STOPPED);
@@ -1229,19 +1255,6 @@ public class RobotManager extends StateMachine<RobotState> {
         };
 
     autoAlign.setScoringLevel(scoringLevel, robotScoringSide);
-
-    var reefAlgaeIntakingOffset =
-        switch (getState()) {
-          case ALGAE_INTAKE_L2_LEFT,
-              ALGAE_INTAKE_L3_LEFT,
-              ALGAE_INTAKE_L2_RIGHT,
-              ALGAE_INTAKE_L3_RIGHT ->
-              ReefSideOffset.ALGAE_INTAKING;
-          default -> ReefSideOffset.SAFE;
-        };
-
-    autoAlign.setReefAlgaeIntakingOffset(reefAlgaeIntakingOffset);
-
     swerve.setElevatorHeight(elevator.getHeight());
   }
 

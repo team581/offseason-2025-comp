@@ -137,7 +137,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private ReefPipe bestPipe = ReefPipe.PIPE_A;
   private ReefSide closestReefSide = ReefSide.SIDE_AB;
   private RobotScoringSide currentScoringSide = RobotScoringSide.RIGHT;
-  private ReefSideOffset currentAlgaeIntakingReefSideOffset = ReefSideOffset.BASE;
   private ReefPipeLevel currentReefPipeLevel = ReefPipeLevel.L1;
   private Pose2d currentPose = Pose2d.kZero;
   private Pose2d currentTargetPose = Pose2d.kZero;
@@ -278,7 +277,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     }
 
     switch (getState()) {
-      case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP -> {
+      case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP, ALGAE_BACKUP -> {
         useAngleBisector = false;
       }
 
@@ -318,9 +317,13 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       case BEST_PIPE -> bestPipe.getPose(currentReefPipeLevel, currentScoringSide, currentPose);
       case PIPE_BACKUP ->
           getClosestReefPipe().getPose(ReefPipeLevel.BACK_AWAY, currentScoringSide, currentPose);
-      case ALGAE ->
-          bestAlgaeSide.getPose(
-              currentAlgaeIntakingReefSideOffset, currentScoringSide, currentPose);
+      case ALGAE_CENTER -> getCenterSidePoseFromRobotDistance(bestAlgaeSide);
+      case ALGAE_WAITING ->
+          bestAlgaeSide.getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+      case ALGAE_INTAKE ->
+          bestAlgaeSide.getPose(ReefSideOffset.ALGAE_INTAKING, currentScoringSide, currentPose);
+      case ALGAE_BACKUP ->
+          closestReefSide.getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
     };
   }
 
@@ -413,6 +416,43 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 : clampedDistance,
             Rotation2d.fromDegrees(0));
     var targetPose = pipePose.plus(poseTransform);
+    return targetPose;
+  }
+
+  /**
+   * Calculates a target pose that is centered with the specified side, based on the forward
+   * distance of the current pose.
+   *
+   * @param side The reef side to center on.
+   * @return The target pose centered with the specified pipe.
+   */
+  private Pose2d getCenterSidePoseFromRobotDistance(ReefSide side) {
+    var sidePose = side.getPose(ReefSideOffset.SAFE, currentScoringSide, currentPose);
+    var robotRelativeSideTranslation =
+        new Pose2d(
+                currentPose.getTranslation().minus(sidePose.getTranslation()),
+                sidePose.getRotation())
+            .rotateBy(sidePose.getRotation().unaryMinus());
+    var forwardDistanceToSide = robotRelativeSideTranslation.getY();
+    var lookaheadDistance = Math.copySign(0.3, forwardDistanceToSide);
+    var lookaheadDistanceToSide = forwardDistanceToSide - lookaheadDistance;
+
+    // Clamp the distance to make it faster to approach if we're far away
+    var clampedDistance =
+        MathUtil.clamp(
+            currentScoringSide.equals(RobotScoringSide.LEFT)
+                ? lookaheadDistance * -1
+                : lookaheadDistanceToSide,
+            0.2,
+            1.0);
+    var poseTransform =
+        new Transform2d(
+            0,
+            currentScoringSide.equals(RobotScoringSide.LEFT)
+                ? clampedDistance * -1
+                : clampedDistance,
+            Rotation2d.fromDegrees(0));
+    var targetPose = sidePose.plus(poseTransform);
     return targetPose;
   }
 
@@ -561,9 +601,19 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     return ALL_REEF_SIDES.stream().min(alignmentCostUtil.getAlgaeComparator()).orElseThrow();
   }
 
-  /** Switches into algae state */
-  public void algaeRequest() {
-    setStateFromRequest(AutoAlignState.ALGAE);
+  /** Switches into algae center state */
+  public void approachAlgaeRequest() {
+    setStateFromRequest(AutoAlignState.ALGAE_CENTER);
+  }
+
+  /** Switches into algae intaking state to drive in to intake */
+  public void intakeAlgaeRequest() {
+    setStateFromRequest(AutoAlignState.ALGAE_INTAKE);
+  }
+
+  /** Switches into algae backup state for after intaking algae */
+  public void backAwayFromAlgaeRequest() {
+    setStateFromRequest(AutoAlignState.ALGAE_BACKUP);
   }
 
   /** Switches into correct approach state based on explicitSelection value */
@@ -627,11 +677,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   public void setScoringLevel(ReefPipeLevel level, RobotScoringSide side) {
     currentScoringSide = side;
     currentReefPipeLevel = level;
-  }
-
-  /** Sets the current algae intaking offset for alignment calculations. */
-  public void setReefAlgaeIntakingOffset(ReefSideOffset offset) {
-    currentAlgaeIntakingReefSideOffset = offset;
   }
 
   /** Returns true if the robot is aligned with the target pose, debounced over 0.1 seconds. */
