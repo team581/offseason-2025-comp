@@ -40,10 +40,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
   private static final DoubleSubscriber ROTATION_GOOD_THRESHOLD =
       DogLog.tunable("AutoAlign/IsAlignedRotation", 3.0);
 
-  private static Translation2d getAllianceCenterOfReef(boolean isRedAliance) {
-    return isRedAliance ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
-  }
-
   public static Translation2d getAllianceCenterOfReef() {
     return FmsUtil.isRedAlliance() ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
@@ -351,16 +347,8 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     var lookaheadDistanceToSide = forwardDistanceToSide - lookaheadDistance;
 
     // Clamp the distance to make it faster to approach if we're far away
-    var clampedDistance =
-        MathUtil.clamp(
-           lookaheadDistanceToSide,
-            0.2,
-            1.0);
-    var poseTransform =
-        new Transform2d(
-            0,
-           clampedDistance,
-            Rotation2d.fromDegrees(0));
+    var clampedDistance = MathUtil.clamp(lookaheadDistanceToSide, 0.2, 1.0);
+    var poseTransform = new Transform2d(0, clampedDistance, Rotation2d.fromDegrees(0));
     var targetPose = sidePose.plus(poseTransform);
     return targetPose;
   }
@@ -485,8 +473,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                     currentPose
                         .getTranslation()
                         .getDistance(
-                            pipe.getPose(ReefPipeLevel.BACK_AWAY, currentPose)
-                                .getTranslation())))
+                            pipe.getPose(ReefPipeLevel.BACK_AWAY, currentPose).getTranslation())))
         .orElseThrow();
   }
 
@@ -564,7 +551,6 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
   }
-
 
   /** Sets the current scoring level and side for alignment calculations. */
   public void setScoringLevel(ReefPipeLevel level) {

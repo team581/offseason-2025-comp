@@ -166,7 +166,6 @@ public class Limelight extends StateMachine<LimelightState> {
     return OptionalDouble.of(tx);
   }
 
-
   public void setClosestScoringReefTag(int tagID) {
     closestScoringReefTag[0] = tagID;
   }

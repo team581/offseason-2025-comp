@@ -166,7 +166,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
       }
     }
   }
-  
+
   public OptionalDouble getHandoffOffsetTx() {
     return gamePieceDetectionLimelight.handoffTx();
   }
