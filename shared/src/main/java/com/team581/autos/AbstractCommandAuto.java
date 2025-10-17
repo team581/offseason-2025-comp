@@ -3,7 +3,7 @@ package com.team581.autos;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.Optional;
 
-public abstract class AbstractCommandAuto extends BaseAuto {
+public abstract class AbstractCommandAuto implements BaseAuto {
   protected final AutoTiming timing = new AutoTiming(name());
   private Optional<Command> autoCommand = Optional.empty();
 

@@ -1,3 +1,3 @@
 package com.team581.autos;
 
-public abstract class AbstractImperativeAuto extends BaseAuto {}
+public abstract class AbstractImperativeAuto implements BaseAuto {}
