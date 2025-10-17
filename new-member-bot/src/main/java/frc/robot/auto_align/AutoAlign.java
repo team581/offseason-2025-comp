@@ -3,7 +3,7 @@ package frc.robot.auto_align;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.math.PoseErrorTolerance;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -19,7 +19,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import java.util.OptionalDouble;
 
-public class AutoAlign extends StateMachine<AutoAlignState> {
+public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private static final AutoConstraintOptions CONSTRAINTS =
       new AutoConstraintOptions(3.0, 10.0, 2.0, 5.0);
   private static final Translation2d CENTER_OF_REEF_RED =

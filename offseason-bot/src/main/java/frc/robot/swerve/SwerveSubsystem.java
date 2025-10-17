@@ -9,7 +9,7 @@ import com.team581.GlobalConfig;
 import com.team581.controller.ControllerHelpers;
 import com.team581.trailblazer.SwerveBase;
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -28,7 +28,7 @@ import frc.robot.generated.RobotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
 
-public class SwerveSubsystem extends StateMachine<SwerveState> implements SwerveBase {
+public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
 

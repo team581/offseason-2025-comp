@@ -1,12 +1,12 @@
 package frc.robot.intake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class IntakeSubsystem extends StateMachine<IntakeState> {
+public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
   private final TalonFX motor;
 
   public IntakeSubsystem(TalonFX motor) {

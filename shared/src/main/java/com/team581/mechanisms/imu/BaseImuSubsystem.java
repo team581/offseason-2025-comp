@@ -3,11 +3,11 @@ package com.team581.mechanisms.imu;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team581.util.scheduling.SubsystemPriorityBase;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 
-public class BaseImuSubsystem extends StateMachine<ImuState> {
+public class BaseImuSubsystem extends StateMachineSubsystem<ImuState> {
   protected final SwerveDrivetrain<?, ?, ?> drivetrain;
 
   protected SwerveDriveState driveState = new SwerveDriveState();

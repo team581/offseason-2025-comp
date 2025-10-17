@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-public final class LifecycleSubsystemManager {
+public final class SubsystemExecutionSequencer {
   @SuppressWarnings("unchecked")
   private static Set<Command> getScheduledCommands() {
     try {
@@ -24,29 +24,30 @@ public final class LifecycleSubsystemManager {
     }
   }
 
-  public static LifecycleStage getStage() {
+  public static RobotMatchState getStage() {
     if (DriverStation.isTeleopEnabled()) {
-      return LifecycleStage.TELEOP;
+      return RobotMatchState.TELEOP;
     } else if (DriverStation.isAutonomousEnabled()) {
-      return LifecycleStage.AUTONOMOUS;
+      return RobotMatchState.AUTONOMOUS;
     } else if (DriverStation.isTestEnabled()) {
-      return LifecycleStage.TEST;
+      return RobotMatchState.TEST;
     } else {
 
-      return LifecycleStage.DISABLED;
+      return RobotMatchState.DISABLED;
     }
   }
 
-  private static final Queue<LifecycleSubsystem> subsystems =
+  private static final Queue<PrioritySubsystem> subsystems =
       new PriorityQueue<>(
-          Comparator.comparingInt((LifecycleSubsystem subsystem) -> subsystem.priority.getValue())
+          Comparator.comparingInt(
+                  (PrioritySubsystem subsystem) -> subsystem.getPriority().getValue())
               .reversed());
   private static final CommandScheduler commandScheduler = CommandScheduler.getInstance();
   private static final Set<Command> scheduledCommands = getScheduledCommands();
 
   public static void ready() {
-    for (LifecycleSubsystem lifecycleSubsystem : subsystems) {
-      commandScheduler.registerSubsystem(lifecycleSubsystem);
+    for (PrioritySubsystem subsystem : subsystems) {
+      commandScheduler.registerSubsystem(subsystem);
     }
   }
 
@@ -56,10 +57,10 @@ public final class LifecycleSubsystemManager {
         scheduledCommands.stream().map(command -> command.getName()).toArray(String[]::new));
   }
 
-  static void registerSubsystem(LifecycleSubsystem subsystem) {
+  public static void registerSubsystem(PrioritySubsystem subsystem) {
     subsystems.add(subsystem);
     commandScheduler.unregisterSubsystem(subsystem);
   }
 
-  private LifecycleSubsystemManager() {}
+  private SubsystemExecutionSequencer() {}
 }

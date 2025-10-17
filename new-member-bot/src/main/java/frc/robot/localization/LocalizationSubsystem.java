@@ -4,7 +4,7 @@ import com.ctre.phoenix6.Utils;
 import com.team581.math.MathHelpers;
 import com.team581.trailblazer.LocalizationBase;
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +18,7 @@ import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class LocalizationSubsystem extends StateMachine<LocalizationState>
+public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationState>
     implements LocalizationBase {
 
   private final ImuSubsystem imu;

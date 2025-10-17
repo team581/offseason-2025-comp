@@ -9,7 +9,7 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -29,7 +29,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
 import java.util.OptionalDouble;
 
-public class ArmSubsystem extends StateMachine<ArmState> {
+public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
 
   private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
