@@ -77,8 +77,8 @@ public enum ReefSide {
 
   public final Pose2d bluePose;
   public final Pose2d redPose;
-  public final ReefPipe pipe1;
-  public final ReefPipe pipe2;
+  public final ReefPipe leftPipe;
+  public final ReefPipe rightPipe;
   public final ReefPipeLevel algaeHeight;
   public final int redTagID;
   public final int blueTagID;
@@ -86,15 +86,15 @@ public enum ReefSide {
   private ReefSide(
       Pose2d bluePose,
       Pose2d redPose,
-      ReefPipe pipe1,
-      ReefPipe pipe2,
+      ReefPipe leftPipe,
+      ReefPipe rightPipe,
       ReefPipeLevel algaeHeight,
       int redTagID,
       int blueTagID) {
     this.bluePose = bluePose;
     this.redPose = redPose;
-    this.pipe1 = pipe1;
-    this.pipe2 = pipe2;
+    this.leftPipe = leftPipe;
+    this.rightPipe = rightPipe;
     this.algaeHeight = algaeHeight;
     this.redTagID = redTagID;
     this.blueTagID = blueTagID;
@@ -117,6 +117,10 @@ public enum ReefSide {
 
   public Pose2d getPose(Pose2d robotPose) {
     return getPose(robotPose.getX() > (17.55 / 2));
+  }
+
+  public Pose2d getPose(ReefSideOffset offset, Pose2d robotPose) {
+    return getPose(robotPose).transformBy(offset.offset);
   }
 
   public int getTagID() {
