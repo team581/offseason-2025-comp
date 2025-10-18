@@ -9,6 +9,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,18 +18,25 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.results.TagResult;
 
 public class LocalizationSubsystem extends StateMachine<LocalizationState>
     implements LocalizationBase {
 
   private final ImuSubsystem imu;
   private final SwerveSubsystem swerve;
+  private final VisionSubsystem vision;
   private Pose2d robotPose = Pose2d.kZero;
 
-  public LocalizationSubsystem(ImuSubsystem imu, SwerveSubsystem swerve) {
+    private static final DoubleSubscriber LATENCY_CONSTANT =
+      DogLog.tunable("Localization/VisionLatencyConstantMS", 20.0);
+
+  public LocalizationSubsystem(ImuSubsystem imu, SwerveSubsystem swerve, VisionSubsystem vision) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
     this.swerve = swerve;
     this.imu = imu;
+    this.vision = vision;
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
@@ -48,7 +56,21 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
 
   @Override
   protected void collectInputs() {
+    vision.getLefTagResult().ifPresent(this::ingestTagResult);
+    vision.getRightTagResult().ifPresent(this::ingestTagResult);
     robotPose = swerve.drivetrain.getState().Pose;
+  }
+
+  private void ingestTagResult(TagResult result) {
+    var visionPose = result.pose();
+
+    if (!vision.seenTagRecentlyForReset() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+      resetPose(visionPose);
+    }
+    swerve.drivetrain.addVisionMeasurement(
+        visionPose,
+        Utils.fpgaToCurrentTime(result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000)),
+        result.standardDevs());
   }
 
   @Override

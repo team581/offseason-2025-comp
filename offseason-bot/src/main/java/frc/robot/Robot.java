@@ -33,29 +33,29 @@ public class Robot extends Base581Robot {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
-  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
   private final RumbleControllerSubsystem rumble =
-      new RumbleControllerSubsystem(
-          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
+  new RumbleControllerSubsystem(
+    hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
 
-  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
-  private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
-  private final SingulatorSubsystem singulator =
-      new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
+    private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
+    private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
+    private final SingulatorSubsystem singulator =
+    new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
-  private final GroundManager groundManager =
-      new GroundManager(
-          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
-  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
-  private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+    private final GroundManager groundManager =
+    new GroundManager(
+      intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+      private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
+      private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+      private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
 
-  private final Limelight leftLimelight =
+      private final Limelight leftLimelight =
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight rightlLimelight =
+      private final Limelight rightlLimelight =
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
 
-  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
+      private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
+      private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final ClimberSubsystem climber =

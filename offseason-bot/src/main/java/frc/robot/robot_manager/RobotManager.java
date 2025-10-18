@@ -635,7 +635,7 @@ public class RobotManager extends StateMachine<RobotState> {
           ALGAE_INTAKE_L3,
           ALGAE_INTAKE_L2_HOLDING,
           ALGAE_INTAKE_L3_HOLDING -> {
-        if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();
@@ -669,7 +669,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L4_RELEASE -> {
         if (scoringAlignActive
             && autoAlign.isReadyToAlign()
-            && vision.isAnyTagLimelightOnline()
+            && vision.isAnyCameraOnlineForTags()
             && DriverStation.isTeleop()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector());
         } else {
@@ -680,7 +680,7 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case CLAW_EMPTY -> {
         lights.setState(LightsState.IDLE_EMPTY);
-        if (groundManager.getBottomHasGP() && vision.isAnyTagLimelightOnline()) {
+        if (groundManager.getBottomHasGP() && vision.isAnyCameraOnlineForTags()) {
           swerve.snapsDriveRequest(
               MathHelpers.getDriveDirection(AutoAlign.getAllianceCenterOfReef(robotPose), robotPose)
                   .getDegrees());
@@ -693,7 +693,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.HOLDING_ALGAE);
       }
       case CLAW_CORAL -> {
-        if (vision.isAnyTagLimelightOnline()) {
+        if (vision.isAnyCameraOnlineForTags()) {
           swerve.snapsDriveRequest(
               MathHelpers.getDriveDirection(AutoAlign.getAllianceCenterOfReef(robotPose), robotPose)
                   .getDegrees());
@@ -781,7 +781,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
-    var tagCameraOnline = vision.isAnyTagLimelightOnline();
+    var tagCameraOnline = vision.isAnyCameraOnlineForTags();
 
     if (!tagCameraOnline) {
       return timeout(0.5);
@@ -794,7 +794,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private boolean drivingAwayFromReef() {
-    var tagCameraOnline = vision.isAnyTagLimelightOnline();
+    var tagCameraOnline = vision.isAnyCameraOnlineForTags();
 
     if (!tagCameraOnline) {
       return timeout(1.0);
@@ -1125,7 +1125,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private LightsState getLightStateFoAlgaeIntaking() {
-    if (!vision.isAnyTagLimelightOnline()) {
+    if (!vision.isAnyCameraOnlineForTags()) {
       return LightsState.ERROR;
     }
 

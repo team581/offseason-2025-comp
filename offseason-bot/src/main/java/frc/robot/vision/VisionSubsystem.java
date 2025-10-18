@@ -131,15 +131,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
   }
 
-  public boolean isAnyLeftScoringTagLimelightOnline() {
-    return leftLimelight.isOnlineForTags();
-  }
-
-  public boolean isAnyRightScoringTagLimelightOnline() {
-    return rightLimelight.isOnlineForTags();
-  }
-
-  public boolean isAnyTagLimelightOnline() {
+  public boolean isAnyCameraOnlineForTags() {
     return leftLimelight.isOnlineForTags() || rightLimelight.isOnlineForTags();
   }
 }
