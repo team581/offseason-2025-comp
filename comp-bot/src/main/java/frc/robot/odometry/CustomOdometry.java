@@ -40,11 +40,15 @@ public class CustomOdometry {
     // the displacement
     double circleCenterX = 0 - (radius * Math.cos(previousAngleRadians));
     double circleCenterY = 0 - (radius * Math.sin(previousAngleRadians));
+    System.out.println("Circle center x " + circleCenterX);
+    System.out.println("Circle center y " + circleCenterY);
 
     // Finally, calculate the current module translation. If arc length is negative, invert
     // displacement
     double displacementX = circleCenterX + (radius * Math.cos(currentAngleRadians));
     double displacementY = circleCenterY + (radius * Math.sin(currentAngleRadians));
+    System.out.println("Displacement x " + displacementX);
+    System.out.println("Displacement y " + displacementY);
 
     if (arcLength < 0) {
       displacementX *= -1;
@@ -86,6 +90,7 @@ public class CustomOdometry {
         new Translation2d(
             sumOfModuleDisplacements.getX() / 4.0, sumOfModuleDisplacements.getY() / 4.0);
 
-    return new Pose2d(robotDisplacement, gyroAngle);
+    // TODO: For the new pose return current gyro angle, currentWheelPositions used as placeholder for tests
+    return new Pose2d(robotDisplacement, currentWheelPositions[1].angle);
   }
 }
