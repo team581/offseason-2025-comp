@@ -33,10 +33,12 @@ public class Robot extends Base581Robot {
   private final Limelight gpLimelight =
       new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG, true);
 
-  private final VisionSubsystem vision = new VisionSubsystem(imu, backLimelight, frontLimelight, rightLimelight, gpLimelight);
+  private final VisionSubsystem vision =
+      new VisionSubsystem(imu, backLimelight, frontLimelight, rightLimelight, gpLimelight);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve);
 
-  private final RobotManager robotManager = new RobotManager(localization, autoAlign, vision, swerve);
+  private final RobotManager robotManager =
+      new RobotManager(localization, autoAlign, vision, swerve);
   private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
@@ -90,7 +92,6 @@ public class Robot extends Base581Robot {
                 })
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
-
 
     hardware.driverController.leftTrigger().onTrue(actions.algaeGroundIntakeCommand());
     hardware.driverController.rightTrigger().onTrue(actions.confirmScoreCommand());

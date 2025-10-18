@@ -24,7 +24,7 @@ public enum RobotState {
   ALGAE_INTAKE_FLOOR(false, ClawGamePiece.NONE),
 
   ALGAE_INTAKE_L2(false, ClawGamePiece.NONE),
-  ALGAE_INTAKE_L3(false, ClawGamePiece.NONE ),
+  ALGAE_INTAKE_L3(false, ClawGamePiece.NONE),
 
   ALGAE_INTAKE_L2_APPROACH(false, ClawGamePiece.NONE),
   ALGAE_INTAKE_L3_APPROACH(false, ClawGamePiece.NONE),
