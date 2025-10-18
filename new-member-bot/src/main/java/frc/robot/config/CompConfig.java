@@ -17,19 +17,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
-import frc.robot.config.RobotConfig.DeployConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
-import frc.robot.config.RobotConfig.IntakeConfig;
-import frc.robot.config.RobotConfig.SingulatorConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
+import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.RobotTunerConstants;
 
 class CompConfig {
@@ -38,40 +34,8 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          new IntakeConfig(
-              CANIVORE_NAME,
-              25,
-              new Debouncer(0.3, DebounceType.kBoth),
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
-                  .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClawConfig(
               CANIVORE_NAME, 99, 99, false, new Debouncer(0), new TalonFXConfiguration()),
-          new DeployConfig(
-              CANIVORE_NAME,
-              20,
-              99,
-              148,
-              1.75,
-              1.0,
-              20.0,
-              1,
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
-                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(48))
-                  .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               CANIVORE_NAME,
               21,
@@ -114,28 +78,6 @@ class CompConfig {
                           .withProximityThreshold(0.05)
                           .withProximityHysteresis(0.01)
                           .withMinSignalStrengthForValidMeasurement(7000))),
-          new SingulatorConfig(
-              CANIVORE_NAME,
-              28,
-              29,
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
-                  .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast)),
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
-                  .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))),
           // TODO: add radius and sensor-mechanism ratio
           new ElevatorConfig(
               CANIVORE_NAME,
@@ -147,7 +89,7 @@ class CompConfig {
               0.0,
               new TalonFXConfiguration()
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2 * Math.PI))),
-          new ArmConfig(
+          new WristConfig(
               RIO_CAN_NAME,
               999,
               new TalonFXConfiguration()
