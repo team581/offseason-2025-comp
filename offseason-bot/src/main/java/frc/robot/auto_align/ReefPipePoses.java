@@ -5,13 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 // Compute the offset poses for scoring on the reef once on boot to reduce GC pressure from dynamic
 // computation
 record ReefPipePoses(
-    Pose2d base,
-    Pose2d l1,
-    Pose2d l2,
-    Pose2d l3,
-    Pose2d l4,
-    Pose2d raising,
-    Pose2d backaway) {
+    Pose2d base, Pose2d l1, Pose2d l2, Pose2d l3, Pose2d l4, Pose2d raising, Pose2d backaway) {
   public ReefPipePoses(Pose2d base) {
     this(
         base,

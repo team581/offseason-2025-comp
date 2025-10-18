@@ -320,7 +320,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
     // Clamp the distance to make it faster to approach if we're far away
     var clampedDistance = MathUtil.clamp(lookaheadDistanceToPipe, minDist, 1.0);
-    var poseTransform = new Transform2d(-clampedDistance,0.0, Rotation2d.fromDegrees(0));
+    var poseTransform = new Transform2d(-clampedDistance, 0.0, Rotation2d.fromDegrees(0));
     var targetPose = pipePose.plus(poseTransform);
     return targetPose;
   }
