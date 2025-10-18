@@ -44,21 +44,23 @@ public class Robot extends Base581Robot {
       new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
   private final GroundManager groundManager =
-      new GroundManager(intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
-      private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
-      private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-      private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+      new GroundManager(
+          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
 
+  private final Limelight leftLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+  private final Limelight rightlLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
 
-      private final Limelight leftLimelight= new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
-      private final Limelight rightlLimelight= new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
-
-      private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight, leftLimelight, rightlLimelight);
-      private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
-      private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, true);
-      private final ClimberSubsystem climber =
-          new ClimberSubsystem(
-              hardware.climberMotor, hardware.climberCANcoder);
+  private final VisionSubsystem vision =
+      new VisionSubsystem(imu, leftLimelight, rightlLimelight, leftLimelight, rightlLimelight);
+  private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, true);
+  private final ClimberSubsystem climber =
+      new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final RobotManager robotManager =
       new RobotManager(
           groundManager,

@@ -40,14 +40,13 @@ public class Hardware {
       new TalonFX(
           RobotConfig.get().climber().climbMotorId(), RobotConfig.get().climber().canBusName());
 
-
   public final CANcoder climberCANcoder =
       new CANcoder(
           RobotConfig.get().climber().cancoderId(), RobotConfig.get().climber().canBusName());
 
-          public final CANdle candle =
-          new CANdle(RobotConfig.get().lights().candleId(), RobotConfig.get().lights().canBusName());
-          public final CANdi clawCaNdi = new CANdi(RobotConfig.get().claw().candiId());
+  public final CANdle candle =
+      new CANdle(RobotConfig.get().lights().candleId(), RobotConfig.get().lights().canBusName());
+  public final CANdi clawCaNdi = new CANdi(RobotConfig.get().claw().candiId());
 
   public final CANdi topIntakeCANdi = new CANdi(RobotConfig.get().singulator().topCandiId());
   public final CANdi bottomIntakeCANdi = new CANdi(RobotConfig.get().singulator().bottomCandiId());
