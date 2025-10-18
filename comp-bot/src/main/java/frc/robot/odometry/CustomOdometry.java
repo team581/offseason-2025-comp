@@ -90,7 +90,8 @@ public class CustomOdometry {
         new Translation2d(
             sumOfModuleDisplacements.getX() / 4.0, sumOfModuleDisplacements.getY() / 4.0);
 
-    // TODO: For the new pose return current gyro angle, currentWheelPositions used as placeholder for tests
+    // TODO: For the new pose return current gyro angle, currentWheelPositions used as placeholder
+    // for tests
     return new Pose2d(robotDisplacement, currentWheelPositions[1].angle);
   }
 }

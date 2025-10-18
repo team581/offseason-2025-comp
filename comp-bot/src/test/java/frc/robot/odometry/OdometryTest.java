@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import org.junit.jupiter.api.Test;
 
 public class OdometryTest {
-// TODO: Make all test formats & units consistent with the first 3 tests
+  // TODO: Make all test formats & units consistent with the first 3 tests
 
   @Test
   void testStraightLineDrive() {
