@@ -34,27 +34,25 @@ public enum ReefPipe {
       new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
       new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120)));
 
-      private final ReefPipePoses redPoses;
-      private final ReefPipePoses bluePoses;
+  private final ReefPipePoses redPoses;
+  private final ReefPipePoses bluePoses;
 
+  ReefPipe(Pose2d blueBase, Pose2d redBase) {
+    this.redPoses = new ReefPipePoses(redBase);
+    this.bluePoses = new ReefPipePoses(blueBase);
+  }
 
-      ReefPipe(Pose2d blueBase, Pose2d redBase) {
-        this.redPoses = new ReefPipePoses(redBase);
-        this.bluePoses = new ReefPipePoses(blueBase);
-      }
+  public Pose2d getPose(ReefPipeLevel level) {
 
-      public Pose2d getPose(ReefPipeLevel level) {
+    return FmsUtil.isRedAlliance() ? redPoses.getPose(level) : bluePoses.getPose(level);
+  }
 
+  public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
 
-        return FmsUtil.isRedAlliance() ? redPoses.getPose(level) : bluePoses.getPose(level);
-      }
+    return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
+  }
 
-      public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
-
-        return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
-      }
-
-      public Pose2d getPose(ReefPipeLevel level, Pose2d robotPose) {
-        return getPose(level, robotPose.getX() > (17.5 / 2));
-      }
+  public Pose2d getPose(ReefPipeLevel level, Pose2d robotPose) {
+    return getPose(level, robotPose.getX() > (17.5 / 2));
+  }
 }
