@@ -244,8 +244,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> getState();
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
           setStateFailsafe(RobotState.CLAW_ALGAE);
-      case CORAL_L1_APPROACH, CORAL_L1_LINEUP ->
-          setStateFailsafe(RobotState.CLAW_CORAL);
+      case CORAL_L1_APPROACH, CORAL_L1_LINEUP -> setStateFailsafe(RobotState.CLAW_CORAL);
       default -> setStateFailsafe(RobotState.CLAW_EMPTY);
     }
   }
@@ -288,7 +287,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
         // TODO: arm elevator
         // if (arm.atGoal() && elevator.atGoal()) {
-          setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+        setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         // }
       }
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
