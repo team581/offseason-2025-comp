@@ -4,14 +4,13 @@ import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
 import com.team581.util.state_machines.StateMachine;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ClawSubsystem extends StateMachine<ClawState>{
-private final TalonFX motor;
+public class ClawSubsystem extends StateMachine<ClawState> {
+  private final TalonFX motor;
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().claw().debouncer();
 
@@ -24,8 +23,8 @@ private final TalonFX motor;
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
     this.candi = candi;
+  }
 
-}
   @Override
   protected void collectInputs() {
     var candiValue = candi.getS1State().getValue();
@@ -44,6 +43,7 @@ private final TalonFX motor;
   public void setState(ClawState newState) {
     setStateFromRequest(newState);
   }
+
   @Override
   protected void afterTransition(ClawState newState) {
     switch (newState) {
