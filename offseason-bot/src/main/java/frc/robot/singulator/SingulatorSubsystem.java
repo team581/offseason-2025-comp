@@ -19,7 +19,7 @@ public class SingulatorSubsystem extends StateMachine<SingulatorState> {
   private double filteredRightCurrent = 0.0;
   private double filteredLeftCurrent = 0.0;
 
-  private static final double JAM_CURRENT_THRESHOLD = 999.0;
+  private static final double JAM_CURRENT_THRESHOLD = Double.POSITIVE_INFINITY;
 
   public SingulatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.SINGULATOR, SingulatorState.IDLE);

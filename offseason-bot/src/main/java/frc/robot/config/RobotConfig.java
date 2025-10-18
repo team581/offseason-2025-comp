@@ -16,10 +16,10 @@ public record RobotConfig(
     ElevatorConfig elevator,
     ArmConfig arm,
     VisionConfig vision,
+    LightsConfig lights,
     SwerveConfig swerve) {
 
-  public record IntakeConfig(
-      String canBusName, int motorId, Debouncer debouncer, TalonFXConfiguration motorConfig) {}
+  public record IntakeConfig(String canBusName, int motorId, TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
@@ -33,13 +33,16 @@ public record RobotConfig(
       String canBusName,
       int leftMotorId,
       int rightMotorId,
+      int topCandiId,
+      int bottomCandiId,
+      Debouncer topDebouncer,
+      Debouncer bottonDebouncer,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig) {}
 
   public record DeployConfig(
       String canBusName,
       int motorId,
-      int candiId,
       double minAngle,
       double maxAngle,
       double homingVoltage,
@@ -74,17 +77,16 @@ public record RobotConfig(
       String canBusName,
       int motorId,
       TalonFXConfiguration motorConfig,
-      double homingPosition,
-      double inchesFromCenter) {}
+    double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftBackLimelightPosition,
-      Pose3d leftFrontLimelightPosition,
-      Pose3d rightLimelightPosition,
-      Pose3d gamePieceDetectionLimelightPosition) {}
+      Pose3d leftLimelightPosition,
+      Pose3d rightLimelightPosition) {}
+
+  public record LightsConfig(String canBusName, int candleId) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,

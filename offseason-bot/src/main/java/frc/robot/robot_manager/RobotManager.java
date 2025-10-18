@@ -1098,20 +1098,14 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_ALGAE -> {
-        if (groundManager.getTopHasGP()) {
-          groundManager.l1Request();
-          scoringAlignActive = true;
-        } else {
+
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-        }
+        
       }
       case CLAW_EMPTY, STARTING_POSITION -> {
-        if (groundManager.getTopHasGP()) {
-          groundManager.l1Request();
-          scoringAlignActive = true;
-        } else {
+
           setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-        }
+
       }
 
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();

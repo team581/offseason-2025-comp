@@ -1,5 +1,8 @@
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
@@ -24,5 +27,28 @@ public class Hardware {
           RobotConfig.get().singulator().rightMotorId(),
           RobotConfig.get().singulator().canBusName());
 
-  // public final CANdi intakeCANdi = new CANdi(RobotConfig.get().intake().caNdiId());
+  public final TalonFX clawMotor =
+      new TalonFX(RobotConfig.get().claw().motorId(), RobotConfig.get().claw().canBusName());
+
+  public final TalonFX armMotor =
+      new TalonFX(RobotConfig.get().arm().motorId(), RobotConfig.get().arm().canBusName());
+
+  public final TalonFX elevatorMotor =
+      new TalonFX(
+          RobotConfig.get().elevator().motorId(), RobotConfig.get().elevator().canBusName());
+  public final TalonFX climberMotor =
+      new TalonFX(
+          RobotConfig.get().climber().climbMotorId(), RobotConfig.get().climber().canBusName());
+
+
+  public final CANcoder climberCANcoder =
+      new CANcoder(
+          RobotConfig.get().climber().cancoderId(), RobotConfig.get().climber().canBusName());
+
+          public final CANdle candle =
+          new CANdle(RobotConfig.get().lights().candleId(), RobotConfig.get().lights().canBusName());
+          public final CANdi clawCaNdi = new CANdi(RobotConfig.get().claw().candiId());
+
+  public final CANdi topIntakeCANdi = new CANdi(RobotConfig.get().singulator().topCandiId());
+  public final CANdi bottomIntakeCANdi = new CANdi(RobotConfig.get().singulator().bottomCandiId());
 }

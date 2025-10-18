@@ -21,8 +21,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
-  private final TalonFX grabMotor;
-  private final CANrange canRange;
   private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
 
   private final LinearFilter cancoderVelocityFilter = LinearFilter.movingAverage(7);
@@ -34,18 +32,15 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private boolean holdingCage = false;
 
   public ClimberSubsystem(
-      TalonFX climbMotor, CANcoder encoder, TalonFX grabMotor, CANrange canRange) {
+      TalonFX climbMotor, CANcoder encoder) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOPPED);
 
     this.climbMotor = climbMotor;
     this.encoder = encoder;
-    this.grabMotor = grabMotor;
-    this.canRange = canRange;
 
     climbMotor.getConfigurator().apply(RobotConfig.get().climber().climbMotorConfig());
     encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
-    grabMotor.getConfigurator().apply(RobotConfig.get().climber().grabMotorConfig());
-    canRange.getConfigurator().apply(RobotConfig.get().climber().canRangeConfig());
+
   }
 
   @Override
@@ -57,11 +52,9 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         } else {
           climbMotor.disable();
         }
-        grabMotor.disable();
       }
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
-        grabMotor.disable();
 
         if (currentAngle < PASS_ANGLE_CHECK) {
           setStateFromRequest(ClimberState.LINEUP_BACKWARD);
@@ -77,7 +70,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         if (holdingCage) {
           setStateFromRequest(ClimberState.HANGING);
         }
-        grabMotor.setVoltage(12.0);
       }
       case HANGING -> {
         if (atGoal()) {
@@ -85,7 +77,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
-        grabMotor.disable();
       }
     }
 
@@ -121,7 +112,6 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
-    holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
     DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
 
