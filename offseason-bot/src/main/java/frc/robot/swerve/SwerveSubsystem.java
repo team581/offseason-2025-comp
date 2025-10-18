@@ -7,17 +7,23 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.GlobalConfig;
 import com.team581.controller.ControllerHelpers;
+import com.team581.math.MathHelpers;
+import com.team581.math.PolarChassisSpeeds;
 import com.team581.trailblazer.SwerveBase;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -32,6 +38,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
 
+  private static final double DRIVE_TO_POSE_TRANSLATION_TOLERANCE =  1.0;
+  private static final double DRIVE_TO_POSE_ROTATION_TOLERANCE =  1.0;
+
+
   public static final double MaxSpeed = 4.75;
   private static final double maxAngularRate = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
@@ -40,6 +50,19 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private static final PhoenixPIDController ORIGINAL_HEADING_PID =
       RobotConfig.get().swerve().snapController();
+  private static final PIDController DRIVE_TO_POSE_TRANSLATION_CONTROLLER =
+      new PIDController(3.5, 0.0, 0.0);
+  private static final PIDController DRIVE_TO_POSE_ROTATION_CONTROLLER =
+      new PIDController(4.0, 0.0, 0.0);
+  private static final DoubleSubscriber DRIVE_TO_POSE_TRANSLATION_FF =
+      DogLog.tunable("Swerve/DriveToPose/TranslationFF", 0.0);
+  private static final DoubleSubscriber DRIVE_TO_POSE_ROTATION_FF =
+      DogLog.tunable("Swerve/DriveToPose/RotationFF", 0.0);
+  private static final DoubleSubscriber MAX_TRANSLATION_VELOCITY_LIMIT =
+      DogLog.tunable("Swerve/DriveToPose/MaxTranslationVelMet", 2.5);
+
+  private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
+      DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
 
   private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
       InterpolatingDoubleTreeMap.ofEntries(Map.entry(0.0, 1.0));
@@ -75,6 +98,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();
   private ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds();
   private double goalSnapAngle = 0;
+
+  private ChassisSpeeds driveToPoseSpeeds = new ChassisSpeeds();
+
+  private Pose2d lastDriveToPoseTarget = new Pose2d();
+  private boolean lastUseAngleBisector = true;
 
   /** The latest requested teleop speeds. */
   private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
@@ -150,6 +178,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       case REEF_ALIGN -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.REEF_ALIGN;
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
+      case DRIVE_TO_POSE ->
+          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.DRIVE_TO_POSE;
+
       case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
     };
   }
@@ -210,6 +241,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     robotRelativeSpeeds = drivetrainState.Speeds;
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
+    if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
+      driveToPoseSpeeds =
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+    }
   }
 
   public ChassisSpeeds getTeleopSpeeds() {
@@ -258,7 +293,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                 .withRotationalRate(autoAlignSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
-
+      case DRIVE_TO_POSE -> {
+        drivetrain.setControl(
+            drive
+                .withVelocityX(driveToPoseSpeeds.vxMetersPerSecond)
+                .withVelocityY(driveToPoseSpeeds.vyMetersPerSecond)
+                .withRotationalRate(driveToPoseSpeeds.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.Velocity));
+      }
       case AUTO ->
           drivetrain.setControl(
               drive
@@ -329,6 +371,26 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     setStateFromRequest(SwerveState.CLIMBING);
   }
 
+  public void driveToPoseRequest(Pose2d pose) {
+    driveToPoseRequest(pose, true);
+  }
+
+  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
+    if (DriverStation.isTeleop()) {
+      lastDriveToPoseTarget = pose;
+      lastUseAngleBisector = useAngleBisector;
+      driveToPoseSpeeds =
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+      setStateFromRequest(SwerveState.DRIVE_TO_POSE);
+      sendSwerveRequest();
+    }
+  }
+public boolean driveToPoseAtGoal(Pose2d goalPose){
+  if(MathUtil.isNear(goalPose.getX(), drivetrainState.Pose.getX(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)&&MathUtil.isNear(goalPose.getY(), drivetrainState.Pose.getY(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)&&MathUtil.isNear(goalPose.getRotation().getDegrees(), drivetrainState.Pose.getRotation().getDegrees(), DRIVE_TO_POSE_ROTATION_TOLERANCE)){
+    return true;
+  }
+  return false;
+}
   public Translation2d getControllerValues() {
     if (getState() != SwerveState.REEF_ALIGN) {
       return Translation2d.kZero;
@@ -377,5 +439,71 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   public void setElevatorHeight(double height) {
     elevatorHeight = height;
+  }
+
+  private PolarChassisSpeeds getDriveToPoseSpeeds(
+      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
+
+    // Calculate x and y velocities
+    double distanceToGoalMeters =
+        currentPose.getTranslation().getDistance(targetPose.getTranslation());
+
+    var driveVelocityMagnitude =
+        DRIVE_TO_POSE_TRANSLATION_CONTROLLER.calculate(distanceToGoalMeters, 0);
+
+    var rotationSpeed =
+        DRIVE_TO_POSE_ROTATION_CONTROLLER.calculate(
+            currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+
+    if (Math.abs(distanceToGoalMeters) > Units.inchesToMeters(1.0)) {
+      driveVelocityMagnitude +=
+          Math.copySign(DRIVE_TO_POSE_TRANSLATION_FF.get(), driveVelocityMagnitude);
+    }
+
+    if (!MathUtil.isNear(
+        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+      rotationSpeed +=
+          Math.copySign(Units.rotationsToRadians(DRIVE_TO_POSE_ROTATION_FF.get()), rotationSpeed);
+    }
+
+    var driveDirection = MathHelpers.getDriveDirection(currentPose, targetPose);
+
+    if (useAngleBisector
+        && Math.hypot(fieldRelativeSpeeds.vxMetersPerSecond, fieldRelativeSpeeds.vyMetersPerSecond)
+            > 0.1
+        && distanceToGoalMeters > 0.1) {
+
+      var wantedDirection =
+          180 + MathHelpers.getDriveDirection(currentPose, targetPose).getDegrees();
+      var currentSpeedDirection =
+          Rotation2d.fromRadians(
+                  Math.atan2(
+                      fieldRelativeSpeeds.vyMetersPerSecond, fieldRelativeSpeeds.vxMetersPerSecond))
+              .getDegrees();
+      var bisectedAngle =
+          MathHelpers.angleModulus(wantedDirection - currentSpeedDirection) / 2
+              + currentSpeedDirection;
+      DogLog.log("Swerve/DriveToPose/WantedDirection", wantedDirection);
+      DogLog.log("Swerve/DriveToPose/CurrentDirection", currentSpeedDirection);
+      driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
+    }
+
+    driveVelocityMagnitude =
+        MathUtil.clamp(
+            driveVelocityMagnitude,
+            -MAX_TRANSLATION_VELOCITY_LIMIT.get(),
+            MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    rotationSpeed =
+        MathUtil.clamp(
+            rotationSpeed,
+            Units.rotationsToRadians(-MAX_ROTATION_VELOCITY_LIMIT_ROT.get()),
+            Units.rotationsToRadians(MAX_ROTATION_VELOCITY_LIMIT_ROT.get()));
+
+    var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
+    DogLog.log("Swerve/DriveToPose/TargetPose", targetPose);
+    DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters);
+    DogLog.log("Swerve/DriveToPose/Speeds", speeds);
+
+    return speeds;
   }
 }

@@ -6,5 +6,6 @@ public enum SwerveState {
   AUTO,
   AUTO_SNAPS,
   CLIMBING,
-  REEF_ALIGN;
+  REEF_ALIGN,
+  DRIVE_TO_POSE;
 }
