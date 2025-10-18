@@ -1,0 +1,12 @@
+package frc.robot.claw;
+
+public enum ClawState {
+  IDLE_NO_GP,
+  IDLE_W_ALGAE,
+  IDLE_W_CORAL,
+  INTAKING_ALGAE,
+  SCORE_ALGAE_NET,
+  SCORE_ALGAE_PROCESSOR,
+  SCORE_CORAL,
+  OUTTAKING;
+}
