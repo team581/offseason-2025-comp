@@ -38,9 +38,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
 
-  private static final double DRIVE_TO_POSE_TRANSLATION_TOLERANCE =  1.0;
-  private static final double DRIVE_TO_POSE_ROTATION_TOLERANCE =  1.0;
-
+  private static final double DRIVE_TO_POSE_TRANSLATION_TOLERANCE = 1.0;
+  private static final double DRIVE_TO_POSE_ROTATION_TOLERANCE = 1.0;
 
   public static final double MaxSpeed = 4.75;
   private static final double maxAngularRate = Units.rotationsToRadians(4);
@@ -385,12 +384,21 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       sendSwerveRequest();
     }
   }
-public boolean driveToPoseAtGoal(Pose2d goalPose){
-  if(MathUtil.isNear(goalPose.getX(), drivetrainState.Pose.getX(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)&&MathUtil.isNear(goalPose.getY(), drivetrainState.Pose.getY(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)&&MathUtil.isNear(goalPose.getRotation().getDegrees(), drivetrainState.Pose.getRotation().getDegrees(), DRIVE_TO_POSE_ROTATION_TOLERANCE)){
-    return true;
+
+  public boolean driveToPoseAtGoal(Pose2d goalPose) {
+    if (MathUtil.isNear(
+            goalPose.getX(), drivetrainState.Pose.getX(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)
+        && MathUtil.isNear(
+            goalPose.getY(), drivetrainState.Pose.getY(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)
+        && MathUtil.isNear(
+            goalPose.getRotation().getDegrees(),
+            drivetrainState.Pose.getRotation().getDegrees(),
+            DRIVE_TO_POSE_ROTATION_TOLERANCE)) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
+
   public Translation2d getControllerValues() {
     if (getState() != SwerveState.REEF_ALIGN) {
       return Translation2d.kZero;

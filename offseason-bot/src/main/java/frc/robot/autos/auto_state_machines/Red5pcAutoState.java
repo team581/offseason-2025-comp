@@ -37,8 +37,7 @@ public enum Red5pcAutoState {
   L_L4_PREPARE(Points.LEFT_CORAL_STATION.getPose()),
   // -move superstructure for scoring, K/L pose
   A_L4_PREPARE(Points.A_L4_POSE.getPose()),
-  B_L4_PREPARE(
-      Points.B_L4_POSE.getPose()), // -move superstructure for scoring, A/B pose
+  B_L4_PREPARE(Points.B_L4_POSE.getPose()), // -move superstructure for scoring, A/B pose
 
   I_L4_SCORE(Points.I_L4_POSE.getPose()),
   J_L4_SCORE(Points.J_L4_POSE.getPose()),
@@ -46,7 +45,6 @@ public enum Red5pcAutoState {
   L_L4_SCORE(Points.L_L4_POSE.getPose()),
   A_L4_SCORE(Points.A_L4_POSE.getPose()),
   B_L4_SCORE(Points.B_L4_POSE.getPose()),
-
 
   // ll-robot score state, reef pipe score pose
 
@@ -67,9 +65,5 @@ public enum Red5pcAutoState {
 
   private Red5pcAutoState(Pose2d pose) {
     this.pose = pose;
-  }
-
-  private Red5pcAutoState(Red5pcAutoState state) {
-    this.pose = state.pose;
   }
 }
