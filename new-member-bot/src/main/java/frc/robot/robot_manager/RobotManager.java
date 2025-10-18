@@ -212,7 +212,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         wrist.setState(WristState.ALGAE_INTAKE_L3);
-       autoAlign.backAwayFromAlgaeRequest();
+        autoAlign.backAwayFromAlgaeRequest();
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         climber.setState(ClimberState.STOPPED);
       }
@@ -421,7 +421,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL -> l1ApproachRequest();
     }
   }
-
 
   public void algaeReefIntakeRequest() {
     scoringAlignActive = true;
