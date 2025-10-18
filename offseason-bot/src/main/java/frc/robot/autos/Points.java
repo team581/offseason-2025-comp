@@ -43,15 +43,21 @@ public enum Points {
   PRE_B_L4(new Pose2d(2.9, 3.86, Rotation2d.kZero)),
   // -robot intaking state (until singulate coral), a little before A/B pose
 
-
-
-  I_L4_POSE(new Pose2d(5.02, 4.62, Rotation2d.fromDegrees(240)),new Pose2d(12.53, 3.43, Rotation2d.fromDegrees(60))),
-  J_L4_POSE(new Pose2d(4.74, 4.78, Rotation2d.fromDegrees(240)),new Pose2d(12.81, 3.27, Rotation2d.fromDegrees(60))),
-  K_L_POSE(new Pose2d(4.24, 4.78, Rotation2d.fromDegrees(300)),new Pose2d(13.31, 3.27, Rotation2d.fromDegrees(120))),
-  L_L4_POSE(new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120))),
-  A_L4_POSE(new Pose2d(3.71, 4.19, Rotation2d.kZero),new Pose2d(13.84, 3.86, Rotation2d.k180deg)),
-  B_L4_POSE(new Pose2d(3.71, 3.86, Rotation2d.kZero),new Pose2d(13.84, 4.19, Rotation2d.k180deg));
-//first is red second is blue
+  I_L4_POSE(
+      new Pose2d(5.02, 4.62, Rotation2d.fromDegrees(240)),
+      new Pose2d(12.53, 3.43, Rotation2d.fromDegrees(60))),
+  J_L4_POSE(
+      new Pose2d(4.74, 4.78, Rotation2d.fromDegrees(240)),
+      new Pose2d(12.81, 3.27, Rotation2d.fromDegrees(60))),
+  K_L_POSE(
+      new Pose2d(4.24, 4.78, Rotation2d.fromDegrees(300)),
+      new Pose2d(13.31, 3.27, Rotation2d.fromDegrees(120))),
+  L_L4_POSE(
+      new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
+      new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120))),
+  A_L4_POSE(new Pose2d(3.71, 4.19, Rotation2d.kZero), new Pose2d(13.84, 3.86, Rotation2d.k180deg)),
+  B_L4_POSE(new Pose2d(3.71, 3.86, Rotation2d.kZero), new Pose2d(13.84, 4.19, Rotation2d.k180deg));
+  // first is red second is blue
   // PIPE_A(new Pose2d(3.71, 4.19, Rotation2d.kZero), new Pose2d(13.84, 3.86, Rotation2d.k180deg)),
   // PIPE_B(new Pose2d(3.71, 3.86, Rotation2d.kZero), new Pose2d(13.84, 4.19, Rotation2d.k180deg)),
   // PIPE_C(
