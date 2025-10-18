@@ -24,6 +24,10 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
   }
 
+  public Command intakeCoralCommand() {
+    return Commands.runOnce(robot::intakeCoralRequest, requirements).withName("IntakeCoralCommand");
+  }
+
   public Command algaeGroundIntakeCommand() {
     return Commands.runOnce(robot::intakeGroundAlgaeRequest, requirements)
         .withName("AlgaeGroundIntakeCommand");
@@ -38,9 +42,9 @@ public class RobotCommands {
     return Commands.runOnce(robot::netWaitRequest, requirements).withName("NetWaitCommand");
   }
 
-  public Command processorWaitCommand() {
-    return Commands.runOnce(robot::processorWaitRequest, requirements)
-        .withName("ProcessorWaitCommand");
+  public Command lowLineupCommand() {
+    return Commands.runOnce(robot::lowLineupRequest, requirements)
+        .withName("LowLineupCommand");
   }
 
   public Command stowCommand() {
@@ -57,8 +61,8 @@ public class RobotCommands {
         .withName("ClimberSequenceForwardCommand");
   }
 
-  public Command climberSequenceBackCommand() {
-    return Commands.runOnce(robot::climberSequenceBack, requirements)
-        .withName("ClimberSequenceBackCommand");
+  public Command climberSequenceStopCommand() {
+    return Commands.runOnce(robot::climberSequenceStop, requirements)
+        .withName("ClimberSequenceStopCommand");
   }
 }

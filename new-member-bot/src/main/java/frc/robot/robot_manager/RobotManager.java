@@ -25,7 +25,7 @@ public class RobotManager extends StateMachine<RobotState> {
       AutoAlign autoalign,
       VisionSubsystem vision,
       SwerveSubsystem swerve) {
-    super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
+    super(SubsystemPriority.ROBOT_MANAGER, RobotState.STARTING_POSITION);
 
     this.localization = localization;
     this.autoAlign = autoalign;
@@ -51,7 +51,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_EMPTY,
           CLAW_ALGAE,
           CLAW_CORAL,
-          CORAL_L1_LINEUP,
+          STARTING_POSITION,
           CORAL_OUTTAKE,
           ALGAE_NET_WAITING,
           ALGAE_PROCESSOR_WAITING,
@@ -65,7 +65,7 @@ public class RobotManager extends StateMachine<RobotState> {
           currentState;
 
       case CORAL_L1_APPROACH -> closeEnoughToReefSide ? RobotState.CORAL_L1_LINEUP : currentState;
-      case CORAL_L1_PLACE -> currentState;
+      case CORAL_L1_LINEUP -> currentState;
       case CORAL_L1_RELEASE ->
           cameraOnlineAndFarEnoughFromReef() || drivingFast ? RobotState.CLAW_EMPTY : currentState;
 
@@ -103,9 +103,6 @@ public class RobotManager extends StateMachine<RobotState> {
         swerve.setSnapToAngle(reefSnapAngle);
       }
       case CORAL_L1_LINEUP -> {
-        swerve.setSnapToAngle(reefSnapAngle);
-      }
-      case CORAL_L1_PLACE -> {
         swerve.setSnapToAngle(reefSnapAngle);
       }
       case CORAL_L1_RELEASE -> {
@@ -219,8 +216,19 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFailsafe(RobotState.ALGAE_PROCESSOR_WAITING);
   }
 
+  public void intakeCoralRequest() {
+    setStateFailsafe(RobotState.CORAL_INTAKE_GROUND);
+  }
+
   public void l1ApproachRequest() {
     setStateFailsafe(RobotState.CORAL_L1_APPROACH);
+  }
+
+  public void lowLineupRequest() {
+    switch (getState().heldGamePiece) {
+      case ALGAE, NONE -> processorWaitRequest();
+      case CORAL -> l1ApproachRequest();
+    }
   }
 
   public void algaeReefIntakeRequest() {
@@ -236,7 +244,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> getState();
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
           setStateFailsafe(RobotState.CLAW_ALGAE);
-      case CORAL_L1_APPROACH, CORAL_L1_LINEUP, CORAL_L1_PLACE ->
+      case CORAL_L1_APPROACH, CORAL_L1_LINEUP ->
           setStateFailsafe(RobotState.CLAW_CORAL);
       default -> setStateFailsafe(RobotState.CLAW_EMPTY);
     }
@@ -259,7 +267,6 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_2_HANGING,
           CORAL_INTAKE_GROUND,
           CORAL_L1_APPROACH,
-          CORAL_L1_PLACE,
           CORAL_L1_RELEASE,
           CORAL_OUTTAKE,
           REHOME_ELEVATOR,
@@ -271,23 +278,30 @@ public class RobotManager extends StateMachine<RobotState> {
 
       case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
       case ALGAE_PROCESSOR_WAITING -> setStateFailsafe(RobotState.ALGAE_PROCESSOR_RELEASE);
-      case CORAL_L1_LINEUP -> setStateFailsafe(RobotState.CORAL_L1_PLACE);
+      case CORAL_L1_LINEUP -> setStateFailsafe(RobotState.CORAL_L1_RELEASE);
     }
   }
 
   public void climberSequenceForward() {
     switch (getState()) {
+      case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
+        // TODO: arm elevator
+        // if (arm.atGoal() && elevator.atGoal()) {
+          setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+        // }
+      }
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
-      case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
-      default -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+      case CLIMBING_2_HANGING -> {}
+      default -> {
+        // Do nothing
+      }
     }
   }
 
-  public void climberSequenceBack() {
+  public void climberSequenceStop() {
     switch (getState()) {
-      case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
-      case CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
-      case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLAW_EMPTY);
+      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
       default -> {}
     }
   }
