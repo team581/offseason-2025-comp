@@ -55,6 +55,11 @@ public class RobotCommands {
         .withName("ConfirmScoreRequest");
   }
 
+  public Command scoringAlignOffCommand() {
+    return Commands.runOnce(robot::scoringAlignOffRequest, requirements)
+        .withName("ScoringAlignOffCommand");
+  }
+
   public Command climberSequenceForwardCommand() {
     return Commands.runOnce(robot::climberSequenceForward, requirements)
         .withName("ClimberSequenceForwardCommand");

@@ -35,7 +35,7 @@ public class Robot extends Base581Robot {
 
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, backLimelight, frontLimelight, rightLimelight, gpLimelight);
-  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
 
   private final RobotManager robotManager =
       new RobotManager(localization, autoAlign, vision, swerve);
@@ -96,7 +96,7 @@ public class Robot extends Base581Robot {
     hardware.driverController.leftTrigger().onTrue(actions.algaeGroundIntakeCommand());
     hardware.driverController.rightTrigger().onTrue(actions.confirmScoreCommand());
 
-    hardware.driverController.leftBumper().onTrue(actions.algaeReefIntakeCommand());
+    hardware.driverController.leftBumper().onTrue(actions.algaeReefIntakeCommand()).onFalse(actions.scoringAlignOffCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
 
     hardware.driverController.y().onTrue(actions.netWaitCommand());

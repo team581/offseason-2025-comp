@@ -34,38 +34,25 @@ public enum ReefPipe {
       new Pose2d(3.96, 4.62, Rotation2d.fromDegrees(300)),
       new Pose2d(13.59, 3.43, Rotation2d.fromDegrees(120)));
 
-  private final Pose2d redPose;
-  private final Pose2d bluePose;
+  private final ReefPipePoses redPoses;
+  private final ReefPipePoses bluePoses;
 
-  ReefPipe(Pose2d bluePose, Pose2d redPose) {
-    this.redPose = redPose;
-    this.bluePose = bluePose;
+  ReefPipe(Pose2d blueBase, Pose2d redBase) {
+    this.redPoses = new ReefPipePoses(redBase);
+    this.bluePoses = new ReefPipePoses(blueBase);
   }
 
   public Pose2d getPose(ReefPipeLevel level) {
-    return FmsUtil.isRedAlliance() ? redPose : bluePose;
+
+    return FmsUtil.isRedAlliance() ? redPoses.getPose(level) : bluePoses.getPose(level);
   }
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
-    return isRedAlliance ? redPose : bluePose;
+
+    return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
   }
 
   public Pose2d getPose(ReefPipeLevel level, Pose2d robotPose) {
     return getPose(level, robotPose.getX() > (17.5 / 2));
-  }
-
-  public static ReefSide getReefSide(ReefPipe pipe) {
-    return switch (pipe) {
-      case PIPE_A, PIPE_B -> ReefSide.SIDE_AB;
-      case PIPE_C, PIPE_D -> ReefSide.SIDE_CD;
-      case PIPE_E, PIPE_F -> ReefSide.SIDE_EF;
-      case PIPE_G, PIPE_H -> ReefSide.SIDE_GH;
-      case PIPE_I, PIPE_J -> ReefSide.SIDE_IJ;
-      case PIPE_K, PIPE_L -> ReefSide.SIDE_KL;
-    };
-  }
-
-  public ReefSide getReefSide() {
-    return getReefSide(this);
   }
 }
