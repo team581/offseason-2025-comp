@@ -77,7 +77,6 @@ public class RobotManager extends StateMachine<RobotState> {
           CLAW_ALGAE,
           CLAW_CORAL,
           STARTING_POSITION,
-          CORAL_OUTTAKE,
           ALGAE_NET_WAITING,
           ALGAE_PROCESSOR_WAITING,
           CLIMBER_STOP,
@@ -95,10 +94,9 @@ public class RobotManager extends StateMachine<RobotState> {
           cameraOnlineAndFarEnoughFromReef() || drivingFast ? RobotState.CLAW_EMPTY : currentState;
 
       case CORAL_INTAKE_GROUND -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
-
       case ALGAE_INTAKE_FLOOR -> claw.getHasGP() ? RobotState.CLAW_ALGAE : currentState;
 
-      case ALGAE_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_ALGAE;
+      case ALGAE_OUTTAKE, CORAL_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_EMPTY;
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
       wrist.atGoal() && elevator.atGoal() ? currentState.getNextAlgaeIntakeState() : currentState;
@@ -143,6 +141,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
+        swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         climber.setState(ClimberState.STOPPED);
       }
@@ -150,30 +149,65 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        // autoAlign.lineupPipeRequest();
+        swerve.setSnapToAngle(reefSnapAngle);
         vision.setState(VisionState.CLOSEST_REEF_TAG);
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L1_RELEASE -> {
+        claw.setState(ClawState.SCORE_CORAL);
+        elevator.setState(ElevatorState.CORAL_SCORE_RELEASE_L1);
+        wrist.setState(WristState.CORAL_SCORE_RELEASE_L1);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_APPROACH -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
+        wrist.setState(WristState.ALGAE_INTAKE_L2);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2 -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
+        wrist.setState(WristState.ALGAE_INTAKE_L2);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_HOLDING -> {
-        swerve.setSnapToAngle(reefSnapAngle);
+        claw.setState(ClawState.IDLE_W_ALGAE);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
+        wrist.setState(WristState.ALGAE_INTAKE_L2);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_APPROACH -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
+        wrist.setState(WristState.ALGAE_INTAKE_L3);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3 -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
+        wrist.setState(WristState.ALGAE_INTAKE_L3);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_HOLDING -> {
+        claw.setState(ClawState.IDLE_W_ALGAE);
+        elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
+        wrist.setState(WristState.ALGAE_INTAKE_L3);
         swerve.setSnapToAngle(reefSnapAngle);
+        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_PROCESSOR_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -413,6 +447,7 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L1_RELEASE,
           CORAL_OUTTAKE,
           REHOME_ELEVATOR,
+          STARTING_POSITION,
           UNJAM -> {}
 
       case CLAW_EMPTY -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
