@@ -5,10 +5,16 @@ import com.team581.controller.RumbleControllerSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.arm.ArmSubsystem;
+import frc.robot.auto_align.AutoAlign;
+import frc.robot.claw.ClawSubsystem;
+import frc.robot.climber.ClimberSubsystem;
+import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
+import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
@@ -16,6 +22,10 @@ import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightModel;
+import frc.robot.vision.limelight.LimelightState;
 
 public class Robot extends Base581Robot {
   private final Command autonomousCommand = Commands.none();
@@ -34,20 +44,34 @@ public class Robot extends Base581Robot {
       new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
 
   private final GroundManager groundManager =
-      new GroundManager(intake, deploy, singulator /* , hardware.intakeCANdi */);
+      new GroundManager(intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+      private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
+      private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+      private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+
+
+      private final Limelight leftLimelight= new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+      private final Limelight rightlLimelight= new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+
+      private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight, leftLimelight, rightlLimelight);
+      private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
+      private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, true);
+      private final ClimberSubsystem climber =
+          new ClimberSubsystem(
+              hardware.climberMotor, hardware.climberCANcoder);
   private final RobotManager robotManager =
       new RobotManager(
           groundManager,
-          null,
-          null,
-          null,
-          null,
+          claw,
+          arm,
+          elevator,
+          vision,
           imu,
           swerve,
           localization,
-          null,
-          null,
-          null,
+          lights,
+          autoAlign,
+          climber,
           rumble);
 
   private final RobotCommands actions = new RobotCommands(robotManager);
