@@ -25,7 +25,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   private double cancoderVelocity = 0;
   private double currentAngle = 0.0;
   private double climberMotorAngle = 0.0;
-  private final boolean holdingCage = false;
+  private static final boolean HOLDING_CAGE = false;
 
   public ClimberSubsystem(TalonFX climbMotor, CANcoder encoder) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOPPED);
@@ -61,7 +61,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
-        if (holdingCage) {
+        if (HOLDING_CAGE) {
           setStateFromRequest(ClimberState.HANGING);
         }
       }
@@ -98,7 +98,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
   }
 
   public boolean holdingCage() {
-    return holdingCage;
+    return HOLDING_CAGE;
   }
 
   @Override
@@ -113,7 +113,7 @@ public class ClimberSubsystem extends StateMachine<ClimberState> {
 
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
 
-    DogLog.log("Climber/HoldingCage", holdingCage);
+    DogLog.log("Climber/HoldingCage", HOLDING_CAGE);
 
     DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
   }
