@@ -1098,14 +1098,10 @@ public class RobotManager extends StateMachine<RobotState> {
       }
 
       case CLAW_ALGAE -> {
-
-          setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-        
+        setStateFromRequest(RobotState.ALGAE_OUTTAKE);
       }
       case CLAW_EMPTY, STARTING_POSITION -> {
-
-          setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-
+        setStateFromRequest(RobotState.ALGAE_OUTTAKE);
       }
 
       case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
