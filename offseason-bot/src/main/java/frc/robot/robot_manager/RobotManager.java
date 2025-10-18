@@ -845,7 +845,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void algaeFlingRequest() {
-    if (getState().climbingOrRehoming) {
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       return;
     }
 
@@ -853,7 +853,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void algaeFlingConfirmRequest() {
-    if (getState().climbingOrRehoming) {
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       return;
     }
 
@@ -861,20 +861,13 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void intakeFloorAlgaeRequest() {
-    if (!getState().climbingOrRehoming) {
-      if (getState() == RobotState.CLAW_EMPTY) {
-        if (elevator.atGoal() && arm.atGoal()) {
-          // Ignore algae intake until stow motion is finished
-          setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
-        }
-      } else {
-        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
-      }
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
+      setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
     }
   }
 
   public void processorWaitingRequest() {
-    if (!getState().climbingOrRehoming) {
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING);
     }
   }
@@ -1003,7 +996,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void algaeReefIntakeRequest() {
-    if (!getState().climbingOrRehoming) {
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       scoringAlignActive = true;
       autoAlign.approachAlgaeRequest();
       if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
@@ -1015,7 +1008,7 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   private void algaeNetRequest() {
-    if (!getState().climbingOrRehoming) {
+    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       setStateFromRequest(RobotState.ALGAE_NET_WAITING);
     }
   }
@@ -1127,33 +1120,6 @@ public class RobotManager extends StateMachine<RobotState> {
   private static final boolean LATEST_UNSAFE = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
-    // latestElevatorGoal = elevatorGoal;
-    // latestArmGoal = armGoal;
-    // latestUnsafe = unsafe;
-
-    // var currentPosition = new SuperstructurePosition(elevator.getHeight(), arm.getAngle());
-    // var goal = new SuperstructurePosition(elevatorGoal.getHeight(), armGoal.getAngle());
-
-    // MechanismVisualizer.log(currentPosition, groundManager.deploy.getAngle());
-
-    // var maybeCollisionAvoidanceResult =
-    //     CollisionAvoidance.routePosition(currentPosition, goal, arm.getRawAngle());
-
-    // DogLog.log("CollisionAvoidance/LatestResultPresent",
-    // maybeCollisionAvoidanceResult.isPresent());
-
-    // if (unsafe || maybeCollisionAvoidanceResult.isEmpty()) {
-    //   elevator.setState(elevatorGoal);
-    //   arm.setState(armGoal);
-    // } else {
-    //   var collisionAvoidanceResult = maybeCollisionAvoidanceResult.orElseThrow();
-
-    //   elevator.setCollisionAvoidanceGoal(collisionAvoidanceResult.elevatorHeight());
-    //   elevator.setState(ElevatorState.COLLISION_AVOIDANCE);
-
-    //   arm.setCollisionAvoidanceGoal(collisionAvoidanceResult.armAngle());
-    //   arm.setState(ArmState.COLLISION_AVOIDANCE);
-    // }
     elevator.setState(elevatorGoal);
     arm.setState(armGoal);
   }

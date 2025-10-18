@@ -160,6 +160,17 @@ public enum RobotState {
     };
   }
 
+  public static boolean isHandoffReleaseState(RobotState state) {
+    return switch (state) {
+      case CORAL_L1_RELEASE_HANDOFF,
+          CORAL_L2_RELEASE_HANDOFF,
+          CORAL_L3_RELEASE_HANDOFF,
+          CORAL_L4_RELEASE_HANDOFF ->
+          true;
+      default -> false;
+    };
+  }
+
   public static boolean isReleaseState(RobotState state) {
     return switch (state) {
       case CORAL_L1_RELEASE, CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE -> true;
