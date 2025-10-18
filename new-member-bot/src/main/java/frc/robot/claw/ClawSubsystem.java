@@ -18,7 +18,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   private boolean sensorDebounced = false;
 
   public ClawSubsystem(TalonFX motor, CANdi candi) {
-    super(SubsystemPriority.INTAKE, ClawState.IDLE_NO_GP);
+    super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
