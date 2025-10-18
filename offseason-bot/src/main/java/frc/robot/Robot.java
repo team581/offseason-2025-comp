@@ -55,8 +55,7 @@ public class Robot extends Base581Robot {
   private final Limelight rightlLimelight =
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
 
-  private final VisionSubsystem vision =
-      new VisionSubsystem(imu, leftLimelight, rightlLimelight);
+  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final ClimberSubsystem climber =

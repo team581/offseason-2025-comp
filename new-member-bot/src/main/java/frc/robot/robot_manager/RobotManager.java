@@ -50,7 +50,7 @@ public class RobotManager extends StateMachine<RobotState> {
     this.claw = claw;
     this.elevator = elevator;
     this.wrist = wrist;
-    this. climber = climber;
+    this.climber = climber;
     this.localization = localization;
     this.autoAlign = autoalign;
     this.vision = vision;
@@ -89,7 +89,8 @@ public class RobotManager extends StateMachine<RobotState> {
           REHOME_ELEVATOR ->
           currentState;
 
-      case CORAL_L1_APPROACH -> wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
+      case CORAL_L1_APPROACH ->
+          wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
       case CORAL_L1_RELEASE ->
           cameraOnlineAndFarEnoughFromReef() || drivingFast ? RobotState.CLAW_EMPTY : currentState;
 
@@ -99,9 +100,12 @@ public class RobotManager extends StateMachine<RobotState> {
       case ALGAE_OUTTAKE, CORAL_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_EMPTY;
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
-      wrist.atGoal() && elevator.atGoal() ? currentState.getNextAlgaeIntakeState() : currentState;
+          wrist.atGoal() && elevator.atGoal()
+              ? currentState.getNextAlgaeIntakeState()
+              : currentState;
 
-      case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> claw.getHasGP() ? currentState.getNextAlgaeIntakeState() : currentState;
+      case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 ->
+          claw.getHasGP() ? currentState.getNextAlgaeIntakeState() : currentState;
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
           cameraOnlineAndFarEnoughFromReef() || drivingFast
@@ -465,7 +469,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
         if (wrist.atGoal() && elevator.atGoal()) {
-        setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+          setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
       }
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);

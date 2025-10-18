@@ -36,10 +36,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   private boolean seeingTagDebounced = false;
   private boolean seenTagRecentlyForReset = true;
 
-  public VisionSubsystem(
-      ImuSubsystem imu,
-      Limelight leftLimelight,
-      Limelight rightLimelight) {
+  public VisionSubsystem(ImuSubsystem imu, Limelight leftLimelight, Limelight rightLimelight) {
     super(SubsystemPriority.VISION, VisionState.TAGS);
     this.imu = imu;
     this.leftLimelight = leftLimelight;
@@ -53,8 +50,7 @@ public class VisionSubsystem extends StateMachine<VisionState> {
     leftTagResult = leftLimelight.getTagResult();
     rightTagResult = rightLimelight.getTagResult();
 
-    if (leftTagResult.isPresent()
-        || rightTagResult.isPresent()){
+    if (leftTagResult.isPresent() || rightTagResult.isPresent()) {
       hasSeenTag = true;
       seeingTag = true;
     } else {
@@ -144,7 +140,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
   }
 
   public boolean isAnyTagLimelightOnline() {
-    return leftLimelight.isOnlineForTags()
-        || rightLimelight.isOnlineForTags();
+    return leftLimelight.isOnlineForTags() || rightLimelight.isOnlineForTags();
   }
 }
