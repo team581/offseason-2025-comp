@@ -8,7 +8,4 @@ public class Hardware {
   // public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
   public final CommandXboxController driverController = new CommandXboxController(0);
   public final CommandXboxController operatorController = new CommandXboxController(1);
-
-  public final TalonFX intakeMotor =
-      new TalonFX(RobotConfig.get().intake().motorId(), RobotConfig.get().intake().canBusName());
 }
