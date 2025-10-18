@@ -29,7 +29,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final VisionSubsystem vision;
   private Pose2d robotPose = Pose2d.kZero;
 
-    private static final DoubleSubscriber LATENCY_CONSTANT =
+  private static final DoubleSubscriber LATENCY_CONSTANT =
       DogLog.tunable("Localization/VisionLatencyConstantMS", 20.0);
 
   public LocalizationSubsystem(ImuSubsystem imu, SwerveSubsystem swerve, VisionSubsystem vision) {
