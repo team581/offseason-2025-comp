@@ -717,7 +717,7 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.IDLE_EMPTY);
         if (groundManager.getBottomHasGP() && vision.isAnyTagLimelightOnline()) {
           swerve.snapsDriveRequest(
-              MathHelpers.getDriveDirection(robotPose, AutoAlign.getAllianceCenterOfReef(robotPose))
+              MathHelpers.getDriveDirection(AutoAlign.getAllianceCenterOfReef(robotPose), robotPose)
                   .getDegrees());
 
         } else {
@@ -730,7 +730,7 @@ public class RobotManager extends StateMachine<RobotState> {
       case CLAW_CORAL -> {
         if (vision.isAnyTagLimelightOnline()) {
           swerve.snapsDriveRequest(
-              MathHelpers.getDriveDirection(robotPose, AutoAlign.getAllianceCenterOfReef(robotPose))
+              MathHelpers.getDriveDirection( AutoAlign.getAllianceCenterOfReef(robotPose), robotPose)
                   .getDegrees());
         } else {
           swerve.normalDriveRequest();

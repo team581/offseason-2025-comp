@@ -191,6 +191,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
       DogLog.log("AutoAlign/BestPipe", bestPipe);
       bestPipeSelected = true;
     }
+
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
     DogLog.log("AutoAlign/PoleSelectioin/JoystickReachedCenter", driverJoystickReachedCenter);
     var controllerValues = swerve.getControllerValues();
@@ -307,8 +308,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 pipePose.getRotation())
             .rotateBy(pipePose.getRotation().unaryMinus());
 
-    // TODO: Confirm forward direction is X with new robot coordinate system
-    var forwardDistanceToPipe = robotRelativePipeTranslation.getX();
+    var forwardDistanceToPipe = -robotRelativePipeTranslation.getX();
     var lookaheadDistance = Math.copySign(0.3, forwardDistanceToPipe);
     var lookaheadDistanceToPipe = forwardDistanceToPipe - lookaheadDistance;
 
@@ -320,7 +320,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
 
     // Clamp the distance to make it faster to approach if we're far away
     var clampedDistance = MathUtil.clamp(lookaheadDistanceToPipe, minDist, 1.0);
-    var poseTransform = new Transform2d(0, clampedDistance, Rotation2d.fromDegrees(0));
+    var poseTransform = new Transform2d(-clampedDistance,0.0, Rotation2d.fromDegrees(0));
     var targetPose = pipePose.plus(poseTransform);
     return targetPose;
   }
@@ -340,8 +340,7 @@ public class AutoAlign extends StateMachine<AutoAlignState> {
                 sidePose.getRotation())
             .rotateBy(sidePose.getRotation().unaryMinus());
 
-    // TODO: Confirm forward direction is X with new robot coordinate system
-    var forwardDistanceToSide = robotRelativeSideTranslation.getX();
+    var forwardDistanceToSide = robotRelativeSideTranslation.getY();
 
     var lookaheadDistance = Math.copySign(0.3, forwardDistanceToSide);
     var lookaheadDistanceToSide = forwardDistanceToSide - lookaheadDistance;
