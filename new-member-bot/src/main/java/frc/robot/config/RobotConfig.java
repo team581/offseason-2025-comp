@@ -11,7 +11,7 @@ public record RobotConfig(
     ClawConfig claw,
     ClimberConfig climber,
     ElevatorConfig elevator,
-    ArmConfig arm,
+    WristConfig wrist,
     VisionConfig vision,
     SwerveConfig swerve) {
 
@@ -46,7 +46,7 @@ public record RobotConfig(
       double minHeight,
       TalonFXConfiguration motorConfig) {}
 
-  public record ArmConfig(
+  public record WristConfig(
       String canBusName,
       int motorId,
       TalonFXConfiguration motorConfig,

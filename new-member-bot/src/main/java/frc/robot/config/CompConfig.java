@@ -20,12 +20,12 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
 import frc.robot.config.RobotConfig.ElevatorConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
+import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.RobotTunerConstants;
 
 class CompConfig {
@@ -89,7 +89,7 @@ class CompConfig {
               0.0,
               new TalonFXConfiguration()
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2 * Math.PI))),
-          new ArmConfig(
+          new WristConfig(
               RIO_CAN_NAME,
               999,
               new TalonFXConfiguration()
