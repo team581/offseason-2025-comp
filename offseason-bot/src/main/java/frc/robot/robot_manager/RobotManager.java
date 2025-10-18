@@ -393,7 +393,7 @@ public class RobotManager extends StateMachine<RobotState> {
         afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-        vision.setState(VisionState.HANDOFF);
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -404,7 +404,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
-        vision.setState(VisionState.HANDOFF);
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -415,7 +415,7 @@ public class RobotManager extends StateMachine<RobotState> {
         claw.setState(ClawState.CORAL_HANDOFF);
         groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-        vision.setState(VisionState.HANDOFF);
+        vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
       }
@@ -627,40 +627,6 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("CollisionAvoidance/latestUnsafe", LATEST_UNSAFE);
     // Continuous state actions
     moveSuperstructure(LATEST_ELEVATOR_GOAL, LATEST_ARM_GOAL);
-
-    switch (getState()) {
-      case CLAW_ALGAE, STARTING_POSITION -> {
-        if (groundManager.getTopHasGP() && !groundManager.deploy.atGoal()) {
-          vision.setState(VisionState.HANDOFF);
-        } else {
-          vision.setState(VisionState.TAGS);
-        }
-        arm.setCoralHandoffOffset(vision.getHandoffOffsetTx());
-      }
-      case CLAW_EMPTY,
-          CORAL_L4_PREPARE_HANDOFF,
-          CORAL_L3_PREPARE_HANDOFF,
-          CORAL_L2_PREPARE_HANDOFF -> {
-        if (groundManager.getTopHasGP()) {
-          vision.setState(VisionState.HANDOFF);
-        } else {
-          vision.setState(VisionState.TAGS);
-        }
-        arm.setCoralHandoffOffset(vision.getHandoffOffsetTx());
-      }
-
-      case CORAL_L1_RELEASE_HANDOFF,
-          CORAL_L2_RELEASE_HANDOFF,
-          CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L4_RELEASE_HANDOFF,
-          CORAL_L1_AFTER_RELEASE_HANDOFF,
-          CORAL_L2_AFTER_RELEASE_HANDOFF,
-          CORAL_L3_AFTER_RELEASE_HANDOFF,
-          CORAL_L4_AFTER_RELEASE_HANDOFF -> {
-        // Do nothing, don't change the handoff angle when we are releasing
-      }
-      default -> arm.setCoralHandoffOffset(vision.getHandoffOffsetTx());
-    }
 
     switch (getState()) {
       case ALGAE_INTAKE_L2_APPROACH,
