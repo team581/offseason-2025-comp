@@ -31,7 +31,7 @@ public class WristSubsystem extends StateMachine<WristState> {
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 0;
-  private static StaticBrake brakeNeutralRequest = new StaticBrake();
+  private static final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final ElevatorSubsystem elevator;
   private boolean elevatorIsGoingDown = false;
