@@ -13,7 +13,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.OptionalTagResult;
-import java.util.OptionalDouble;
 
 public class VisionSubsystem extends StateMachine<VisionState> {
 
@@ -152,12 +151,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         rightLimelight.setState(LimelightState.TAGS);
         gamePieceDetectionLimelight.setState(LimelightState.CORAL);
       }
-      case HANDOFF -> {
-        leftBackLimelight.setState(LimelightState.TAGS);
-        leftFrontLimelight.setState(LimelightState.TAGS);
-        rightLimelight.setState(LimelightState.TAGS);
-        gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
-      }
       case ALGAE_DETECTION -> {
         leftBackLimelight.setState(LimelightState.OFF);
         leftFrontLimelight.setState(LimelightState.OFF);
@@ -165,10 +158,6 @@ public class VisionSubsystem extends StateMachine<VisionState> {
         gamePieceDetectionLimelight.setState(LimelightState.HELD_CORAL);
       }
     }
-  }
-
-  public OptionalDouble getHandoffOffsetTx() {
-    return gamePieceDetectionLimelight.handoffTx();
   }
 
   @Override
