@@ -46,7 +46,7 @@ public final class IntakeAssistUtil {
     var offset =
         fieldRelativePose.transformBy(
             new Transform2d(
-                Units.inchesToMeters(-RobotConfig.get().arm().inchesFromCenter()),
+                Units.inchesToMeters(-RobotConfig.get().wrist().inchesFromCenter()),
                 LOLLIPOP_INTAKE_OFFSET,
                 Rotation2d.kZero));
     DogLog.log("CoralMap/Lollipop/WantedIntakePose", offset);
