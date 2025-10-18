@@ -393,7 +393,6 @@ public class RobotManager extends StateMachine<RobotState> {
         afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-        autoAlign.approachPipeRequest();
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -947,7 +946,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
     scoringAlignActive = true;
-
+    autoAlign.approachPipeRequest();
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       setStateFromRequest(RobotState.CORAL_L4_APPROACH);
     } else {
@@ -961,6 +960,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
+    autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       setStateFromRequest(RobotState.CORAL_L3_APPROACH);
@@ -975,6 +975,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
+    autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       setStateFromRequest(RobotState.CORAL_L2_APPROACH);
@@ -1038,7 +1039,7 @@ public class RobotManager extends StateMachine<RobotState> {
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming) {
       scoringAlignActive = true;
-
+      autoAlign.approachAlgaeRequest();
       if (nearestReefSide.algaeHeight == ReefPipeLevel.L3) {
         setStateFromRequest(RobotState.ALGAE_INTAKE_L3_APPROACH);
       } else {

@@ -607,7 +607,6 @@ public class RobotManager extends StateMachine<RobotState> {
         afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
-        autoAlign.approachPipeRequest();
         vision.setState(VisionState.HANDOFF);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -1476,6 +1475,7 @@ public class RobotManager extends StateMachine<RobotState> {
       return;
     }
     scoringAlignActive = true;
+    autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
 
@@ -1494,6 +1494,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
+    autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       switch (robotScoringSide) {
@@ -1511,6 +1512,7 @@ public class RobotManager extends StateMachine<RobotState> {
     }
 
     scoringAlignActive = true;
+    autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       switch (robotScoringSide) {
