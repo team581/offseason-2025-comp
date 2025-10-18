@@ -1,13 +1,11 @@
 package frc.robot.config;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.VoltageConfigs;
@@ -17,6 +15,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -41,6 +40,8 @@ class CompConfig {
           new IntakeConfig(
               CANIVORE_NAME,
               25,
+              26,
+              new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -51,7 +52,7 @@ class CompConfig {
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ClawConfig(
-              CANIVORE_NAME, 99, 99, false, new Debouncer(0), new TalonFXConfiguration()),
+              CANIVORE_NAME, 16, 27, false, new Debouncer(0), new TalonFXConfiguration()),
           new DeployConfig(
               CANIVORE_NAME,
               20,
@@ -76,8 +77,6 @@ class CompConfig {
               CANIVORE_NAME,
               21,
               22,
-              23,
-              24,
               0.0,
               0.0,
               // Climb motor
@@ -99,21 +98,7 @@ class CompConfig {
                       new MagnetSensorConfigs()
                           .withMagnetOffset(-0.44921875)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                          .withAbsoluteSensorDiscontinuityPoint(0.5)),
-              // Grab motor
-              new TalonFXConfiguration()
-                  .withCurrentLimits(
-                      new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(35)
-                          .withSupplyCurrentLimit(35))
-                  .withMotorOutput(
-                      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
-              new CANrangeConfiguration()
-                  .withProximityParams(
-                      new ProximityParamsConfigs()
-                          .withProximityThreshold(0.05)
-                          .withProximityHysteresis(0.01)
-                          .withMinSignalStrengthForValidMeasurement(7000))),
+                          .withAbsoluteSensorDiscontinuityPoint(0.5))),
           new SingulatorConfig(
               CANIVORE_NAME,
               28,
@@ -143,7 +128,7 @@ class CompConfig {
           // TODO: add radius and sensor-mechanism ratio
           new ElevatorConfig(
               CANIVORE_NAME,
-              999,
+              15,
               0.0,
               0.0,
               0.0,
@@ -153,7 +138,7 @@ class CompConfig {
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2 * Math.PI))),
           new ArmConfig(
               RIO_CAN_NAME,
-              999,
+              18,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
