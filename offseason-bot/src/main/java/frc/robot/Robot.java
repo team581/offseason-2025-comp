@@ -58,7 +58,7 @@ public class Robot extends Base581Robot {
   private final VisionSubsystem vision =
       new VisionSubsystem(imu, leftLimelight, rightlLimelight, leftLimelight, rightlLimelight);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
-  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, true);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
   private final RobotManager robotManager =
@@ -130,9 +130,41 @@ public class Robot extends Base581Robot {
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
-    hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
-    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
-    hardware.driverController.back().onTrue(localization.getZeroCommand());
+            hardware.driverController.rightTrigger().onTrue(actions.confirmScoreCommand());
+            hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
+            hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
+            hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+            hardware
+                .driverController
+                .y()
+                .onTrue(actions.highLineupCommand())
+                .onFalse(actions.scoringAlignOffCommand());
+            hardware
+                .driverController
+                .x()
+                .onTrue(actions.l3LineupCommand())
+                .onFalse(actions.scoringAlignOffCommand());
+            hardware
+                .driverController
+                .b()
+                .onTrue(actions.l2LineupCommand())
+                .onFalse(actions.scoringAlignOffCommand());
+            hardware
+                .driverController
+                .a()
+                .onTrue(actions.lowLineupCommand())
+                .onFalse(actions.scoringAlignOffCommand());
+
+            hardware.driverController.povUp().onTrue(actions.climbUpCommand());
+            hardware.driverController.povDown().onTrue(actions.climbStopCommand());
+            hardware.driverController.povLeft().onTrue(actions.lowStowCommand());
+            hardware
+                .driverController
+                .povRight()
+                .onTrue(actions.algaeReefIntakeCommand())
+                .onFalse(actions.scoringAlignOffCommand());
+
+            hardware.driverController.back().onTrue(localization.getZeroCommand());
     hardware.operatorController.y().onTrue(actions.rehomeDeployCommand());
   }
 }
