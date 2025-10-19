@@ -133,8 +133,31 @@ public class GroundManager extends StateMachine<GroundState> {
   protected void collectInputs() {
     topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
     bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    if (RobotBase.isSimulation()) {
+      topRaw =
+          switch (getState()) {
+            case HANDOFF_RELEASE -> !timeout(0.5);
+            case IDLE_NO_GP -> false;
+            case IDLE_GP -> true;
+            case HANDOFF_WAIT -> true;
+            case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(2);
+            default -> false;
+          };
+
+          bottomRaw =
+          switch (getState()) {
+            case HANDOFF_RELEASE -> !timeout(0.5);
+            case IDLE_NO_GP -> false;
+            case IDLE_GP -> true;
+            case HANDOFF_WAIT -> true;
+            case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(1.9);
+            default -> false;
+          };
+    }
     topDebounced = topDebouncer.calculate(topRaw);
     bottomDebounced = bottomDebouncer.calculate(bottomRaw);
+
+
   }
 
   @Override

@@ -624,9 +624,8 @@ public class RobotManager extends StateMachine<RobotState> {
   @Override
   public void whileInState(RobotState currentState) {
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
-    DogLog.log("CollisionAvoidance/latestUnsafe", LATEST_UNSAFE);
-    // Continuous state actions
-    moveSuperstructure(LATEST_ELEVATOR_GOAL, LATEST_ARM_GOAL);
+    MechanismVisualizer.log(elevator.getHeight(), arm.getAngle(), groundManager.deploy.getAngle());
+
 
     switch (getState()) {
       case ALGAE_INTAKE_L2_APPROACH,

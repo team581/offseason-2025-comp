@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachine;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
@@ -253,45 +254,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-  @Override
-  public void simulationPeriodic() {
-    if (getState() == ArmState.PRE_MATCH_HOMING) {
-      motor.setPosition(0);
-      setStateFromRequest(ArmState.HOLDING_UPRIGHT);
-    }
-
-    if (!simDidInit) {
-      motor.getConfigurator().refresh(simMotorConfig);
-
-      simConstraints =
-          new TrapezoidProfile.Constraints(
-              simMotorConfig.MotionMagic.MotionMagicCruiseVelocity,
-              simMotorConfig.MotionMagic.MotionMagicAcceleration);
-
-      simDidInit = true;
-    }
-
-    if (DriverStation.isDisabled()) {
-      return;
-    }
-
-    var currentState =
-        new TrapezoidProfile.State(
-            motor.getPosition().getValueAsDouble(), motor.getVelocity().getValueAsDouble());
-    var wantedState =
-        new TrapezoidProfile.State(motor.getClosedLoopReference().getValueAsDouble(), 0);
-
-    var predictedState =
-        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
-
-    var motorSim = motor.getSimState();
-
-    motorSim.setRawRotorPosition(
-        predictedState.position * simMotorConfig.Feedback.SensorToMechanismRatio);
-
-    motorSim.setRotorVelocity(
-        predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
-  }
 
   @Override
   public void disabledInit() {
@@ -299,6 +261,22 @@ public class ArmSubsystem extends StateMachine<ArmState> {
       // reset position to be 0*
       var motorSim = motor.getSimState();
       motorSim.setRawRotorPosition(rawMotorAngle);
+    }
+  }
+
+   @Override
+  public void simulationPeriodic() {
+    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      motor.setPosition(0);
+      setStateFromRequest(ArmState.HOLDING_UPRIGHT);
+    }
+
+    armSimulation.update();
+
+    if (DriverStation.isDisabled()) {
+      armSimulation.seedPosition(rawMotorAngle);
     }
   }
 }
