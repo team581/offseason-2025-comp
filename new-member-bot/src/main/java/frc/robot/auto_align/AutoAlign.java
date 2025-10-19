@@ -3,7 +3,7 @@ package frc.robot.auto_align;
 import com.google.common.collect.ImmutableList;
 import com.team581.auto_align.TagAlignState;
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
@@ -23,8 +23,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import java.util.Comparator;
 
-public class AutoAlign extends StateMachine<AutoAlignState> {
-
+public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
       ImmutableList.copyOf(ReefSide.values());
   public static final ImmutableList<ReefPipe> ALL_REEF_PIPES =

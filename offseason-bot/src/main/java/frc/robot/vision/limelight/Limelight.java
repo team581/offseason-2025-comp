@@ -2,7 +2,7 @@ package frc.robot.vision.limelight;
 
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +18,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
-public class Limelight extends StateMachine<LimelightState> {
+public class Limelight extends StateMachineSubsystem<LimelightState> {
   private static final int[] VALID_APRILTAGS =
       new int[] {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 

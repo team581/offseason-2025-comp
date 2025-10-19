@@ -1,6 +1,6 @@
 package com.team581.util.scheduling;
 
-public enum LifecycleStage {
+public enum RobotMatchState {
   TELEOP,
   AUTONOMOUS,
   TEST,

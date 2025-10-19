@@ -1,7 +1,7 @@
 package com.team581;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.team581.util.scheduling.LifecycleSubsystemManager;
+import com.team581.util.scheduling.SubsystemExecutionSequencer;
 import com.team581.util.tuning.ElasticLayoutUtil;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
@@ -43,7 +43,7 @@ public abstract class Base581Robot extends TimedRobot {
     DogLog.clearFault(FINALIZE_INIT_FAULT);
 
     // This must be run before any commands are scheduled
-    LifecycleSubsystemManager.ready();
+    SubsystemExecutionSequencer.ready();
 
     configureBindings();
   }
@@ -83,7 +83,7 @@ public abstract class Base581Robot extends TimedRobot {
     DogLog.time("Scheduler/CommandSchedulerPeriodic");
     CommandScheduler.getInstance().run();
     DogLog.timeEnd("Scheduler/CommandSchedulerPeriodic");
-    LifecycleSubsystemManager.log();
+    SubsystemExecutionSequencer.log();
 
     if (RobotController.getBatteryVoltage() < 12.5) {
       DogLog.logFault("Battery voltage low", AlertType.kWarning);

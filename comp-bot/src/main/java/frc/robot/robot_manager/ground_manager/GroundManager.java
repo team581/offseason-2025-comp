@@ -1,6 +1,6 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
@@ -8,7 +8,7 @@ import frc.robot.intake_deploy.DeployState;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class GroundManager extends StateMachine<GroundState> {
+public class GroundManager extends StateMachineSubsystem<GroundState> {
   public final DeploySubsystem deploy;
   public final IntakeSubsystem intake;
   private boolean hasCoral = false;

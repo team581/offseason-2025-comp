@@ -1,7 +1,7 @@
 package frc.robot.robot_manager;
 
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,7 +25,7 @@ import frc.robot.vision.VisionSubsystem;
 import frc.robot.wrist.WristState;
 import frc.robot.wrist.WristSubsystem;
 
-public class RobotManager extends StateMachine<RobotState> {
+public class RobotManager extends StateMachineSubsystem<RobotState> {
   public final ClawSubsystem claw;
   public final ElevatorSubsystem elevator;
   public final WristSubsystem wrist;

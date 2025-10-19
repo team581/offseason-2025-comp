@@ -2,7 +2,7 @@ package frc.robot.robot_manager.ground_manager;
 
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.signals.S2StateValue;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,7 +16,7 @@ import frc.robot.singulator.SingulatorState;
 import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class GroundManager extends StateMachine<GroundState> {
+public class GroundManager extends StateMachineSubsystem<GroundState> {
   public final IntakeSubsystem intake;
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;

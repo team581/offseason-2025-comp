@@ -2,11 +2,11 @@ package frc.robot;
 
 import com.team581.Base581Robot;
 import com.team581.controller.RumbleControllerSubsystem;
+import com.team581.trailblazer.Trailblazer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.autos.Autos;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -28,7 +28,6 @@ import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
 
 public class Robot extends Base581Robot {
-  private final Command autonomousCommand = Commands.none();
   private final Hardware hardware = new Hardware();
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
@@ -76,6 +75,10 @@ public class Robot extends Base581Robot {
           rumble);
 
   private final RobotCommands actions = new RobotCommands(robotManager);
+  private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+
+  @SuppressWarnings("unused") // Registers itself as a subsystem
+  private final Autos autos = new Autos(robotManager, trailblazer);
 
   public Robot() {
     logMetadata(
@@ -101,16 +104,13 @@ public class Robot extends Base581Robot {
   @Override
   public void autonomousInit() {
     super.autonomousInit();
-
-    // autonomousCommand = autos.getAutoCommand();
-    // autonomousCommand.schedule();
+    // The Autos subsystem handles running the selected auto automatically
   }
 
   @Override
   public void teleopInit() {
     super.teleopInit();
-
-    autonomousCommand.cancel();
+    // No need to cancel anything, the Autos subsystem will stop running the auto
   }
 
   @Override

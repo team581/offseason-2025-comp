@@ -4,7 +4,7 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.GlobalConfig;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ClimberSubsystem extends StateMachine<ClimberState> {
+public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
 
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;

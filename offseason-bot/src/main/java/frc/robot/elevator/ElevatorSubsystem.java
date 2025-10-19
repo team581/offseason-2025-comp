@@ -4,7 +4,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.simkit.SimKit;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ElevatorSubsystem extends StateMachine<ElevatorState> {
+public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   private static final double TOLERANCE = 5.0;
   private static final double NEAR_TOLERANCE = 20.0;
 

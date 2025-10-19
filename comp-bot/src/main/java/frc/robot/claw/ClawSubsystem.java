@@ -3,14 +3,14 @@ package frc.robot.claw;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ClawSubsystem extends StateMachine<ClawState> {
+public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().claw().debouncer();

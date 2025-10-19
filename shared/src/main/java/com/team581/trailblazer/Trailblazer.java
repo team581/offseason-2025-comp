@@ -65,57 +65,13 @@ public class Trailblazer {
   public Command followSegment(AutoSegment segment, boolean shouldEnd) {
     TrailblazerPathLogger.logSegment(segment);
     var command =
-        Commands.runOnce(
-                () -> {
-                  pathTracker.resetAndSetPoints(segment.points);
-                  previousAutoPointIndex = -1;
-                  DogLog.log(
-                      "Autos/Trailblazer/CurrentSegment/InitialPoints",
-                      segment.points.stream()
-                          .map(point -> point.poseSupplier.get())
-                          .toArray(Pose2d[]::new));
-                })
-            .alongWith(
-                Commands.run(
-                    () -> {
-                      pathTracker.updateRobotState(
-                          localization.getPose(), swerve.getFieldRelativeSpeeds());
-                      var currentAutoPointIndex = pathTracker.getCurrentPointIndex();
-                      var currentAutoPoint = segment.points.get(currentAutoPointIndex);
-                      double distanceToSegmentEnd =
-                          segment.getRemainingDistance(
-                              localization.getPose(), currentAutoPointIndex);
-
-                      var constrainedVelocityGoal =
-                          getSwerveSetpoint(
-                              currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
-                      swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
-
-                      DogLog.log(
-                          "Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
-                      if (previousAutoPointIndex != currentAutoPointIndex) {
-                        // Currently tracked point has changed, trigger side effects
-
-                        // Each of the points in (previous, current]
-                        var pointsToRunSideEffectsFor =
-                            segment.points.subList(
-                                previousAutoPointIndex + 1, currentAutoPointIndex + 1);
-                        for (var passedPoint : pointsToRunSideEffectsFor) {
-                          DogLog.log(
-                              "Autos/Trailblazer/Tracker/CommandTriggered",
-                              passedPoint.command.getName());
-                          passedPoint.command.schedule();
-                        }
-                        previousAutoPointIndex = currentAutoPointIndex;
-                      }
-                    },
-                    swerve))
+        Commands.runOnce(() -> followSegmentInit(segment))
+            .alongWith(Commands.run(() -> followSegmentPeriodic(segment), swerve))
             .withName("FollowSegmentIndefinitely");
 
     if (shouldEnd) {
       return command
-          .until(
-              () -> segment.isFinished(localization.getPose(), pathTracker.getCurrentPointIndex()))
+          .until(() -> followSegmentIsFinished(segment))
           .andThen(
               Commands.runOnce(
                   () -> {
@@ -125,6 +81,44 @@ public class Trailblazer {
     }
 
     return command;
+  }
+
+  public boolean followSegmentIsFinished(AutoSegment segment) {
+    return segment.isFinished(localization.getPose(), pathTracker.getCurrentPointIndex());
+  }
+
+  public void followSegmentPeriodic(AutoSegment segment) {
+    pathTracker.updateRobotState(localization.getPose(), swerve.getFieldRelativeSpeeds());
+    var currentAutoPointIndex = pathTracker.getCurrentPointIndex();
+    var currentAutoPoint = segment.points.get(currentAutoPointIndex);
+    double distanceToSegmentEnd =
+        segment.getRemainingDistance(localization.getPose(), currentAutoPointIndex);
+
+    var constrainedVelocityGoal =
+        getSwerveSetpoint(currentAutoPoint, segment.defaultConstraints, distanceToSegmentEnd);
+    swerve.setFieldRelativeAutoSpeeds(constrainedVelocityGoal);
+
+    DogLog.log("Autos/Trailblazer/Tracker/CurrentPointIndex", currentAutoPointIndex);
+    if (previousAutoPointIndex != currentAutoPointIndex) {
+      // Currently tracked point has changed, trigger side effects
+
+      // Each of the points in (previous, current]
+      var pointsToRunSideEffectsFor =
+          segment.points.subList(previousAutoPointIndex + 1, currentAutoPointIndex + 1);
+      for (var passedPoint : pointsToRunSideEffectsFor) {
+        DogLog.log("Autos/Trailblazer/Tracker/CommandTriggered", passedPoint.command.getName());
+        passedPoint.command.schedule();
+      }
+      previousAutoPointIndex = currentAutoPointIndex;
+    }
+  }
+
+  public void followSegmentInit(AutoSegment segment) {
+    pathTracker.resetAndSetPoints(segment.points);
+    previousAutoPointIndex = -1;
+    DogLog.log(
+        "Autos/Trailblazer/CurrentSegment/InitialPoints",
+        segment.points.stream().map(point -> point.poseSupplier.get()).toArray(Pose2d[]::new));
   }
 
   private ChassisSpeeds getSwerveSetpoint(

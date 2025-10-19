@@ -10,17 +10,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.autos.AutoBlocks;
-import frc.robot.autos.BaseAuto;
+import frc.robot.autos.BaseCommandAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 
-public class BlueLollipop4PieceR1AB extends BaseAuto {
+public class BlueLollipop4PieceR1AB extends BaseCommandAuto {
   public BlueLollipop4PieceR1AB(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
   @Override
-  protected Pose2d getStartingPose() {
+  public Pose2d getStartingPose() {
     return Points.START_R1_AND_B1.bluePose;
   }
 

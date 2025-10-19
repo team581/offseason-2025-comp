@@ -2,7 +2,7 @@ package frc.robot.robot_manager;
 
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -31,7 +31,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 
-public class RobotManager extends StateMachine<RobotState> {
+public class RobotManager extends StateMachineSubsystem<RobotState> {
   public final LocalizationSubsystem localization;
 
   public final VisionSubsystem vision;

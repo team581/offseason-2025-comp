@@ -1,7 +1,7 @@
 package com.team581.controller;
 
 import com.team581.util.scheduling.SubsystemPriorityBase;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class RumbleControllerSubsystem extends StateMachine<RumbleControllerState> {
+public class RumbleControllerSubsystem extends StateMachineSubsystem<RumbleControllerState> {
   private final Timer matchTimer = new Timer();
   private final GenericHID controller;
   public static final double MATCH_DURATION_TELEOP = 135;

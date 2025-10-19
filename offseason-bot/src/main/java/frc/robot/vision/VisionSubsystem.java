@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
 import com.team581.mechanisms.vision.CameraHealth;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -14,7 +14,7 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.OptionalTagResult;
 
-public class VisionSubsystem extends StateMachine<VisionState> {
+public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
 
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final Debouncer seeingTagForPoseResetDebouncer =

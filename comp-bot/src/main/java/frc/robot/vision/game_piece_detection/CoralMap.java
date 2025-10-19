@@ -2,7 +2,7 @@ package frc.robot.vision.game_piece_detection;
 
 import com.team581.math.MathHelpers;
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class CoralMap extends StateMachine<CoralMapState> {
+public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   private static final int LOLLIPOP_FILTER_TAPS = 9;
   private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
