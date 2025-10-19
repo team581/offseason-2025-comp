@@ -626,7 +626,6 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     MechanismVisualizer.log(elevator.getHeight(), arm.getAngle(), groundManager.deploy.getAngle());
 
-
     switch (getState()) {
       case ALGAE_INTAKE_L2_APPROACH,
           ALGAE_INTAKE_L3_APPROACH,

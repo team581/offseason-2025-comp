@@ -144,7 +144,7 @@ public class GroundManager extends StateMachine<GroundState> {
             default -> false;
           };
 
-          bottomRaw =
+      bottomRaw =
           switch (getState()) {
             case HANDOFF_RELEASE -> !timeout(0.5);
             case IDLE_NO_GP -> false;
@@ -156,8 +156,6 @@ public class GroundManager extends StateMachine<GroundState> {
     }
     topDebounced = topDebouncer.calculate(topRaw);
     bottomDebounced = bottomDebouncer.calculate(bottomRaw);
-
-
   }
 
   @Override

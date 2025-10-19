@@ -254,7 +254,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-
   @Override
   public void disabledInit() {
     if (RobotBase.isSimulation()) {
@@ -264,7 +263,7 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     }
   }
 
-   @Override
+  @Override
   public void simulationPeriodic() {
     var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
 

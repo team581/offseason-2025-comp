@@ -136,32 +136,31 @@ class CompConfig {
               100.0,
               0.0,
               new TalonFXConfiguration()
-              .withCurrentLimits(
-                  new CurrentLimitsConfigs()
-                      .withSupplyCurrentLimit(60)
-                      .withStatorCurrentLimit(60))
-              .withMotorOutput(
-                  new MotorOutputConfigs()
-                      .withInverted(InvertedValue.Clockwise_Positive)
-                      .withNeutralMode(NeutralModeValue.Brake))
-              .withSlot0(
-                  new Slot0Configs()
-                      // kp 30.0
-                      .withKP(30.0)
-                      .withKD(0.0)
-                      .withKV(0)
-                      // kg 0.8
-                      .withKG(0.4)
-                      .withGravityType(GravityTypeValue.Elevator_Static))
-              .withMotionMagic(
-                  new MotionMagicConfigs()
-                      .withMotionMagicAcceleration(300.0)
-                      .withMotionMagicCruiseVelocity(320.0))
-              .withFeedback(
-                  new FeedbackConfigs()
-                      .withSensorToMechanismRatio(
-                          1.0 / ((8.0 / 40.0) * (2.0 / 1.0) * (Math.PI * 1.274))))
-                          ),
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withSupplyCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake))
+                  .withSlot0(
+                      new Slot0Configs()
+                          // kp 30.0
+                          .withKP(30.0)
+                          .withKD(0.0)
+                          .withKV(0)
+                          // kg 0.8
+                          .withKG(0.4)
+                          .withGravityType(GravityTypeValue.Elevator_Static))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(300.0)
+                          .withMotionMagicCruiseVelocity(320.0))
+                  .withFeedback(
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio(
+                              1.0 / ((8.0 / 40.0) * (2.0 / 1.0) * (Math.PI * 1.274))))),
           new ArmConfig(
               RIO_CAN_NAME,
               18,

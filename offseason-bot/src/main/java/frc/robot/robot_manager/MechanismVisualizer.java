@@ -47,7 +47,6 @@ public final class MechanismVisualizer {
     DogLog.log("SuperstructureVisualization/CurrentElevatorHeight", currentElevatorHeight);
     DogLog.log("SuperstructureVisualization/CurrentArmAngle", currentArmAngle);
 
-
     SmartDashboard.putData("SuperstructureVisualization", mechanism);
 
     var armAngle = -1.0 * (currentArmAngle + 360 - elevator.getAngle());
