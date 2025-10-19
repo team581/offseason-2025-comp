@@ -4,11 +4,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
@@ -71,11 +71,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
       new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
 
-  // TODO: tune velocity
-  private final PositionVoltage algaeFling =
-      new PositionVoltage(Units.degreesToRotations(ArmState.ALGAE_FLING_SWING.getAngle()))
-          .withVelocity(Units.degreesToRotations(90));
-
   public ArmSubsystem(TalonFX motor, ElevatorSubsystem elevator) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
@@ -134,7 +129,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
       case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
-      case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -211,12 +205,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
           motor.setControl(coastNeutralRequest);
         }
       }
-      case SPIN_TO_WIN -> {
-        motor.setControl(spinToWin);
-      }
-      case ALGAE_FLING_SWING -> {
-        motor.setControl(algaeFling);
-      }
       case CORAL_HANDOFF -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(usedHandoffAngle));
       }
@@ -254,51 +242,27 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   @Override
-  public void simulationPeriodic() {
-    if (getState() == ArmState.PRE_MATCH_HOMING) {
-      motor.setPosition(0);
-      setStateFromRequest(ArmState.HOLDING_UPRIGHT);
-    }
-
-    if (!simDidInit) {
-      motor.getConfigurator().refresh(simMotorConfig);
-
-      simConstraints =
-          new TrapezoidProfile.Constraints(
-              simMotorConfig.MotionMagic.MotionMagicCruiseVelocity,
-              simMotorConfig.MotionMagic.MotionMagicAcceleration);
-
-      simDidInit = true;
-    }
-
-    if (DriverStation.isDisabled()) {
-      return;
-    }
-
-    var currentState =
-        new TrapezoidProfile.State(
-            motor.getPosition().getValueAsDouble(), motor.getVelocity().getValueAsDouble());
-    var wantedState =
-        new TrapezoidProfile.State(motor.getClosedLoopReference().getValueAsDouble(), 0);
-
-    var predictedState =
-        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
-
-    var motorSim = motor.getSimState();
-
-    motorSim.setRawRotorPosition(
-        predictedState.position * simMotorConfig.Feedback.SensorToMechanismRatio);
-
-    motorSim.setRotorVelocity(
-        predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
-  }
-
-  @Override
   public void disabledInit() {
     if (RobotBase.isSimulation()) {
       // reset position to be 0*
       var motorSim = motor.getSimState();
       motorSim.setRawRotorPosition(rawMotorAngle);
+    }
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      motor.setPosition(0);
+      setStateFromRequest(ArmState.HOLDING_UPRIGHT);
+    }
+
+    armSimulation.update();
+
+    if (DriverStation.isDisabled()) {
+      armSimulation.seedPosition(rawMotorAngle);
     }
   }
 }

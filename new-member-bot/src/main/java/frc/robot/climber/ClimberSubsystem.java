@@ -2,39 +2,45 @@ package frc.robot.climber;
 
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.GlobalConfig;
-import com.team581.util.state_machines.StateMachineSubsystem;
+import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
-
+public class ClimberSubsystem extends StateMachine<ClimberState> {
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
-
-  private final LinearFilter cancoderVelocityFilter = LinearFilter.movingAverage(7);
+  private final TalonFX grabMotor;
+  private final CANrange canRange;
+  private final Debouncer canRangeDebouncer = new Debouncer(0.25, DebounceType.kBoth);
 
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private double cancoderVelocity = 0;
   private double currentAngle = 0.0;
   private double climberMotorAngle = 0.0;
-  private static final boolean HOLDING_CAGE = false;
+  private boolean holdingCage = false;
 
-  public ClimberSubsystem(TalonFX climbMotor, CANcoder encoder) {
+  public ClimberSubsystem(
+      TalonFX climbMotor, CANcoder encoder, TalonFX grabMotor, CANrange canRange) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOPPED);
 
     this.climbMotor = climbMotor;
     this.encoder = encoder;
+    this.grabMotor = grabMotor;
+    this.canRange = canRange;
 
     climbMotor.getConfigurator().apply(RobotConfig.get().climber().climbMotorConfig());
     encoder.getConfigurator().apply(RobotConfig.get().climber().cancoderConfig());
+    grabMotor.getConfigurator().apply(RobotConfig.get().climber().grabMotorConfig());
+    canRange.getConfigurator().apply(RobotConfig.get().climber().canRangeConfig());
   }
 
   @Override
@@ -46,9 +52,11 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
         } else {
           climbMotor.disable();
         }
+        grabMotor.disable();
       }
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
+        grabMotor.disable();
 
         if (currentAngle < PASS_ANGLE_CHECK) {
           setStateFromRequest(ClimberState.LINEUP_BACKWARD);
@@ -61,9 +69,10 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
-        if (HOLDING_CAGE) {
+        if (holdingCage) {
           setStateFromRequest(ClimberState.HANGING);
         }
+        grabMotor.setVoltage(12.0);
       }
       case HANGING -> {
         if (atGoal()) {
@@ -71,6 +80,7 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
+        grabMotor.disable();
       }
     }
 
@@ -98,24 +108,24 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
   }
 
   public boolean holdingCage() {
-    return HOLDING_CAGE;
+    return holdingCage;
   }
 
   @Override
   protected void collectInputs() {
+    if (getState() == ClimberState.STOPPED) {
+      return;
+    }
+
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
-    cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
-
-    DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
+    holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
 
-    DogLog.log("Climber/HoldingCage", HOLDING_CAGE);
-
-    DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Climber/HoldingCage", holdingCage);
   }
 
   public boolean atGoal() {

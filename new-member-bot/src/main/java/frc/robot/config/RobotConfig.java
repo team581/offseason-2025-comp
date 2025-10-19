@@ -8,18 +8,12 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 
 public record RobotConfig(
-    IntakeConfig intake,
     ClawConfig claw,
-    DeployConfig deploy,
     ClimberConfig climber,
-    SingulatorConfig singulator,
     ElevatorConfig elevator,
-    ArmConfig arm,
+    WristConfig wrist,
     VisionConfig vision,
     SwerveConfig swerve) {
-
-  public record IntakeConfig(
-      String canBusName, int motorId, Debouncer debouncer, TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
@@ -27,24 +21,6 @@ public record RobotConfig(
       int candiId,
       boolean sensorFlipped,
       Debouncer debouncer,
-      TalonFXConfiguration motorConfig) {}
-
-  public record SingulatorConfig(
-      String canBusName,
-      int leftMotorId,
-      int rightMotorId,
-      TalonFXConfiguration leftMotorConfig,
-      TalonFXConfiguration rightMotorConfig) {}
-
-  public record DeployConfig(
-      String canBusName,
-      int motorId,
-      int candiId,
-      double minAngle,
-      double maxAngle,
-      double homingVoltage,
-      double homingCurrentThreshold,
-      double homingEndPosition,
       TalonFXConfiguration motorConfig) {}
 
   public record ClimberConfig(
@@ -70,7 +46,7 @@ public record RobotConfig(
       double minHeight,
       TalonFXConfiguration motorConfig) {}
 
-  public record ArmConfig(
+  public record WristConfig(
       String canBusName,
       int motorId,
       TalonFXConfiguration motorConfig,

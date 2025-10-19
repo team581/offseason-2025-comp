@@ -3,6 +3,7 @@ package frc.robot.intake_deploy;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -14,7 +15,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
   private final TalonFX motor;
   private final CoastOut coastRequest = new CoastOut();
-  private final PositionVoltage positionRequest = new PositionVoltage(0.0);
+  private final PositionVoltage positionRequest = new PositionVoltage(0);
   private final LinearFilter currentFilter = LinearFilter.movingAverage(6);
   private static final double TOLERANCE = 3.0;
 
@@ -93,5 +94,26 @@ public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
       return;
     }
     setState(DeployState.REHOME);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    var deploySimulation =
+        SimKit.positionMechanism(
+            "deploy",
+            (mechanism) ->
+                mechanism
+                    .addMotor(motor)
+                    .withMinPosition(
+                        Units.degreesToRotations(RobotConfig.get().deploy().minAngle()))
+                    .withMaxPosition(
+                        Units.degreesToRotations(RobotConfig.get().deploy().maxAngle())));
+
+    if (getState() == DeployState.UNHOMED || getState() == DeployState.REHOME) {
+      motor.setPosition(RobotConfig.get().deploy().homingEndPosition());
+      setStateFromRequest(DeployState.STOWED);
+    }
+
+    deploySimulation.update();
   }
 }

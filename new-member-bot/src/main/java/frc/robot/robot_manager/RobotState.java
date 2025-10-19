@@ -4,56 +4,58 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 public enum RobotState {
+  STARTING_POSITION(false, ClawGamePiece.NONE),
   // Stowed states
-  CLAW_EMPTY(false),
-  CLAW_CORAL(false),
-  CLAW_ALGAE(false),
+  CLAW_EMPTY(false, ClawGamePiece.NONE),
+  CLAW_CORAL(false, ClawGamePiece.CORAL),
+  CLAW_ALGAE(false, ClawGamePiece.ALGAE),
 
   // Coral intake
-  CORAL_INTAKE_GROUND(false),
+  CORAL_INTAKE_GROUND(false, ClawGamePiece.NONE),
 
-  CORAL_OUTTAKE(false),
+  CORAL_OUTTAKE(false, ClawGamePiece.CORAL),
 
   // Coral score L1
-  CORAL_L1_APPROACH(false),
-  CORAL_L1_LINEUP(false),
-  CORAL_L1_PLACE(false),
-  CORAL_L1_RELEASE(false),
+  CORAL_L1_APPROACH(false, ClawGamePiece.CORAL),
+  CORAL_L1_LINEUP(false, ClawGamePiece.CORAL),
+  CORAL_L1_RELEASE(false, ClawGamePiece.CORAL),
 
   // Algae intake states
-  ALGAE_INTAKE_FLOOR(false),
+  ALGAE_INTAKE_FLOOR(false, ClawGamePiece.NONE),
 
-  ALGAE_INTAKE_L2(false),
-  ALGAE_INTAKE_L3(false),
+  ALGAE_INTAKE_L2(false, ClawGamePiece.NONE),
+  ALGAE_INTAKE_L3(false, ClawGamePiece.NONE),
 
-  ALGAE_INTAKE_L2_APPROACH(false),
-  ALGAE_INTAKE_L3_APPROACH(false),
+  ALGAE_INTAKE_L2_APPROACH(false, ClawGamePiece.NONE),
+  ALGAE_INTAKE_L3_APPROACH(false, ClawGamePiece.NONE),
 
-  ALGAE_INTAKE_L2_HOLDING(false),
-  ALGAE_INTAKE_L3_HOLDING(false),
+  ALGAE_INTAKE_L2_HOLDING(false, ClawGamePiece.ALGAE),
+  ALGAE_INTAKE_L3_HOLDING(false, ClawGamePiece.ALGAE),
 
-  ALGAE_OUTTAKE(false),
+  ALGAE_OUTTAKE(false, ClawGamePiece.ALGAE),
 
   // Algae scoring states
-  ALGAE_NET_WAITING(false),
-  ALGAE_NET_RELEASE(false),
+  ALGAE_NET_WAITING(false, ClawGamePiece.ALGAE),
+  ALGAE_NET_RELEASE(false, ClawGamePiece.ALGAE),
 
-  ALGAE_PROCESSOR_WAITING(false),
-  ALGAE_PROCESSOR_RELEASE(false),
+  ALGAE_PROCESSOR_WAITING(false, ClawGamePiece.ALGAE),
+  ALGAE_PROCESSOR_RELEASE(false, ClawGamePiece.ALGAE),
 
   // Climbing states
-  CLIMBING_1_LINEUP(true),
-  CLIMBING_2_HANGING(true),
-  CLIMBER_STOP(true),
+  CLIMBING_1_LINEUP(true, ClawGamePiece.NONE),
+  CLIMBING_2_HANGING(true, ClawGamePiece.NONE),
+  CLIMBER_STOP(true, ClawGamePiece.NONE),
 
   // Misc states
-  REHOME_ELEVATOR(true),
-  UNJAM(false);
+  REHOME_ELEVATOR(true, ClawGamePiece.NONE),
+  UNJAM(false, ClawGamePiece.NONE);
 
   public final boolean climbingOrRehoming;
+  public final ClawGamePiece heldGamePiece;
 
-  private RobotState(boolean climbingOrRehoming) {
+  private RobotState(boolean climbingOrRehoming, ClawGamePiece heldGamePiece) {
     this.climbingOrRehoming = climbingOrRehoming;
+    this.heldGamePiece = heldGamePiece;
   }
 
   private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
