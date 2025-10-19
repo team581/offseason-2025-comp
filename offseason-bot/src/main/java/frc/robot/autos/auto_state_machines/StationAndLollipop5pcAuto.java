@@ -12,20 +12,20 @@ import frc.robot.robot_manager.RobotManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
+public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
   private AutoSegment path =
       new AutoSegment(
           CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
   private Pose2d prevPose = getStartingPose();
-  private final ArrayList<Red5pcAutoState> nextScoringPositions =
-      new ArrayList<Red5pcAutoState>(
+  private final ArrayList<StationAndLollipop5pcAutoState> nextScoringPositions =
+      new ArrayList<StationAndLollipop5pcAutoState>(
           List.of(
-              Red5pcAutoState.J_L4_LINEUP,
-              Red5pcAutoState.K_L4_LINEUP,
-              Red5pcAutoState.L_L4_LINEUP,
-              Red5pcAutoState.A_L4_LINEUP,
-              Red5pcAutoState.B_L4_LINEUP));
+              StationAndLollipop5pcAutoState.J_L4_LINEUP,
+              StationAndLollipop5pcAutoState.K_L4_LINEUP,
+              StationAndLollipop5pcAutoState.L_L4_LINEUP,
+              StationAndLollipop5pcAutoState.A_L4_LINEUP,
+              StationAndLollipop5pcAutoState.B_L4_LINEUP));
 
   public void createPath(Pose2d goalPose) {
 
@@ -33,13 +33,13 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
     prevPose = goalPose;
   }
 
-  public Red5pcAuto(RobotManager robot, Trailblazer trailblazer) {
-    super(Red5pcAutoState.IDLE, robot, trailblazer);
+  public StationAndLollipop5pcAuto(RobotManager robot, Trailblazer trailblazer) {
+    super(StationAndLollipop5pcAutoState.IDLE, robot, trailblazer);
   }
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.redPose;
+    return Points.START_R1_AND_B1.getPose();
   }
 
   private boolean superstructureAtGoal() {
@@ -51,41 +51,41 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
     return false;
   }
 
-  private Red5pcAutoState getNextReefPosition() {
+  private StationAndLollipop5pcAutoState getNextReefPosition() {
     nextScoringPositions.remove(0);
-    Red5pcAutoState nextScoringPosition = nextScoringPositions.get(0);
+    StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.get(0);
     return nextScoringPosition;
   }
 
   @Override
-  protected Red5pcAutoState getNextState(Red5pcAutoState currentState) {
+  protected StationAndLollipop5pcAutoState getNextState(StationAndLollipop5pcAutoState currentState) {
     return switch (currentState) {
-      case IDLE -> DriverStation.isAutonomous() ? Red5pcAutoState.A_L4_LINEUP : currentState;
+      case IDLE -> DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
 
       case J_L4_LINEUP ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.J_L4_PREPARE
+              ? StationAndLollipop5pcAutoState.J_L4_PREPARE
               : currentState;
       case J_L4_PREPARE ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose) && superstructureAtGoal()
-              ? Red5pcAutoState.J_L4_SCORE
+              ? StationAndLollipop5pcAutoState.J_L4_SCORE
               : currentState;
-      case J_L4_SCORE -> superstructureAtGoal() ? Red5pcAutoState.J_L4_POST_SCORING : currentState;
+      case J_L4_SCORE -> superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
       case J_L4_POST_SCORING ->
           superstructureAtGoal()
                   && robotManager.swerve.driveToPoseAtGoal(
                       currentState.pose) // trailblazer.followSegmentIsFinished(null)
-              ? Red5pcAutoState.PRE_INTAKING
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case PRE_INTAKING ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.INTAKING
+              ? StationAndLollipop5pcAutoState.INTAKING
               : currentState;
       case INTAKING ->
           (superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose))
                   || robotManager.claw.getHasGP()
-              ? Red5pcAutoState.POST_INTAKING
+              ? StationAndLollipop5pcAutoState.POST_INTAKING
               : currentState;
       case POST_INTAKING ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
@@ -94,79 +94,79 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
 
       case K_L4_LINEUP ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.K_L4_PREPARE
+              ? StationAndLollipop5pcAutoState.K_L4_PREPARE
               : currentState;
       case K_L4_PREPARE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.K_L4_SCORE
+              ? StationAndLollipop5pcAutoState.K_L4_SCORE
               : currentState;
       case K_L4_SCORE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.K_L4_POST_SCORING
+              ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
               : currentState;
       case K_L4_POST_SCORING ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.PRE_INTAKING
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case L_L4_LINEUP ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.L_L4_PREPARE
+              ? StationAndLollipop5pcAutoState.L_L4_PREPARE
               : currentState;
       case L_L4_PREPARE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.L_L4_SCORE
+              ? StationAndLollipop5pcAutoState.L_L4_SCORE
               : currentState;
       case L_L4_SCORE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.L_L4_POST_SCORING
+              ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
               : currentState;
       case L_L4_POST_SCORING ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.PRE_INTAKING
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case A_L4_LINEUP ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.A_L4_PREPARE
+              ? StationAndLollipop5pcAutoState.A_L4_PREPARE
               : currentState;
       case A_L4_PREPARE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.A_L4_SCORE
+              ? StationAndLollipop5pcAutoState.A_L4_SCORE
               : currentState;
       case A_L4_SCORE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.A_L4_POST_SCORING
+              ? StationAndLollipop5pcAutoState.A_L4_POST_SCORING
               : currentState;
       case A_L4_POST_SCORING ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.PRE_LOLLIPOP_2
+              ? StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2
               : currentState;
 
       case PRE_LOLLIPOP_2 ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.LOLLIPOP_2
+              ? StationAndLollipop5pcAutoState.LOLLIPOP_2
               : currentState;
       case LOLLIPOP_2 ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.POST_LOLLIPOP_2
+              ? StationAndLollipop5pcAutoState.POST_LOLLIPOP_2
               : currentState;
       case POST_LOLLIPOP_2 ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.L_L4_LINEUP
+              ? StationAndLollipop5pcAutoState.L_L4_LINEUP
               : currentState;
 
       case B_L4_LINEUP ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.B_L4_PREPARE
+              ? StationAndLollipop5pcAutoState.B_L4_PREPARE
               : currentState;
       case B_L4_PREPARE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.B_L4_SCORE
+              ? StationAndLollipop5pcAutoState.B_L4_SCORE
               : currentState;
       case B_L4_SCORE ->
           superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
-              ? Red5pcAutoState.B_L4_POST_SCORING
+              ? StationAndLollipop5pcAutoState.B_L4_POST_SCORING
               : currentState;
       case B_L4_POST_SCORING -> currentState;
 
@@ -183,35 +183,35 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
 
   // TRAILBLAZER/PUREPURSUIT VERSION OF AUTO
   // @Override
-  // protected Red5pcAutoState getNextState(Red5pcAutoState currentState) {
+  // protected StationAndLollipop5pcAuto getNextState(StationAndLollipop5pcAuto currentState) {
   //   return switch (currentState) {
-  //     case IDLE -> DriverStation.isAutonomous() ? Red5pcAutoState.A_L4_LINEUP : currentState;
+  //     case IDLE -> DriverStation.isAutonomous() ? StationAndLollipop5pcAuto.A_L4_LINEUP : currentState;
 
   //     case J_L4_LINEUP ->
   //         trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.J_L4_PREPARE
+  //             ? StationAndLollipop5pcAuto.J_L4_PREPARE
   //             : currentState;
   //     case J_L4_PREPARE ->
   //         trailblazer.followSegmentIsFinished(path) && superstructureAtGoal()
-  //             ? Red5pcAutoState.J_L4_SCORE
+  //             ? StationAndLollipop5pcAuto.J_L4_SCORE
   //             : currentState;
-  //     case J_L4_SCORE -> superstructureAtGoal() ? Red5pcAutoState.J_L4_POST_SCORING :
+  //     case J_L4_SCORE -> superstructureAtGoal() ? StationAndLollipop5pcAuto.J_L4_POST_SCORING :
   // currentState;
   //     case J_L4_POST_SCORING ->
   //         superstructureAtGoal()
   //                 && robotManager.swerve.driveToPoseAtGoal(
   //                     currentState.pose) // trailblazer.followSegmentIsFinished(null)
-  //             ? Red5pcAutoState.PRE_INTAKING
+  //             ? StationAndLollipop5pcAuto.PRE_INTAKING
   //             : currentState;
 
   //     case PRE_INTAKING ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.INTAKING
+  //             ? StationAndLollipop5pcAuto.INTAKING
   //             : currentState;
   //     case INTAKING ->
   //         (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
   //                 || robotManager.claw.getHasGP()
-  //             ? Red5pcAutoState.POST_INTAKING
+  //             ? StationAndLollipop5pcAuto.POST_INTAKING
   //             : currentState;
   //     case POST_INTAKING ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
@@ -220,79 +220,79 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
 
   //     case K_L4_LINEUP ->
   //         trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.K_L4_PREPARE
+  //             ? StationAndLollipop5pcAuto.K_L4_PREPARE
   //             : currentState;
   //     case K_L4_PREPARE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.K_L4_SCORE
+  //             ? StationAndLollipop5pcAuto.K_L4_SCORE
   //             : currentState;
   //     case K_L4_SCORE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.K_L4_POST_SCORING
+  //             ? StationAndLollipop5pcAuto.K_L4_POST_SCORING
   //             : currentState;
   //     case K_L4_POST_SCORING ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.PRE_INTAKING
+  //             ? StationAndLollipop5pcAuto.PRE_INTAKING
   //             : currentState;
 
   //     case L_L4_LINEUP ->
   //         trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.L_L4_PREPARE
+  //             ? StationAndLollipop5pcAuto.L_L4_PREPARE
   //             : currentState;
   //     case L_L4_PREPARE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.L_L4_SCORE
+  //             ? StationAndLollipop5pcAuto.L_L4_SCORE
   //             : currentState;
   //     case L_L4_SCORE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.L_L4_POST_SCORING
+  //             ? StationAndLollipop5pcAuto.L_L4_POST_SCORING
   //             : currentState;
   //     case L_L4_POST_SCORING ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.PRE_INTAKING
+  //             ? StationAndLollipop5pcAuto.PRE_INTAKING
   //             : currentState;
 
   //     case A_L4_LINEUP ->
   //         trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.A_L4_PREPARE
+  //             ? StationAndLollipop5pcAuto.A_L4_PREPARE
   //             : currentState;
   //     case A_L4_PREPARE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.A_L4_SCORE
+  //             ? StationAndLollipop5pcAuto.A_L4_SCORE
   //             : currentState;
   //     case A_L4_SCORE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.A_L4_POST_SCORING
+  //             ? StationAndLollipop5pcAuto.A_L4_POST_SCORING
   //             : currentState;
   //     case A_L4_POST_SCORING ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.PRE_LOLLIPOP_2
+  //             ? StationAndLollipop5pcAuto.PRE_LOLLIPOP_2
   //             : currentState;
 
   //     case PRE_LOLLIPOP_2 ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.LOLLIPOP_2
+  //             ? StationAndLollipop5pcAuto.LOLLIPOP_2
   //             : currentState;
   //     case LOLLIPOP_2 ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.POST_LOLLIPOP_2
+  //             ? StationAndLollipop5pcAuto.POST_LOLLIPOP_2
   //             : currentState;
   //     case POST_LOLLIPOP_2 ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.L_L4_LINEUP
+  //             ? StationAndLollipop5pcAuto.L_L4_LINEUP
   //             : currentState;
 
   //     case B_L4_LINEUP ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.B_L4_PREPARE
+  //             ? StationAndLollipop5pcAuto.B_L4_PREPARE
   //             : currentState;
   //     case B_L4_PREPARE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.B_L4_SCORE
+  //             ? StationAndLollipop5pcAuto.B_L4_SCORE
   //             : currentState;
   //     case B_L4_SCORE ->
   //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-  //             ? Red5pcAutoState.B_L4_POST_SCORING
+  //             ? StationAndLollipop5pcAuto.B_L4_POST_SCORING
   //             : currentState;
   //     case B_L4_POST_SCORING -> currentState;
 
@@ -307,7 +307,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
   //   };
   // }
   @Override
-  protected void afterTransition(Red5pcAutoState newState) {
+  protected void afterTransition(StationAndLollipop5pcAutoState newState) {
     switch (newState) {
       case IDLE -> {}
       case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
@@ -361,7 +361,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
   }
 
   //   @Override
-  //   protected void afterTransition(Red5pcAutoState newState) {
+  //   protected void afterTransition(StationAndLollipop5pcAuto newState) {
   //     switch (newState) {
   //       case IDLE -> {}
   //       case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
@@ -423,7 +423,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
   //   }
 
   @Override
-  protected void whileInState(Red5pcAutoState state) {
+  protected void whileInState(StationAndLollipop5pcAutoState state) {
     switch (state) {
       case IDLE -> {}
       case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
@@ -476,7 +476,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
     }
   }
   // @Override
-  // protected void whileInState(Red5pcAutoState state) {
+  // protected void whileInState(StationAndLollipop5pcAuto state) {
   //   switch (state) {
   //     case IDLE -> {}
   //     case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {

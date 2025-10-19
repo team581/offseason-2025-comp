@@ -3,7 +3,7 @@ package frc.robot.autos.auto_state_machines;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.Points;
 
-public enum Red5pcAutoState {
+public enum StationAndLollipop5pcAutoState {
   IDLE(Points.START_R2_AND_B2.getPose()), // (wait for auto to start)
   // -Pose R2
 
@@ -63,7 +63,7 @@ public enum Red5pcAutoState {
     return this.pose;
   }
 
-  private Red5pcAutoState(Pose2d pose) {
+  private StationAndLollipop5pcAutoState(Pose2d pose) {
     this.pose = pose;
   }
 }
