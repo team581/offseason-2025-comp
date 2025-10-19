@@ -138,8 +138,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L4_PREPARE_HANDOFF ->
           elevator.atGoal()
                   && arm.atGoal()
-                  && ((
-                          groundManager.getState().equals(GroundState.HANDOFF_WAIT)
+                  && ((groundManager.getState().equals(GroundState.HANDOFF_WAIT)
                           && groundManager.getTopHasGP())
                       || claw.getHasGP())
               ? currentState.getNextHandoffState()
@@ -158,7 +157,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       // Approach
       case CORAL_L1_APPROACH ->
-          elevator.nearGoal() && arm.nearGoal() ? currentState.getNextScoreState(): currentState;
+          elevator.nearGoal() && arm.nearGoal() ? currentState.getNextScoreState() : currentState;
 
       case CORAL_L2_APPROACH -> {
         yield elevator.nearGoal()

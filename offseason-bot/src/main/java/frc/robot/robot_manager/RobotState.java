@@ -1,9 +1,6 @@
 package frc.robot.robot_manager;
 
 import com.google.common.collect.ImmutableMap;
-
-import dev.doglog.DogLog;
-
 import java.util.Map;
 
 public enum RobotState {
@@ -171,7 +168,7 @@ public enum RobotState {
   }
 
   public static boolean missingGP(RobotState state, boolean hasGp) {
-   return (!state.clawGp.equals(ClawGamePiece.EMPTY) && !hasGp);
+    return (!state.clawGp.equals(ClawGamePiece.EMPTY) && !hasGp);
   }
 
   public static boolean isReleaseState(RobotState state) {
