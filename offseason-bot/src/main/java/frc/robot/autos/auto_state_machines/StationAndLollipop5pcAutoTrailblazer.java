@@ -11,11 +11,7 @@ import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.List;
 
-public class StationAndLollipop5pcAutoTrailblazer
-    extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
 public class StationAndLollipop5pcAutoTrailblazer
     extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
@@ -65,11 +61,8 @@ public class StationAndLollipop5pcAutoTrailblazer
   @Override
   protected StationAndLollipop5pcAutoState getNextState(
       StationAndLollipop5pcAutoState currentState) {
-  protected StationAndLollipop5pcAutoState getNextState(
-      StationAndLollipop5pcAutoState currentState) {
+
     return switch (currentState) {
-      case IDLE ->
-          DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
       case IDLE ->
           DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
 
@@ -83,10 +76,7 @@ public class StationAndLollipop5pcAutoTrailblazer
               : currentState;
       case J_L4_SCORE ->
           superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
-      case J_L4_SCORE ->
-          superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
       case J_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
@@ -203,15 +193,6 @@ public class StationAndLollipop5pcAutoTrailblazer
         trailblazer.followSegment(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-  @Override
-  protected void afterTransition(StationAndLollipop5pcAutoState newState) {
-    switch (newState) {
-      case IDLE -> {}
-      case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
 
       case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE -> {
         createPath(newState.pose);
@@ -251,46 +232,8 @@ public class StationAndLollipop5pcAutoTrailblazer
         trailblazer.followSegment(path);
         robotManager.stowRequest();
       }
-      case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.l4CoralAutoApproachRequest();
-      }
-      case A_L4_SCORE, B_L4_SCORE, I_L4_SCORE, J_L4_SCORE, K_L4_SCORE, L_L4_SCORE -> {
-        robotManager.confirmScoreRequest();
-      }
-      case A_L4_POST_SCORING,
-          B_L4_POST_SCORING,
-          I_L4_POST_SCORING,
-          J_L4_POST_SCORING,
-          K_L4_POST_SCORING,
-          L_L4_POST_SCORING -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.stowRequest();
-      }
-      case PRE_INTAKING -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.stowRequest();
-      }
-      case INTAKING -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
-      case POST_INTAKING -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
-      case PRE_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.stowRequest();
-      }
 
-      case LOLLIPOP_2 -> {
+      case POST_LOLLIPOP_2 -> {
         createPath(newState.pose);
         trailblazer.followSegment(path);
         robotManager.groundManager.intakeThenHandoffRequest();
@@ -300,19 +243,7 @@ public class StationAndLollipop5pcAutoTrailblazer
         trailblazer.followSegment(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-
-      case POST_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
-    }
-  }
-      case POST_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegment(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+      default -> throw new IllegalArgumentException("Unexpected value: " + newState);
     }
   }
 
