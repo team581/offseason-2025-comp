@@ -1,17 +1,19 @@
 package frc.robot.odometry;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-// TODO: Start basic, then add more complexity over time
 public class CustomOdometry {
-  private final Rotation2d gyroAngle;
+  private final Rotation2d currentGyroAngle;
   private final Pose2d pose;
 
   public CustomOdometry(Rotation2d initialGyroAngle, Pose2d initialPoseMeters) {
-    this.gyroAngle = initialGyroAngle;
+    this.currentGyroAngle = initialGyroAngle;
     this.pose = initialPoseMeters;
   }
 
@@ -40,53 +42,87 @@ public class CustomOdometry {
     // the displacement
     double circleCenterX = 0 - (radius * Math.cos(previousAngleRadians));
     double circleCenterY = 0 - (radius * Math.sin(previousAngleRadians));
-    System.out.println("Circle center x " + circleCenterX);
-    System.out.println("Circle center y " + circleCenterY);
-
+    
     // Finally, calculate the current module translation. If arc length is negative, invert
     // displacement
     double displacementX = circleCenterX + (radius * Math.cos(currentAngleRadians));
     double displacementY = circleCenterY + (radius * Math.sin(currentAngleRadians));
-    System.out.println("Displacement x " + displacementX);
-    System.out.println("Displacement y " + displacementY);
+
+    // Logging
+    // System.out.println("Circle center x " + circleCenterX);
+    // System.out.println("Circle center y " + circleCenterY);
+    // System.out.println("Displacement x " + displacementX);
+    // System.out.println("Displacement y " + displacementY);
+
+    // if (arcLength < 0) {
+    //   displacementX *= -1;
+    //   displacementY *= -1;
+    // }
 
     return new Translation2d(displacementX, displacementY);
   }
 
-  public Pose2d update(
-      SwerveModulePosition[] previousWheelPositions, SwerveModulePosition[] currentWheelPositions) {
-    Translation2d sumOfModuleDisplacements =
-        getModuleDisplacement(
-                previousWheelPositions[0].angle.getRadians(),
-                previousWheelPositions[0].distanceMeters,
-                currentWheelPositions[0].angle.getRadians(),
-                currentWheelPositions[0].distanceMeters)
-            .plus(
-                getModuleDisplacement(
-                    previousWheelPositions[1].angle.getRadians(),
-                    previousWheelPositions[1].distanceMeters,
-                    currentWheelPositions[1].angle.getRadians(),
-                    currentWheelPositions[1].distanceMeters))
-            .plus(
-                getModuleDisplacement(
-                    previousWheelPositions[2].angle.getRadians(),
-                    previousWheelPositions[2].distanceMeters,
-                    currentWheelPositions[2].angle.getRadians(),
-                    currentWheelPositions[2].distanceMeters))
-            .plus(
-                getModuleDisplacement(
-                    previousWheelPositions[3].angle.getRadians(),
-                    previousWheelPositions[3].distanceMeters,
-                    currentWheelPositions[3].angle.getRadians(),
-                    currentWheelPositions[3].distanceMeters));
+  // TODO: add logging for field relative module poses and previous and updated robot pose
+  public Pose2d update(Pose2d previousRobotPose, SwerveModulePosition[] previousWheelPositions, SwerveModulePosition[] currentWheelPositions) {
+    Translation2d[] robotRelativeModuleOffsets = {
+      new Translation2d(Inches.of(12), Inches.of(12)),
+      new Translation2d(Inches.of(12), Inches.of(-12)),
+      new Translation2d(Inches.of(-12), Inches.of(12)),
+      new Translation2d(Inches.of(-12), Inches.of(-12))
+    };
+    
+    Rotation2d gyroAngleDifference = currentGyroAngle.minus(previousRobotPose.getRotation());
 
-    // Divide sum of module displacements by the amount of swerve modules, 4
-    var robotDisplacement =
-        new Translation2d(
-            sumOfModuleDisplacements.getX() / 4.0, sumOfModuleDisplacements.getY() / 4.0);
+    //logging
+    // System.out.println("New test -");
+    // System.out.println("Current gyro angle: " + currentGyroAngle);
+    // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
+    // System.out.println("Gryo angle difference: " + gyroAngleDifference);
+    
+    Pose2d[] fieldRelativeModulePoses = {
+      previousRobotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[0], gyroAngleDifference)),
+      previousRobotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[1], gyroAngleDifference)),
+      previousRobotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[2], gyroAngleDifference)),
+      previousRobotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[3], gyroAngleDifference))
+    };
+    
+    Translation2d[] moduleDisplacements = {
+      getModuleDisplacement(
+              previousWheelPositions[0].angle.getRadians(),
+              previousWheelPositions[0].distanceMeters,
+              currentWheelPositions[0].angle.getRadians(),
+              currentWheelPositions[0].distanceMeters),
+      getModuleDisplacement(
+              previousWheelPositions[1].angle.getRadians(),
+              previousWheelPositions[1].distanceMeters,
+              currentWheelPositions[1].angle.getRadians(),
+              currentWheelPositions[1].distanceMeters),
+      getModuleDisplacement(
+              previousWheelPositions[2].angle.getRadians(),
+              previousWheelPositions[2].distanceMeters,
+              currentWheelPositions[2].angle.getRadians(),
+              currentWheelPositions[2].distanceMeters),
+      getModuleDisplacement(
+              previousWheelPositions[3].angle.getRadians(),
+              previousWheelPositions[3].distanceMeters,
+              currentWheelPositions[3].angle.getRadians(),
+              currentWheelPositions[3].distanceMeters)
+    };
 
-    // TODO: For the new pose return current gyro angle, currentWheelPositions used as placeholder
-    // for tests
-    return new Pose2d(robotDisplacement, currentWheelPositions[1].angle);
+    Translation2d[] fieldRelativeModuleDisplacements = {
+      fieldRelativeModulePoses[0].transformBy(new Transform2d(moduleDisplacements[0], new Rotation2d(0.0))).getTranslation(),
+      fieldRelativeModulePoses[1].transformBy(new Transform2d(moduleDisplacements[1], new Rotation2d(0.0))).getTranslation(),
+      fieldRelativeModulePoses[2].transformBy(new Transform2d(moduleDisplacements[2], new Rotation2d(0.0))).getTranslation(),
+      fieldRelativeModulePoses[3].transformBy(new Transform2d(moduleDisplacements[3], new Rotation2d(0.0))).getTranslation()
+    };
+    
+    // Divide sum of field relative module displacements by 4 because there are 4 modules
+    Translation2d sumOfFieldRelativeModuleDisplacements = fieldRelativeModuleDisplacements[0].plus(fieldRelativeModuleDisplacements[1]).plus(fieldRelativeModuleDisplacements[2]).plus(fieldRelativeModuleDisplacements[3]);
+    double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
+    double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
+
+    Pose2d updatedPose = new Pose2d(displacementX, displacementY, currentGyroAngle);
+
+    return updatedPose;
   }
 }

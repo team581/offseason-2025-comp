@@ -9,14 +9,14 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import org.junit.jupiter.api.Test;
 
 public class OdometryTest {
-  // TODO: Make all test formats & units consistent with the first 3 tests
-
+  // TODO: Make all these tests work for new Custom Odometry code
   @Test
   void straightLineDrive() {
     var odometry = new CustomOdometry(Rotation2d.kZero, Pose2d.kZero);
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(0.0)),
               new SwerveModulePosition(0.0, new Rotation2d(0.0)),
@@ -39,6 +39,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+          new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(5.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition(5.0, new Rotation2d(Math.PI)),
@@ -61,6 +62,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
@@ -83,6 +85,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
               new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -105,6 +108,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(0.0)),
               new SwerveModulePosition(0.0, new Rotation2d(0.0)),
@@ -127,6 +131,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
               new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -149,6 +154,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
@@ -175,6 +181,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
@@ -197,6 +204,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(2.0 * Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(2.0 * Math.PI)),
               new SwerveModulePosition(0.0, new Rotation2d(2.0 * Math.PI)),
@@ -223,6 +231,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
               new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
@@ -245,6 +254,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI)),
@@ -267,6 +277,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(
                   (2.0 * Math.PI) / 4.0 + 5.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -293,6 +304,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(0.0)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(0.0)),
@@ -315,6 +327,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(
                   (2.0 * Math.PI) / 4.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -340,6 +353,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI)),
@@ -363,6 +377,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI / 2.0)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI / 2.0)),
@@ -385,6 +400,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(2.0 * Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(2.0 * Math.PI)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(2.0 * Math.PI)),
@@ -408,6 +424,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI / 2.0)),
             new SwerveModulePosition[] {
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI / 2.0)),
               new SwerveModulePosition((2.0 * Math.PI) / 4.0, new Rotation2d(Math.PI / 2.0)),
