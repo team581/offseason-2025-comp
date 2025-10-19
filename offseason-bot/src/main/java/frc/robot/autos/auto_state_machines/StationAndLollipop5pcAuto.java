@@ -4,6 +4,7 @@ import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -28,7 +29,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
               StationAndLollipop5pcAutoState.B_L4_LINEUP));
 
   public void createPath(Pose2d goalPose) {
-
     path = new AutoSegment(CONSTRAINTS, new AutoPoint(prevPose), new AutoPoint(goalPose));
     prevPose = goalPose;
   }
