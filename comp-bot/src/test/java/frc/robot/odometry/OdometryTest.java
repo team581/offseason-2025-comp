@@ -39,7 +39,7 @@ public class OdometryTest {
 
     var actual =
         odometry.update(
-          new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
+            new Pose2d(0.0, 0.0, new Rotation2d(Math.PI)),
             new SwerveModulePosition[] {
               new SwerveModulePosition(5.0, new Rotation2d(Math.PI)),
               new SwerveModulePosition(5.0, new Rotation2d(Math.PI)),
