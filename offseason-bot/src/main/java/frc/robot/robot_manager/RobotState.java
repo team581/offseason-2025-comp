@@ -30,11 +30,6 @@ public enum RobotState {
 
   ALGAE_INTAKE_L2(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3(ClawGamePiece.ALGAE, false),
-
-  ALGAE_FLING_WAIT(ClawGamePiece.ALGAE, false),
-  ALGAE_FLING_PREPARE(ClawGamePiece.ALGAE, false),
-  ALGAE_FLING_RELEASE(ClawGamePiece.ALGAE, false),
-
   // L1 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L1_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
@@ -96,8 +91,6 @@ public enum RobotState {
   CLIMBER_STOP(ClawGamePiece.EMPTY, true),
 
   // Misc states
-  PREPARE_SPIN_TO_WIN(ClawGamePiece.EMPTY, false),
-  SPIN_TO_WIN(ClawGamePiece.EMPTY, false),
   ALGAE_OUTTAKE(ClawGamePiece.ALGAE, false),
   UNJAM(ClawGamePiece.EMPTY, false),
   REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),

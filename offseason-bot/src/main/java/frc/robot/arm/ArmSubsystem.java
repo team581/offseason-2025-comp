@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -72,11 +71,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
   private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
       new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
 
-  // TODO: tune velocity
-  private final PositionVoltage algaeFling =
-      new PositionVoltage(Units.degreesToRotations(ArmState.ALGAE_FLING_SWING.getAngle()))
-          .withVelocity(Units.degreesToRotations(90));
-
   public ArmSubsystem(TalonFX motor, ElevatorSubsystem elevator) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
@@ -135,7 +129,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
       case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
-      case ALGAE_FLING_SWING -> motorAngle >= getState().getAngle();
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -211,12 +204,6 @@ public class ArmSubsystem extends StateMachine<ArmState> {
         } else {
           motor.setControl(coastNeutralRequest);
         }
-      }
-      case SPIN_TO_WIN -> {
-        motor.setControl(spinToWin);
-      }
-      case ALGAE_FLING_SWING -> {
-        motor.setControl(algaeFling);
       }
       case CORAL_HANDOFF -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(usedHandoffAngle));

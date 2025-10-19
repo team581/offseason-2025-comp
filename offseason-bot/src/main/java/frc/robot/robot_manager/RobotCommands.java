@@ -112,9 +112,6 @@ public class RobotCommands {
         .withName("RehomeDeployCommand");
   }
 
-  public Command spinToWinCommand() {
-    return Commands.runOnce(robot::spinToWinRequest, rmRequirements).withName("SpinToWinCommand");
-  }
 
   public Command lowStowCommand() {
     return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");

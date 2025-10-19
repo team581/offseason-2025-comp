@@ -82,7 +82,6 @@ public class RobotManager extends StateMachine<RobotState> {
     DogLog.log("RobotManager/StateCount", stateCount);
   }
 
-  private double reefSnapAngle = 0.0;
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
@@ -108,8 +107,6 @@ public class RobotManager extends StateMachine<RobotState> {
           CLIMBING_2_HANGING,
           CLIMBER_STOP,
           UNJAM,
-          SPIN_TO_WIN,
-          ALGAE_FLING_WAIT,
           FORCED_HANDOFF ->
           currentState;
       case CORAL_L2_PLACE, CORAL_L3_PLACE, CORAL_L4_PLACE -> {
@@ -133,11 +130,6 @@ public class RobotManager extends StateMachine<RobotState> {
       }
       case REHOME_ELEVATOR ->
           elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY : currentState;
-      case PREPARE_SPIN_TO_WIN ->
-          elevator.atGoal() && arm.atGoal() ? RobotState.SPIN_TO_WIN : currentState;
-
-      case ALGAE_FLING_PREPARE -> arm.atGoal() ? RobotState.ALGAE_FLING_RELEASE : currentState;
-      case ALGAE_FLING_RELEASE -> !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF,
@@ -594,22 +586,6 @@ public class RobotManager extends StateMachine<RobotState> {
         lights.setState(LightsState.SCORING_ALGAE);
         climber.setState(ClimberState.STOPPED);
       }
-      case PREPARE_SPIN_TO_WIN -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.HOLDING_UPRIGHT);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.IDLE_EMPTY);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case SPIN_TO_WIN -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.SPIN_TO_WIN);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.IDLE_EMPTY);
-        climber.setState(ClimberState.STOPPED);
-      }
       case CLAW_ALGAE_STOW_INWARD -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         moveSuperstructure(ElevatorState.STOWED_INWARD, ArmState.STOWED_INWARD);
@@ -842,21 +818,6 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFromRequest(RobotState.FORCED_HANDOFF);
   }
 
-  public void algaeFlingRequest() {
-    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
-      return;
-    }
-
-    setStateFromRequest(RobotState.ALGAE_FLING_WAIT);
-  }
-
-  public void algaeFlingConfirmRequest() {
-    if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
-      return;
-    }
-
-    setStateFromRequest(RobotState.ALGAE_FLING_PREPARE);
-  }
 
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
@@ -1044,8 +1005,6 @@ public class RobotManager extends StateMachine<RobotState> {
       case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
           setStateFromRequest(getState().getNextScoreState());
 
-      case ALGAE_FLING_WAIT -> setStateFromRequest(RobotState.ALGAE_FLING_PREPARE);
-
       case CORAL_L1_LINEUP, CORAL_L2_LINEUP, CORAL_L3_LINEUP, CORAL_L4_LINEUP -> {
         setStateFromRequest(getState().getNextScoreState());
       }
@@ -1107,15 +1066,6 @@ public class RobotManager extends StateMachine<RobotState> {
     }
   }
 
-  public void spinToWinRequest() {
-    if (!getState().climbingOrRehoming && FeatureFlags.SPIN_TO_WIN.getAsBoolean()) {
-      setStateFromRequest(RobotState.PREPARE_SPIN_TO_WIN);
-    }
-  }
-
-  private static final ElevatorState LATEST_ELEVATOR_GOAL = ElevatorState.STOWED;
-  private static final ArmState LATEST_ARM_GOAL = ArmState.HOLDING_UPRIGHT;
-  private static final boolean LATEST_UNSAFE = false;
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     elevator.setState(elevatorGoal);

@@ -13,11 +13,12 @@ public enum ArmState {
   PRE_MATCH_HOMING(0),
 
   UNJAM(UNTUNED),
+
   // Idle positions
   HOLDING_UPRIGHT(90),
   STOWED_INWARD(-90),
 
-  //  coral positions
+  // coral positions
   CORAL_SCORE_LINEUP_L2(30.0),
   CORAL_SCORE_RELEASE_L2(5.0),
 
@@ -34,7 +35,7 @@ public enum ArmState {
   CORAL_HANDOFF(-90.0),
 
   // Algae positions
-  ALGAE_INTAKE_FLOOR(-43.0),
+  ALGAE_INTAKE_FLOOR(UNTUNED),
 
   ALGAE_INTAKE_L2(0.0),
   ALGAE_INTAKE_L3(0.0),
@@ -44,21 +45,8 @@ public enum ArmState {
   ALGAE_PROCESSOR(-20.0),
 
   ALGAE_OUTTAKE(UNTUNED),
-  // TODO: Setting the arm to 60 can lead to false positives when coming from net scoring to algae
-  // ground intake. The robot will be partially done with the motion to go to handoff, and the
-  // nearest waypoint is climbing, which is used as the path start when the algae intake request is
-  // received.
-  // CLIMBING(60.0),
-  CLIMBING(0.0),
 
-  SPIN_TO_WIN(90),
-
-  ALGAE_FLING_WAIT(UNTUNED),
-  ALGAE_FLING_SWING(UNTUNED),
-
-  // For auto
-  LOLLIPOP_CORAL_INTAKE_PUSH(-22),
-  LOLLIPOP_CORAL_INTAKE_INTAKE(-9);
+  CLIMBING(UNTUNED);
 
   private final double defaultAngle;
   private final DoubleSubscriber tunableAngle;
