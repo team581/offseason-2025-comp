@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
-import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
@@ -39,9 +38,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   private OptionalTagResult lastGoodTagResult = new OptionalTagResult();
   private OptionalTagResult tagResult = new OptionalTagResult();
-
-  private OptionalGamePieceResult coralResult = new OptionalGamePieceResult();
-  private OptionalGamePieceResult algaeResult = new OptionalGamePieceResult();
 
   private double angularVelocity = 0.0;
 
@@ -76,14 +72,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   public void setState(LimelightState state) {
     setStateFromRequest(state);
-  }
-
-  public OptionalGamePieceResult getCoralResult() {
-    return getState() == LimelightState.CORAL ? coralResult : coralResult.empty();
-  }
-
-  public OptionalGamePieceResult getAlgaeResult() {
-    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
   }
 
   public OptionalTagResult getTagResult() {
@@ -154,30 +142,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     return tagResult.update(mt2Pose, mT2Estimate.timestampSeconds, devs);
   }
 
-  private OptionalGamePieceResult getRawCoralResult() {
-    if (getState() != LimelightState.CORAL) {
-      return coralResult.empty();
-    }
-    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
-    if (t2d.length == 0) {
-      return coralResult.empty();
-    }
-    var coralTx = t2d[4];
-    var coralTy = t2d[5];
-    if (coralTx == 0.0 || coralTy == 0.0) {
-      return coralResult.empty();
-    }
-
-    DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
-    DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
-
-    var latency = t2d[2] + t2d[3];
-    var latencySeconds = latency / 1000.0;
-    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
-
-    return coralResult.update(coralTx, coralTy, timestamp);
-  }
-
   public OptionalDouble handoffTx() {
     if (getState() != LimelightState.HELD_CORAL) {
       return OptionalDouble.empty();
@@ -202,30 +166,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     return OptionalDouble.of(tx);
   }
 
-  private OptionalGamePieceResult getRawAlgaeResult() {
-    if (getState() != LimelightState.ALGAE) {
-      return algaeResult.empty();
-    }
-    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
-    if (t2d.length == 0) {
-      return algaeResult.empty();
-    }
-    var algaeTx = t2d[4];
-    var algaeTy = t2d[5];
-    if (algaeTx == 0.0 || algaeTy == 0.0) {
-      return algaeResult.empty();
-    }
-
-    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
-    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
-
-    var latency = t2d[2] + t2d[3];
-    var latencySeconds = latency / 1000.0;
-    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
-
-    return algaeResult.update(algaeTx, algaeTy, timestamp);
-  }
-
   public void setClosestScoringReefTag(int tagID) {
     closestScoringReefTag[0] = tagID;
   }
@@ -236,8 +176,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     if (tagResult.isPresent()) {
       lastGoodTagResult = tagResult;
     }
-    coralResult = getRawCoralResult();
-    algaeResult = getRawAlgaeResult();
   }
 
   @Override
@@ -260,9 +198,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
         updateHealth(tagResult);
       }
-      case CORAL -> updateHealth(coralResult);
-      case ALGAE -> updateHealth(algaeResult);
-      case HELD_CORAL -> updateHealth(coralResult);
       case CLOSEST_REEF_TAG -> {
         LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
         updateHealth(tagResult);

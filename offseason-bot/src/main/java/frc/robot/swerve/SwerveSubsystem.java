@@ -11,7 +11,7 @@ import com.team581.math.MathHelpers;
 import com.team581.math.PolarChassisSpeeds;
 import com.team581.trailblazer.SwerveBase;
 import com.team581.util.FmsUtil;
-import com.team581.util.state_machines.StateMachineSubsystem;
+import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
@@ -34,21 +34,10 @@ import frc.robot.generated.RobotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
 
-public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
+public class SwerveSubsystem extends StateMachine<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
   private static final double RIGHT_JOYSTICK_EXPONENT = 2;
 
-  private static final double DRIVE_TO_POSE_TRANSLATION_TOLERANCE = 1.0;
-  private static final double DRIVE_TO_POSE_ROTATION_TOLERANCE = 1.0;
-
-  public static final double MaxSpeed = 4.75;
-  private static final double maxAngularRate = Units.rotationsToRadians(4);
-  private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
-
-  private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
-
-  private static final PhoenixPIDController ORIGINAL_HEADING_PID =
-      RobotConfig.get().swerve().snapController();
   private static final PIDController DRIVE_TO_POSE_TRANSLATION_CONTROLLER =
       new PIDController(3.5, 0.0, 0.0);
   private static final PIDController DRIVE_TO_POSE_ROTATION_CONTROLLER =
@@ -62,6 +51,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
       DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
+
+  public static final double MaxSpeed = 4.75;
+  private static final double maxAngularRate = Units.rotationsToRadians(4);
+  private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
+
+  private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+
+  private static final PhoenixPIDController ORIGINAL_HEADING_PID =
+      RobotConfig.get().swerve().snapController();
 
   private static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_TO_SLOW_MODE =
       InterpolatingDoubleTreeMap.ofEntries(Map.entry(0.0, 1.0));
@@ -78,14 +76,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       new SwerveRequest.FieldCentric()
           // I want field-centric driving in open loop
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.015)
-          .withRotationalDeadband(maxAngularRate * 0.015);
+          .withDeadband(0.07)
+          .withRotationalDeadband(0.05);
 
   private final SwerveRequest.FieldCentricFacingAngle driveToAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-          .withDeadband(MaxSpeed * 0.01)
-          .withRotationalDeadband(maxAngularRate * 0.005)
+          .withDeadband(0.07)
+          .withRotationalDeadband(0.5)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
           .withMaxAbsRotationalRate(maxAngularRate);
@@ -98,17 +96,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds();
   private double goalSnapAngle = 0;
 
-  private ChassisSpeeds driveToPoseSpeeds = new ChassisSpeeds();
-
-  private Pose2d lastDriveToPoseTarget = new Pose2d();
-  private boolean lastUseAngleBisector = true;
-
   /** The latest requested teleop speeds. */
   private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
 
   private ChassisSpeeds autoSpeeds = new ChassisSpeeds();
 
-  private ChassisSpeeds autoAlignSpeeds = new ChassisSpeeds();
+  private ChassisSpeeds driveToPoseSpeeds = new ChassisSpeeds();
+
+  private Pose2d lastDriveToPoseTarget = new Pose2d();
+  private boolean lastUseAngleBisector = true;
 
   private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
@@ -145,7 +141,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
 
     driveToAngle.HeadingController.setTolerance(0.01);
-
+    DRIVE_TO_POSE_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
     drivetrain.setStateStdDevs(new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002)));
     timeSinceAutoSpeeds.start();
   }
@@ -162,24 +158,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
         ChassisSpeeds.fromRobotRelativeSpeeds(speeds, drivetrainState.Pose.getRotation()));
   }
 
-  public void setFieldRelativeCoralAssistSpeeds(ChassisSpeeds speeds) {}
-
-  public void setAutoAlignSpeeds(ChassisSpeeds speeds) {
-    autoAlignSpeeds = speeds;
-    sendSwerveRequest();
-  }
-
   @Override
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
       case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
-      case REEF_ALIGN -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.REEF_ALIGN;
-      case AUTO_SNAPS, TELEOP_SNAPS ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
       case DRIVE_TO_POSE ->
           DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.DRIVE_TO_POSE;
-
+      case AUTO_SNAPS, TELEOP_SNAPS ->
+          DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
       case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
     };
   }
@@ -284,14 +271,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
       }
-      case REEF_ALIGN -> {
-        drivetrain.setControl(
-            drive
-                .withVelocityX(autoAlignSpeeds.vxMetersPerSecond)
-                .withVelocityY(autoAlignSpeeds.vyMetersPerSecond)
-                .withRotationalRate(autoAlignSpeeds.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.Velocity));
-      }
       case DRIVE_TO_POSE -> {
         drivetrain.setControl(
             drive
@@ -300,6 +279,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                 .withRotationalRate(driveToPoseSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
+
       case AUTO ->
           drivetrain.setControl(
               drive
@@ -346,6 +326,17 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
   }
 
+  public Translation2d getControllerValues() {
+    if (rawControllerXValue == 0 && rawControllerYValue == 0) {
+      return Translation2d.kZero;
+    }
+
+    return new Translation2d(
+        ControllerHelpers.getJoystickMagnitude(
+            rawControllerXValue, rawControllerYValue, LEFT_JOYSTICK_EXPONENT),
+        new Rotation2d(rawControllerXValue, rawControllerYValue));
+  }
+
   public void snapsDriveRequest(double snapAngle) {
     setSnapToAngle(snapAngle);
 
@@ -354,20 +345,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     } else {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
     }
-  }
-
-  public void scoringAlignmentRequest(double snapAngle) {
-    if (DriverStation.isAutonomous()) {
-      normalDriveRequest();
-    } else {
-      setSnapToAngle(snapAngle);
-      setStateFromRequest(SwerveState.REEF_ALIGN);
-    }
-  }
-
-  public void climbRequest(double snapAngle) {
-    setSnapToAngle(snapAngle);
-    setStateFromRequest(SwerveState.CLIMBING);
   }
 
   public void driveToPoseRequest(Pose2d pose) {
@@ -385,33 +362,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
   }
 
-  public boolean driveToPoseAtGoal(Pose2d goalPose) {
-    if (MathUtil.isNear(
-            goalPose.getX(), drivetrainState.Pose.getX(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)
-        && MathUtil.isNear(
-            goalPose.getY(), drivetrainState.Pose.getY(), DRIVE_TO_POSE_TRANSLATION_TOLERANCE)
-        && MathUtil.isNear(
-            goalPose.getRotation().getDegrees(),
-            drivetrainState.Pose.getRotation().getDegrees(),
-            DRIVE_TO_POSE_ROTATION_TOLERANCE)) {
-      return true;
-    }
-    return false;
-  }
-
-  public Translation2d getControllerValues() {
-    if (getState() != SwerveState.REEF_ALIGN) {
-      return Translation2d.kZero;
-    }
-
-    if (rawControllerXValue == 0 && rawControllerYValue == 0) {
-      return Translation2d.kZero;
-    }
-
-    return new Translation2d(
-        ControllerHelpers.getJoystickMagnitude(
-            rawControllerXValue, rawControllerYValue, LEFT_JOYSTICK_EXPONENT),
-        new Rotation2d(rawControllerXValue, rawControllerYValue));
+  public void climbRequest(double snapAngle) {
+    setSnapToAngle(snapAngle);
+    setStateFromRequest(SwerveState.CLIMBING);
   }
 
   @Override

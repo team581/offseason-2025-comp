@@ -1,7 +1,6 @@
 package frc.robot.config;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
@@ -16,10 +15,15 @@ public record RobotConfig(
     ElevatorConfig elevator,
     ArmConfig arm,
     VisionConfig vision,
+    LightsConfig lights,
     SwerveConfig swerve) {
 
   public record IntakeConfig(
-      String canBusName, int motorId, Debouncer debouncer, TalonFXConfiguration motorConfig) {}
+      String canBusName,
+      int motorId,
+      int candiId,
+      Debouncer debouncer,
+      TalonFXConfiguration motorConfig) {}
 
   public record ClawConfig(
       String canBusName,
@@ -33,13 +37,16 @@ public record RobotConfig(
       String canBusName,
       int leftMotorId,
       int rightMotorId,
+      int topCandiId,
+      int bottomCandiId,
+      Debouncer topDebouncer,
+      Debouncer bottonDebouncer,
       TalonFXConfiguration leftMotorConfig,
       TalonFXConfiguration rightMotorConfig) {}
 
   public record DeployConfig(
       String canBusName,
       int motorId,
-      int candiId,
       double minAngle,
       double maxAngle,
       double homingVoltage,
@@ -51,14 +58,10 @@ public record RobotConfig(
       String canBusName,
       int climbMotorId,
       int cancoderId,
-      int grabMotorId,
-      int canrangeId,
       double minAngle,
       double maxAngle,
       TalonFXConfiguration climbMotorConfig,
-      CANcoderConfiguration cancoderConfig,
-      TalonFXConfiguration grabMotorConfig,
-      CANrangeConfiguration canRangeConfig) {}
+      CANcoderConfiguration cancoderConfig) {}
 
   public record ElevatorConfig(
       String canBusName,
@@ -71,20 +74,16 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig) {}
 
   public record ArmConfig(
-      String canBusName,
-      int motorId,
-      TalonFXConfiguration motorConfig,
-      double homingPosition,
-      double inchesFromCenter) {}
+      String canBusName, int motorId, TalonFXConfiguration motorConfig, double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftBackLimelightPosition,
-      Pose3d leftFrontLimelightPosition,
-      Pose3d rightLimelightPosition,
-      Pose3d gamePieceDetectionLimelightPosition) {}
+      Pose3d leftLimelightPosition,
+      Pose3d rightLimelightPosition) {}
+
+  public record LightsConfig(String canBusName, int candleId) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,

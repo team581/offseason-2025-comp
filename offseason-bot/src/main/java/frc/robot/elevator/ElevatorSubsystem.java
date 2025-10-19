@@ -2,6 +2,8 @@ package frc.robot.elevator;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -117,5 +119,23 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   public double getHeight() {
     return height;
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    var elevatorSimulation =
+        SimKit.positionMechanism(
+            "elevator",
+            (mechanism) ->
+                mechanism
+                    .addMotor(motor, ChassisReference.Clockwise_Positive)
+                    .withMinPosition(RobotConfig.get().elevator().minHeight())
+                    .withMaxPosition(RobotConfig.get().elevator().maxHeight()));
+
+    elevatorSimulation.update();
+
+    if (DriverStation.isDisabled()) {
+      elevatorSimulation.seedPosition(0);
+    }
   }
 }
