@@ -6,6 +6,7 @@ import com.team581.util.state_machines.StateMachine;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -85,13 +86,14 @@ public class RobotManager extends StateMachine<RobotState> {
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
-  private Optional<RobotState> afterIntakingCoralState = Optional.empty();
   private boolean scoringAlignActive = false;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (afterIntakingCoralState.isPresent() && groundManager.getTopHasGP()) {
-      return afterIntakingCoralState.orElseThrow();
+    if (RobotState.missingGP(currentState, claw.getHasGP())) {
+      lights.blinkError();
+      DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
+      return RobotState.CLAW_EMPTY;
     }
 
     return switch (currentState) {
@@ -383,7 +385,6 @@ public class RobotManager extends StateMachine<RobotState> {
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        afterIntakingCoralState = Optional.empty();
         groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
@@ -792,7 +793,6 @@ public class RobotManager extends StateMachine<RobotState> {
   }
 
   public void stowRequest() {
-    afterIntakingCoralState = Optional.empty();
     groundManager.stowRequest();
     switch (getState()) {
       case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> setStateFromRequest(RobotState.CLAW_EMPTY);

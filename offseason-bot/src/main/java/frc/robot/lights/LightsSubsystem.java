@@ -22,12 +22,21 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   }
 
   public void setState(LightsState newState) {
+    if (getState() == LightsState.BLINK || getState() == LightsState.BLINK_ERROR) {
+      storedState = newState;
+      return;
+    }
     setStateFromRequest(newState);
   }
 
   public void blink() {
     storedState = getState();
     setStateFromRequest(LightsState.BLINK);
+  }
+
+  public void blinkError() {
+    storedState = getState();
+    setStateFromRequest(LightsState.BLINK_ERROR);
   }
 
   public void setDisabledState(LightsState newDisabledState) {
@@ -37,7 +46,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   @Override
   protected LightsState getNextState(LightsState currentState) {
     return switch (currentState) {
-      case BLINK -> timeout(1.0) ? storedState : currentState;
+      case BLINK, BLINK_ERROR -> timeout(1.0) ? storedState : currentState;
       default -> currentState;
     };
   }

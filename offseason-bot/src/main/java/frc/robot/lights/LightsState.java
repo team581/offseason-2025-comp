@@ -9,6 +9,8 @@ public enum LightsState {
   HOMED_SEES_TAGS(Color.kGreen, BlinkPattern.SOLID),
 
   BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
+  BLINK_ERROR(Color.kWhite, BlinkPattern.BLINK_FAST),
+
 
   INTAKING_CORAL(Color.kWhite, BlinkPattern.BLINK_SLOW),
   INTAKING_ALGAE(Color.kTeal, BlinkPattern.BLINK_SLOW),

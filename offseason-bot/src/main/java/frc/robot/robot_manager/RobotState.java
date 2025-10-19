@@ -21,9 +21,9 @@ public enum RobotState {
   // Intake states
   // In theory we could have intake upright while holding algae but nobody is going to use that
 
-  ALGAE_INTAKE_FLOOR(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3_APPROACH(ClawGamePiece.ALGAE, false),
+  ALGAE_INTAKE_FLOOR(ClawGamePiece.EMPTY, false),
+  ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.EMPTY, false),
+  ALGAE_INTAKE_L3_APPROACH(ClawGamePiece.EMPTY, false),
 
   ALGAE_INTAKE_L2_HOLDING(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3_HOLDING(ClawGamePiece.ALGAE, false),
@@ -39,7 +39,7 @@ public enum RobotState {
   /** Coral is in the claw, let's get ready to score L1. */
   CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L1_LINEUP(ClawGamePiece.CORAL, false),
-  CORAL_L1_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L1_RELEASE(ClawGamePiece.EMPTY, false),
 
   // L2 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -49,10 +49,9 @@ public enum RobotState {
 
   /** Coral is in the claw, let's get ready to score L2. */
   CORAL_L2_APPROACH(ClawGamePiece.CORAL, false),
-
   CORAL_L2_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L2_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L2_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L2_RELEASE(ClawGamePiece.EMPTY, false),
 
   // L3 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -64,7 +63,7 @@ public enum RobotState {
   CORAL_L3_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L3_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L3_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L3_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L3_RELEASE(ClawGamePiece.EMPTY, false),
 
   // L4 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -76,14 +75,14 @@ public enum RobotState {
   CORAL_L4_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L4_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L4_PLACE(ClawGamePiece.CORAL, false),
-  CORAL_L4_RELEASE(ClawGamePiece.CORAL, false),
+  CORAL_L4_RELEASE(ClawGamePiece.EMPTY, false),
 
   // Algae scoring states
   ALGAE_NET_WAITING(ClawGamePiece.ALGAE, false),
-  ALGAE_NET_RELEASE(ClawGamePiece.ALGAE, false),
+  ALGAE_NET_RELEASE(ClawGamePiece.EMPTY, false),
 
   ALGAE_PROCESSOR_WAITING(ClawGamePiece.ALGAE, false),
-  ALGAE_PROCESSOR_RELEASE(ClawGamePiece.ALGAE, false),
+  ALGAE_PROCESSOR_RELEASE(ClawGamePiece.EMPTY, false),
 
   // Climbing states
   CLIMBING_1_LINEUP(ClawGamePiece.EMPTY, true),
@@ -91,7 +90,7 @@ public enum RobotState {
   CLIMBER_STOP(ClawGamePiece.EMPTY, true),
 
   // Misc states
-  ALGAE_OUTTAKE(ClawGamePiece.ALGAE, false),
+  ALGAE_OUTTAKE(ClawGamePiece.EMPTY, false),
   UNJAM(ClawGamePiece.EMPTY, false),
   REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),
 
@@ -162,6 +161,10 @@ public enum RobotState {
           true;
       default -> false;
     };
+  }
+
+  public static boolean missingGP(RobotState state, boolean hasGp) {
+    return (state.clawGp != ClawGamePiece.EMPTY && !hasGp);
   }
 
   public static boolean isReleaseState(RobotState state) {
