@@ -33,12 +33,8 @@ public class StationAndLollipop5pcAutoDriveToPoint
   }
 
   private boolean superstructureAtGoal() {
-    if (robotManager.arm.atGoal()
-        && robotManager.elevator.atGoal()
-        && robotManager.arm.atGoal()) { // TODO: robotManager.claw.atGoal()
-      return true;
-    }
-    return false;
+    // TODO: robotManager.claw.atGoal()
+    return robotManager.arm.atGoal() && robotManager.elevator.atGoal() && robotManager.arm.atGoal();
   }
 
   private StationAndLollipop5pcAutoState getNextReefPosition() {
