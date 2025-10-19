@@ -50,11 +50,6 @@ public class CustomOdometry {
     System.out.println("Displacement x " + displacementX);
     System.out.println("Displacement y " + displacementY);
 
-    if (arcLength < 0) {
-      displacementX *= -1;
-      displacementY *= -1;
-    }
-
     return new Translation2d(displacementX, displacementY);
   }
 
