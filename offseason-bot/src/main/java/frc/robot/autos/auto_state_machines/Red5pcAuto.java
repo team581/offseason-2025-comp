@@ -1,6 +1,9 @@
 package frc.robot.autos.auto_state_machines;
 
+import com.team581.trailblazer.AutoPoint;
+import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
+import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -10,7 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
-
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
+  private AutoSegment path =
+      new AutoSegment(
+          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
+  private Pose2d prevPose = getStartingPose();
   private final ArrayList<Red5pcAutoState> nextScoringPositions =
       new ArrayList<Red5pcAutoState>(
           List.of(
@@ -20,7 +27,11 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
               Red5pcAutoState.A_L4_LINEUP,
               Red5pcAutoState.B_L4_LINEUP));
 
-  public void createPath(Pose2d currentPose, Pose2d goalPose) {}
+  public void createPath(Pose2d goalPose) {
+
+    path = new AutoSegment(CONSTRAINTS, new AutoPoint(prevPose), new AutoPoint(goalPose));
+    prevPose = goalPose;
+  }
 
   public Red5pcAuto(RobotManager robot, Trailblazer trailblazer) {
     super(Red5pcAutoState.IDLE, robot, trailblazer);
@@ -28,7 +39,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.bluePose;
+    return Points.START_R1_AND_B1.redPose;
   }
 
   private boolean superstructureAtGoal() {
@@ -170,6 +181,131 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
     };
   }
 
+  // TRAILBLAZER/PUREPURSUIT VERSION OF AUTO
+  // @Override
+  // protected Red5pcAutoState getNextState(Red5pcAutoState currentState) {
+  //   return switch (currentState) {
+  //     case IDLE -> DriverStation.isAutonomous() ? Red5pcAutoState.A_L4_LINEUP : currentState;
+
+  //     case J_L4_LINEUP ->
+  //         trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.J_L4_PREPARE
+  //             : currentState;
+  //     case J_L4_PREPARE ->
+  //         trailblazer.followSegmentIsFinished(path) && superstructureAtGoal()
+  //             ? Red5pcAutoState.J_L4_SCORE
+  //             : currentState;
+  //     case J_L4_SCORE -> superstructureAtGoal() ? Red5pcAutoState.J_L4_POST_SCORING :
+  // currentState;
+  //     case J_L4_POST_SCORING ->
+  //         superstructureAtGoal()
+  //                 && robotManager.swerve.driveToPoseAtGoal(
+  //                     currentState.pose) // trailblazer.followSegmentIsFinished(null)
+  //             ? Red5pcAutoState.PRE_INTAKING
+  //             : currentState;
+
+  //     case PRE_INTAKING ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.INTAKING
+  //             : currentState;
+  //     case INTAKING ->
+  //         (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
+  //                 || robotManager.claw.getHasGP()
+  //             ? Red5pcAutoState.POST_INTAKING
+  //             : currentState;
+  //     case POST_INTAKING ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? getNextReefPosition()
+  //             : currentState;
+
+  //     case K_L4_LINEUP ->
+  //         trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.K_L4_PREPARE
+  //             : currentState;
+  //     case K_L4_PREPARE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.K_L4_SCORE
+  //             : currentState;
+  //     case K_L4_SCORE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.K_L4_POST_SCORING
+  //             : currentState;
+  //     case K_L4_POST_SCORING ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.PRE_INTAKING
+  //             : currentState;
+
+  //     case L_L4_LINEUP ->
+  //         trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.L_L4_PREPARE
+  //             : currentState;
+  //     case L_L4_PREPARE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.L_L4_SCORE
+  //             : currentState;
+  //     case L_L4_SCORE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.L_L4_POST_SCORING
+  //             : currentState;
+  //     case L_L4_POST_SCORING ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.PRE_INTAKING
+  //             : currentState;
+
+  //     case A_L4_LINEUP ->
+  //         trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.A_L4_PREPARE
+  //             : currentState;
+  //     case A_L4_PREPARE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.A_L4_SCORE
+  //             : currentState;
+  //     case A_L4_SCORE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.A_L4_POST_SCORING
+  //             : currentState;
+  //     case A_L4_POST_SCORING ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.PRE_LOLLIPOP_2
+  //             : currentState;
+
+  //     case PRE_LOLLIPOP_2 ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.LOLLIPOP_2
+  //             : currentState;
+  //     case LOLLIPOP_2 ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.POST_LOLLIPOP_2
+  //             : currentState;
+  //     case POST_LOLLIPOP_2 ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.L_L4_LINEUP
+  //             : currentState;
+
+  //     case B_L4_LINEUP ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.B_L4_PREPARE
+  //             : currentState;
+  //     case B_L4_PREPARE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.B_L4_SCORE
+  //             : currentState;
+  //     case B_L4_SCORE ->
+  //         superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+  //             ? Red5pcAutoState.B_L4_POST_SCORING
+  //             : currentState;
+  //     case B_L4_POST_SCORING -> currentState;
+
+  //     case I_L4_LINEUP ->
+  //         throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+  //     case I_L4_POST_SCORING ->
+  //         throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+  //     case I_L4_PREPARE ->
+  //         throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+  //     case I_L4_SCORE ->
+  //         throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+  //   };
+  // }
   @Override
   protected void afterTransition(Red5pcAutoState newState) {
     switch (newState) {
@@ -224,6 +360,68 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
     }
   }
 
+  //   @Override
+  //   protected void afterTransition(Red5pcAutoState newState) {
+  //     switch (newState) {
+  //       case IDLE -> {}
+  //       case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
+  //         createPath(newState.pose);
+  //         trailblazer.followSegment(path);
+  //         robotManager.groundManager.intakeThenHandoffRequest();
+  //       }
+
+  //       case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE
+  // -> {
+  //         createPath(newState.pose);
+  // trailblazer.followSegment(path);        robotManager.l4CoralAutoApproachRequest();
+  //       }
+  //       case A_L4_SCORE, B_L4_SCORE, I_L4_SCORE, J_L4_SCORE, K_L4_SCORE, L_L4_SCORE -> {
+  //         robotManager.confirmScoreRequest();
+  //       }
+  //       case A_L4_POST_SCORING,
+  //           B_L4_POST_SCORING,
+  //           I_L4_POST_SCORING,
+  //           J_L4_POST_SCORING,
+  //           K_L4_POST_SCORING,
+  //           L_L4_POST_SCORING -> {
+  //             createPath(newState.pose);
+  //             trailblazer.followSegment(path);
+  //         robotManager.stowRequest();
+  //       }
+  //       case PRE_INTAKING -> {
+  //         createPath(newState.pose);
+  // trailblazer.followSegment(path);
+  //         robotManager.stowRequest();
+  //       }
+  //       case INTAKING -> {
+  //         createPath(newState.pose);
+  // trailblazer.followSegment(path);
+  //         robotManager.groundManager.intakeThenHandoffRequest();
+  //       }
+  //       case POST_INTAKING -> {
+  //         createPath(newState.pose);
+  //         trailblazer.followSegment(path);
+  //         robotManager.groundManager.intakeThenHandoffRequest();
+  //       }
+  //       case PRE_LOLLIPOP_2 -> {
+  //         createPath(newState.pose);
+  //         trailblazer.followSegment(path);
+  //         robotManager.stowRequest();
+  //       }
+
+  //       case LOLLIPOP_2 -> {
+  //         createPath(newState.pose);
+  // trailblazer.followSegment(path);        robotManager.groundManager.intakeThenHandoffRequest();
+  //       }
+
+  //       case POST_LOLLIPOP_2 -> {
+  //         createPath(newState.pose);
+  //         trailblazer.followSegment(path);
+  //         robotManager.groundManager.intakeThenHandoffRequest();
+  //       }
+  //     }
+  //   }
+
   @Override
   protected void whileInState(Red5pcAutoState state) {
     switch (state) {
@@ -277,4 +475,57 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
       }
     }
   }
+  // @Override
+  // protected void whileInState(Red5pcAutoState state) {
+  //   switch (state) {
+  //     case IDLE -> {}
+  //     case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
+  //       trailblazer.followSegment(path);
+  //       robotManager.groundManager.intakeThenHandoffRequest();
+  //     }
+
+  //     case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE ->
+  // {
+  //   trailblazer.followSegment(path);        robotManager.l4CoralAutoApproachRequest();
+  //     }
+  //     case A_L4_SCORE, B_L4_SCORE, I_L4_SCORE, J_L4_SCORE, K_L4_SCORE, L_L4_SCORE -> {
+  //       robotManager.confirmScoreRequest();
+  //     }
+  //     case A_L4_POST_SCORING,
+  //         B_L4_POST_SCORING,
+  //         I_L4_POST_SCORING,
+  //         J_L4_POST_SCORING,
+  //         K_L4_POST_SCORING,
+  //         L_L4_POST_SCORING -> {
+  //           trailblazer.followSegment(path);
+  //       robotManager.stowRequest();
+  //     }
+  //     case PRE_INTAKING -> {
+  //   trailblazer.followSegment(path);
+  //       robotManager.stowRequest();
+  //     }
+  //     case INTAKING -> {
+  //   trailblazer.followSegment(path);
+  //       robotManager.groundManager.intakeThenHandoffRequest();
+  //     }
+  //     case POST_INTAKING -> {
+  //       trailblazer.followSegment(path);
+  //       robotManager.groundManager.intakeThenHandoffRequest();
+  //     }
+  //     case PRE_LOLLIPOP_2 -> {
+  //       trailblazer.followSegment(path);
+  //       robotManager.stowRequest();
+  //     }
+
+  //     case LOLLIPOP_2 -> {
+  //   trailblazer.followSegment(path);
+  // robotManager.groundManager.intakeThenHandoffRequest();
+  //     }
+
+  //     case POST_LOLLIPOP_2 -> {
+  //       trailblazer.followSegment(path);
+  //       robotManager.groundManager.intakeThenHandoffRequest();
+  //     }
+  //   }
+  // }
 }
