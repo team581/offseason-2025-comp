@@ -11,7 +11,6 @@ public enum LightsState {
   BLINK(Color.kWhite, BlinkPattern.BLINK_FAST),
   BLINK_ERROR(Color.kRed, BlinkPattern.BLINK_FAST),
 
-
   INTAKING_CORAL(Color.kWhite, BlinkPattern.BLINK_SLOW),
   INTAKING_ALGAE(Color.kTeal, BlinkPattern.BLINK_SLOW),
 
