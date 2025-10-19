@@ -1,10 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
-import com.team581.trailblazer.AutoPoint;
-import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
-import com.team581.trailblazer.constraints.AutoConstraintOptions;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -13,8 +9,9 @@ import frc.robot.robot_manager.RobotManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationAndLollipop5pcAutoDriveToPoint extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
+public class StationAndLollipop5pcAutoDriveToPoint
+    extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
+
   // private AutoSegment path =
   //     new AutoSegment(
   //         CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
