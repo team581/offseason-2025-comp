@@ -31,7 +31,7 @@ public enum StationAndLollipop5pcAutoState {
   J_L4_PREPARE(Points.J_L4_POSE.getPose()),
   // -move superstructure for scoring, I/J pose
   K_L4_PREPARE(Points.K_L_POSE.getPose()),
-  L_L4_PREPARE(Points.LEFT_CORAL_STATION.getPose()),
+  L_L4_PREPARE(Points.L_L4_POSE.getPose()),
   // -move superstructure for scoring, K/L pose
   A_L4_PREPARE(Points.A_L4_POSE.getPose()),
   B_L4_PREPARE(Points.B_L4_POSE.getPose()), // -move superstructure for scoring, A/B pose

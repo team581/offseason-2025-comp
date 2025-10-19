@@ -23,16 +23,16 @@ public enum Points {
   LEFT_CORAL_STATION(new Pose2d(16.194, 0.861, Rotation2d.fromDegrees(125.309))),
   RIGHT_CORAL_STATION(new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(-131.807))),
 
-  GROUND_INTAKE_LEFT_STATION(new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(0))),
+  GROUND_INTAKE_LEFT_STATION(new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(131.807)),new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(131.807))),
 
   INTAKING(new Pose2d(1.710, 7.079, Rotation2d.fromDegrees(-48.447))),
   // -Pose by station, robot state intaking
-  PRE_GROUND_INTAKE_LEFT_STATION(new Pose2d(2.565, 6.265, Rotation2d.fromDegrees(-48.447))),
+  PRE_GROUND_INTAKE_LEFT_STATION(new Pose2d(15.1,2.0, Rotation2d.fromDegrees(131.807)),new Pose2d(2.565, 6.265, Rotation2d.fromDegrees(-48.447))),
   // -Pose before getting to station, robot state idle
 
-  LOLLIPOP_2(new Pose2d(1.547, 3.964, Rotation2d.fromDegrees(0))),
+  LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180))),
   // -LP 2 pose, intaking state
-  PRE_LOLLIPOP_2(new Pose2d(2.28, 3.964, Rotation2d.fromDegrees(0))),
+  PRE_LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180))),
   // -away from LP 2 pose, idle state
 
   PRE_I_L4(ReefPipe.PIPE_I.getPose(ReefPipeLevel.RAISING)),
@@ -50,7 +50,7 @@ public enum Points {
   K_L_POSE(ReefPipe.PIPE_K.getPose(ReefPipeLevel.L4)),
   L_L4_POSE(ReefPipe.PIPE_L.getPose(ReefPipeLevel.L4)),
   A_L4_POSE(ReefPipe.PIPE_A.getPose(ReefPipeLevel.L4)),
-  B_L4_POSE(ReefPipe.PIPE_A.getPose(ReefPipeLevel.L4));
+  B_L4_POSE(ReefPipe.PIPE_B.getPose(ReefPipeLevel.L4));
 
   public Pose2d redPose;
   public Pose2d bluePose;
