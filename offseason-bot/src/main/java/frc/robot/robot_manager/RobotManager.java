@@ -818,7 +818,6 @@ public class RobotManager extends StateMachine<RobotState> {
     setStateFromRequest(RobotState.FORCED_HANDOFF);
   }
 
-
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
@@ -1065,7 +1064,6 @@ public class RobotManager extends StateMachine<RobotState> {
       setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }
   }
-
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     elevator.setState(elevatorGoal);
