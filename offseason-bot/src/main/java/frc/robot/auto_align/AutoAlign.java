@@ -24,11 +24,11 @@ import frc.robot.vision.VisionSubsystem;
 import java.util.Comparator;
 
 public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
-
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
       ImmutableList.copyOf(ReefSide.values());
   public static final ImmutableList<ReefPipe> ALL_REEF_PIPES =
       ImmutableList.copyOf(ReefPipe.values());
+
   private static final Translation2d CENTER_OF_REEF_RED =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
   private static final Translation2d CENTER_OF_REEF_BLUE =
