@@ -1,5 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
+import com.team581.math.PoseErrorTolerance;
 import com.team581.trailblazer.Trailblazer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,6 +12,8 @@ import java.util.List;
 
 public class StationAndLollipop5pcAutoDriveToPoint
     extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
+  private static final PoseErrorTolerance POSITION_TOLERANCE = new PoseErrorTolerance(0.1, 0.1);
+
   private final ArrayList<StationAndLollipop5pcAutoState> nextScoringPositions =
       new ArrayList<StationAndLollipop5pcAutoState>(
           List.of(
@@ -52,108 +55,108 @@ public class StationAndLollipop5pcAutoDriveToPoint
           DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
 
       case J_L4_LINEUP ->
-          robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.J_L4_PREPARE
               : currentState;
       case J_L4_PREPARE ->
-          robotManager.swerve.driveToPoseAtGoal(currentState.pose) && superstructureAtGoal()
+          POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose()) && superstructureAtGoal()
               ? StationAndLollipop5pcAutoState.J_L4_SCORE
               : currentState;
       case J_L4_SCORE ->
           superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
       case J_L4_POST_SCORING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case PRE_INTAKING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.INTAKING
               : currentState;
       case INTAKING ->
-          (superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose))
+          (superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose()))
                   || robotManager.claw.getHasGP()
               ? StationAndLollipop5pcAutoState.POST_INTAKING
               : currentState;
       case POST_INTAKING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? getNextReefPosition()
               : currentState;
 
       case K_L4_LINEUP ->
-          robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.K_L4_PREPARE
               : currentState;
       case K_L4_PREPARE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.K_L4_SCORE
               : currentState;
       case K_L4_SCORE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
               : currentState;
       case K_L4_POST_SCORING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case L_L4_LINEUP ->
-          robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.L_L4_PREPARE
               : currentState;
       case L_L4_PREPARE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.L_L4_SCORE
               : currentState;
       case L_L4_SCORE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
               : currentState;
       case L_L4_POST_SCORING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
 
       case A_L4_LINEUP ->
-          robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.A_L4_PREPARE
               : currentState;
       case A_L4_PREPARE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.A_L4_SCORE
               : currentState;
       case A_L4_SCORE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.A_L4_POST_SCORING
               : currentState;
       case A_L4_POST_SCORING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2
               : currentState;
 
       case PRE_LOLLIPOP_2 ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.LOLLIPOP_2
               : currentState;
       case LOLLIPOP_2 ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.POST_LOLLIPOP_2
               : currentState;
       case POST_LOLLIPOP_2 ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.L_L4_LINEUP
               : currentState;
 
       case B_L4_LINEUP ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.B_L4_PREPARE
               : currentState;
       case B_L4_PREPARE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.B_L4_SCORE
               : currentState;
       case B_L4_SCORE ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)
+          superstructureAtGoal() && POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.B_L4_POST_SCORING
               : currentState;
       case B_L4_POST_SCORING -> currentState;
