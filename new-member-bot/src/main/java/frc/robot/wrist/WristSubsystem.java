@@ -6,7 +6,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -19,7 +19,7 @@ import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class WristSubsystem extends StateMachine<WristState> {
+public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   private static final double TOLERANCE = 0;
   private static final double NEAR_TOLERANCE = 0;
