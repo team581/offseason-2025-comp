@@ -1,10 +1,7 @@
 package frc.robot.autos.auto_state_machines;
 
-import com.team581.trailblazer.AutoPoint;
-import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -15,9 +12,7 @@ import java.util.List;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
-  private AutoSegment path =
-      new AutoSegment(
-          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
+
   private Pose2d prevPose = getStartingPose();
   private final ArrayList<StationAndLollipop5pcAutoState> nextScoringPositions =
       new ArrayList<StationAndLollipop5pcAutoState>(
@@ -29,7 +24,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
               StationAndLollipop5pcAutoState.B_L4_LINEUP));
 
   public void createPath(Pose2d goalPose) {
-    path = new AutoSegment(CONSTRAINTS, new AutoPoint(prevPose), new AutoPoint(goalPose));
+
     prevPose = goalPose;
   }
 
@@ -58,9 +53,11 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   }
 
   @Override
-  protected StationAndLollipop5pcAutoState getNextState(StationAndLollipop5pcAutoState currentState) {
+  protected StationAndLollipop5pcAutoState getNextState(
+      StationAndLollipop5pcAutoState currentState) {
     return switch (currentState) {
-      case IDLE -> DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
+      case IDLE ->
+          DriverStation.isAutonomous() ? StationAndLollipop5pcAutoState.A_L4_LINEUP : currentState;
 
       case J_L4_LINEUP ->
           robotManager.swerve.driveToPoseAtGoal(currentState.pose)
@@ -70,7 +67,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
           robotManager.swerve.driveToPoseAtGoal(currentState.pose) && superstructureAtGoal()
               ? StationAndLollipop5pcAutoState.J_L4_SCORE
               : currentState;
-      case J_L4_SCORE -> superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
+      case J_L4_SCORE ->
+          superstructureAtGoal() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
       case J_L4_POST_SCORING ->
           superstructureAtGoal()
                   && robotManager.swerve.driveToPoseAtGoal(
@@ -185,7 +183,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   // @Override
   // protected StationAndLollipop5pcAuto getNextState(StationAndLollipop5pcAuto currentState) {
   //   return switch (currentState) {
-  //     case IDLE -> DriverStation.isAutonomous() ? StationAndLollipop5pcAuto.A_L4_LINEUP : currentState;
+  //     case IDLE -> DriverStation.isAutonomous() ? StationAndLollipop5pcAuto.A_L4_LINEUP :
+  // currentState;
 
   //     case J_L4_LINEUP ->
   //         trailblazer.followSegmentIsFinished(path)
