@@ -13,7 +13,7 @@ import frc.robot.robot_manager.RobotManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
+public class StationAndLollipop5pcAutoDriveToPoint extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
   private AutoSegment path =
       new AutoSegment(
@@ -33,7 +33,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
     prevPose = goalPose;
   }
 
-  public StationAndLollipop5pcAuto(RobotManager robot, Trailblazer trailblazer) {
+  public StationAndLollipop5pcAutoDriveToPoint(RobotManager robot, Trailblazer trailblazer) {
     super(StationAndLollipop5pcAutoState.IDLE, robot, trailblazer);
   }
 
