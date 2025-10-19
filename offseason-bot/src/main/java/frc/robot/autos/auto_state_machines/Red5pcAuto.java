@@ -1,9 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
 import com.team581.trailblazer.Trailblazer;
-import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
-import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitUtils;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -64,7 +61,9 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
               : currentState;
       case J_L4_SCORE -> superstructureAtGoal() ? Red5pcAutoState.J_L4_POST_SCORING : currentState;
       case J_L4_POST_SCORING ->
-          superstructureAtGoal() && robotManager.swerve.driveToPoseAtGoal(currentState.pose)//trailblazer.followSegmentIsFinished(null)
+          superstructureAtGoal()
+                  && robotManager.swerve.driveToPoseAtGoal(
+                      currentState.pose) // trailblazer.followSegmentIsFinished(null)
               ? Red5pcAutoState.PRE_INTAKING
               : currentState;
 

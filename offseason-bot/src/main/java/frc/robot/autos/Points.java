@@ -45,14 +45,10 @@ public enum Points {
   PRE_B_L4(ReefPipe.PIPE_B.getPose(ReefPipeLevel.RAISING)),
   // -robot intaking state (until singulate coral), a little before A/B pose
 
-  I_L4_POSE(
-      ReefPipe.PIPE_I.getPose(ReefPipeLevel.L4)),
-  J_L4_POSE(
-      ReefPipe.PIPE_J.getPose(ReefPipeLevel.L4)),
-  K_L_POSE(
-      ReefPipe.PIPE_K.getPose(ReefPipeLevel.L4)),
-  L_L4_POSE(
-      ReefPipe.PIPE_L.getPose(ReefPipeLevel.L4)),
+  I_L4_POSE(ReefPipe.PIPE_I.getPose(ReefPipeLevel.L4)),
+  J_L4_POSE(ReefPipe.PIPE_J.getPose(ReefPipeLevel.L4)),
+  K_L_POSE(ReefPipe.PIPE_K.getPose(ReefPipeLevel.L4)),
+  L_L4_POSE(ReefPipe.PIPE_L.getPose(ReefPipeLevel.L4)),
   A_L4_POSE(ReefPipe.PIPE_A.getPose(ReefPipeLevel.L4)),
   B_L4_POSE(ReefPipe.PIPE_A.getPose(ReefPipeLevel.L4));
 
