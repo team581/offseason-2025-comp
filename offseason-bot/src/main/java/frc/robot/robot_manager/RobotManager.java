@@ -138,8 +138,9 @@ public class RobotManager extends StateMachine<RobotState> {
           elevator.atGoal()
                   && arm.atGoal()
                   && ((groundManager.deploy.atGoal()
-                  && groundManager.getState().equals(GroundState.HANDOFF_WAIT)
-                  && groundManager.getTopHasGP())|| claw.getHasGP())
+                          && groundManager.getState().equals(GroundState.HANDOFF_WAIT)
+                          && groundManager.getTopHasGP())
+                      || claw.getHasGP())
               ? currentState.getNextScoreState()
               : currentState;
 
