@@ -185,7 +185,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     currentTargetPose = findTargetPose();
     isAligned = isRobotPoseAlignedWithTargetPose();
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-    if (!explicitSelection && !bestPipeSelected && !currentReefPipeLevel.equals(ReefPipeLevel.RAISING)) {
+    if (!explicitSelection
+        && !bestPipeSelected
+        && !currentReefPipeLevel.equals(ReefPipeLevel.RAISING)) {
       bestPipe = getBestPipeForScoring();
       DogLog.log("AutoAlign/BestPipe", bestPipe);
       bestPipeSelected = true;
