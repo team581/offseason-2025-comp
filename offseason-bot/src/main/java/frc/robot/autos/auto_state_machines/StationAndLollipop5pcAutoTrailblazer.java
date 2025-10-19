@@ -27,7 +27,6 @@ public class StationAndLollipop5pcAutoTrailblazer
               StationAndLollipop5pcAutoState.L_L4_LINEUP,
               StationAndLollipop5pcAutoState.A_L4_LINEUP,
               StationAndLollipop5pcAutoState.B_L4_LINEUP));
-  private StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.get(0);
 
   public void createPath(Pose2d goalPose) {
     path = new AutoSegment(CONSTRAINTS, new AutoPoint(prevPose), new AutoPoint(goalPose));
@@ -54,7 +53,7 @@ public class StationAndLollipop5pcAutoTrailblazer
 
   private StationAndLollipop5pcAutoState getNextReefPosition() {
     nextScoringPositions.remove(0);
-    nextScoringPosition = nextScoringPositions.get(0);
+    StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.get(0);
     return nextScoringPosition;
   }
 
@@ -243,7 +242,6 @@ public class StationAndLollipop5pcAutoTrailblazer
         trailblazer.followSegment(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-      default -> throw new IllegalArgumentException("Unexpected value: " + newState);
     }
   }
 
