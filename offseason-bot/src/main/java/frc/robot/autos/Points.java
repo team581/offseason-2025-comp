@@ -23,11 +23,15 @@ public enum Points {
   LEFT_CORAL_STATION(new Pose2d(16.194, 0.861, Rotation2d.fromDegrees(125.309))),
   RIGHT_CORAL_STATION(new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(-131.807))),
 
-  GROUND_INTAKE_LEFT_STATION(new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(131.807)),new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(131.807))),
+  GROUND_INTAKE_LEFT_STATION(
+      new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(131.807)),
+      new Pose2d(16.1, 7.35, Rotation2d.fromDegrees(131.807))),
 
   INTAKING(new Pose2d(1.710, 7.079, Rotation2d.fromDegrees(-48.447))),
   // -Pose by station, robot state intaking
-  PRE_GROUND_INTAKE_LEFT_STATION(new Pose2d(15.1,2.0, Rotation2d.fromDegrees(131.807)),new Pose2d(2.565, 6.265, Rotation2d.fromDegrees(-48.447))),
+  PRE_GROUND_INTAKE_LEFT_STATION(
+      new Pose2d(15.1, 2.0, Rotation2d.fromDegrees(131.807)),
+      new Pose2d(2.565, 6.265, Rotation2d.fromDegrees(-48.447))),
   // -Pose before getting to station, robot state idle
 
   LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180))),

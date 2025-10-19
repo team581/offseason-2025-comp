@@ -4,7 +4,6 @@ import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.BaseImperativeAuto;
@@ -15,7 +14,8 @@ import java.util.List;
 
 public class StationAndLollipop5pcAutoTrailblazer
     extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
-  //private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
+  // private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4,
+  // 30);
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path =
@@ -34,7 +34,11 @@ public class StationAndLollipop5pcAutoTrailblazer
 
   public void createPath(Pose2d goalPose) {
 
-    path = new AutoSegment(CONSTRAINTS, new AutoPoint(robotManager.localization.getPose()), new AutoPoint(goalPose));
+    path =
+        new AutoSegment(
+            CONSTRAINTS,
+            new AutoPoint(robotManager.localization.getPose()),
+            new AutoPoint(goalPose));
     DogLog.timestamp("StateMachineAuto/newPathGenerated");
     DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
   }
@@ -52,7 +56,6 @@ public class StationAndLollipop5pcAutoTrailblazer
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-
   private StationAndLollipop5pcAutoState getNextReefPosition() {
     StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.pop();
     return nextScoringPosition;
@@ -61,8 +64,10 @@ public class StationAndLollipop5pcAutoTrailblazer
   @Override
   protected StationAndLollipop5pcAutoState getNextState(
       StationAndLollipop5pcAutoState currentState) {
-        DogLog.timestamp("StateMachineAuto/gotNewState");
-DogLog.log("StateMachineAuto/trailblazerFollowSegmentIsFinished", trailblazer.followSegmentIsFinished(path));
+    DogLog.timestamp("StateMachineAuto/gotNewState");
+    DogLog.log(
+        "StateMachineAuto/trailblazerFollowSegmentIsFinished",
+        trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case J_L4_LINEUP ->
           trailblazer.followSegmentIsFinished(path)
@@ -87,8 +92,7 @@ DogLog.log("StateMachineAuto/trailblazerFollowSegmentIsFinished", trailblazer.fo
               : currentState;
       case INTAKING ->
           (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
-                  ||
-                  robotManager.claw.getHasGP()
+                  || robotManager.claw.getHasGP()
               ? StationAndLollipop5pcAutoState.POST_INTAKING
               : currentState;
       case POST_INTAKING ->
