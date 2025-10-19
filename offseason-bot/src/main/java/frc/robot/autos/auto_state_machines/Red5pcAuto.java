@@ -1,7 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
 import com.team581.trailblazer.Trailblazer;
-import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
@@ -11,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
 
-  private Pose2d prevPose = getStartingPose();
   private final ArrayList<Red5pcAutoState> nextScoringPositions =
       new ArrayList<Red5pcAutoState>(
           List.of(
@@ -23,10 +20,7 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
               Red5pcAutoState.A_L4_LINEUP,
               Red5pcAutoState.B_L4_LINEUP));
 
-  public void createPath(Pose2d goalPose) {
-
-    prevPose = goalPose;
-  }
+  public void createPath(Pose2d goalPose) {}
 
   public Red5pcAuto(RobotManager robot, Trailblazer trailblazer) {
     super(Red5pcAutoState.IDLE, robot, trailblazer);
