@@ -1,6 +1,9 @@
 package frc.robot.robot_manager;
 
 import com.google.common.collect.ImmutableMap;
+
+import dev.doglog.DogLog;
+
 import java.util.Map;
 
 public enum RobotState {
@@ -106,6 +109,10 @@ public enum RobotState {
 
   private static final ImmutableMap<RobotState, RobotState> scoreSequence =
       ImmutableMap.ofEntries(
+          Map.entry(CORAL_L1_APPROACH, CORAL_L1_LINEUP),
+          Map.entry(CORAL_L2_APPROACH, CORAL_L2_LINEUP),
+          Map.entry(CORAL_L3_APPROACH, CORAL_L3_LINEUP),
+          Map.entry(CORAL_L4_APPROACH, CORAL_L4_LINEUP),
           Map.entry(CORAL_L1_LINEUP, CORAL_L1_RELEASE),
           Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
           Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
@@ -164,7 +171,7 @@ public enum RobotState {
   }
 
   public static boolean missingGP(RobotState state, boolean hasGp) {
-    return (state.clawGp != ClawGamePiece.EMPTY && !hasGp);
+   return (!state.clawGp.equals(ClawGamePiece.EMPTY) && !hasGp);
   }
 
   public static boolean isReleaseState(RobotState state) {

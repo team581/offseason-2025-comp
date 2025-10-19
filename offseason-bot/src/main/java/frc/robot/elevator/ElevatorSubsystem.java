@@ -66,6 +66,9 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   public void whileInState(ElevatorState currentState) {
     DogLog.log("Elevator/Motor/Current", filteredCurrent);
     DogLog.log("Elevator/Height", height);
+    DogLog.log("Elevator/AtGoal", atGoal());
+    DogLog.log("Elevator/NearGoal", nearGoal());
+    DogLog.log("Elevator/Goal", currentState.getHeight());
 
     if (DriverStation.isEnabled()) {
       return;

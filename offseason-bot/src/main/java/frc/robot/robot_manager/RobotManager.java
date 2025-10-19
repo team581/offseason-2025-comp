@@ -138,50 +138,50 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L4_PREPARE_HANDOFF ->
           elevator.atGoal()
                   && arm.atGoal()
-                  && ((groundManager.deploy.atGoal()
-                          && groundManager.getState().equals(GroundState.HANDOFF_WAIT)
+                  && ((
+                          groundManager.getState().equals(GroundState.HANDOFF_WAIT)
                           && groundManager.getTopHasGP())
                       || claw.getHasGP())
-              ? currentState.getNextScoreState()
+              ? currentState.getNextHandoffState()
               : currentState;
 
       case CORAL_L1_RELEASE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
-          claw.getHasGP() ? currentState.getNextScoreState() : currentState;
+          claw.getHasGP() ? currentState.getNextHandoffState() : currentState;
       case CORAL_L1_AFTER_RELEASE_HANDOFF,
           CORAL_L2_AFTER_RELEASE_HANDOFF,
           CORAL_L3_AFTER_RELEASE_HANDOFF,
           CORAL_L4_AFTER_RELEASE_HANDOFF ->
-          elevator.atGoal() && arm.atGoal() ? currentState.getNextScoreState() : currentState;
+          elevator.atGoal() && arm.atGoal() ? currentState.getNextHandoffState() : currentState;
 
       // Approach
       case CORAL_L1_APPROACH ->
-          elevator.nearGoal() && arm.nearGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
+          elevator.nearGoal() && arm.nearGoal() ? currentState.getNextScoreState(): currentState;
 
       case CORAL_L2_APPROACH -> {
-        yield elevator.nearGoal(ElevatorState.L2_SCORE_LINEUP)
-                && arm.nearGoal(ArmState.CORAL_SCORE_LINEUP_L2)
+        yield elevator.nearGoal()
+                && arm.nearGoal()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
-            ? RobotState.CORAL_L2_LINEUP
+            ? currentState.getNextScoreState()
             : currentState;
       }
       case CORAL_L3_APPROACH -> {
-        yield elevator.nearGoal(ElevatorState.L3_SCORE_LINEUP)
-                && arm.nearGoal(ArmState.CORAL_SCORE_LINEUP_L3)
+        yield elevator.nearGoal()
+                && arm.nearGoal()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
-            ? RobotState.CORAL_L3_LINEUP
+            ? currentState.getNextScoreState()
             : currentState;
       }
       case CORAL_L4_APPROACH -> {
-        yield elevator.nearGoal(ElevatorState.L4_SCORE_LINEUP)
-                && arm.nearGoal(ArmState.CORAL_SCORE_LINEUP_L4)
+        yield elevator.nearGoal()
+                && arm.nearGoal()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
-            ? RobotState.CORAL_L4_LINEUP
+            ? currentState.getNextScoreState()
             : currentState;
       }
 
@@ -455,14 +455,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_PLACE -> {
-        claw.setState(ClawState.IDLE_NO_GP);
+        claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RELEASE -> {
-        claw.setState(ClawState.SCORE_CORAL);
+        claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING_CORAL);
@@ -486,7 +486,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L3_PLACE -> {
-        claw.setState(ClawState.IDLE_NO_GP);
+        claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.L3_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L3);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
@@ -520,7 +520,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L4_PLACE -> {
-        claw.setState(ClawState.IDLE_NO_GP);
+        claw.setState(ClawState.IDLE_W_CORAL);
         moveSuperstructure(ElevatorState.L4_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L4);
         vision.setState(VisionState.TAGS);
         lights.setState(getLightStateForScoring());
