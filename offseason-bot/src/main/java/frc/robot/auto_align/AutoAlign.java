@@ -2,7 +2,6 @@ package frc.robot.auto_align;
 
 import com.google.common.collect.ImmutableList;
 import com.team581.auto_align.TagAlignState;
-import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
@@ -25,8 +24,6 @@ import frc.robot.vision.VisionSubsystem;
 import java.util.Comparator;
 
 public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
-  private static final AutoConstraintOptions CONSTRAINTS =
-      new AutoConstraintOptions(3.0, 10.0, 2.0, 5.0);
 
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
       ImmutableList.copyOf(ReefSide.values());
