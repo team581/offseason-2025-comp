@@ -1,7 +1,5 @@
 package frc.robot.autos.auto_state_machines;
 
-import com.team581.trailblazer.AutoPoint;
-import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,9 +12,7 @@ import java.util.List;
 
 public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
-  private AutoSegment path =
-      new AutoSegment(
-          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
+
   private Pose2d prevPose = getStartingPose();
   private final ArrayList<Red5pcAutoState> nextScoringPositions =
       new ArrayList<Red5pcAutoState>(
@@ -29,7 +25,6 @@ public class Red5pcAuto extends BaseImperativeAuto<Red5pcAutoState> {
 
   public void createPath(Pose2d goalPose) {
 
-    path = new AutoSegment(CONSTRAINTS, new AutoPoint(prevPose), new AutoPoint(goalPose));
     prevPose = goalPose;
   }
 
