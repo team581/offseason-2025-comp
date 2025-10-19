@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.Points;
 
 public enum StationAndLollipop5pcAutoState {
-
   INTAKING(Points.GROUND_INTAKE_LEFT_STATION.getPose()),
   // -Pose by station, robot state intaking
   PRE_INTAKING(Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose()),

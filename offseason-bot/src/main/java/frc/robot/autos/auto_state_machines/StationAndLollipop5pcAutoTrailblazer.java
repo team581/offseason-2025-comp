@@ -4,16 +4,12 @@ import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
-
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StationAndLollipop5pcAutoTrailblazer
@@ -21,12 +17,14 @@ public class StationAndLollipop5pcAutoTrailblazer
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 30);
   private AutoSegment path =
       new AutoSegment(
-          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(StationAndLollipop5pcAutoState.J_L4_LINEUP.pose));
+          CONSTRAINTS,
+          new AutoPoint(getStartingPose()),
+          new AutoPoint(StationAndLollipop5pcAutoState.J_L4_LINEUP.pose));
   private Pose2d prevPose = getStartingPose();
   private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
-  new ArrayDeque<StationAndLollipop5pcAutoState>(
-    List.of(
-      //StationAndLollipop5pcAutoState.J_L4_LINEUP,
+      new ArrayDeque<StationAndLollipop5pcAutoState>(
+          List.of(
+              // StationAndLollipop5pcAutoState.J_L4_LINEUP,
               StationAndLollipop5pcAutoState.K_L4_LINEUP,
               StationAndLollipop5pcAutoState.L_L4_LINEUP,
               StationAndLollipop5pcAutoState.A_L4_LINEUP,
@@ -47,8 +45,9 @@ public class StationAndLollipop5pcAutoTrailblazer
   }
 
   private boolean superstructureAtGoal() {
-    DogLog.log("Autos/SuperStructureAtGoal", robotManager.arm.atGoal()&&robotManager.elevator.atGoal());
-    return robotManager.arm.atGoal()&&robotManager.elevator.atGoal();
+    DogLog.log(
+        "Autos/SuperStructureAtGoal", robotManager.arm.atGoal() && robotManager.elevator.atGoal());
+    return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
   private StationAndLollipop5pcAutoState getNextReefPosition() {
@@ -61,8 +60,6 @@ public class StationAndLollipop5pcAutoTrailblazer
       StationAndLollipop5pcAutoState currentState) {
 
     return switch (currentState) {
-
-
       case J_L4_LINEUP ->
           trailblazer.followSegmentIsFinished(path)
               ? StationAndLollipop5pcAutoState.J_L4_PREPARE
@@ -72,7 +69,9 @@ public class StationAndLollipop5pcAutoTrailblazer
               ? StationAndLollipop5pcAutoState.J_L4_SCORE
               : currentState;
       case J_L4_SCORE ->
-          !robotManager.claw.getHasGP() ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING : currentState;
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING
+              : currentState;
       case J_L4_POST_SCORING ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
@@ -101,7 +100,7 @@ public class StationAndLollipop5pcAutoTrailblazer
               ? StationAndLollipop5pcAutoState.K_L4_SCORE
               : currentState;
       case K_L4_SCORE ->
-      !robotManager.claw.getHasGP()
+          !robotManager.claw.getHasGP()
               ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
               : currentState;
       case K_L4_POST_SCORING ->
@@ -118,7 +117,8 @@ public class StationAndLollipop5pcAutoTrailblazer
               ? StationAndLollipop5pcAutoState.L_L4_SCORE
               : currentState;
       case L_L4_SCORE ->
-      !robotManager.claw.getHasGP()              ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
               : currentState;
       case L_L4_POST_SCORING ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
@@ -134,7 +134,8 @@ public class StationAndLollipop5pcAutoTrailblazer
               ? StationAndLollipop5pcAutoState.A_L4_SCORE
               : currentState;
       case A_L4_SCORE ->
-      !robotManager.claw.getHasGP()              ? StationAndLollipop5pcAutoState.A_L4_POST_SCORING
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.A_L4_POST_SCORING
               : currentState;
       case A_L4_POST_SCORING ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
@@ -163,7 +164,8 @@ public class StationAndLollipop5pcAutoTrailblazer
               ? StationAndLollipop5pcAutoState.B_L4_SCORE
               : currentState;
       case B_L4_SCORE ->
-      !robotManager.claw.getHasGP()              ? StationAndLollipop5pcAutoState.B_L4_POST_SCORING
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.B_L4_POST_SCORING
               : currentState;
       case B_L4_POST_SCORING -> currentState;
 

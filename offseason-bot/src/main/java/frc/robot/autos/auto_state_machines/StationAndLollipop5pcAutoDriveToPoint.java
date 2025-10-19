@@ -2,31 +2,24 @@ package frc.robot.autos.auto_state_machines;
 
 import com.team581.math.PoseErrorTolerance;
 import com.team581.trailblazer.Trailblazer;
-
-import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
-
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 public class StationAndLollipop5pcAutoDriveToPoint
     extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final PoseErrorTolerance POSITION_TOLERANCE = new PoseErrorTolerance(0.1, 0.1);
   private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
-  new ArrayDeque<StationAndLollipop5pcAutoState>(
-    List.of(
-      //StationAndLollipop5pcAutoState.J_L4_LINEUP,
+      new ArrayDeque<StationAndLollipop5pcAutoState>(
+          List.of(
+              // StationAndLollipop5pcAutoState.J_L4_LINEUP,
               StationAndLollipop5pcAutoState.K_L4_LINEUP,
               StationAndLollipop5pcAutoState.L_L4_LINEUP,
               StationAndLollipop5pcAutoState.A_L4_LINEUP,
               StationAndLollipop5pcAutoState.B_L4_LINEUP));
-
 
   public StationAndLollipop5pcAutoDriveToPoint(RobotManager robot, Trailblazer trailblazer) {
     super(StationAndLollipop5pcAutoState.J_L4_LINEUP, robot, trailblazer);
@@ -52,7 +45,6 @@ public class StationAndLollipop5pcAutoDriveToPoint
   protected StationAndLollipop5pcAutoState getNextState(
       StationAndLollipop5pcAutoState currentState) {
     return switch (currentState) {
-
       case J_L4_LINEUP ->
           POSITION_TOLERANCE.atPose(currentState.pose, robotManager.localization.getPose())
               ? StationAndLollipop5pcAutoState.J_L4_PREPARE
@@ -215,7 +207,7 @@ public class StationAndLollipop5pcAutoDriveToPoint
     switch (newState) {
       case A_L4_LINEUP, B_L4_LINEUP, I_L4_LINEUP, J_L4_LINEUP, K_L4_LINEUP, L_L4_LINEUP -> {
         robotManager.swerve.driveToPoseRequest(newState.pose);
-        //robotManager.groundManager.intakeThenHandoffRequest();
+        // robotManager.groundManager.intakeThenHandoffRequest();
       }
 
       case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE -> {
@@ -271,7 +263,8 @@ public class StationAndLollipop5pcAutoDriveToPoint
   //       robotManager.groundManager.intakeThenHandoffRequest();
   //     }
 
-  //     case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE -> {
+  //     case A_L4_PREPARE, B_L4_PREPARE, I_L4_PREPARE, J_L4_PREPARE, K_L4_PREPARE, L_L4_PREPARE ->
+  // {
   //       robotManager.swerve.driveToPoseRequest(state.pose);
   //       robotManager.l4CoralAutoApproachRequest();
   //     }

@@ -11,8 +11,10 @@ import java.util.function.BiFunction;
 
 public enum AutoSelection implements AutoSelectionBase {
   CROSS_LINE(RedCrossLineAuto::new, BlueCrossLineAuto::new),
-  STATION_LOLLIPOP_5PC_TRAILBLAZER(StationAndLollipop5pcAutoTrailblazer::new, StationAndLollipop5pcAutoTrailblazer::new),
-  STATION_LOLLIPOP_5PC_DRIVE_TO_POSE(StationAndLollipop5pcAutoDriveToPoint::new, StationAndLollipop5pcAutoDriveToPoint::new);
+  STATION_LOLLIPOP_5PC_TRAILBLAZER(
+      StationAndLollipop5pcAutoTrailblazer::new, StationAndLollipop5pcAutoTrailblazer::new),
+  STATION_LOLLIPOP_5PC_DRIVE_TO_POSE(
+      StationAndLollipop5pcAutoDriveToPoint::new, StationAndLollipop5pcAutoDriveToPoint::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseImperativeAuto<?>> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseImperativeAuto<?>> blueAuto;
