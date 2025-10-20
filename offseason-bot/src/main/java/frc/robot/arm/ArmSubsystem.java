@@ -214,7 +214,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
-
   private double usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle();
 
   @Override

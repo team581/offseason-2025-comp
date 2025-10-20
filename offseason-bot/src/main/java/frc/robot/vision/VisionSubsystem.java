@@ -121,7 +121,6 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);
   }
 
-
   public boolean isAnyCameraOffline() {
     return leftLimelight.getCameraHealth() == CameraHealth.OFFLINE
         || rightLimelight.getCameraHealth() == CameraHealth.OFFLINE;
