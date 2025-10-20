@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 public class CustomOdometry {
   public CustomOdometry() {}
 
-  private Translation2d getModuleDisplacement(
+  private static Translation2d getModuleDisplacement(
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
@@ -37,7 +37,8 @@ public class CustomOdometry {
     double circleCenterX = 0 - (radius * Math.cos(previousAngleRadians));
     double circleCenterY = 0 - (radius * Math.sin(previousAngleRadians));
 
-    // Finally, calculate the current module translation on the arc and return it as module displacement
+    // Finally, calculate the current module translation on the arc and return it as module
+    // displacement
     double displacementX = circleCenterX + (radius * Math.cos(currentAngleRadians));
     double displacementY = circleCenterY + (radius * Math.sin(currentAngleRadians));
 
@@ -69,16 +70,21 @@ public class CustomOdometry {
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
     // System.out.println("Current gyro angle: " + currentGyroAngle);
 
-    // TODO: Figure out why "previousRobotPose.getRotation().times(-1.0)" makes the calculations work
+    // TODO: Figure out why "previousRobotPose.getRotation().times(-1.0)" makes the calculations
+    // work
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[0], previousRobotPose.getRotation().times(-1.0))),
+          new Transform2d(
+              robotRelativeModuleOffsets[0], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[1], previousRobotPose.getRotation().times(-1.0))),
+          new Transform2d(
+              robotRelativeModuleOffsets[1], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[2], previousRobotPose.getRotation().times(-1.0))),
+          new Transform2d(
+              robotRelativeModuleOffsets[2], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[3], previousRobotPose.getRotation().times(-1.0)))
+          new Transform2d(
+              robotRelativeModuleOffsets[3], previousRobotPose.getRotation().times(-1.0)))
     };
 
     Translation2d[] moduleDisplacements = {
