@@ -121,10 +121,6 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);
   }
 
-  public void setClosestScoringReefAndPipe(int tagID) {
-    rightLimelight.setClosestScoringReefTag(tagID);
-    leftLimelight.setClosestScoringReefTag(tagID);
-  }
 
   public boolean isAnyCameraOffline() {
     return leftLimelight.getCameraHealth() == CameraHealth.OFFLINE

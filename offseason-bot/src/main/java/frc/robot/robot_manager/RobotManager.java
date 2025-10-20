@@ -750,7 +750,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
     autoAlign.setScoringLevel(scoringLevel);
 
-    vision.setClosestScoringReefAndPipe(nearestReefSide.getTagID());
     swerve.setElevatorHeight(elevator.getHeight());
   }
 
