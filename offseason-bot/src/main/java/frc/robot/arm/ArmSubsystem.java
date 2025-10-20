@@ -1,11 +1,9 @@
 package frc.robot.arm;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
 import com.team581.simkit.SimKit;
@@ -17,7 +15,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -52,7 +49,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private final VelocityVoltage spinToWin = new VelocityVoltage(0.6);
   private boolean lollipopMode = false;
   private final ElevatorSubsystem elevator;
   private boolean elevatorIsGoingDown = false;
@@ -218,9 +214,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
-  private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();
-  private TrapezoidProfile.Constraints simConstraints;
-  private boolean simDidInit = false;
 
   private double usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle();
 
