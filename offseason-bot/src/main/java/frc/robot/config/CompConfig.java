@@ -78,7 +78,7 @@ class CompConfig {
               CANIVORE_NAME,
               20,
 
-              // UPDATED FOR OFFSEASON BOT
+              // TODO: BRINGUP: VERIFY VALUES
               99,
               148,
               1.75,
