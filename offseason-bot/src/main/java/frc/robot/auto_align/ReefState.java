@@ -80,11 +80,14 @@ public class ReefState {
   }
 
   public ReefPipeLevel getHighestAvailableLevel(ReefSide closestSide) {
-    if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L4) || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L4)) {
+    if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L4)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L4)) {
       return ReefPipeLevel.L4;
-    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L3)|| !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L3)) {
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L3)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L3)) {
       return ReefPipeLevel.L3;
-    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L2) || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L2)) {
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L2)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L2)) {
       return ReefPipeLevel.L2;
     } else {
       return ReefPipeLevel.L1;

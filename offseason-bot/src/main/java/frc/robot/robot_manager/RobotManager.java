@@ -1000,8 +1000,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       default -> {
         scoringAlignActive = true;
         autoAlign.approachPipeRequest();
-         var  bestLevel = autoAlign.getBestLevel();
-         DogLog.log("Debug/BestLevel", bestLevel);
+        var bestLevel = autoAlign.getBestLevel();
+        DogLog.log("Debug/BestLevel", bestLevel);
         switch (bestLevel) {
           case L4 -> l4CoralApproachRequest();
           case L3 -> l3CoralApproachRequest();
@@ -1020,16 +1020,16 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
     switch (scoringLevel) {
       case L4 -> {
-          autoAlign.markLevelScored(scoringLevel);
-         l3CoralApproachRequest();
+        autoAlign.markLevelScored(scoringLevel);
+        l3CoralApproachRequest();
       }
       case L3 -> {
         autoAlign.markLevelScored(scoringLevel);
-         l2CoralApproachRequest();
+        l2CoralApproachRequest();
       }
       case L2 -> {
         autoAlign.markLevelScored(scoringLevel);
-         l1CoralApproachRequest();
+        l1CoralApproachRequest();
       }
 
       default -> {}

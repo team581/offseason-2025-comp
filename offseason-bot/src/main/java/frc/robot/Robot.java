@@ -129,26 +129,18 @@ public class Robot extends Base581Robot {
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
-    hardware.driverController.rightTrigger().onTrue(actions.scoreCommand()).onFalse(actions.scoringAlignOffCommand());
+    hardware
+        .driverController
+        .rightTrigger()
+        .onTrue(actions.scoreCommand())
+        .onFalse(actions.scoringAlignOffCommand());
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
-    hardware
-        .driverController
-        .y()
-        .onTrue(actions.bumpUpCommand());
-    hardware
-        .driverController
-        .x()
-        .onTrue(actions.bumpLeftCommand());
-    hardware
-        .driverController
-        .b()
-        .onTrue(actions.bumpRightCommand());
-    hardware
-        .driverController
-        .a()
-        .onTrue(actions.bumpDownCommand());
+    hardware.driverController.y().onTrue(actions.bumpUpCommand());
+    hardware.driverController.x().onTrue(actions.bumpLeftCommand());
+    hardware.driverController.b().onTrue(actions.bumpRightCommand());
+    hardware.driverController.a().onTrue(actions.bumpDownCommand());
 
     hardware.driverController.povUp().onTrue(actions.climbUpCommand());
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());

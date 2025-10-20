@@ -79,8 +79,7 @@ public class RobotCommands {
   }
 
   public Command scoreCommand() {
-    return Commands.runOnce(robot::scoreRequest, bothRequirements)
-        .withName("ConfirmScoreCommand");
+    return Commands.runOnce(robot::scoreRequest, bothRequirements).withName("ConfirmScoreCommand");
   }
 
   public Command bumpUpCommand() {
