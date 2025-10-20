@@ -69,7 +69,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private double reefSnapAngle = 0.0;
   private boolean scoringAlignActive = false;
   private boolean awayFromReef = false;
-  private boolean closeEnoughToReefSide = false;
   private ReefSide nearestReefSide = ReefSide.SIDE_AB;
   private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
 
@@ -362,6 +361,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           swerve.normalDriveRequest();
         }
       }
+      default -> {}
     }
   }
 
