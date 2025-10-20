@@ -9,15 +9,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class CustomOdometry {
-  private final Rotation2d currentGyroAngle;
-  private final Pose2d pose;
+  public CustomOdometry() {}
 
-  public CustomOdometry(Rotation2d initialGyroAngle, Pose2d initialPoseMeters) {
-    this.currentGyroAngle = initialGyroAngle;
-    this.pose = initialPoseMeters;
-  }
-
-  private static Translation2d getModuleDisplacement(
+  private Translation2d getModuleDisplacement(
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
@@ -43,21 +37,16 @@ public class CustomOdometry {
     double circleCenterX = 0 - (radius * Math.cos(previousAngleRadians));
     double circleCenterY = 0 - (radius * Math.sin(previousAngleRadians));
 
-    // Finally, calculate the current module translation. If arc length is negative, invert
-    // displacement
+    // Finally, calculate the current module translation on the arc and return it as module displacement
     double displacementX = circleCenterX + (radius * Math.cos(currentAngleRadians));
     double displacementY = circleCenterY + (radius * Math.sin(currentAngleRadians));
 
     // Logging
+    // System.out.println("New test -");
     // System.out.println("Circle center x " + circleCenterX);
     // System.out.println("Circle center y " + circleCenterY);
     // System.out.println("Displacement x " + displacementX);
     // System.out.println("Displacement y " + displacementY);
-
-    // if (arcLength < 0) {
-    //   displacementX *= -1;
-    //   displacementY *= -1;
-    // }
 
     return new Translation2d(displacementX, displacementY);
   }
@@ -66,7 +55,8 @@ public class CustomOdometry {
   public Pose2d update(
       Pose2d previousRobotPose,
       SwerveModulePosition[] previousWheelPositions,
-      SwerveModulePosition[] currentWheelPositions) {
+      SwerveModulePosition[] currentWheelPositions,
+      Rotation2d currentGyroAngle) {
     Translation2d[] robotRelativeModuleOffsets = {
       new Translation2d(Inches.of(12), Inches.of(12)),
       new Translation2d(Inches.of(12), Inches.of(-12)),
@@ -74,23 +64,21 @@ public class CustomOdometry {
       new Translation2d(Inches.of(-12), Inches.of(-12))
     };
 
-    Rotation2d gyroAngleDifference = currentGyroAngle.minus(previousRobotPose.getRotation());
-
-    // logging
+    // Logging
     // System.out.println("New test -");
-    // System.out.println("Current gyro angle: " + currentGyroAngle);
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
-    // System.out.println("Gryo angle difference: " + gyroAngleDifference);
+    // System.out.println("Current gyro angle: " + currentGyroAngle);
 
-    Pose2d[] fieldRelativeModulePoses = {
+    // TODO: Figure out why "previousRobotPose.getRotation().times(-1.0)" makes the calculations work
+    Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[0], gyroAngleDifference)),
+          new Transform2d(robotRelativeModuleOffsets[0], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[1], gyroAngleDifference)),
+          new Transform2d(robotRelativeModuleOffsets[1], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[2], gyroAngleDifference)),
+          new Transform2d(robotRelativeModuleOffsets[2], previousRobotPose.getRotation().times(-1.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[3], gyroAngleDifference))
+          new Transform2d(robotRelativeModuleOffsets[3], previousRobotPose.getRotation().times(-1.0)))
     };
 
     Translation2d[] moduleDisplacements = {
@@ -117,16 +105,16 @@ public class CustomOdometry {
     };
 
     Translation2d[] fieldRelativeModuleDisplacements = {
-      fieldRelativeModulePoses[0]
+      fieldRelativeModulePosesOfPreviousPose[0]
           .transformBy(new Transform2d(moduleDisplacements[0], new Rotation2d(0.0)))
           .getTranslation(),
-      fieldRelativeModulePoses[1]
+      fieldRelativeModulePosesOfPreviousPose[1]
           .transformBy(new Transform2d(moduleDisplacements[1], new Rotation2d(0.0)))
           .getTranslation(),
-      fieldRelativeModulePoses[2]
+      fieldRelativeModulePosesOfPreviousPose[2]
           .transformBy(new Transform2d(moduleDisplacements[2], new Rotation2d(0.0)))
           .getTranslation(),
-      fieldRelativeModulePoses[3]
+      fieldRelativeModulePosesOfPreviousPose[3]
           .transformBy(new Transform2d(moduleDisplacements[3], new Rotation2d(0.0)))
           .getTranslation()
     };
@@ -140,8 +128,6 @@ public class CustomOdometry {
     double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
     double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
-    var updatedPose = new Pose2d(displacementX, displacementY, currentGyroAngle);
-
-    return updatedPose;
+    return new Pose2d(displacementX, displacementY, currentGyroAngle);
   }
 }
