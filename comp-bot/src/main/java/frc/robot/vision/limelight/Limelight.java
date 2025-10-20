@@ -81,7 +81,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   }
 
   public OptionalGamePieceResult getAlgaeResult() {
-    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
+    return getState() == LimelightState.ALGAE ? algaeResult : algaeResult.empty();
   }
 
   public OptionalTagResult getTagResult() {
