@@ -79,6 +79,18 @@ public class ReefState {
     DogLog.log("ReefState/RemovedAlgae", removedAlgae.toArray(ReefSide[]::new));
   }
 
+  public ReefPipeLevel getHighestAvailableLevel(ReefSide closestSide) {
+    if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L4) || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L4)) {
+      return ReefPipeLevel.L4;
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L3)|| !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L3)) {
+      return ReefPipeLevel.L3;
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L2) || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L2)) {
+      return ReefPipeLevel.L2;
+    } else {
+      return ReefPipeLevel.L1;
+    }
+  }
+
   public boolean isCoralScored(ReefPipe pipe, ReefPipeLevel level) {
     return switch (level) {
       case L2 -> scoredL2Pipes.contains(pipe);

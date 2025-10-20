@@ -251,7 +251,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.ALGAE_STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -267,7 +267,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case STARTING_POSITION -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.IDLE_EMPTY);
@@ -283,7 +283,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case STARTING_POSITION_CORAL -> {
         claw.setState(ClawState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.STOWED, ArmState.STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_CORAL);
@@ -572,7 +572,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case REHOME_ELEVATOR -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.REHOME, ArmState.HOLDING_UPRIGHT);
+        moveSuperstructure(ElevatorState.REHOME, ArmState.ALGAE_STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -588,7 +588,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE_STOW_INWARD -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED_INWARD, ArmState.STOWED_INWARD);
+        moveSuperstructure(ElevatorState.STOWED_INWARD, ArmState.STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -861,7 +861,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     if (getState().climbingOrRehoming) {
       return;
     }
-    scoringAlignActive = true;
     autoAlign.approachPipeRequest();
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
       setStateFromRequest(RobotState.CORAL_L4_APPROACH);
@@ -875,7 +874,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
 
-    scoringAlignActive = true;
     autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
@@ -890,7 +888,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
 
-    scoringAlignActive = true;
     autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
@@ -982,49 +979,72 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void confirmScoreRequest() {
+  public void scoreRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
     switch (getState()) {
-      case CLIMBING_1_LINEUP,
-          CLIMBING_2_HANGING,
-          CLIMBER_STOP,
-          CORAL_L1_PREPARE_HANDOFF,
-          CORAL_L2_PREPARE_HANDOFF,
-          CORAL_L3_PREPARE_HANDOFF,
-          CORAL_L4_PREPARE_HANDOFF,
-          CORAL_L1_RELEASE_HANDOFF,
-          CORAL_L2_RELEASE_HANDOFF,
-          CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L4_RELEASE_HANDOFF,
-          CORAL_L1_AFTER_RELEASE_HANDOFF,
-          CORAL_L2_AFTER_RELEASE_HANDOFF,
-          CORAL_L3_AFTER_RELEASE_HANDOFF,
-          CORAL_L4_AFTER_RELEASE_HANDOFF -> {}
+      case CLAW_ALGAE, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
+        if (AutoAlign.shouldScoreInNet(robotPose)) {
+          setStateFromRequest(RobotState.ALGAE_NET_WAITING);
 
-      case CORAL_L1_APPROACH, CORAL_L2_APPROACH, CORAL_L3_APPROACH, CORAL_L4_APPROACH ->
-          setStateFromRequest(getState().getNextScoreState());
-
-      case CORAL_L1_LINEUP, CORAL_L2_LINEUP, CORAL_L3_LINEUP, CORAL_L4_LINEUP -> {
-        setStateFromRequest(getState().getNextScoreState());
+        } else {
+          setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING);
+        }
       }
-
-      case CORAL_L2_PLACE, CORAL_L3_PLACE, CORAL_L4_PLACE -> {
-        autoAlign.markPipeScored();
-        setStateFromRequest(getState().getNextScoreState());
-      }
-
-      case CLAW_ALGAE -> {
-        setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-      }
-      case CLAW_EMPTY, STARTING_POSITION -> {
-        setStateFromRequest(RobotState.ALGAE_OUTTAKE);
-      }
-
-      case CLAW_CORAL, STARTING_POSITION_CORAL -> l4CoralApproachRequest();
 
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
 
+      default -> {
+        scoringAlignActive = true;
+        autoAlign.approachPipeRequest();
+         var  bestLevel = autoAlign.getBestLevel();
+         DogLog.log("Debug/BestLevel", bestLevel);
+        switch (bestLevel) {
+          case L4 -> l4CoralApproachRequest();
+          case L3 -> l3CoralApproachRequest();
+          case L2 -> l2CoralApproachRequest();
+          case L1 -> l1CoralApproachRequest();
+          default -> {}
+        }
+      }
+    }
+  }
+
+  public void bumpDownLevelRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+
+    switch (scoringLevel) {
+      case L4 -> {
+          autoAlign.markLevelScored(scoringLevel);
+         l3CoralApproachRequest();
+      }
+      case L3 -> {
+        autoAlign.markLevelScored(scoringLevel);
+         l2CoralApproachRequest();
+      }
+      case L2 -> {
+        autoAlign.markLevelScored(scoringLevel);
+         l1CoralApproachRequest();
+      }
+
+      default -> {}
+    }
+  }
+
+  public void bumpUpLevelRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+
+    switch (scoringLevel) {
+      case L3 -> l4CoralApproachRequest();
+      case L2 -> l3CoralApproachRequest();
+      case L1 -> l2CoralApproachRequest();
       default -> {}
     }
   }

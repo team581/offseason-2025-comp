@@ -11,7 +11,7 @@ public enum ReefPipeLevel {
   L3(new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.kZero)),
   L4(new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.kZero)),
 
-  RAISING(new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.kZero)),
+  RAISING(new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0+15), 0.0, Rotation2d.kZero)),
   BACK_AWAY(new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.kZero));
 
   public final Transform2d transform;
