@@ -132,7 +132,6 @@ class CompConfig {
                   Units.inchesToMeters(0.0),
                   new Rotation3d(0.0, 0.0, 0.0)),
 
-
               // Limelight position relative to robot bellypan center (meters)
               // Forward: 0.0, Right: 0.0, Up: 0.0, Roll: 0.0, Pitch: 0.0, Yaw:
               // 0.0
