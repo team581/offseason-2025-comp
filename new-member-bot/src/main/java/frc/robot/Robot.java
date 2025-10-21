@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.claw.ClawSubsystem;
+import frc.robot.climber.ClimberSubsystem;
+import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -15,10 +18,16 @@ import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
+import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends Base581Robot {
   private final Command autonomousCommand = Commands.none();
   private final Hardware hardware = new Hardware();
+
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem(null);
+  private final WristSubsystem wrist = new WristSubsystem(null, elevator);
+  private final ClawSubsystem claw = new ClawSubsystem(null, null);
+  private final ClimberSubsystem climber = new ClimberSubsystem(null, null, null, null);
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
@@ -30,8 +39,7 @@ public class Robot extends Base581Robot {
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
 
-  private final RobotManager robotManager =
-      new RobotManager(localization, autoAlign, vision, swerve);
+  private final RobotManager robotManager = new RobotManager(claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
   private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
