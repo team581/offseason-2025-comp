@@ -197,7 +197,7 @@ class CompConfig {
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
                               // UPDATED FOR OFFSEASON BOT
-                              (12.0 / 40.0) * (20.0 / 44.0) * (Math.PI * 1.88)))),
+                              (12.0 / 40.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
           new ArmConfig(
               RIO_CAN_NAME,
               18,
