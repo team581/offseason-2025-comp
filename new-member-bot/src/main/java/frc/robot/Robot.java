@@ -22,19 +22,13 @@ public class Robot extends Base581Robot {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
-  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
 
-  private final Limelight rightLimelight =
-      new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight backLimelight =
-      new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight frontLimelight =
-      new Limelight("front", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight gpLimelight =
-      new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG, true);
+  private final Limelight limelight =
+  new Limelight("main", LimelightState.TAGS, LimelightModel.THREEG, true);
 
   private final VisionSubsystem vision =
-      new VisionSubsystem(imu, backLimelight, frontLimelight, rightLimelight, gpLimelight);
+  new VisionSubsystem(imu, limelight);
+  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
 
   private final RobotManager robotManager =

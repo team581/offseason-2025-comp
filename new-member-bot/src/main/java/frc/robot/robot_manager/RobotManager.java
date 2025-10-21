@@ -148,7 +148,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
         swerve.setSnapToAngle(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L1_LINEUP -> {
@@ -156,7 +156,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
         swerve.setSnapToAngle(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L1_RELEASE -> {
@@ -164,7 +164,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.CORAL_SCORE_RELEASE_L1);
         wrist.setState(WristState.CORAL_SCORE_RELEASE_L1);
         swerve.setSnapToAngle(reefSnapAngle);
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_APPROACH -> {
@@ -172,7 +172,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
         wrist.setState(WristState.ALGAE_INTAKE_L2);
         autoAlign.approachAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2 -> {
@@ -180,7 +180,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
         wrist.setState(WristState.ALGAE_INTAKE_L2);
         autoAlign.intakeAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L2_HOLDING -> {
@@ -188,7 +188,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L2);
         wrist.setState(WristState.ALGAE_INTAKE_L2);
         autoAlign.backAwayFromAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_APPROACH -> {
@@ -196,7 +196,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         wrist.setState(WristState.ALGAE_INTAKE_L3);
         autoAlign.approachAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3 -> {
@@ -204,7 +204,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         wrist.setState(WristState.ALGAE_INTAKE_L3);
         autoAlign.intakeAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_L3_HOLDING -> {
@@ -212,7 +212,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         elevator.setState(ElevatorState.ALGAE_INTAKE_L3);
         wrist.setState(WristState.ALGAE_INTAKE_L3);
         autoAlign.backAwayFromAlgaeRequest();
-        vision.setState(VisionState.CLOSEST_REEF_TAG);
+        vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_PROCESSOR_WAITING -> {
@@ -333,7 +333,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   @Override
   protected void collectInputs() {
     robotPose = localization.getPose();
-    tagCameraOnline = vision.isAnyTagLimelightOnline();
+    tagCameraOnline = vision.isCameraOnlineForTags();
     robotSpeeds = swerve.getTeleopSpeeds();
     nearestReefSide = AutoAlign.getClosestReefSide(robotPose);
     awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
@@ -355,7 +355,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_L3,
           ALGAE_INTAKE_L2_HOLDING,
           ALGAE_INTAKE_L3_HOLDING -> {
-        if (scoringAlignActive && vision.isAnyTagLimelightOnline() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isCameraOnlineForTags() && DriverStation.isTeleop()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();

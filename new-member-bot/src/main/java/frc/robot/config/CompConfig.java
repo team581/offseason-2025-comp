@@ -132,49 +132,18 @@ class CompConfig {
                   Units.inchesToMeters(0.0),
                   new Rotation3d(0.0, 0.0, 0.0)),
 
-              // Left Back Limelight
-              // Forward: -0.2845308, Right: -0.2695448, Up: 0.2321306, Roll: 0.0, Pitch: 5.0, Yaw:
-              // 50.0
-              new Pose3d(
-                  Units.inchesToMeters(-11.202),
-                  Units.inchesToMeters(10.612),
-                  Units.inchesToMeters(9.139),
-                  new Rotation3d(
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(-5.0),
-                      Units.degreesToRadians(50.0))),
 
-              // Left Front Limelight
-              // Forward: 0.2472182, Right: -0.3260344, Up: 0.2320544, Roll: 0.0, Pitch: 5.0, Yaw:
-              // 130.0
+              // Limelight position relative to robot bellypan center (meters)
+              // Forward: 0.0, Right: 0.0, Up: 0.0, Roll: 0.0, Pitch: 0.0, Yaw:
+              // 0.0
               new Pose3d(
-                  Units.inchesToMeters(9.733),
-                  Units.inchesToMeters(12.836),
-                  Units.inchesToMeters(9.136),
+                  Units.inchesToMeters(0.0),
+                  Units.inchesToMeters(0.0),
+                  Units.inchesToMeters(0.0),
                   new Rotation3d(
                       Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(-5.0),
-                      Units.degreesToRadians(130.0))),
-
-              // Right Limelight
-              // Forward: 0.187706, Right: 0.186182, Up: 0.2042922, Roll: 0.0, Pitch: 10.0, Yaw:
-              // -90.0
-              new Pose3d(
-                  Units.inchesToMeters(7.5),
-                  Units.inchesToMeters(-7.0),
-                  Units.inchesToMeters(9.5),
-                  new Rotation3d(
                       Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(-10.0),
-                      Units.degreesToRadians(-87.0))),
-              new Pose3d(
-                  Units.inchesToMeters(-8.0),
-                  Units.inchesToMeters(10.78),
-                  Units.inchesToMeters(32.75),
-                  new Rotation3d(
-                      Units.degreesToRadians(-5.0),
-                      Units.degreesToRadians(28.0),
-                      Units.degreesToRadians(-10.0)))),
+                      Units.degreesToRadians(0.0)))),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 
   private CompConfig() {}

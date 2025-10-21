@@ -57,10 +57,7 @@ public record RobotConfig(
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftBackLimelightPosition,
-      Pose3d leftFrontLimelightPosition,
-      Pose3d rightLimelightPosition,
-      Pose3d gamePieceDetectionLimelightPosition) {}
+      Pose3d limelightPosition) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,
