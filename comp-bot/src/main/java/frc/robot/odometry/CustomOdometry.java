@@ -72,17 +72,13 @@ public class CustomOdometry {
 
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
-          new Transform2d(
-              robotRelativeModuleOffsets[0], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[0], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
-          new Transform2d(
-              robotRelativeModuleOffsets[1], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[1], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
-          new Transform2d(
-              robotRelativeModuleOffsets[2], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[2], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
-          new Transform2d(
-              robotRelativeModuleOffsets[3], previousRobotPose.getRotation()))
+          new Transform2d(robotRelativeModuleOffsets[3], previousRobotPose.getRotation()))
     };
 
     Translation2d[] moduleDisplacements = {
