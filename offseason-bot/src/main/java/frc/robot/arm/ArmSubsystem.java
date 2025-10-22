@@ -257,6 +257,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
       armSimulation.seedPosition(rawMotorAngle);
     }
   }
+
   private static double clamp(double armAngle) {
     return MathUtil.clamp(
         armAngle, RobotConfig.get().arm().minAngle(), RobotConfig.get().arm().maxAngle());
