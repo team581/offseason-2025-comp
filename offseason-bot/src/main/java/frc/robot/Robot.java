@@ -138,18 +138,14 @@ public class Robot extends Base581Robot {
         .onFalse(actions.scoringAlignOffCommand());
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
-    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+    hardware.driverController.rightBumper().onTrue(actions.algaeReefIntakeCommand()).onFalse(actions.scoringAlignOffCommand());
+    hardware.driverController.a().onTrue(actions.stowCommand());
 
     hardware.driverController.povUp().onTrue(actions.climbUpCommand());
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());
-    hardware.driverController.povLeft().onTrue(actions.lowStowCommand());
-    hardware
-        .driverController
-        .povRight()
-        .onTrue(actions.algaeReefIntakeCommand())
-        .onFalse(actions.scoringAlignOffCommand());
 
+    hardware.driverController.y().onTrue(actions.rehomeDeployCommand());
+    hardware.driverController.x().onTrue(actions.rehomeElevatorCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
-    hardware.operatorController.y().onTrue(actions.rehomeDeployCommand());
   }
 }

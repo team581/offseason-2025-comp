@@ -47,10 +47,17 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() > 17.55 / 2 ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
+  public boolean isCloseToReefSide(double thresholdMeters) {
+      return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
+}
+
   public static boolean isCloseToReefSide(
-      Pose2d robotPose, Pose2d nearestReefSide, double thresholdMeters) {
-    return robotPose.getTranslation().getDistance(nearestReefSide.getTranslation())
-        < thresholdMeters;
+      Pose2d robotPose, ReefSide nearestReefSide, double thresholdMeters) {
+     var  reefSidePose = nearestReefSide.getPose(robotPose);
+        var reefSidePoseRobotRelative = nearestReefSide.getPose(robotPose).minus(new Pose2d(robotPose.getTranslation(), Rotation2d.kZero)).getTranslation().rotateBy(reefSidePose.getRotation().unaryMinus());
+    DogLog.log("AutoAlign/IsCloseToReefSide/ReefSideRR", new Pose2d( reefSidePoseRobotRelative, Rotation2d.kZero));
+
+        return reefSidePoseRobotRelative.getX()<thresholdMeters && reefSidePoseRobotRelative.getX()>0;
   }
 
   public static boolean shouldScoreInNet(Pose2d robotPose) {
