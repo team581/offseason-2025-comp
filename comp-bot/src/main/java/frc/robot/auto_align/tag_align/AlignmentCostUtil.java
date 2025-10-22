@@ -5,8 +5,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
+import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.ReefState;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.config.FeatureFlags;
@@ -15,7 +17,9 @@ import frc.robot.swerve.SwerveSubsystem;
 import java.util.Comparator;
 
 public class AlignmentCostUtil {
-  private static final double REEF_STATE_COST = 1.0;
+  private static final double REEF_STATE_COST = 0.3;
+  private static final double ALGAE_STATE_COST = 0.3;
+
   private static final double DRIVE_DIRECTION_SCALAR = 0.02;
   private static final double ANGLE_ERROR_SCALAR = 0.3;
 
@@ -94,6 +98,7 @@ public class AlignmentCostUtil {
   private final Comparator<ReefPipe> pipeL3Comparator = createReefPipeComparator(ReefPipeLevel.L3);
   private final Comparator<ReefPipe> pipeL2Comparator = createReefPipeComparator(ReefPipeLevel.L2);
   private final Comparator<ReefPipe> pipeL1Comparator = createReefPipeComparator(ReefPipeLevel.L1);
+  private final Comparator<ReefSide> algaeComparator = createAlgaeComparator();
 
   public AlignmentCostUtil(
       LocalizationSubsystem localization,
@@ -117,6 +122,10 @@ public class AlignmentCostUtil {
     };
   }
 
+  public Comparator<ReefSide> getAlgaeComparator() {
+    return algaeComparator;
+  }
+
   public void setSide(RobotScoringSide side) {
     this.side = side;
   }
@@ -129,7 +138,7 @@ public class AlignmentCostUtil {
         yield Comparator.comparingDouble(
             pipe -> {
               var allPipes =
-                  TagAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
+                  AutoAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
               return allPipes.stream()
                   .filter(p -> p.getPose(level, side, localization.getPose()) != null)
                   .min(
@@ -150,16 +159,35 @@ public class AlignmentCostUtil {
       }
       default -> {
         yield Comparator.comparingDouble(
-            pipe ->
-                getAlignCost(
-                        pipe.getPose(level, side, localization.getPose()),
-                        localization.getPose(),
-                        swerve.getTeleopSpeeds())
-                    + (reefState.isScored(pipe, level)
-                            && FeatureFlags.AUTO_ALIGN_REEF_STATE_COST.getAsBoolean()
-                        ? REEF_STATE_COST
-                        : 0.0));
+            pipe -> {
+              var lookaheadPose = localization.getLookaheadPose(0.3);
+              var closestReefSide = AutoAlign.getClosestReefSide(lookaheadPose, side);
+              if (closestReefSide.leftPipe != pipe && closestReefSide.rightPipe != pipe) {
+                return Double.MAX_VALUE;
+              }
+              return getAlignCost(
+                      pipe.getPose(level, side, localization.getPose()),
+                      localization.getPose(),
+                      swerve.getTeleopSpeeds())
+                  + (reefState.isCoralScored(pipe, level)
+                          && FeatureFlags.AUTO_ALIGN_REEF_STATE_COST.getAsBoolean()
+                      ? REEF_STATE_COST
+                      : 0.0);
+            });
       }
     };
+  }
+
+  private Comparator<ReefSide> createAlgaeComparator() {
+    return Comparator.comparingDouble(
+        side ->
+            getAlignCost(
+                    side.getPose(localization.getPose()),
+                    localization.getPose(),
+                    swerve.getTeleopSpeeds())
+                + (reefState.isAlgaeRemoved(side)
+                        && FeatureFlags.AUTO_ALIGN_REEF_STATE_COST.getAsBoolean()
+                    ? ALGAE_STATE_COST
+                    : 0.0));
   }
 }

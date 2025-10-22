@@ -1,156 +1,155 @@
 package frc.robot;
 
-import com.ctre.phoenix6.SignalLogger;
-import com.team581.GlobalConfig;
-import com.team581.util.scheduling.LifecycleSubsystemManager;
-import com.team581.util.tuning.ElasticLayoutUtil;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
-import edu.wpi.first.wpilibj.Alert.AlertType;
+import com.team581.Base581Robot;
+import com.team581.controller.RumbleControllerSubsystem;
+import com.team581.trailblazer.Trailblazer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.config.RobotConfig;
-import frc.robot.fms.FmsSubsystem;
+import frc.robot.arm.ArmSubsystem;
+import frc.robot.auto_align.AutoAlign;
+import frc.robot.autos.Autos;
+import frc.robot.claw.ClawSubsystem;
+import frc.robot.climber.ClimberSubsystem;
+import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
+import frc.robot.imu.ImuSubsystem;
+import frc.robot.intake.IntakeSubsystem;
+import frc.robot.intake_deploy.DeploySubsystem;
+import frc.robot.lights.LightsSubsystem;
+import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.robot_manager.RobotCommands;
+import frc.robot.robot_manager.RobotManager;
+import frc.robot.robot_manager.ground_manager.GroundManager;
+import frc.robot.singulator.SingulatorSubsystem;
+import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightModel;
+import frc.robot.vision.limelight.LimelightState;
 
-public class Robot extends TimedRobot {
-  private final Command autonomousCommand = Commands.none();
-  private final FmsSubsystem fms = new FmsSubsystem();
+public class Robot extends Base581Robot {
   private final Hardware hardware = new Hardware();
 
+  private final SwerveSubsystem swerve = new SwerveSubsystem();
+  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
+  private final RumbleControllerSubsystem rumble =
+      new RumbleControllerSubsystem(
+          hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);
+
+  private final IntakeSubsystem intake = new IntakeSubsystem(hardware.intakeMotor);
+  private final DeploySubsystem deploy = new DeploySubsystem(hardware.deployMotor);
+  private final SingulatorSubsystem singulator =
+      new SingulatorSubsystem(hardware.leftSingulatorMotor, hardware.rightSingulatorMotor);
+
+  private final GroundManager groundManager =
+      new GroundManager(
+          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+
+  private final Limelight leftLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+  private final Limelight rightlLimelight =
+      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+
+  private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
+  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
+  private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
+  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
+  private final ClimberSubsystem climber =
+      new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+  private final RobotManager robotManager =
+      new RobotManager(
+          groundManager,
+          claw,
+          arm,
+          elevator,
+          vision,
+          imu,
+          swerve,
+          localization,
+          lights,
+          autoAlign,
+          climber,
+          rumble);
+
+  private final RobotCommands actions = new RobotCommands(robotManager);
+  private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+
+  @SuppressWarnings("unused") // Registers itself as a subsystem
+  private final Autos autos = new Autos(robotManager, trailblazer);
+
   public Robot() {
-    System.out.println("roboRIO serial number: " + RobotConfig.SERIAL_NUMBER);
+    logMetadata(
+        BuildConstants.MAVEN_NAME,
+        BuildConstants.BUILD_DATE,
+        BuildConstants.GIT_SHA,
+        BuildConstants.GIT_DATE,
+        BuildConstants.GIT_BRANCH,
+        BuildConstants.DIRTY);
 
-    DriverStation.silenceJoystickConnectionWarning(RobotBase.isSimulation());
-
-    SignalLogger.start();
-    SignalLogger.setPath("/media/sda1/hoot/");
-
-    DogLog.setOptions(
-        new DogLogOptions()
-            .withCaptureDs(true)
-            .withNtPublish(GlobalConfig.IS_DEVELOPMENT)
-            .withNtTunables(GlobalConfig.IS_DEVELOPMENT));
-    // DogLog.setPdh(hardware.pdh);
-
-    // Record metadata
-    DogLog.log("Metadata/ProjectName", BuildConstants.MAVEN_NAME);
-    DogLog.log("Metadata/RoborioSerialNumber", RobotConfig.SERIAL_NUMBER);
-    DogLog.log("Metadata/RobotName", RobotConfig.get().robotName());
-    DogLog.log("Metadata/BuildDate", BuildConstants.BUILD_DATE);
-    DogLog.log("Metadata/GitSHA", BuildConstants.GIT_SHA);
-    DogLog.log("Metadata/GitDate", BuildConstants.GIT_DATE);
-    DogLog.log("Metadata/GitBranch", BuildConstants.GIT_BRANCH);
-
-    switch (BuildConstants.DIRTY) {
-      case 0 -> DogLog.log("Metadata/GitDirty", "All changes committed");
-      case 1 -> DogLog.log("Metadata/GitDirty", "Uncomitted changes");
-      default -> DogLog.log("Metadata/GitDirty", "Unknown");
-    }
-
-    // This must be run before any commands are scheduled
-    LifecycleSubsystemManager.ready();
-
-    configureBindings();
-
-    ElasticLayoutUtil.onBoot();
+    finalizeInit();
   }
 
   @Override
-  public void robotInit() {}
-
-  @Override
   public void robotPeriodic() {
-    DogLog.timeEnd("Scheduler/TimeSinceLastLoop");
-    DogLog.time("Scheduler/TimeSinceLastLoop");
-
-    DogLog.time("Scheduler/CommandSchedulerPeriodic");
-    CommandScheduler.getInstance().run();
-    DogLog.timeEnd("Scheduler/CommandSchedulerPeriodic");
-    LifecycleSubsystemManager.log();
-
-    if (RobotController.getBatteryVoltage() < 12.5) {
-      DogLog.logFault("Battery voltage low", AlertType.kWarning);
-    } else {
-      DogLog.clearFault("Battery voltage low");
-    }
+    super.robotPeriodic();
 
     // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
     //   fieldCalibrationUtil.log();
     // }
+
+    robotManager.setRawRightControllerYValue(hardware.driverController.getRightY());
   }
-
-  @Override
-  public void disabledInit() {
-    ElasticLayoutUtil.onDisable();
-  }
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    // autonomousCommand = autos.getAutoCommand();
-    // autonomousCommand.schedule();
-
-    ElasticLayoutUtil.onEnable();
+    super.autonomousInit();
+    // The Autos subsystem handles running the selected auto automatically
   }
-
-  @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void autonomousExit() {}
 
   @Override
   public void teleopInit() {
-    autonomousCommand.cancel();
-
-    ElasticLayoutUtil.onEnable();
+    super.teleopInit();
+    // No need to cancel anything, the Autos subsystem will stop running the auto
   }
 
   @Override
-  public void teleopPeriodic() {}
+  protected void configureBindings() {
+    swerve.setDefaultCommand(
+        swerve
+            .run(
+                () -> {
+                  if (DriverStation.isTeleop()) {
+                    swerve.driveTeleop(
+                        hardware.driverController.getLeftX(),
+                        hardware.driverController.getLeftY(),
+                        hardware.driverController.getRightX());
+                  }
+                })
+            .ignoringDisable(true)
+            .withName("DefaultSwerveCommand"));
 
-  @Override
-  public void teleopExit() {}
+    hardware
+        .driverController
+        .rightTrigger()
+        .onTrue(actions.scoreCommand())
+        .onFalse(actions.scoringAlignOffCommand());
+    hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
+    hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
+    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
 
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
+    hardware.driverController.povUp().onTrue(actions.climbUpCommand());
+    hardware.driverController.povDown().onTrue(actions.climbStopCommand());
+    hardware.driverController.povLeft().onTrue(actions.lowStowCommand());
+    hardware
+        .driverController
+        .povRight()
+        .onTrue(actions.algaeReefIntakeCommand())
+        .onFalse(actions.scoringAlignOffCommand());
 
-  @Override
-  public void testPeriodic() {}
-
-  @Override
-  public void testExit() {}
-
-  private static void intake() {}
-
-  private void configureBindings() {
-    // swerve.setDefaultCommand(
-    //     swerve
-    //         .run(
-    //             () -> {
-    //               if (DriverStation.isTeleop()) {
-    //                 swerve.driveTeleop(
-    //                     hardware.driverController.getLeftX(),
-    //                     hardware.driverController.getLeftY(),
-    //                     hardware.driverController.getRightX());
-    //               }
-    //             })
-    //         .ignoringDisable(true)
-    //         .withName("DefaultSwerveCommand"));
-
-    hardware.driverController.leftTrigger().onTrue(Commands.runOnce(() -> intake()));
+    hardware.driverController.back().onTrue(localization.getZeroCommand());
+    hardware.operatorController.y().onTrue(actions.rehomeDeployCommand());
   }
 }

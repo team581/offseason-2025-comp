@@ -1,14 +1,14 @@
 package frc.robot.lights;
 
 import com.ctre.phoenix.led.CANdle;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class LightsSubsystem extends StateMachine<LightsState> {
+public class LightsSubsystem extends StateMachineSubsystem<LightsState> {
   private final CANdle candle;
 
   private final Timer blinkTimer = new Timer();
@@ -43,8 +43,7 @@ public class LightsSubsystem extends StateMachine<LightsState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
+  public void whileInState(LightsState currentState) {
     var usedState = DriverStation.isDisabled() ? disabledState : getState();
     var color8Bit = new Color8Bit(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {

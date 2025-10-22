@@ -10,7 +10,7 @@ public class FeatureFlags {
   public static final BooleanSupplier CAMERA_POSITION_CALIBRATION =
       FeatureFlag.of("Vision/PositionCalibrationMode", false);
 
-  public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", true);
+  public static final BooleanSupplier CORAL_DETECTION = FeatureFlag.of("CoralMap", false);
 
   public static final BooleanSupplier VISION_STALE_DATA_CHECK =
       FeatureFlag.of("Vision/StaleDataRejection", false);
@@ -35,7 +35,9 @@ public class FeatureFlags {
   public static final BooleanSupplier AUTO_STOW_ALGAE = FeatureFlag.of("AutoStowAlgaeScore", false);
 
   public static final BooleanSupplier AUTO_ALIGN_AUTO_SCORE =
-      FeatureFlag.of("AutoAlign/AutoScore", true);
+      FeatureFlag.of("AutoAlign/AutoScore", false);
+  public static final BooleanSupplier AUTO_ALIGN_TRAPEZOIDAL =
+      FeatureFlag.of("AutoAlign/TrapezoidalProfiles", true);
   public static final BooleanSupplier AUTO_ALIGN_MAX_ROTATION_LIMIT =
       FeatureFlag.of("AutoAlign/MaxRotationLimit", true);
 

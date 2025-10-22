@@ -10,10 +10,11 @@ dependencies {
 	implementation wpi.java.deps.wpilib()
 	implementation wpi.java.vendor.java()
 
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.13.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	errorprone "com.google.errorprone:error_prone_core:2.38.0"
+	compileOnly "com.google.errorprone:error_prone_annotations:2.42.0"
+	errorprone "com.google.errorprone:error_prone_core:2.42.0"
 }
 
 ext.wpilibVersion = "2025.+"
@@ -21,7 +22,7 @@ ext.wpilibVersion = "2025.+"
 
 // Error Prone configs
 tasks.withType(JavaCompile).configureEach {
-	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "UnusedVariable", "InconsistentCapitalization", "Var", "BooleanParameter", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
+	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "InconsistentCapitalization", "Var", "BooleanParameter", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
 
 	// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
 	if (System.getenv().containsKey("ERRORPRONE_AUTOFIX")) {

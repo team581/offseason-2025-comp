@@ -1,6 +1,6 @@
 // pathflip if it sucked in every way but worked with trailblazer
 // node scripts/pathflip.mjs -t vertical -i src/main/java/frc/robot/autos/auto_path_commands/red/RedFourPiece2IJKLAuto.java
-// node scripts/pathflip.mjs -t color -i src/main/java/frc/robot/autos/auto_path_commands/red/RedStraightLineAuto.java
+// node scripts/pathflip.mjs -t color -i comp-bot/src/main/java/frc/robot/autos/auto_path_commands/red/RedLollipop4PieceR1AB.java
 
 import { parseArgs } from "node:util";
 import assert from "node:assert/strict";

@@ -3,14 +3,14 @@ package frc.robot.claw;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1StateValue;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class ClawSubsystem extends StateMachine<ClawState> {
+public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().claw().debouncer();
@@ -41,7 +41,7 @@ public class ClawSubsystem extends StateMachine<ClawState> {
             case IDLE_NO_GP -> false;
             case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
             case INTAKING_ALGAE -> timeout(1);
-            case SCORE_CORAL -> !timeout(0.5);
+            case SCORE_CORAL -> !timeout(0.1);
             case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
             case LOLLIPOP_CORAL_INTAKE -> timeout(1.7);
           };
@@ -97,10 +97,6 @@ public class ClawSubsystem extends StateMachine<ClawState> {
   @Override
   public void robotPeriodic() {
     super.robotPeriodic();
-
-    DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Claw/Sensors/SensorRaw", sensorRaw);
     DogLog.log("Claw/Sensors/SensorDebounced", sensorDebounced);
   }

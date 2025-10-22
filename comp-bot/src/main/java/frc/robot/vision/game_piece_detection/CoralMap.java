@@ -1,7 +1,8 @@
 package frc.robot.vision.game_piece_detection;
 
 import com.team581.math.MathHelpers;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.FmsUtil;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.tag_align.AlignmentCostUtil;
 import frc.robot.config.FeatureFlags;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class CoralMap extends StateMachine<CoralMapState> {
+public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   private static final int LOLLIPOP_FILTER_TAPS = 9;
   private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 3.0;
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 3.0;
@@ -65,6 +65,7 @@ public class CoralMap extends StateMachine<CoralMapState> {
   private final LinearFilter lollipopYFilter = LinearFilter.movingAverage(LOLLIPOP_FILTER_TAPS);
   private double filteredLollipopX = 0.0;
   private double filteredLollipopY = 0.0;
+  private Optional<Pose2d> nextExpectedTranslation = Optional.empty();
 
   private final Comparator<Pose2d> bestCoralComparator =
       Comparator.comparingDouble(
@@ -84,7 +85,12 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public void clearLollipop() {
+    nextExpectedTranslation = Optional.empty();
     filteredLollipopPose = Optional.empty();
+  }
+
+  public void setExpectedLollipopTranslation(Pose2d expectedTranslation) {
+    nextExpectedTranslation = Optional.of(expectedTranslation);
   }
 
   private void resetLollipopFilter(Translation2d expectedTranslation) {
@@ -104,7 +110,15 @@ public class CoralMap extends StateMachine<CoralMapState> {
     var newPose =
         IntakeAssistUtil.getLollipopIntakePoseFromVisionResult(
             lollipopResult, localization.getPose(lollipopResult.timestamp()));
-    if (safeToTrack() && isLollipopInSafeSpotForAuto(newPose.getTranslation())) {
+
+    var outsideExpectedLocation =
+        nextExpectedTranslation.isPresent()
+            && newPose.getTranslation().getDistance(nextExpectedTranslation.get().getTranslation())
+                > 1.0;
+
+    if (!outsideExpectedLocation
+        && safeToTrack()
+        && isLollipopInSafeSpotForAuto(newPose.getTranslation())) {
       if (filteredLollipopPose.isEmpty()) {
         resetLollipopFilter(newPose.getTranslation());
       }
@@ -199,24 +213,24 @@ public class CoralMap extends StateMachine<CoralMapState> {
   }
 
   public static boolean isCoralInSafeSpotForAuto(Translation2d coralPose) {
-    var centerOfReef = AutoAlign.getAllianceCenterOfReef(FmsSubsystem.isRedAlliance());
+    var centerOfReef = AutoAlign.getAllianceCenterOfReef();
     if (coralPose.getDistance(centerOfReef) < Units.inchesToMeters(37.2)) {
       return false;
     }
 
-    if ((FmsSubsystem.isRedAlliance() && coralPose.getX() > Units.inchesToMeters(630))
-        || (!FmsSubsystem.isRedAlliance() && coralPose.getX() < Units.inchesToMeters(55))) {
+    if ((FmsUtil.isRedAlliance() && coralPose.getX() > Units.inchesToMeters(630))
+        || (!FmsUtil.isRedAlliance() && coralPose.getX() < Units.inchesToMeters(55))) {
       return false;
     }
 
     return true;
   }
 
-  public static boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
+  public boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
 
-    if ((FmsSubsystem.isRedAlliance()
+    if ((FmsUtil.isRedAlliance()
             && (coralPose.getX() < Units.inchesToMeters(603) || coralPose.getX() > 16.5))
-        || ((!FmsSubsystem.isRedAlliance()
+        || ((!FmsUtil.isRedAlliance()
                 && (coralPose.getX() > Units.inchesToMeters(72) || coralPose.getX() < 1.0))
             || coralPose.getY() > 6.5
             || coralPose.getY() < 1.5)) {

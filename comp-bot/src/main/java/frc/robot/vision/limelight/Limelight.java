@@ -2,7 +2,7 @@ package frc.robot.vision.limelight;
 
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,7 +19,7 @@ import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
-public class Limelight extends StateMachine<LimelightState> {
+public class Limelight extends StateMachineSubsystem<LimelightState> {
   private static final int[] VALID_APRILTAGS =
       new int[] {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 
@@ -28,6 +28,7 @@ public class Limelight extends StateMachine<LimelightState> {
   private final String limelightTableName;
   private final String name;
   private final LimelightModel limelightModel;
+  private final boolean mt1Compatible;
 
   private final Timer limelightTimer = new Timer();
   private final Timer seedImuTimer = new Timer();
@@ -44,9 +45,11 @@ public class Limelight extends StateMachine<LimelightState> {
 
   private double angularVelocity = 0.0;
 
-  private final int[] closestScoringReefTag = {0};
-
-  public Limelight(String name, LimelightState initialState, LimelightModel limelightModel) {
+  public Limelight(
+      String name,
+      LimelightState initialState,
+      LimelightModel limelightModel,
+      boolean mt1Compatible) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
@@ -54,6 +57,7 @@ public class Limelight extends StateMachine<LimelightState> {
     this.name = name;
     limelightTimer.start();
     this.limelightModel = limelightModel;
+    this.mt1Compatible = mt1Compatible;
   }
 
   public void sendImuData(
@@ -77,11 +81,11 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public OptionalGamePieceResult getAlgaeResult() {
-    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
+    return getState() == LimelightState.ALGAE ? algaeResult : algaeResult.empty();
   }
 
   public OptionalTagResult getTagResult() {
-    if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
+    if (getState() != LimelightState.TAGS) {
       return tagResult.empty();
     }
 
@@ -100,6 +104,7 @@ public class Limelight extends StateMachine<LimelightState> {
     if (mT2Estimate.rawFiducials.length == 1) {
       double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
       if (ambiguity >= 0.7) {
+        DogLog.timestamp("Vision/" + name + "/Tags/AmbiguityFilter");
         return tagResult.empty();
       }
     }
@@ -124,7 +129,7 @@ public class Limelight extends StateMachine<LimelightState> {
       return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-    if (FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (mt1Compatible && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var distance = mT2Estimate.avgTagDist;
       DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
@@ -173,7 +178,7 @@ public class Limelight extends StateMachine<LimelightState> {
   }
 
   public OptionalDouble handoffTx() {
-    if (getState() != LimelightState.HELD_CORAL) {
+    if (getState() != LimelightState.HANDOFF) {
       return OptionalDouble.empty();
     }
 
@@ -220,10 +225,6 @@ public class Limelight extends StateMachine<LimelightState> {
     return algaeResult.update(algaeTx, algaeTy, timestamp);
   }
 
-  public void setClosestScoringReefTag(int tagID) {
-    closestScoringReefTag[0] = tagID;
-  }
-
   @Override
   protected void collectInputs() {
     tagResult = getTagResult();
@@ -247,21 +248,21 @@ public class Limelight extends StateMachine<LimelightState> {
     if (Timer.getTimestamp() - lastTagTimestamp > 30) {
       DogLog.logFault(
           limelightTableName + " has not seen a tag in the last 30 seconds", AlertType.kWarning);
+    } else {
+      DogLog.clearFault(limelightTableName + " has not seen a tag in the last 30 seconds");
     }
 
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        if (limelightTimer.hasElapsed(5.0)) {
+          // LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        }
         updateHealth(tagResult);
       }
       case CORAL -> updateHealth(coralResult);
       case ALGAE -> updateHealth(algaeResult);
-      case HELD_CORAL -> updateHealth(coralResult);
-      case CLOSEST_REEF_TAG -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
-        updateHealth(tagResult);
-      }
+      case HANDOFF -> updateHealth(coralResult);
     }
 
     // TODO: Remove once Limelights are upgraded
@@ -276,8 +277,20 @@ public class Limelight extends StateMachine<LimelightState> {
 
   @Override
   public void autonomousInit() {
+    if (!limelightModel.equals(LimelightModel.THREE)) {
+
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }
     seedImuTimer.reset();
     seedImuTimer.start();
+  }
+
+  @Override
+  public void teleopInit() {
+    if (!limelightModel.equals(LimelightModel.THREE)) {
+
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }
   }
 
   private void updateHealth(ReusableOptional<?> result) {
@@ -337,7 +350,7 @@ public class Limelight extends StateMachine<LimelightState> {
 
   public boolean isOnlineForTags() {
     return switch (getState()) {
-      case TAGS, CLOSEST_REEF_TAG, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
+      case TAGS, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
       default -> false;
     };
   }

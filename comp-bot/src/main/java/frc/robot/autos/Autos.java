@@ -2,27 +2,27 @@ package frc.robot.autos;
 
 import com.team581.autos.AutoChooser;
 import com.team581.trailblazer.Trailblazer;
-import com.team581.util.scheduling.LifecycleSubsystem;
+import com.team581.util.FmsUtil;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.fms.FmsSubsystem;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class Autos extends LifecycleSubsystem {
+public class Autos extends StateMachineSubsystem<AutosState> {
   private final AutoChooser<AutoSelection> autoChooser;
   private final RobotManager robotManager;
   private final Trailblazer trailblazer;
   private boolean hasEnabledAuto = false;
-  private Pair<AutoSelection, BaseAuto> selectedRed;
-  private Pair<AutoSelection, BaseAuto> selectedBlue;
+  private Pair<AutoSelection, BaseCommandAuto> selectedRed;
+  private Pair<AutoSelection, BaseCommandAuto> selectedBlue;
   private Command autoCommand;
 
   public Autos(RobotManager robotManager, Trailblazer trailblazer) {
-    super(SubsystemPriority.AUTOS);
+    super(SubsystemPriority.AUTOS, AutosState.CHOSEN_COMMAND);
 
     autoChooser = new AutoChooser<>(AutoSelection.values(), AutoSelection.DO_NOTHING);
     this.robotManager = robotManager;
@@ -62,7 +62,7 @@ public class Autos extends LifecycleSubsystem {
   }
 
   private void resetPoseForAuto() {
-    var auto = FmsSubsystem.isRedAlliance() ? selectedRed.getSecond() : selectedBlue.getSecond();
+    var auto = FmsUtil.isRedAlliance() ? selectedRed.getSecond() : selectedBlue.getSecond();
     var startingPose = auto.getStartingPose();
     robotManager.localization.resetPose(startingPose);
   }
@@ -90,7 +90,7 @@ public class Autos extends LifecycleSubsystem {
     return Commands.either(
             selectedRed.getSecond().getAutoCommand(),
             selectedBlue.getSecond().getAutoCommand(),
-            FmsSubsystem::isRedAlliance)
+            FmsUtil::isRedAlliance)
         .withName(selectedRed.getSecond().name() + "_or_" + selectedBlue.getSecond().name());
   }
 }

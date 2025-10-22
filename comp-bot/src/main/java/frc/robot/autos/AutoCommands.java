@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.arm.ArmState;
 import frc.robot.auto_align.ReefPipe;
+import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.RobotScoringSide;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.RobotCommands;
@@ -13,11 +14,11 @@ import frc.robot.robot_manager.RobotState;
 import frc.robot.robot_manager.ground_manager.GroundState;
 
 public class AutoCommands {
-  private final RobotCommands robotCommands;
+
   private final RobotManager robotManager;
 
   public AutoCommands(RobotCommands robotCommands, RobotManager robotManager) {
-    this.robotCommands = robotCommands;
+
     this.robotManager = robotManager;
   }
 
@@ -30,7 +31,7 @@ public class AutoCommands {
   }
 
   public boolean alignedForScore() {
-    return robotManager.autoAlign.isTagAlignedDebounced()
+    return robotManager.autoAlign.isAligned()
         && robotManager.imu.isFlatDebounced()
         && robotManager.elevator.atGoal()
         && robotManager.arm.atGoal();
@@ -77,14 +78,15 @@ public class AutoCommands {
     return Commands.waitUntil(
             () ->
                 robotManager.elevator.nearGoal(ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE)
-                    && robotManager.arm.nearGoal(ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE, 50))
+                    && robotManager.arm.nearGoal(ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE, 60))
         .withName("WaitForElevatorAndArmNearGoalCommand");
   }
 
   public Command l4ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L4, scoringSide));
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l4CoralLeftAutoApproachRequest();
               } else {
@@ -94,9 +96,12 @@ public class AutoCommands {
         .withName("L4ApproachCommand");
   }
 
-  public Command l3ApproachCommand(RobotScoringSide scoringSide) {
+  public Command l3ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L3, scoringSide));
+
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l3CoralLeftAutoApproachRequest();
               } else {
@@ -109,7 +114,9 @@ public class AutoCommands {
   public Command l2ApproachCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L2, scoringSide));
+
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l2CoralLeftAutoApproachRequest();
               } else {
@@ -119,9 +126,12 @@ public class AutoCommands {
         .withName("L2ApproachCommand");
   }
 
-  public Command l2LineupCommand(RobotScoringSide scoringSide) {
+  public Command l2LineupCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
+              robotManager.autoAlign.setAutoTargetPoseOverride(
+                  pipe.getPose(ReefPipeLevel.L2, scoringSide));
+
               if (scoringSide == RobotScoringSide.LEFT) {
                 robotManager.l2CoralLeftAutoLineupRequest();
               } else {
@@ -134,7 +144,6 @@ public class AutoCommands {
   public Command l4LeftReleaseCommand(ReefPipe pipe, RobotScoringSide scoringSide) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoReefPipeOverride(pipe);
               robotManager.l4CoralLeftReleaseRequest();
             })
         .withName("L4LeftReleaseCommand");

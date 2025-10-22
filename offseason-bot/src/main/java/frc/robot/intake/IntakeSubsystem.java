@@ -1,0 +1,35 @@
+package frc.robot.intake;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.team581.util.state_machines.StateMachineSubsystem;
+import dev.doglog.DogLog;
+import frc.robot.config.RobotConfig;
+import frc.robot.util.scheduling.SubsystemPriority;
+
+public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
+  private final TalonFX motor;
+
+  public IntakeSubsystem(TalonFX motor) {
+    super(SubsystemPriority.INTAKE, IntakeState.IDLE);
+
+    motor.getConfigurator().apply(RobotConfig.get().intake().motorConfig());
+    this.motor = motor;
+  }
+
+  @Override
+  protected void afterTransition(IntakeState newState) {
+    switch (newState) {
+      case UNTUNED, STOPPED -> motor.disable();
+      default -> motor.setVoltage(getState().volts);
+    }
+  }
+
+  @Override
+  public void whileInState(IntakeState currentState) {
+    DogLog.log("Intake/Motor/Current", motor.getStatorCurrent().getValueAsDouble());
+  }
+
+  public void setState(IntakeState newState) {
+    setStateFromRequest(newState);
+  }
+}

@@ -12,8 +12,8 @@ public enum ReefPipeLevel {
   L1(
       new Transform2d(
           // Half of drivebase + bumper side width + reef side to pipe distance
-          -Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.fromDegrees(0)),
-      new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 2.0), 0.0, Rotation2d.fromDegrees(0))),
+          -Units.inchesToMeters(14.5 + 4.0 + 1.0), 0.0, Rotation2d.fromDegrees(0)),
+      new Transform2d(-Units.inchesToMeters(14.5 + 4.0 + 1.0), 0.0, Rotation2d.fromDegrees(0))),
   L2(
       // Half of drivebase + bumper side width + 1 coral width + reef side to pipe distance +
       // extra
@@ -57,6 +57,15 @@ public enum ReefPipeLevel {
           -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 15.0),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90))),
+  CENTER(
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 30.0),
+          Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(270)),
+      new Transform2d(
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 30.0),
+          -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
+          Rotation2d.fromDegrees(90))),
   BACK_AWAY(
       new Transform2d(
           -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 15.0),
@@ -68,11 +77,11 @@ public enum ReefPipeLevel {
           Rotation2d.fromDegrees(90))),
   BACK_AWAY_AUTO(
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 35.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 38.0),
           Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(270)),
       new Transform2d(
-          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 35.0),
+          -Units.inchesToMeters(14.5 + 4.0 + 4.5 + 38.0),
           -Units.inchesToMeters(RobotConfig.get().arm().inchesFromCenter()),
           Rotation2d.fromDegrees(90)));
 

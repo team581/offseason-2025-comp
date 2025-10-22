@@ -1,23 +1,21 @@
 package frc.robot.intake_deploy;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.GlobalConfig;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.simkit.SimKit;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class DeploySubsystem extends StateMachine<DeployState> {
+public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
   private static final double TOLERANCE = 1.0;
 
   private final TalonFX motor;
@@ -77,20 +75,24 @@ public class DeploySubsystem extends StateMachine<DeployState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
+  public void whileInState(DeployState currentState) {
     DogLog.log("Deploy/AtGoal", atGoal());
     DogLog.log("Deploy/Angle", currentAngle);
-    DogLog.log("Deploy/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Deploy/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
-    DogLog.log("Deploy/CurrentThreshold", RobotConfig.get().deploy().homingCurrentThreshold());
+    DogLog.log("Deploy/FilteredStatorCurrent", filteredCurrent);
   }
 
   @Override
   protected void collectInputs() {
-    rawCurrent = motor.getStatorCurrent().getValueAsDouble();
-    filteredCurrent = currentFilter.calculate(rawCurrent);
+    switch (getState()) {
+      case UNHOMED, HOMING -> {
+        rawCurrent = motor.getStatorCurrent().getValueAsDouble();
+        filteredCurrent = currentFilter.calculate(rawCurrent);
+      }
+      default -> {
+        rawCurrent = 0;
+        filteredCurrent = 0;
+      }
+    }
 
     currentAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
   }
@@ -125,47 +127,24 @@ public class DeploySubsystem extends StateMachine<DeployState> {
     return currentAngle;
   }
 
-  private final TalonFXConfiguration simMotorConfig = new TalonFXConfiguration();
-  private TrapezoidProfile.Constraints simConstraints;
-  private boolean simDidInit = false;
-
   @Override
   public void simulationPeriodic() {
+    var deploySimulation =
+        SimKit.positionMechanism(
+            "deploy",
+            (mechanism) ->
+                mechanism
+                    .addMotor(motor)
+                    .withMinPosition(
+                        Units.degreesToRotations(RobotConfig.get().deploy().minAngle()))
+                    .withMaxPosition(
+                        Units.degreesToRotations(RobotConfig.get().deploy().maxAngle())));
+
     if (getState() == DeployState.HOMING) {
       motor.setPosition(RobotConfig.get().deploy().homingEndPosition());
       setStateFromRequest(DeployState.STOWED);
     }
 
-    if (!simDidInit) {
-      motor.getConfigurator().refresh(simMotorConfig);
-
-      simConstraints =
-          new TrapezoidProfile.Constraints(
-              simMotorConfig.MotionMagic.MotionMagicCruiseVelocity,
-              simMotorConfig.MotionMagic.MotionMagicAcceleration);
-
-      simDidInit = true;
-    }
-
-    if (DriverStation.isDisabled()) {
-      return;
-    }
-
-    var currentState =
-        new TrapezoidProfile.State(
-            motor.getPosition().getValueAsDouble(), motor.getVelocity().getValueAsDouble());
-    var wantedState =
-        new TrapezoidProfile.State(motor.getClosedLoopReference().getValueAsDouble(), 0);
-
-    var predictedState =
-        new TrapezoidProfile(simConstraints).calculate(0.02, currentState, wantedState);
-
-    var motorSim = motor.getSimState();
-
-    motorSim.setRawRotorPosition(
-        predictedState.position * simMotorConfig.Feedback.SensorToMechanismRatio);
-
-    motorSim.setRotorVelocity(
-        predictedState.velocity * simMotorConfig.Feedback.SensorToMechanismRatio);
+    deploySimulation.update();
   }
 }

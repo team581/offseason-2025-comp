@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PurePursuitUtils {
   public static final double DYNAMIC_LOOKAHEAD_MAX = 1.5;
-  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.35;
+  private static final double DYNAMIC_LOOKAHEAD_SCALE = 0.4;
 
   public static Pose2d getPerpendicularPoint(Pose2d startPoint, Pose2d endPoint, Pose2d robotPose) {
     var x1 = startPoint.getX();
@@ -116,7 +116,6 @@ public class PurePursuitUtils {
       double lookaheadDistance,
       Pose2d startingRobotPose) {
     var lastTargetWaypoint = Pose2d.kZero;
-    var currentTargetWaypoint = Pose2d.kZero;
 
     if (points.isEmpty()) {
       return Pose2d.kZero;
@@ -126,7 +125,7 @@ public class PurePursuitUtils {
     } else {
       lastTargetWaypoint = points.get(currentPointIndex - 1).poseSupplier.get();
     }
-    currentTargetWaypoint = points.get(currentPointIndex).poseSupplier.get();
+    var currentTargetWaypoint = points.get(currentPointIndex).poseSupplier.get();
     var perpendicularPoint =
         getPerpendicularPoint(lastTargetWaypoint, currentTargetWaypoint, currentPose);
 

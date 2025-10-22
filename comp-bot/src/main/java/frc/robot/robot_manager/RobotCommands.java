@@ -62,6 +62,11 @@ public class RobotCommands {
         .withName("ConfirmScoreCommand");
   }
 
+  public Command forcedL1Request() {
+    return Commands.runOnce(robot::forcedL1Request, bothRequirements)
+        .withName("ForcedSensorCommand");
+  }
+
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, bothRequirements)
         .andThen(
@@ -102,17 +107,8 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, bothRequirements).withName("UnjamCommand");
   }
 
-  public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::lowStowRequest, rmRequirements)
-        .withName("RehomeElevatorCommand");
-  }
-
   public Command floorIntakeCommand() {
     return Commands.runOnce(robot::intakeRequest, gmRequirements).withName("FloorIntakeCommand");
-  }
-
-  public Command l1HardOffCommand() {
-    return Commands.runOnce(robot::hardL1OffRequest, gmRequirements).withName("FloorIntakeCommand");
   }
 
   public Command rehomeDeployCommand() {
@@ -135,6 +131,6 @@ public class RobotCommands {
   }
 
   public Command lowStowCommand() {
-    return Commands.runOnce(robot::endgameStowRequest, rmRequirements).withName("LowStowCommand");
+    return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");
   }
 }

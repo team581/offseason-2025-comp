@@ -1,6 +1,6 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
@@ -8,7 +8,7 @@ import frc.robot.intake_deploy.DeployState;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class GroundManager extends StateMachine<GroundState> {
+public class GroundManager extends StateMachineSubsystem<GroundState> {
   public final DeploySubsystem deploy;
   public final IntakeSubsystem intake;
   private boolean hasCoral = false;
@@ -25,6 +25,7 @@ public class GroundManager extends StateMachine<GroundState> {
       case INTAKING -> hasCoral ? GroundState.IDLE_CORAL : currentState;
       case HANDOFF_RELEASE, L1_SCORE, L1_HARD_SCORE ->
           !hasCoral ? GroundState.IDLE_EMPTY : currentState;
+      case FORCED_HARD_SCORE -> timeout(0.5) ? GroundState.IDLE_EMPTY : currentState;
       case REHOME_DEPLOY -> deploy.atGoal() ? GroundState.IDLE_EMPTY : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> hasCoral ? GroundState.HANDOFF_WAIT : currentState;
       default -> currentState;
@@ -54,7 +55,7 @@ public class GroundManager extends StateMachine<GroundState> {
         deploy.setState(DeployState.L1_SCORE);
         intake.setState(IntakeState.SCORING);
       }
-      case L1_HARD_SCORE -> {
+      case L1_HARD_SCORE, FORCED_HARD_SCORE -> {
         deploy.setState(DeployState.L1_SCORE);
         intake.setState(IntakeState.HARD_SCORING);
       }
@@ -124,6 +125,10 @@ public class GroundManager extends StateMachine<GroundState> {
     }
   }
 
+  public void forcedHardScoreRequest() {
+    setState(GroundState.FORCED_HARD_SCORE);
+  }
+
   public void hardL1Request() {
     switch (getState()) {
       case L1_WAIT, L1_HARD_WAIT -> setState(GroundState.L1_HARD_SCORE);
@@ -160,10 +165,7 @@ public class GroundManager extends StateMachine<GroundState> {
   }
 
   public void intakeThenHandoffRequest() {
-    if (getState() == GroundState.INTAKING
-        || DriverStation.isAutonomous()
-        || getState() == GroundState.HANDOFF_WAIT
-        || getState() == GroundState.HANDOFF_RELEASE) {
+    if (getState() == GroundState.INTAKING || DriverStation.isAutonomous()) {
       setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
     } else {
       setState(GroundState.HANDOFF_WAIT);

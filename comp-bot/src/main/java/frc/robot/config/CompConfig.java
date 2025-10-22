@@ -40,7 +40,6 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          "comp",
           new ElevatorConfig(
               CANIVORE_NAME,
               15,
@@ -56,15 +55,17 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
+                          // kp 30.0
                           .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.8)
+                          // kg 0.8
+                          .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(240.0)
-                          .withMotionMagicCruiseVelocity(240.0))
+                          .withMotionMagicAcceleration(300.0)
+                          .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -77,15 +78,17 @@ class CompConfig {
                   .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
+                          // kp 30.0
                           .withKP(30.0)
                           .withKD(0.0)
                           .withKV(0)
-                          .withKG(0.8)
+                          // kg 0.8
+                          .withKG(0.4)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(240.0)
-                          .withMotionMagicCruiseVelocity(240.0))
+                          .withMotionMagicAcceleration(300.0)
+                          .withMotionMagicCruiseVelocity(320.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -201,8 +204,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(2.5)
-                          .withMotionMagicCruiseVelocity(3.0)
+                          .withMotionMagicAcceleration(5.0)
+                          .withMotionMagicCruiseVelocity(6.0)
                           .withMotionMagicExpo_kA(6.0)
                           .withMotionMagicExpo_kV(3.0))
                   .withFeedback(
@@ -240,7 +243,7 @@ class CompConfig {
               -34.0,
               120.673828125,
               3,
-              20,
+              25,
               120.673828125),
           new ClimberConfig(
               CANIVORE_NAME,

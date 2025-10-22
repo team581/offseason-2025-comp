@@ -1,37 +1,29 @@
 package com.team581.util.state_machines;
 
-import com.team581.util.scheduling.LifecycleSubsystem;
-import com.team581.util.scheduling.LifecycleSubsystemManager;
-import com.team581.util.scheduling.SubsystemPriorityBase;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import java.util.Set;
 
-/** A state machine backed by {@link LifecycleSubsystem}. */
-public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem {
-  private static final StateMachineInputManager manager = new StateMachineInputManager();
-
+public abstract class StateMachine<S extends Enum<S>> {
+  private final String name = StateMachineSubsystem.getSubsystemName(getClass());
   private S state;
   private boolean isInitialized = false;
   private double lastTransitionTimestamp = Timer.getFPGATimestamp();
 
   /**
-   * Creates a new state machine.
+   * Creates a new state machine. For advanced use cases only.
    *
-   * @param priority The subsystem priority of this subsystem in {@link LifecycleSubsystemManager}.
    * @param initialState The initial/default state of the state machine.
    */
-  protected StateMachine(SubsystemPriorityBase priority, S initialState) {
-    super(priority);
+  protected StateMachine(S initialState) {
     state = initialState;
-    manager.register(this);
+  }
+
+  public void beforePeriodic() {
+    collectInputs();
   }
 
   /** Processes collecting inputs, state transitions, and state actions. */
-  @Override
-  public void robotPeriodic() {
+  public void periodic() {
     // The first time the robot boots up, we need to set the state from null to the initial state
     // This also gives us an opportunity to run the state actions for the initial state
     // Think of it as transitioning from the robot being off to initialState
@@ -55,39 +47,8 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
   }
 
   /**
-   * Creates a command that waits until this state machine is in the given state.
-   *
-   * @param goalState The state to wait for.
-   * @return A command that waits until the state is equal to the goal state.
-   */
-  public Command waitForState(S goalState) {
-    return Commands.waitUntil(() -> this.state == goalState);
-  }
-
-  /**
-   * Creates a command that waits until this state machine is in any of the given states.
-   *
-   * @param goalStates A set of the states to wait for.
-   * @return A command that waits until the state is equal to any of the goal states.
-   */
-  public Command waitForStates(Set<S> goalStates) {
-    return Commands.waitUntil(() -> goalStates.contains(this.state));
-  }
-
-  /**
-   * Creates a command that waits until this state machine is in any of the given states.
-   *
-   * @param goalStates An array of the states to wait for.
-   * @return A command that waits until the state is equal to any of the goal states.
-   */
-  @SafeVarargs
-  public final Command waitForStates(S... goalStates) {
-    return waitForStates(Set.of(goalStates));
-  }
-
-  /**
-   * {@link StateMachineInputManager} will call this method for each state machine. Used for
-   * retrieving sensor values, etc. Inputs are collected in a special phase before any subsystem
+   * {@link StateMachineSubsystemInputManager} will call this method for each state machine. Used
+   * for retrieving sensor values, etc. Inputs are collected in a special phase before any subsystem
    * periodic methods are run.
    *
    * <p>Default behavior is to do nothing.
@@ -166,7 +127,7 @@ public abstract class StateMachine<S extends Enum<S>> extends LifecycleSubsystem
 
   /** Run side effects that occur when a state transition happens. */
   private void doTransition() {
-    DogLog.log(subsystemName + "/State", state);
+    DogLog.log(name + "/State", state);
 
     lastTransitionTimestamp = Timer.getFPGATimestamp();
 

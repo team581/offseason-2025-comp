@@ -3,14 +3,14 @@ package frc.robot.intake;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S2StateValue;
-import com.team581.util.state_machines.StateMachine;
+import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
-public class IntakeSubsystem extends StateMachine<IntakeState> {
+public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
   private final TalonFX motor;
   private final CANdi candi;
   private final Debouncer debouncer = RobotConfig.get().intake().debouncer();
@@ -71,7 +71,7 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
         motor.setVoltage(-4);
       }
       case HARD_SCORING -> {
-        motor.setVoltage(-6);
+        motor.setVoltage(-5.5);
       }
       case CORAL_HANDOFF -> {
         motor.setVoltage(-12);
@@ -83,14 +83,8 @@ public class IntakeSubsystem extends StateMachine<IntakeState> {
   }
 
   @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
-
-    DogLog.log("Intake/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Intake/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Intake/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+  public void whileInState(IntakeState currentState) {
     DogLog.log("Intake/RawSensor", sensorRaw);
-
     DogLog.log("Intake/SensorHasGP", sensorDebounced);
   }
 }

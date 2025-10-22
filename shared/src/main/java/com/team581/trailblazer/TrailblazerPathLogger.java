@@ -1,7 +1,7 @@
 package com.team581.trailblazer;
 
 import com.team581.GlobalConfig;
-import com.team581.autos.NamedAuto;
+import com.team581.autos.BaseAuto;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class TrailblazerPathLogger {
   private static final Map<String, List<Pose2d>> autoNameToPath = new HashMap<>();
   private static String currentAuto = "(none)";
 
-  public static void markAuto(NamedAuto auto) {
+  public static void markAuto(BaseAuto auto) {
     currentAuto = auto.name();
   }
 
