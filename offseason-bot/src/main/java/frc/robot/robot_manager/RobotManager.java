@@ -110,6 +110,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_FLOOR,
           ALGAE_PROCESSOR_WAITING,
           ALGAE_NET_WAITING,
+          CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
           CLIMBER_STOP,
           UNJAM,
@@ -243,9 +244,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
         yield currentState;
       }
-
-      case CLIMBING_1_LINEUP ->
-          climber.holdingCage() ? RobotState.CLIMBING_2_HANGING : currentState;
     };
   }
 
