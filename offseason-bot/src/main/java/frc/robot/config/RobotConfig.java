@@ -74,7 +74,7 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig) {}
 
   public record ArmConfig(
-      String canBusName, int motorId, TalonFXConfiguration motorConfig, double homingPosition) {}
+      String canBusName, int motorId,double minAngle, double maxAngle, TalonFXConfiguration motorConfig, double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,

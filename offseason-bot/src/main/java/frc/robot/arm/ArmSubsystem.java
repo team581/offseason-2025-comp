@@ -202,10 +202,10 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         }
       }
       case CORAL_HANDOFF -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(usedHandoffAngle));
+        makeGetMotionMagicRequest(Units.degreesToRotations(clamp(usedHandoffAngle)));
       }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getState().getAngle()));
+        makeGetMotionMagicRequest(Units.degreesToRotations(clamp(getState().getAngle())));
       }
     }
   }
@@ -256,5 +256,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     if (DriverStation.isDisabled()) {
       armSimulation.seedPosition(rawMotorAngle);
     }
+  }
+  private static double clamp(double armAngle) {
+    return MathUtil.clamp(
+        armAngle, RobotConfig.get().arm().minAngle(), RobotConfig.get().arm().maxAngle());
   }
 }
