@@ -690,7 +690,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         if (AutoAlign.shouldScoreInNet(robotPose) && AutoAlign.isCloseToNet(robotPose)) {
           swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
         } else if (!AutoAlign.shouldScoreInNet(robotPose)) {
-          SnapUtil.getProcessorAngle();
+          swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         } else {
           swerve.normalDriveRequest();
         }

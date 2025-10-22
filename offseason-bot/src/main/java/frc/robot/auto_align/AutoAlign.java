@@ -77,7 +77,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   public static boolean isCloseToNet(Pose2d robotPose) {
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;
-    return MathUtil.isNear(halfFieldLength, robotPose.getX(), 2.0);
+    return MathUtil.isNear(halfFieldLength, robotPose.getX(), 3.0);
   }
 
   private final VisionSubsystem vision;
