@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.math.MathHelpers;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
@@ -182,6 +183,22 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
           RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
       motor.setPosition(Units.degreesToRotations(actualWristAngle));
       collectInputs();
+    }
+  }
+
+  @Override
+  public void simulationPeriodic() {
+      var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+
+    if (getState() == WristState.PRE_MATCH_HOMING || getState() == WristState.MID_MATCH_HOMING) {
+      motor.setPosition(0);
+      setStateFromRequest(WristState.STOWED);
+    }
+
+    armSimulation.update();
+
+    if (DriverStation.isDisabled()) {
+      armSimulation.seedPosition(rawMotorAngle);
     }
   }
 }

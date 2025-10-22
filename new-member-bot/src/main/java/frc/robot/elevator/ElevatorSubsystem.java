@@ -3,6 +3,8 @@ package frc.robot.elevator;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
@@ -128,16 +130,19 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   @Override
   public void simulationPeriodic() {
+    var elevatorSimulation =
+        SimKit.positionMechanism(
+            "elevator",
+            (mechanism) ->
+                mechanism
+                    .addMotor(motor, ChassisReference.Clockwise_Positive)
+                    .withMinPosition(RobotConfig.get().elevator().minHeight())
+                    .withMaxPosition(RobotConfig.get().elevator().maxHeight()));
+
+    elevatorSimulation.update();
+
     if (DriverStation.isDisabled()) {
-      return;
+      elevatorSimulation.seedPosition(0);
     }
-  }
-
-  @Override
-  public void disabledInit() {
-    // reset position to be 0
-    var motorSim = motor.getSimState();
-
-    motorSim.setRawRotorPosition(0);
   }
 }
