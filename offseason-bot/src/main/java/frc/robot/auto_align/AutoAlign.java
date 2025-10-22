@@ -48,16 +48,24 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   public boolean isCloseToReefSide(double thresholdMeters) {
-      return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
-}
+    return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
+  }
 
   public static boolean isCloseToReefSide(
       Pose2d robotPose, ReefSide nearestReefSide, double thresholdMeters) {
-     var  reefSidePose = nearestReefSide.getPose(robotPose);
-        var reefSidePoseRobotRelative = nearestReefSide.getPose(robotPose).minus(new Pose2d(robotPose.getTranslation(), Rotation2d.kZero)).getTranslation().rotateBy(reefSidePose.getRotation().unaryMinus());
-    DogLog.log("AutoAlign/IsCloseToReefSide/ReefSideRR", new Pose2d( reefSidePoseRobotRelative, Rotation2d.kZero));
+    var reefSidePose = nearestReefSide.getPose(robotPose);
+    var reefSidePoseRobotRelative =
+        nearestReefSide
+            .getPose(robotPose)
+            .minus(new Pose2d(robotPose.getTranslation(), Rotation2d.kZero))
+            .getTranslation()
+            .rotateBy(reefSidePose.getRotation().unaryMinus());
+    DogLog.log(
+        "AutoAlign/IsCloseToReefSide/ReefSideRR",
+        new Pose2d(reefSidePoseRobotRelative, Rotation2d.kZero));
 
-        return reefSidePoseRobotRelative.getX()<thresholdMeters && reefSidePoseRobotRelative.getX()>0;
+    return reefSidePoseRobotRelative.getX() < thresholdMeters
+        && reefSidePoseRobotRelative.getX() > 0;
   }
 
   public static boolean shouldScoreInNet(Pose2d robotPose) {

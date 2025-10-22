@@ -193,7 +193,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         if (DriverStation.isTeleop()) {
           // In teleop, we go to CLAW_EMPTY when you drive away or if we know the score succeeded
           if (drivingAwayFromReef()
-              || ((autoAlign.isAlgaeRemoved()||groundManager.getState().equals(GroundState.INTAKING)) && farEnoughFromReef())) {
+              || ((autoAlign.isAlgaeRemoved()
+                      || groundManager.getState().equals(GroundState.INTAKING))
+                  && farEnoughFromReef())) {
             yield RobotState.CLAW_EMPTY;
           }
         }
@@ -210,8 +212,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
 
       case ALGAE_NET_RELEASE -> {
-          yield backedAwayFromNetEnough() ? RobotState.CLAW_EMPTY : currentState;
-
+        yield backedAwayFromNetEnough() ? RobotState.CLAW_EMPTY : currentState;
       }
 
       case ALGAE_OUTTAKE -> timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
@@ -812,10 +813,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private boolean backedAwayFromNetEnough() {
     var rotation = lastNetReleasePose.getRotation().getDegrees();
     var redSide = MathUtil.isNear(180, rotation, 10);
-    var farEnoughFromReleasePose = redSide ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)
-        : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(5.0);
+    var farEnoughFromReleasePose =
+        redSide
+            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)
+            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(5.0);
 
-        var xMetersPerSecond = swerve.getTeleopSpeeds().vxMetersPerSecond;
+    var xMetersPerSecond = swerve.getTeleopSpeeds().vxMetersPerSecond;
     var swerveMovingFastEnough = redSide ? xMetersPerSecond > 0.1 : xMetersPerSecond < -0.1;
 
     return farEnoughFromReleasePose && swerveMovingFastEnough;
@@ -828,8 +831,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(0.5);
     }
 
-    var isFarEnoughFromReefSide =
-        !autoAlign.isCloseToReefSide(0.8);
+    var isFarEnoughFromReefSide = !autoAlign.isCloseToReefSide(0.8);
 
     return isFarEnoughFromReefSide;
   }
@@ -841,8 +843,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(1.0);
     }
 
-    var isFarEnoughFromReefSide =
-        !autoAlign.isCloseToReefSide(0.8);
+    var isFarEnoughFromReefSide = !autoAlign.isCloseToReefSide(0.8);
 
     var speeds = swerve.getTeleopSpeeds();
     var isDrivingAway = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) > 0.3;

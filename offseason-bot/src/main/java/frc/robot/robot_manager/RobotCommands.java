@@ -44,8 +44,7 @@ public class RobotCommands {
   }
 
   public Command stowCommand() {
-    return Commands.runOnce(robot::stowRequest, bothRequirements)
-        .withName("StowCommand");
+    return Commands.runOnce(robot::stowRequest, bothRequirements).withName("StowCommand");
   }
 
   public Command highLineupCommand() {
@@ -106,6 +105,7 @@ public class RobotCommands {
   }
 
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements).withName("LowStowCommand");
+    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements)
+        .withName("LowStowCommand");
   }
 }
