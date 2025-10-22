@@ -44,14 +44,7 @@ public class RobotCommands {
   }
 
   public Command stowCommand() {
-    return Commands.runOnce(robot::stowRequest, bothRequirements)
-        .andThen(
-            Commands.waitUntil(
-                () ->
-                    robot.elevator.atGoal()
-                        && robot.arm.atGoal()
-                        && robot.groundManager.deploy.atGoal()))
-        .withName("StowCommand");
+    return Commands.runOnce(robot::stowRequest, bothRequirements).withName("StowCommand");
   }
 
   public Command highLineupCommand() {
@@ -111,7 +104,8 @@ public class RobotCommands {
         .withName("RehomeDeployCommand");
   }
 
-  public Command lowStowCommand() {
-    return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");
+  public Command rehomeElevatorCommand() {
+    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements)
+        .withName("LowStowCommand");
   }
 }

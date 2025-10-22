@@ -4,7 +4,9 @@ import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.arm.ArmState;
@@ -84,7 +86,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private ReefSide nearestReefSide = ReefSide.SIDE_GH;
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
-  private Pose2d robotPose;
+  private Pose2d robotPose = new Pose2d();
+  private Pose2d lastNetReleasePose = new Pose2d();
   private boolean scoringAlignActive = false;
   private double rawRightControllerYValue = 0.0;
   private boolean reachedCenterSinceLastBumpRequest = false;
@@ -189,21 +192,27 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE, CORAL_L1_RELEASE -> {
         if (DriverStation.isTeleop()) {
           // In teleop, we go to CLAW_EMPTY when you drive away or if we know the score succeeded
-          if (drivingAwayFromReef()) {
+          if (drivingAwayFromReef()
+              || ((autoAlign.isAlgaeRemoved()
+                      || groundManager.getState().equals(GroundState.INTAKING))
+                  && farEnoughFromReef())) {
             yield RobotState.CLAW_EMPTY;
           }
         }
-
         yield currentState;
       }
 
       // Algae scoring
-      case ALGAE_PROCESSOR_RELEASE, ALGAE_NET_RELEASE -> {
+      case ALGAE_PROCESSOR_RELEASE -> {
         if (FeatureFlags.AUTO_STOW_ALGAE.getAsBoolean()) {
           yield timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
         }
 
         yield currentState;
+      }
+
+      case ALGAE_NET_RELEASE -> {
+        yield backedAwayFromNetEnough() ? RobotState.CLAW_EMPTY : currentState;
       }
 
       case ALGAE_OUTTAKE -> timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
@@ -225,7 +234,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
-        if (cameraOnlineAndFarEnoughFromReef()) {
+        if (farEnoughFromReef()) {
           // yield DriverStation.isAutonomous() ? RobotState.CLAW_ALGAE_STOW_INWARD :
           // RobotState.CLAW_ALGAE;
           // TODO: implement stow inward
@@ -362,6 +371,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING_ALGAE);
         climber.setState(ClimberState.STOPPED);
+        lastNetReleasePose = robotPose;
       }
       case ALGAE_PROCESSOR_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -680,7 +690,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         if (AutoAlign.shouldScoreInNet(robotPose) && AutoAlign.isCloseToNet(robotPose)) {
           swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
         } else if (!AutoAlign.shouldScoreInNet(robotPose)) {
-          SnapUtil.getProcessorAngle();
+          swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         } else {
           swerve.normalDriveRequest();
         }
@@ -800,15 +810,28 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     swerve.setElevatorHeight(elevator.getHeight());
   }
 
-  private boolean cameraOnlineAndFarEnoughFromReef() {
+  private boolean backedAwayFromNetEnough() {
+    var rotation = lastNetReleasePose.getRotation().getDegrees();
+    var redSide = MathUtil.isNear(180, rotation, 10);
+    var farEnoughFromReleasePose =
+        redSide
+            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)
+            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(5.0);
+
+    var xMetersPerSecond = swerve.getTeleopSpeeds().vxMetersPerSecond;
+    var swerveMovingFastEnough = redSide ? xMetersPerSecond > 0.1 : xMetersPerSecond < -0.1;
+
+    return farEnoughFromReleasePose && swerveMovingFastEnough;
+  }
+
+  private boolean farEnoughFromReef() {
     var tagCameraOnline = vision.isAnyCameraOnlineForTags();
 
     if (!tagCameraOnline) {
       return timeout(0.5);
     }
 
-    var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
+    var isFarEnoughFromReefSide = !autoAlign.isCloseToReefSide(0.8);
 
     return isFarEnoughFromReefSide;
   }
@@ -820,15 +843,17 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(1.0);
     }
 
-    var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
+    var isFarEnoughFromReefSide = !autoAlign.isCloseToReefSide(0.8);
 
     var speeds = swerve.getTeleopSpeeds();
-    var isDrivingAway = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) > 0.5;
+    var isDrivingAway = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) > 0.3;
     return isFarEnoughFromReefSide && isDrivingAway;
   }
 
   public void intakeRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
     groundManager.intakeRequest();
   }
 
@@ -1134,7 +1159,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void lowStowRequest() {
+  public void rehomeElevatorCommand() {
     if (!getState().climbingOrRehoming) {
       setStateFromRequest(RobotState.REHOME_ELEVATOR);
     }

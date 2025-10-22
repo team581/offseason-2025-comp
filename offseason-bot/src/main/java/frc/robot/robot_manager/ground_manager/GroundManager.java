@@ -7,6 +7,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
@@ -133,7 +134,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
   protected void collectInputs() {
     topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
     bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    if (RobotBase.isSimulation()) {
+    if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       topRaw =
           switch (getState()) {
             case HANDOFF_RELEASE -> !timeout(0.5);

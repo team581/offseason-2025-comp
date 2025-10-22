@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class SnapUtil {
   public static double getProcessorAngle() {
-    return FmsUtil.isRedAlliance() ? 190 : 370;
+    return FmsUtil.isRedAlliance() ? 100 : -80;
   }
 
   public static double getCageAngle(boolean isRedAlliance) {
@@ -25,9 +25,9 @@ public class SnapUtil {
     double halfFieldLength = 17.55 / 2.0;
 
     if (robotX < halfFieldLength) {
-      return 90.0;
+      return 0;
     } else {
-      return 270.0;
+      return 180.0;
     }
   }
 
