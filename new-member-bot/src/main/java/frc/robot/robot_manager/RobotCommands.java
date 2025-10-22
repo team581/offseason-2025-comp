@@ -17,11 +17,13 @@ public class RobotCommands {
   }
 
   public Command rehomeWristCommand() {
-    return Commands.runOnce(robot::rehomeWristRequest, requirements).withName("RehomeElevatorCommand");
+    return Commands.runOnce(robot::rehomeWristRequest, requirements)
+        .withName("RehomeElevatorCommand");
   }
 
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeWristRequest, requirements).withName("RehomeElevatorCommand");
+    return Commands.runOnce(robot::rehomeWristRequest, requirements)
+        .withName("RehomeElevatorCommand");
   }
 
   public Command unjamCommand() {

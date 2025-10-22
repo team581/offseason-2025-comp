@@ -87,8 +87,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_PROCESSOR_RELEASE ->
           currentState;
 
-      case REHOME_WRIST -> wrist.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
-      case REHOME_ELEVATOR -> elevator.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
+      case REHOME_WRIST ->
+          wrist.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
+      case REHOME_ELEVATOR ->
+          elevator.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
       case CORAL_L1_APPROACH ->
           wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
       case CORAL_L1_RELEASE ->
@@ -442,6 +444,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       default -> RobotState.CLAW_EMPTY;
     };
   }
+
   public void stowRequest() {
     scoringAlignActive = false;
     setStateFailsafe(getStowState(getState(), claw.getHasGP()));
