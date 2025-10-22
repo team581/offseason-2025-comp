@@ -188,7 +188,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   @Override
   public void simulationPeriodic() {
-      var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
 
     if (getState() == WristState.PRE_MATCH_HOMING || getState() == WristState.MID_MATCH_HOMING) {
       motor.setPosition(0);
