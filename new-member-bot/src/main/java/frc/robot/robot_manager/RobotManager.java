@@ -309,6 +309,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
+      case REHOME_ELEVATOR -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.MID_MATCH_HOMING);
+        wrist.setState(WristState.STOWED);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        climber.setState(ClimberState.STOPPED);
+      }
       case STARTING_POSITION -> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
@@ -467,6 +475,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L1_RELEASE,
           CORAL_OUTTAKE,
           REHOME_WRIST,
+          REHOME_ELEVATOR,
           STARTING_POSITION,
           UNJAM -> {}
 
