@@ -78,17 +78,19 @@ class CompConfig {
                           .withProximityThreshold(0.05)
                           .withProximityHysteresis(0.01)
                           .withMinSignalStrengthForValidMeasurement(7000))),
-          // TODO: add radius and sensor-mechanism ratio
+          // TODO: add radius
           new ElevatorConfig(
               CANIVORE_NAME,
               999,
               0.0,
               0.0,
               0.0,
-              9999.0,
+              99.75,
               0.0,
               new TalonFXConfiguration()
-                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2 * Math.PI))),
+                  .withFeedback(
+                      new FeedbackConfigs()
+                          .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0)))),
           new WristConfig(
               RIO_CAN_NAME,
               999,
@@ -110,9 +112,7 @@ class CompConfig {
                           .withMotionMagicCruiseVelocity(0.0)
                           .withMotionMagicExpo_kA(0.0)
                           .withMotionMagicExpo_kV(0.0))
-                  .withFeedback(
-                      new FeedbackConfigs()
-                          .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))
+                  .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio((92.0 / 1.0)))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
