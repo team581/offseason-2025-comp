@@ -70,21 +70,19 @@ public class CustomOdometry {
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
     // System.out.println("Current gyro angle: " + currentGyroAngle);
 
-    // TODO: Figure out why "previousRobotPose.getRotation().times(-1.0)" makes the calculations
-    // work
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
           new Transform2d(
-              robotRelativeModuleOffsets[0], previousRobotPose.getRotation().times(-1.0))),
+              robotRelativeModuleOffsets[0], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
           new Transform2d(
-              robotRelativeModuleOffsets[1], previousRobotPose.getRotation().times(-1.0))),
+              robotRelativeModuleOffsets[1], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
           new Transform2d(
-              robotRelativeModuleOffsets[2], previousRobotPose.getRotation().times(-1.0))),
+              robotRelativeModuleOffsets[2], previousRobotPose.getRotation())),
       previousRobotPose.transformBy(
           new Transform2d(
-              robotRelativeModuleOffsets[3], previousRobotPose.getRotation().times(-1.0)))
+              robotRelativeModuleOffsets[3], previousRobotPose.getRotation()))
     };
 
     Translation2d[] moduleDisplacements = {
