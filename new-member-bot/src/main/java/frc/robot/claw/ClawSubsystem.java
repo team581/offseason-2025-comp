@@ -34,19 +34,18 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             ? candiValue == S1StateValue.Low
             : candiValue != S1StateValue.Low;
 
-            if (RobotBase.isSimulation()) {
-              sensorRaw =
-                  switch (getState()) {
-                    case IDLE_NO_GP -> false;
-                    case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
-                    case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1);
-                    case SCORE_CORAL -> !timeout(0.5);
-                    case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
-                  };
+    if (RobotBase.isSimulation()) {
+      sensorRaw =
+          switch (getState()) {
+            case IDLE_NO_GP -> false;
+            case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
+            case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1);
+            case SCORE_CORAL -> !timeout(0.5);
+            case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
+          };
 
-    sensorDebounced = debouncer.calculate(sensorRaw);
-                }
-
+      sensorDebounced = debouncer.calculate(sensorRaw);
+    }
   }
 
   public boolean getHasGP() {
