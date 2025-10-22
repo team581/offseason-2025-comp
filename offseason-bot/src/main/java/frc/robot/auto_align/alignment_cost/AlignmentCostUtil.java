@@ -1,4 +1,4 @@
-package frc.robot.auto_align.tag_align;
+package frc.robot.auto_align.alignment_cost;
 
 import com.team581.math.MathHelpers;
 import edu.wpi.first.math.MathUtil;
@@ -6,10 +6,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefPipe;
-import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.auto_align.ReefSide;
-import frc.robot.auto_align.ReefState;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
+import frc.robot.auto_align.poses.ReefSide;
 import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;

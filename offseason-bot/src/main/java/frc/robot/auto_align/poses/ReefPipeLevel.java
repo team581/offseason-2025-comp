@@ -1,4 +1,4 @@
-package frc.robot.auto_align;
+package frc.robot.auto_align.poses;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;

@@ -1,9 +1,13 @@
-package frc.robot.auto_align;
+package frc.robot.auto_align.alignment_cost;
 
 import com.team581.GlobalConfig;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
+import frc.robot.auto_align.poses.ReefSide;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 
