@@ -89,16 +89,16 @@ public class CustomOdometry extends SwerveDriveOdometry {
     // System.out.println("New test -");
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
     // System.out.println("Current gyro angle: " + currentGyroAngle);
-    
+
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[0], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[0], new Rotation2d(0.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[1], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[1], new Rotation2d(0.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[2], previousRobotPose.getRotation())),
+          new Transform2d(robotRelativeModuleOffsets[2], new Rotation2d(0.0))),
       previousRobotPose.transformBy(
-          new Transform2d(robotRelativeModuleOffsets[3], previousRobotPose.getRotation()))
+          new Transform2d(robotRelativeModuleOffsets[3], new Rotation2d(0.0)))
     };
 
     Translation2d[] moduleDisplacements = {
