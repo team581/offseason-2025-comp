@@ -201,6 +201,8 @@ class CompConfig {
           new ArmConfig(
               RIO_CAN_NAME,
               18,
+              999,
+              999,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
