@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.auto_align.poses.ReefSide;
-
 import java.util.EnumSet;
 import java.util.HashMap;
 
