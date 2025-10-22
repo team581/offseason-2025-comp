@@ -59,6 +59,12 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() < halfFieldLength ? robotPose.getY() > 3.5 : robotPose.getY() < 8 - 3.5;
   }
 
+  public static boolean isCloseToNet(Pose2d robotPose) {
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
+    return MathUtil.isNear(halfFieldLength, robotPose.getX(), 2.0);
+  }
+
   private final VisionSubsystem vision;
   private final LocalizationSubsystem localization;
   private final SwerveSubsystem swerve;
@@ -81,8 +87,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private boolean useAngleBisector = true;
   private boolean driverJoystickReachedCenter = false;
   private boolean bestPipeSelected = false;
-  private boolean goToDriverViewLeftPipe = false;
-  private boolean goToDriverViewRightPipe = false;
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -191,8 +195,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   protected void beforeTransition(AutoAlignState oldState, AutoAlignState newState) {
     if (newState == AutoAlignState.BEST_PIPE_CENTER
         || newState == AutoAlignState.EXPLICIT_SAFE_WAITING) {
-      goToDriverViewLeftPipe = false;
-      goToDriverViewRightPipe = false;
+      driverJoystickReachedCenter = false;
     }
   }
 
@@ -282,6 +285,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     autoTargetPoseOverride = target;
   }
 
+
   /**
    * Determines if the driver is commanding left or right pipe selection based on controller
    * joystick input.
@@ -294,43 +298,24 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       return getState();
     }
 
-    if (goToDriverViewLeftPipe) {
-      var leftPipeYValue = closestSide.leftPipe.getPose(ReefPipeLevel.BASE).getY();
-
-      var rightPipeYValue = closestSide.rightPipe.getPose(ReefPipeLevel.BASE).getY();
-
+    if (driverJoystickReachedCenter
+        && (Math.hypot(rawControllerXValue, rawControllerYValue) > 0.3)) {
+      var inputVector = new Translation2d(rawControllerXValue, -rawControllerYValue);
+      var viewOffset = 0;
       if (FmsUtil.isRedAlliance()) {
-        if (leftPipeYValue < rightPipeYValue) {
-          return AutoAlignState.LEFT_PIPE;
-        } else {
-          return AutoAlignState.RIGHT_PIPE;
-        }
-      } else {
-        if (leftPipeYValue > rightPipeYValue) {
-          return AutoAlignState.LEFT_PIPE;
-        } else {
-          return AutoAlignState.RIGHT_PIPE;
-        }
+        viewOffset = 180;
       }
-    }
 
-    if (goToDriverViewRightPipe) {
-      var leftPipeYValue = closestSide.leftPipe.getPose(ReefPipeLevel.BASE).getY();
+      var sideAngle = closestSide.getPose(currentPose);
 
-      var rightPipeYValue = closestSide.rightPipe.getPose(ReefPipeLevel.BASE).getY();
-
-      if (FmsUtil.isRedAlliance()) {
-        if (leftPipeYValue < rightPipeYValue) {
-          return AutoAlignState.RIGHT_PIPE;
-        } else {
-          return AutoAlignState.LEFT_PIPE;
-        }
+      var rotatedVector =
+          inputVector.rotateBy(
+              Rotation2d.fromDegrees((viewOffset - sideAngle.getRotation().getDegrees())));
+      var isLeft = rotatedVector.getX() < 0;
+      if (isLeft) {
+        return AutoAlignState.LEFT_PIPE;
       } else {
-        if (leftPipeYValue > rightPipeYValue) {
-          return AutoAlignState.RIGHT_PIPE;
-        } else {
-          return AutoAlignState.LEFT_PIPE;
-        }
+        return AutoAlignState.RIGHT_PIPE;
       }
     }
     return getState();
@@ -476,14 +461,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   /** Marks the closest pipe as having been scored on at the current pipe level. */
   public void markPipeScored() {
     reefState.markCoralScored(getClosestReefPipe(), currentReefPipeLevel);
-  }
-
-  public void leftPipeRequest() {
-    goToDriverViewLeftPipe = true;
-  }
-
-  public void rightPipeRequest() {
-    goToDriverViewRightPipe = true;
   }
 
   public void markLevelScored(ReefPipeLevel level) {

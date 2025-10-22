@@ -99,6 +99,8 @@ public class Robot extends Base581Robot {
     // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
     //   fieldCalibrationUtil.log();
     // }
+
+    robotManager.setRawRightControllerYValue(hardware.driverController.getRightY());
   }
 
   @Override
@@ -138,8 +140,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
     hardware.driverController.y().onTrue(actions.bumpUpCommand());
-    hardware.driverController.x().onTrue(actions.bumpLeftCommand());
-    hardware.driverController.b().onTrue(actions.bumpRightCommand());
     hardware.driverController.a().onTrue(actions.bumpDownCommand());
 
     hardware.driverController.povUp().onTrue(actions.climbUpCommand());

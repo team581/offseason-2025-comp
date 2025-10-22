@@ -90,13 +90,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::bumpDownLevelRequest, rmRequirements).withName("BumpUpCommand");
   }
 
-  public Command bumpRightCommand() {
-    return Commands.runOnce(robot.autoAlign::rightPipeRequest, bothRequirements);
-  }
-
-  public Command bumpLeftCommand() {
-    return Commands.runOnce(robot.autoAlign::leftPipeRequest, bothRequirements);
-  }
 
   public Command forcedHandoffCommand() {
     return Commands.runOnce(robot::forcedHandoffRequest, rmRequirements)

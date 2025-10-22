@@ -86,6 +86,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private ReefPipeLevel scoringLevel = ReefPipeLevel.L4;
   private Pose2d robotPose;
   private boolean scoringAlignActive = false;
+  private double rawRightControllerYValue = 0.0;
+  private boolean reachedCenterSinceLastBumpRequest = false;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -616,6 +618,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
         lights.setState(getLightStateFoAlgaeIntaking());
       }
+
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L1_RELEASE_HANDOFF,
           CORAL_L1_AFTER_RELEASE_HANDOFF,
@@ -650,6 +653,16 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           swerve.normalDriveRequest();
         }
 
+        if (reachedCenterSinceLastBumpRequest) {
+          if (rawRightControllerYValue > 0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+            bumpUpLevelRequest();
+          } else if (rawRightControllerYValue < -0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+            bumpDownLevelRequest();
+          }
+        }
+
         lights.setState(getLightStateForScoring());
       }
       case CLAW_EMPTY -> {
@@ -664,6 +677,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
       }
       case CLAW_ALGAE -> {
+        if (AutoAlign.shouldScoreInNet(robotPose) && AutoAlign.isCloseToNet(robotPose)) {
+          swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
+        } else if (!AutoAlign.shouldScoreInNet(robotPose)) {
+          SnapUtil.getProcessorAngle();
+        } else {
+          swerve.normalDriveRequest();
+        }
         lights.setState(LightsState.HOLDING_ALGAE);
       }
       case CLAW_CORAL -> {
@@ -673,6 +693,30 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
                   .getDegrees());
         } else {
           swerve.normalDriveRequest();
+        }
+      }
+
+      case ALGAE_NET_WAITING -> {
+        if (reachedCenterSinceLastBumpRequest) {
+          if (rawRightControllerYValue > 0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+
+          } else if (rawRightControllerYValue < -0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+          processorWaitingRequest();
+          }
+        }
+      }
+
+      case ALGAE_PROCESSOR_WAITING -> {
+        if (reachedCenterSinceLastBumpRequest) {
+          if (rawRightControllerYValue > 0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+          algaeNetRequest();
+          } else if (rawRightControllerYValue < -0.5) {
+            reachedCenterSinceLastBumpRequest = false;
+
+          }
         }
       }
       default -> {}
@@ -711,6 +755,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     vision.setEstimatedPoseAngle(localization.getPose().getRotation().getDegrees());
     nearestReefSide = autoAlign.getClosestReefSide();
     robotPose = localization.getPose();
+    if (Math.abs(rawRightControllerYValue) < 0.5) {
+      reachedCenterSinceLastBumpRequest = true;
+    }
 
     scoringLevel =
         switch (getState()) {
@@ -718,6 +765,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
               CORAL_L1_RELEASE_HANDOFF,
               CORAL_L1_AFTER_RELEASE_HANDOFF,
               CORAL_L1_APPROACH,
+              CORAL_L1_LINEUP,
               CORAL_L1_RELEASE ->
               ReefPipeLevel.L1;
 
@@ -1012,7 +1060,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void bumpDownLevelRequest() {
+  private void bumpDownLevelRequest() {
     if (getState().climbingOrRehoming) {
       return;
     }
@@ -1040,12 +1088,22 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
 
+    switch (getState()) {
+      case ALGAE_PROCESSOR_WAITING -> {
+        algaeNetRequest();
+      }
+    }
+
     switch (scoringLevel) {
       case L3 -> l4CoralApproachRequest();
       case L2 -> l3CoralApproachRequest();
       case L1 -> l2CoralApproachRequest();
       default -> {}
     }
+  }
+
+  public void setRawRightControllerYValue(double value) {
+    rawRightControllerYValue = value;
   }
 
   public void nextClimbStateRequest() {
