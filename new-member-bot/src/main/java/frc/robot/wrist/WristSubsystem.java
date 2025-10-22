@@ -86,7 +86,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   public boolean atGoal() {
     return switch (getState()) {
       default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, 0, 0);
-      case PRE_MATCH_HOMING -> false;
+      case PRE_MATCH_HOMING, MID_MATCH_HOMING -> false;
     };
   }
 

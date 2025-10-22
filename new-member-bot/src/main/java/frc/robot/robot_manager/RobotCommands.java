@@ -16,8 +16,12 @@ public class RobotCommands {
     requirements = requirementsList.toArray(Subsystem[]::new);
   }
 
+  public Command rehomeWristCommand() {
+    return Commands.runOnce(robot::rehomeWristRequest, requirements).withName("RehomeElevatorCommand");
+  }
+
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeRequest, requirements).withName("RehomeElevatorCommand");
+    return Commands.runOnce(robot::rehomeWristRequest, requirements).withName("RehomeElevatorCommand");
   }
 
   public Command unjamCommand() {

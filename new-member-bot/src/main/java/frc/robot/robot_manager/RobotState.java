@@ -48,6 +48,7 @@ public enum RobotState {
 
   // Misc states
   REHOME_ELEVATOR(true, ClawGamePiece.NONE),
+  REHOME_WRIST(true, ClawGamePiece.NONE),
   UNJAM(false, ClawGamePiece.NONE);
 
   public final boolean climbingOrRehoming;
