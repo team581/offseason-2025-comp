@@ -36,6 +36,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+  private Pose2d[] fieldRelativeModulePosesOfPreviousPose = new Pose2d[4];
 
   public LocalizationSubsystem(
       ImuSubsystem imu,
@@ -77,6 +78,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
+    fieldRelativeModulePosesOfPreviousPose = customOdometry.getFieldRelativeModulePosesOfPreviousPose();
     robotPose = poseEstimator.getEstimatedPosition();
     customOdometry.setPreviousRobotPose(robotPose);
   }
@@ -98,6 +100,10 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   @Override
   public void whileInState(LocalizationState currentState) {
     DogLog.log("Localization/EstimatedPose", getPose());
+    DogLog.log("Localization/FrontLeftModulePose", fieldRelativeModulePosesOfPreviousPose[0]);
+    DogLog.log("Localization/FrontRightModulePose", fieldRelativeModulePosesOfPreviousPose[1]);
+    DogLog.log("Localization/BackLeftModulePose", fieldRelativeModulePosesOfPreviousPose[2]);
+    DogLog.log("Localization/BackRightModulePose", fieldRelativeModulePosesOfPreviousPose[3]);
     var swerveState = swerve.drivetrain.getState();
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }

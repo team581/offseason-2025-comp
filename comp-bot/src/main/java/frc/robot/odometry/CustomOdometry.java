@@ -11,8 +11,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class CustomOdometry extends SwerveDriveOdometry {
-  private SwerveModulePosition[] previousWheelPositions;
-  private Pose2d previousRobotPose;
+  private SwerveModulePosition[] previousWheelPositions = new SwerveModulePosition[] {
+    new SwerveModulePosition(),
+    new SwerveModulePosition(),
+    new SwerveModulePosition(),
+    new SwerveModulePosition()
+  };
+  private Pose2d previousRobotPose = new Pose2d();
+  private Pose2d[] fieldRelativeModulePosesOfPreviousPoseLogged = new Pose2d[] {
+    new Pose2d(),
+    new Pose2d(),
+    new Pose2d(),
+    new Pose2d()
+  };
 
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
@@ -78,7 +89,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     // System.out.println("New test -");
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
     // System.out.println("Current gyro angle: " + currentGyroAngle);
-
+    
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
           new Transform2d(robotRelativeModuleOffsets[0], previousRobotPose.getRotation())),
@@ -128,6 +139,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
           .getTranslation()
     };
 
+    fieldRelativeModulePosesOfPreviousPoseLogged = fieldRelativeModulePosesOfPreviousPose;
+
     // Divide sum of field relative module displacements by 4 because there are 4 modules
     Translation2d sumOfFieldRelativeModuleDisplacements =
         fieldRelativeModuleDisplacements[0]
@@ -148,5 +161,9 @@ public class CustomOdometry extends SwerveDriveOdometry {
     for (int i = 0; i < 4; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];
     }
+  }
+
+  public Pose2d[] getFieldRelativeModulePosesOfPreviousPose() {
+    return fieldRelativeModulePosesOfPreviousPoseLogged;
   }
 }
