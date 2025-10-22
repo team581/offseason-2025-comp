@@ -93,7 +93,6 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     }
   }
 
-
   @Override
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
