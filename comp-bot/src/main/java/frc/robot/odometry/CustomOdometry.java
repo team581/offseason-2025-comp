@@ -22,10 +22,7 @@ public class CustomOdometry {
 
     // If angle difference is 0 then we can just use a straight line instead of an arc
     if (angleDifferenceRadians == 0) {
-      double displacementX = arcLength * Math.cos(currentAngleRadians);
-      double displacementY = arcLength * Math.sin(currentAngleRadians);
-
-      return new Translation2d(displacementX, displacementY);
+      return new Translation2d(arcLength, new Rotation2d(currentAngleRadians));
     }
 
     // Next, calculate radius
