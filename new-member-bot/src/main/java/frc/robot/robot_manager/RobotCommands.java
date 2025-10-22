@@ -21,7 +21,8 @@ public class RobotCommands {
   }
 
   public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorRequest, requirements).withName("RehomeElevatorCommand");
+    return Commands.runOnce(robot::rehomeElevatorRequest, requirements)
+        .withName("RehomeElevatorCommand");
   }
 
   public Command unjamCommand() {
