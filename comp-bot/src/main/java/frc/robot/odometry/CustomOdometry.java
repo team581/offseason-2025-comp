@@ -6,12 +6,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-public class CustomOdometry {
-  public CustomOdometry() {}
+public class CustomOdometry extends SwerveDriveOdometry {
+  public CustomOdometry(
+      SwerveDriveKinematics kinematics,
+      Rotation2d gyroAngle,
+      SwerveModulePosition[] modulePositions) {
+    super(kinematics, gyroAngle, modulePositions);
+  }
 
-  private static Translation2d getModuleDisplacement(
+  private Translation2d getModuleDisplacement(
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
@@ -50,11 +57,14 @@ public class CustomOdometry {
   }
 
   // TODO: add logging for field relative module poses and previous and updated robot pose
-  public Pose2d update(
-      Pose2d previousRobotPose,
-      SwerveModulePosition[] previousWheelPositions,
-      SwerveModulePosition[] currentWheelPositions,
-      Rotation2d currentGyroAngle) {
+  @Override
+  public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
+
+        // Pose2d previousRobotPose,
+        // SwerveModulePosition[] previousWheelPositions,
+        // SwerveModulePosition[] currentWheelPositions,
+        // Rotation2d currentGyroAngle)
+
     Translation2d[] robotRelativeModuleOffsets = {
       new Translation2d(Inches.of(12), Inches.of(12)),
       new Translation2d(Inches.of(12), Inches.of(-12)),
@@ -125,6 +135,19 @@ public class CustomOdometry {
     double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
     double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
+    // After calculations, before the next loop update the previous wheel positions to the current ones
+    updatePreviousWheelPositions;
+
     return new Pose2d(displacementX, displacementY, currentGyroAngle);
+  }
+
+  private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
+    SwerveModulePosition[] updatedPreviousWheelPositions;
+
+    for(int i; i < 4; i++) {
+      updatedPreviousWheelPositions[i] = currentWheelPositions[i];
+    }
+
+    previousWheelPositions = updatedPreviousWheelPositions;
   }
 }

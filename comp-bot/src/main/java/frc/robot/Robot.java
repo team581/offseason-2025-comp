@@ -7,7 +7,6 @@ import com.team581.util.scheduling.LifecycleSubsystemManager;
 import com.team581.util.tuning.ElasticLayoutUtil;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -33,6 +32,7 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.intake_deploy.DeploySubsystem;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.odometry.CustomOdometry;
 import frc.robot.robot_manager.RobotCommands;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.collision_avoidance.CollisionAvoidance;
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
           vision,
           swerve,
           swerve.drivetrain.getKinematics(),
-          new SwerveDriveOdometry(
+          new CustomOdometry(
               swerve.drivetrain.getKinematics(),
               swerve.drivetrain.getState().RawHeading,
               swerve.drivetrain.getState().ModulePositions));

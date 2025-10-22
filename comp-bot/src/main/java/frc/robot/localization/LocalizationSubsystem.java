@@ -10,7 +10,6 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N3;
@@ -21,6 +20,7 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.fms.FmsSubsystem;
 import frc.robot.imu.ImuSubsystem;
+import frc.robot.odometry.CustomOdometry;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
@@ -41,7 +41,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
-  private final Odometry<SwerveModulePosition[]> odometry;
+  private final CustomOdometry customOdometry;
   private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
@@ -53,16 +53,16 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
       VisionSubsystem vision,
       SwerveSubsystem swerve,
       SwerveDriveKinematics kinematics,
-      Odometry<SwerveModulePosition[]> odometry) {
+      CustomOdometry customOdometry) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
     this.swerve = swerve;
     this.imu = imu;
     this.vision = vision;
-    this.odometry = odometry;
+    this.customOdometry = customOdometry;
 
     this.poseEstimator =
         new PoseEstimator<>(
-            kinematics, odometry, ODOMETRY_STATE_STD_DEVS, VISION_MEASURMENT_STD_DEVS);
+            kinematics, customOdometry, ODOMETRY_STATE_STD_DEVS, VISION_MEASURMENT_STD_DEVS);
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
