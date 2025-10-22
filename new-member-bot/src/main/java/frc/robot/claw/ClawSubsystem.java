@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.S1StateValue;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -33,7 +34,18 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             ? candiValue == S1StateValue.Low
             : candiValue != S1StateValue.Low;
 
-    sensorDebounced = debouncer.calculate(sensorRaw);
+    if (RobotBase.isSimulation()) {
+      sensorRaw =
+          switch (getState()) {
+            case IDLE_NO_GP -> false;
+            case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
+            case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1);
+            case SCORE_CORAL -> !timeout(0.5);
+            case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
+          };
+
+      sensorDebounced = debouncer.calculate(sensorRaw);
+    }
   }
 
   public boolean getHasGP() {
