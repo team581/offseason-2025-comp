@@ -82,9 +82,6 @@ public class RobotCommands {
     return Commands.runOnce(robot::scoreRequest, bothRequirements).withName("ConfirmScoreCommand");
   }
 
-
-
-
   public Command forcedHandoffCommand() {
     return Commands.runOnce(robot::forcedHandoffRequest, rmRequirements)
         .withName("ForcedHandoffCommand");

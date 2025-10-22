@@ -285,7 +285,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     autoTargetPoseOverride = target;
   }
 
-
   /**
    * Determines if the driver is commanding left or right pipe selection based on controller
    * joystick input.

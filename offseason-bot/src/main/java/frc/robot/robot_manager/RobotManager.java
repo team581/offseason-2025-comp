@@ -703,7 +703,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
           } else if (rawRightControllerYValue < -0.5) {
             reachedCenterSinceLastBumpRequest = false;
-          processorWaitingRequest();
+            processorWaitingRequest();
           }
         }
       }
@@ -712,10 +712,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         if (reachedCenterSinceLastBumpRequest) {
           if (rawRightControllerYValue > 0.5) {
             reachedCenterSinceLastBumpRequest = false;
-          algaeNetRequest();
+            algaeNetRequest();
           } else if (rawRightControllerYValue < -0.5) {
             reachedCenterSinceLastBumpRequest = false;
-
           }
         }
       }
