@@ -11,6 +11,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class CustomOdometry extends SwerveDriveOdometry {
+  private final Translation2d[] robotRelativeModuleOffsets = new Translation2d[4];
+
   private SwerveModulePosition[] previousWheelPositions = new SwerveModulePosition[] {
     new SwerveModulePosition(),
     new SwerveModulePosition(),
@@ -30,6 +32,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
       Rotation2d gyroAngle,
       SwerveModulePosition[] modulePositions) {
     super(kinematics, gyroAngle, modulePositions);
+
+    for (int i = 0; i < 4; i++) {
+      robotRelativeModuleOffsets[i] = new Translation2d(kinematics.getModules()[i].getX(), kinematics.getModules()[i].getY());
+    }
   }
 
   private static Translation2d getModuleDisplacement(
@@ -78,13 +84,6 @@ public class CustomOdometry extends SwerveDriveOdometry {
   // TODO: add logging for field relative module poses and previous and updated robot pose
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
-    Translation2d[] robotRelativeModuleOffsets = {
-      new Translation2d(Inches.of(12), Inches.of(12)),
-      new Translation2d(Inches.of(12), Inches.of(-12)),
-      new Translation2d(Inches.of(-12), Inches.of(12)),
-      new Translation2d(Inches.of(-12), Inches.of(-12))
-    };
-
     // Logging
     // System.out.println("New test -");
     // System.out.println("Previous gyro angle " + previousRobotPose.getRotation());
