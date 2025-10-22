@@ -89,6 +89,7 @@ public class LocalizationSubsystem extends StateMachine<LocalizationState>
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
     robotPose = poseEstimator.getEstimatedPosition();
+    customOdometry.setPreviousRobotPose(robotPose);
   }
 
   @Override

@@ -11,6 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class CustomOdometry extends SwerveDriveOdometry {
+  private SwerveModulePosition[] previousWheelPositions;
+  private Pose2d previousRobotPose;
+
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
       Rotation2d gyroAngle,
@@ -56,15 +59,14 @@ public class CustomOdometry extends SwerveDriveOdometry {
     return new Translation2d(displacementX, displacementY);
   }
 
+  // Function to set the previous robot pose, as it can't be passed in to Update() as a parameter
+  public void setPreviousRobotPose(Pose2d newPreviousRobotPose) {
+    previousRobotPose = newPreviousRobotPose;
+  }
+
   // TODO: add logging for field relative module poses and previous and updated robot pose
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
-
-        // Pose2d previousRobotPose,
-        // SwerveModulePosition[] previousWheelPositions,
-        // SwerveModulePosition[] currentWheelPositions,
-        // Rotation2d currentGyroAngle)
-
     Translation2d[] robotRelativeModuleOffsets = {
       new Translation2d(Inches.of(12), Inches.of(12)),
       new Translation2d(Inches.of(12), Inches.of(-12)),
@@ -136,18 +138,14 @@ public class CustomOdometry extends SwerveDriveOdometry {
     double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
     // After calculations, before the next loop update the previous wheel positions to the current ones
-    updatePreviousWheelPositions;
+    updatePreviousWheelPositions(currentWheelPositions);
 
     return new Pose2d(displacementX, displacementY, currentGyroAngle);
   }
 
   private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
-    SwerveModulePosition[] updatedPreviousWheelPositions;
-
-    for(int i; i < 4; i++) {
-      updatedPreviousWheelPositions[i] = currentWheelPositions[i];
+    for(int i = 0; i < 4; i++) {
+      previousWheelPositions[i] = currentWheelPositions[i];
     }
-
-    previousWheelPositions = updatedPreviousWheelPositions;
   }
 }
