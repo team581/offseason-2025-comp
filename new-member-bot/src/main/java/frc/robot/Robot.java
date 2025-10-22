@@ -27,7 +27,12 @@ public class Robot extends Base581Robot {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
   private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor, elevator);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCANdi);
-  private final ClimberSubsystem climber = new ClimberSubsystem(hardware.climberClimbMotor, hardware.climberCANcoder, hardware.climberGrabMotor, hardware.climberCANrange);
+  private final ClimberSubsystem climber =
+      new ClimberSubsystem(
+          hardware.climberClimbMotor,
+          hardware.climberCANcoder,
+          hardware.climberGrabMotor,
+          hardware.climberCANrange);
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
