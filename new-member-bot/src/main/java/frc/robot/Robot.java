@@ -109,9 +109,10 @@ public class Robot extends Base581Robot {
         .leftBumper()
         .onTrue(actions.algaeReefIntakeCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+    hardware.driverController.rightBumper().onTrue(actions.intakeCoralCommand());
 
     hardware.driverController.y().onTrue(actions.netWaitCommand());
+    hardware.driverController.x().onTrue(actions.stowCommand());
     hardware.driverController.a().onTrue(actions.lowLineupCommand());
 
     hardware.driverController.povUp().onTrue(actions.climberSequenceForwardCommand());
