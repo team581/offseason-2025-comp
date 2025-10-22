@@ -458,6 +458,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     setStateFailsafe(getStowState(getState(), claw.getHasGP()));
   }
 
+  public static boolean shouldScoreInNet(Pose2d robotPose) {
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
+    return robotPose.getX() < halfFieldLength ? robotPose.getY() > 3.5 : robotPose.getY() < 8 - 3.5;
+  }
+
   public void confirmScoreRequest() {
     switch (getState()) {
       case ALGAE_INTAKE_FLOOR,
@@ -483,7 +489,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           UNJAM -> {}
 
       case CLAW_EMPTY -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
-      case CLAW_ALGAE -> netWaitRequest();
+      case CLAW_ALGAE -> {
+        if (shouldScoreInNet(robotPose)) {
+          netWaitRequest();
+        }
+        processorWaitRequest();
+      }
       case CLAW_CORAL -> l1ApproachRequest();
 
       case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
