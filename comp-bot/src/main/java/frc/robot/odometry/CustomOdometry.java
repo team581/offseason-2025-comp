@@ -21,7 +21,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     super(kinematics, gyroAngle, modulePositions);
   }
 
-  private Translation2d getModuleDisplacement(
+  private static Translation2d getModuleDisplacement(
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
@@ -137,14 +137,15 @@ public class CustomOdometry extends SwerveDriveOdometry {
     double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
     double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
-    // After calculations, before the next loop update the previous wheel positions to the current ones
+    // After calculations, before the next loop update the previous wheel positions to the current
+    // ones
     updatePreviousWheelPositions(currentWheelPositions);
 
     return new Pose2d(displacementX, displacementY, currentGyroAngle);
   }
 
   private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];
     }
   }
