@@ -39,7 +39,9 @@ public class Robot extends Base581Robot {
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
 
-  private final RobotManager robotManager = new RobotManager(claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
+  private final RobotManager robotManager =
+      new RobotManager(
+          claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
   private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
