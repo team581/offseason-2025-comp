@@ -7,6 +7,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -34,7 +35,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             ? candiValue == S1StateValue.Low
             : candiValue != S1StateValue.Low;
 
-    if (RobotBase.isSimulation()) {
+    if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       sensorRaw =
           switch (getState()) {
             case CORAL_HANDOFF -> timeout(0.5);
