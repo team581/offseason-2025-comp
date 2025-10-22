@@ -139,8 +139,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
     hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
     hardware.driverController.rightBumper().onTrue(actions.stowCommand());
-    hardware.driverController.y().onTrue(actions.bumpUpCommand());
-    hardware.driverController.a().onTrue(actions.bumpDownCommand());
 
     hardware.driverController.povUp().onTrue(actions.climbUpCommand());
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());

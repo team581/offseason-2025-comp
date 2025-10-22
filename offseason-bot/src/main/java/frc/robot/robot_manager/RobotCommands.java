@@ -82,13 +82,7 @@ public class RobotCommands {
     return Commands.runOnce(robot::scoreRequest, bothRequirements).withName("ConfirmScoreCommand");
   }
 
-  public Command bumpUpCommand() {
-    return Commands.runOnce(robot::bumpUpLevelRequest, rmRequirements).withName("BumpUpCommand");
-  }
 
-  public Command bumpDownCommand() {
-    return Commands.runOnce(robot::bumpDownLevelRequest, rmRequirements).withName("BumpUpCommand");
-  }
 
 
   public Command forcedHandoffCommand() {
