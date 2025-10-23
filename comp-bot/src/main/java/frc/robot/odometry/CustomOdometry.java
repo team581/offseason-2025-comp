@@ -77,7 +77,6 @@ public class CustomOdometry extends SwerveDriveOdometry {
     previousRobotPose = newPreviousRobotPose;
   }
 
-  // TODO: add logging for field relative module poses and previous and updated robot pose
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
     // Logging
