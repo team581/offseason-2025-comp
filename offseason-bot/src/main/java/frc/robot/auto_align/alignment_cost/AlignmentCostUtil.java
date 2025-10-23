@@ -97,6 +97,7 @@ public class AlignmentCostUtil {
   private final Comparator<ReefPipe> pipeL1Comparator = createReefPipeComparator(ReefPipeLevel.L1);
   private final Comparator<ReefSide> algaeComparator = createAlgaeComparator();
 
+  private ReefSide closestReefSide = ReefSide.SIDE_AB;
   public AlignmentCostUtil(
       LocalizationSubsystem localization, SwerveSubsystem swerve, ReefState reefState) {
     this.localization = localization;
@@ -104,7 +105,8 @@ public class AlignmentCostUtil {
     this.reefState = reefState;
   }
 
-  public Comparator<ReefPipe> getReefPipeComparator(ReefPipeLevel level) {
+  public Comparator<ReefPipe> getReefPipeComparator(ReefPipeLevel level, ReefSide closestReefSide) {
+    this.closestReefSide = closestReefSide;
     return switch (level) {
       case L4 -> pipeL4Comparator;
       case L3 -> pipeL3Comparator;
@@ -148,9 +150,7 @@ public class AlignmentCostUtil {
       default -> {
         yield Comparator.comparingDouble(
             pipe -> {
-              var lookaheadPose = localization.getLookaheadPose(0.3);
-              var closestReefSide = AutoAlign.getClosestReefSide(lookaheadPose);
-              if (closestReefSide.leftPipe != pipe && closestReefSide.rightPipe != pipe) {
+              if (!closestReefSide.leftPipe.equals(pipe) && !closestReefSide.rightPipe.equals(pipe)) {
                 return Double.MAX_VALUE;
               }
               return getAlignCost(

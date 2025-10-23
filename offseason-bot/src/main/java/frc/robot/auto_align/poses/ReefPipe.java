@@ -47,6 +47,10 @@ public enum ReefPipe {
     return FmsUtil.isRedAlliance() ? redPoses.getPose(level) : bluePoses.getPose(level);
   }
 
+  public Pose2d getPose(boolean isRedAlliance) {
+    return isRedAlliance ? redPoses.getPose(ReefPipeLevel.BASE) : bluePoses.getPose(ReefPipeLevel.BASE);
+  }
+
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
 
     return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
