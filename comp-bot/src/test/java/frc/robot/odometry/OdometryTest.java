@@ -9,22 +9,28 @@ public class OdometryTest {
 
   @Test
   void straightLineDrive() {
-  var customOdometry = new CustomOdometry(new SwerveDriveKinematics(), new Rotation2d(), new SwerveModulePosition[4]);
+    var customOdometry =
+        new CustomOdometry(
+            new SwerveDriveKinematics(), new Rotation2d(), new SwerveModulePosition[4]);
 
-  customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-  customOdometry.updatePreviousWheelPositions(new SwerveModulePosition[] {
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0))
-  });
+    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+    customOdometry.updatePreviousWheelPositions(
+        new SwerveModulePosition[] {
+          new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+          new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+          new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+          new SwerveModulePosition(0.0, new Rotation2d(0.0))
+        });
 
-  var actual = customOdometry.update(0.0, new SwerveModulePosition[] {
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0)),
-    new SwerveModulePosition(0.0, new Rotation2d(0.0))
-  });
+    var actual =
+        customOdometry.update(
+            0.0,
+            new SwerveModulePosition[] {
+              new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+              new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+              new SwerveModulePosition(0.0, new Rotation2d(0.0)),
+              new SwerveModulePosition(0.0, new Rotation2d(0.0))
+            });
 
     assertEquals(new Pose2d(new Translation2d(5.0, 0.0), new Rotation2d(0.0)), actual);
   }

@@ -1,7 +1,5 @@
 package frc.robot.odometry;
 
-import static edu.wpi.first.units.Units.Inches;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -13,19 +11,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 public class CustomOdometry extends SwerveDriveOdometry {
   private final Translation2d[] robotRelativeModuleOffsets = new Translation2d[4];
 
-  private SwerveModulePosition[] previousWheelPositions = new SwerveModulePosition[] {
-    new SwerveModulePosition(),
-    new SwerveModulePosition(),
-    new SwerveModulePosition(),
-    new SwerveModulePosition()
-  };
+  private final SwerveModulePosition[] previousWheelPositions =
+      new SwerveModulePosition[] {
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition()
+      };
   private Pose2d previousRobotPose = new Pose2d();
-  private Pose2d[] fieldRelativeModulePosesOfPreviousPoseLogged = new Pose2d[] {
-    new Pose2d(),
-    new Pose2d(),
-    new Pose2d(),
-    new Pose2d()
-  };
+  private Pose2d[] fieldRelativeModulePosesOfPreviousPoseLogged =
+      new Pose2d[] {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
 
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
@@ -34,7 +29,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
     super(kinematics, gyroAngle, modulePositions);
 
     for (int i = 0; i < 4; i++) {
-      robotRelativeModuleOffsets[i] = new Translation2d(kinematics.getModules()[i].getX(), kinematics.getModules()[i].getY());
+      robotRelativeModuleOffsets[i] =
+          new Translation2d(kinematics.getModules()[i].getX(), kinematics.getModules()[i].getY());
     }
   }
 
