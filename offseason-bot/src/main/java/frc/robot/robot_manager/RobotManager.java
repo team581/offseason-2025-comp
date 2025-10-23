@@ -163,7 +163,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       // Approach
       case CORAL_L1_APPROACH ->
-          elevator.atGoal() && arm.atGoal() && autoAlign.isCentered() ? currentState.getNextScoreState() : currentState;
+          elevator.atGoal() && arm.atGoal() && autoAlign.isCentered()
+              ? currentState.getNextScoreState()
+              : currentState;
 
       case CORAL_L2_APPROACH -> {
         yield elevator.nearGoal()
@@ -190,10 +192,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
             : currentState;
       }
 
-      case CORAL_L1_RELEASE-> {
-          if (!claw.getHasGP()&&timeout(0.5)) {
-            yield currentState.getNextScoreState();
-          }
+      case CORAL_L1_RELEASE -> {
+        if (!claw.getHasGP() && timeout(0.5)) {
+          yield currentState.getNextScoreState();
+        }
 
         yield currentState;
       }
@@ -679,9 +681,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L2_RELEASE,
           CORAL_L3_RELEASE,
           CORAL_L4_RELEASE -> {
-        if (scoringAlignActive
-            && vision.isAnyCameraOnlineForTags()
-            && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector());
         } else {
           swerve.normalDriveRequest();
@@ -1149,7 +1149,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case L3 -> {
         autoAlign.bumpRequest(ReefPipeLevel.L4);
 
-        l4CoralApproachRequest();}
+        l4CoralApproachRequest();
+      }
       case L2 -> {
         autoAlign.bumpRequest(ReefPipeLevel.L3);
 
@@ -1158,7 +1159,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case L1 -> {
         autoAlign.bumpRequest(ReefPipeLevel.L3);
 
-      l2CoralApproachRequest();}
+        l2CoralApproachRequest();
+      }
       default -> {}
     }
   }

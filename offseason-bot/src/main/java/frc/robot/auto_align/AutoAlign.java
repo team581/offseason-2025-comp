@@ -151,7 +151,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0,-180.0, 180.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.EXPLICIT_LEFT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
           yield AutoAlignState.EXPLICIT_RIGHT_CENTER;
@@ -164,7 +166,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0,-180.0, 180.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.EXPLICIT_RIGHT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           yield AutoAlignState.EXPLICIT_LEFT_CENTER;
@@ -177,7 +181,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0,-180.0, 180.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.BEST_PIPE_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           reefState.markCoralScored(closestReefSide.rightPipe, currentReefPipeLevel);
@@ -214,17 +220,20 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       }
 
       case BEST_L1_CENTER -> {
-        var distanceCheck = currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
-        < Units.inchesToMeters(15.0);
-        var angleCheck =MathUtil.isNear(
-          currentTargetPose.getRotation().getDegrees(),
-          currentPose.getRotation().getDegrees(),
-          25.0, -180.0, 180.0);
-          DogLog.log("Debug/Distance", distanceCheck);
-          DogLog.log("Debug/AngleCheck", angleCheck);
+        var distanceCheck =
+            currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
+                < Units.inchesToMeters(15.0);
+        var angleCheck =
+            MathUtil.isNear(
+                currentTargetPose.getRotation().getDegrees(),
+                currentPose.getRotation().getDegrees(),
+                25.0,
+                -180.0,
+                180.0);
+        DogLog.log("Debug/Distance", distanceCheck);
+        DogLog.log("Debug/AngleCheck", angleCheck);
 
-        if (distanceCheck
-            && angleCheck) {
+        if (distanceCheck && angleCheck) {
           yield AutoAlignState.BEST_L1_WAITING;
         }
         yield currentState;
@@ -250,7 +259,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     isAligned = isRobotPoseAlignedWithTargetPose();
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
 
-
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
     DogLog.log("AutoAlign/PoleSelectioin/JoystickReachedCenter", driverJoystickReachedCenter);
     var controllerValues = swerve.getControllerValues();
@@ -268,7 +276,14 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     }
 
     switch (getState()) {
-      case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP, ALGAE_BACKUP, BEST_L1, L1_BACKUP, ALGAE_INTAKE -> {
+      case LEFT_PIPE,
+          RIGHT_PIPE,
+          BEST_PIPE,
+          PIPE_BACKUP,
+          ALGAE_BACKUP,
+          BEST_L1,
+          L1_BACKUP,
+          ALGAE_INTAKE -> {
         useAngleBisector = false;
       }
 
@@ -468,7 +483,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     if (DriverStation.isTeleop()
         && (!getState().equals(AutoAlignState.LEFT_PIPE)
             && !getState().equals(AutoAlignState.RIGHT_PIPE))
-        && !getState().equals(AutoAlignState.BEST_PIPE) && !getState().equals(AutoAlignState.BEST_L1)) {
+        && !getState().equals(AutoAlignState.BEST_PIPE)
+        && !getState().equals(AutoAlignState.BEST_L1)) {
       return false;
     }
 
@@ -566,8 +582,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return getBestPipeForScoring(currentReefPipeLevel);
   }
 
-   /** Finds the best pipe to score on based on alignment cost and reef state. */
-   public ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
+  /** Finds the best pipe to score on based on alignment cost and reef state. */
+  public ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level, closestReefSide))
         .orElseThrow();
@@ -601,12 +617,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         .orElseThrow();
   }
 
-
-
   public boolean isCentered() {
-   return switch (getState()) {
-      case EXPLICIT_LEFT_CENTER, EXPLICIT_RIGHT_CENTER, BEST_L1_CENTER, BEST_PIPE_CENTER ->
-        false;
+    return switch (getState()) {
+      case EXPLICIT_LEFT_CENTER, EXPLICIT_RIGHT_CENTER, BEST_L1_CENTER, BEST_PIPE_CENTER -> false;
       default -> true;
     };
   }
@@ -652,7 +665,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       bestPipe = getBestPipeForScoring(newLevel);
       reefState.removeCoral(bestPipe, newLevel);
     }
-
   }
 
   /** Switches into correct pipe side state based on current approach state */

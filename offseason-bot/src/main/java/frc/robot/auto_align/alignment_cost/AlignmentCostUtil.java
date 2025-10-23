@@ -98,6 +98,7 @@ public class AlignmentCostUtil {
   private final Comparator<ReefSide> algaeComparator = createAlgaeComparator();
 
   private ReefSide closestReefSide = ReefSide.SIDE_AB;
+
   public AlignmentCostUtil(
       LocalizationSubsystem localization, SwerveSubsystem swerve, ReefState reefState) {
     this.localization = localization;
@@ -150,7 +151,8 @@ public class AlignmentCostUtil {
       default -> {
         yield Comparator.comparingDouble(
             pipe -> {
-              if (!closestReefSide.leftPipe.equals(pipe) && !closestReefSide.rightPipe.equals(pipe)) {
+              if (!closestReefSide.leftPipe.equals(pipe)
+                  && !closestReefSide.rightPipe.equals(pipe)) {
                 return Double.MAX_VALUE;
               }
               return getAlignCost(

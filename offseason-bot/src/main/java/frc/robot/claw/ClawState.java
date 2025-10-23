@@ -10,5 +10,6 @@ public enum ClawState {
   SCORE_ALGAE_PROCESSOR,
   SCORE_CORAL,
   SCORE_CORAL_L1,
-  OUTTAKING,;
+  OUTTAKING,
+  ;
 }

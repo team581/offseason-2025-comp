@@ -48,7 +48,9 @@ public enum ReefPipe {
   }
 
   public Pose2d getPose(boolean isRedAlliance) {
-    return isRedAlliance ? redPoses.getPose(ReefPipeLevel.BASE) : bluePoses.getPose(ReefPipeLevel.BASE);
+    return isRedAlliance
+        ? redPoses.getPose(ReefPipeLevel.BASE)
+        : bluePoses.getPose(ReefPipeLevel.BASE);
   }
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
