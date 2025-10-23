@@ -11,6 +11,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N3;
@@ -36,7 +37,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-  private Pose2d[] fieldRelativeModulePosesOfPreviousPose = new Pose2d[4];
+  private Translation2d[] fieldRelativeModuleDisplacements = new Translation2d[4];
 
   public LocalizationSubsystem(
       ImuSubsystem imu,
@@ -78,8 +79,8 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    fieldRelativeModulePosesOfPreviousPose =
-        customOdometry.getFieldRelativeModulePosesOfPreviousPose();
+    fieldRelativeModuleDisplacements =
+        customOdometry.getFieldRelativeModuleDisplacements();
     robotPose = poseEstimator.getEstimatedPosition();
     customOdometry.setPreviousRobotPose(robotPose);
   }
@@ -101,10 +102,10 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   @Override
   public void whileInState(LocalizationState currentState) {
     DogLog.log("Localization/EstimatedPose", getPose());
-    DogLog.log("Localization/FrontLeftModulePose", fieldRelativeModulePosesOfPreviousPose[0]);
-    DogLog.log("Localization/FrontRightModulePose", fieldRelativeModulePosesOfPreviousPose[1]);
-    DogLog.log("Localization/BackLeftModulePose", fieldRelativeModulePosesOfPreviousPose[2]);
-    DogLog.log("Localization/BackRightModulePose", fieldRelativeModulePosesOfPreviousPose[3]);
+    DogLog.log("Localization/FrontLeftModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[0], robotPose.getRotation()));
+    DogLog.log("Localization/FrontRightModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[1], robotPose.getRotation()));
+    DogLog.log("Localization/BackLeftModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[2], robotPose.getRotation()));
+    DogLog.log("Localization/BackRightModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[3], robotPose.getRotation()));
     var swerveState = swerve.drivetrain.getState();
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }

@@ -19,8 +19,13 @@ public class CustomOdometry extends SwerveDriveOdometry {
         new SwerveModulePosition()
       };
   private Pose2d previousRobotPose = new Pose2d();
+
+  // For logging only
   private Pose2d[] fieldRelativeModulePosesOfPreviousPoseLogged =
       new Pose2d[] {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
+  private Translation2d[] fieldRelativeModuleDisplacementsLogged = new Translation2d[] {
+    new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()
+  };
 
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
@@ -134,6 +139,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     };
 
     fieldRelativeModulePosesOfPreviousPoseLogged = fieldRelativeModulePosesOfPreviousPose;
+    fieldRelativeModuleDisplacementsLogged = fieldRelativeModuleDisplacements;
 
     // Divide sum of field relative module displacements by 4 because there are 4 modules
     Translation2d sumOfFieldRelativeModuleDisplacements =
@@ -166,5 +172,9 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
   public Pose2d[] getFieldRelativeModulePosesOfPreviousPose() {
     return fieldRelativeModulePosesOfPreviousPoseLogged;
+  }
+
+  public Translation2d[] getFieldRelativeModuleDisplacements() {
+    return fieldRelativeModuleDisplacementsLogged;
   }
 }
