@@ -156,7 +156,14 @@ public class CustomOdometry extends SwerveDriveOdometry {
     return new Pose2d(displacementX, displacementY, currentGyroAngle);
   }
 
-  private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
+  // private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
+  //   for (int i = 0; i < 4; i++) {
+  //     previousWheelPositions[i] = currentWheelPositions[i];
+  //   }
+  // }
+
+  // Public test ONLY FOR UNIT TESTS
+  public void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
     for (int i = 0; i < 4; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];
     }
