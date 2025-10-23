@@ -79,8 +79,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    fieldRelativeModuleDisplacements =
-        customOdometry.getFieldRelativeModuleDisplacements();
+    fieldRelativeModuleDisplacements = customOdometry.getFieldRelativeModuleDisplacements();
     robotPose = poseEstimator.getEstimatedPosition();
     customOdometry.setPreviousRobotPose(robotPose);
   }
@@ -102,10 +101,18 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   @Override
   public void whileInState(LocalizationState currentState) {
     DogLog.log("Localization/EstimatedPose", getPose());
-    DogLog.log("Localization/FrontLeftModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[0], robotPose.getRotation()));
-    DogLog.log("Localization/FrontRightModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[1], robotPose.getRotation()));
-    DogLog.log("Localization/BackLeftModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[2], robotPose.getRotation()));
-    DogLog.log("Localization/BackRightModuleDisplacement", new Pose2d(fieldRelativeModuleDisplacements[3], robotPose.getRotation()));
+    DogLog.log(
+        "Localization/FrontLeftModuleDisplacement",
+        new Pose2d(fieldRelativeModuleDisplacements[0], robotPose.getRotation()));
+    DogLog.log(
+        "Localization/FrontRightModuleDisplacement",
+        new Pose2d(fieldRelativeModuleDisplacements[1], robotPose.getRotation()));
+    DogLog.log(
+        "Localization/BackLeftModuleDisplacement",
+        new Pose2d(fieldRelativeModuleDisplacements[2], robotPose.getRotation()));
+    DogLog.log(
+        "Localization/BackRightModuleDisplacement",
+        new Pose2d(fieldRelativeModuleDisplacements[3], robotPose.getRotation()));
     var swerveState = swerve.drivetrain.getState();
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }

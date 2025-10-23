@@ -23,9 +23,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
   // For logging only
   private Pose2d[] fieldRelativeModulePosesOfPreviousPoseLogged =
       new Pose2d[] {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
-  private Translation2d[] fieldRelativeModuleDisplacementsLogged = new Translation2d[] {
-    new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()
-  };
+  private Translation2d[] fieldRelativeModuleDisplacementsLogged =
+      new Translation2d[] {
+        new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()
+      };
 
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
