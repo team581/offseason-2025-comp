@@ -63,11 +63,13 @@ public final class PositionMechanism {
   private final OptionalDouble minPosition;
   private final OptionalDouble maxPosition;
   private final Timer updateTimer = new Timer();
+  private boolean hasRefreshedConstraints = false;
   private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0, 0);
 
   /** Recomputes the predicted state and pushes the result into each motor sim. */
   public void update() {
-    if (constraints.maxVelocity == 0 && constraints.maxAcceleration == 0) {
+    if (!hasRefreshedConstraints) {
+      hasRefreshedConstraints = true;
       constraints = getMechanismConstraints(devices);
     }
 
