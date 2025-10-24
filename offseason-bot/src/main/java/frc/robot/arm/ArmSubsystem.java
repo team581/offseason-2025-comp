@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.OptionalDouble;
 
 public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
-  public static final double ARM_LENGTH_METERS = Units.inchesToMeters(37.416);
+  public static final double ARM_LENGTH_METERS = Units.inchesToMeters(21.5687);
 
   private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
       InterpolatingDoubleTreeMap.ofEntries(

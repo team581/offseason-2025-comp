@@ -1,11 +1,7 @@
 package frc.robot.robot_manager;
 
 import com.team581.GlobalConfig;
-import dev.doglog.DogLog;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -15,6 +11,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.config.RobotConfig;
+import frc.robot.elevator.ElevatorSubsystem;
 
 public final class MechanismVisualizer {
   private static final Translation2d MECHANISM_AREA =
@@ -31,7 +28,7 @@ public final class MechanismVisualizer {
       root.append(
           new MechanismLigament2d(
               "elevator",
-              Units.inchesToMeters(RobotConfig.get().elevator().minHeight()),
+              Units.inchesToMeters(RobotConfig.get().elevator().minHeight()) + ElevatorSubsystem.CARRIAGE_HEIGHT_FROM_FLOOR_METERS,
               90,
               20,
               new Color8Bit(Color.kFirstBlue)));
@@ -44,27 +41,15 @@ public final class MechanismVisualizer {
     if (!GlobalConfig.IS_DEVELOPMENT) {
       return;
     }
-    DogLog.log("SuperstructureVisualization/CurrentElevatorHeight", currentElevatorHeight);
-    DogLog.log("SuperstructureVisualization/CurrentArmAngle", currentArmAngle);
 
     SmartDashboard.putData("SuperstructureVisualization", mechanism);
 
-    var armAngle = -1.0 * (currentArmAngle + 360 - elevator.getAngle());
-    var elevatorHeight = Units.inchesToMeters(currentElevatorHeight);
-    var elevatorPose = new Pose3d(Translation3d.kZero, Rotation3d.kZero);
-    var carriagePose = new Pose3d(new Translation3d(0, 0, elevatorHeight), Rotation3d.kZero);
-    var armPose =
-        new Pose3d(
-            new Translation3d(0, 0, elevatorHeight),
-            new Rotation3d(Units.degreesToRadians(armAngle), 0, 90));
-    var deployPose =
-        new Pose3d(
-            Translation3d.kZero, new Rotation3d(0, -1.0 * Units.degreesToRadians(deployAngle), 0));
-    DogLog.log(
-        "SuperstructureVisualization/Superstructure3d",
-        new Pose3d[] {elevatorPose, carriagePose, armPose, deployPose});
+    var armAngle = currentArmAngle - 90;
+    var elevatorHeight =
+        Units.inchesToMeters(currentElevatorHeight)
+            + ElevatorSubsystem.CARRIAGE_HEIGHT_FROM_FLOOR_METERS;
 
-    elevator.setLength(Units.inchesToMeters(elevatorHeight));
+    elevator.setLength(elevatorHeight);
     arm.setAngle(armAngle);
   }
 
