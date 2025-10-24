@@ -35,12 +35,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * Networks, and standard color/retroreflective tracking.
  */
 public final class LimelightHelpers {
-
   private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
 
   /** Represents a Color/Retroreflective Target Result extracted from JSON Output */
   public static class LimelightTarget_Retro {
-
     @JsonProperty("t6c_ts")
     private final double[] cameraPoseTargetSpace;
 
@@ -131,7 +129,6 @@ public final class LimelightHelpers {
 
   /** Represents an AprilTag/Fiducial Target Result extracted from JSON Output */
   public static class LimelightTarget_Fiducial {
-
     @JsonProperty("fID")
     public double fiducialID;
 
@@ -228,7 +225,6 @@ public final class LimelightHelpers {
 
   /** Represents a Barcode Target Result extracted from JSON Output */
   public static class LimelightTarget_Barcode {
-
     /** Barcode family type (e.g. "QR", "DataMatrix", etc.) */
     @JsonProperty("fam")
     public String family;
@@ -270,7 +266,6 @@ public final class LimelightHelpers {
 
   /** Represents a Neural Classifier Pipeline Result extracted from JSON Output */
   public static class LimelightTarget_Classifier {
-
     @JsonProperty("class")
     public String className;
 
@@ -300,7 +295,6 @@ public final class LimelightHelpers {
 
   /** Represents a Neural Detector Pipeline Result extracted from JSON Output */
   public static class LimelightTarget_Detector {
-
     @JsonProperty("class")
     public String className;
 
@@ -336,7 +330,6 @@ public final class LimelightHelpers {
 
   /** Limelight Results object, parsed from a Limelight's JSON results output. */
   public static class LimelightResults {
-
     public String error;
 
     @JsonProperty("pID")
@@ -543,7 +536,6 @@ public final class LimelightHelpers {
         double avgTagArea,
         RawFiducial[] rawFiducials,
         boolean isMegaTag2) {
-
       this.pose = pose;
       this.timestampSeconds = timestampSeconds;
       this.latency = latency;
@@ -1260,7 +1252,6 @@ public final class LimelightHelpers {
 
   /** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement) */
   public static Pose2d getBotPose2d_wpiBlue(String limelightName) {
-
     double[] result = getBotPose_wpiBlue(limelightName);
     return toPose2D(result);
   }
@@ -1284,7 +1275,6 @@ public final class LimelightHelpers {
 
   /** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement) */
   public static Pose2d getBotPose2d_wpiRed(String limelightName) {
-
     double[] result = getBotPose_wpiRed(limelightName);
     return toPose2D(result);
   }
@@ -1307,7 +1297,6 @@ public final class LimelightHelpers {
 
   /** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement) */
   public static Pose2d getBotPose2d(String limelightName) {
-
     double[] result = getBotPose(limelightName);
     return toPose2D(result);
   }
@@ -1460,7 +1449,6 @@ public final class LimelightHelpers {
       double roll,
       double rollRate,
       boolean flush) {
-
     double[] entries = new double[6];
     entries[0] = yaw;
     entries[1] = yawRate;
@@ -1494,7 +1482,6 @@ public final class LimelightHelpers {
    * @param z Z offset in meters
    */
   public static void SetFidcuial3DOffset(String limelightName, double x, double y, double z) {
-
     double[] entries = new double[3];
     entries[0] = x;
     entries[1] = y;
@@ -1624,7 +1611,6 @@ public final class LimelightHelpers {
    * @return LimelightResults object containing all current target data
    */
   public static LimelightResults getLatestResults(String limelightName) {
-
     long start = System.nanoTime();
     LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
     if (mapper == null) {

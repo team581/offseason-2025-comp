@@ -32,7 +32,6 @@ public final class SubsystemExecutionSequencer {
     } else if (DriverStation.isTestEnabled()) {
       return RobotMatchState.TEST;
     } else {
-
       return RobotMatchState.DISABLED;
     }
   }

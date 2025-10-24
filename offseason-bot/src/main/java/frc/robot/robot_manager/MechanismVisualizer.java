@@ -28,7 +28,8 @@ public final class MechanismVisualizer {
       root.append(
           new MechanismLigament2d(
               "elevator",
-              Units.inchesToMeters(RobotConfig.get().elevator().minHeight()) + ElevatorSubsystem.CARRIAGE_HEIGHT_FROM_FLOOR_METERS,
+              Units.inchesToMeters(RobotConfig.get().elevator().minHeight())
+                  + ElevatorSubsystem.CARRIAGE_HEIGHT_FROM_FLOOR_METERS,
               90,
               20,
               new Color8Bit(Color.kFirstBlue)));

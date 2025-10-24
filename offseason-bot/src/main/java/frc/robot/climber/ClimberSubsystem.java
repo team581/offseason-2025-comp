@@ -14,7 +14,6 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
-
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;

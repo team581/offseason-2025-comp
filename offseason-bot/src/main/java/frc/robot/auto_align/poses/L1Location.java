@@ -107,12 +107,10 @@ public enum L1Location {
   }
 
   public Pose2d getPose(ReefPipeLevel level) {
-
     return FmsUtil.isRedAlliance() ? redPoses.getPose(level) : bluePoses.getPose(level);
   }
 
   public Pose2d getPose(ReefPipeLevel level, boolean isRedAlliance) {
-
     return isRedAlliance ? redPoses.getPose(level) : bluePoses.getPose(level);
   }
 

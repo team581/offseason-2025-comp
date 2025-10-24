@@ -17,7 +17,6 @@ public record RobotConfig(
     VisionConfig vision,
     LightsConfig lights,
     SwerveConfig swerve) {
-
   public record IntakeConfig(
       String canBusName,
       int motorId,

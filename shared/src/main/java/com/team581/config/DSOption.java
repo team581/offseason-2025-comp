@@ -8,7 +8,6 @@ public class DSOption {
   private final BooleanSubscriber booleanSub;
 
   public DSOption(String key, boolean defaultValue) {
-
     var table = NetworkTableInstance.getDefault().getTable("DSOptions");
     BooleanTopic booleanTopic = table.getBooleanTopic(key);
 

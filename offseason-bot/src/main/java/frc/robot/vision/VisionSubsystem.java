@@ -15,7 +15,6 @@ import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.OptionalTagResult;
 
 public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
-
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final Debouncer seeingTagForPoseResetDebouncer =
       new Debouncer(5.0, DebounceType.kFalling);

@@ -1478,7 +1478,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     autoAlign.approachPipeRequest();
 
     if (claw.getHasGP() || RobotState.isLineupOrApproachState(getState())) {
-
       switch (robotScoringSide) {
         case LEFT -> setStateFromRequest(RobotState.CORAL_L4_LEFT_APPROACH);
         case RIGHT -> setStateFromRequest(RobotState.CORAL_L4_RIGHT_APPROACH);
@@ -1580,7 +1579,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     if (!getState().climbingOrRehoming) {
       scoringAlignActive = true;
       if (robotScoringSide == RobotScoringSide.LEFT) {
-
         switch (getState()) {
           case ALGAE_INTAKE_L2_LEFT_APPROACH,
               ALGAE_INTAKE_L2_LEFT,
