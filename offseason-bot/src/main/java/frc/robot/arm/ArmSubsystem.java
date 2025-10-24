@@ -234,15 +234,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   @Override
-  public void disabledInit() {
-    if (RobotBase.isSimulation()) {
-      // reset position to be 0*
-      var motorSim = motor.getSimState();
-      motorSim.setRawRotorPosition(rawMotorAngle);
-    }
-  }
-
-  @Override
   public void simulationPeriodic() {
     var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
 
@@ -254,7 +245,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     armSimulation.update();
 
     if (DriverStation.isDisabled()) {
-      armSimulation.seedPosition(rawMotorAngle);
+      armSimulation.seedPosition(0);
     }
   }
 
