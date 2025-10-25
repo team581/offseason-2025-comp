@@ -90,6 +90,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
     }
   }
 
+
   @Override
   public void whileInState(ClawState currentState) {
     clawHasGP =
