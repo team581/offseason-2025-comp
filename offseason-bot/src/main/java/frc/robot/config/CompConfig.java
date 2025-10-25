@@ -96,10 +96,9 @@ class CompConfig {
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
 
-                  // TODO: BRINGUP: SET TO ZERO AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(100.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))),
