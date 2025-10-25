@@ -39,7 +39,6 @@ class CompConfig {
           new IntakeConfig(
               CANIVORE_NAME,
               25,
-              26,
               new Debouncer(0.3, DebounceType.kBoth),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -100,7 +99,7 @@ class CompConfig {
                   // TODO: BRINGUP: SET TO ZERO AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(200.0)
+                          .withKP(0.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))),
@@ -181,7 +180,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // TODO: BRINGUP: REMOVE VALUES AND TUNE
-                          .withKP(30.0)
+                          .withKP(0.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
@@ -189,8 +188,8 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES AND TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(300.0)
-                          .withMotionMagicCruiseVelocity(320.0))
+                          .withMotionMagicAcceleration(9999999.0)
+                          .withMotionMagicCruiseVelocity(9999999.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -209,7 +208,7 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(10.0)
+                          .withKP(0.0)
                           .withKV(0.0)
                           .withKD(0.0)
                           .withKG(0.0)
@@ -217,8 +216,8 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(100.0)
-                          .withMotionMagicCruiseVelocity(100.0))
+                          .withMotionMagicAcceleration(999999.0)
+                          .withMotionMagicCruiseVelocity(999999.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -229,7 +228,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
               // TODO: BRINGUP: RETUNE
-              0.0),
+              -90.0),
           new VisionConfig(
               0.005,
               0.8,
@@ -242,9 +241,9 @@ class CompConfig {
                   0.1045038296,
                   -0.2494524094,
                   0.5819300782,
-                  0.0,
-                  0.0,
-                  0.0),
+                  -20.0,
+                  -60.0,
+                  90.0),
               // Right Camera Config
               new CameraConfig(
                   LimelightModel.THREEG,
@@ -252,10 +251,10 @@ class CompConfig {
                   0.0956578478,
                   0.2345115452,
                   0.5819625648,
-                  0.0,
-                  0.0,
-                  0.0)),
-          new LightsConfig(CANIVORE_NAME, 0),
+                  -20.0,
+                  60.0,
+                  -90.0)),
+          new LightsConfig(CANIVORE_NAME, 17),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 
   private CompConfig() {}
