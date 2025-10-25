@@ -610,6 +610,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
+        groundManager.outtakeRequest();
         climber.setState(ClimberState.STOPPED);
       }
       case REHOME_ELEVATOR -> {
@@ -920,7 +921,17 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
-      setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+      if (groundManager.getState().equals(GroundState.INTAKING)) {
+        groundManager.outtakeRequest();
+      } else {
+        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+      }
+    }
+  }
+
+  public void stopOuttakeRequest() {
+    if (groundManager.getState().equals(GroundState.OUTTAKING)) {
+      groundManager.intakeRequest();
     }
   }
 
