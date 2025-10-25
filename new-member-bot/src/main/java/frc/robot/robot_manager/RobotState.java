@@ -5,6 +5,7 @@ import java.util.Map;
 
 public enum RobotState {
   STARTING_POSITION(false, ClawGamePiece.NONE),
+  STARTING_POSITION_CORAL(false,ClawGamePiece.CORAL),
   // Stowed states
   CLAW_EMPTY(false, ClawGamePiece.NONE),
   CLAW_CORAL(false, ClawGamePiece.CORAL),
