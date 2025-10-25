@@ -37,7 +37,6 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Vector<N3> VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-  private Translation2d[] fieldRelativeModuleDisplacements = new Translation2d[4];
 
   public LocalizationSubsystem(
       ImuSubsystem imu,
@@ -79,7 +78,6 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
-    fieldRelativeModuleDisplacements = customOdometry.getFieldRelativeModuleDisplacements();
     robotPose = poseEstimator.getEstimatedPosition();
     customOdometry.setPreviousRobotPose(robotPose);
   }
@@ -101,18 +99,6 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   @Override
   public void whileInState(LocalizationState currentState) {
     DogLog.log("Localization/EstimatedPose", getPose());
-    DogLog.log(
-        "Localization/FrontLeftModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[0], robotPose.getRotation()));
-    DogLog.log(
-        "Localization/FrontRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[1], robotPose.getRotation()));
-    DogLog.log(
-        "Localization/BackLeftModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[2], robotPose.getRotation()));
-    DogLog.log(
-        "Localization/BackRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[3], robotPose.getRotation()));
     var swerveState = swerve.drivetrain.getState();
     poseEstimator.update(swerveState.RawHeading, swerveState.ModulePositions);
   }
