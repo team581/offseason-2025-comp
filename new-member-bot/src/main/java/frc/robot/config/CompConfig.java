@@ -34,14 +34,13 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          new ClawConfig(
-              CANIVORE_NAME, 99, 99, false, new Debouncer(0), new TalonFXConfiguration()),
+          new ClawConfig(RIO_CAN_NAME, 16, 58.1, new Debouncer(0), new TalonFXConfiguration()),
           new ClimberConfig(
               CANIVORE_NAME,
+              19,
+              20,
               21,
               22,
-              23,
-              24,
               0.0,
               0.0,
               // Climb motor
@@ -81,7 +80,7 @@ class CompConfig {
           // TODO: add radius
           new ElevatorConfig(
               CANIVORE_NAME,
-              999,
+              15,
               0.0,
               0.0,
               0.0,
@@ -93,7 +92,7 @@ class CompConfig {
                           .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0)))),
           new WristConfig(
               RIO_CAN_NAME,
-              999,
+              18,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -143,7 +142,7 @@ class CompConfig {
                       Units.degreesToRadians(0.0),
                       Units.degreesToRadians(0.0),
                       Units.degreesToRadians(0.0)))),
-          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
+          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, false, false));
 
   private CompConfig() {}
 }

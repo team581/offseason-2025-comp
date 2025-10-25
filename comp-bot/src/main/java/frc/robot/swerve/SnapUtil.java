@@ -26,7 +26,6 @@ public class SnapUtil {
     double halfFieldLength = 17.55 / 2.0;
 
     if (robotX < halfFieldLength) {
-
       return scoringSide.equals(RobotScoringSide.RIGHT) ? 90 : -90;
     }
     return scoringSide.equals(RobotScoringSide.RIGHT) ? -90 : 90;

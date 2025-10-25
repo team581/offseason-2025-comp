@@ -40,6 +40,7 @@ public enum RobotState {
   CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L1_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L1_RELEASE(ClawGamePiece.EMPTY, false),
+  CORAL_L1_BACKAWAY(ClawGamePiece.EMPTY, false),
 
   // L2 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -114,7 +115,7 @@ public enum RobotState {
           Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
           Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
           Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE),
-          Map.entry(CORAL_L1_RELEASE, CORAL_L1_RELEASE),
+          Map.entry(CORAL_L1_RELEASE, CORAL_L1_BACKAWAY),
           Map.entry(CORAL_L2_PLACE, CORAL_L2_RELEASE),
           Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
           Map.entry(CORAL_L4_PLACE, CORAL_L4_RELEASE));

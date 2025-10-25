@@ -7,7 +7,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.limelight.Limelight;
@@ -15,7 +14,6 @@ import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.OptionalTagResult;
 
 public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
-
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final Debouncer seeingTagForPoseResetDebouncer =
       new Debouncer(5.0, DebounceType.kFalling);
@@ -110,12 +108,6 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
   public void whileInState(VisionState currentState) {
     leftLimelight.sendImuData(robotHeading, angularVelocity, 0.0, 0.0, 0.0, 0.0);
     rightLimelight.sendImuData(robotHeading, angularVelocity, 0.0, 0.0, 0.0, 0.0);
-
-    if (FeatureFlags.CAMERA_POSITION_CALIBRATION.getAsBoolean()) {
-      setStateFromRequest(VisionState.TAGS);
-      leftLimelight.logCameraPositionCalibrationValues();
-      rightLimelight.logCameraPositionCalibrationValues();
-    }
 
     DogLog.log("Vision/SeeingTag", seeingTag);
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);

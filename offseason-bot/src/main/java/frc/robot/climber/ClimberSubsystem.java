@@ -14,7 +14,6 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
-
   private static final double PASS_ANGLE_CHECK = 0.0;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
@@ -25,7 +24,6 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
   private double cancoderVelocity = 0;
   private double currentAngle = 0.0;
   private double climberMotorAngle = 0.0;
-  private static final boolean HOLDING_CAGE = false;
 
   public ClimberSubsystem(TalonFX climbMotor, CANcoder encoder) {
     super(SubsystemPriority.CLIMBER, ClimberState.STOPPED);
@@ -61,9 +59,6 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
         }
-        if (HOLDING_CAGE) {
-          setStateFromRequest(ClimberState.HANGING);
-        }
       }
       case HANGING -> {
         if (atGoal()) {
@@ -97,10 +92,6 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     }
   }
 
-  public boolean holdingCage() {
-    return HOLDING_CAGE;
-  }
-
   @Override
   protected void collectInputs() {
     currentAngle = Units.rotationsToDegrees(encoder.getAbsolutePosition().getValueAsDouble());
@@ -112,8 +103,6 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
 
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
-
-    DogLog.log("Climber/HoldingCage", HOLDING_CAGE);
 
     DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
   }

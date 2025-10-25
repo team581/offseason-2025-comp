@@ -15,7 +15,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.auto_align.tag_align.AlignmentCostUtil;
+import frc.robot.auto_align.alignment_cost.AlignmentCostUtil;
+import frc.robot.auto_align.alignment_cost.ReefState;
+import frc.robot.auto_align.poses.L1Location;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
+import frc.robot.auto_align.poses.ReefSide;
+import frc.robot.auto_align.poses.ReefSideOffset;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
@@ -28,6 +34,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       ImmutableList.copyOf(ReefSide.values());
   public static final ImmutableList<ReefPipe> ALL_REEF_PIPES =
       ImmutableList.copyOf(ReefPipe.values());
+
+  public static final ImmutableList<L1Location> ALL_L1_LOCATIONS =
+      ImmutableList.copyOf(L1Location.values());
 
   private static final Translation2d CENTER_OF_REEF_RED =
       new Translation2d(Units.inchesToMeters(514.13), Units.inchesToMeters(158.5));
@@ -94,6 +103,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private double rawControllerYValue = 0.0;
   private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
   private ReefPipe bestPipe = ReefPipe.PIPE_A;
+  private L1Location bestL1 = L1Location.AB_LEFT;
+
   private ReefSide closestReefSide = ReefSide.SIDE_AB;
   private ReefPipeLevel currentReefPipeLevel = ReefPipeLevel.L1;
   private Pose2d currentPose = Pose2d.kZero;
@@ -101,7 +112,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
   private boolean driverJoystickReachedCenter = false;
-  private boolean bestPipeSelected = false;
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -141,7 +151,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.EXPLICIT_LEFT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
           yield AutoAlignState.EXPLICIT_RIGHT_CENTER;
@@ -154,7 +166,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.EXPLICIT_RIGHT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           yield AutoAlignState.EXPLICIT_LEFT_CENTER;
@@ -167,7 +181,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0,
+                -180.0,
+                180.0)) {
           yield AutoAlignState.BEST_PIPE_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           reefState.markCoralScored(closestReefSide.rightPipe, currentReefPipeLevel);
@@ -202,6 +218,26 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         }
         yield currentState;
       }
+
+      case BEST_L1_CENTER -> {
+        var distanceCheck =
+            currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
+                < Units.inchesToMeters(15.0);
+        var angleCheck =
+            MathUtil.isNear(
+                currentTargetPose.getRotation().getDegrees(),
+                currentPose.getRotation().getDegrees(),
+                25.0,
+                -180.0,
+                180.0);
+        DogLog.log("Debug/Distance", distanceCheck);
+        DogLog.log("Debug/AngleCheck", angleCheck);
+
+        if (distanceCheck && angleCheck) {
+          yield AutoAlignState.BEST_L1_WAITING;
+        }
+        yield currentState;
+      }
       default -> currentState;
     };
   }
@@ -222,13 +258,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     currentTargetPose = findTargetPose();
     isAligned = isRobotPoseAlignedWithTargetPose();
     isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
-    if (!explicitSelection
-        && !bestPipeSelected
-        && !currentReefPipeLevel.equals(ReefPipeLevel.RAISING)) {
-      bestPipe = getBestPipeForScoring();
-      DogLog.log("AutoAlign/BestPipe", bestPipe);
-      bestPipeSelected = true;
-    }
 
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
     DogLog.log("AutoAlign/PoleSelectioin/JoystickReachedCenter", driverJoystickReachedCenter);
@@ -247,7 +276,14 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     }
 
     switch (getState()) {
-      case LEFT_PIPE, RIGHT_PIPE, BEST_PIPE, PIPE_BACKUP, ALGAE_BACKUP -> {
+      case LEFT_PIPE,
+          RIGHT_PIPE,
+          BEST_PIPE,
+          PIPE_BACKUP,
+          ALGAE_BACKUP,
+          BEST_L1,
+          L1_BACKUP,
+          ALGAE_INTAKE -> {
         useAngleBisector = false;
       }
 
@@ -258,7 +294,13 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   public ReefPipeLevel getBestLevel() {
-    return reefState.getHighestAvailableLevel(closestReefSide);
+    var bestLevel = reefState.getHighestAvailableLevel(closestReefSide);
+    if (bestLevel.equals(ReefPipeLevel.L1)) {
+      bestL1 = getBestL1ForScoring();
+    } else {
+      bestPipe = getBestPipeForScoring(bestLevel);
+    }
+    return bestLevel;
   }
 
   private Pose2d findTargetPose() {
@@ -279,6 +321,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       case BEST_PIPE_WAITING -> bestPipe.getPose(ReefPipeLevel.RAISING, currentPose);
       case BEST_PIPE -> bestPipe.getPose(currentReefPipeLevel, currentPose);
       case PIPE_BACKUP -> getClosestReefPipe().getPose(ReefPipeLevel.BACK_AWAY, currentPose);
+      case BEST_L1_CENTER -> getCenterL1PoseFromRobotDistance(bestL1);
+      case BEST_L1_WAITING -> bestL1.getPose(ReefPipeLevel.RAISING, currentPose);
+      case BEST_L1 -> bestL1.getPose(ReefPipeLevel.L1, currentPose);
+      case L1_BACKUP -> bestL1.getPose(ReefPipeLevel.BACK_AWAY, currentPose);
       case ALGAE_CENTER -> getCenterSidePoseFromRobotDistance(bestAlgaeSide);
       case ALGAE_WAITING -> bestAlgaeSide.getPose(ReefSideOffset.SAFE, currentPose);
       case ALGAE_INTAKE -> bestAlgaeSide.getPose(ReefSideOffset.ALGAE_INTAKING, currentPose);
@@ -368,6 +414,37 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   /**
+   * Calculates a target pose that is centered with the specified l1 location, based on the forward
+   * distance of the current pose.
+   *
+   * @param location The l1 location to center on.
+   * @return The target pose centered with the specified pipe.
+   */
+  private Pose2d getCenterL1PoseFromRobotDistance(L1Location location) {
+    var l1Pose = location.getPose(ReefPipeLevel.RAISING, currentPose);
+    var robotRelativePipeTranslation =
+        new Pose2d(
+                currentPose.getTranslation().minus(l1Pose.getTranslation()), l1Pose.getRotation())
+            .rotateBy(l1Pose.getRotation().unaryMinus());
+
+    var forwardDistanceToLocation = -robotRelativePipeTranslation.getX();
+    var lookaheadDistance = Math.copySign(0.3, forwardDistanceToLocation);
+    var lookaheadDistanceToLocation = forwardDistanceToLocation - lookaheadDistance;
+
+    // When going around to a different side of the reef, we want to approach from further away
+    var minDist = 0.2;
+    if (!explicitSelection && ReefSide.fromPipe(bestPipe) != closestReefSide) {
+      minDist = 0.5;
+    }
+
+    // Clamp the distance to make it faster to approach if we're far away
+    var clampedDistance = MathUtil.clamp(lookaheadDistanceToLocation, minDist, 1.0);
+    var poseTransform = new Transform2d(-clampedDistance, 0.0, Rotation2d.fromDegrees(0));
+    var targetPose = l1Pose.plus(poseTransform);
+    return targetPose;
+  }
+
+  /**
    * Calculates a target pose that is centered with the specified side, based on the forward
    * distance of the current pose.
    *
@@ -406,7 +483,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     if (DriverStation.isTeleop()
         && (!getState().equals(AutoAlignState.LEFT_PIPE)
             && !getState().equals(AutoAlignState.RIGHT_PIPE))
-        && !getState().equals(AutoAlignState.BEST_PIPE)) {
+        && !getState().equals(AutoAlignState.BEST_PIPE)
+        && !getState().equals(AutoAlignState.BEST_L1)) {
       return false;
     }
 
@@ -501,12 +579,28 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   /** Finds the best pipe to score on based on alignment cost and reef state. */
   public ReefPipe getBestPipeForScoring() {
-    if (currentReefPipeLevel == ReefPipeLevel.L1) {
-      // TODO: Update for L1 auto align
-      return getClosestReefPipe();
-    }
+    return getBestPipeForScoring(currentReefPipeLevel);
+  }
+
+  /** Finds the best pipe to score on based on alignment cost and reef state. */
+  public ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
     return ALL_REEF_PIPES.stream()
-        .min(alignmentCostUtil.getReefPipeComparator(currentReefPipeLevel))
+        .min(alignmentCostUtil.getReefPipeComparator(level, closestReefSide))
+        .orElseThrow();
+  }
+
+  /** Finds the best pipe to score on based on alignment cost and reef state. */
+  public L1Location getBestL1ForScoring() {
+    return ALL_L1_LOCATIONS.stream()
+        .min(
+            Comparator.comparingDouble(
+                l1Location ->
+                    currentPose
+                        .getTranslation()
+                        .getDistance(
+                            l1Location
+                                .getPose(ReefPipeLevel.RAISING, currentPose)
+                                .getTranslation())))
         .orElseThrow();
   }
 
@@ -523,13 +617,11 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         .orElseThrow();
   }
 
-  /** Returns true once the best pipe to align to is calculated. */
-  public boolean isReadyToAlign() {
-    return explicitSelection
-        || bestPipeSelected
-        || (getState() != AutoAlignState.BEST_PIPE_CENTER
-            && getState() != AutoAlignState.BEST_PIPE_WAITING
-            && getState() != AutoAlignState.BEST_PIPE);
+  public boolean isCentered() {
+    return switch (getState()) {
+      case EXPLICIT_LEFT_CENTER, EXPLICIT_RIGHT_CENTER, BEST_L1_CENTER, BEST_PIPE_CENTER -> false;
+      default -> true;
+    };
   }
 
   public Pose2d getCurrentTargetPose() {
@@ -562,8 +654,16 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     if (explicitSelection) {
       setStateFromRequest(AutoAlignState.EXPLICIT_SAFE_WAITING);
     } else {
-      bestPipeSelected = false;
       setStateFromRequest(AutoAlignState.BEST_PIPE_CENTER);
+    }
+  }
+
+  public void bumpRequest(ReefPipeLevel newLevel) {
+    if (newLevel.equals(ReefPipeLevel.L1)) {
+      bestL1 = getBestL1ForScoring();
+    } else {
+      bestPipe = getBestPipeForScoring(newLevel);
+      reefState.removeCoral(bestPipe, newLevel);
     }
   }
 
@@ -588,8 +688,27 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   /** Switches into pipe backup state for after placing coral */
   public void backAwayFromPipeRequest() {
-    bestPipeSelected = false;
     setStateFromRequest(AutoAlignState.PIPE_BACKUP);
+  }
+
+  /** Switches into closest l1 approach state */
+  public void approachL1Request() {
+    setStateFromRequest(AutoAlignState.BEST_L1_CENTER);
+  }
+
+  /** Switches into correct pipe side state based on current approach state */
+  public void lineupL1Request() {
+    switch (getState()) {
+      case BEST_L1_CENTER, BEST_L1_WAITING -> {
+        setStateFromRequest(AutoAlignState.BEST_L1);
+      }
+      default -> {}
+    }
+  }
+
+  /** Switches into pipe backup state for after placing coral */
+  public void backAwayFromL1Request() {
+    setStateFromRequest(AutoAlignState.L1_BACKUP);
   }
 
   @Override

@@ -17,7 +17,6 @@ import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
 public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
-
   private final Debouncer seeingTagDebouncer = new Debouncer(1.0, DebounceType.kFalling);
   private final Debouncer seeingTagForPoseResetDebouncer =
       new Debouncer(5.0, DebounceType.kFalling);
@@ -100,7 +99,6 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
 
   public OptionalTagResult getGamePieceTagResult() {
     if (leftBackTagResult.isEmpty() && rightTagResult.isEmpty() && leftFrontTagResult.isEmpty()) {
-
       return gamePieceTagResult;
     }
     return gamePieceTagResult.empty();

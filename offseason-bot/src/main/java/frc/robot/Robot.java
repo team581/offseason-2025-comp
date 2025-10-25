@@ -9,6 +9,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
@@ -24,7 +25,6 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
 
 public class Robot extends Base581Robot {
@@ -43,15 +43,15 @@ public class Robot extends Base581Robot {
 
   private final GroundManager groundManager =
       new GroundManager(
-          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+          intake, deploy, singulator, hardware.topCradleSensor, hardware.bottomCradleSensor);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
 
   private final Limelight leftLimelight =
-      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+      new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
   private final Limelight rightlLimelight =
-      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+      new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);

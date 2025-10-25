@@ -27,7 +27,6 @@ import frc.robot.vision.results.TagResult;
 
 public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationState>
     implements LocalizationBase {
-
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
   private final CustomOdometry customOdometry;

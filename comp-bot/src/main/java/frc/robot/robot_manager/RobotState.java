@@ -292,7 +292,6 @@ public enum RobotState {
   }
 
   public RobotState getLeftApproachToLineupState() {
-
     return approachToLineupLeftStates.getOrDefault(this, this);
   }
 

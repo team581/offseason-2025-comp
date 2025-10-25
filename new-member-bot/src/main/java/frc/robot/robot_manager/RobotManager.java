@@ -76,6 +76,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CLAW_ALGAE,
           CLAW_CORAL,
           STARTING_POSITION,
+          STARTING_POSITION_CORAL,
           ALGAE_NET_WAITING,
           ALGAE_PROCESSOR_WAITING,
           CLIMBER_STOP,
@@ -335,6 +336,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOPPED);
       }
+      case STARTING_POSITION_CORAL -> {
+        claw.setState(ClawState.IDLE_W_CORAL);
+        elevator.setState(ElevatorState.STOWED);
+        wrist.setState(WristState.STOWED);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        climber.setState(ClimberState.STOPPED);
+      }
     }
   }
 
@@ -392,6 +401,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void unjamRequest() {
     setStateFailsafe(RobotState.UNJAM);
   }
+
+  public void preloadCoralRequest() {
+    setStateFailsafe(RobotState.STARTING_POSITION_CORAL);
+    }
 
   public void intakeGroundAlgaeRequest() {
     setStateFailsafe(RobotState.ALGAE_INTAKE_FLOOR);
@@ -486,14 +499,16 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           REHOME_WRIST,
           REHOME_ELEVATOR,
           STARTING_POSITION,
+          STARTING_POSITION_CORAL,
           UNJAM -> {}
 
       case CLAW_EMPTY -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
       case CLAW_ALGAE -> {
         if (shouldScoreInNet(robotPose)) {
           netWaitRequest();
+        } else {
+          processorWaitRequest();
         }
-        processorWaitRequest();
       }
       case CLAW_CORAL -> l1ApproachRequest();
 

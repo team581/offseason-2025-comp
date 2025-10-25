@@ -12,7 +12,6 @@ import frc.robot.config.RobotConfig;
 import frc.robot.vision.results.GamePieceResult;
 
 public final class GamePieceDetectionUtil {
-
   private static final double CORAL_LENGTH = 11.875;
   private static final double CORAL_RADIUS = 2.25;
 
@@ -69,7 +68,6 @@ public final class GamePieceDetectionUtil {
 
   public static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
-
     double thetaX = Units.degreesToRadians(visionResult.tx());
     double thetaY = Units.degreesToRadians(visionResult.ty());
     double hypot = Math.copySign(Math.hypot(thetaX, thetaY), thetaX);

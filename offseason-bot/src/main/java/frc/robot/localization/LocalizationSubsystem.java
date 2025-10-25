@@ -23,7 +23,6 @@ import frc.robot.vision.results.TagResult;
 
 public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationState>
     implements LocalizationBase {
-
   private final ImuSubsystem imu;
   private final SwerveSubsystem swerve;
   private final VisionSubsystem vision;

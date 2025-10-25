@@ -2,7 +2,7 @@ package frc.robot.swerve;
 
 import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.auto_align.ReefSide;
+import frc.robot.auto_align.poses.ReefSide;
 import java.util.Comparator;
 import java.util.stream.Stream;
 

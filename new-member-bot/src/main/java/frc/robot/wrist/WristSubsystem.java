@@ -21,7 +21,6 @@ import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class WristSubsystem extends StateMachineSubsystem<WristState> {
-
   private static final double TOLERANCE = 0;
   private static final double NEAR_TOLERANCE = 0;
 
