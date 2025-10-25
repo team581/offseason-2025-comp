@@ -279,7 +279,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.ALGAE_STOWED);
+        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED_ALGAE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -608,7 +608,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case REHOME_ELEVATOR -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.REHOME, ArmState.ALGAE_STOWED);
+        moveSuperstructure(ElevatorState.REHOME, ArmState.STOWED_ALGAE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -624,7 +624,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE_STOW_INWARD -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED_INWARD, ArmState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
