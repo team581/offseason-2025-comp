@@ -492,8 +492,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CLAW_ALGAE -> {
         if (shouldScoreInNet(robotPose)) {
           netWaitRequest();
+        } else {
+          processorWaitRequest();
         }
-        processorWaitRequest();
       }
       case CLAW_CORAL -> l1ApproachRequest();
 
