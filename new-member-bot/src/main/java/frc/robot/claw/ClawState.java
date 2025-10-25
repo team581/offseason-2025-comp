@@ -22,5 +22,4 @@ public enum ClawState {
   private ClawState(ClawState state) {
     this.volts = state.volts;
   }
-
 }
