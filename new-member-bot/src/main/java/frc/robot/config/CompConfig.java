@@ -10,7 +10,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -38,7 +37,7 @@ class CompConfig {
           new ClawConfig(
               RIO_CAN_NAME,
               16,
-              0.0,
+              30.0,
               new Debouncer(0),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -48,11 +47,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))
-                  .withTorqueCurrent(
-                      new TorqueCurrentConfigs()
-                          .withPeakForwardTorqueCurrent(0.0)
-                          .withPeakReverseTorqueCurrent(0.0))),
+                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               CANIVORE_NAME,
               19,
@@ -60,7 +55,7 @@ class CompConfig {
               21,
               22,
               0.0,
-              0.0,
+              90.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
