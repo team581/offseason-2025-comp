@@ -111,9 +111,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           claw.getHasGP() ? currentState.getNextAlgaeIntakeState() : currentState;
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
-          cameraOnlineAndFarEnoughFromReef()
-              ? RobotState.CLAW_ALGAE
-              : currentState;
+          cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_ALGAE : currentState;
     };
   }
 
