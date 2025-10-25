@@ -46,7 +46,7 @@ public class Robot extends Base581Robot {
           intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
 
   private final Limelight leftLimelight =
       new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);

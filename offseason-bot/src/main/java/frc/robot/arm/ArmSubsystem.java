@@ -1,7 +1,6 @@
 package frc.robot.arm;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,67 +10,36 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
-import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
-import java.util.Map;
-import java.util.OptionalDouble;
-
 public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
-  public static final double ARM_LENGTH_METERS = Units.inchesToMeters(21.5687);
+  public static final double ARM_LENGTH_METERS = Units.inchesToMeters(16.0);
 
-  private static final InterpolatingDoubleTreeMap CORAL_TX_TO_ARM_ANGLE_TABLE =
-      InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.66, 4.93),
-          Map.entry(0.0, 0.0),
-          Map.entry(-6.5, -2.37),
-          Map.entry(-11.0, -6.67));
 
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 35.0;
 
   private final TalonFX motor;
-  private double rawMotorAngle;
-  private double motorAngle;
-  private double motorCurrent;
+  private double rawMotorAngle=0.0;
+  private double motorAngle=0.0;
+  private double motorCurrent=0.0;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private double handoffOffset = 0;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private boolean lollipopMode = false;
-  private final ElevatorSubsystem elevator;
-  private boolean elevatorIsGoingDown = false;
-  private boolean elevatorIsGoingDownDebounced = false;
-  private double previousElevatorHeight = Double.POSITIVE_INFINITY;
-  private final Debouncer debouncer = new Debouncer(1.0, DebounceType.kBoth);
-  private final LinearFilter handoffAdjustmentTxFilter = LinearFilter.movingAverage(7);
-
-  public void setLollipopMode(boolean lollipopMode) {
-    this.lollipopMode = lollipopMode;
-    DogLog.log("Arm/LollipopMode", lollipopMode);
-  }
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
-  private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
-      new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
-
-  public ArmSubsystem(TalonFX motor, ElevatorSubsystem elevator) {
+  public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
 
     this.motor = motor;
-    this.elevator = elevator;
 
     // In field calibration mode, boot arm to lower hardstop angle
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
@@ -86,10 +54,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         newPositionDeg -> motor.setPosition(Units.degreesToRotations(newPositionDeg)));
   }
 
-  public void setCoralHandoffOffset(OptionalDouble tx) {
-    handoffOffset =
-        CORAL_TX_TO_ARM_ANGLE_TABLE.get(handoffAdjustmentTxFilter.calculate(tx.orElse(0)));
-  }
 
   public void setState(ArmState newState) {
     switch (getState()) {
@@ -111,20 +75,13 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   private void makeGetMotionMagicRequest(double armRotations) {
-    if (DriverStation.isTeleop() || lollipopMode) {
       motor.setControl(motionMagicRequest.withPosition(armRotations));
-      DogLog.log("Arm/MotionMagicStrategy", "Teleop");
-    } else {
-      motor.setControl(autoMotionMagicExpoRequest.withPosition(armRotations));
-      DogLog.log("Arm/MotionMagicStrategy", "Expo");
-    }
   }
 
   public boolean atGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
-      case CORAL_HANDOFF -> MathUtil.isNear(usedHandoffAngle, motorAngle, TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING -> false;
+      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
     };
   }
 
@@ -145,23 +102,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   protected void collectInputs() {
-    usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle() + handoffOffset;
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     motorAngle = MathHelpers.angleModulus(rawMotorAngle);
 
     if (DriverStation.isDisabled()) {
-      elevatorIsGoingDown = elevator.getHeight() < previousElevatorHeight;
-      elevatorIsGoingDownDebounced = debouncer.calculate(elevatorIsGoingDown);
-
-      // If elevator is going down, reset these values
-      if (elevatorIsGoingDownDebounced) {
-        lowestSeenAngle = Double.POSITIVE_INFINITY;
-      }
-
       lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
       highestSeenAngle = Math.max(highestSeenAngle, rawMotorAngle);
-
-      previousElevatorHeight = elevator.getHeight();
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
@@ -181,8 +127,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
-      DogLog.log("Arm/ElevatorIsGoingDown", elevatorIsGoingDown);
-      DogLog.log("Arm/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
     }
     if (rangeOfMotionGood()) {
       DogLog.clearFault("ARM NOT HOMED");
@@ -200,9 +144,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
           motor.setControl(coastNeutralRequest);
         }
       }
-      case CORAL_HANDOFF -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(clamp(usedHandoffAngle)));
-      }
       default -> {
         makeGetMotionMagicRequest(Units.degreesToRotations(clamp(getState().getAngle())));
       }
@@ -213,7 +154,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
-  private double usedHandoffAngle = ArmState.CORAL_HANDOFF.getAngle();
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
