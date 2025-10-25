@@ -27,7 +27,8 @@ public abstract class Base581Robot extends TimedRobot {
         new DogLogOptions()
             .withCaptureDs(true)
             .withNtPublish(GlobalConfig.IS_DEVELOPMENT)
-            .withNtTunables(GlobalConfig.IS_DEVELOPMENT));
+            .withNtTunables(GlobalConfig.IS_DEVELOPMENT)
+            .withUseLogThread(false));
 
     DogLog.log(
         "Metadata/RobotName",
