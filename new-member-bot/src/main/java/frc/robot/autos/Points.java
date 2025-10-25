@@ -1,4 +1,3 @@
-
 package frc.robot.autos;
 
 import com.team581.math.MathHelpers;

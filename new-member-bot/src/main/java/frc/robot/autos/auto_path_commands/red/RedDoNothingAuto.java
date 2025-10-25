@@ -1,4 +1,3 @@
-
 package frc.robot.autos.auto_path_commands.red;
 
 import com.team581.trailblazer.AutoPoint;
