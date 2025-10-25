@@ -404,7 +404,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void preloadCoralRequest() {
     setStateFailsafe(RobotState.STARTING_POSITION_CORAL);
-    }
+  }
 
   public void intakeGroundAlgaeRequest() {
     setStateFailsafe(RobotState.ALGAE_INTAKE_FLOOR);
