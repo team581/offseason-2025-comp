@@ -129,18 +129,13 @@ public class CustomOdometry extends SwerveDriveOdometry {
     double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
     double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
-    // After calculations, before the next loop update the previous wheel positions to the current
-    // ones
-    updatePreviousWheelPositions(currentWheelPositions);
-
     // Logging
-    // DogLog.log("Odometry/", );
-    DogLog.log("Odometry/FrontLeftModuleDisplacement", moduleDisplacements[0]);
-    DogLog.log("Odometry/FrontRightModuleDisplacement", moduleDisplacements[1]);
-    DogLog.log("Odometry/BackLeftModuleDisplacement", moduleDisplacements[2]);
-    DogLog.log("Odometry/BackRightModuleDisplacement", moduleDisplacements[3]);
+    DogLog.log("Odometry/PreviousPose", previousRobotPose);
+    DogLog.log("Odometry/PreviousWheelPositions", previousWheelPositions);
+    DogLog.log("Odometry/CurrentWheelPositions", currentWheelPositions);
+    DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
     DogLog.log(
-        "Odometry/FieldRelativeFrontLeftModuleDisplacement",
+        "Odometry/FieldRelativeFrontLeftModuleDisplacements",
         new Pose2d(fieldRelativeModuleDisplacements[0], currentGyroAngle));
     DogLog.log(
         "Odometry/FieldRelativeFrontRightModuleDisplacement",
@@ -151,6 +146,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log(
         "Odometry/FieldRelativeBackRightModuleDisplacement",
         new Pose2d(fieldRelativeModuleDisplacements[3], currentGyroAngle));
+
+    // After calculations, before the next loop update the previous wheel positions to the current
+    // ones
+    updatePreviousWheelPositions(currentWheelPositions);
 
     return new Pose2d(displacementX, displacementY, currentGyroAngle);
   }
