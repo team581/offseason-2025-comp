@@ -16,17 +16,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.FeatureFlags;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
+
 public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(16.0);
-
 
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 35.0;
 
   private final TalonFX motor;
-  private double rawMotorAngle=0.0;
-  private double motorAngle=0.0;
-  private double motorCurrent=0.0;
+  private double rawMotorAngle = 0.0;
+  private double motorAngle = 0.0;
+  private double motorCurrent = 0.0;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
@@ -35,6 +35,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
+
   public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
@@ -53,7 +54,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         0.0,
         newPositionDeg -> motor.setPosition(Units.degreesToRotations(newPositionDeg)));
   }
-
 
   public void setState(ArmState newState) {
     switch (getState()) {
@@ -75,7 +75,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   private void makeGetMotionMagicRequest(double armRotations) {
-      motor.setControl(motionMagicRequest.withPosition(armRotations));
+    motor.setControl(motionMagicRequest.withPosition(armRotations));
   }
 
   public boolean atGoal() {
@@ -153,7 +153,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public boolean rangeOfMotionGood() {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
-
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
