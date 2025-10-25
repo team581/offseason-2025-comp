@@ -143,7 +143,7 @@ class CompConfig {
                       Units.degreesToRadians(0.0),
                       Units.degreesToRadians(0.0),
                       Units.degreesToRadians(0.0)))),
-          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
+          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, false, false));
 
   private CompConfig() {}
 }
