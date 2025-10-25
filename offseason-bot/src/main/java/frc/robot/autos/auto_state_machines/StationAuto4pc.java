@@ -111,9 +111,7 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
               : currentState;
 
       case L_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.PRE_INTAKING
-              : currentState;
+          currentState;
       case A_L4_SCORING ->
           throw new UnsupportedOperationException("Unimplemented case: " + currentState);
       case A_L4_POST_SCORING ->
