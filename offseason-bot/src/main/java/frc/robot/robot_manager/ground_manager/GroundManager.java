@@ -1,7 +1,5 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.ctre.phoenix6.hardware.CANdi;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;

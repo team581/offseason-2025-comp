@@ -4,7 +4,6 @@ import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotConfig;
@@ -50,6 +49,8 @@ public class Hardware {
       new CANdle(RobotConfig.get().lights().candleId(), RobotConfig.get().lights().canBusName());
   public final CANdi clawCaNdi = new CANdi(RobotConfig.get().claw().candiId());
 
-  public final DigitalInput topCradleSensor = new DigitalInput(RobotConfig.get().singulator().topSensorPortId());
-  public final DigitalInput bottomCradleSensor = new DigitalInput(RobotConfig.get().singulator().bottonSensorPortId());
+  public final DigitalInput topCradleSensor =
+      new DigitalInput(RobotConfig.get().singulator().topSensorPortId());
+  public final DigitalInput bottomCradleSensor =
+      new DigitalInput(RobotConfig.get().singulator().bottonSensorPortId());
 }

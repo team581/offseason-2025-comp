@@ -246,7 +246,8 @@ class CompConfig {
                   new Rotation3d(0.0, 0.0, 0.0)),
 
               // Left Limelight
-              // Forward: 0.1045038296, Right: -0.2494524094, Up:0.5819300782, Roll: 0.0, Pitch: 0.0, Yaw:
+              // Forward: 0.1045038296, Right: -0.2494524094, Up:0.5819300782, Roll: 0.0, Pitch:
+              // 0.0, Yaw:
               // 0.0
               new Pose3d(
                   Units.inchesToMeters(0.0),
@@ -258,7 +259,8 @@ class CompConfig {
                       Units.degreesToRadians(0.0))),
 
               // Right Limelight
-              // Forward: 0.0956578478, Right: 0.2345115452, Up: 0.5819625648, Roll: 0.0, Pitch: 0.0, Yaw:
+              // Forward: 0.0956578478, Right: 0.2345115452, Up: 0.5819625648, Roll: 0.0, Pitch:
+              // 0.0, Yaw:
               // 0.0
               new Pose3d(
                   Units.inchesToMeters(0.0),
