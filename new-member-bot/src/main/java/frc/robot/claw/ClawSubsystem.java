@@ -77,11 +77,12 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   @Override
   public void whileInState(ClawState currentState) {
     minVelocity = DogLog.tunable("Claw/MinVelocity", 5.0).get();
-    double tunableMaxVelocity = DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity()).get();
-    velocityDetectsGp =
-        getHasGp(motor.getVelocity().getValueAsDouble(), tunableMaxVelocity);
+    double tunableMaxVelocity =
+        DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity()).get();
+    velocityDetectsGp = getHasGp(motor.getVelocity().getValueAsDouble(), tunableMaxVelocity);
     // velocityDetectsGp =
-    //     getHasGp(motor.getVelocity().getValueAsDouble(), RobotConfig.get().claw().gpMaxVelocity());
+    //     getHasGp(motor.getVelocity().getValueAsDouble(),
+    // RobotConfig.get().claw().gpMaxVelocity());
     DogLog.log("Claw/HasGP", getHasGP());
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
