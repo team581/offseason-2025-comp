@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -34,7 +35,24 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          new ClawConfig(RIO_CAN_NAME, 16, 58.1, new Debouncer(0), new TalonFXConfiguration()),
+          new ClawConfig(
+              RIO_CAN_NAME,
+              16,
+              0.0,
+              new Debouncer(0),
+              new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(90.0)
+                          .withSupplyCurrentLimit(65.0))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))
+                  .withTorqueCurrent(
+                      new TorqueCurrentConfigs()
+                          .withPeakForwardTorqueCurrent(0.0)
+                          .withPeakReverseTorqueCurrent(0.0))),
           new ClimberConfig(
               CANIVORE_NAME,
               19,
@@ -87,6 +105,25 @@ class CompConfig {
               99.75,
               0.0,
               new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withSupplyCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(0.0)
+                          .withKD(0.0)
+                          .withKV(0.0)
+                          .withKG(0.0)
+                          .withGravityType(GravityTypeValue.Elevator_Static))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(0.0)
+                          .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0)))),
