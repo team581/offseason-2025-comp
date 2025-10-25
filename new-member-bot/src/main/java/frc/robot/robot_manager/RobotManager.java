@@ -426,7 +426,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     setStateFailsafe(RobotState.ALGAE_NET_WAITING);
   }
 
-  public void netReleaseRequest(){
+  public void netReleaseRequest() {
     setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
   }
 
@@ -442,11 +442,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     setStateFailsafe(RobotState.CORAL_L1_APPROACH);
   }
 
-  public void l1lineupRequest(){
+  public void l1lineupRequest() {
     setStateFailsafe(RobotState.CORAL_L1_LINEUP);
   }
 
-  public void l1ReleaseRequest(){
+  public void l1ReleaseRequest() {
     setStateFailsafe(RobotState.CORAL_L1_RELEASE);
   }
 
