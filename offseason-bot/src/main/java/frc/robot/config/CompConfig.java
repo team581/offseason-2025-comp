@@ -31,6 +31,7 @@ import frc.robot.config.RobotConfig.SingulatorConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.generated.RobotTunerConstants;
+import frc.robot.vision.limelight.LimelightModel;
 
 class CompConfig {
   private static final String CANIVORE_NAME = RobotTunerConstants.kCANBus.getName();
@@ -237,39 +238,10 @@ class CompConfig {
               0.8,
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
-
-              // Robot pose to calibration rig
-              new Pose3d(
-                  0.0,
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  new Rotation3d(0.0, 0.0, 0.0)),
-
-              // Left Limelight
-              // Forward: 0.1045038296, Right: -0.2494524094, Up:0.5819300782, Roll: 0.0, Pitch:
-              // 0.0, Yaw:
-              // 0.0
-              new Pose3d(
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  new Rotation3d(
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0))),
-
-              // Right Limelight
-              // Forward: 0.0956578478, Right: 0.2345115452, Up: 0.5819625648, Roll: 0.0, Pitch:
-              // 0.0, Yaw:
-              // 0.0
-              new Pose3d(
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  new Rotation3d(
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0)))),
+              // Left Camera Config
+              new CameraConfig(LimelightModel.THREEG, true,0.1045038296, -0.2494524094, 0.5819300782, 0.0, 0.0, 0.0),
+              // Right Camera Config
+              new CameraConfig(LimelightModel.THREEG, true, 0.0956578478, 0.2345115452, 0.5819625648, 0.0, 0.0, 0.0)),
           new LightsConfig(CANIVORE_NAME, 0),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 

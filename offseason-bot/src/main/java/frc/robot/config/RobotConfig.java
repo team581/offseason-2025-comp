@@ -83,9 +83,8 @@ public record RobotConfig(
   public record VisionConfig(
       double xyStdDev,
       double thetaStdDev,
-      Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftLimelightPosition,
-      Pose3d rightLimelightPosition) {}
+      CameraConfig leftLimelightConfig,
+      CameraConfig rightLimelightConfig) {}
 
   public record LightsConfig(String canBusName, int candleId) {}
 

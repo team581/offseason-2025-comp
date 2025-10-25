@@ -110,11 +110,6 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
     leftLimelight.sendImuData(robotHeading, angularVelocity, 0.0, 0.0, 0.0, 0.0);
     rightLimelight.sendImuData(robotHeading, angularVelocity, 0.0, 0.0, 0.0, 0.0);
 
-    if (FeatureFlags.CAMERA_POSITION_CALIBRATION.getAsBoolean()) {
-      setStateFromRequest(VisionState.TAGS);
-      leftLimelight.logCameraPositionCalibrationValues();
-      rightLimelight.logCameraPositionCalibrationValues();
-    }
 
     DogLog.log("Vision/SeeingTag", seeingTag);
     DogLog.log("Vision/SeeingTagLast5Seconds", seenTagRecentlyForReset);
