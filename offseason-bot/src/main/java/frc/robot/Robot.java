@@ -43,7 +43,7 @@ public class Robot extends Base581Robot {
 
   private final GroundManager groundManager =
       new GroundManager(
-          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+          intake, deploy, singulator, hardware.topCradleSensor, hardware.bottomCradleSensor);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
   private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);

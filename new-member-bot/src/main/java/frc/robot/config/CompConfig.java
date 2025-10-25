@@ -34,8 +34,7 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          new ClawConfig(
-              RIO_CAN_NAME, 16, 17, false, new Debouncer(0), new TalonFXConfiguration()),
+          new ClawConfig(RIO_CAN_NAME, 16, 17, false, new Debouncer(0), new TalonFXConfiguration()),
           new ClimberConfig(
               CANIVORE_NAME,
               19,
