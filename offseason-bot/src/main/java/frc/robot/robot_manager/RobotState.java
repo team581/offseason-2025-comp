@@ -25,11 +25,11 @@ public enum RobotState {
   ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.EMPTY, false),
   ALGAE_INTAKE_L3_APPROACH(ClawGamePiece.EMPTY, false),
 
+  ALGAE_INTAKE_L2(ClawGamePiece.EMPTY, false),
+  ALGAE_INTAKE_L3(ClawGamePiece.EMPTY, false),
+
   ALGAE_INTAKE_L2_HOLDING(ClawGamePiece.ALGAE, false),
   ALGAE_INTAKE_L3_HOLDING(ClawGamePiece.ALGAE, false),
-
-  ALGAE_INTAKE_L2(ClawGamePiece.ALGAE, false),
-  ALGAE_INTAKE_L3(ClawGamePiece.ALGAE, false),
   // L1 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L1_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
@@ -40,6 +40,7 @@ public enum RobotState {
   CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
   CORAL_L1_LINEUP(ClawGamePiece.CORAL, false),
   CORAL_L1_RELEASE(ClawGamePiece.EMPTY, false),
+  CORAL_L1_BACKAWAY(ClawGamePiece.EMPTY, false),
 
   // L2 scoring using the claw
   /** Coral is in the ground intake, need to pass it to the claw. */
@@ -106,11 +107,15 @@ public enum RobotState {
 
   private static final ImmutableMap<RobotState, RobotState> scoreSequence =
       ImmutableMap.ofEntries(
+          Map.entry(CORAL_L1_APPROACH, CORAL_L1_LINEUP),
+          Map.entry(CORAL_L2_APPROACH, CORAL_L2_LINEUP),
+          Map.entry(CORAL_L3_APPROACH, CORAL_L3_LINEUP),
+          Map.entry(CORAL_L4_APPROACH, CORAL_L4_LINEUP),
           Map.entry(CORAL_L1_LINEUP, CORAL_L1_RELEASE),
           Map.entry(CORAL_L2_LINEUP, CORAL_L2_PLACE),
           Map.entry(CORAL_L3_LINEUP, CORAL_L3_PLACE),
           Map.entry(CORAL_L4_LINEUP, CORAL_L4_PLACE),
-          Map.entry(CORAL_L1_RELEASE, CORAL_L1_RELEASE),
+          Map.entry(CORAL_L1_RELEASE, CORAL_L1_BACKAWAY),
           Map.entry(CORAL_L2_PLACE, CORAL_L2_RELEASE),
           Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
           Map.entry(CORAL_L4_PLACE, CORAL_L4_RELEASE));
@@ -164,7 +169,7 @@ public enum RobotState {
   }
 
   public static boolean missingGP(RobotState state, boolean hasGp) {
-    return (state.clawGp != ClawGamePiece.EMPTY && !hasGp);
+    return (!state.clawGp.equals(ClawGamePiece.EMPTY) && !hasGp);
   }
 
   public static boolean isReleaseState(RobotState state) {

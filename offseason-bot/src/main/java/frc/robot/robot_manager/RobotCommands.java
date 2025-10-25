@@ -43,15 +43,18 @@ public class RobotCommands {
         .withName("AlgaeIntakeGroundCommand");
   }
 
+  public Command outtakeRequestCommand() {
+    return Commands.runOnce(robot.groundManager::outtakeRequest, gmRequirements)
+        .withName("OuttakeRequestCommand");
+  }
+
   public Command stowCommand() {
-    return Commands.runOnce(robot::stowRequest, bothRequirements)
-        .andThen(
-            Commands.waitUntil(
-                () ->
-                    robot.elevator.atGoal()
-                        && robot.arm.atGoal()
-                        && robot.groundManager.deploy.atGoal()))
-        .withName("StowCommand");
+    return Commands.runOnce(robot::stowRequest, bothRequirements).withName("StowCommand");
+  }
+
+  public Command forceNextScoreSequenceCommand() {
+    return Commands.runOnce(robot::forceNextScoringStateRequest, bothRequirements)
+        .withName("ForceNextScoreSequenceCommand");
   }
 
   public Command highLineupCommand() {
@@ -78,9 +81,8 @@ public class RobotCommands {
         .withName("AlgaeReefIntakeCommand");
   }
 
-  public Command confirmScoreCommand() {
-    return Commands.runOnce(robot::confirmScoreRequest, bothRequirements)
-        .withName("ConfirmScoreCommand");
+  public Command scoreCommand() {
+    return Commands.runOnce(robot::scoreRequest, bothRequirements).withName("ConfirmScoreCommand");
   }
 
   public Command forcedHandoffCommand() {
@@ -107,12 +109,18 @@ public class RobotCommands {
     return Commands.runOnce(robot::unjamRequest, bothRequirements).withName("UnjamCommand");
   }
 
+  public Command stopOuttakeRequest() {
+    return Commands.runOnce(robot::stopOuttakeRequest, gmRequirements)
+        .withName("StopOuttakeRequestCommand");
+  }
+
   public Command rehomeDeployCommand() {
     return Commands.runOnce(robot.groundManager::rehomeRequest, gmRequirements)
         .withName("RehomeDeployCommand");
   }
 
-  public Command lowStowCommand() {
-    return Commands.runOnce(robot::lowStowRequest, rmRequirements).withName("LowStowCommand");
+  public Command rehomeElevatorCommand() {
+    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements)
+        .withName("LowStowCommand");
   }
 }

@@ -14,12 +14,10 @@ public record RobotConfig(
     WristConfig wrist,
     VisionConfig vision,
     SwerveConfig swerve) {
-
   public record ClawConfig(
       String canBusName,
       int motorId,
-      int candiId,
-      boolean sensorFlipped,
+      double gpMaxVelocity,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
@@ -57,10 +55,7 @@ public record RobotConfig(
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftBackLimelightPosition,
-      Pose3d leftFrontLimelightPosition,
-      Pose3d rightLimelightPosition,
-      Pose3d gamePieceDetectionLimelightPosition) {}
+      Pose3d limelightPosition) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,

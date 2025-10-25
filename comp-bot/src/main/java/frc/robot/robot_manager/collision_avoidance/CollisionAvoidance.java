@@ -57,7 +57,6 @@ public class CollisionAvoidance {
       SuperstructurePosition desiredPosition,
       ObstructionKind obstructionKind,
       double rawArmAngle) {
-
     var maybeWaypoint = route(currentPosition, desiredPosition, obstructionKind);
     if (maybeWaypoint.isEmpty()) {
       return Optional.empty();
@@ -167,7 +166,6 @@ public class CollisionAvoidance {
 
   public static double[] getCollisionAvoidanceSolutions(
       double currentRawAngle, double normalizedGoalAngle) {
-
     // Find the closest lower multiple of 360 so that the unwrapped angle is near current
 
     int n = (int) currentRawAngle / 360;

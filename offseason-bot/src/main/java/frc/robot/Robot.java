@@ -9,6 +9,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.autos.Autos;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
@@ -24,7 +25,6 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
 
 public class Robot extends Base581Robot {
@@ -43,15 +43,15 @@ public class Robot extends Base581Robot {
 
   private final GroundManager groundManager =
       new GroundManager(
-          intake, deploy, singulator, hardware.topIntakeCANdi, hardware.bottomIntakeCANdi);
+          intake, deploy, singulator, hardware.topCradleSensor, hardware.bottomCradleSensor);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor, hardware.clawCaNdi);
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor, elevator);
+  private final ArmSubsystem arm = new ArmSubsystem(hardware.armMotor);
 
   private final Limelight leftLimelight =
-      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+      new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
   private final Limelight rightlLimelight =
-      new Limelight("left", LimelightState.TAGS, LimelightModel.THREEG, true);
+      new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
@@ -99,6 +99,8 @@ public class Robot extends Base581Robot {
     // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
     //   fieldCalibrationUtil.log();
     // }
+
+    robotManager.setRawRightControllerYValue(hardware.driverController.getRightY());
   }
 
   @Override
@@ -129,41 +131,30 @@ public class Robot extends Base581Robot {
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
-    hardware.driverController.rightTrigger().onTrue(actions.confirmScoreCommand());
+    hardware
+        .driverController
+        .rightTrigger()
+        .onTrue(actions.scoreCommand())
+        .onFalse(actions.scoringAlignOffCommand());
     hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
-    hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
-    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
     hardware
         .driverController
-        .y()
-        .onTrue(actions.highLineupCommand())
-        .onFalse(actions.scoringAlignOffCommand());
+        .leftBumper()
+        .onTrue(actions.algaeIntakeGroundCommand())
+        .onFalse(actions.stopOuttakeRequest());
     hardware
         .driverController
-        .x()
-        .onTrue(actions.l3LineupCommand())
+        .rightBumper()
+        .onTrue(actions.algaeReefIntakeCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware
-        .driverController
-        .b()
-        .onTrue(actions.l2LineupCommand())
-        .onFalse(actions.scoringAlignOffCommand());
-    hardware
-        .driverController
-        .a()
-        .onTrue(actions.lowLineupCommand())
-        .onFalse(actions.scoringAlignOffCommand());
+    hardware.driverController.a().onTrue(actions.stowCommand());
 
     hardware.driverController.povUp().onTrue(actions.climbUpCommand());
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());
-    hardware.driverController.povLeft().onTrue(actions.lowStowCommand());
-    hardware
-        .driverController
-        .povRight()
-        .onTrue(actions.algaeReefIntakeCommand())
-        .onFalse(actions.scoringAlignOffCommand());
 
+    hardware.driverController.y().onTrue(actions.rehomeDeployCommand());
+    hardware.driverController.x().onTrue(actions.forceNextScoreSequenceCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
-    hardware.operatorController.y().onTrue(actions.rehomeDeployCommand());
+    hardware.driverController.back().onTrue(actions.unjamCommand());
   }
 }

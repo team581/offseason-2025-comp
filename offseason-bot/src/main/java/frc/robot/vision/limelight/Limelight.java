@@ -6,15 +6,15 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.config.CameraConfig;
 import frc.robot.config.FeatureFlags;
-import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
 import java.util.OptionalDouble;
 
@@ -26,8 +26,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   private static final double USE_MT1_DISTANCE_THRESHOLD = Units.inchesToMeters(40.0);
   private final String limelightTableName;
   private final String name;
-
-  private final boolean mt1Compatible;
+  private final CameraConfig config;
 
   private final Timer limelightTimer = new Timer();
   private final Timer seedImuTimer = new Timer();
@@ -39,23 +38,20 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   private OptionalTagResult lastGoodTagResult = new OptionalTagResult();
   private OptionalTagResult tagResult = new OptionalTagResult();
 
+  private OptionalGamePieceResult coralResult = new OptionalGamePieceResult();
+  private OptionalGamePieceResult algaeResult = new OptionalGamePieceResult();
+
   private double angularVelocity = 0.0;
+  private boolean updatedLimelightPos = false;
 
-  private final int[] closestScoringReefTag = {0};
-
-  public Limelight(
-      String name,
-      LimelightState initialState,
-      LimelightModel limelightModel,
-      boolean mt1Compatible) {
+  public Limelight(String name, LimelightState initialState, CameraConfig config) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;
     limelightTimer.start();
-
-    this.mt1Compatible = mt1Compatible;
+    this.config = config;
   }
 
   public void sendImuData(
@@ -74,8 +70,16 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     setStateFromRequest(state);
   }
 
+  public OptionalGamePieceResult getCoralResult() {
+    return getState() == LimelightState.CORAL ? coralResult : coralResult.empty();
+  }
+
+  public OptionalGamePieceResult getAlgaeResult() {
+    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
+  }
+
   public OptionalTagResult getTagResult() {
-    if (getState() != LimelightState.TAGS && getState() != LimelightState.CLOSEST_REEF_TAG) {
+    if (getState() != LimelightState.TAGS) {
       return tagResult.empty();
     }
 
@@ -94,6 +98,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     if (mT2Estimate.rawFiducials.length == 1) {
       double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
       if (ambiguity >= 0.7) {
+        DogLog.timestamp("Vision/" + name + "/Tags/AmbiguityFilter");
         return tagResult.empty();
       }
     }
@@ -118,7 +123,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-    if (mt1Compatible && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (config.useMtp1() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var distance = mT2Estimate.avgTagDist;
       DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
@@ -142,8 +147,32 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     return tagResult.update(mt2Pose, mT2Estimate.timestampSeconds, devs);
   }
 
+  private OptionalGamePieceResult getRawCoralResult() {
+    if (getState() != LimelightState.CORAL) {
+      return coralResult.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return coralResult.empty();
+    }
+    var coralTx = t2d[4];
+    var coralTy = t2d[5];
+    if (coralTx == 0.0 || coralTy == 0.0) {
+      return coralResult.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
+
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+
+    return coralResult.update(coralTx, coralTy, timestamp);
+  }
+
   public OptionalDouble handoffTx() {
-    if (getState() != LimelightState.HELD_CORAL) {
+    if (getState() != LimelightState.HANDOFF) {
       return OptionalDouble.empty();
     }
 
@@ -166,8 +195,28 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     return OptionalDouble.of(tx);
   }
 
-  public void setClosestScoringReefTag(int tagID) {
-    closestScoringReefTag[0] = tagID;
+  private OptionalGamePieceResult getRawAlgaeResult() {
+    if (getState() != LimelightState.ALGAE) {
+      return algaeResult.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return algaeResult.empty();
+    }
+    var algaeTx = t2d[4];
+    var algaeTy = t2d[5];
+    if (algaeTx == 0.0 || algaeTy == 0.0) {
+      return algaeResult.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
+    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
+
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+
+    return algaeResult.update(algaeTx, algaeTy, timestamp);
   }
 
   @Override
@@ -176,10 +225,27 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     if (tagResult.isPresent()) {
       lastGoodTagResult = tagResult;
     }
+    coralResult = getRawCoralResult();
+    algaeResult = getRawAlgaeResult();
   }
 
   @Override
-  public void whileInState(LimelightState currentState) {
+  public void robotPeriodic() {
+    super.robotPeriodic();
+
+    if (DriverStation.isDisabled()) {
+      if (!updatedLimelightPos && !getCameraHealth().equals(CameraHealth.OFFLINE)) {
+        LimelightHelpers.setCameraPose_RobotSpace(
+            limelightTableName,
+            config.forward(),
+            config.right(),
+            config.up(),
+            config.roll(),
+            config.pitch(),
+            config.yaw());
+        updatedLimelightPos = true;
+      }
+    }
     DogLog.log("Vision/" + name + "/State", getState());
 
     var lastTagTimestamp =
@@ -190,18 +256,21 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     if (Timer.getTimestamp() - lastTagTimestamp > 30) {
       DogLog.logFault(
           limelightTableName + " has not seen a tag in the last 30 seconds", AlertType.kWarning);
+    } else {
+      DogLog.clearFault(limelightTableName + " has not seen a tag in the last 30 seconds");
     }
 
     LimelightHelpers.setPipelineIndex(limelightTableName, getState().pipelineIndex);
     switch (getState()) {
       case TAGS -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        if (limelightTimer.hasElapsed(5.0)) {
+          // LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+        }
         updateHealth(tagResult);
       }
-      case CLOSEST_REEF_TAG -> {
-        LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, closestScoringReefTag);
-        updateHealth(tagResult);
-      }
+      case CORAL -> updateHealth(coralResult);
+      case ALGAE -> updateHealth(algaeResult);
+      case HANDOFF -> updateHealth(coralResult);
     }
 
     // TODO: Remove once Limelights are upgraded
@@ -216,8 +285,18 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void autonomousInit() {
+    if (!config.model().equals(LimelightModel.THREE)) {
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }
     seedImuTimer.reset();
     seedImuTimer.start();
+  }
+
+  @Override
+  public void teleopInit() {
+    if (!config.model().equals(LimelightModel.THREE)) {
+      LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
+    }
   }
 
   private void updateHealth(ReusableOptional<?> result) {
@@ -256,61 +335,10 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     return cameraHealth;
   }
 
-  public void logCameraPositionCalibrationValues() {
-    var cameraPoseTargetSpace = LimelightHelpers.getCameraPose3d_TargetSpace(limelightTableName);
-    var robotPoseTargetSpace = RobotConfig.get().vision().robotPoseRelativeToCalibration();
-    var cameraRobotRelativePose =
-        getRobotRelativeCameraPosition(robotPoseTargetSpace, cameraPoseTargetSpace);
-    DogLog.log("CameraPositionCalibration/" + name + "/LL Right", cameraRobotRelativePose.getX());
-    DogLog.log("CameraPositionCalibration/" + name + "/LL Up", cameraRobotRelativePose.getY());
-    DogLog.log("CameraPositionCalibration/" + name + "/LL Forward", cameraRobotRelativePose.getZ());
-    DogLog.log(
-        "CameraPositionCalibration/" + name + "/LL Roll",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getX()));
-    DogLog.log(
-        "CameraPositionCalibration/" + name + "/LL Pitch",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getY()));
-    DogLog.log(
-        "CameraPositionCalibration/" + name + "/LL Yaw",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getZ()));
-  }
-
   public boolean isOnlineForTags() {
     return switch (getState()) {
-      case TAGS, CLOSEST_REEF_TAG, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
+      case TAGS, OFF -> getCameraHealth() != CameraHealth.OFFLINE;
       default -> false;
     };
-  }
-
-  private static Pose3d getRobotRelativeCameraPosition(
-      Pose3d robotPoseTargetSpace, Pose3d seenCameraPoseTargetSpace) {
-    // Positive X = Right
-    var cameraLeftRight = seenCameraPoseTargetSpace.getX();
-    // Positive Y = Down, so flipped for common sense
-    var cameraUpDown = -1 * seenCameraPoseTargetSpace.getY();
-    // Positive Z = Forward
-    var cameraForwardBackward = seenCameraPoseTargetSpace.getZ();
-    // Pitch rotates around left right axis (x according to LL coordinate systems)
-    var cameraPitch = seenCameraPoseTargetSpace.getRotation().getX();
-    // Roll rotates around forward backward axis (Z according to LL coordinate systems)
-    var cameraRoll = seenCameraPoseTargetSpace.getRotation().getZ();
-    // Yaw rotates around up down axis (y according to LL coordinate systems)
-    var cameraYaw = -1 * seenCameraPoseTargetSpace.getRotation().getY();
-
-    var robotLeftRight = robotPoseTargetSpace.getX();
-    var robotUpDown = robotPoseTargetSpace.getY();
-    var robotForwardBackward = robotPoseTargetSpace.getZ();
-    var robotPitch = robotPoseTargetSpace.getRotation().getY();
-    var robotRoll = robotPoseTargetSpace.getRotation().getX();
-    var robotYaw = robotPoseTargetSpace.getRotation().getZ();
-
-    var right = cameraLeftRight - robotLeftRight;
-    var up = cameraUpDown - robotUpDown;
-    var forward = cameraForwardBackward - robotForwardBackward;
-    var roll = cameraRoll - robotRoll;
-    var pitch = cameraPitch - robotPitch;
-    var yaw = cameraYaw - robotYaw;
-
-    return new Pose3d(right, up, forward, new Rotation3d(roll, pitch, yaw));
   }
 }

@@ -174,7 +174,6 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
     // Loop through 4 points
     // Delete 3 point data
     if (corners.length >= 8 && corners[0] != 0.0 && corners.length % 8 == 0) {
-
       for (int i = 0; i < corners.length; i = i + 8) {
         var centerX = (corners[i] + corners[i + 2]) / 2.0;
         var centerY = (corners[i + 1] + corners[i + 5]) / 2.0;
@@ -227,7 +226,6 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   }
 
   public boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
-
     if ((FmsUtil.isRedAlliance()
             && (coralPose.getX() < Units.inchesToMeters(603) || coralPose.getX() > 16.5))
         || ((!FmsUtil.isRedAlliance()

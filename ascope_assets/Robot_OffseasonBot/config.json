@@ -1,0 +1,20 @@
+{
+  "cameras": [],
+  "components": [],
+  "name": "Offseason Bot",
+  "position": [
+    0,
+    0,
+    0
+  ],
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    },
+    {
+      "axis": "z",
+      "degrees": 180
+    }
+  ]
+}

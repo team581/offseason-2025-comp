@@ -81,7 +81,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   }
 
   public OptionalGamePieceResult getAlgaeResult() {
-    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
+    return getState() == LimelightState.ALGAE ? algaeResult : algaeResult.empty();
   }
 
   public OptionalTagResult getTagResult() {
@@ -278,7 +278,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   @Override
   public void autonomousInit() {
     if (!limelightModel.equals(LimelightModel.THREE)) {
-
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
     seedImuTimer.reset();
@@ -288,7 +287,6 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   @Override
   public void teleopInit() {
     if (!limelightModel.equals(LimelightModel.THREE)) {
-
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
   }

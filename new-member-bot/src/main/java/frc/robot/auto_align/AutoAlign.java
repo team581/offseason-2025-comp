@@ -561,15 +561,11 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   public TagAlignState getTagAlignState() {
-    if (!vision.isAnyLeftScoringTagLimelightOnline()
-        && !vision.isAnyRightScoringTagLimelightOnline()) {
+    if (vision.isCameraOffline()) {
       return TagAlignState.ALL_CAMERAS_DEAD;
     }
 
-    if (vision.getLeftBackTagResult().isPresent()
-        || vision.getLeftFrontTagResult().isPresent()
-        || vision.getRightTagResult().isPresent()
-        || vision.getGamePieceTagResult().isPresent()) {
+    if (vision.getTagResult().isPresent()) {
       if (isAligned) {
         return TagAlignState.HAS_TAGS_IN_POSITION;
       }

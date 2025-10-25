@@ -167,7 +167,6 @@ public class PurePursuitPathTracker implements PathTracker {
                 .getTranslation()
                 .getDistance(points.get(0).poseSupplier.get().getTranslation())
             > STARTING_ROBOT_POSE_FAR_FROM_PATH_THRESHOLD) {
-
           requestNewLookaheadDistance(
               PurePursuitUtils.getDynamicLookaheadDistance(
                   startingRobotPose,

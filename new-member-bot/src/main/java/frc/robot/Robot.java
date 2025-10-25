@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.claw.ClawSubsystem;
+import frc.robot.climber.ClimberSubsystem;
+import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
@@ -15,30 +18,35 @@ import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
+import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends Base581Robot {
   private final Command autonomousCommand = Commands.none();
   private final Hardware hardware = new Hardware();
 
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+  private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor, elevator);
+  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor);
+  private final ClimberSubsystem climber =
+      new ClimberSubsystem(
+          hardware.climberClimbMotor,
+          hardware.climberCANcoder,
+          hardware.climberGrabMotor,
+          hardware.climberCANrange);
+
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
-  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve);
 
-  private final Limelight rightLimelight =
-      new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight backLimelight =
-      new Limelight("back", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight frontLimelight =
-      new Limelight("front", LimelightState.TAGS, LimelightModel.THREEG, true);
-  private final Limelight gpLimelight =
-      new Limelight("right", LimelightState.TAGS, LimelightModel.THREEG, true);
+  private final Limelight limelight =
+      new Limelight("main", LimelightState.TAGS, LimelightModel.THREEG, true);
 
-  private final VisionSubsystem vision =
-      new VisionSubsystem(imu, backLimelight, frontLimelight, rightLimelight, gpLimelight);
+  private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
+  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
 
   private final RobotManager robotManager =
-      new RobotManager(localization, autoAlign, vision, swerve);
+      new RobotManager(
+          claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
   private final RobotCommands actions = new RobotCommands(robotManager);
 
   public Robot() {
@@ -101,9 +109,10 @@ public class Robot extends Base581Robot {
         .leftBumper()
         .onTrue(actions.algaeReefIntakeCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+    hardware.driverController.rightBumper().onTrue(actions.intakeCoralCommand());
 
     hardware.driverController.y().onTrue(actions.netWaitCommand());
+    hardware.driverController.x().onTrue(actions.stowCommand());
     hardware.driverController.a().onTrue(actions.lowLineupCommand());
 
     hardware.driverController.povUp().onTrue(actions.climberSequenceForwardCommand());
@@ -113,6 +122,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.back().onTrue(localization.getZeroCommand());
 
     hardware.operatorController.a().onTrue(actions.rehomeElevatorCommand());
-    // hardware.operatorController.y().onTrue(actions.rehomeElevator/WristCommand());
+    hardware.operatorController.y().onTrue(actions.rehomeWristCommand());
   }
 }

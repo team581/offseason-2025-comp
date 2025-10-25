@@ -1,12 +1,12 @@
 package frc.robot.robot_manager.ground_manager;
 
-import com.ctre.phoenix6.hardware.CANdi;
-import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.intake.IntakeState;
 import frc.robot.intake.IntakeSubsystem;
@@ -21,8 +21,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;
 
-  private final CANdi topSensor;
-  private final CANdi bottomSensor;
+  private final DigitalInput topSensor;
+  private final DigitalInput bottomSensor;
 
   private final Debouncer topDebouncer = RobotConfig.get().singulator().topDebouncer();
   private final Debouncer bottomDebouncer = RobotConfig.get().singulator().bottonDebouncer();
@@ -37,8 +37,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
       IntakeSubsystem intake,
       DeploySubsystem deploy,
       SingulatorSubsystem singulator,
-      CANdi topSensor,
-      CANdi bottomSensor) {
+      DigitalInput topSensor,
+      DigitalInput bottomSensor) {
     super(
         SubsystemPriority.GROUND_MANAGER,
         RobotBase.isSimulation() ? GroundState.IDLE_NO_GP : GroundState.DEPLOY_NOT_HOMED);
@@ -63,7 +63,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
-      case HANDOFF_RELEASE, OUTTAKING -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
+      case HANDOFF_RELEASE -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
 
       // TODO: Adjust timeouts and make work for INTAKE_THEN_HANDOFF
       case UNJAM_LEFT, UNJAM_RIGHT -> timeout(0) ? GroundState.INTAKING : currentState;
@@ -131,15 +131,16 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
-    if (RobotBase.isSimulation()) {
+    topRaw = topSensor.get();
+    bottomRaw = bottomSensor.get();
+    if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       topRaw =
           switch (getState()) {
             case HANDOFF_RELEASE -> !timeout(0.5);
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
             case HANDOFF_WAIT -> true;
+            case OUTTAKING -> false;
             case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(2);
             default -> false;
           };
@@ -150,6 +151,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
             case HANDOFF_WAIT -> true;
+            case OUTTAKING -> false;
             case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(1.9);
             default -> false;
           };
@@ -189,6 +191,10 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
     setState(GroundState.INTAKING);
   }
 
+  public void outtakeRequest() {
+    setState(GroundState.OUTTAKING);
+  }
+
   public void stowRequest() {
     if (getTopHasGP()) {
       setState(GroundState.IDLE_GP);
@@ -201,7 +207,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
         || getState() == GroundState.HANDOFF_WAIT
-        || getState() == GroundState.HANDOFF_RELEASE) {
+        || getState() == GroundState.HANDOFF_RELEASE
+        || !getTopHasGP()) {
       setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
     } else {
       setState(GroundState.HANDOFF_WAIT);

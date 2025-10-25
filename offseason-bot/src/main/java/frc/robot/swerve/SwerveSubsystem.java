@@ -404,7 +404,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private PolarChassisSpeeds getDriveToPoseSpeeds(
       Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
-
     // Calculate x and y velocities
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -433,7 +432,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
         && Math.hypot(fieldRelativeSpeeds.vxMetersPerSecond, fieldRelativeSpeeds.vyMetersPerSecond)
             > 0.1
         && distanceToGoalMeters > 0.1) {
-
       var wantedDirection =
           180 + MathHelpers.getDriveDirection(currentPose, targetPose).getDegrees();
       var currentSpeedDirection =

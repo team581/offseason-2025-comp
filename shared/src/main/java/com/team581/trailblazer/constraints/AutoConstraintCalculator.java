@@ -106,7 +106,6 @@ public class AutoConstraintCalculator {
       TimestampedChassisSpeeds inputSpeeds,
       TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
-
     double inputTotalSpeed =
         Math.sqrt(
             Math.pow(inputSpeeds.vxMetersPerSecond, 2)
@@ -183,7 +182,6 @@ public class AutoConstraintCalculator {
       TimestampedChassisSpeeds inputSpeeds,
       TimestampedChassisSpeeds previousSpeeds,
       AutoConstraintOptions options) {
-
     double currentAngularSpeed = inputSpeeds.omegaRadiansPerSecond;
     double previousAngularSpeed = previousSpeeds.omegaRadiansPerSecond;
 

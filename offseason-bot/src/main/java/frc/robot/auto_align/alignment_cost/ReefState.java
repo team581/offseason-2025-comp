@@ -1,9 +1,12 @@
-package frc.robot.auto_align;
+package frc.robot.auto_align.alignment_cost;
 
 import com.team581.GlobalConfig;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
+import frc.robot.auto_align.poses.ReefSide;
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -77,6 +80,21 @@ public class ReefState {
   public void addAlgae(ReefSide side) {
     removedAlgae.remove(side);
     DogLog.log("ReefState/RemovedAlgae", removedAlgae.toArray(ReefSide[]::new));
+  }
+
+  public ReefPipeLevel getHighestAvailableLevel(ReefSide closestSide) {
+    if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L4)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L4)) {
+      return ReefPipeLevel.L4;
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L3)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L3)) {
+      return ReefPipeLevel.L3;
+    } else if (!isCoralScored(closestSide.leftPipe, ReefPipeLevel.L2)
+        || !isCoralScored(closestSide.rightPipe, ReefPipeLevel.L2)) {
+      return ReefPipeLevel.L2;
+    } else {
+      return ReefPipeLevel.L1;
+    }
   }
 
   public boolean isCoralScored(ReefPipe pipe, ReefPipeLevel level) {

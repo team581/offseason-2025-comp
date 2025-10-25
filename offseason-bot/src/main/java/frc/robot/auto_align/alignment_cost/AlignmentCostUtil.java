@@ -1,4 +1,4 @@
-package frc.robot.auto_align.tag_align;
+package frc.robot.auto_align.alignment_cost;
 
 import com.team581.math.MathHelpers;
 import edu.wpi.first.math.MathUtil;
@@ -6,17 +6,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.auto_align.AutoAlign;
-import frc.robot.auto_align.ReefPipe;
-import frc.robot.auto_align.ReefPipeLevel;
-import frc.robot.auto_align.ReefSide;
-import frc.robot.auto_align.ReefState;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
+import frc.robot.auto_align.poses.ReefSide;
 import frc.robot.config.FeatureFlags;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import java.util.Comparator;
 
 public class AlignmentCostUtil {
-  private static final double REEF_STATE_COST = 0.3;
+  private static final double REEF_STATE_COST = 10;
   private static final double ALGAE_STATE_COST = 0.3;
 
   private static final double DRIVE_DIRECTION_SCALAR = 0.02;
@@ -67,7 +66,6 @@ public class AlignmentCostUtil {
 
   public static double getCoralAlignCost(
       Pose2d target, Pose2d robotPose, ChassisSpeeds robotVelocity) {
-
     var distanceCost = target.getTranslation().getDistance(robotPose.getTranslation());
     if (target.getTranslation().equals(Translation2d.kZero)
         || robotPose.getTranslation().equals(Translation2d.kZero)) {
@@ -98,6 +96,8 @@ public class AlignmentCostUtil {
   private final Comparator<ReefPipe> pipeL1Comparator = createReefPipeComparator(ReefPipeLevel.L1);
   private final Comparator<ReefSide> algaeComparator = createAlgaeComparator();
 
+  private ReefSide closestReefSide = ReefSide.SIDE_AB;
+
   public AlignmentCostUtil(
       LocalizationSubsystem localization, SwerveSubsystem swerve, ReefState reefState) {
     this.localization = localization;
@@ -105,7 +105,8 @@ public class AlignmentCostUtil {
     this.reefState = reefState;
   }
 
-  public Comparator<ReefPipe> getReefPipeComparator(ReefPipeLevel level) {
+  public Comparator<ReefPipe> getReefPipeComparator(ReefPipeLevel level, ReefSide closestReefSide) {
+    this.closestReefSide = closestReefSide;
     return switch (level) {
       case L4 -> pipeL4Comparator;
       case L3 -> pipeL3Comparator;
@@ -122,7 +123,6 @@ public class AlignmentCostUtil {
 
   /** Helper function to create a singleton comparator for each level. */
   private Comparator<ReefPipe> createReefPipeComparator(ReefPipeLevel level) {
-
     return switch (level) {
       case L1 -> {
         yield Comparator.comparingDouble(
@@ -149,9 +149,8 @@ public class AlignmentCostUtil {
       default -> {
         yield Comparator.comparingDouble(
             pipe -> {
-              var lookaheadPose = localization.getLookaheadPose(0.3);
-              var closestReefSide = AutoAlign.getClosestReefSide(lookaheadPose);
-              if (closestReefSide.leftPipe != pipe && closestReefSide.rightPipe != pipe) {
+              if (!closestReefSide.leftPipe.equals(pipe)
+                  && !closestReefSide.rightPipe.equals(pipe)) {
                 return Double.MAX_VALUE;
               }
               return getAlignCost(

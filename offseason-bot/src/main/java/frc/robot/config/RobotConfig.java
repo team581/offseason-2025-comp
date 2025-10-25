@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Pose3d;
 
 public record RobotConfig(
     IntakeConfig intake,
@@ -17,7 +16,6 @@ public record RobotConfig(
     VisionConfig vision,
     LightsConfig lights,
     SwerveConfig swerve) {
-
   public record IntakeConfig(
       String canBusName,
       int motorId,
@@ -37,8 +35,8 @@ public record RobotConfig(
       String canBusName,
       int leftMotorId,
       int rightMotorId,
-      int topCandiId,
-      int bottomCandiId,
+      int topSensorPortId,
+      int bottonSensorPortId,
       Debouncer topDebouncer,
       Debouncer bottonDebouncer,
       TalonFXConfiguration leftMotorConfig,
@@ -74,14 +72,18 @@ public record RobotConfig(
       TalonFXConfiguration motorConfig) {}
 
   public record ArmConfig(
-      String canBusName, int motorId, TalonFXConfiguration motorConfig, double homingPosition) {}
+      String canBusName,
+      int motorId,
+      double minAngle,
+      double maxAngle,
+      TalonFXConfiguration motorConfig,
+      double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,
       double thetaStdDev,
-      Pose3d robotPoseRelativeToCalibration,
-      Pose3d leftLimelightPosition,
-      Pose3d rightLimelightPosition) {}
+      CameraConfig leftLimelightConfig,
+      CameraConfig rightLimelightConfig) {}
 
   public record LightsConfig(String canBusName, int candleId) {}
 

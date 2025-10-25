@@ -7,11 +7,10 @@ public enum SingulatorState {
   UNJAM_LEFT_ONLY(UNTUNED),
 
   STOPPED(0.0),
-  IDLE(UNTUNED),
+  IDLE(0.0),
   INTAKING(6),
-  OUTTAKING(UNTUNED),
-  L1_SCORE(UNTUNED),
-  HANDOFF(UNTUNED);
+  OUTTAKING(-1.0),
+  HANDOFF(0.0);
 
   public final double voltsLeft;
   public final double voltsRight;

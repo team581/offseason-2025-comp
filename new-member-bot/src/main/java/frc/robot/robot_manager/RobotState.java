@@ -5,6 +5,7 @@ import java.util.Map;
 
 public enum RobotState {
   STARTING_POSITION(false, ClawGamePiece.NONE),
+  STARTING_POSITION_CORAL(false, ClawGamePiece.CORAL),
   // Stowed states
   CLAW_EMPTY(false, ClawGamePiece.NONE),
   CLAW_CORAL(false, ClawGamePiece.CORAL),
@@ -48,6 +49,7 @@ public enum RobotState {
 
   // Misc states
   REHOME_ELEVATOR(true, ClawGamePiece.NONE),
+  REHOME_WRIST(true, ClawGamePiece.NONE),
   UNJAM(false, ClawGamePiece.NONE);
 
   public final boolean climbingOrRehoming;

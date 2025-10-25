@@ -7,6 +7,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -34,16 +35,16 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             ? candiValue == S1StateValue.Low
             : candiValue != S1StateValue.Low;
 
-    if (RobotBase.isSimulation()) {
+    if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       sensorRaw =
           switch (getState()) {
             case CORAL_HANDOFF -> timeout(0.5);
             case IDLE_NO_GP -> false;
             case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
-            case INTAKING_ALGAE -> timeout(1);
-            case SCORE_CORAL -> !timeout(0.5);
+            case INTAKING_ALGAE -> timeout(1.5);
+            case SCORE_CORAL -> !timeout(0.2);
+            case SCORE_CORAL_L1 -> !timeout(0.4);
             case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
-            case LOLLIPOP_CORAL_INTAKE -> timeout(1.7);
           };
     }
 
@@ -65,31 +66,31 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
         motor.disable();
       }
       case IDLE_W_ALGAE -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(12.0);
       }
       case IDLE_W_CORAL -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(0.6);
       }
       case INTAKING_ALGAE -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(12.0);
       }
       case CORAL_HANDOFF -> {
-        motor.setVoltage(0.0);
+        motor.setVoltage(12.0);
       }
       case SCORE_ALGAE_NET -> {
-        motor.setVoltage(0);
+        motor.setVoltage(-8);
       }
       case SCORE_ALGAE_PROCESSOR -> {
-        motor.setVoltage(0);
+        motor.setVoltage(-5);
       }
       case SCORE_CORAL -> {
-        motor.setVoltage(0);
+        motor.setVoltage(-4);
+      }
+      case SCORE_CORAL_L1 -> {
+        motor.setVoltage(-1.5);
       }
       case OUTTAKING -> {
-        motor.setVoltage(0);
-      }
-      case LOLLIPOP_CORAL_INTAKE -> {
-        motor.setVoltage(0);
+        motor.setVoltage(-6);
       }
     }
   }

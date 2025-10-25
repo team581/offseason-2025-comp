@@ -26,7 +26,6 @@ import frc.robot.vision.VisionSubsystem;
 import java.util.Comparator;
 
 public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
-
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
       ImmutableList.copyOf(ReefSide.values());
   public static final ImmutableList<ReefPipe> ALL_REEF_PIPES =
