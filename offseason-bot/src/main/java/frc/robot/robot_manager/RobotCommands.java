@@ -43,6 +43,11 @@ public class RobotCommands {
         .withName("AlgaeIntakeGroundCommand");
   }
 
+  public Command outtakeRequestCommand() {
+    return Commands.runOnce(robot.groundManager::outtakeRequest, gmRequirements)
+        .withName("OuttakeRequestCommand");
+  }
+
   public Command stowCommand() {
     return Commands.runOnce(robot::stowRequest, bothRequirements).withName("StowCommand");
   }
@@ -102,6 +107,11 @@ public class RobotCommands {
 
   public Command unjamCommand() {
     return Commands.runOnce(robot::unjamRequest, bothRequirements).withName("UnjamCommand");
+  }
+
+  public Command stopOuttakeRequest() {
+    return Commands.runOnce(robot::stopOuttakeRequest, gmRequirements)
+        .withName("StopOuttakeRequestCommand");
   }
 
   public Command rehomeDeployCommand() {

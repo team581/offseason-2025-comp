@@ -63,7 +63,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
       case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
-      case HANDOFF_RELEASE, OUTTAKING -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
+      case HANDOFF_RELEASE -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
 
       // TODO: Adjust timeouts and make work for INTAKE_THEN_HANDOFF
       case UNJAM_LEFT, UNJAM_RIGHT -> timeout(0) ? GroundState.INTAKING : currentState;
@@ -140,6 +140,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
             case HANDOFF_WAIT -> true;
+            case OUTTAKING -> false;
             case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(2);
             default -> false;
           };
@@ -150,6 +151,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
             case HANDOFF_WAIT -> true;
+            case OUTTAKING -> false;
             case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(1.9);
             default -> false;
           };
@@ -187,6 +189,10 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
   public void intakeRequest() {
     setState(GroundState.INTAKING);
+  }
+
+  public void outtakeRequest() {
+    setState(GroundState.OUTTAKING);
   }
 
   public void stowRequest() {
