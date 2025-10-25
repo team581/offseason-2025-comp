@@ -201,7 +201,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
     if (getState() == GroundState.INTAKING
         || DriverStation.isAutonomous()
         || getState() == GroundState.HANDOFF_WAIT
-        || getState() == GroundState.HANDOFF_RELEASE) {
+        || getState() == GroundState.HANDOFF_RELEASE||!getTopHasGP()) {
       setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
     } else {
       setState(GroundState.HANDOFF_WAIT);
