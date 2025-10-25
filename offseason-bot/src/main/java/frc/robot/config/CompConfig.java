@@ -242,9 +242,9 @@ class CompConfig {
                   0.1045038296,
                   -0.2494524094,
                   0.5819300782,
-                  0.0,
-                  0.0,
-                  0.0),
+                  -20.0,
+                  -60.0,
+                  90.0),
               // Right Camera Config
               new CameraConfig(
                   LimelightModel.THREEG,
@@ -252,9 +252,9 @@ class CompConfig {
                   0.0956578478,
                   0.2345115452,
                   0.5819625648,
-                  0.0,
-                  0.0,
-                  0.0)),
+                  -20.0,
+                  60.0,
+                  -90.0)),
           new LightsConfig(CANIVORE_NAME, 0),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 
