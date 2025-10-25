@@ -17,8 +17,8 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
 
-
-  public ClawSubsystem(TalonFX motor, double minVelocity, double minVelocityTimeout, double debounceTime) {
+  public ClawSubsystem(
+      TalonFX motor, double minVelocity, double minVelocityTimeout, double debounceTime) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
@@ -33,7 +33,6 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   protected void collectInputs() {
     hasSeenMinVelocity = false;
     timeout.reset();
-
   }
 
   public void reset() {
@@ -41,10 +40,11 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
     timeout.reset();
   }
 
-
-
   public boolean getHasGP(double motorVelocity, double maxVelocity) {
-    hasSeenMinVelocity = hasSeenMinVelocity || timeout.hasElapsed(minVelocityTimeout) || motorVelocity >= minVelocity;
+    hasSeenMinVelocity =
+        hasSeenMinVelocity
+            || timeout.hasElapsed(minVelocityTimeout)
+            || motorVelocity >= minVelocity;
     return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
   }
 
