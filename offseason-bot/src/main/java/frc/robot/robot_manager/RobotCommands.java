@@ -47,6 +47,11 @@ public class RobotCommands {
     return Commands.runOnce(robot::stowRequest, bothRequirements).withName("StowCommand");
   }
 
+  public Command forceNextScoreSequenceCommand() {
+    return Commands.runOnce(robot::forceNextScoringStateRequest, bothRequirements)
+        .withName("ForceNextScoreSequenceCommand");
+  }
+
   public Command highLineupCommand() {
     return Commands.runOnce(robot::highLineupRequest, bothRequirements)
         .withName("HighLineupCommand");

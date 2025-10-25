@@ -149,7 +149,7 @@ public class Robot extends Base581Robot {
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());
 
     hardware.driverController.y().onTrue(actions.rehomeDeployCommand());
-    hardware.driverController.x().onTrue(actions.rehomeElevatorCommand());
+    hardware.driverController.x().onTrue(actions.forceNextScoreSequenceCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
   }
 }
