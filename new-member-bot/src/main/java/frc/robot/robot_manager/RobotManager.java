@@ -111,7 +111,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
           cameraOnlineAndFarEnoughFromReef()
-              ? currentState.getNextAlgaeIntakeState()
+              ? RobotState.CLAW_ALGAE
               : currentState;
     };
   }
@@ -350,6 +350,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   @Override
   protected void whileInState(RobotState currentState) {
+    DogLog.log("RobotManager/ElevatorAtGoal", elevator.atGoal());
+    DogLog.log("RobotManager/WristAtGoal", wrist.atGoal());
+
     switch (currentState) {
       case ALGAE_INTAKE_L2_APPROACH,
           ALGAE_INTAKE_L3_APPROACH,
@@ -365,6 +368,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       default -> {}
     }
+
+    wrist.customPeriodic();
+    elevator.customPeriodic();
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {

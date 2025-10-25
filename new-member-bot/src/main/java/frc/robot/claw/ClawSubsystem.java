@@ -17,7 +17,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
 
-  private boolean clawHasGP = false;
+  private boolean velocityDetectsGP = false;
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
@@ -38,7 +38,12 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   }
 
   public boolean getHasGP() {
-    return Robot.isSimulation() ? timeout(1.0) : clawHasGP;
+    return Robot.isSimulation() ? switch (getState()) {
+      case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1.0);
+      case SCORE_CORAL, SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(1.0);
+      case IDLE_NO_GP  -> false;
+      case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
+    } : velocityDetectsGP;
   }
 
   private boolean getHasGP(double motorVelocity, double maxVelocity) {
@@ -93,9 +98,9 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   public void whileInState(ClawState currentState) {
-    clawHasGP =
+    velocityDetectsGP =
         getHasGP(motor.getVelocity().getValueAsDouble(), RobotConfig.get().claw().gpMaxVelocity());
-    DogLog.log("Claw/HasGP", clawHasGP);
+    DogLog.log("Claw/HasGP", getHasGP());
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
