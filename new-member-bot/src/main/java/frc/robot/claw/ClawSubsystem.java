@@ -18,8 +18,10 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private boolean hasSeenMinVelocity = false;
   private boolean velocityDetectsGp = false;
 
-  private DoubleSubscriber tunableMaxVelocity = DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());;
-  private DoubleSubscriber tunableMinVelocity = DogLog.tunable("Claw/MinVelocity", 5.0);
+  private final DoubleSubscriber tunableMaxVelocity =
+      DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());
+  ;
+  private final DoubleSubscriber tunableMinVelocity = DogLog.tunable("Claw/MinVelocity", 5.0);
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
