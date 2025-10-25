@@ -1,18 +1,16 @@
 package frc.robot.autos.auto_state_machines;
 
-import java.util.ArrayDeque;
-import java.util.List;
-
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
+import java.util.ArrayDeque;
+import java.util.List;
 
 public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
@@ -25,11 +23,10 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
   private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
       new ArrayDeque<StationAndLollipop5pcAutoState>(
           List.of(
-              //StationAndLollipop5pcAutoState.I_L4_LINEUP,
+              // StationAndLollipop5pcAutoState.I_L4_LINEUP,
               StationAndLollipop5pcAutoState.J_L4_LINEUP,
               StationAndLollipop5pcAutoState.K_L4_LINEUP,
-              StationAndLollipop5pcAutoState.L_L4_LINEUP
-              ));
+              StationAndLollipop5pcAutoState.L_L4_LINEUP));
 
   public void createPath(Pose2d goalPose) {
 
@@ -68,97 +65,108 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
-          case I_L4_LINEUP ->
-              trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.I_L4_PREPARE
-                  : currentState;
-          case I_L4_PREPARE ->
-              trailblazer.followSegmentIsFinished(path) && superstructureAtGoal()
-                  ? StationAndLollipop5pcAutoState.I_L4_SCORE
-                  : currentState;
-          case I_L4_SCORE ->
-              !robotManager.claw.getHasGP()
-                  ? StationAndLollipop5pcAutoState.I_L4_POST_SCORING
-                  : currentState;
-          case I_L4_POST_SCORING ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.PRE_INTAKING
-                  : currentState;
+      case I_L4_LINEUP ->
+          trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.I_L4_PREPARE
+              : currentState;
+      case I_L4_PREPARE ->
+          trailblazer.followSegmentIsFinished(path) && superstructureAtGoal()
+              ? StationAndLollipop5pcAutoState.I_L4_SCORE
+              : currentState;
+      case I_L4_SCORE ->
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.I_L4_POST_SCORING
+              : currentState;
+      case I_L4_POST_SCORING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
+              : currentState;
 
-          case PRE_INTAKING ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.INTAKING
-                  : currentState;
-          case INTAKING ->
-              (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
-                      || robotManager.claw.getHasGP()
-                  ? StationAndLollipop5pcAutoState.POST_INTAKING
-                  : currentState;
-          case POST_INTAKING ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? getNextReefPosition()
-                  : currentState;
-                  case J_L4_LINEUP ->
-                  trailblazer.followSegmentIsFinished(path)
-                      ? StationAndLollipop5pcAutoState.J_L4_PREPARE
-                      : currentState;
-              case J_L4_PREPARE ->
-                  superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                      ? StationAndLollipop5pcAutoState.J_L4_SCORE
-                      : currentState;
-              case J_L4_SCORE ->
-                  !robotManager.claw.getHasGP()
-                      ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING
-                      : currentState;
-              case J_L4_POST_SCORING ->
-                  superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                      ? StationAndLollipop5pcAutoState.PRE_INTAKING
-                      : currentState;
-          case K_L4_LINEUP ->
-              trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.K_L4_PREPARE
-                  : currentState;
-          case K_L4_PREPARE ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.K_L4_SCORE
-                  : currentState;
-          case K_L4_SCORE ->
-              !robotManager.claw.getHasGP()
-                  ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
-                  : currentState;
-          case K_L4_POST_SCORING ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.PRE_INTAKING
-                  : currentState;
+      case PRE_INTAKING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.INTAKING
+              : currentState;
+      case INTAKING ->
+          (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
+                  || robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.POST_INTAKING
+              : currentState;
+      case POST_INTAKING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? getNextReefPosition()
+              : currentState;
+      case J_L4_LINEUP ->
+          trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.J_L4_PREPARE
+              : currentState;
+      case J_L4_PREPARE ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.J_L4_SCORE
+              : currentState;
+      case J_L4_SCORE ->
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING
+              : currentState;
+      case J_L4_POST_SCORING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
+              : currentState;
+      case K_L4_LINEUP ->
+          trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.K_L4_PREPARE
+              : currentState;
+      case K_L4_PREPARE ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.K_L4_SCORE
+              : currentState;
+      case K_L4_SCORE ->
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
+              : currentState;
+      case K_L4_POST_SCORING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
+              : currentState;
 
-          case L_L4_LINEUP ->
-              trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.L_L4_PREPARE
-                  : currentState;
-          case L_L4_PREPARE ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.L_L4_SCORE
-                  : currentState;
-          case L_L4_SCORE ->
-              !robotManager.claw.getHasGP()
-                  ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
-                  : currentState;
-          case L_L4_POST_SCORING ->
-              superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-                  ? StationAndLollipop5pcAutoState.PRE_INTAKING
-                  : currentState;
-          case A_L4_LINEUP -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case A_L4_POST_SCORING -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case A_L4_PREPARE -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case A_L4_SCORE -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case B_L4_LINEUP -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case B_L4_POST_SCORING -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case B_L4_PREPARE -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case B_L4_SCORE -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case POST_LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          case PRE_LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-          default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
+      case L_L4_LINEUP ->
+          trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.L_L4_PREPARE
+              : currentState;
+      case L_L4_PREPARE ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.L_L4_SCORE
+              : currentState;
+      case L_L4_SCORE ->
+          !robotManager.claw.getHasGP()
+              ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
+              : currentState;
+      case L_L4_POST_SCORING ->
+          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+              ? StationAndLollipop5pcAutoState.PRE_INTAKING
+              : currentState;
+      case A_L4_LINEUP ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case A_L4_POST_SCORING ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case A_L4_PREPARE ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case A_L4_SCORE ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case B_L4_LINEUP ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case B_L4_POST_SCORING ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case B_L4_PREPARE ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case B_L4_SCORE ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case LOLLIPOP_2 ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case POST_LOLLIPOP_2 ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      case PRE_LOLLIPOP_2 ->
+          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
+      default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
     };
   }
 
@@ -276,5 +284,4 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
       }
     }
   }
-
 }
