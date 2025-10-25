@@ -16,7 +16,6 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final Timer timeout = new Timer();
   private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
-
   private boolean velocityDetectsGp = false;
 
   private DoubleSubscriber tunableMaxVelocity = DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());;
