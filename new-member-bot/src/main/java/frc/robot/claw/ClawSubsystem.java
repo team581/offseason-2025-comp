@@ -4,49 +4,43 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
-  private final double minVelocity;
-  private final double minVelocityTimeout;
-  private final Timer timeout = new Timer();
-  private final Debouncer debouncer;
+  private double minVelocity;
+  private double minVelocityTimeout;
+  private Timer timeout = new Timer();
+  private Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
 
   public ClawSubsystem(
-      TalonFX motor, double minVelocity, double minVelocityTimeout, double debounceTime) {
+      TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
-    this.minVelocity = minVelocity;
-    this.minVelocityTimeout = minVelocityTimeout;
-    this.debouncer = new Debouncer(debounceTime, DebounceType.kRising);
-    timeout.start();
   }
 
   @Override
   protected void collectInputs() {
-    hasSeenMinVelocity = false;
-    timeout.reset();
-  }
+     }
 
-  public void reset() {
-    hasSeenMinVelocity = false;
-    timeout.reset();
-  }
+     public void reset() {
+      hasSeenMinVelocity = false;
+      timeout.reset();
+    }
 
-  public boolean getHasGP(double motorVelocity, double maxVelocity) {
-    hasSeenMinVelocity =
-        hasSeenMinVelocity
-            || timeout.hasElapsed(minVelocityTimeout)
-            || motorVelocity >= minVelocity;
-    return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
-  }
+     public boolean hasGamePiece(double motorVelocity, double maxVelocity) {
+      hasSeenMinVelocity =
+          hasSeenMinVelocity
+              || timeout.hasElapsed(minVelocityTimeout)
+              || motorVelocity >= minVelocity;
+
+      return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
+    }
 
   public void setState(ClawState newState) {
     setStateFromRequest(newState);
