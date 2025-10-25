@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.S2StateValue;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.DSOptions;
@@ -22,8 +23,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
   public final DeploySubsystem deploy;
   public final SingulatorSubsystem singulator;
 
-  private final CANdi topSensor;
-  private final CANdi bottomSensor;
+  private final DigitalInput topSensor;
+  private final DigitalInput bottomSensor;
 
   private final Debouncer topDebouncer = RobotConfig.get().singulator().topDebouncer();
   private final Debouncer bottomDebouncer = RobotConfig.get().singulator().bottonDebouncer();
@@ -38,8 +39,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
       IntakeSubsystem intake,
       DeploySubsystem deploy,
       SingulatorSubsystem singulator,
-      CANdi topSensor,
-      CANdi bottomSensor) {
+      DigitalInput topSensor,
+      DigitalInput bottomSensor) {
     super(
         SubsystemPriority.GROUND_MANAGER,
         RobotBase.isSimulation() ? GroundState.IDLE_NO_GP : GroundState.DEPLOY_NOT_HOMED);
@@ -132,8 +133,8 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
   @Override
   protected void collectInputs() {
-    topRaw = topSensor.getS2State().getValue() == S2StateValue.High;
-    bottomRaw = bottomSensor.getS2State().getValue() == S2StateValue.High;
+    topRaw = topSensor.get();
+    bottomRaw = bottomSensor.get();
     if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       topRaw =
           switch (getState()) {
