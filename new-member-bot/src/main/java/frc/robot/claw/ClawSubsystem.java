@@ -41,7 +41,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
     return Robot.isSimulation() ? switch (getState()) {
       case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1.0);
       case SCORE_CORAL, SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(1.0);
-      case IDLE_NO_GP  -> false;
+      case IDLE_NO_GP, UNTUNED  -> false;
       case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
     } : velocityDetectsGP;
   }
@@ -62,36 +62,13 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   @Override
   protected void afterTransition(ClawState newState) {
     switch (newState) {
-      case IDLE_NO_GP -> {
-        reset();
-        motor.disable();
-      }
-      case IDLE_W_ALGAE -> {
-        motor.setVoltage(0.0);
-      }
-      case IDLE_W_CORAL -> {
-        motor.setVoltage(0.0);
-      }
-      case INTAKING_ALGAE -> {
-        reset();
-        motor.setVoltage(0.0);
-      }
-      case INTAKING_CORAL -> {
-        reset();
-        motor.setVoltage(0.0);
-      }
-      case SCORE_ALGAE_NET -> {
-        motor.setVoltage(0.0);
-      }
-      case SCORE_ALGAE_PROCESSOR -> {
-        motor.setVoltage(0.0);
-      }
-      case SCORE_CORAL -> {
-        motor.setVoltage(0.0);
-      }
-      case OUTTAKING -> {
-        motor.setVoltage(0.0);
-      }
+      case IDLE_NO_GP, INTAKING_CORAL, INTAKING_ALGAE -> reset();
+      default -> {}
+    }
+    if (newState.volts == 0.0) {
+      motor.disable();
+    } else {
+      motor.setVoltage(newState.volts);
     }
   }
 
