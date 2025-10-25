@@ -38,7 +38,7 @@ class CompConfig {
           new ClawConfig(
               RIO_CAN_NAME,
               16,
-              0.0,
+              30.0,
               new Debouncer(0),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -48,11 +48,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))
-                  .withTorqueCurrent(
-                      new TorqueCurrentConfigs()
-                          .withPeakForwardTorqueCurrent(0.0)
-                          .withPeakReverseTorqueCurrent(0.0))),
+                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               CANIVORE_NAME,
               19,
@@ -60,7 +56,7 @@ class CompConfig {
               21,
               22,
               0.0,
-              0.0,
+              90.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
