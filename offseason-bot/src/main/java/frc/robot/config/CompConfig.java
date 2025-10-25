@@ -95,7 +95,6 @@ class CompConfig {
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
-
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(100.0)
@@ -135,7 +134,7 @@ class CompConfig {
               28,
               29,
               9,
-            8,
+              8,
               new Debouncer(0.0),
               new Debouncer(0.0),
               new TalonFXConfiguration()
