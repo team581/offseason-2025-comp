@@ -39,7 +39,7 @@ public enum Points {
   PRE_LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180))),
   // -away from LP 2 pose, idle state
 
-  PRE_I_L4(ReefPipe.PIPE_I.getPose(frc.robot.auto_align.poses.ReefPipeLevel.RAISING)),
+  PRE_I_L4(ReefPipe.PIPE_I.getPose(ReefPipeLevel.RAISING)),
   PRE_J_L4(ReefPipe.PIPE_J.getPose(ReefPipeLevel.RAISING)),
   // -robot idle state, a little before I/J pose
   PRE_K_L4(ReefPipe.PIPE_K.getPose(ReefPipeLevel.RAISING)),

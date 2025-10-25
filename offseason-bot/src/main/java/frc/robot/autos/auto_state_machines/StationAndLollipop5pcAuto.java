@@ -144,7 +144,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
           throw new UnsupportedOperationException("Unimplemented case: " + currentState);
       case I_L4_SCORING ->
           throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-      default -> throw new IllegalArgumentException("Unexpected value: " + currentState);
     };
   }
 
