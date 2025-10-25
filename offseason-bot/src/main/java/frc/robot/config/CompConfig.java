@@ -100,7 +100,7 @@ class CompConfig {
                   // TODO: BRINGUP: SET TO ZERO AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(200.0)
+                          .withKP(0.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))),
@@ -181,7 +181,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // TODO: BRINGUP: REMOVE VALUES AND TUNE
-                          .withKP(30.0)
+                          .withKP(0.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
@@ -189,8 +189,8 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES AND TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(300.0)
-                          .withMotionMagicCruiseVelocity(320.0))
+                          .withMotionMagicAcceleration(9999999.0)
+                          .withMotionMagicCruiseVelocity(9999999.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -209,7 +209,7 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(10.0)
+                          .withKP(0.0)
                           .withKV(0.0)
                           .withKD(0.0)
                           .withKG(0.0)
@@ -217,8 +217,8 @@ class CompConfig {
                   // TODO: BRINGUP: REMOVE VALUES
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(100.0)
-                          .withMotionMagicCruiseVelocity(100.0))
+                          .withMotionMagicAcceleration(999999.0)
+                          .withMotionMagicCruiseVelocity(999999.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -229,7 +229,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
               // TODO: BRINGUP: RETUNE
-              0.0),
+              -90.0),
           new VisionConfig(
               0.005,
               0.8,
