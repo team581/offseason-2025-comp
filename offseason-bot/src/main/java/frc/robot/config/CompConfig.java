@@ -254,7 +254,7 @@ class CompConfig {
                   -20.0,
                   60.0,
                   -90.0)),
-          new LightsConfig(CANIVORE_NAME, 0),
+          new LightsConfig(CANIVORE_NAME, 17),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 
   private CompConfig() {}
