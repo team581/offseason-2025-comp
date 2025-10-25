@@ -6,8 +6,6 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,7 +13,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.CameraConfig;
 import frc.robot.config.FeatureFlags;
-import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
@@ -47,9 +44,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   private double angularVelocity = 0.0;
   private boolean updatedLimelightPos = false;
 
-  public Limelight(
-      String name,
-      LimelightState initialState, CameraConfig config) {
+  public Limelight(String name, LimelightState initialState, CameraConfig config) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
@@ -240,8 +235,15 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
     if (DriverStation.isDisabled()) {
       if (!updatedLimelightPos && !getCameraHealth().equals(CameraHealth.OFFLINE)) {
-        LimelightHelpers.setCameraPose_RobotSpace(limelightTableName, config.forward(), config.right(), config.up(), config.roll(), config.pitch(), config.yaw());
-      updatedLimelightPos = true;
+        LimelightHelpers.setCameraPose_RobotSpace(
+            limelightTableName,
+            config.forward(),
+            config.right(),
+            config.up(),
+            config.roll(),
+            config.pitch(),
+            config.yaw());
+        updatedLimelightPos = true;
       }
     }
     DogLog.log("Vision/" + name + "/State", getState());
@@ -339,5 +341,4 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       default -> false;
     };
   }
-
 }
