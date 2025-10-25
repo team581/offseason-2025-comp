@@ -17,9 +17,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
 import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -202,8 +199,8 @@ class CompConfig {
           new ArmConfig(
               RIO_CAN_NAME,
               18,
-              -999,
-              999,
+              -90,
+              75,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -239,9 +236,25 @@ class CompConfig {
               // Translation: Positive X = Forward, Positive Y = Left, Positive Z = Up
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
               // Left Camera Config
-              new CameraConfig(LimelightModel.THREEG, true,0.1045038296, -0.2494524094, 0.5819300782, 0.0, 0.0, 0.0),
+              new CameraConfig(
+                  LimelightModel.THREEG,
+                  true,
+                  0.1045038296,
+                  -0.2494524094,
+                  0.5819300782,
+                  0.0,
+                  0.0,
+                  0.0),
               // Right Camera Config
-              new CameraConfig(LimelightModel.THREEG, true, 0.0956578478, 0.2345115452, 0.5819625648, 0.0, 0.0, 0.0)),
+              new CameraConfig(
+                  LimelightModel.THREEG,
+                  true,
+                  0.0956578478,
+                  0.2345115452,
+                  0.5819625648,
+                  0.0,
+                  0.0,
+                  0.0)),
           new LightsConfig(CANIVORE_NAME, 0),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 

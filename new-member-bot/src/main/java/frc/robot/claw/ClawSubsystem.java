@@ -13,7 +13,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
   private double minVelocity;
   private double minVelocityTimeout;
-  private Timer timeout = new Timer();
+  private final Timer timeout = new Timer();
   private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
 
@@ -94,7 +94,6 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
       }
     }
   }
-
 
   @Override
   public void whileInState(ClawState currentState) {

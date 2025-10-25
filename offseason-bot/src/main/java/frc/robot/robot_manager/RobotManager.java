@@ -107,7 +107,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           STARTING_POSITION_CORAL,
           STARTING_POSITION,
           CLAW_ALGAE_STOW_INWARD,
-          ALGAE_INTAKE_FLOOR,
           ALGAE_PROCESSOR_WAITING,
           ALGAE_NET_WAITING,
           CLIMBING_1_LINEUP,
@@ -263,6 +262,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
         yield currentState;
       }
+      case ALGAE_INTAKE_FLOOR -> {
+        if (claw.getHasGP() && swerve.getFieldRelativeSpeeds().vxMetersPerSecond > 0.1) {
+          rumbleController.rumbleRequest();
+          yield RobotState.CLAW_ALGAE;
+        }
+        yield currentState;
+      }
     };
   }
 
@@ -279,7 +285,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.ALGAE_STOWED);
+        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED_ALGAE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -608,7 +614,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case REHOME_ELEVATOR -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.REHOME, ArmState.ALGAE_STOWED);
+        moveSuperstructure(ElevatorState.REHOME, ArmState.STOWED_ALGAE);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -624,7 +630,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE_STOW_INWARD -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED_INWARD, ArmState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);
@@ -1079,7 +1085,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
     switch (getState()) {
-      case CLAW_ALGAE, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
+      case CLAW_ALGAE, ALGAE_INTAKE_FLOOR, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
         if (AutoAlign.shouldScoreInNet(robotPose)) {
           setStateFromRequest(RobotState.ALGAE_NET_WAITING);
 
@@ -1106,6 +1112,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
       }
     }
+  }
+
+  public void forceNextScoringStateRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+    setStateFromRequest(getState().getNextScoreState());
   }
 
   private void bumpDownLevelRequest() {
@@ -1143,6 +1156,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case ALGAE_PROCESSOR_WAITING -> {
         algaeNetRequest();
       }
+      default -> {}
     }
 
     switch (scoringLevel) {
