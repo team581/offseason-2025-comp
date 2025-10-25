@@ -17,8 +17,7 @@ public record RobotConfig(
   public record ClawConfig(
       String canBusName,
       int motorId,
-      int candiId,
-      boolean sensorFlipped,
+      double gpMaxVelocity,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 

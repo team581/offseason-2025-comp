@@ -5,6 +5,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -13,34 +14,41 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private double minVelocity;
   private double minVelocityTimeout;
   private Timer timeout = new Timer();
-  private Debouncer debouncer;
+  private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
 
-  public ClawSubsystem(
-      TalonFX motor) {
+  private boolean clawHasGP = false;
+
+  public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
+
+    this.debouncer = RobotConfig.get().claw().debouncer();
+    this.timeout.start();
   }
 
   @Override
-  protected void collectInputs() {
-     }
+  protected void collectInputs() {}
 
-     public void reset() {
-      hasSeenMinVelocity = false;
-      timeout.reset();
-    }
+  public void reset() {
+    hasSeenMinVelocity = false;
+    timeout.reset();
+  }
 
-     public boolean hasGamePiece(double motorVelocity, double maxVelocity) {
-      hasSeenMinVelocity =
-          hasSeenMinVelocity
-              || timeout.hasElapsed(minVelocityTimeout)
-              || motorVelocity >= minVelocity;
+  public boolean getHasGP() {
+    return Robot.isSimulation() ? timeout(1.0) : clawHasGP;
+  }
 
-      return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
-    }
+  private boolean getHasGP(double motorVelocity, double maxVelocity) {
+    hasSeenMinVelocity =
+        hasSeenMinVelocity
+            || timeout.hasElapsed(minVelocityTimeout)
+            || Math.abs(motorVelocity) >= minVelocity;
+
+    return hasSeenMinVelocity && debouncer.calculate(Math.abs(motorVelocity) <= maxVelocity);
+  }
 
   public void setState(ClawState newState) {
     setStateFromRequest(newState);
@@ -50,6 +58,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   protected void afterTransition(ClawState newState) {
     switch (newState) {
       case IDLE_NO_GP -> {
+        reset();
         motor.disable();
       }
       case IDLE_W_ALGAE -> {
@@ -59,9 +68,11 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
         motor.setVoltage(0.0);
       }
       case INTAKING_ALGAE -> {
+        reset();
         motor.setVoltage(0.0);
       }
       case INTAKING_CORAL -> {
+        reset();
         motor.setVoltage(0.0);
       }
       case SCORE_ALGAE_NET -> {
@@ -81,6 +92,9 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   public void whileInState(ClawState currentState) {
+    clawHasGP =
+        getHasGP(motor.getVelocity().getValueAsDouble(), RobotConfig.get().claw().gpMaxVelocity());
+    DogLog.log("Claw/HasGP", clawHasGP);
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
