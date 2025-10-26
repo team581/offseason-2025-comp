@@ -9,25 +9,24 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
-import java.util.ArrayDeque;
-import java.util.List;
+import frc.robot.robot_manager.RobotState;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path =
       new AutoSegment(
-          CONSTRAINTS,
-          new AutoPoint(getStartingPose()),
-          new AutoPoint(StationAndLollipop5pcAutoState.J_L4_SCORING.pose));
-  private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
-      new ArrayDeque<StationAndLollipop5pcAutoState>(
-          List.of(
-              // StationAndLollipop5pcAutoState.J_L4_LINEUP,
-              StationAndLollipop5pcAutoState.K_L4_SCORING,
-              StationAndLollipop5pcAutoState.L_L4_SCORING,
-              StationAndLollipop5pcAutoState.A_L4_SCORING,
-              StationAndLollipop5pcAutoState.B_L4_SCORING));
+          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
+
+  // private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
+  //     new ArrayDeque<StationAndLollipop5pcAutoState>(
+  //         List.of(
+  //             // StationAndLollipop5pcAutoState.J_L4_LINEUP,
+  //             StationAndLollipop5pcAutoState.K_L4_SCORING,
+  //             StationAndLollipop5pcAutoState.L_L4_SCORING,
+  //             StationAndLollipop5pcAutoState.A_L4_SCORING,
+  //             StationAndLollipop5pcAutoState.B_L4_SCORING));
+  private int scoreCounter = 0;
 
   public void createPath(Pose2d goalPose) {
 
@@ -41,7 +40,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   }
 
   public StationAndLollipop5pcAuto(RobotManager robot, Trailblazer trailblazer) {
-    super(StationAndLollipop5pcAutoState.J_L4_SCORING, robot, trailblazer);
+    super(StationAndLollipop5pcAutoState.SCORE, robot, trailblazer);
   }
 
   @Override
@@ -53,10 +52,18 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-  private StationAndLollipop5pcAutoState getNextReefPosition() {
-    StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.pop();
-    return nextScoringPosition;
+  private StationAndLollipop5pcAutoState getNextIntakeState() {
+    DogLog.log("StateMachineAuto/scoreCounter", scoreCounter);
+    if (scoreCounter >= 4) {
+      return StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2;
+    }
+    return StationAndLollipop5pcAutoState.PRE_INTAKING;
   }
+
+  // private StationAndLollipop5pcAutoState getNextReefPosition() {
+  //   StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.pop();
+  //   return nextScoringPosition;
+  // }
 
   @Override
   protected StationAndLollipop5pcAutoState getNextState(
@@ -66,16 +73,11 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
-      case J_L4_SCORING ->
+      case SCORE ->
           !robotManager.claw.getHasGP()
-              ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING
+                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
+              ? getNextIntakeState()
               : currentState;
-
-      case J_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.PRE_INTAKING
-              : currentState;
-
       case PRE_INTAKING ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
               ? StationAndLollipop5pcAutoState.INTAKING
@@ -83,41 +85,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       case INTAKING ->
           (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                   || robotManager.claw.getHasGP()
-              ? StationAndLollipop5pcAutoState.POST_INTAKING
-              : currentState;
-      case POST_INTAKING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? getNextReefPosition()
-              : currentState;
-
-      case K_L4_SCORING ->
-          !robotManager.claw.getHasGP()
-              ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
-              : currentState;
-
-      case K_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.PRE_INTAKING
-              : currentState;
-
-      case L_L4_SCORING ->
-          !robotManager.claw.getHasGP()
-              ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
-              : currentState;
-
-      case L_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.PRE_INTAKING
-              : currentState;
-
-      case A_L4_SCORING ->
-          !robotManager.claw.getHasGP()
-              ? StationAndLollipop5pcAutoState.A_L4_POST_SCORING
-              : currentState;
-
-      case A_L4_POST_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2
+              ? StationAndLollipop5pcAutoState.SCORE
               : currentState;
 
       case PRE_LOLLIPOP_2 ->
@@ -126,46 +94,21 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
               : currentState;
       case LOLLIPOP_2 ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.POST_LOLLIPOP_2
+              ? StationAndLollipop5pcAutoState.SCORE
               : currentState;
-      case POST_LOLLIPOP_2 ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.B_L4_SCORING
-              : currentState;
-
-      case B_L4_SCORING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.B_L4_POST_SCORING
-              : currentState;
-
-      case B_L4_POST_SCORING -> currentState;
-
-      case I_L4_POST_SCORING ->
-          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-      case I_L4_SCORING ->
-          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
     };
   }
 
   @Override
   protected void afterTransition(StationAndLollipop5pcAutoState newState) {
     switch (newState) {
-      case A_L4_SCORING, B_L4_SCORING, I_L4_SCORING, J_L4_SCORING, K_L4_SCORING, L_L4_SCORING -> {
+      case SCORE -> {
         robotManager.scoreRequest();
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
-      case A_L4_POST_SCORING,
-          B_L4_POST_SCORING,
-          I_L4_POST_SCORING,
-          J_L4_POST_SCORING,
-          K_L4_POST_SCORING,
-          L_L4_POST_SCORING -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-        robotManager.stowRequest();
-      }
       case PRE_INTAKING -> {
+        scoreCounter++;
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
@@ -175,22 +118,13 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
         trailblazer.followSegmentInit(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-      case POST_INTAKING -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+
       case PRE_LOLLIPOP_2 -> {
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
       }
 
-      case POST_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
       case LOLLIPOP_2 -> {
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
@@ -202,20 +136,11 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   @Override
   protected void whileInState(StationAndLollipop5pcAutoState state) {
     switch (state) {
-      case A_L4_SCORING, B_L4_SCORING, I_L4_SCORING, J_L4_SCORING, K_L4_SCORING, L_L4_SCORING -> {
+      case SCORE -> {
         robotManager.scoreRequest();
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
-      case A_L4_POST_SCORING,
-          B_L4_POST_SCORING,
-          I_L4_POST_SCORING,
-          J_L4_POST_SCORING,
-          K_L4_POST_SCORING,
-          L_L4_POST_SCORING -> {
-        trailblazer.followSegmentPeriodic(path);
-        robotManager.stowRequest();
-      }
       case PRE_INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
         robotManager.stowRequest();
@@ -224,21 +149,13 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
         trailblazer.followSegmentPeriodic(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-      case POST_INTAKING -> {
-        trailblazer.followSegmentPeriodic(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+
       case PRE_LOLLIPOP_2 -> {
         trailblazer.followSegmentPeriodic(path);
         robotManager.stowRequest();
       }
 
       case LOLLIPOP_2 -> {
-        trailblazer.followSegmentPeriodic(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
-
-      case POST_LOLLIPOP_2 -> {
         trailblazer.followSegmentPeriodic(path);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
