@@ -162,10 +162,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
-
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
-default ->currentState;    };
+      default -> currentState;
+    };
   }
 
   public void driveTeleop(double x, double y, double theta) {
@@ -276,7 +276,6 @@ default ->currentState;    };
                 .withRotationalRate(driveToPoseSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
-
 
       case AUTO_SNAPS -> {
         drivetrain.setControl(

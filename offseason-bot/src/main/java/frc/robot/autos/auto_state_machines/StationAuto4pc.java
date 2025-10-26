@@ -10,7 +10,6 @@ import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
-
 import java.util.ArrayDeque;
 import java.util.List;
 
@@ -68,7 +67,8 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case I_L4_SCORING ->
-          !robotManager.claw.getHasGP()&&robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
+          !robotManager.claw.getHasGP()
+                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
               ? StationAndLollipop5pcAutoState.I_L4_POST_SCORING
               : currentState;
       case I_L4_POST_SCORING ->
@@ -90,8 +90,8 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
               ? getNextReefPosition()
               : currentState;
       case J_L4_SCORING ->
-                    !robotManager.claw.getHasGP()&&robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
-
+          !robotManager.claw.getHasGP()
+                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
               ? StationAndLollipop5pcAutoState.J_L4_POST_SCORING
               : currentState;
       case J_L4_POST_SCORING ->
@@ -99,8 +99,8 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
               ? StationAndLollipop5pcAutoState.PRE_INTAKING
               : currentState;
       case K_L4_SCORING ->
-                    !robotManager.claw.getHasGP()&&robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
-
+          !robotManager.claw.getHasGP()
+                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
               ? StationAndLollipop5pcAutoState.K_L4_POST_SCORING
               : currentState;
 
@@ -110,8 +110,8 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
               : currentState;
 
       case L_L4_SCORING ->
-                    !robotManager.claw.getHasGP()&&robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
-
+          !robotManager.claw.getHasGP()
+                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
               ? StationAndLollipop5pcAutoState.L_L4_POST_SCORING
               : currentState;
 
