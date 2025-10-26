@@ -1,10 +1,11 @@
 package frc.robot.intake_deploy;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
+import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -15,7 +16,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
   private final TalonFX motor;
   private final CoastOut coastRequest = new CoastOut();
-  private final PositionVoltage positionRequest = new PositionVoltage(0);
+  private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
   private final LinearFilter currentFilter = LinearFilter.movingAverage(6);
   private static final double TOLERANCE = 3.0;
 
@@ -29,6 +30,7 @@ public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
 
   public DeploySubsystem(TalonFX motor) {
     super(SubsystemPriority.DEPLOY, DeployState.UNHOMED);
+    TunablePid.of("Deploy", motor, RobotConfig.get().deploy().motorConfig());
 
     motor.getConfigurator().apply(RobotConfig.get().deploy().motorConfig());
     this.motor = motor;
