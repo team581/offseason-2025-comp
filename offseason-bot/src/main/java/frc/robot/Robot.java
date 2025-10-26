@@ -104,18 +104,6 @@ public class Robot extends Base581Robot {
   }
 
   @Override
-  public void autonomousInit() {
-    super.autonomousInit();
-    // The Autos subsystem handles running the selected auto automatically
-  }
-
-  @Override
-  public void teleopInit() {
-    super.teleopInit();
-    // No need to cancel anything, the Autos subsystem will stop running the auto
-  }
-
-  @Override
   protected void configureBindings() {
     swerve.setDefaultCommand(
         swerve
