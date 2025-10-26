@@ -162,13 +162,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
-      case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
-      case DRIVE_TO_POSE ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.DRIVE_TO_POSE;
+
       case AUTO_SNAPS, TELEOP_SNAPS ->
           DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
-      case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
-    };
+default ->currentState;    };
   }
 
   public void driveTeleop(double x, double y, double theta) {
@@ -280,13 +277,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
 
-      case AUTO ->
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
+
       case AUTO_SNAPS -> {
         drivetrain.setControl(
             driveToAngle
@@ -319,9 +310,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void normalDriveRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO);
-    } else {
+    if (DriverStation.isTeleop()) {
       setStateFromRequest(SwerveState.TELEOP);
     }
   }
