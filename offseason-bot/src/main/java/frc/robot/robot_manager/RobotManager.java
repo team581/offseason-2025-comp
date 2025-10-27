@@ -879,7 +879,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-
   public void stowRequest() {
     groundManager.stowRequest();
     switch (getState()) {
@@ -933,7 +932,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     scoringAlignActive = false;
   }
 
-
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {
       return;
@@ -985,7 +983,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       setStateFromRequest(RobotState.CORAL_L1_PREPARE_HANDOFF);
     }
   }
-
 
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {

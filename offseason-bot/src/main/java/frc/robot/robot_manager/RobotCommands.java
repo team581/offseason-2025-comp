@@ -57,7 +57,6 @@ public class RobotCommands {
         .withName("ForceNextScoreSequenceCommand");
   }
 
-
   public Command l3LineupCommand() {
     return Commands.runOnce(robot::l3CoralApproachRequest, bothRequirements)
         .withName("L3LineupCommand");
