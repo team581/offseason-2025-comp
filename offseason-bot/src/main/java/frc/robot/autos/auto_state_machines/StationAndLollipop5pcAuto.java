@@ -18,7 +18,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       new AutoSegment(
           CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
 
-  private final int scoreCounter = 0;
+  private static final int SCORE_COUNTER = 0;
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -56,8 +56,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   }
 
   private StationAndLollipop5pcAutoState getNextIntakeState() {
-    DogLog.log("StateMachineAuto/scoreCounter", scoreCounter);
-    if (scoreCounter >= 4) {
+    DogLog.log("StateMachineAuto/scoreCounter", SCORE_COUNTER);
+    if (SCORE_COUNTER >= 4) {
       return StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2;
     }
     return StationAndLollipop5pcAutoState.INTAKING;
