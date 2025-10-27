@@ -75,9 +75,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return rawMotorAngle;
   }
 
-  private void makeGetMotionMagicRequest(double armRotations) {
-    motor.setControl(motionMagicRequest.withPosition(armRotations));
-  }
 
   public boolean atGoal() {
     return switch (getState()) {
@@ -119,10 +116,19 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
-  @Override
-  protected void afterTransition(ArmState newState) {}
+ @Override
+  protected void afterTransition(ArmState newState) {
+    switch (newState) {
+      default -> motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.getAngle()))));
+    }
+  }
 
-  public void customPeriodic() {
+  public boolean rangeOfMotionGood() {
+    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+  }
+
+  @Override
+  protected void whileInState(ArmState state) {
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
@@ -156,19 +162,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         }
       }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(clamp(getState().getAngle())));
       }
     }
   }
 
-  public boolean rangeOfMotionGood() {
-    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
-  }
-
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
-    DogLog.log("Arm/OldState", oldState);
-    DogLog.log("Arm/NewState", newState);
 
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
