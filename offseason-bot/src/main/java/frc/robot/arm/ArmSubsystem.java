@@ -185,7 +185,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   public void simulationPeriodic() {
-    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor, ChassisReference.Clockwise_Positive));
+    var armSimulation =
+        SimKit.positionMechanism(
+            "arm", (mechanism) -> mechanism.addMotor(motor, ChassisReference.Clockwise_Positive));
 
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       motor.setPosition(0);
