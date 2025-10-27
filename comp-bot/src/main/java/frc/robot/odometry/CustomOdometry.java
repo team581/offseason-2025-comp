@@ -53,10 +53,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
     // angle. The previous module translation is (0, 0) because we don't care where it starts, only
-    // the displacement. It is also always perpendicular to the preivous angle, +-radius indicating 
+    // the displacement. It is also always perpendicular to the preivous angle, +-radius indicating
     // which side of the module that the circle center will be on
     double circleCenterX = -radius * Math.sin(previousAngleRadians);
-    double circleCenterY =  radius * Math.cos(previousAngleRadians);
+    double circleCenterY = radius * Math.cos(previousAngleRadians);
 
     // Finally, calculate the current module translation on the arc and return it as module
     // displacement
