@@ -37,8 +37,7 @@ public enum ElevatorState {
   CLIMBING(UNTUNED);
 
   public final double defaultHeight;
-    private final DoubleSubscriber tunableHeight;
-
+  private final DoubleSubscriber tunableHeight;
 
   public double getHeight() {
     return tunableHeight.get();
@@ -46,8 +45,7 @@ public enum ElevatorState {
 
   private ElevatorState(double height) {
     this.defaultHeight = height;
-        this.tunableHeight = DogLog.tunable("Elevator/State/" + name(), height);
-
+    this.tunableHeight = DogLog.tunable("Elevator/State/" + name(), height);
   }
 
   private ElevatorState(ElevatorState other) {
