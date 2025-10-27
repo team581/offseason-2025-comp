@@ -4,7 +4,6 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
@@ -187,7 +186,6 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
     }
     setState(GroundState.IDLE_NO_GP);
   }
-
 
   public void climbRequest() {
     setState(GroundState.CLIMB);

@@ -155,10 +155,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF ->
-          elevator.atGoal()
-                  && arm.atGoal()
-                  && (groundManager.getTopHasGP()
-                      || claw.getHasGP())
+          elevator.atGoal() && arm.atGoal() && (groundManager.getTopHasGP() || claw.getHasGP())
               ? currentState.getNextHandoffState()
               : currentState;
 
