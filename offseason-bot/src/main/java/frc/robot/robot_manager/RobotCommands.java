@@ -119,8 +119,4 @@ public class RobotCommands {
         .withName("RehomeDeployCommand");
   }
 
-  public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements)
-        .withName("LowStowCommand");
-  }
 }

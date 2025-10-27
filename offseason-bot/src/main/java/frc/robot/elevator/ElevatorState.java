@@ -1,9 +1,13 @@
 package frc.robot.elevator;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
+
 public enum ElevatorState {
   UNTUNED(0.0),
+
+  PRE_MATCH_HOMING(0.0),
   UNJAM(UNTUNED),
-  REHOME(UNTUNED),
 
   ALGAE_INTAKE_GROUND(10.0),
   ALGAE_INTAKE_L2(10),
@@ -32,17 +36,21 @@ public enum ElevatorState {
 
   CLIMBING(UNTUNED);
 
-  public final double height;
+  public final double defaultHeight;
+    private final DoubleSubscriber tunableHeight;
+
 
   public double getHeight() {
-    return this.height;
+    return tunableHeight.get();
   }
 
   private ElevatorState(double height) {
-    this.height = height;
+    this.defaultHeight = height;
+        this.tunableHeight = DogLog.tunable("Elevator/State/" + name(), height);
+
   }
 
-  private ElevatorState(ElevatorState state) {
-    this.height = state.height;
+  private ElevatorState(ElevatorState other) {
+    this(other.defaultHeight);
   }
 }

@@ -92,6 +92,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private double rawRightControllerYValue = 0.0;
   private boolean reachedCenterSinceLastBumpRequest = false;
 
+  private ArmState latestArmGoal = ArmState.STOWED;
+  private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
+
   @Override
   protected RobotState getNextState(RobotState currentState) {
     if (RobotState.missingGP(currentState, claw.getHasGP())) {
@@ -134,9 +137,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
         yield currentState;
       }
-      case REHOME_ELEVATOR ->
-          elevator.getState() == ElevatorState.STOWED ? RobotState.CLAW_EMPTY : currentState;
-
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
@@ -613,14 +613,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         groundManager.outtakeRequest();
         climber.setState(ClimberState.STOPPED);
       }
-      case REHOME_ELEVATOR -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.REHOME, ArmState.STOWED_ALGAE);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.OTHER);
-        climber.setState(ClimberState.STOPPED);
-      }
       case ALGAE_OUTTAKE -> {
         claw.setState(ClawState.OUTTAKING);
         moveSuperstructure(ElevatorState.ALGAE_OUTTAKE, ArmState.ALGAE_OUTTAKE);
@@ -642,6 +634,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   @Override
   public void whileInState(RobotState currentState) {
+    moveSuperstructure(latestElevatorGoal, latestArmGoal);
+
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     MechanismVisualizer.log(elevator.getHeight(), arm.getAngle(), groundManager.deploy.getAngle());
 
@@ -782,8 +776,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       default -> {}
     }
-
-    arm.customPeriodic();
   }
 
   @Override
@@ -1223,13 +1215,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void rehomeElevatorCommand() {
-    if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.REHOME_ELEVATOR);
-    }
-  }
 
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
+    latestArmGoal = armGoal;
+    latestElevatorGoal = elevatorGoal;
     elevator.setState(elevatorGoal);
     arm.setState(armGoal);
   }

@@ -45,7 +45,7 @@ public class FieldCalibrationUtil {
       double actualArm,
       Pose2d wantedPose,
       Pose2d actualPose) {
-    var elevatorError = wantedElevator.height - actualElevator;
+    var elevatorError = wantedElevator.getHeight() - actualElevator;
     var armError = wantedArm.getAngle() - actualArm;
     var alignError = wantedPose.getTranslation().getDistance(actualPose.getTranslation());
 
