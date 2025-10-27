@@ -159,7 +159,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L2_AFTER_RELEASE_HANDOFF,
           CORAL_L3_AFTER_RELEASE_HANDOFF,
           CORAL_L4_AFTER_RELEASE_HANDOFF ->
-          elevator.atGoal() && arm.atGoal() ? currentState.getNextHandoffState() : currentState;
+          elevator.atGoal() && arm.atGoal() && (DriverStation.isTeleop() || nearestReefSide == ReefSide.fromPipe(autoAlign.getBestPipe()))? currentState.getNextHandoffState() : currentState;
 
       // Approach
       case CORAL_L1_APPROACH ->
@@ -170,6 +170,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L2_APPROACH -> {
         yield elevator.nearGoal()
                 && arm.nearGoal()
+                && autoAlign.isCentered()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
             ? currentState.getNextScoreState()
@@ -178,6 +179,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L3_APPROACH -> {
         yield elevator.nearGoal()
                 && arm.nearGoal()
+                && autoAlign.isCentered()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
             ? currentState.getNextScoreState()
@@ -186,6 +188,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L4_APPROACH -> {
         yield elevator.nearGoal()
                 && arm.nearGoal()
+                && autoAlign.isCentered()
                 && (!FeatureFlags.APPROACH_TAG_CHECK.getAsBoolean() || vision.seeingTag())
                 && autoAlign.isNearRotationGoal()
             ? currentState.getNextScoreState()
