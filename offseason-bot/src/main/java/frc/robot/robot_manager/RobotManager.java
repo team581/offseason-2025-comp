@@ -688,10 +688,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_RELEASE,
           CORAL_L4_RELEASE -> {
         if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
-          swerve.driveToPoseRequest(
-              autoAlign.getCurrentTargetPose(),
-              autoAlign.useAngleBisector(),
-              autoAlign.getVelocityLimit());
+          swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector(), autoAlign.getVelocityLimit());
         } else {
           swerve.normalDriveRequest();
         }
