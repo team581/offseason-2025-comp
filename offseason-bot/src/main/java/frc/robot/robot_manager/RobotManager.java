@@ -647,7 +647,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_L3,
           ALGAE_INTAKE_L2_HOLDING,
           ALGAE_INTAKE_L3_HOLDING -> {
-        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector());
         } else {
           swerve.normalDriveRequest();
@@ -683,11 +683,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L2_RELEASE,
           CORAL_L3_RELEASE,
           CORAL_L4_RELEASE -> {
-        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
-          swerve.driveToPoseRequest(
-              autoAlign.getCurrentTargetPose(),
-              autoAlign.useAngleBisector(),
-              autoAlign.getVelocityLimit());
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags()) {
+          swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector(), autoAlign.getVelocityLimit());
         } else {
           swerve.normalDriveRequest();
         }
