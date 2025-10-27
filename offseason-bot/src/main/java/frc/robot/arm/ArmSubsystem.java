@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.math.MathHelpers;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -184,7 +185,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   public void simulationPeriodic() {
-    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor, ChassisReference.Clockwise_Positive));
 
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       motor.setPosition(0);
