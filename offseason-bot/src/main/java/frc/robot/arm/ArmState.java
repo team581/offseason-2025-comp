@@ -15,8 +15,8 @@ public enum ArmState {
   UNJAM(-45),
 
   // Idle positions
-  STOWED(-90),
-  STOWED_ALGAE(75),
+  STOWED(-83),
+  STOWED_ALGAE(55),
 
   // coral positions
   CORAL_SCORE_LINEUP_L2(30.0),
@@ -32,7 +32,7 @@ public enum ArmState {
   CORAL_SCORE_RELEASE_L1(-23.0),
 
   // Handoffs
-  CORAL_HANDOFF(-90.0),
+  CORAL_HANDOFF(-83.0),
 
   // Algae positions
   ALGAE_INTAKE_FLOOR(-43.0),
@@ -44,7 +44,7 @@ public enum ArmState {
 
   ALGAE_PROCESSOR(-20.0),
 
-  ALGAE_OUTTAKE(75),
+  ALGAE_OUTTAKE(55),
 
   CLIMBING(UNTUNED);
 
