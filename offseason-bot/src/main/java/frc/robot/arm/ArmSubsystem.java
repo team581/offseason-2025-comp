@@ -20,21 +20,22 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(16.0);
 
+  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 35.0;
 
+  private final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private final CoastOut coastNeutralRequest = new CoastOut();
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0.0).withEnableFOC(false);
+
   private final TalonFX motor;
+
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
-  private final StaticBrake brakeNeutralRequest = new StaticBrake();
-  private final CoastOut coastNeutralRequest = new CoastOut();
-
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
@@ -103,7 +104,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   @Override
   protected void collectInputs() {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      motorAngle = RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+    } else {
+      motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+    }
 
     if (DriverStation.isDisabled()) {
       lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
@@ -127,6 +133,11 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
+      if (!MathUtil.isNear(ArmState.CORAL_HANDOFF.getAngle(), motorAngle, 8.0, -180, 180)) {
+        DogLog.logFault("ARM NOT IN AUTO POSITION");
+      } else {
+        DogLog.clearFault("ARM NOT IN AUTO POSITION");
+      }
     }
     if (rangeOfMotionGood()) {
       DogLog.clearFault("ARM NOT HOMED");
