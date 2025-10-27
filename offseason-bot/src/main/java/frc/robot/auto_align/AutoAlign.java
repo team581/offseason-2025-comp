@@ -57,6 +57,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() > 17.55 / 2 ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
+  public static double DEFAULT_VELOCITY_LIMIT = 2.0;
+  public static double AUTO_CENTER_VELOCITY_LIMIT = 4.0;
+
   public boolean isCloseToReefSide(double thresholdMeters) {
     return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
   }
@@ -112,6 +115,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private Pose2d currentTargetPose = Pose2d.kZero;
   private final Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
+  private double velocityLimit = DEFAULT_VELOCITY_LIMIT;
   private boolean driverJoystickReachedCenter = false;
 
   private Optional<ReefPipe> autoPipeOverride = Optional.empty();
@@ -289,12 +293,22 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
           L1_BACKUP,
           ALGAE_INTAKE -> {
         useAngleBisector = false;
+        velocityLimit = DEFAULT_VELOCITY_LIMIT;
+      }
+      case BEST_PIPE_CENTER -> {
+        useAngleBisector = true;
+          velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
       }
 
       default -> {
         useAngleBisector = true;
+        velocityLimit = DEFAULT_VELOCITY_LIMIT;
       }
     }
+  }
+
+  public double getVelocityLimit() {
+    return velocityLimit;
   }
 
   public ReefPipeLevel getBestLevel() {

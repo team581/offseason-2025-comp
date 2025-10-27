@@ -105,6 +105,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private Pose2d lastDriveToPoseTarget = new Pose2d();
   private boolean lastUseAngleBisector = true;
+  private double lastUsedMaxVelocity = MAX_TRANSLATION_VELOCITY_LIMIT.get();
 
   private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
@@ -229,7 +230,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
     if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
       driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, lastUsedMaxVelocity);
     }
   }
 
@@ -348,15 +349,23 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void driveToPoseRequest(Pose2d pose) {
-    driveToPoseRequest(pose, true);
+    driveToPoseRequest(pose, true, MAX_TRANSLATION_VELOCITY_LIMIT.get());
   }
 
-  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
+    public void driveToPoseRequest(Pose2d pose, double maxVelocity) {
+      driveToPoseRequest(pose, true, maxVelocity);
+    }
+
+    public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
+      driveToPoseRequest(pose, useAngleBisector, MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    }
+
+  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, double maxVelocity) {
     if (DriverStation.isTeleop()) {
       lastDriveToPoseTarget = pose;
       lastUseAngleBisector = useAngleBisector;
       driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, maxVelocity);
       setStateFromRequest(SwerveState.DRIVE_TO_POSE);
       sendSwerveRequest();
     }
@@ -403,7 +412,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   private PolarChassisSpeeds getDriveToPoseSpeeds(
-      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
+      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector, double maxVelocity) {
     // Calculate x and y velocities
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -450,8 +459,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     driveVelocityMagnitude =
         MathUtil.clamp(
             driveVelocityMagnitude,
-            -MAX_TRANSLATION_VELOCITY_LIMIT.get(),
-            MAX_TRANSLATION_VELOCITY_LIMIT.get());
+            -maxVelocity,
+            maxVelocity);
     rotationSpeed =
         MathUtil.clamp(
             rotationSpeed,
