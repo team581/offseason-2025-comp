@@ -54,7 +54,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     } else {
       moduleDirection = -1.0;
     }
-    double angleDifferenceRadians = moduleDirection * (currentAngleRadians - previousAngleRadians);
+    double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
     double arcLength = currentDistanceMeters - previousDistanceMeters;
 
     // *If angle difference is 0 then we can just use a straight line instead of an arc
@@ -63,7 +63,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     }
 
     // Next, calculate radius. Positive = left turn, negative = right turn
-    double radius = (Math.abs(arcLength) / angleDifferenceRadians);
+    double radius = moduleDirection * (Math.abs(arcLength) / angleDifferenceRadians);
     DogLog.log("Odometry/GetModuleDisplacement/Radius", radius);
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
