@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.arm.ArmState;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.auto_align.poses.ReefSide;
 import frc.robot.claw.ClawState;
@@ -775,13 +776,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   @Override
-  public void teleopInit() {
-    super.teleopInit();
-    scoringAlignActive = false;
-    swerve.normalDriveRequest();
-  }
-
-  @Override
   protected void collectInputs() {
     if (DriverStation.isAutonomous()) {
       scoringAlignActive = true;
@@ -1063,6 +1057,41 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void scoreRequest() {
+    if (getState().climbingOrRehoming) {
+      return;
+    }
+    switch (getState()) {
+      case CLAW_ALGAE, ALGAE_INTAKE_FLOOR, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
+        if (AutoAlign.shouldScoreInNet(robotPose)) {
+          setStateFromRequest(RobotState.ALGAE_NET_WAITING);
+
+        } else {
+          setStateFromRequest(RobotState.ALGAE_PROCESSOR_WAITING);
+        }
+      }
+
+      case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
+
+      case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
+
+      default -> {
+        scoringAlignActive = true;
+        autoAlign.approachPipeRequest();
+        var bestLevel = autoAlign.getBestLevel();
+        DogLog.log("Debug/BestLevel", bestLevel);
+        switch (bestLevel) {
+          case L4 -> l4CoralApproachRequest();
+          case L3 -> l3CoralApproachRequest();
+          case L2 -> l2CoralApproachRequest();
+          case L1 -> l1CoralApproachRequest();
+          default -> {}
+        }
+      }
+    }
+  }
+
+  public void scoreRequest(ReefPipe pipe, ReefPipeLevel level) {
+    autoAlign.setAutoPipeOverride(pipe, level);
     if (getState().climbingOrRehoming) {
       return;
     }

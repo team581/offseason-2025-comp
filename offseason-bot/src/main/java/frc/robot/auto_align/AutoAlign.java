@@ -28,6 +28,7 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
@@ -109,9 +110,12 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private ReefPipeLevel currentReefPipeLevel = ReefPipeLevel.L1;
   private Pose2d currentPose = Pose2d.kZero;
   private Pose2d currentTargetPose = Pose2d.kZero;
-  private Pose2d autoTargetPoseOverride = new Pose2d();
+  private final Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
   private boolean driverJoystickReachedCenter = false;
+
+  private Optional<ReefPipe> autoPipeOverride = Optional.empty();
+  private Optional<ReefPipeLevel> autoLevelOverride = Optional.empty();
 
   public AutoAlign(
       VisionSubsystem vision,
@@ -294,7 +298,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   public ReefPipeLevel getBestLevel() {
-    var bestLevel = reefState.getHighestAvailableLevel(closestReefSide);
+    var bestLevel =
+        (DriverStation.isAutonomous() && autoLevelOverride.isPresent())
+            ? autoLevelOverride.get()
+            : reefState.getHighestAvailableLevel(closestReefSide);
     if (bestLevel.equals(ReefPipeLevel.L1)) {
       bestL1 = getBestL1ForScoring();
     } else {
@@ -339,11 +346,11 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   /**
    * Sets an override target pose for auto period. If set to Pose2d.kZero, the normal logic will be
    * used.
-   *
-   * @param target The target pose to use during auto.
    */
-  public void setAutoTargetPoseOverride(Pose2d target) {
-    autoTargetPoseOverride = target;
+  public void setAutoPipeOverride(ReefPipe pipeOverride, ReefPipeLevel levelOverride) {
+    autoPipeOverride = Optional.of(pipeOverride);
+    autoLevelOverride = Optional.of(levelOverride);
+    bestPipe = pipeOverride;
   }
 
   /**
@@ -584,6 +591,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   /** Finds the best pipe to score on based on alignment cost and reef state. */
   public ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
+    if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
+      return autoPipeOverride.get();
+    }
     return ALL_REEF_PIPES.stream()
         .min(alignmentCostUtil.getReefPipeComparator(level, closestReefSide))
         .orElseThrow();
