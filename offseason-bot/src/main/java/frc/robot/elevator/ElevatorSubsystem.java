@@ -9,6 +9,7 @@ import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -72,6 +73,16 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     DogLog.log("Elevator/AtGoal", atGoal());
     DogLog.log("Elevator/NearGoal", nearGoal());
     DogLog.log("Elevator/Goal", currentState.getHeight());
+
+    if (DriverStation.isDisabled()) {
+      var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+      var estimatedHeight = homingEndHeight + (height - lowestSeenHeight);
+      if (!MathUtil.isNear(estimatedHeight, homingEndHeight, 2.0)) {
+        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kWarning);
+      } else {
+        DogLog.clearFault("ELEVATOR NOT IN AUTO POSITION");
+      }
+    }
   }
 
   @Override
