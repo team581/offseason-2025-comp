@@ -66,7 +66,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       AutoAlign autoAlign,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
-    super(SubsystemPriority.ROBOT_MANAGER, RobotState.STARTING_POSITION);
+    super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
     this.groundManager = groundManager;
     this.arm = arm;
     this.claw = claw;
@@ -105,11 +105,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
 
     return switch (currentState) {
-      case CLAW_EMPTY,
-          CLAW_ALGAE,
+      case CLAW_ALGAE,
           CLAW_CORAL,
-          STARTING_POSITION_CORAL,
-          STARTING_POSITION,
           CLAW_ALGAE_STOW_INWARD,
           ALGAE_PROCESSOR_WAITING,
           ALGAE_NET_WAITING,
@@ -119,6 +116,20 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           UNJAM,
           FORCED_HANDOFF ->
           currentState;
+
+      case CLAW_EMPTY -> {
+        if (DriverStation.isDisabled()) {
+          if (claw.getHasGP()) {
+            DogLog.clearFault("CLAW_MISSING_PRELOAD");
+            lights.blink();
+            yield RobotState.CLAW_CORAL;
+          } else {
+            DogLog.logFault("CLAW_MISSING_PRELOAD");
+          }
+        }
+        yield currentState;
+      }
+
       case CORAL_L2_PLACE, CORAL_L3_PLACE, CORAL_L4_PLACE -> {
         if (((FeatureFlags.AUTO_ALIGN_AUTO_SCORE.getAsBoolean() && scoringAlignActive)
                 || DriverStation.isAutonomous())
@@ -300,28 +311,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
-      case STARTING_POSITION -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.STOWED);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.IDLE_EMPTY);
-        climber.setState(ClimberState.STOPPED);
-      }
       case FORCED_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case STARTING_POSITION_CORAL -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
-        moveSuperstructure(ElevatorState.STOWED, ArmState.STOWED);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.HOLDING_CORAL);
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_INTAKE_FLOOR -> {
@@ -1075,18 +1070,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void preloadCoralRequest() {
-    if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.STARTING_POSITION_CORAL);
-    }
-  }
-
-  public void startingPositionRequest() {
-    if (!getState().climbingOrRehoming) {
-      setStateFromRequest(RobotState.STARTING_POSITION);
-    }
-  }
-
   public void scoreRequest() {
     if (getState().climbingOrRehoming) {
       return;
@@ -1228,7 +1211,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void nextClimbStateRequest() {
     switch (getState()) {
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
-      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
+      case CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
         if (arm.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
