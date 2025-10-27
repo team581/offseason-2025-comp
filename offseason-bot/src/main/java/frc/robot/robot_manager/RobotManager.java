@@ -157,8 +157,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L4_PREPARE_HANDOFF ->
           elevator.atGoal()
                   && arm.atGoal()
-                  && ((groundManager.getState().equals(GroundState.HANDOFF_WAIT)
-                          && groundManager.getTopHasGP())
+                  && (groundManager.getTopHasGP()
                       || claw.getHasGP())
               ? currentState.getNextHandoffState()
               : currentState;
@@ -416,7 +415,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        groundManager.intakeThenHandoffRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
@@ -427,7 +425,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
@@ -438,7 +435,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_AFTER_RELEASE_HANDOFF,
           CORAL_L4_AFTER_RELEASE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        groundManager.handoffReleaseRequest();
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
