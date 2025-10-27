@@ -125,12 +125,11 @@ public class Robot extends Base581Robot {
         .rightTrigger()
         .onTrue(actions.scoreCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
+    hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand()).onFalse(actions.stopOuttakeRequest());
     hardware
         .driverController
         .leftBumper()
-        .onTrue(actions.algaeIntakeGroundCommand())
-        .onFalse(actions.stopOuttakeRequest());
+        .onTrue(actions.algaeIntakeGroundCommand());
     hardware
         .driverController
         .rightBumper()

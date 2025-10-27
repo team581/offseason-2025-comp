@@ -34,7 +34,7 @@ public class RobotCommands {
   }
 
   public Command groundIntakeCommand() {
-    return Commands.runOnce(groundManager::intakeRequest, gmRequirements)
+    return Commands.runOnce(robot::intakeRequest, gmRequirements)
         .withName("GroundIntakeCoralCommand");
   }
 

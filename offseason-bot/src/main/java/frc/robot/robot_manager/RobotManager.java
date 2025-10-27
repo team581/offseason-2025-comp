@@ -871,7 +871,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     if (getState().climbingOrRehoming) {
       return;
     }
-    groundManager.intakeRequest();
+    if (groundManager.getState() == GroundState.INTAKING) {
+      groundManager.outtakeRequest();
+    } else {
+
+      groundManager.intakeRequest();
+    }
   }
 
   public void forceIdleNoGp() {
@@ -908,7 +913,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
       if (groundManager.getState().equals(GroundState.INTAKING)) {
-        groundManager.outtakeRequest();
+        groundManager.stowRequest();
       } else {
         setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
       }
