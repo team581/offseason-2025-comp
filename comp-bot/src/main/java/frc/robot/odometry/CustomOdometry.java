@@ -8,10 +8,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class CustomOdometry extends SwerveDriveOdometry {
   private final Translation2d[] robotRelativeModuleOffsets = new Translation2d[4];
 
+  private double[] moduleSpeeds = new double[] {
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  };
+  private Pose2d previousRobotPose = new Pose2d();
   private final SwerveModulePosition[] previousWheelPositions =
       new SwerveModulePosition[] {
         new SwerveModulePosition(),
@@ -19,7 +27,6 @@ public class CustomOdometry extends SwerveDriveOdometry {
         new SwerveModulePosition(),
         new SwerveModulePosition()
       };
-  private Pose2d previousRobotPose = new Pose2d();
 
   public CustomOdometry(
       SwerveDriveKinematics kinematics,
@@ -34,12 +41,20 @@ public class CustomOdometry extends SwerveDriveOdometry {
   }
 
   private static Translation2d getModuleDisplacement(
+      double currentSpeed,
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
-      double currentDistanceMeters) {
-    // First, calculate difference between previous and current angles and distances
-    double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
+      double currentDistanceMeters) {  
+    // First, calculate difference between previous and current angles and distances. Negative speed indicates module is flipped pi radians, so we invert the module direction
+    double moduleDirection;
+
+    if (currentSpeed > 0) {
+      moduleDirection = 1.0;
+    } else {
+      moduleDirection = -1.0;
+    }
+    double angleDifferenceRadians = moduleDirection * (currentAngleRadians - previousAngleRadians);
     double arcLength = currentDistanceMeters - previousDistanceMeters;
 
     // If angle difference is 0 then we can just use a straight line instead of an arc
@@ -66,6 +81,12 @@ public class CustomOdometry extends SwerveDriveOdometry {
     return new Translation2d(displacementX, displacementY);
   }
 
+  public void setModuleSpeeds(SwerveModuleState[] currentModuleStates) {
+    for (int i = 0; i < 4; i++) {
+      moduleSpeeds[i] = currentModuleStates[i].speedMetersPerSecond;
+    }
+  }
+
   // Function to set the previous robot pose, as it can't be passed in to Update() as a parameter
   public void setPreviousRobotPose(Pose2d newPreviousRobotPose) {
     previousRobotPose = newPreviousRobotPose;
@@ -86,21 +107,25 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
     Translation2d[] moduleDisplacements = {
       getModuleDisplacement(
+          moduleSpeeds[0],
           previousWheelPositions[0].angle.getRadians(),
           previousWheelPositions[0].distanceMeters,
           currentWheelPositions[0].angle.getRadians(),
           currentWheelPositions[0].distanceMeters),
       getModuleDisplacement(
+          moduleSpeeds[1],
           previousWheelPositions[1].angle.getRadians(),
           previousWheelPositions[1].distanceMeters,
           currentWheelPositions[1].angle.getRadians(),
           currentWheelPositions[1].distanceMeters),
       getModuleDisplacement(
+          moduleSpeeds[2],
           previousWheelPositions[2].angle.getRadians(),
           previousWheelPositions[2].distanceMeters,
           currentWheelPositions[2].angle.getRadians(),
           currentWheelPositions[2].distanceMeters),
       getModuleDisplacement(
+          moduleSpeeds[3],
           previousWheelPositions[3].angle.getRadians(),
           previousWheelPositions[3].distanceMeters,
           currentWheelPositions[3].angle.getRadians(),
@@ -138,16 +163,16 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
     DogLog.log(
         "Odometry/FieldRelativeFrontLeftModuleDisplacements",
-        new Pose2d(fieldRelativeModuleDisplacements[0], currentGyroAngle));
+        new Pose2d(fieldRelativeModuleDisplacements[0], new Rotation2d(currentWheelPositions[0].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeFrontRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[1], currentGyroAngle));
+        new Pose2d(fieldRelativeModuleDisplacements[1], new Rotation2d(currentWheelPositions[1].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeBackLeftModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[2], currentGyroAngle));
+        new Pose2d(fieldRelativeModuleDisplacements[2], new Rotation2d(currentWheelPositions[2].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeBackRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[3], currentGyroAngle));
+        new Pose2d(fieldRelativeModuleDisplacements[3], new Rotation2d(currentWheelPositions[3].angle.getRadians())));
 
     // After calculations, before the next loop update the previous wheel positions to the current
     // ones

@@ -76,6 +76,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
+    customOdometry.setModuleSpeeds(swerve.drivetrain.getState().ModuleStates);
     robotPose = poseEstimator.getEstimatedPosition();
     customOdometry.setPreviousRobotPose(robotPose);
   }
