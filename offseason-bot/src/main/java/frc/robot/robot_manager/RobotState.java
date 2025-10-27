@@ -93,7 +93,6 @@ public enum RobotState {
   // Misc states
   ALGAE_OUTTAKE(ClawGamePiece.EMPTY, false),
   UNJAM(ClawGamePiece.EMPTY, false),
-  REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),
 
   FORCED_HANDOFF(ClawGamePiece.EMPTY, false);
 
