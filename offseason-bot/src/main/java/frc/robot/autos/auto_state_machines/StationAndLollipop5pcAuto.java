@@ -6,10 +6,13 @@ import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
+import java.util.ArrayDeque;
+import java.util.List;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
@@ -18,22 +21,29 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       new AutoSegment(
           CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
 
-  // private final ArrayDeque<StationAndLollipop5pcAutoState> nextScoringPositions =
-  //     new ArrayDeque<StationAndLollipop5pcAutoState>(
-  //         List.of(
-  //             // StationAndLollipop5pcAutoState.J_L4_LINEUP,
-  //             StationAndLollipop5pcAutoState.K_L4_SCORING,
-  //             StationAndLollipop5pcAutoState.L_L4_SCORING,
-  //             StationAndLollipop5pcAutoState.A_L4_SCORING,
-  //             StationAndLollipop5pcAutoState.B_L4_SCORING));
+  private final ArrayDeque<ReefPipe> nextScoringPositions =
+      new ArrayDeque<ReefPipe>(
+          List.of(
+              ReefPipe.PIPE_J, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A, ReefPipe.PIPE_B));
   private int scoreCounter = 0;
 
   public void createPath(Pose2d goalPose) {
+    path =
+        new AutoSegment(
+            CONSTRAINTS,
+            new AutoPoint(robotManager.localization.getPose()),
+            new AutoPoint(goalPose));
+    DogLog.timestamp("StateMachineAuto/newPathGenerated");
+    DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
+  }
+
+  public void createPath(Pose2d goalPose, Pose2d intermediaryPose) {
 
     path =
         new AutoSegment(
             CONSTRAINTS,
             new AutoPoint(robotManager.localization.getPose()),
+            new AutoPoint(intermediaryPose),
             new AutoPoint(goalPose));
     DogLog.timestamp("StateMachineAuto/newPathGenerated");
     DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
@@ -57,7 +67,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
     if (scoreCounter >= 4) {
       return StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2;
     }
-    return StationAndLollipop5pcAutoState.PRE_INTAKING;
+    return StationAndLollipop5pcAutoState.INTAKING;
   }
 
   // private StationAndLollipop5pcAutoState getNextReefPosition() {
@@ -78,10 +88,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
                   && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
               ? getNextIntakeState()
               : currentState;
-      case PRE_INTAKING ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.INTAKING
-              : currentState;
+
       case INTAKING ->
           (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                   || robotManager.claw.getHasGP()
@@ -107,12 +114,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
-      case PRE_INTAKING -> {
-        scoreCounter++;
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-        robotManager.stowRequest();
-      }
       case INTAKING -> {
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
@@ -122,7 +123,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       case PRE_LOLLIPOP_2 -> {
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
-        robotManager.stowRequest();
       }
 
       case LOLLIPOP_2 -> {
@@ -136,27 +136,18 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   @Override
   protected void whileInState(StationAndLollipop5pcAutoState state) {
     switch (state) {
-      case SCORE -> {
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+      case SCORE -> {}
 
-      case PRE_INTAKING -> {
-        trailblazer.followSegmentPeriodic(path);
-        robotManager.stowRequest();
-      }
       case INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
       }
 
       case PRE_LOLLIPOP_2 -> {
         trailblazer.followSegmentPeriodic(path);
-        robotManager.stowRequest();
       }
 
       case LOLLIPOP_2 -> {
         trailblazer.followSegmentPeriodic(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
       }
     }
   }

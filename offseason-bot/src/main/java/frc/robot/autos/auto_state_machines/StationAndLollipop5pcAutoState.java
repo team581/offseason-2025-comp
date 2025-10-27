@@ -5,7 +5,6 @@ import frc.robot.autos.Points;
 
 public enum StationAndLollipop5pcAutoState {
   INTAKING(Points.GROUND_INTAKE_LEFT_STATION.getPose()),
-  PRE_INTAKING(Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose()),
   LOLLIPOP_2(Points.LOLLIPOP_2.getPose()),
   PRE_LOLLIPOP_2(Points.PRE_LOLLIPOP_2.getPose()),
   SCORE(new Pose2d());
