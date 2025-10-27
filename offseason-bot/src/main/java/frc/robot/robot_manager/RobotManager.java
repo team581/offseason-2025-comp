@@ -1151,7 +1151,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
       }
     }
-
   }
 
   public void forceNextScoringStateRequest() {
