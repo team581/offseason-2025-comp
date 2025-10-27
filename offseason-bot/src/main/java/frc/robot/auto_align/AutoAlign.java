@@ -57,8 +57,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() > 17.55 / 2 ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
-  public static double DEFAULT_VELOCITY_LIMIT = 2.0;
-  public static double AUTO_CENTER_VELOCITY_LIMIT = 4.0;
+  public static final double DEFAULT_VELOCITY_LIMIT = 2.0;
+  public static final double AUTO_CENTER_VELOCITY_LIMIT = 4.0;
 
   public boolean isCloseToReefSide(double thresholdMeters) {
     return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
@@ -297,7 +297,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       }
       case BEST_PIPE_CENTER -> {
         useAngleBisector = true;
-          velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
+        velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
       }
 
       default -> {
