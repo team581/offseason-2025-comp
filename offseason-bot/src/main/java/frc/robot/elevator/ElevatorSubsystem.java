@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
+import com.team581.util.tuning.TunablePid;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -31,6 +33,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   public ElevatorSubsystem(TalonFX motor) {
     super(SubsystemPriority.ELEVATOR, ElevatorState.STOWED);
+    TunablePid.of("Elevator", motor, RobotConfig.get().elevator().motorConfig());
 
     motor.getConfigurator().apply(RobotConfig.get().elevator().motorConfig());
     this.motor = motor;
