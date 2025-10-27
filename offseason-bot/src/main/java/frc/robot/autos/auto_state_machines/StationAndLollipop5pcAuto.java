@@ -1,8 +1,5 @@
 package frc.robot.autos.auto_state_machines;
 
-import java.util.ArrayDeque;
-import java.util.List;
-
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
@@ -15,18 +12,18 @@ import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
+import java.util.ArrayDeque;
+import java.util.List;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
-  private AutoSegment path =
-      new AutoSegment();
+  private AutoSegment path = new AutoSegment();
   private static final int SCORE_COUNTER = 0;
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           List.of(
               ReefPipe.PIPE_I, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A, ReefPipe.PIPE_B));
-
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -92,7 +89,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
 
       case INTAKING ->
           ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
-                  || robotManager.claw.getHasGP())&&!nextScoringPositions.isEmpty()
+                      || robotManager.claw.getHasGP())
+                  && !nextScoringPositions.isEmpty()
               ? StationAndLollipop5pcAutoState.SCORE
               : currentState;
 
@@ -111,7 +109,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   protected void afterTransition(StationAndLollipop5pcAutoState newState) {
     switch (newState) {
       case SCORE -> {
-        robotManager.scoreRequest(nextScoringPositions.pop(),ReefPipeLevel.L4);
+        robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
