@@ -6,13 +6,10 @@ import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
-import java.util.ArrayDeque;
-import java.util.List;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
@@ -21,11 +18,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       new AutoSegment(
           CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
 
-  private final ArrayDeque<ReefPipe> nextScoringPositions =
-      new ArrayDeque<ReefPipe>(
-          List.of(
-              ReefPipe.PIPE_J, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A, ReefPipe.PIPE_B));
-  private int scoreCounter = 0;
+  private final int scoreCounter = 0;
 
   public void createPath(Pose2d goalPose) {
     path =
