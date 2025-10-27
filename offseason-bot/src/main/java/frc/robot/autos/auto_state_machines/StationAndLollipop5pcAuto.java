@@ -137,7 +137,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   protected void whileInState(StationAndLollipop5pcAutoState state) {
     switch (state) {
       case SCORE -> {
-        robotManager.scoreRequest();
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 

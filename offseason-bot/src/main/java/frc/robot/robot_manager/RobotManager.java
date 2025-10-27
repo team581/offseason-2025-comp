@@ -199,25 +199,23 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         yield currentState;
       }
       case CORAL_L1_BACKAWAY -> {
-        if (DriverStation.isTeleop()) {
-          // In teleop, we go to CLAW_EMPTY when you drive away or if we know the score succeeded
+
           if (drivingAwayFromReef()) {
             yield RobotState.CLAW_EMPTY;
           }
-        }
+
         yield currentState;
       }
 
       case CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE -> {
-        if (DriverStation.isTeleop()) {
-          // In teleop, we go to CLAW_EMPTY when you drive away or if we know the score succeeded
+
           if (drivingAwayFromReef()
               || ((autoAlign.isAlgaeRemoved()
                       || groundManager.getState().equals(GroundState.INTAKING))
                   && farEnoughFromReef())) {
             yield RobotState.CLAW_EMPTY;
           }
-        }
+
         yield currentState;
       }
 
@@ -652,7 +650,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_L3,
           ALGAE_INTAKE_L2_HOLDING,
           ALGAE_INTAKE_L3_HOLDING -> {
-        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose());
         } else {
           swerve.normalDriveRequest();
@@ -688,7 +686,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L2_RELEASE,
           CORAL_L3_RELEASE,
           CORAL_L4_RELEASE -> {
-        if (scoringAlignActive && vision.isAnyCameraOnlineForTags() && DriverStation.isTeleop()) {
+        if (scoringAlignActive && vision.isAnyCameraOnlineForTags()) {
           swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector());
         } else {
           swerve.normalDriveRequest();
@@ -784,6 +782,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
 
     arm.customPeriodic();
+  }
+
+
+  @Override
+  public void teleopInit() {
+    super.teleopInit();
+    scoringAlignActive = false;
+    swerve.normalDriveRequest();
   }
 
   @Override
@@ -945,29 +951,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     scoringAlignActive = false;
   }
 
-  public void l4CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L4_APPROACH);
-    }
-  }
-
-  public void l3CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L3_APPROACH);
-    }
-  }
-
-  public void l2CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L2_APPROACH);
-    }
-  }
-
-  public void l2CoralAutoLineupRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L2_LINEUP);
-    }
-  }
 
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {

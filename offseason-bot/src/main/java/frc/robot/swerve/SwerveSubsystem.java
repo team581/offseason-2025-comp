@@ -309,9 +309,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void normalDriveRequest() {
-    if (DriverStation.isTeleop()) {
       setStateFromRequest(SwerveState.TELEOP);
-    }
   }
 
   public Translation2d getControllerValues() {
@@ -340,14 +338,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
-    if (DriverStation.isTeleop()) {
+
       lastDriveToPoseTarget = pose;
       lastUseAngleBisector = useAngleBisector;
       driveToPoseSpeeds =
           getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
       setStateFromRequest(SwerveState.DRIVE_TO_POSE);
       sendSwerveRequest();
-    }
+
   }
 
   public void climbRequest(double snapAngle) {
