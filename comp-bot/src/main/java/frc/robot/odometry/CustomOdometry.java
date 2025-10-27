@@ -39,7 +39,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
       double currentAngleRadians,
       double currentDistanceMeters) {
     // First, calculate difference between previous and current angles and distances
-    double angleDifferenceRadians = Math.abs(currentAngleRadians - previousAngleRadians);
+    double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
     double arcLength = currentDistanceMeters - previousDistanceMeters;
 
     // If angle difference is 0 then we can just use a straight line instead of an arc
@@ -47,19 +47,21 @@ public class CustomOdometry extends SwerveDriveOdometry {
       return new Translation2d(arcLength, new Rotation2d(currentAngleRadians));
     }
 
-    // Next, calculate radius
+    // Next, calculate radius. Positive = left turn, negative = right turn
     double radius = (Math.abs(arcLength) / angleDifferenceRadians);
+    DogLog.log("Odometry/GetModuleDisplacement/Radius", radius);
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
     // angle. The previous module translation is (0, 0) because we don't care where it starts, only
-    // the displacement
-    double circleCenterX = 0 - (radius * Math.cos(previousAngleRadians));
-    double circleCenterY = 0 - (radius * Math.sin(previousAngleRadians));
+    // the displacement. It is also always perpendicular to the preivous angle, +-radius indicating 
+    // which side of the module that the circle center will be on
+    double circleCenterX = -radius * Math.sin(previousAngleRadians);
+    double circleCenterY =  radius * Math.cos(previousAngleRadians);
 
     // Finally, calculate the current module translation on the arc and return it as module
     // displacement
-    double displacementX = circleCenterX + (radius * Math.cos(currentAngleRadians));
-    double displacementY = circleCenterY + (radius * Math.sin(currentAngleRadians));
+    double displacementX = circleCenterX + radius * Math.sin(currentAngleRadians);
+    double displacementY = circleCenterY - radius * Math.cos(currentAngleRadians);
 
     return new Translation2d(displacementX, displacementY);
   }
