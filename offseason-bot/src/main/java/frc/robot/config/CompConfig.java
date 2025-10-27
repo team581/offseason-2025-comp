@@ -225,8 +225,7 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
-              // TODO: BRINGUP: RETUNE
-              -90.0),
+              -83.435),
           new VisionConfig(
               0.005,
               0.8,
