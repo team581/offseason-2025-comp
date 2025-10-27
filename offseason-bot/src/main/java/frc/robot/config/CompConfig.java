@@ -74,8 +74,6 @@ class CompConfig {
           new DeployConfig(
               CANIVORE_NAME,
               20,
-
-              // TODO: BRINGUP: VERIFY VALUES
               -9.229,
               158,
               -1.75,
@@ -86,7 +84,6 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(150)
                           .withSupplyCurrentLimit(150))
-                  // UPDATED FOR OFFSEASON BOT
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -125,7 +122,6 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          // TODO: BRINGUP: RETUNE
                           .withMagnetOffset(-0.1064453125)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5))),
@@ -144,7 +140,6 @@ class CompConfig {
                           .withSupplyCurrentLimit(150))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
                           .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast)),
               new TalonFXConfiguration()
@@ -154,7 +149,6 @@ class CompConfig {
                           .withSupplyCurrentLimit(150))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ElevatorConfig(
@@ -172,18 +166,17 @@ class CompConfig {
                           .withStatorCurrentLimit(60))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
                   .withSlot0(
                       new Slot0Configs()
-                          // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                          // TODO: BRINGUP: TUNE
                           .withKP(0.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Elevator_Static))
-                  // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                  // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(9999999.0)
@@ -203,7 +196,7 @@ class CompConfig {
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
                           .withInverted(InvertedValue.Clockwise_Positive))
-                  // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                  // TODO: BRINGUP: TUNE
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(0.0)
@@ -211,7 +204,7 @@ class CompConfig {
                           .withKD(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
-                  // TODO: BRINGUP: REMOVE VALUES
+                  // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(999999.0)
