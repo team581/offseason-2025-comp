@@ -150,6 +150,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   public void setFieldRelativeAutoSpeeds(ChassisSpeeds speeds) {
     autoSpeeds = speeds;
     timeSinceAutoSpeeds.reset();
+    trailblazerDriveRequest();
     sendSwerveRequest();
   }
 
@@ -162,8 +163,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
-      case AUTO_SNAPS, TELEOP_SNAPS ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
+      case TRAILBLAZER, TELEOP ->
+          DriverStation.isAutonomous() ? SwerveState.TRAILBLAZER : SwerveState.TELEOP;
       default -> currentState;
     };
   }
@@ -277,13 +278,12 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
 
-      case AUTO_SNAPS -> {
+      case TRAILBLAZER -> {
         drivetrain.setControl(
-            driveToAngle
+            drive
                 .withVelocityX(autoSpeeds.vxMetersPerSecond)
                 .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                .withMaxAbsRotationalRate(maxAngularRate)
+                .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
@@ -309,7 +309,17 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void normalDriveRequest() {
-    setStateFromRequest(SwerveState.TELEOP);
+    if (DriverStation.isAutonomous()) {
+      return;
+    }
+     setStateFromRequest(SwerveState.TELEOP);
+  }
+
+  public void trailblazerDriveRequest() {
+    if (!DriverStation.isAutonomous()) {
+      return;
+    }
+    setStateFromRequest(SwerveState.TRAILBLAZER);
   }
 
   public Translation2d getControllerValues() {
@@ -327,7 +337,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     setSnapToAngle(snapAngle);
 
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO_SNAPS);
+      setStateFromRequest(SwerveState.TRAILBLAZER);
     } else {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
     }

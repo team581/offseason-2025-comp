@@ -108,6 +108,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
       }
 
       case INTAKING -> {
+        robotManager.stowRequest();
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
         robotManager.groundManager.intakeThenHandoffRequest();
