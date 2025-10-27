@@ -199,22 +199,20 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         yield currentState;
       }
       case CORAL_L1_BACKAWAY -> {
-
-          if (drivingAwayFromReef()) {
-            yield RobotState.CLAW_EMPTY;
-          }
+        if (drivingAwayFromReef()) {
+          yield RobotState.CLAW_EMPTY;
+        }
 
         yield currentState;
       }
 
       case CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE -> {
-
-          if (drivingAwayFromReef()
-              || ((autoAlign.isAlgaeRemoved()
-                      || groundManager.getState().equals(GroundState.INTAKING))
-                  && farEnoughFromReef())) {
-            yield RobotState.CLAW_EMPTY;
-          }
+        if (drivingAwayFromReef()
+            || ((autoAlign.isAlgaeRemoved()
+                    || groundManager.getState().equals(GroundState.INTAKING))
+                && farEnoughFromReef())) {
+          yield RobotState.CLAW_EMPTY;
+        }
 
         yield currentState;
       }
@@ -776,7 +774,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-
   @Override
   public void teleopInit() {
     super.teleopInit();
@@ -942,7 +939,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void scoringAlignOffRequest() {
     scoringAlignActive = false;
   }
-
 
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {
