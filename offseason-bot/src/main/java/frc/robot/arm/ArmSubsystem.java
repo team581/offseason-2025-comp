@@ -75,7 +75,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return rawMotorAngle;
   }
 
-
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING -> false;
@@ -116,10 +115,13 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
- @Override
+  @Override
   protected void afterTransition(ArmState newState) {
     switch (newState) {
-      default -> motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(clamp(newState.getAngle()))));
+      default ->
+          motor.setControl(
+              motionMagicRequest.withPosition(
+                  Units.degreesToRotations(clamp(newState.getAngle()))));
     }
   }
 
@@ -161,8 +163,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
           motor.setControl(coastNeutralRequest);
         }
       }
-      default -> {
-      }
+      default -> {}
     }
   }
 

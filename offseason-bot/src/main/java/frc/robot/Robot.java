@@ -51,7 +51,8 @@ public class Robot extends Base581Robot {
   private final Limelight leftLimelight =
       new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
   private final Limelight rightlLimelight =
-      new Limelight("right", LimelightState.TAGS, RobotConfig.get().vision().rightLimelightConfig());
+      new Limelight(
+          "right", LimelightState.TAGS, RobotConfig.get().vision().rightLimelightConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);

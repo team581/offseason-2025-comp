@@ -118,5 +118,4 @@ public class RobotCommands {
     return Commands.runOnce(robot.groundManager::rehomeRequest, gmRequirements)
         .withName("RehomeDeployCommand");
   }
-
 }

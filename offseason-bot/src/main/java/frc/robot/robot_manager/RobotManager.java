@@ -1215,7 +1215,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-
   private void moveSuperstructure(ElevatorState elevatorGoal, ArmState armGoal) {
     latestArmGoal = armGoal;
     latestElevatorGoal = elevatorGoal;
