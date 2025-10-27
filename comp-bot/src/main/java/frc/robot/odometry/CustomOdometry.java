@@ -57,7 +57,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     double angleDifferenceRadians = moduleDirection * (currentAngleRadians - previousAngleRadians);
     double arcLength = currentDistanceMeters - previousDistanceMeters;
 
-    // If angle difference is 0 then we can just use a straight line instead of an arc
+    // *If angle difference is 0 then we can just use a straight line instead of an arc
     if (angleDifferenceRadians == 0) {
       return new Translation2d(arcLength, new Rotation2d(currentAngleRadians));
     }
@@ -68,8 +68,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
     // angle. The previous module translation is (0, 0) because we don't care where it starts, only
-    // the displacement. It is also always perpendicular to the preivous angle, +-radius indicating
-    // which side of the module that the circle center will be on
+    // the displacement. It is also always perpendicular to the preivous angle, with positive/negative radius indicating which side of the module that the circle center will be on
     double circleCenterX = -radius * Math.sin(previousAngleRadians);
     double circleCenterY = radius * Math.cos(previousAngleRadians);
 
@@ -81,19 +80,21 @@ public class CustomOdometry extends SwerveDriveOdometry {
     return new Translation2d(displacementX, displacementY);
   }
 
-  public void setModuleSpeeds(SwerveModuleState[] currentModuleStates) {
+  // Function to set the current module speeds, as it can't be passed into Update() as a parameter
+  public void setCurrentModuleSpeeds(SwerveModuleState[] currentModuleStates) {
     for (int i = 0; i < 4; i++) {
       moduleSpeeds[i] = currentModuleStates[i].speedMetersPerSecond;
     }
   }
 
-  // Function to set the previous robot pose, as it can't be passed in to Update() as a parameter
+  // Function to set the previous robot pose, as it can't be passed into Update() as a parameter
   public void setPreviousRobotPose(Pose2d newPreviousRobotPose) {
     previousRobotPose = newPreviousRobotPose;
   }
 
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
+    // First, get the field relative module poses of the previous robot pose, and apply robot relative module offsets
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
           new Transform2d(robotRelativeModuleOffsets[0], new Rotation2d(0.0))),
@@ -105,6 +106,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
           new Transform2d(robotRelativeModuleOffsets[3], new Rotation2d(0.0)))
     };
 
+    // Also get the module displacements from the previous wheel positions to the current wheel positions 
     Translation2d[] moduleDisplacements = {
       getModuleDisplacement(
           moduleSpeeds[0],
@@ -132,6 +134,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
           currentWheelPositions[3].distanceMeters)
     };
 
+    // Next, add the module displacements to the field relative module poses
     Translation2d[] fieldRelativeModuleDisplacements = {
       fieldRelativeModulePosesOfPreviousPose[0]
           .transformBy(new Transform2d(moduleDisplacements[0], new Rotation2d(0.0)))
@@ -147,14 +150,14 @@ public class CustomOdometry extends SwerveDriveOdometry {
           .getTranslation()
     };
 
-    // Divide sum of field relative module displacements by 4 because there are 4 modules
+    // Finally, average the module displacements and return the new pose
     Translation2d sumOfFieldRelativeModuleDisplacements =
         fieldRelativeModuleDisplacements[0]
             .plus(fieldRelativeModuleDisplacements[1])
             .plus(fieldRelativeModuleDisplacements[2])
             .plus(fieldRelativeModuleDisplacements[3]);
-    double displacementX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
-    double displacementY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
+    double updatedPoseX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
+    double updatedPoseY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
 
     // Logging
     DogLog.log("Odometry/PreviousPose", previousRobotPose);
@@ -174,11 +177,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
         "Odometry/FieldRelativeBackRightModuleDisplacement",
         new Pose2d(fieldRelativeModuleDisplacements[3], new Rotation2d(currentWheelPositions[3].angle.getRadians())));
 
-    // After calculations, before the next loop update the previous wheel positions to the current
-    // ones
+    // After calculations, but before the next loop, update the previous wheel positions to the current ones
     updatePreviousWheelPositions(currentWheelPositions);
 
-    return new Pose2d(displacementX, displacementY, currentGyroAngle);
+    return new Pose2d(updatedPoseX, updatedPoseY, currentGyroAngle);
   }
 
   private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
@@ -187,7 +189,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     }
   }
 
-  // Public function FOR UNIT TESTS ONLY
+  // PUBLIC FUNCTION FOR UNIT TESTS ONLY
   public void unitTestUpdatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
     for (int i = 0; i < 4; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];

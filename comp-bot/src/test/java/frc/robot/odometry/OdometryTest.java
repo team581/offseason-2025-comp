@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import org.junit.jupiter.api.Test;
 
 public class OdometryTest {
-
+  // TODO: Make tests account for wheels flipped by pi radians - use setCurrentModuleSpeeds() to check
   @Test
   void sampleOdometryTest() {
     // INITIALIZE CUSTOM ODOMETRY OBJECT
