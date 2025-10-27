@@ -1,11 +1,16 @@
 package frc.robot.autos.auto_state_machines;
 
+import java.util.ArrayDeque;
+import java.util.List;
+
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.auto_align.poses.ReefPipe;
+import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
@@ -15,10 +20,13 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path =
-      new AutoSegment(
-          CONSTRAINTS, new AutoPoint(getStartingPose()), new AutoPoint(getStartingPose()));
-
+      new AutoSegment();
   private static final int SCORE_COUNTER = 0;
+  private final ArrayDeque<ReefPipe> nextScoringPositions =
+      new ArrayDeque<ReefPipe>(
+          List.of(
+              ReefPipe.PIPE_I, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A, ReefPipe.PIPE_B));
+
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -48,7 +56,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.getPose();
+    return Points.START_R2_AND_B2.getPose();
   }
 
   private boolean superstructureAtGoal() {
@@ -83,8 +91,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
               : currentState;
 
       case INTAKING ->
-          (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
-                  || robotManager.claw.getHasGP()
+          ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
+                  || robotManager.claw.getHasGP())&&!nextScoringPositions.isEmpty()
               ? StationAndLollipop5pcAutoState.SCORE
               : currentState;
 
@@ -103,14 +111,15 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   protected void afterTransition(StationAndLollipop5pcAutoState newState) {
     switch (newState) {
       case SCORE -> {
-        robotManager.scoreRequest();
+        robotManager.scoreRequest(nextScoringPositions.pop(),ReefPipeLevel.L4);
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
       case INTAKING -> {
-        robotManager.stowRequest();
-        createPath(newState.pose);
+        createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
+        robotManager.stowRequest();
+
         robotManager.groundManager.intakeThenHandoffRequest();
       }
 
