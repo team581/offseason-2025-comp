@@ -584,7 +584,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         .orElseThrow();
   }
 
-
   /** Finds the best pipe to score on based on alignment cost and reef state. */
   private ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
     if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
