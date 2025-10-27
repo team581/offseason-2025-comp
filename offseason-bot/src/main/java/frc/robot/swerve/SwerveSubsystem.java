@@ -361,7 +361,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, double maxVelocity) {
-    if (DriverStation.isTeleop()) {
       lastDriveToPoseTarget = pose;
       lastUseAngleBisector = useAngleBisector;
       driveToPoseSpeeds =
@@ -369,7 +368,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
               lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, maxVelocity);
       setStateFromRequest(SwerveState.DRIVE_TO_POSE);
       sendSwerveRequest();
-    }
+    
   }
 
   public void climbRequest(double snapAngle) {
