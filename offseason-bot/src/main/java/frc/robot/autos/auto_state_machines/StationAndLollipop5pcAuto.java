@@ -55,7 +55,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-  private StationAndLollipop5pcAutoState getNextIntakeState() {
+  private static StationAndLollipop5pcAutoState getNextIntakeState() {
     DogLog.log("StateMachineAuto/scoreCounter", SCORE_COUNTER);
     if (SCORE_COUNTER >= 4) {
       return StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2;
