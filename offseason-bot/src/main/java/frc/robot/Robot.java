@@ -144,6 +144,6 @@ public class Robot extends Base581Robot {
     hardware.driverController.y().onTrue(actions.rehomeDeployCommand());
     hardware.driverController.x().onTrue(actions.forceNextScoreSequenceCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
-    hardware.driverController.back().onTrue(actions.unjamCommand());
+    hardware.driverController.start().onTrue(actions.unjamCommand()).onFalse(actions.stowCommand());
   }
 }
