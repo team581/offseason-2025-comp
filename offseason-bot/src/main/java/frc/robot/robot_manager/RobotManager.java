@@ -879,9 +879,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void forceIdleNoGp() {
-    setStateFromRequest(RobotState.CLAW_EMPTY);
-  }
 
   public void stowRequest() {
     groundManager.stowRequest();
@@ -936,29 +933,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     scoringAlignActive = false;
   }
 
-  public void l4CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L4_APPROACH);
-    }
-  }
-
-  public void l3CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L3_APPROACH);
-    }
-  }
-
-  public void l2CoralAutoApproachRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L2_APPROACH);
-    }
-  }
-
-  public void l2CoralAutoLineupRequest() {
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(RobotState.CORAL_L2_LINEUP);
-    }
-  }
 
   public void l4CoralApproachRequest() {
     if (getState().climbingOrRehoming) {
@@ -1012,45 +986,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
   }
 
-  public void highLineupRequest() {
-    if (!getState().climbingOrRehoming) {
-      if (getState().clawGp == ClawGamePiece.ALGAE) {
-        algaeNetRequest();
-      } else {
-        l4CoralApproachRequest();
-      }
-    }
-  }
-
-  public void lowLineupRequest() {
-    if (!getState().climbingOrRehoming) {
-      if (getState().clawGp == ClawGamePiece.ALGAE) {
-        processorWaitingRequest();
-      } else {
-        l1CoralApproachRequest();
-      }
-    }
-  }
-
-  public void l4CoralReleaseRequest() {
-    if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP()) {
-        setStateFromRequest(RobotState.CORAL_L4_RELEASE);
-      } else {
-        setStateFromRequest(RobotState.CORAL_L4_PREPARE_HANDOFF);
-      }
-    }
-  }
-
-  public void l3CoralReleaseRequest() {
-    if (!getState().climbingOrRehoming) {
-      if (claw.getHasGP()) {
-        setStateFromRequest(RobotState.CORAL_L3_RELEASE);
-      } else {
-        setStateFromRequest(RobotState.CORAL_L3_PREPARE_HANDOFF);
-      }
-    }
-  }
 
   public void algaeReefIntakeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
@@ -1087,6 +1022,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
+      case ALGAE_NET_RELEASE -> {}
 
       default -> {
         scoringAlignActive = true;
@@ -1122,6 +1058,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
+      case ALGAE_NET_RELEASE -> {}
 
       default -> {
         scoringAlignActive = true;

@@ -57,10 +57,6 @@ public class RobotCommands {
         .withName("ForceNextScoreSequenceCommand");
   }
 
-  public Command highLineupCommand() {
-    return Commands.runOnce(robot::highLineupRequest, bothRequirements)
-        .withName("HighLineupCommand");
-  }
 
   public Command l3LineupCommand() {
     return Commands.runOnce(robot::l3CoralApproachRequest, bothRequirements)
@@ -70,10 +66,6 @@ public class RobotCommands {
   public Command l2LineupCommand() {
     return Commands.runOnce(robot::l2CoralApproachRequest, bothRequirements)
         .withName("L2LineupCommand");
-  }
-
-  public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, bothRequirements).withName("LowLineupCommand");
   }
 
   public Command algaeReefIntakeCommand() {
