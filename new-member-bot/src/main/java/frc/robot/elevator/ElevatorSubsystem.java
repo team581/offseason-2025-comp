@@ -15,8 +15,8 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
-  private static final double TOLERANCE = 0;
-  private static final double NEAR_TOLERANCE = 0;
+  private static final double TOLERANCE = 5.0;
+  private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
 
