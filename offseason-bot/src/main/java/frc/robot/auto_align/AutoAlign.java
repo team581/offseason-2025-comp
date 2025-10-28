@@ -610,12 +610,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   }
 
   /** Finds the best pipe to score on based on alignment cost and reef state. */
-  public ReefPipe getBestPipeForScoring() {
-    return getBestPipeForScoring(currentReefPipeLevel);
-  }
-
-  /** Finds the best pipe to score on based on alignment cost and reef state. */
-  public ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
+  private ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
     if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
       return autoPipeOverride.get();
     }
@@ -666,6 +661,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   public Pose2d getCurrentTargetPose() {
     return currentTargetPose;
+  }
+
+  public ReefPipe getBestPipe() {
+    return bestPipe;
   }
 
   /** Finds the best side to intake algae from based on algae state in reef */
