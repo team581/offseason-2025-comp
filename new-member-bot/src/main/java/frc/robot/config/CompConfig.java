@@ -54,8 +54,8 @@ class CompConfig {
               20,
               21,
               22,
-              0.0,
-              90.0,
+              -55.0,
+              100.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
