@@ -97,7 +97,11 @@ class CompConfig {
                           .withKP(100.0)
                           .withKV(0.0)
                           .withKG(0.0)
-                          .withGravityType(GravityTypeValue.Arm_Cosine))),
+                          .withGravityType(GravityTypeValue.Arm_Cosine))
+                          .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(999999.0)
+                          .withMotionMagicCruiseVelocity(999999.0))),
           new ClimberConfig(
               CANIVORE_NAME,
               21,
