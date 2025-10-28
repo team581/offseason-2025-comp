@@ -67,8 +67,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   // }
 
   @Override
-  protected AutoState getNextState(
-      AutoState currentState) {
+  protected AutoState getNextState(AutoState currentState) {
     DogLog.log(
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
         trailblazer.followSegmentIsFinished(path));

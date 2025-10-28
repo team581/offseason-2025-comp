@@ -74,8 +74,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   // }
 
   @Override
-  protected AutoState getNextState(
-      AutoState currentState) {
+  protected AutoState getNextState(AutoState currentState) {
     DogLog.timestamp("StateMachineAuto/gotNewState");
     DogLog.log(
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
