@@ -37,7 +37,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
-      double currentDistanceMeters) {  
+      double currentDistanceMeters) {
     // First, calculate difference between previous and current angles and distances
     double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
     double arcLength = currentDistanceMeters - previousDistanceMeters;
@@ -53,7 +53,9 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
     // angle. The previous module translation is (0, 0) because we don't care where it starts, only
-    // the displacement. It is also always perpendicular to the preivous angle, with positive/negative radius indicating which side of the module that the circle center will be on
+    // the displacement. It is also always perpendicular to the preivous angle, with
+    // positive/negative radius indicating which side of the module that the circle center will be
+    // on
     double circleCenterX = -radius * Math.sin(previousAngleRadians);
     double circleCenterY = radius * Math.cos(previousAngleRadians);
 
@@ -72,7 +74,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
-    // First, get the field relative module poses of the previous robot pose, and apply robot relative module offsets
+    // First, get the field relative module poses of the previous robot pose, and apply robot
+    // relative module offsets
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = {
       previousRobotPose.transformBy(
           new Transform2d(robotRelativeModuleOffsets[0], new Rotation2d(0.0))),
@@ -84,7 +87,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
           new Transform2d(robotRelativeModuleOffsets[3], new Rotation2d(0.0)))
     };
 
-    // Also get the module displacements from the previous wheel positions to the current wheel positions 
+    // Also get the module displacements from the previous wheel positions to the current wheel
+    // positions
     Translation2d[] moduleDisplacements = {
       getModuleDisplacement(
           previousWheelPositions[0].angle.getRadians(),
@@ -140,18 +144,27 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
     DogLog.log(
         "Odometry/FieldRelativeFrontLeftModuleDisplacements",
-        new Pose2d(fieldRelativeModuleDisplacements[0], new Rotation2d(currentWheelPositions[0].angle.getRadians())));
+        new Pose2d(
+            fieldRelativeModuleDisplacements[0],
+            new Rotation2d(currentWheelPositions[0].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeFrontRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[1], new Rotation2d(currentWheelPositions[1].angle.getRadians())));
+        new Pose2d(
+            fieldRelativeModuleDisplacements[1],
+            new Rotation2d(currentWheelPositions[1].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeBackLeftModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[2], new Rotation2d(currentWheelPositions[2].angle.getRadians())));
+        new Pose2d(
+            fieldRelativeModuleDisplacements[2],
+            new Rotation2d(currentWheelPositions[2].angle.getRadians())));
     DogLog.log(
         "Odometry/FieldRelativeBackRightModuleDisplacement",
-        new Pose2d(fieldRelativeModuleDisplacements[3], new Rotation2d(currentWheelPositions[3].angle.getRadians())));
+        new Pose2d(
+            fieldRelativeModuleDisplacements[3],
+            new Rotation2d(currentWheelPositions[3].angle.getRadians())));
 
-    // After calculations, but before the next loop, update the previous wheel positions to the current ones
+    // After calculations, but before the next loop, update the previous wheel positions to the
+    // current ones
     updatePreviousWheelPositions(currentWheelPositions);
 
     return new Pose2d(updatedPoseX, updatedPoseY, currentGyroAngle);
