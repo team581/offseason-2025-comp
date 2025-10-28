@@ -38,6 +38,8 @@ class CompConfig {
               RIO_CAN_NAME,
               16,
               30.0,
+              5.0,
+              3.0,
               new Debouncer(0),
               new TalonFXConfiguration()
                   .withCurrentLimits(

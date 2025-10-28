@@ -12,7 +12,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
-  private double minVelocityTimeout;
   private final Timer timeout = new Timer();
   private final Debouncer debouncer;
   private boolean hasSeenMinVelocity = false;
@@ -20,8 +19,8 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   private final DoubleSubscriber tunableMaxVelocity =
       DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());
-  ;
-  private final DoubleSubscriber tunableMinVelocity = DogLog.tunable("Claw/MinVelocity", 5.0);
+
+  private final DoubleSubscriber tunableMinVelocity = DogLog.tunable("Claw/MinVelocity", RobotConfig.get().claw().gpMinVelocity());
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
@@ -52,13 +51,13 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
         : velocityDetectsGp;
   }
 
-  private boolean getHasGp(double motorVelocity, double maxVelocity) {
+  private boolean getHasGp(double motorVelocity) {
     hasSeenMinVelocity =
         hasSeenMinVelocity
-            || timeout.hasElapsed(minVelocityTimeout)
+            || timeout.hasElapsed(RobotConfig.get().claw().minVelocityTimeout())
             || Math.abs(motorVelocity) >= tunableMinVelocity.get();
 
-    return hasSeenMinVelocity && debouncer.calculate(Math.abs(motorVelocity) <= maxVelocity);
+    return hasSeenMinVelocity && debouncer.calculate(Math.abs(motorVelocity) <= tunableMaxVelocity.get());
   }
 
   public void setState(ClawState newState) {
@@ -80,7 +79,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   public void whileInState(ClawState currentState) {
-    velocityDetectsGp = getHasGp(motor.getVelocity().getValueAsDouble(), tunableMaxVelocity.get());
+    velocityDetectsGp = getHasGp(motor.getVelocity().getValueAsDouble());
     DogLog.log("Claw/HasGP", getHasGP());
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());

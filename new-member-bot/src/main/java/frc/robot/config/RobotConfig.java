@@ -18,6 +18,8 @@ public record RobotConfig(
       String canBusName,
       int motorId,
       double gpMaxVelocity,
+      double gpMinVelocity,
+      double minVelocityTimeout,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
