@@ -99,7 +99,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     if (oldState == ElevatorState.PRE_MATCH_HOMING
         && newState != ElevatorState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
-        // We are enabled and still in pre match homing
+      // We are enabled and still in pre match homing
       // Reset the motor positions, and then transition to idle state
       double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
       var homedHeight = homingEndHeight + (height - lowestSeenHeight);
