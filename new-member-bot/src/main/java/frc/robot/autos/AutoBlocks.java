@@ -121,8 +121,7 @@ public class AutoBlocks {
                     new AutoPoint(
                         () ->
                             backupPoint.orElse(
-                                pipe.getPose(
-                                    ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
+                                pipe.getPose(ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
                 false)
             .onlyIf(() -> robotManager.claw.getHasGP()));
   }
