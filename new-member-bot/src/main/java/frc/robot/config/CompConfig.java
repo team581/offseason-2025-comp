@@ -123,7 +123,7 @@ class CompConfig {
                           .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0)))),
+                          .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0) * (Math.PI * 1.881)))),
           new WristConfig(
               RIO_CAN_NAME,
               18,
