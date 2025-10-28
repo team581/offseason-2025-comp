@@ -233,11 +233,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       // Algae scoring
       case ALGAE_PROCESSOR_RELEASE -> {
-        if (FeatureFlags.AUTO_STOW_ALGAE.getAsBoolean()) {
-          yield timeout(0.5) || !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
-        }
-
-        yield currentState;
+          yield timeout(1.0) ? RobotState.CLAW_EMPTY : currentState;
       }
 
       case ALGAE_NET_RELEASE -> {
@@ -249,7 +245,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       // Intaking
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
-          arm.nearGoal() && elevator.nearGoal()
+          arm.nearGoal() && elevator.nearGoal() && autoAlign.isCentered()
               ? currentState.getNextAlgaeIntakeState()
               : currentState;
 
@@ -829,7 +825,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private boolean backedAwayFromNetEnough() {
     var rotation = lastNetReleasePose.getRotation().getDegrees();
-    var redSide = MathUtil.isNear(180, rotation, 10);
+    var redSide = MathUtil.isNear(180, rotation, 10,-180,180);
     var farEnoughFromReleasePose =
         redSide
             ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)
