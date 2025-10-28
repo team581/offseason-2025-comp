@@ -19,7 +19,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
-  private static int SCORE_COUNTER = 0;
+  private static final int SCORE_COUNTER = 0;
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           List.of(

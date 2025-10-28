@@ -100,7 +100,8 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
-        robotManager.groundManager.intakeRequest();      }
+        robotManager.groundManager.intakeRequest();
+      }
       case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + newState);
     }
   }
@@ -114,7 +115,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         trailblazer.followSegmentPeriodic(path);
       }
       case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + state);
-      default -> throw new IllegalArgumentException("Unexpected value: " + state);
     }
   }
 }
