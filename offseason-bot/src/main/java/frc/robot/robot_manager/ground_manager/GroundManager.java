@@ -60,7 +60,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           yield GroundState.IDLE_GP;
         }
 
-        //Prevent from going in an unjamming loop
+        // Prevent from going in an unjamming loop
         if (timeout(0.5)) {
           if (intake.isJammed()) {
             yield GroundState.AUTO_UNJAM;
@@ -72,12 +72,13 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
             yield GroundState.AUTO_UNJAM_RIGHT;
           }
         }
-        
+
         yield currentState;
       }
       case IDLE_GP -> !getTopHasGP() ? GroundState.IDLE_NO_GP : currentState;
       case IDLE_NO_GP -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
-      case AUTO_UNJAM_LEFT, AUTO_UNJAM_RIGHT, AUTO_UNJAM -> timeout(0.25) ? GroundState.INTAKING : currentState;
+      case AUTO_UNJAM_LEFT, AUTO_UNJAM_RIGHT, AUTO_UNJAM ->
+          timeout(0.25) ? GroundState.INTAKING : currentState;
       default -> currentState;
     };
   }

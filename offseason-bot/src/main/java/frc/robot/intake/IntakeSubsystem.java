@@ -15,8 +15,8 @@ public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
   private double rawCurrent = 0.0;
   private double filteredCurrent = 0.0;
 
-    private final DoubleSubscriber JAM_CURRENT_THRESHOLD = DogLog.tunable("Singulator/JamCurrentThreshold", Double.POSITIVE_INFINITY);
-
+  private static final DoubleSubscriber JAM_CURRENT_THRESHOLD =
+      DogLog.tunable("Singulator/JamCurrentThreshold", Double.POSITIVE_INFINITY);
 
   public IntakeSubsystem(TalonFX motor) {
     super(SubsystemPriority.INTAKE, IntakeState.IDLE);
