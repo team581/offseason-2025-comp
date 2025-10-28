@@ -15,11 +15,11 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 import java.util.List;
 
-public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
+public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
-  private static final int SCORE_COUNTER = 0;
+  private static int SCORE_COUNTER = 0;
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           List.of(
@@ -48,7 +48,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   }
 
   public StationAndLollipop5pcAuto(RobotManager robot, Trailblazer trailblazer) {
-    super(StationAndLollipop5pcAutoState.SCORE, robot, trailblazer);
+    super(AutoState.SCORE, robot, trailblazer);
   }
 
   @Override
@@ -60,12 +60,12 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-  private static StationAndLollipop5pcAutoState getNextIntakeState() {
+  private static AutoState getNextIntakeState() {
     DogLog.log("StateMachineAuto/scoreCounter", SCORE_COUNTER);
-    if (SCORE_COUNTER >= 4) {
-      return StationAndLollipop5pcAutoState.PRE_LOLLIPOP_2;
+    if (SCORE_COUNTER == 4) {
+      return AutoState.LOLLIPOP_2;
     }
-    return StationAndLollipop5pcAutoState.INTAKING;
+    return AutoState.INTAKING;
   }
 
   // private StationAndLollipop5pcAutoState getNextReefPosition() {
@@ -74,8 +74,8 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
   // }
 
   @Override
-  protected StationAndLollipop5pcAutoState getNextState(
-      StationAndLollipop5pcAutoState currentState) {
+  protected AutoState getNextState(
+      AutoState currentState) {
     DogLog.timestamp("StateMachineAuto/gotNewState");
     DogLog.log(
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
@@ -91,59 +91,47 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<StationAndLoll
           ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                       || robotManager.claw.getHasGP())
                   && !nextScoringPositions.isEmpty()
-              ? StationAndLollipop5pcAutoState.SCORE
+              ? AutoState.SCORE
               : currentState;
 
-      case PRE_LOLLIPOP_2 ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.LOLLIPOP_2
-              : currentState;
       case LOLLIPOP_2 ->
           superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
-              ? StationAndLollipop5pcAutoState.SCORE
+              ? AutoState.SCORE
               : currentState;
     };
   }
 
   @Override
-  protected void afterTransition(StationAndLollipop5pcAutoState newState) {
+  protected void afterTransition(AutoState newState) {
     switch (newState) {
       case SCORE -> {
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeThenHandoffRequest();
+        SCORE_COUNTER++;
       }
 
       case INTAKING -> {
         createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
-
         robotManager.groundManager.intakeThenHandoffRequest();
-      }
-
-      case PRE_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
       }
 
       case LOLLIPOP_2 -> {
         createPath(newState.pose);
         trailblazer.followSegmentInit(path);
+        robotManager.stowRequest();
         robotManager.groundManager.intakeThenHandoffRequest();
       }
     }
   }
 
   @Override
-  protected void whileInState(StationAndLollipop5pcAutoState state) {
+  protected void whileInState(AutoState state) {
     switch (state) {
       case SCORE -> {}
 
       case INTAKING -> {
-        trailblazer.followSegmentPeriodic(path);
-      }
-
-      case PRE_LOLLIPOP_2 -> {
         trailblazer.followSegmentPeriodic(path);
       }
 

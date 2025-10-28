@@ -15,7 +15,7 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 import java.util.List;
 
-public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAutoState> {
+public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
@@ -49,7 +49,7 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
   }
 
   public StationAuto4pc(RobotManager robot, Trailblazer trailblazer) {
-    super(StationAndLollipop5pcAutoState.SCORE, robot, trailblazer);
+    super(AutoState.SCORE, robot, trailblazer);
   }
 
   @Override
@@ -67,8 +67,8 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
   // }
 
   @Override
-  protected StationAndLollipop5pcAutoState getNextState(
-      StationAndLollipop5pcAutoState currentState) {
+  protected AutoState getNextState(
+      AutoState currentState) {
     DogLog.log(
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
         trailblazer.followSegmentIsFinished(path));
@@ -76,24 +76,22 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
       case SCORE ->
           !robotManager.claw.getHasGP()
                   && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
-              ? StationAndLollipop5pcAutoState.INTAKING
+              ? AutoState.INTAKING
               : currentState;
 
       case INTAKING ->
           ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                       || robotManager.claw.getHasGP())
                   && !nextScoringPositions.isEmpty()
-              ? StationAndLollipop5pcAutoState.SCORE
+              ? AutoState.SCORE
               : currentState;
       case LOLLIPOP_2 ->
-          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
-      case PRE_LOLLIPOP_2 ->
           throw new UnsupportedOperationException("Unimplemented case: " + currentState);
     };
   }
 
   @Override
-  protected void afterTransition(StationAndLollipop5pcAutoState newState) {
+  protected void afterTransition(AutoState newState) {
     switch (newState) {
       case SCORE -> {
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
@@ -105,33 +103,20 @@ public class StationAuto4pc extends BaseImperativeAuto<StationAndLollipop5pcAuto
         robotManager.stowRequest();
         robotManager.groundManager.intakeThenHandoffRequest();
       }
-      case PRE_LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-      }
-      case LOLLIPOP_2 -> {
-        createPath(newState.pose);
-        trailblazer.followSegmentInit(path);
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+      case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + newState);
     }
   }
 
   @Override
-  protected void whileInState(StationAndLollipop5pcAutoState state) {
+  protected void whileInState(AutoState state) {
     switch (state) {
       case SCORE -> {}
 
       case INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
       }
-      case PRE_LOLLIPOP_2 -> {
-        trailblazer.followSegmentPeriodic(path);
-      }
-
-      case LOLLIPOP_2 -> {
-        trailblazer.followSegmentPeriodic(path);
-      }
+      case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + state);
+      default -> throw new IllegalArgumentException("Unexpected value: " + state);
     }
   }
 }
