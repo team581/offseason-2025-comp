@@ -30,7 +30,11 @@ public class PidPathFollower implements PathFollower {
             currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
     if (!MathUtil.isNear(
-        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0, -180, 180)) {
+        targetPose.getRotation().getDegrees(),
+        currentPose.getRotation().getDegrees(),
+        1.0,
+        -180,
+        180)) {
       rotationSpeed +=
           Math.copySign(Units.rotationsToRadians(ROTATION_FEED_FORWARD), rotationSpeed);
     }
