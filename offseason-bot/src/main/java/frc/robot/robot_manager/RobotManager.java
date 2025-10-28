@@ -233,7 +233,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       // Algae scoring
       case ALGAE_PROCESSOR_RELEASE -> {
-          yield timeout(1.0) ? RobotState.CLAW_EMPTY : currentState;
+        yield timeout(1.0) ? RobotState.CLAW_EMPTY : currentState;
       }
 
       case ALGAE_NET_RELEASE -> {
@@ -825,7 +825,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private boolean backedAwayFromNetEnough() {
     var rotation = lastNetReleasePose.getRotation().getDegrees();
-    var redSide = MathUtil.isNear(180, rotation, 10,-180,180);
+    var redSide = MathUtil.isNear(180, rotation, 10, -180, 180);
     var farEnoughFromReleasePose =
         redSide
             ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)

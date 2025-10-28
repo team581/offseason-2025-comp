@@ -98,7 +98,7 @@ class CompConfig {
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
-                          .withMotionMagic(
+                  .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(999999.0)
                           .withMotionMagicCruiseVelocity(999999.0))),
