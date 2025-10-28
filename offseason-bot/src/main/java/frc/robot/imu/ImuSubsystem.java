@@ -28,8 +28,8 @@ public class ImuSubsystem extends BaseImuSubsystem {
 
   public boolean isFlatDebounced() {
     return isTiltedDebouncer.calculate(
-        MathUtil.isNear(pitch, 0, IS_TILTED_THRESHOLD)
-            && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD));
+        MathUtil.isNear(pitch, 0, IS_TILTED_THRESHOLD, -90, 90)
+            && MathUtil.isNear(roll, 0, IS_TILTED_THRESHOLD , -180, 180));
   }
 
   @Override

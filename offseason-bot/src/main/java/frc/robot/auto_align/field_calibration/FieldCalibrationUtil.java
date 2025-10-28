@@ -56,7 +56,7 @@ public class FieldCalibrationUtil {
         MathUtil.isNear(
             wantedPose.getRotation().getDegrees(),
             actualPose.getRotation().getDegrees(),
-            HEADING_TOLERANCE);
+            HEADING_TOLERANCE,-180,180);
 
     if (elevatorError > ELEVATOR_TOLERANCE) {
       elevatorState = MechanismState.TOO_LOW;

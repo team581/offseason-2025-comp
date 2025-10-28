@@ -424,7 +424,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
 
     if (!MathUtil.isNear(
-        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0, -180, 180)) {
       rotationSpeed +=
           Math.copySign(Units.rotationsToRadians(DRIVE_TO_POSE_ROTATION_FF.get()), rotationSpeed);
     }

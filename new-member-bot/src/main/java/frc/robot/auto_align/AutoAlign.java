@@ -114,7 +114,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0, -180.0, 180.0)) {
           yield AutoAlignState.EXPLICIT_LEFT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.RIGHT_PIPE) {
           yield AutoAlignState.EXPLICIT_RIGHT_CENTER;
@@ -127,7 +127,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0, -180.0, 180.0)) {
           yield AutoAlignState.EXPLICIT_RIGHT_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           yield AutoAlignState.EXPLICIT_LEFT_CENTER;
@@ -140,7 +140,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
             && MathUtil.isNear(
                 currentTargetPose.getRotation().getDegrees(),
                 currentPose.getRotation().getDegrees(),
-                25.0)) {
+                25.0, -180.0, 180.0)) {
           yield AutoAlignState.BEST_PIPE_WAITING;
         } else if (getWantedPipeSideState(closestReefSide) == AutoAlignState.LEFT_PIPE) {
           yield AutoAlignState.EXPLICIT_LEFT_CENTER;
