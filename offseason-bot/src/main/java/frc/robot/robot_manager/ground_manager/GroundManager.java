@@ -51,20 +51,33 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
   @Override
   protected GroundState getNextState(GroundState currentState) {
-    if (singulator.isLeftJammed()) {
-      return GroundState.UNJAM_LEFT;
-    }
-    if (singulator.isRightJammed()) {
-      return GroundState.UNJAM_RIGHT;
-    }
+
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
-      case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case INTAKING -> {
+        if (getTopHasGP()) {
+          yield GroundState.IDLE_GP;
+        }
+
+        //Prevent from going in an unjamming loop
+        if (timeout(0.5)) {
+          if (intake.isJammed()) {
+            yield GroundState.AUTO_UNJAM;
+          }
+          if (singulator.isLeftJammed()) {
+            yield GroundState.AUTO_UNJAM_LEFT;
+          }
+          if (singulator.isRightJammed()) {
+            yield GroundState.AUTO_UNJAM_RIGHT;
+          }
+        }
+        
+        yield currentState;
+      }
       case IDLE_GP -> !getTopHasGP() ? GroundState.IDLE_NO_GP : currentState;
       case IDLE_NO_GP -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
-      // TODO: Adjust timeouts and make work for INTAKE_THEN_HANDOFF
-      case UNJAM_LEFT, UNJAM_RIGHT -> timeout(0) ? GroundState.INTAKING : currentState;
+      case AUTO_UNJAM_LEFT, AUTO_UNJAM_RIGHT, AUTO_UNJAM -> timeout(0.25) ? GroundState.INTAKING : currentState;
       default -> currentState;
     };
   }
@@ -92,12 +105,12 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         deploy.setState(DeployState.FLOOR_INTAKE);
         singulator.setState(SingulatorState.INTAKING);
       }
-      case UNJAM_LEFT -> {
+      case AUTO_UNJAM_LEFT -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_LEFT_ONLY);
       }
-      case UNJAM_RIGHT -> {
+      case AUTO_UNJAM_RIGHT -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
@@ -109,7 +122,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         singulator.setState(SingulatorState.STOPPED);
       }
 
-      case OUTTAKING -> {
+      case OUTTAKING, AUTO_UNJAM -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.OUTTAKING);
@@ -126,7 +139,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           switch (getState()) {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
-            case OUTTAKING -> false;
+            case OUTTAKING, AUTO_UNJAM -> false;
             case INTAKING -> timeout(2);
             default -> false;
           };
@@ -135,7 +148,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           switch (getState()) {
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
-            case OUTTAKING -> false;
+            case OUTTAKING, AUTO_UNJAM -> false;
             case INTAKING -> timeout(1.9);
             default -> false;
           };
