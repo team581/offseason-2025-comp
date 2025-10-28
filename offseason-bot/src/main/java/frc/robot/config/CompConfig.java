@@ -51,7 +51,7 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ClawConfig(
               // TODO: BRINGUP: CHECK SENSOR FLIPPED
-              CANIVORE_NAME,
+              RIO_CAN_NAME,
               16,
               27,
               false,
@@ -74,35 +74,34 @@ class CompConfig {
           new DeployConfig(
               CANIVORE_NAME,
               20,
-
-              // TODO: BRINGUP: VERIFY VALUES
-              99,
-              148,
-              1.75,
+              -9.229,
+              158,
+              -1.75,
               20.0,
-              1,
+              -9.229,
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(150)
                           .withSupplyCurrentLimit(150))
-                  // UPDATED FOR OFFSEASON BOT
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
                               (72.0 / 12.0) * (72.0 / 18.0) * (24.0 / 12.0)))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))
-
-                  // TODO: BRINGUP: SET TO ZERO AND TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(100.0)
                           .withKV(0.0)
                           .withKG(0.0)
-                          .withGravityType(GravityTypeValue.Arm_Cosine))),
+                          .withGravityType(GravityTypeValue.Arm_Cosine))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(999999.0)
+                          .withMotionMagicCruiseVelocity(999999.0))),
           new ClimberConfig(
               CANIVORE_NAME,
               21,
@@ -127,8 +126,7 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          // TODO: BRINGUP: RETUNE
-                          .withMagnetOffset(-0.44921875)
+                          .withMagnetOffset(-0.1064453125)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5))),
           new SingulatorConfig(
@@ -146,8 +144,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(150))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
-                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withInverted(InvertedValue.CounterClockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast)),
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -156,8 +153,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(150))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ElevatorConfig(
               CANIVORE_NAME,
@@ -174,18 +170,17 @@ class CompConfig {
                           .withStatorCurrentLimit(60))
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          // TODO: BRINGUP: MAY NEED TO INVERT
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Brake))
+                          .withNeutralMode(NeutralModeValue.Coast))
                   .withSlot0(
                       new Slot0Configs()
-                          // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                          // TODO: BRINGUP: TUNE
                           .withKP(0.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Elevator_Static))
-                  // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                  // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(9999999.0)
@@ -194,18 +189,18 @@ class CompConfig {
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
                               // UPDATED FOR OFFSEASON BOT
-                              (12.0 / 40.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
+                              (16.0 / 36.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
           new ArmConfig(
               RIO_CAN_NAME,
               18,
-              -90,
-              75,
+              -83.435,
+              58,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
-                          .withInverted(InvertedValue.CounterClockwise_Positive))
-                  // TODO: BRINGUP: REMOVE VALUES AND TUNE
+                          .withInverted(InvertedValue.Clockwise_Positive))
+                  // TODO: BRINGUP: TUNE
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(0.0)
@@ -213,7 +208,7 @@ class CompConfig {
                           .withKD(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Arm_Cosine))
-                  // TODO: BRINGUP: REMOVE VALUES
+                  // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(999999.0)
@@ -227,8 +222,7 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
-              // TODO: BRINGUP: RETUNE
-              -90.0),
+              -83.435),
           new VisionConfig(
               0.005,
               0.8,

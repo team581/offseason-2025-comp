@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -19,7 +20,8 @@ public class SingulatorSubsystem extends StateMachineSubsystem<SingulatorState> 
   private double filteredRightCurrent = 0.0;
   private double filteredLeftCurrent = 0.0;
 
-  private static final double JAM_CURRENT_THRESHOLD = Double.POSITIVE_INFINITY;
+  private static final DoubleSubscriber JAM_CURRENT_THRESHOLD =
+      DogLog.tunable("Singulator/JamCurrentThreshold", Double.POSITIVE_INFINITY);
 
   public SingulatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.SINGULATOR, SingulatorState.IDLE);
@@ -68,11 +70,11 @@ public class SingulatorSubsystem extends StateMachineSubsystem<SingulatorState> 
   }
 
   public boolean isLeftJammed() {
-    return filteredLeftCurrent > JAM_CURRENT_THRESHOLD;
+    return filteredLeftCurrent > JAM_CURRENT_THRESHOLD.getAsDouble();
   }
 
   public boolean isRightJammed() {
-    return filteredRightCurrent > JAM_CURRENT_THRESHOLD;
+    return filteredRightCurrent > JAM_CURRENT_THRESHOLD.getAsDouble();
   }
 
   public void setState(SingulatorState newState) {

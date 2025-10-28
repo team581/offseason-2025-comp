@@ -100,7 +100,7 @@ public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
   public boolean atGoal() {
     return switch (getState()) {
       case UNHOMED, HOMING -> false;
-      default -> MathUtil.isNear(clamp(getState().getAngle()), currentAngle, TOLERANCE);
+      default -> MathUtil.isNear(clamp(getState().getAngle()), currentAngle, TOLERANCE, -180, 180);
     };
   }
 

@@ -34,7 +34,7 @@ public class RobotCommands {
   }
 
   public Command groundIntakeCommand() {
-    return Commands.runOnce(groundManager::intakeRequest, gmRequirements)
+    return Commands.runOnce(robot::intakeRequest, gmRequirements)
         .withName("GroundIntakeCoralCommand");
   }
 
@@ -57,11 +57,6 @@ public class RobotCommands {
         .withName("ForceNextScoreSequenceCommand");
   }
 
-  public Command highLineupCommand() {
-    return Commands.runOnce(robot::highLineupRequest, bothRequirements)
-        .withName("HighLineupCommand");
-  }
-
   public Command l3LineupCommand() {
     return Commands.runOnce(robot::l3CoralApproachRequest, bothRequirements)
         .withName("L3LineupCommand");
@@ -70,10 +65,6 @@ public class RobotCommands {
   public Command l2LineupCommand() {
     return Commands.runOnce(robot::l2CoralApproachRequest, bothRequirements)
         .withName("L2LineupCommand");
-  }
-
-  public Command lowLineupCommand() {
-    return Commands.runOnce(robot::lowLineupRequest, bothRequirements).withName("LowLineupCommand");
   }
 
   public Command algaeReefIntakeCommand() {
@@ -117,10 +108,5 @@ public class RobotCommands {
   public Command rehomeDeployCommand() {
     return Commands.runOnce(robot.groundManager::rehomeRequest, gmRequirements)
         .withName("RehomeDeployCommand");
-  }
-
-  public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robot::rehomeElevatorCommand, rmRequirements)
-        .withName("LowStowCommand");
   }
 }

@@ -18,11 +18,6 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   private static final double TOLERANCE = 0;
   private static final double NEAR_TOLERANCE = 0;
 
-  private static double clampHeight(double height) {
-    return MathUtil.clamp(
-        height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
-  }
-
   private final TalonFX motor;
 
   private final MotionMagicVoltage positionRequest =
@@ -68,6 +63,11 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     }
   }
 
+  private static double clampHeight(double height) {
+    return MathUtil.clamp(
+        height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
+  }
+
   @Override
   protected void afterTransition(ElevatorState newState) {
     switch (newState) {
@@ -98,7 +98,16 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
     if (oldState == ElevatorState.PRE_MATCH_HOMING
         && newState != ElevatorState.PRE_MATCH_HOMING
-        && DriverStation.isEnabled()) {}
+        && DriverStation.isEnabled()) {
+      // We are enabled and still in pre match homing
+      // Reset the motor positions, and then transition to idle state
+      double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+      var homedHeight = homingEndHeight + (height - lowestSeenHeight);
+
+      motor.setPosition(homedHeight);
+      // Refresh sensor data now that position is set
+      collectInputs();
+    }
   }
 
   public boolean atGoal() {

@@ -1,6 +1,6 @@
 package frc.robot.config;
 
-import com.team581.util.FeatureFlag;
+import com.team581.config.FeatureFlag;
 import java.util.function.BooleanSupplier;
 
 public class FeatureFlags {

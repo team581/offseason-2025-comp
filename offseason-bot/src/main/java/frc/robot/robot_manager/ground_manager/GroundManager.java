@@ -4,7 +4,6 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
@@ -52,21 +51,34 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
   @Override
   protected GroundState getNextState(GroundState currentState) {
-    if (singulator.isLeftJammed()) {
-      return GroundState.UNJAM_LEFT;
-    }
-    if (singulator.isRightJammed()) {
-      return GroundState.UNJAM_RIGHT;
-    }
+
     return switch (currentState) {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
-      case INTAKING -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
-      case INTAKE_THEN_HANDOFF_WAIT -> getTopHasGP() ? GroundState.HANDOFF_WAIT : currentState;
-      case HANDOFF_RELEASE -> getTopHasGP() ? currentState : GroundState.IDLE_NO_GP;
+      case INTAKING -> {
+        if (getTopHasGP()) {
+          yield GroundState.IDLE_GP;
+        }
 
-      // TODO: Adjust timeouts and make work for INTAKE_THEN_HANDOFF
-      case UNJAM_LEFT, UNJAM_RIGHT -> timeout(0) ? GroundState.INTAKING : currentState;
+        // Prevent from going in an unjamming loop
+        if (timeout(0.5)) {
+          if (intake.isJammed()) {
+            yield GroundState.AUTO_UNJAM;
+          }
+          if (singulator.isLeftJammed()) {
+            yield GroundState.AUTO_UNJAM_LEFT;
+          }
+          if (singulator.isRightJammed()) {
+            yield GroundState.AUTO_UNJAM_RIGHT;
+          }
+        }
+
+        yield currentState;
+      }
+      case IDLE_GP -> !getTopHasGP() ? GroundState.IDLE_NO_GP : currentState;
+      case IDLE_NO_GP -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
+      case AUTO_UNJAM_LEFT, AUTO_UNJAM_RIGHT, AUTO_UNJAM ->
+          timeout(0.25) ? GroundState.INTAKING : currentState;
       default -> currentState;
     };
   }
@@ -89,17 +101,17 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         deploy.setState(DeployState.STOWED);
         singulator.setState(SingulatorState.IDLE);
       }
-      case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> {
+      case INTAKING -> {
         intake.setState(IntakeState.INTAKING);
         deploy.setState(DeployState.FLOOR_INTAKE);
         singulator.setState(SingulatorState.INTAKING);
       }
-      case UNJAM_LEFT -> {
+      case AUTO_UNJAM_LEFT -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_LEFT_ONLY);
       }
-      case UNJAM_RIGHT -> {
+      case AUTO_UNJAM_RIGHT -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.UNJAM_RIGHT_ONLY);
@@ -111,20 +123,10 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         singulator.setState(SingulatorState.STOPPED);
       }
 
-      case OUTTAKING -> {
+      case OUTTAKING, AUTO_UNJAM -> {
         intake.setState(IntakeState.OUTTAKING);
         deploy.setState(DeployState.OUTTAKE);
         singulator.setState(SingulatorState.OUTTAKING);
-      }
-      case HANDOFF_WAIT -> {
-        intake.setState(IntakeState.HANDOFF);
-        deploy.setState(DeployState.HANDOFF);
-        singulator.setState(SingulatorState.IDLE);
-      }
-      case HANDOFF_RELEASE -> {
-        intake.setState(IntakeState.HANDOFF);
-        deploy.setState(DeployState.HANDOFF);
-        singulator.setState(SingulatorState.HANDOFF);
       }
     }
   }
@@ -136,23 +138,19 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
     if (RobotBase.isSimulation() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       topRaw =
           switch (getState()) {
-            case HANDOFF_RELEASE -> !timeout(0.5);
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
-            case HANDOFF_WAIT -> true;
-            case OUTTAKING -> false;
-            case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(2);
+            case OUTTAKING, AUTO_UNJAM -> false;
+            case INTAKING -> timeout(2);
             default -> false;
           };
 
       bottomRaw =
           switch (getState()) {
-            case HANDOFF_RELEASE -> !timeout(0.5);
             case IDLE_NO_GP -> false;
             case IDLE_GP -> true;
-            case HANDOFF_WAIT -> true;
-            case OUTTAKING -> false;
-            case INTAKING, INTAKE_THEN_HANDOFF_WAIT -> timeout(1.9);
+            case OUTTAKING, AUTO_UNJAM -> false;
+            case INTAKING -> timeout(1.9);
             default -> false;
           };
     }
@@ -201,22 +199,6 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
       return;
     }
     setState(GroundState.IDLE_NO_GP);
-  }
-
-  public void intakeThenHandoffRequest() {
-    if (getState() == GroundState.INTAKING
-        || DriverStation.isAutonomous()
-        || getState() == GroundState.HANDOFF_WAIT
-        || getState() == GroundState.HANDOFF_RELEASE
-        || !getTopHasGP()) {
-      setState(GroundState.INTAKE_THEN_HANDOFF_WAIT);
-    } else {
-      setState(GroundState.HANDOFF_WAIT);
-    }
-  }
-
-  public void handoffReleaseRequest() {
-    setState(GroundState.HANDOFF_RELEASE);
   }
 
   public void climbRequest() {

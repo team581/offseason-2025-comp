@@ -1,4 +1,4 @@
-package com.team581.util;
+package com.team581.config;
 
 import com.team581.GlobalConfig;
 import dev.doglog.DogLog;
