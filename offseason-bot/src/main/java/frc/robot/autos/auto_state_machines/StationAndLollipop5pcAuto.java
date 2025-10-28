@@ -19,7 +19,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
-  private static final int SCORE_COUNTER = 0;
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           List.of(
@@ -61,10 +60,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   }
 
   private static AutoState getNextIntakeState() {
-    DogLog.log("StateMachineAuto/scoreCounter", SCORE_COUNTER);
-    if (SCORE_COUNTER == 4) {
-      return AutoState.LOLLIPOP_2;
-    }
+
     return AutoState.INTAKING;
   }
 
@@ -106,7 +102,6 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
       case SCORE -> {
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
-        SCORE_COUNTER++;
       }
 
       case INTAKING -> {
