@@ -8,17 +8,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class CustomOdometry extends SwerveDriveOdometry {
   private final Translation2d[] robotRelativeModuleOffsets = new Translation2d[4];
 
-  private double[] moduleSpeeds = new double[] {
-    0.0,
-    0.0,
-    0.0,
-    0.0
-  };
   private Pose2d previousRobotPose = new Pose2d();
   private final SwerveModulePosition[] previousWheelPositions =
       new SwerveModulePosition[] {
@@ -41,19 +34,11 @@ public class CustomOdometry extends SwerveDriveOdometry {
   }
 
   private static Translation2d getModuleDisplacement(
-      double currentSpeed,
       double previousAngleRadians,
       double previousDistanceMeters,
       double currentAngleRadians,
       double currentDistanceMeters) {  
-    // First, calculate difference between previous and current angles and distances. Negative speed indicates module is flipped pi radians, so we invert the module direction
-    double moduleDirection;
-
-    if (currentSpeed > 0) {
-      moduleDirection = 1.0;
-    } else {
-      moduleDirection = -1.0;
-    }
+    // First, calculate difference between previous and current angles and distances
     double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
     double arcLength = currentDistanceMeters - previousDistanceMeters;
 
@@ -63,7 +48,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     }
 
     // Next, calculate radius. Positive = left turn, negative = right turn
-    double radius = moduleDirection * (Math.abs(arcLength) / angleDifferenceRadians);
+    double radius = (arcLength / angleDifferenceRadians);
     DogLog.log("Odometry/GetModuleDisplacement/Radius", radius);
 
     // Then, calculate the center point of the circle that the arc is a part of, using the previous
@@ -78,13 +63,6 @@ public class CustomOdometry extends SwerveDriveOdometry {
     double displacementY = circleCenterY - radius * Math.cos(currentAngleRadians);
 
     return new Translation2d(displacementX, displacementY);
-  }
-
-  // Function to set the current module speeds, as it can't be passed into Update() as a parameter
-  public void setCurrentModuleSpeeds(SwerveModuleState[] currentModuleStates) {
-    for (int i = 0; i < 4; i++) {
-      moduleSpeeds[i] = currentModuleStates[i].speedMetersPerSecond;
-    }
   }
 
   // Function to set the previous robot pose, as it can't be passed into Update() as a parameter
@@ -109,25 +87,21 @@ public class CustomOdometry extends SwerveDriveOdometry {
     // Also get the module displacements from the previous wheel positions to the current wheel positions 
     Translation2d[] moduleDisplacements = {
       getModuleDisplacement(
-          moduleSpeeds[0],
           previousWheelPositions[0].angle.getRadians(),
           previousWheelPositions[0].distanceMeters,
           currentWheelPositions[0].angle.getRadians(),
           currentWheelPositions[0].distanceMeters),
       getModuleDisplacement(
-          moduleSpeeds[1],
           previousWheelPositions[1].angle.getRadians(),
           previousWheelPositions[1].distanceMeters,
           currentWheelPositions[1].angle.getRadians(),
           currentWheelPositions[1].distanceMeters),
       getModuleDisplacement(
-          moduleSpeeds[2],
           previousWheelPositions[2].angle.getRadians(),
           previousWheelPositions[2].distanceMeters,
           currentWheelPositions[2].angle.getRadians(),
           currentWheelPositions[2].distanceMeters),
       getModuleDisplacement(
-          moduleSpeeds[3],
           previousWheelPositions[3].angle.getRadians(),
           previousWheelPositions[3].distanceMeters,
           currentWheelPositions[3].angle.getRadians(),
