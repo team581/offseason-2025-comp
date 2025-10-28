@@ -20,7 +20,8 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final DoubleSubscriber tunableMaxVelocity =
       DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());
 
-  private final DoubleSubscriber tunableMinVelocity = DogLog.tunable("Claw/MinVelocity", RobotConfig.get().claw().gpMinVelocity());
+  private final DoubleSubscriber tunableMinVelocity =
+      DogLog.tunable("Claw/MinVelocity", RobotConfig.get().claw().gpMinVelocity());
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
@@ -57,7 +58,8 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             || timeout.hasElapsed(RobotConfig.get().claw().minVelocityTimeout())
             || Math.abs(motorVelocity) >= tunableMinVelocity.get();
 
-    return hasSeenMinVelocity && debouncer.calculate(Math.abs(motorVelocity) <= tunableMaxVelocity.get());
+    return hasSeenMinVelocity
+        && debouncer.calculate(Math.abs(motorVelocity) <= tunableMaxVelocity.get());
   }
 
   public void setState(ClawState newState) {
