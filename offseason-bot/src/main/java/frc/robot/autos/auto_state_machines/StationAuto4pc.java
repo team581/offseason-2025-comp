@@ -94,14 +94,13 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
     switch (newState) {
       case SCORE -> {
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
-        robotManager.groundManager.intakeThenHandoffRequest();
+        robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
         createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
-        robotManager.groundManager.intakeThenHandoffRequest();
-      }
+        robotManager.groundManager.intakeRequest();      }
       case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + newState);
     }
   }
