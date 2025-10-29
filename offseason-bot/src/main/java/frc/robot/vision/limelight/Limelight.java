@@ -1,5 +1,6 @@
 package frc.robot.vision.limelight;
 
+import com.team581.config.CameraConfig;
 import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.config.CameraConfig;
 import frc.robot.config.FeatureFlags;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.results.OptionalGamePieceResult;
@@ -125,7 +125,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-    if (config.useMtp1() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (config.useMegatag1RotationWhenClose() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var distance = mT2Estimate.avgTagDist;
       DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
