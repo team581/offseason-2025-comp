@@ -67,11 +67,6 @@ public class CustomOdometry extends SwerveDriveOdometry {
     return new Translation2d(displacementX, displacementY);
   }
 
-  // Function to set the previous robot pose, as it can't be passed into Update() as a parameter
-  public void setPreviousRobotPose(Pose2d newPreviousRobotPose) {
-    previousRobotPose = newPreviousRobotPose;
-  }
-
   @Override
   public Pose2d update(Rotation2d currentGyroAngle, SwerveModulePosition[] currentWheelPositions) {
     // First, get the field relative module poses of the previous robot pose, and apply robot
@@ -136,6 +131,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
             .plus(fieldRelativeModuleDisplacements[3]);
     double updatedPoseX = sumOfFieldRelativeModuleDisplacements.getX() / 4.0;
     double updatedPoseY = sumOfFieldRelativeModuleDisplacements.getY() / 4.0;
+    Pose2d updatedPose = new Pose2d(updatedPoseX, updatedPoseY, currentGyroAngle);
 
     // Logging
     DogLog.log("Odometry/PreviousPose", previousRobotPose);
@@ -143,31 +139,32 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log("Odometry/CurrentWheelPositions", currentWheelPositions);
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
     DogLog.log(
-        "Odometry/FieldRelativeFrontLeftModuleDisplacements",
+        "Odometry/FieldRelativeModuleDisplacements/FrontLeft",
         new Pose2d(
             fieldRelativeModuleDisplacements[0],
             new Rotation2d(currentWheelPositions[0].angle.getRadians())));
     DogLog.log(
-        "Odometry/FieldRelativeFrontRightModuleDisplacement",
+        "Odometry/FieldRelativeModuleDisplacements/FrontRight",
         new Pose2d(
             fieldRelativeModuleDisplacements[1],
             new Rotation2d(currentWheelPositions[1].angle.getRadians())));
     DogLog.log(
-        "Odometry/FieldRelativeBackLeftModuleDisplacement",
+        "Odometry/FieldRelativeModuleDisplacements/BackLeft",
         new Pose2d(
             fieldRelativeModuleDisplacements[2],
             new Rotation2d(currentWheelPositions[2].angle.getRadians())));
     DogLog.log(
-        "Odometry/FieldRelativeBackRightModuleDisplacement",
+        "Odometry/FieldRelativeModuleDisplacements/BackRight",
         new Pose2d(
             fieldRelativeModuleDisplacements[3],
             new Rotation2d(currentWheelPositions[3].angle.getRadians())));
 
-    // After calculations, but before the next loop, update the previous wheel positions to the
+    // After calculations, but before the next loop, update the previous pose & wheel positions to the
     // current ones
+    previousRobotPose = updatedPose;
     updatePreviousWheelPositions(currentWheelPositions);
 
-    return new Pose2d(updatedPoseX, updatedPoseY, currentGyroAngle);
+    return updatedPose;
   }
 
   private void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {

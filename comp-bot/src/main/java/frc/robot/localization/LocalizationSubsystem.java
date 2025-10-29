@@ -77,7 +77,6 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
 
     robotPose = poseEstimator.getEstimatedPosition();
-    customOdometry.setPreviousRobotPose(robotPose);
   }
 
   @Override
@@ -109,7 +108,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     }
 
     poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
-    DogLog.log("Localization/Vision Pose", visionPose);
+    DogLog.log("Localization/VisionPose", visionPose);
   }
 
   private void resetGyro(Rotation2d gyroAngle) {
