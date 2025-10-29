@@ -93,7 +93,8 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
         && DriverStation.isEnabled()) {
       // We are enabled and still in pre match homing
       // Reset the motor positions, and then transition to idle state
-      var homedHeight = RobotConfig.get().elevator().homingEndHeight() + (height - lowestSeenHeight);
+      var homedHeight =
+          RobotConfig.get().elevator().homingEndHeight() + (height - lowestSeenHeight);
 
       motor.setPosition(homedHeight);
       // Refresh sensor data now that position is set
@@ -107,9 +108,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
       case PRE_MATCH_HOMING, UNJAM -> true;
       default ->
           MathUtil.isNear(
-              state.getHeight(),
-              height,
-              state.getHeight() == 0.0 ? TOLERANCE + 1.0 : TOLERANCE);
+              state.getHeight(), height, state.getHeight() == 0.0 ? TOLERANCE + 1.0 : TOLERANCE);
     };
   }
 
