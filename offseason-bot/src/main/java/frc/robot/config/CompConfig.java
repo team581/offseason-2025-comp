@@ -183,8 +183,8 @@ class CompConfig {
                   // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(9999999.0)
-                          .withMotionMagicCruiseVelocity(9999999.0))
+                          .withMotionMagicAcceleration(0.0)
+                          .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(

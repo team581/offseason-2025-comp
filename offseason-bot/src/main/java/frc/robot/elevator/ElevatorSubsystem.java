@@ -1,6 +1,7 @@
 package frc.robot.elevator;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.simkit.SimKit;
@@ -22,8 +23,8 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   private final TalonFX motor;
 
-  private final MotionMagicVoltage positionRequest =
-      new MotionMagicVoltage(ElevatorState.STOWED.defaultHeight);
+  private final PositionVoltage positionRequest =
+      new PositionVoltage(ElevatorState.STOWED.defaultHeight);
 
   private double height = 0.0;
   private double lowestSeenHeight = Double.POSITIVE_INFINITY;
