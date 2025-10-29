@@ -18,6 +18,8 @@ public record RobotConfig(
       String canBusName,
       int motorId,
       double gpMaxVelocity,
+      double gpMinVelocity,
+      double minVelocityTimeout,
       Debouncer debouncer,
       TalonFXConfiguration motorConfig) {}
 
@@ -47,9 +49,9 @@ public record RobotConfig(
   public record WristConfig(
       String canBusName,
       int motorId,
+      double rangeOfMotionDeg,
       TalonFXConfiguration motorConfig,
-      double homingPosition,
-      double inchesFromCenter) {}
+      double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,

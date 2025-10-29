@@ -111,9 +111,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           claw.getHasGP() ? currentState.getNextAlgaeIntakeState() : currentState;
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
-          cameraOnlineAndFarEnoughFromReef()
-              ? currentState.getNextAlgaeIntakeState()
-              : currentState;
+          cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_ALGAE : currentState;
     };
   }
 
@@ -359,6 +357,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   @Override
   protected void whileInState(RobotState currentState) {
+    DogLog.log("RobotManager/ElevatorAtGoal", elevator.atGoal());
+    DogLog.log("RobotManager/WristAtGoal", wrist.atGoal());
+
     switch (currentState) {
       case ALGAE_INTAKE_L2_APPROACH,
           ALGAE_INTAKE_L3_APPROACH,
@@ -374,6 +375,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       default -> {}
     }
+
+    wrist.customPeriodic();
+    elevator.customPeriodic();
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {
@@ -404,7 +408,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void preloadCoralRequest() {
     setStateFailsafe(RobotState.STARTING_POSITION_CORAL);
-    }
+  }
 
   public void intakeGroundAlgaeRequest() {
     setStateFailsafe(RobotState.ALGAE_INTAKE_FLOOR);
@@ -422,6 +426,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     setStateFailsafe(RobotState.ALGAE_NET_WAITING);
   }
 
+  public void netReleaseRequest() {
+    setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
+  }
+
   public void processorWaitRequest() {
     setStateFailsafe(RobotState.ALGAE_PROCESSOR_WAITING);
   }
@@ -432,6 +440,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void l1ApproachRequest() {
     setStateFailsafe(RobotState.CORAL_L1_APPROACH);
+  }
+
+  public void l1lineupRequest() {
+    setStateFailsafe(RobotState.CORAL_L1_LINEUP);
+  }
+
+  public void l1ReleaseRequest() {
+    setStateFailsafe(RobotState.CORAL_L1_RELEASE);
   }
 
   public void lowLineupRequest() {

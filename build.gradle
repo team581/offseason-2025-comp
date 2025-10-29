@@ -15,8 +15,9 @@ subprojects {
 	apply plugin: 'java'
 
 	java {
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
 	}
 
 	repositories {
@@ -26,6 +27,7 @@ subprojects {
 	// Configure string concat to always inline compile
 	tasks.withType(JavaCompile) {
 		options.compilerArgs.add '-XDstringConcat=inline'
+		options.release = 17
 	}
 
 	// Common test configuration

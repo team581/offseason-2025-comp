@@ -11,10 +11,6 @@ public enum RobotState {
   CLAW_ALGAE(ClawGamePiece.ALGAE, false),
   /** Claw holding coral */
   CLAW_CORAL(ClawGamePiece.CORAL, false),
-  /** Claw empty, arm upright */
-  STARTING_POSITION(ClawGamePiece.EMPTY, false),
-  /** Claw holding coral, arm upright */
-  STARTING_POSITION_CORAL(ClawGamePiece.CORAL, false),
   /** Claw holding algae, stowed inward */
   CLAW_ALGAE_STOW_INWARD(ClawGamePiece.ALGAE, false),
 
@@ -93,7 +89,6 @@ public enum RobotState {
   // Misc states
   ALGAE_OUTTAKE(ClawGamePiece.EMPTY, false),
   UNJAM(ClawGamePiece.EMPTY, false),
-  REHOME_ELEVATOR(ClawGamePiece.EMPTY, true),
 
   FORCED_HANDOFF(ClawGamePiece.EMPTY, false);
 

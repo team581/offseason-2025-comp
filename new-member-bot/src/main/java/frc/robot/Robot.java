@@ -38,7 +38,7 @@ public class Robot extends Base581Robot {
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
 
   private final Limelight limelight =
-      new Limelight("main", LimelightState.TAGS, LimelightModel.THREEG, true);
+      new Limelight("main", LimelightState.TAGS, LimelightModel.FOUR, true);
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);

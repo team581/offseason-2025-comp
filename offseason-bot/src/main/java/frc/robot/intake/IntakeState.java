@@ -5,12 +5,10 @@ public enum IntakeState {
   UNJAM(UNTUNED),
 
   STOPPED(0.0),
-  IDLE(UNTUNED),
+  IDLE(0.0),
   INTAKING(12),
-  OUTTAKING(UNTUNED),
-  HANDOFF(UNTUNED),
-  SCORING(UNTUNED),
-  HARD_SCORING(UNTUNED);
+  OUTTAKING(-12),
+  HANDOFF(0.0);
 
   public final double volts;
 

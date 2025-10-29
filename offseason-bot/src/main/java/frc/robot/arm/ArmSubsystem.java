@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.math.MathHelpers;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -20,21 +21,22 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public static final double ARM_LENGTH_METERS = Units.inchesToMeters(16.0);
 
+  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
   private static final double TOLERANCE = 2.0;
   private static final double NEAR_TOLERANCE = 35.0;
 
+  private final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private final CoastOut coastNeutralRequest = new CoastOut();
+  private final MotionMagicVoltage motionMagicRequest =
+      new MotionMagicVoltage(0.0).withEnableFOC(false);
+
   private final TalonFX motor;
+
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 90.0;
-  private final StaticBrake brakeNeutralRequest = new StaticBrake();
-  private final CoastOut coastNeutralRequest = new CoastOut();
-
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
@@ -74,10 +76,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return rawMotorAngle;
   }
 
-  private void makeGetMotionMagicRequest(double armRotations) {
-    motor.setControl(motionMagicRequest.withPosition(armRotations));
-  }
-
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING -> false;
@@ -103,7 +101,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   @Override
   protected void collectInputs() {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+
+    if (getState() == ArmState.PRE_MATCH_HOMING) {
+      motorAngle = RobotConfig.get().arm().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+    } else {
+      motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+    }
 
     if (DriverStation.isDisabled()) {
       lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
@@ -114,9 +117,21 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   @Override
-  protected void afterTransition(ArmState newState) {}
+  protected void afterTransition(ArmState newState) {
+    switch (newState) {
+      default ->
+          motor.setControl(
+              motionMagicRequest.withPosition(
+                  Units.degreesToRotations(clamp(newState.getAngle()))));
+    }
+  }
 
-  public void customPeriodic() {
+  public boolean rangeOfMotionGood() {
+    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+  }
+
+  @Override
+  protected void whileInState(ArmState state) {
     DogLog.log("Arm/StatorCurrent", motorCurrent);
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Arm/Angle", motorAngle);
@@ -127,6 +142,11 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle);
       DogLog.log("Arm/HighestAngle", highestSeenAngle);
+      if (!MathUtil.isNear(ArmState.CORAL_HANDOFF.getAngle(), motorAngle, 8.0, -180, 180)) {
+        DogLog.logFault("ARM NOT IN AUTO POSITION");
+      } else {
+        DogLog.clearFault("ARM NOT IN AUTO POSITION");
+      }
     }
     if (rangeOfMotionGood()) {
       DogLog.clearFault("ARM NOT HOMED");
@@ -144,20 +164,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
           motor.setControl(coastNeutralRequest);
         }
       }
-      default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(clamp(getState().getAngle())));
-      }
+      default -> {}
     }
-  }
-
-  public boolean rangeOfMotionGood() {
-    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
-    DogLog.log("Arm/OldState", oldState);
-    DogLog.log("Arm/NewState", newState);
 
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
@@ -173,7 +185,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   public void simulationPeriodic() {
-    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+    var armSimulation =
+        SimKit.positionMechanism(
+            "arm", (mechanism) -> mechanism.addMotor(motor, ChassisReference.Clockwise_Positive));
 
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       motor.setPosition(0);

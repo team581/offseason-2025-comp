@@ -5,10 +5,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
+import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -20,17 +21,16 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
-  private double height = 0.0;
-
-  private final LinearFilter currentFilter = LinearFilter.movingAverage(5);
-  private double filteredCurrent = 0.0;
-  final double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
 
   private final MotionMagicVoltage positionRequest =
-      new MotionMagicVoltage(ElevatorState.STOWED.height);
+      new MotionMagicVoltage(ElevatorState.STOWED.defaultHeight);
+
+  private double height = 0.0;
+  private double lowestSeenHeight = Double.POSITIVE_INFINITY;
 
   public ElevatorSubsystem(TalonFX motor) {
-    super(SubsystemPriority.ELEVATOR, ElevatorState.STOWED);
+    super(SubsystemPriority.ELEVATOR, ElevatorState.PRE_MATCH_HOMING);
+    TunablePid.of("Elevator", motor, RobotConfig.get().elevator().motorConfig());
 
     motor.getConfigurator().apply(RobotConfig.get().elevator().motorConfig());
     this.motor = motor;
@@ -44,66 +44,73 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   }
 
   @Override
-  protected ElevatorState getNextState(ElevatorState currentState) {
-    return switch (currentState) {
-      case REHOME -> {
-        if (filteredCurrent > RobotConfig.get().elevator().homingCurrentThreshold()) {
-          motor.setPosition(homingEndHeight);
-          yield ElevatorState.STOWED;
-        }
-        yield currentState;
-      }
-      default -> currentState;
-    };
+  protected void afterTransition(ElevatorState newState) {
+    switch (newState) {
+      default -> motor.setControl(positionRequest.withPosition(clampHeight(newState.getHeight())));
+    }
   }
 
   @Override
-  protected void afterTransition(ElevatorState newState) {
-    switch (newState) {
-      case REHOME -> motor.setVoltage(RobotConfig.get().elevator().homingVoltage());
-      default -> motor.setControl(positionRequest.withPosition(clampHeight(newState.height)));
+  protected void beforeTransition(ElevatorState oldState, ElevatorState newState) {
+
+    if (oldState == ElevatorState.PRE_MATCH_HOMING
+        && newState != ElevatorState.PRE_MATCH_HOMING
+        && DriverStation.isEnabled()) {
+      // We are enabled and still in pre match homing
+      // Reset the motor positions, and then transition to idle state
+      double homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+      var homedHeight = homingEndHeight + (height - lowestSeenHeight);
+
+      motor.setPosition(homedHeight);
+      // Refresh sensor data now that position is set
+      collectInputs();
     }
   }
 
   @Override
   public void whileInState(ElevatorState currentState) {
-    DogLog.log("Elevator/Motor/Current", filteredCurrent);
     DogLog.log("Elevator/Height", height);
     DogLog.log("Elevator/AtGoal", atGoal());
     DogLog.log("Elevator/NearGoal", nearGoal());
     DogLog.log("Elevator/Goal", currentState.getHeight());
 
-    if (DriverStation.isEnabled()) {
-      return;
-    }
-    if (height < homingEndHeight) {
-      motor.setPosition(homingEndHeight);
+    if (DriverStation.isDisabled()) {
+      var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
+      var estimatedHeight = homingEndHeight + (height - lowestSeenHeight);
+      if (!MathUtil.isNear(estimatedHeight, homingEndHeight, 2.0)) {
+        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kWarning);
+      } else {
+        DogLog.clearFault("ELEVATOR NOT IN AUTO POSITION");
+      }
     }
   }
 
   @Override
   protected void collectInputs() {
-    var rawCurrent = motor.getStatorCurrent().getValueAsDouble();
-    filteredCurrent = currentFilter.calculate(rawCurrent);
-
     height = motor.getPosition().getValueAsDouble();
-  }
-
-  public void rehome() {
-    setState(ElevatorState.REHOME);
+    if (DriverStation.isDisabled()) {
+      lowestSeenHeight = Math.min(lowestSeenHeight, height);
+    }
   }
 
   public void setState(ElevatorState newState) {
-    if (getState() != ElevatorState.REHOME) {
-      setStateFromRequest(newState);
+    switch (getState()) {
+      case PRE_MATCH_HOMING -> {
+        if (DriverStation.isEnabled()) {
+          setStateFromRequest(newState);
+        }
+      }
+      default -> {
+        setStateFromRequest(newState);
+      }
     }
   }
 
   public boolean atGoal(ElevatorState goal) {
     return switch (goal) {
       case UNJAM -> true;
-      case UNTUNED, REHOME -> false;
-      default -> MathUtil.isNear(clampHeight(goal.height), height, TOLERANCE);
+      case PRE_MATCH_HOMING, UNTUNED -> false;
+      default -> MathUtil.isNear(clampHeight(goal.getHeight()), height, TOLERANCE);
     };
   }
 
@@ -114,8 +121,8 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   public boolean nearGoal(ElevatorState goal) {
     return switch (goal) {
       case UNJAM -> true;
-      case UNTUNED, REHOME -> false;
-      default -> MathUtil.isNear(clampHeight(goal.height), height, NEAR_TOLERANCE);
+      case PRE_MATCH_HOMING, UNTUNED -> false;
+      default -> MathUtil.isNear(clampHeight(goal.getHeight()), height, NEAR_TOLERANCE);
     };
   }
 

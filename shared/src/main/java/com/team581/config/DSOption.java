@@ -1,21 +1,19 @@
 package com.team581.config;
 
 import edu.wpi.first.networktables.BooleanSubscriber;
-import edu.wpi.first.networktables.BooleanTopic;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class DSOption {
-  private final BooleanSubscriber booleanSub;
+  private static final NetworkTable table = NetworkTableInstance.getDefault().getTable("DSOptions");
 
-  public DSOption(String key, boolean defaultValue) {
-    var table = NetworkTableInstance.getDefault().getTable("DSOptions");
-    BooleanTopic booleanTopic = table.getBooleanTopic(key);
+  public static BooleanSubscriber of(String key, boolean defaultValue) {
+    var topic = table.getBooleanTopic(key);
 
-    booleanTopic.publish();
-    this.booleanSub = booleanTopic.subscribe(defaultValue);
+    topic.publish().setDefault(defaultValue);
+
+    return topic.subscribe(defaultValue);
   }
 
-  public boolean getAsBoolean() {
-    return booleanSub.getAsBoolean();
-  }
+  private DSOption() {}
 }

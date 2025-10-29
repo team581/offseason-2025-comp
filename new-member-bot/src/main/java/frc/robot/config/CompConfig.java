@@ -34,15 +34,30 @@ class CompConfig {
 
   public static final RobotConfig competitionBot =
       new RobotConfig(
-          new ClawConfig(RIO_CAN_NAME, 16, 58.1, new Debouncer(0), new TalonFXConfiguration()),
+          new ClawConfig(
+              RIO_CAN_NAME,
+              16,
+              30.0,
+              5.0,
+              3.0,
+              new Debouncer(0),
+              new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(90.0)
+                          .withSupplyCurrentLimit(65.0))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               CANIVORE_NAME,
               19,
               20,
               21,
               22,
-              0.0,
-              0.0,
+              -55.0,
+              100.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
@@ -87,12 +102,33 @@ class CompConfig {
               99.75,
               0.0,
               new TalonFXConfiguration()
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withSupplyCurrentLimit(60)
+                          .withStatorCurrentLimit(60))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Brake))
+                  .withSlot0(
+                      new Slot0Configs()
+                          .withKP(0.0)
+                          .withKD(0.0)
+                          .withKV(0.0)
+                          .withKG(0.0)
+                          .withGravityType(GravityTypeValue.Elevator_Static))
+                  .withMotionMagic(
+                      new MotionMagicConfigs()
+                          .withMotionMagicAcceleration(0.0)
+                          .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((36.0 / 16.0) * (44.0 / 20.0)))),
+                          .withSensorToMechanismRatio(
+                              (36.0 / 16.0) * (44.0 / 20.0) * (Math.PI * 1.881)))),
           new WristConfig(
               RIO_CAN_NAME,
               18,
+              146.0, // TODO: 151 actually, 146 to be safe. Change after bringup
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -116,7 +152,6 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
-              0.0,
               0.0),
           new VisionConfig(
               0.005,

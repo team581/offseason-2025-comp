@@ -16,13 +16,14 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class WristSubsystem extends StateMachineSubsystem<WristState> {
-  private static final double TOLERANCE = 0;
-  private static final double NEAR_TOLERANCE = 0;
+  private static final double TOLERANCE = 3.0;
+  private static final double NEAR_TOLERANCE = 5.0;
 
   private final TalonFX motor;
   private double rawMotorAngle;
@@ -30,7 +31,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 0;
   private static final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final ElevatorSubsystem elevator;
@@ -83,26 +83,26 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     }
   }
 
+  public boolean atGoal(WristState state) {
+    return switch (state) {
+      default -> MathUtil.isNear(state.getAngle(), motorAngle, TOLERANCE);
+      case PRE_MATCH_HOMING, MID_MATCH_HOMING -> false;
+    };
+  }
+
   public boolean atGoal() {
-    return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, 0, 0);
+    return atGoal(getState());
+  }
+
+  public boolean nearGoal(WristState state) {
+    return switch (state) {
+      default -> MathUtil.isNear(state.getAngle(), motorAngle, NEAR_TOLERANCE);
       case PRE_MATCH_HOMING, MID_MATCH_HOMING -> false;
     };
   }
 
   public boolean nearGoal() {
-    return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, 0, 0);
-      case PRE_MATCH_HOMING -> false;
-    };
-  }
-
-  public boolean nearGoal(WristState state) {
-    return nearGoal(state, NEAR_TOLERANCE);
-  }
-
-  public boolean nearGoal(WristState state, double tolerance) {
-    return MathUtil.isNear(state.getAngle(), rawMotorAngle, tolerance, 0, 0);
+    return nearGoal(getState());
   }
 
   @Override
@@ -126,23 +126,14 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
-  @Override
-  protected void afterTransition(WristState newState) {}
-
   public void customPeriodic() {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Wrist/Angle", motorAngle);
-    DogLog.log("Wrist/RawAngle", rawMotorAngle);
+    DogLog.log("Wrist/MotorAngle", motorAngle);
+    DogLog.log("Wrist/RawMotorAngle", rawMotorAngle);
 
     DogLog.log("Wrist/AtGoal", atGoal());
 
-    if (DriverStation.isDisabled()) {
-      DogLog.log("Wrist/LowestAngle", lowestSeenAngle);
-      DogLog.log("Wrist/HighestAngle", highestSeenAngle);
-      DogLog.log("Wrist/ElevatorIsGoingDown", elevatorIsGoingDown);
-      DogLog.log("Wrist/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
-    }
     if (rangeOfMotionGood()) {
       DogLog.clearFault("WRIST NOT HOMED");
     } else {
@@ -166,7 +157,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   public boolean rangeOfMotionGood() {
-    return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+    return Math.abs(highestSeenAngle - lowestSeenAngle)
+        >= RobotConfig.get().wrist().rangeOfMotionDeg();
   }
 
   @Override
@@ -176,7 +168,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
     if (oldState == WristState.PRE_MATCH_HOMING
         && newState != WristState.PRE_MATCH_HOMING
-        && DriverStation.isEnabled()) {
+        && DriverStation.isEnabled()
+        && Robot.isReal()) {
       DogLog.clearFault("Wrist/WRIST NOT HOMED");
       var actualWristAngle =
           RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
@@ -187,17 +180,18 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   @Override
   public void simulationPeriodic() {
-    var armSimulation = SimKit.positionMechanism("arm", (mechanism) -> mechanism.addMotor(motor));
+    var wristSimulation =
+        SimKit.positionMechanism("wrist", (mechanism) -> mechanism.addMotor(motor));
 
     if (getState() == WristState.PRE_MATCH_HOMING || getState() == WristState.MID_MATCH_HOMING) {
       motor.setPosition(0);
       setStateFromRequest(WristState.STOWED);
     }
 
-    armSimulation.update();
+    wristSimulation.update();
 
     if (DriverStation.isDisabled()) {
-      armSimulation.seedPosition(rawMotorAngle);
+      wristSimulation.seedPosition(rawMotorAngle);
     }
   }
 }

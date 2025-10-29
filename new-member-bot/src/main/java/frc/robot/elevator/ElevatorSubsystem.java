@@ -15,13 +15,8 @@ import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
-  private static final double TOLERANCE = 0;
-  private static final double NEAR_TOLERANCE = 0;
-
-  private static double clampHeight(double height) {
-    return MathUtil.clamp(
-        height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
-  }
+  private static final double TOLERANCE = 5.0;
+  private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
 
@@ -68,23 +63,20 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     }
   }
 
+  private static double clampHeight(double height) {
+    return MathUtil.clamp(
+        height, RobotConfig.get().elevator().minHeight(), RobotConfig.get().elevator().maxHeight());
+  }
+
   @Override
   protected void afterTransition(ElevatorState newState) {
-    switch (newState) {
-      default -> {
-        motor.setControl(positionRequest.withPosition(clampHeight(newState.getHeight())));
-      }
-    }
+    motor.setControl(positionRequest.withPosition(clampHeight(newState.getHeight())));
   }
 
   public void customPeriodic() {
     DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Height", height);
     DogLog.log("Elevator/AtGoal", atGoal());
-
-    switch (getState()) {
-      default -> {}
-    }
 
     if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       motor.setControl(coastRequest);
@@ -98,34 +90,41 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
     if (oldState == ElevatorState.PRE_MATCH_HOMING
         && newState != ElevatorState.PRE_MATCH_HOMING
-        && DriverStation.isEnabled()) {}
+        && DriverStation.isEnabled()) {
+      // We are enabled and still in pre match homing
+      // Reset the motor positions, and then transition to idle state
+      var homedHeight =
+          RobotConfig.get().elevator().homingEndHeight() + (height - lowestSeenHeight);
+
+      motor.setPosition(homedHeight);
+      // Refresh sensor data now that position is set
+      collectInputs();
+    }
   }
 
-  public boolean atGoal() {
-    return switch (getState()) {
+  public boolean atGoal(ElevatorState state) {
+    return switch (state) {
       case MID_MATCH_HOMING -> false;
       case PRE_MATCH_HOMING, UNJAM -> true;
       default ->
           MathUtil.isNear(
-              getState().getHeight(),
-              height,
-              getState().getHeight() == 0.0 ? TOLERANCE + 1.0 : TOLERANCE);
+              state.getHeight(), height, state.getHeight() == 0.0 ? TOLERANCE + 1.0 : TOLERANCE);
     };
+  }
+
+  public boolean atGoal() {
+    return atGoal(getState());
   }
 
   public boolean nearGoal(ElevatorState state) {
-    return nearGoal(state, NEAR_TOLERANCE);
-  }
-
-  public boolean nearGoal(ElevatorState state, double tolerance) {
-    return MathUtil.isNear(state.getHeight(), height, tolerance);
+    return switch (state) {
+      case PRE_MATCH_HOMING, UNJAM -> true;
+      default -> MathUtil.isNear(state.getHeight(), height, NEAR_TOLERANCE);
+    };
   }
 
   public boolean nearGoal() {
-    return switch (getState()) {
-      case PRE_MATCH_HOMING, UNJAM -> true;
-      default -> MathUtil.isNear(getState().getHeight(), height, NEAR_TOLERANCE);
-    };
+    return nearGoal(getState());
   }
 
   @Override

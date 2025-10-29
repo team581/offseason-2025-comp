@@ -51,7 +51,8 @@ public class Robot extends Base581Robot {
   private final Limelight leftLimelight =
       new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
   private final Limelight rightlLimelight =
-      new Limelight("left", LimelightState.TAGS, RobotConfig.get().vision().leftLimelightConfig());
+      new Limelight(
+          "right", LimelightState.TAGS, RobotConfig.get().vision().rightLimelightConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
@@ -104,18 +105,6 @@ public class Robot extends Base581Robot {
   }
 
   @Override
-  public void autonomousInit() {
-    super.autonomousInit();
-    // The Autos subsystem handles running the selected auto automatically
-  }
-
-  @Override
-  public void teleopInit() {
-    super.teleopInit();
-    // No need to cancel anything, the Autos subsystem will stop running the auto
-  }
-
-  @Override
   protected void configureBindings() {
     swerve.setDefaultCommand(
         swerve
@@ -136,7 +125,11 @@ public class Robot extends Base581Robot {
         .rightTrigger()
         .onTrue(actions.scoreCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware.driverController.leftTrigger().onTrue(actions.groundIntakeCommand());
+    hardware
+        .driverController
+        .leftTrigger()
+        .onTrue(actions.groundIntakeCommand())
+        .onFalse(actions.stopOuttakeRequest());
     hardware.driverController.leftBumper().onTrue(actions.algaeIntakeGroundCommand());
     hardware
         .driverController
@@ -149,7 +142,8 @@ public class Robot extends Base581Robot {
     hardware.driverController.povDown().onTrue(actions.climbStopCommand());
 
     hardware.driverController.y().onTrue(actions.rehomeDeployCommand());
-    hardware.driverController.x().onTrue(actions.rehomeElevatorCommand());
+    hardware.driverController.x().onTrue(actions.forceNextScoreSequenceCommand());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
+    hardware.driverController.start().onTrue(actions.unjamCommand()).onFalse(actions.stowCommand());
   }
 }

@@ -105,6 +105,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private Pose2d lastDriveToPoseTarget = new Pose2d();
   private boolean lastUseAngleBisector = true;
+  private final double lastUsedMaxVelocity = MAX_TRANSLATION_VELOCITY_LIMIT.get();
 
   private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
@@ -150,6 +151,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   public void setFieldRelativeAutoSpeeds(ChassisSpeeds speeds) {
     autoSpeeds = speeds;
     timeSinceAutoSpeeds.reset();
+    trailblazerDriveRequest();
     sendSwerveRequest();
   }
 
@@ -162,12 +164,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   protected SwerveState getNextState(SwerveState currentState) {
     // Ensure that we are in an auto state during auto, and a teleop state during teleop
     return switch (currentState) {
-      case AUTO, TELEOP -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.TELEOP;
-      case DRIVE_TO_POSE ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.DRIVE_TO_POSE;
-      case AUTO_SNAPS, TELEOP_SNAPS ->
-          DriverStation.isAutonomous() ? SwerveState.AUTO_SNAPS : SwerveState.TELEOP_SNAPS;
-      case CLIMBING -> DriverStation.isAutonomous() ? SwerveState.AUTO : SwerveState.CLIMBING;
+      case TRAILBLAZER, TELEOP ->
+          DriverStation.isAutonomous() ? SwerveState.TRAILBLAZER : SwerveState.TELEOP;
+      default -> currentState;
     };
   }
 
@@ -229,7 +228,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
     if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
       driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+          getDriveToPoseSpeeds(
+              lastDriveToPoseTarget,
+              drivetrainState.Pose,
+              lastUseAngleBisector,
+              lastUsedMaxVelocity);
     }
   }
 
@@ -280,20 +283,12 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
 
-      case AUTO ->
-          drivetrain.setControl(
-              drive
-                  .withVelocityX(autoSpeeds.vxMetersPerSecond)
-                  .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                  .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
-      case AUTO_SNAPS -> {
+      case TRAILBLAZER -> {
         drivetrain.setControl(
-            driveToAngle
+            drive
                 .withVelocityX(autoSpeeds.vxMetersPerSecond)
                 .withVelocityY(autoSpeeds.vyMetersPerSecond)
-                .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
-                .withMaxAbsRotationalRate(maxAngularRate)
+                .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.Velocity));
       }
       case CLIMBING -> {
@@ -320,10 +315,16 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   public void normalDriveRequest() {
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO);
-    } else {
-      setStateFromRequest(SwerveState.TELEOP);
+      return;
     }
+    setStateFromRequest(SwerveState.TELEOP);
+  }
+
+  public void trailblazerDriveRequest() {
+    if (!DriverStation.isAutonomous()) {
+      return;
+    }
+    setStateFromRequest(SwerveState.TRAILBLAZER);
   }
 
   public Translation2d getControllerValues() {
@@ -341,25 +342,32 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     setSnapToAngle(snapAngle);
 
     if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.AUTO_SNAPS);
+      setStateFromRequest(SwerveState.TRAILBLAZER);
     } else {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
     }
   }
 
   public void driveToPoseRequest(Pose2d pose) {
-    driveToPoseRequest(pose, true);
+    driveToPoseRequest(pose, true, MAX_TRANSLATION_VELOCITY_LIMIT.get());
+  }
+
+  public void driveToPoseRequest(Pose2d pose, double maxVelocity) {
+    driveToPoseRequest(pose, true, maxVelocity);
   }
 
   public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
-    if (DriverStation.isTeleop()) {
-      lastDriveToPoseTarget = pose;
-      lastUseAngleBisector = useAngleBisector;
-      driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
-      setStateFromRequest(SwerveState.DRIVE_TO_POSE);
-      sendSwerveRequest();
-    }
+    driveToPoseRequest(pose, useAngleBisector, MAX_TRANSLATION_VELOCITY_LIMIT.get());
+  }
+
+  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, double maxVelocity) {
+    lastDriveToPoseTarget = pose;
+    lastUseAngleBisector = useAngleBisector;
+    driveToPoseSpeeds =
+        getDriveToPoseSpeeds(
+            lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, maxVelocity);
+    setStateFromRequest(SwerveState.DRIVE_TO_POSE);
+    sendSwerveRequest();
   }
 
   public void climbRequest(double snapAngle) {
@@ -403,7 +411,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   private PolarChassisSpeeds getDriveToPoseSpeeds(
-      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector) {
+      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector, double maxVelocity) {
     // Calculate x and y velocities
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -421,7 +429,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
 
     if (!MathUtil.isNear(
-        targetPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 1.0)) {
+        targetPose.getRotation().getDegrees(),
+        currentPose.getRotation().getDegrees(),
+        1.0,
+        -180,
+        180)) {
       rotationSpeed +=
           Math.copySign(Units.rotationsToRadians(DRIVE_TO_POSE_ROTATION_FF.get()), rotationSpeed);
     }
@@ -447,11 +459,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
     }
 
-    driveVelocityMagnitude =
-        MathUtil.clamp(
-            driveVelocityMagnitude,
-            -MAX_TRANSLATION_VELOCITY_LIMIT.get(),
-            MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    driveVelocityMagnitude = MathUtil.clamp(driveVelocityMagnitude, -maxVelocity, maxVelocity);
     rotationSpeed =
         MathUtil.clamp(
             rotationSpeed,
