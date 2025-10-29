@@ -91,7 +91,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))
+                          .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(100.0)
