@@ -310,10 +310,10 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
     if (limelightTimer.hasElapsed(IS_OFFLINE_TIMEOUT) && RobotBase.isReal()) {
       cameraHealth = CameraHealth.OFFLINE;
-      DogLog.logFault(name.toUpperCase(Locale.ROOT) + "LIMELIGHT IS OFFLINE", AlertType.kError);
+      DogLog.logFault(name.toUpperCase(Locale.US) + "LIMELIGHT IS OFFLINE", AlertType.kError);
       return;
     } else {
-      DogLog.clearFault(name.toUpperCase(Locale.ROOT) + "LIMELIGHT IS OFFLINE");
+      DogLog.clearFault(name.toUpperCase(Locale.US) + "LIMELIGHT IS OFFLINE");
     }
 
     if (result.isPresent()) {
