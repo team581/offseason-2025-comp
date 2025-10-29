@@ -29,7 +29,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     implements LocalizationBase {
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
-  private final CustomOdometry customOdometry;
+
   private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
   // Currently using default std devs for odometry
@@ -46,7 +46,6 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     this.swerve = swerve;
 
     this.vision = vision;
-    this.customOdometry = customOdometry;
 
     this.poseEstimator =
         new PoseEstimator<>(
