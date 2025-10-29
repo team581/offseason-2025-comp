@@ -43,8 +43,9 @@ public final class SubsystemExecutionSequencer {
           comparingInt((PrioritySubsystem subsystem) -> subsystem.getPriority().getValue())
               .reversed());
   private static final CommandScheduler COMMAND_SCHEDULER = CommandScheduler.getInstance();
-  private static final ImmutableSet<Command> SCHEDULED_COMMANDS =
-      ImmutableSet.copyOf(getScheduledCommands());
+
+  @SuppressWarnings("ImmutableMemberCollection")
+  private static final Set<Command> SCHEDULED_COMMANDS = getScheduledCommands();
 
   public static void ready() {
     for (PrioritySubsystem subsystem : SUBSYSTEMS) {
