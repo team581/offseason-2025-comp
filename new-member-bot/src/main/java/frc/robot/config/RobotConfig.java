@@ -51,8 +51,7 @@ public record RobotConfig(
       int motorId,
       double rangeOfMotionDeg,
       TalonFXConfiguration motorConfig,
-      double homingPosition,
-      double inchesFromCenter) {}
+      double homingPosition) {}
 
   public record VisionConfig(
       double xyStdDev,
