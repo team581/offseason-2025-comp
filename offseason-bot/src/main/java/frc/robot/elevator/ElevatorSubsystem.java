@@ -73,6 +73,10 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     DogLog.log("Elevator/AtGoal", atGoal());
     DogLog.log("Elevator/NearGoal", nearGoal());
     DogLog.log("Elevator/Goal", currentState.getHeight());
+    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Elevator/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+
 
     if (DriverStation.isDisabled()) {
       var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
