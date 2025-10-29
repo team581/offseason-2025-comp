@@ -230,7 +230,7 @@ class CompConfig {
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
               // Left Camera Config
               new CameraConfig(
-                  LimelightModel.THREEG,
+                  LimelightModel.FOUR,
                   true,
                   0.1045038296,
                   -0.2494524094,
