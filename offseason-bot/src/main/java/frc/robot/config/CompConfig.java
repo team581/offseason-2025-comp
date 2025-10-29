@@ -15,6 +15,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.team581.config.LimelightModel;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ArmConfig;
@@ -28,7 +30,6 @@ import frc.robot.config.RobotConfig.SingulatorConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.generated.RobotTunerConstants;
-import frc.robot.vision.limelight.LimelightModel;
 
 class CompConfig {
   private static final String CANIVORE_NAME = RobotTunerConstants.kCANBus.getName();

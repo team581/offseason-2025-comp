@@ -1,6 +1,6 @@
 package frc.robot.config;
 
-import frc.robot.vision.limelight.LimelightModel;
+import com.team581.config.LimelightModel;
 
 public record CameraConfig(
     LimelightModel model,

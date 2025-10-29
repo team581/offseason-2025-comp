@@ -1,5 +1,6 @@
 package frc.robot.vision.limelight;
 
+import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
 import com.team581.util.state_machines.StateMachineSubsystem;
