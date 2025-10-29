@@ -82,7 +82,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
       var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
       var estimatedHeight = homingEndHeight + (height - lowestSeenHeight);
       if (!MathUtil.isNear(estimatedHeight, homingEndHeight, 2.0)) {
-        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kWarning);
+        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kError);
       } else {
         DogLog.clearFault("ELEVATOR NOT IN AUTO POSITION");
       }
