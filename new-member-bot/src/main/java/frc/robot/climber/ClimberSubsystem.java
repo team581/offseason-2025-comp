@@ -44,6 +44,21 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
   }
 
   @Override
+  protected ClimberState getNextState(ClimberState currentState) {
+      return switch (currentState) {
+        case LINEUP_FORWARD -> {
+          if (currentAngle < PASS_ANGLE_CHECK) {
+            DogLog.timestamp("Climber/LineupForwardStartedFlip");
+            yield ClimberState.LINEUP_BACKWARD;
+          }
+          yield currentState;
+        }
+        case LINEUP_BACKWARD -> holdingCage ? ClimberState.HANGING : currentState;
+        default -> currentState;
+      };
+  }
+
+  @Override
   public void whileInState(ClimberState currentState) {
     switch (getState()) {
       case STOPPED -> {
@@ -57,20 +72,12 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
       case LINEUP_FORWARD -> {
         climbMotor.setVoltage(getState().forwardsVoltage);
         grabMotor.disable();
-
-        if (currentAngle < PASS_ANGLE_CHECK) {
-          setStateFromRequest(ClimberState.LINEUP_BACKWARD);
-          DogLog.timestamp("Climber/LineupForwardStartedFlip");
-        }
       }
       case LINEUP_BACKWARD -> {
         if (atGoal()) {
           climbMotor.disable();
         } else {
           climbMotor.setVoltage(getState().forwardsVoltage);
-        }
-        if (holdingCage) {
-          setStateFromRequest(ClimberState.HANGING);
         }
         grabMotor.setVoltage(12.0);
       }
@@ -87,23 +94,20 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     if (GlobalConfig.IS_DEVELOPMENT) {
       if (atGoal()) {
         DogLog.log("Climber/Status", "At goal");
-      } else if (currentAngle < clamp(getState().angle)) {
-        DogLog.log("Climber/Status", "Too low");
       } else {
-        DogLog.log("Climber/Status", "Too high");
+        DogLog.log("Climber/Status", "Too low");
       }
     }
   }
 
   public void setState(ClimberState newState) {
     switch (newState) {
-      case LINEUP_FORWARD, STOPPED -> setStateFromRequest(newState);
       case HANGING -> {
         if (getState() == ClimberState.LINEUP_BACKWARD && atGoal()) {
           setStateFromRequest(newState);
         }
       }
-      default -> {}
+      default -> setStateFromRequest(newState);
     }
   }
 
@@ -122,15 +126,12 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
     DogLog.log("Climber/Cancoder/Angle", currentAngle);
-
     DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
-
     DogLog.log("Climber/HoldingCage", holdingCage);
   }
 
   public boolean atGoal() {
-    var goal = clamp(getState().angle);
-    return currentAngle >= goal;
+    return currentAngle >= clamp(getState().angle);
   }
 
   private static double clamp(double angle) {
