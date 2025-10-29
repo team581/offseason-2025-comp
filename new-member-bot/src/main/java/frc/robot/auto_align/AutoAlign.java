@@ -171,6 +171,19 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         }
         yield currentState;
       }
+      case ALGAE_CENTER -> {
+        if (currentPose.getTranslation().getDistance(currentTargetPose.getTranslation())
+                < Units.inchesToMeters(15.0)
+            && MathUtil.isNear(
+                currentTargetPose.getRotation().getDegrees(),
+                currentPose.getRotation().getDegrees(),
+                25.0,
+                -180.0,
+                180.0)) {
+          yield AutoAlignState.ALGAE_WAITING;
+        }
+        yield currentState;
+      }
       default -> currentState;
     };
   }
@@ -344,16 +357,16 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
                 sidePose.getRotation())
             .rotateBy(sidePose.getRotation().unaryMinus());
 
-    var forwardDistanceToSide = robotRelativeSideTranslation.getY();
-
+    var forwardDistanceToSide = -robotRelativeSideTranslation.getX();
     var lookaheadDistance = Math.copySign(0.3, forwardDistanceToSide);
     var lookaheadDistanceToSide = forwardDistanceToSide - lookaheadDistance;
 
     // Clamp the distance to make it faster to approach if we're far away
-    var clampedDistance = MathUtil.clamp(lookaheadDistanceToSide, 0.2, 1.0);
-    var poseTransform = new Transform2d(0, clampedDistance, Rotation2d.fromDegrees(0));
+    var clampedDistance = MathUtil.clamp(lookaheadDistanceToSide, 0.5, 1.0);
+    var poseTransform = new Transform2d(-clampedDistance, 0.0, Rotation2d.fromDegrees(0));
     return sidePose.plus(poseTransform);
   }
+
 
   /**
    * Checks if the robot's current pose is aligned with the target pose within thresholds.
