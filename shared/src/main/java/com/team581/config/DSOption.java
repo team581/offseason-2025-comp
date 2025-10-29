@@ -8,11 +8,11 @@ public class DSOption {
   private static final NetworkTable table = NetworkTableInstance.getDefault().getTable("DSOptions");
 
   public static BooleanSubscriber of(String key, boolean defaultValue) {
-    var topic = table.getBooleanTopic(key);
+    var entry = table.getBooleanTopic(key).getEntry(defaultValue);
 
-    topic.publish().setDefault(defaultValue);
+    entry.set(defaultValue);
 
-    return topic.subscribe(defaultValue);
+    return entry;
   }
 
   private DSOption() {}
