@@ -47,204 +47,200 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   private double angularVelocity = 0.0;
 
+  private boolean updatedLimelightPos = false;
 
-    private boolean updatedLimelightPos = false;
+  public Limelight(String name, LimelightState initialState, CameraConfig config) {
+    // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
+    // singleton
+    super(SubsystemPriority.VISION, initialState);
+    limelightTableName = "limelight-" + name;
+    this.name = name;
+    limelightTimer.start();
+    this.config = config;
+  }
 
-    public Limelight(
-        String name,
-        LimelightState initialState,
-        CameraConfig config) {
-      // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
-      // singleton
-      super(SubsystemPriority.VISION, initialState);
-      limelightTableName = "limelight-" + name;
-      this.name = name;
-      limelightTimer.start();
-      this.config = config;
+  public void sendImuData(
+      double robotHeading,
+      double angularVelocity,
+      double pitch,
+      double pitchRate,
+      double roll,
+      double rollRate) {
+    LimelightHelpers.SetRobotOrientation(
+        limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
+    this.angularVelocity = angularVelocity;
+  }
+
+  public void setState(LimelightState state) {
+    setStateFromRequest(state);
+  }
+
+  public OptionalGamePieceResult getCoralResult() {
+    return getState() == LimelightState.CORAL ? coralResult : coralResult.empty();
+  }
+
+  public OptionalGamePieceResult getAlgaeResult() {
+    return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
+  }
+
+  public OptionalTagResult getTagResult() {
+    if (getState() != LimelightState.TAGS) {
+      return tagResult.empty();
     }
 
-    public void sendImuData(
-        double robotHeading,
-        double angularVelocity,
-        double pitch,
-        double pitchRate,
-        double roll,
-        double rollRate) {
-      LimelightHelpers.SetRobotOrientation(
-          limelightTableName, robotHeading, angularVelocity, pitch, pitchRate, roll, rollRate);
-      this.angularVelocity = angularVelocity;
+    var mT2Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
+    if (mT2Estimate == null) {
+      return tagResult.empty();
     }
-
-    public void setState(LimelightState state) {
-      setStateFromRequest(state);
+    if (Math.abs(angularVelocity) > 360) {
+      return tagResult.empty();
     }
+    if (mT2Estimate.tagCount == 0) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
 
-    public OptionalGamePieceResult getCoralResult() {
-      return getState() == LimelightState.CORAL ? coralResult : coralResult.empty();
+      return tagResult.empty();
     }
-
-    public OptionalGamePieceResult getAlgaeResult() {
-      return getState() == LimelightState.ALGAE ? algaeResult : coralResult.empty();
-    }
-
-    public OptionalTagResult getTagResult() {
-      if (getState() != LimelightState.TAGS) {
+    if (mT2Estimate.rawFiducials.length == 1) {
+      double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
+      if (ambiguity >= 0.7) {
+        DogLog.timestamp("Vision/" + name + "/Tags/AmbiguityFilter");
         return tagResult.empty();
       }
+    }
+    DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
+    if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
+      var newTimestamp = mT2Estimate.timestampSeconds;
+      if (newTimestamp == lastTimestamp) {
+        DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", 0.0);
 
-      var mT2Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightTableName);
-      if (mT2Estimate == null) {
-        return tagResult.empty();
-      }
-      if (Math.abs(angularVelocity) > 360) {
-        return tagResult.empty();
-      }
-      if (mT2Estimate.tagCount == 0) {
         DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-
         return tagResult.empty();
       }
-      if (mT2Estimate.rawFiducials.length == 1) {
-        double ambiguity = mT2Estimate.rawFiducials[0].ambiguity;
-        if (ambiguity >= 0.7) {
-          DogLog.timestamp("Vision/" + name + "/Tags/AmbiguityFilter");
-          return tagResult.empty();
+
+      lastTimestamp = newTimestamp;
+    }
+
+    var mt2Pose = mT2Estimate.pose;
+    // This prevents pose estimator from having crazy poses if the Limelight loses power
+    if (mt2Pose.getX() == 0.0 && mt2Pose.getY() == 0.0) {
+      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
+
+      return tagResult.empty();
+    }
+    var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
+    if (config.useMegatag1RotationWhenClose() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+      var distance = mT2Estimate.avgTagDist;
+      DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
+
+      var xyDev = 0.01 * Math.pow(distance, 1.2);
+      var thetaDev = 0.03 * Math.pow(distance, 1.2);
+
+      devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
+
+      if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
+        DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
+        var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
+        if (mT1Result != null
+            && mT1Result.tagCount != 0
+            && mT1Result.pose.getRotation().getDegrees() != 0.0) {
+          mt2Pose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
         }
       }
-      DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", mT2Estimate.timestampSeconds);
-      if (FeatureFlags.VISION_STALE_DATA_CHECK.getAsBoolean()) {
-        var newTimestamp = mT2Estimate.timestampSeconds;
-        if (newTimestamp == lastTimestamp) {
-          DogLog.log("Vision/" + name + "/Tags/MT2Timestamp", 0.0);
-
-          DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-          return tagResult.empty();
-        }
-
-        lastTimestamp = newTimestamp;
-      }
-
-      var mt2Pose = mT2Estimate.pose;
-      // This prevents pose estimator from having crazy poses if the Limelight loses power
-      if (mt2Pose.getX() == 0.0 && mt2Pose.getY() == 0.0) {
-        DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", Pose2d.kZero);
-
-        return tagResult.empty();
-      }
-      var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-      if (config.useMegatag1RotationWhenClose() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
-        var distance = mT2Estimate.avgTagDist;
-        DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
-
-        var xyDev = 0.01 * Math.pow(distance, 1.2);
-        var thetaDev = 0.03 * Math.pow(distance, 1.2);
-
-        devs = VecBuilder.fill(xyDev, xyDev, thetaDev);
-
-        if (distance <= USE_MT1_DISTANCE_THRESHOLD) {
-          DogLog.timestamp("Vision/" + name + "/Tags/UsingMT1Rotation");
-          var mT1Result = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightTableName);
-          if (mT1Result != null
-              && mT1Result.tagCount != 0
-              && mT1Result.pose.getRotation().getDegrees() != 0.0) {
-            mt2Pose = new Pose2d(mT2Estimate.pose.getTranslation(), mT1Result.pose.getRotation());
-          }
-        }
-      }
-
-      DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", mt2Pose);
-      return tagResult.update(mt2Pose, mT2Estimate.timestampSeconds, devs);
     }
 
-    private OptionalGamePieceResult getRawCoralResult() {
-      if (getState() != LimelightState.CORAL) {
-        return coralResult.empty();
-      }
-      var t2d = LimelightHelpers.getT2DArray(limelightTableName);
-      if (t2d.length == 0) {
-        return coralResult.empty();
-      }
-      var coralTx = t2d[4];
-      var coralTy = t2d[5];
-      if (coralTx == 0.0 || coralTy == 0.0) {
-        return coralResult.empty();
-      }
+    DogLog.log("Vision/" + name + "/Tags/RawLimelightPose", mt2Pose);
+    return tagResult.update(mt2Pose, mT2Estimate.timestampSeconds, devs);
+  }
 
-      DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
-      DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
-
-      var latency = t2d[2] + t2d[3];
-      var latencySeconds = latency / 1000.0;
-      var timestamp = Timer.getFPGATimestamp() - latencySeconds;
-
-      return coralResult.update(coralTx, coralTy, timestamp);
+  private OptionalGamePieceResult getRawCoralResult() {
+    if (getState() != LimelightState.CORAL) {
+      return coralResult.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return coralResult.empty();
+    }
+    var coralTx = t2d[4];
+    var coralTy = t2d[5];
+    if (coralTx == 0.0 || coralTy == 0.0) {
+      return coralResult.empty();
     }
 
-    public OptionalDouble handoffTx() {
-      if (getState() != LimelightState.HANDOFF) {
-        return OptionalDouble.empty();
-      }
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
 
-      var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
 
-      if (t2d.length != 17) {
-        return OptionalDouble.empty();
-      }
-      var tv = t2d[0];
+    return coralResult.update(coralTx, coralTy, timestamp);
+  }
 
-      if (tv == 0) {
-        return OptionalDouble.empty();
-      }
-
-      var tx = t2d[4];
-      if (tx == 0.0) {
-        return OptionalDouble.empty();
-      }
-
-      return OptionalDouble.of(tx);
+  public OptionalDouble handoffTx() {
+    if (getState() != LimelightState.HANDOFF) {
+      return OptionalDouble.empty();
     }
 
-    private OptionalGamePieceResult getRawAlgaeResult() {
-      if (getState() != LimelightState.ALGAE) {
-        return algaeResult.empty();
-      }
-      var t2d = LimelightHelpers.getT2DArray(limelightTableName);
-      if (t2d.length == 0) {
-        return algaeResult.empty();
-      }
-      var algaeTx = t2d[4];
-      var algaeTy = t2d[5];
-      if (algaeTx == 0.0 || algaeTy == 0.0) {
-        return algaeResult.empty();
-      }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
 
-      DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
-      DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
+    if (t2d.length != 17) {
+      return OptionalDouble.empty();
+    }
+    var tv = t2d[0];
 
-      var latency = t2d[2] + t2d[3];
-      var latencySeconds = latency / 1000.0;
-      var timestamp = Timer.getFPGATimestamp() - latencySeconds;
-
-      return algaeResult.update(algaeTx, algaeTy, timestamp);
+    if (tv == 0) {
+      return OptionalDouble.empty();
     }
 
-    @Override
-    protected void collectInputs() {
-      tagResult = getTagResult();
-      if (tagResult.isPresent()) {
-        lastGoodTagResult = tagResult;
-      }
-      coralResult = getRawCoralResult();
-      algaeResult = getRawAlgaeResult();
+    var tx = t2d[4];
+    if (tx == 0.0) {
+      return OptionalDouble.empty();
     }
 
-    @Override
-    public void robotPeriodic() {
-      super.robotPeriodic();
-      DogLog.log("Vision/" + name + "/State", getState());
+    return OptionalDouble.of(tx);
+  }
 
-       if (DriverStation.isDisabled()) {
-        if (!updatedLimelightPos && getCameraHealth() != CameraHealth.OFFLINE) {
+  private OptionalGamePieceResult getRawAlgaeResult() {
+    if (getState() != LimelightState.ALGAE) {
+      return algaeResult.empty();
+    }
+    var t2d = LimelightHelpers.getT2DArray(limelightTableName);
+    if (t2d.length == 0) {
+      return algaeResult.empty();
+    }
+    var algaeTx = t2d[4];
+    var algaeTy = t2d[5];
+    if (algaeTx == 0.0 || algaeTy == 0.0) {
+      return algaeResult.empty();
+    }
+
+    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
+    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
+
+    var latency = t2d[2] + t2d[3];
+    var latencySeconds = latency / 1000.0;
+    var timestamp = Timer.getFPGATimestamp() - latencySeconds;
+
+    return algaeResult.update(algaeTx, algaeTy, timestamp);
+  }
+
+  @Override
+  protected void collectInputs() {
+    tagResult = getTagResult();
+    if (tagResult.isPresent()) {
+      lastGoodTagResult = tagResult;
+    }
+    coralResult = getRawCoralResult();
+    algaeResult = getRawAlgaeResult();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DogLog.log("Vision/" + name + "/State", getState());
+
+    if (DriverStation.isDisabled()) {
+      if (!updatedLimelightPos && getCameraHealth() != CameraHealth.OFFLINE) {
         LimelightHelpers.setCameraPose_RobotSpace(
             limelightTableName,
             config.forward(),
