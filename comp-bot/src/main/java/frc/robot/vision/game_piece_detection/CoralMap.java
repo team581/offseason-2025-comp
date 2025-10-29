@@ -151,7 +151,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
     return filteredLollipopPose;
   }
 
-  private List<Translation2d> getRawCoralPoses() {
+  private ImmutableList<Translation2d> getRawCoralPoses() {
     if (limelight.getState() != LimelightState.CORAL) {
       return ImmutableList.of();
     }
@@ -195,7 +195,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
       }
     }
 
-    return coralTranslations;
+    return ImmutableList.copyOf(coralTranslations);
   }
 
   public Optional<Pose2d> getBestCoralPose() {
@@ -244,7 +244,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
     return true;
   }
 
-  private List<Translation2d> getFilteredCoralPoses() {
+  private ImmutableList<Translation2d> getFilteredCoralPoses() {
     if (!safeToTrack()) {
       return ImmutableList.of();
     }
@@ -261,7 +261,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
           }
         });
 
-    return safeCoralPoses;
+    return ImmutableList.copyOf(safeCoralPoses);
   }
 
   private boolean safeToTrack() {

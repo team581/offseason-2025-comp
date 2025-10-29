@@ -1,7 +1,8 @@
 package frc.robot.vision.limelight;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.NUMBER;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -357,7 +358,7 @@ public final class LimelightHelpers {
     @JsonProperty("ts_rio")
     public double timestamp_RIOFPGA_capture;
 
-    @JsonFormat(shape = Shape.NUMBER)
+    @JsonFormat(shape = NUMBER)
     @JsonProperty("v")
     public boolean valid;
 
@@ -907,7 +908,7 @@ public final class LimelightHelpers {
 
   public static URL getLimelightURLString(String tableName, String request) {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
-    URL url;
+
     try {
       return new URL(urlString);
 

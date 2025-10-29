@@ -1,5 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.MutableValueGraph;
 import dev.doglog.DogLog;
@@ -10,7 +12,6 @@ import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -170,12 +171,12 @@ public enum Waypoint {
 
       return Collections.min(
           ALL_WAYPOINTS,
-          Comparator.comparingDouble(
+          comparingDouble(
               waypoint -> positionTranslation.getDistance(waypoint.position.translation())));
     }
 
     return Collections.min(
-        ALL_WAYPOINTS, Comparator.comparingDouble(waypoint -> position.costFor(waypoint.position)));
+        ALL_WAYPOINTS, comparingDouble(waypoint -> position.costFor(waypoint.position)));
   }
 
   public void alwaysSafe(MutableValueGraph<Waypoint, WaypointEdge> graph, Waypoint... others) {

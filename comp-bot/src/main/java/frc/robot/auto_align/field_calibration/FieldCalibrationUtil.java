@@ -1,5 +1,7 @@
 package frc.robot.auto_align.field_calibration;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.google.common.collect.ImmutableList;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -16,8 +18,6 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with the
@@ -37,7 +37,7 @@ public class FieldCalibrationUtil {
   private static final double TRANSLATION_TOLERANCE = 0.05;
   private static final double HEADING_TOLERANCE = 1;
 
-  private static final List<ReefPipeLevel> LEVELS =
+  private static final ImmutableList<ReefPipeLevel> LEVELS =
       ImmutableList.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
 
   private static Summary createSummary(
@@ -183,7 +183,7 @@ public class FieldCalibrationUtil {
 
     return Collections.min(
         Arrays.asList(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight),
-        Comparator.comparingDouble(
+        comparingDouble(
                 (ScoringPosition scoringPosition) ->
                     scoringPosition
                         .getPose(level)
@@ -204,7 +204,7 @@ public class FieldCalibrationUtil {
     var bestPipe =
         Collections.min(
             Arrays.asList(ReefPipe.values()),
-            Comparator.comparingDouble(
+            comparingDouble(
                 pipe ->
                     pipe.getPose(ReefPipeLevel.L4, isRedAlliance, side)
                         .getTranslation()

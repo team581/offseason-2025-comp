@@ -1,5 +1,7 @@
 package frc.robot.auto_align;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.google.common.collect.ImmutableList;
 import com.team581.auto_align.TagAlignState;
 import com.team581.math.MathHelpers;
@@ -24,7 +26,6 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private static final ImmutableList<ReefSide> ALL_REEF_SIDES =
@@ -543,7 +544,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       Pose2d currentPose, RobotScoringSide currentScoringSide) {
     return Collections.min(
         ALL_REEF_SIDES,
-        Comparator.comparingDouble(
+        comparingDouble(
             side ->
                 currentPose
                     .getTranslation()
@@ -566,7 +567,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   public ReefPipe getClosestReefPipe() {
     return Collections.min(
         ALL_REEF_PIPES,
-        Comparator.comparingDouble(
+        comparingDouble(
             pipe ->
                 currentPose
                     .getTranslation()

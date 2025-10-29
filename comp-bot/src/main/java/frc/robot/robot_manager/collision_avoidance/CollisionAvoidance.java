@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingDouble;
 
 import com.google.common.collect.ImmutableList;
@@ -15,7 +16,6 @@ import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -619,9 +619,7 @@ public class CollisionAvoidance {
       // current is equal to the waypoint in openset that has the smallest gscore
       var maybeCurrent =
           openSet.stream()
-              .min(
-                  Comparator.comparing(
-                      waypoint -> gscore.getOrDefault(waypoint, Double.MAX_VALUE)));
+              .min(comparing(waypoint -> gscore.getOrDefault(waypoint, Double.MAX_VALUE)));
       if (maybeCurrent.isPresent()) {
         current = maybeCurrent.orElseThrow();
       }

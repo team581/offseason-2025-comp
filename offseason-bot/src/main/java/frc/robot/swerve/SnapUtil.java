@@ -6,6 +6,7 @@ import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.poses.ReefSide;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class SnapUtil {
   public static double getProcessorAngle() {
@@ -52,14 +53,13 @@ public class SnapUtil {
   }
 
   public static double getNearestReefAngle(Pose2d robotPose) {
-    return Arrays.stream(ReefSide.values())
-        .min(
+    return Collections.min(
+            Arrays.asList(ReefSide.values()),
             comparingDouble(
                 side ->
                     side.getPose(robotPose)
                         .getTranslation()
                         .getDistance(robotPose.getTranslation())))
-        .orElseThrow()
         .getPose(robotPose)
         .getRotation()
         .getDegrees();
