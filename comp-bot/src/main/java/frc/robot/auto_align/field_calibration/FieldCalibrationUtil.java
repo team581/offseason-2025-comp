@@ -181,22 +181,21 @@ public class FieldCalibrationUtil {
 
     var robotPose = localization.getPose();
 
-    var bestPipe =
-        Collections.min(
-            Arrays.asList(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight),
-            Comparator.comparingDouble(
-                    (ScoringPosition scoringPosition) ->
-                        scoringPosition
-                            .getPose(level)
-                            .getTranslation()
-                            .getDistance(robotPose.getTranslation()))
-                .thenComparingDouble(
-                    (ScoringPosition scoringPosition) ->
-                        Math.abs(
-                            robotPose
-                                .getRotation()
-                                .minus(scoringPosition.getPose(level).getRotation())
-                                .getRadians())));
+    return Collections.min(
+        Arrays.asList(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight),
+        Comparator.comparingDouble(
+                (ScoringPosition scoringPosition) ->
+                    scoringPosition
+                        .getPose(level)
+                        .getTranslation()
+                        .getDistance(robotPose.getTranslation()))
+            .thenComparingDouble(
+                (ScoringPosition scoringPosition) ->
+                    Math.abs(
+                        robotPose
+                            .getRotation()
+                            .minus(scoringPosition.getPose(level).getRotation())
+                            .getRadians())));
   }
 
   private ScoringPosition getBestScoringPipe(boolean isRedAlliance, RobotScoringSide side) {

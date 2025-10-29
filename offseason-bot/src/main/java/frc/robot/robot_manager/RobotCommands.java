@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.robot_manager.ground_manager.GroundManager;
-import java.util.List;
 
 public class RobotCommands {
   private final GroundManager groundManager;
@@ -24,7 +23,7 @@ public class RobotCommands {
     requirementsList = ImmutableList.of(robot.elevator, robot.arm, robot.claw, robot.climber);
     rmRequirements = requirementsList.toArray(Subsystem[]::new);
     requirementsList =
-        List.of(
+        ImmutableList.of(
             robot.elevator,
             robot.arm,
             robot.claw,
