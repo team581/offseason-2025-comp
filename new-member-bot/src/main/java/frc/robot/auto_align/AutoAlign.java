@@ -367,7 +367,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return sidePose.plus(poseTransform);
   }
 
-
   /**
    * Checks if the robot's current pose is aligned with the target pose within thresholds.
    *
