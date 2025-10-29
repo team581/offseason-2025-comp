@@ -32,6 +32,9 @@ subprojects {
 		errorprone "com.google.errorprone:error_prone_core:2.42.0"
 		errorprone "tech.picnic.error-prone-support:error-prone-contrib:0.26.0"
 		errorprone "tech.picnic.error-prone-support:refaster-runner:0.26.0"
+
+		// AssertJ for fluent assertions in tests
+		testImplementation "org.assertj:assertj-core:3.27.3"
 	}
 
 	// Configure string concat to always inline compile
