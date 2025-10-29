@@ -73,6 +73,8 @@ dependencies {
 
 	compileOnly "com.google.errorprone:error_prone_annotations:2.43.0"
 	errorprone "com.google.errorprone:error_prone_core:2.42.0"
+	errorprone "tech.picnic.error-prone-support:error-prone-contrib:0.26.0"
+	errorprone "tech.picnic.error-prone-support:refaster-runner:0.26.0"
 
 	// https://central.sonatype.com/artifact/com.google.guava/guava
 	implementation 'com.google.guava:guava:33.5.0-jre'
@@ -103,6 +105,7 @@ wpi.java.configureTestTasks(test)
 
 // Error Prone configs
 tasks.withType(JavaCompile).configureEach {
+	options.errorprone.disableWarningsInGeneratedCode = true
 	options.errorprone.disable("InlineMeSuggester", "ImmutableEnumChecker", "InconsistentCapitalization", "Var", "BooleanParameter", "Java8ApiChecker", "ImmutableMemberCollection", "ReturnMissingNullable", "FieldMissingNullable", "ParameterMissingNullable", "EqualsMissingNullable")
 
 	// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
