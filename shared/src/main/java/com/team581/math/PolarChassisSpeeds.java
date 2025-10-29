@@ -2,11 +2,17 @@ package com.team581.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.proto.ChassisSpeedsProto;
 import edu.wpi.first.math.kinematics.struct.ChassisSpeedsStruct;
 
 public class PolarChassisSpeeds extends ChassisSpeeds {
+  /** ChassisSpeeds protobuf for serialization. */
+  @SuppressWarnings("ConstantNaming") // Can't be renamed as part of ProtobufSerializable API
+  public static final ChassisSpeedsProto proto = ChassisSpeeds.proto;
+
   /** ChassisSpeeds struct for serialization. */
-  public static final ChassisSpeedsStruct struct = new ChassisSpeedsStruct();
+  @SuppressWarnings("ConstantNaming") // Can't be renamed as part of StructSerializable API
+  public static final ChassisSpeedsStruct struct = ChassisSpeeds.struct;
 
   public double vMetersPerSecond;
   public Rotation2d direction;

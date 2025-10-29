@@ -90,6 +90,6 @@ public record RobotConfig(
       boolean invertY) {}
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return CompConfig.COMPETITION_BOT;
   }
 }

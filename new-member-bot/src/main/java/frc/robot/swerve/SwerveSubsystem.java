@@ -53,7 +53,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
       DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
 
-  public static final double MaxSpeed = 4.75;
+  public static final double MAX_SPEED = 4.75;
   private static final double MAX_ANGULAR_RATE = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
@@ -217,8 +217,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
     teleopSpeeds =
         new ChassisSpeeds(
-            -1.0 * leftY * MaxSpeed * teleopSlowModePercent,
-            leftX * MaxSpeed * teleopSlowModePercent,
+            -1.0 * leftY * MAX_SPEED * teleopSlowModePercent,
+            leftX * MAX_SPEED * teleopSlowModePercent,
             rightX * TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
 
     sendSwerveRequest();
