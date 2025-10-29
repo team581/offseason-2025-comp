@@ -4,6 +4,8 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.team581.config.CameraConfig;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 
@@ -57,7 +59,7 @@ public record RobotConfig(
       double xyStdDev,
       double thetaStdDev,
       Pose3d robotPoseRelativeToCalibration,
-      Pose3d limelightPosition) {}
+      CameraConfig mainLimelightConfig) {}
 
   public record SwerveConfig(
       PhoenixPIDController snapController,

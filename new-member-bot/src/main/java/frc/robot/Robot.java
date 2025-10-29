@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.RobotConfig;
 import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.generated.BuildConstants;
 import frc.robot.imu.ImuSubsystem;
@@ -16,7 +17,6 @@ import frc.robot.robot_manager.RobotManager;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristSubsystem;
 
@@ -38,7 +38,7 @@ public class Robot extends Base581Robot {
   private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
 
   private final Limelight limelight =
-      new Limelight("main", LimelightState.TAGS, LimelightModel.FOUR, true);
+      new Limelight("main", LimelightState.TAGS, RobotConfig.get().vision().mainLimelightConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);

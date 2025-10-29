@@ -16,6 +16,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.team581.config.CameraConfig;
+import com.team581.config.LimelightModel;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -167,16 +169,8 @@ class CompConfig {
                   new Rotation3d(0.0, 0.0, 0.0)),
 
               // Limelight position relative to robot bellypan center (meters)
-              // Forward: 0.0, Right: 0.0, Up: 0.0, Roll: 0.0, Pitch: 0.0, Yaw:
-              // 0.0
-              new Pose3d(
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  Units.inchesToMeters(0.0),
-                  new Rotation3d(
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0),
-                      Units.degreesToRadians(0.0)))),
+              // Limelight class takes this in to set position from code
+              new CameraConfig(LimelightModel.THREE, true, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, false, false));
 
   private CompConfig() {}
