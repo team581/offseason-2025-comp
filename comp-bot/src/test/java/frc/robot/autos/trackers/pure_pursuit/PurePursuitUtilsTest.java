@@ -127,6 +127,6 @@ final class PurePursuitUtilsTest {
         PurePursuitUtils.getPointToPointInterpolatedRotation(startPose, endPose, pointOnPath)
             .getDegrees();
     var expected = endPose.getRotation().getDegrees();
-    assertThat(expected == result).isTrue();
+    assertThat(expected).isSameAs(result);
   }
 }

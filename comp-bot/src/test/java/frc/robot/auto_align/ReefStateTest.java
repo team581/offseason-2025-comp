@@ -3,11 +3,10 @@ package frc.robot.auto_align;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 final class ReefStateTest {
-  private static final List<ReefPipeLevel> TRACKED_LEVELS =
+  private static final ImmutableList<ReefPipeLevel> TRACKED_LEVELS =
       ImmutableList.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
 
   @Test
