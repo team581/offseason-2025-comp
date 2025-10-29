@@ -49,6 +49,7 @@ public record RobotConfig(
   public record WristConfig(
       String canBusName,
       int motorId,
+      double rangeOfMotionDeg,
       TalonFXConfiguration motorConfig,
       double homingPosition,
       double inchesFromCenter) {}

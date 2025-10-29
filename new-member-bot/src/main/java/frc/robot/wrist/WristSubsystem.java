@@ -31,7 +31,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private static final double MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE = 0;
   private static final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final ElevatorSubsystem elevator;
@@ -127,9 +126,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
-  @Override
-  protected void afterTransition(WristState newState) {}
-
   public void customPeriodic() {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
@@ -161,7 +157,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   public boolean rangeOfMotionGood() {
-    return Math.abs(highestSeenAngle - lowestSeenAngle) >= MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+    return Math.abs(highestSeenAngle - lowestSeenAngle) >= RobotConfig.get().wrist().rangeOfMotionDeg();
   }
 
   @Override

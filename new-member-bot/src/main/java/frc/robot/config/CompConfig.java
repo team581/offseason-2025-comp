@@ -128,6 +128,7 @@ class CompConfig {
           new WristConfig(
               RIO_CAN_NAME,
               18,
+              146.0, // TODO: 151 actually, 146 to be safe. Change after bringup
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
