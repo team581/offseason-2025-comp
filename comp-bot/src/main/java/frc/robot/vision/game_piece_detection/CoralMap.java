@@ -272,7 +272,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   }
 
   private void updateMap() {
-    List<Translation2d> filteredCoralPoses = getFilteredCoralPoses();
+    ImmutableList<Translation2d> filteredCoralPoses = getFilteredCoralPoses();
 
     coralMap.removeIf(
         element -> {

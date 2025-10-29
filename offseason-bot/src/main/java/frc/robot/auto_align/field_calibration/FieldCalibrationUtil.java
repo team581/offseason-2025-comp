@@ -18,7 +18,6 @@ import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with the
@@ -170,7 +169,7 @@ public class FieldCalibrationUtil {
     return Comparators.min(
         bestRed,
         bestBlue,
-        Comparator.comparingDouble(
+        comparingDouble(
                 (ScoringPosition scoringPosition) ->
                     scoringPosition
                         .getPose(level)
