@@ -16,6 +16,7 @@ import frc.robot.config.FeatureFlags;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
+import java.util.Locale;
 import java.util.OptionalDouble;
 
 public class Limelight extends StateMachineSubsystem<LimelightState> {
@@ -309,10 +310,10 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
     if (limelightTimer.hasElapsed(IS_OFFLINE_TIMEOUT) && RobotBase.isReal()) {
       cameraHealth = CameraHealth.OFFLINE;
-      DogLog.logFault(name.toUpperCase() + "LIMELIGHT IS OFFLINE", AlertType.kError);
+      DogLog.logFault(name.toUpperCase(Locale.ROOT) + "LIMELIGHT IS OFFLINE", AlertType.kError);
       return;
     } else {
-      DogLog.clearFault(name.toUpperCase() + "LIMELIGHT IS OFFLINE");
+      DogLog.clearFault(name.toUpperCase(Locale.ROOT) + "LIMELIGHT IS OFFLINE");
     }
 
     if (result.isPresent()) {

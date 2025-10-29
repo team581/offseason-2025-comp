@@ -1,6 +1,5 @@
 package frc.robot.elevator;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
@@ -77,7 +76,6 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
     DogLog.log("Elevator/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
-
 
     if (DriverStation.isDisabled()) {
       var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();

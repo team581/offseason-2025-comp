@@ -1,7 +1,6 @@
 package frc.robot.arm;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -28,8 +27,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   private final StaticBrake brakeNeutralRequest = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private final PositionVoltage motionMagicRequest =
-      new PositionVoltage(0.0).withEnableFOC(false);
+  private final PositionVoltage motionMagicRequest = new PositionVoltage(0.0).withEnableFOC(false);
 
   private final TalonFX motor;
 
