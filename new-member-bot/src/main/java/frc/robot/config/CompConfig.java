@@ -152,7 +152,6 @@ class CompConfig {
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0)),
-              0.0,
               0.0),
           new VisionConfig(
               0.005,
