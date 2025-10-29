@@ -39,8 +39,7 @@ public class Trailblazer {
    */
   private static AutoConstraintOptions resolveConstraints(
       AutoPoint point, AutoConstraintOptions segmentConstraints) {
-    var constraints = point.constraints.orElse(segmentConstraints);
-    return constraints;
+    return point.constraints.orElse(segmentConstraints);
   }
 
   private final SwerveBase swerve;

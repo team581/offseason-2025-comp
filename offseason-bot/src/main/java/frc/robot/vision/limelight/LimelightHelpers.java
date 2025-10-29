@@ -36,7 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class LimelightHelpers {
 
-  private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
+  private static final Map<String, DoubleArrayEntry> DOUBLE_ARRAY_ENTRIES =
+      new ConcurrentHashMap<>();
 
   /** Represents a Color/Retroreflective Target Result extracted from JSON Output */
   public static class LimelightTarget_Retro {
@@ -356,8 +357,8 @@ public final class LimelightHelpers {
     @JsonProperty("ts_rio")
     public double timestamp_RIOFPGA_capture;
 
-    @JsonProperty("v")
     @JsonFormat(shape = Shape.NUMBER)
+    @JsonProperty("v")
     public boolean valid;
 
     @JsonProperty("botpose")
@@ -872,7 +873,7 @@ public final class LimelightHelpers {
 
   public static DoubleArrayEntry getLimelightDoubleArrayEntry(String tableName, String entryName) {
     String key = tableName + "/" + entryName;
-    return doubleArrayEntries.computeIfAbsent(
+    return DOUBLE_ARRAY_ENTRIES.computeIfAbsent(
         key,
         k -> {
           NetworkTable table = getLimelightNTTable(tableName);
@@ -908,8 +909,8 @@ public final class LimelightHelpers {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
     URL url;
     try {
-      url = new URL(urlString);
-      return url;
+      return new URL(urlString);
+
     } catch (MalformedURLException e) {
       System.err.println("bad LL URL");
     }

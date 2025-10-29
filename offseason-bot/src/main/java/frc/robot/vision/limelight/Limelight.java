@@ -234,7 +234,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     super.robotPeriodic();
 
     if (DriverStation.isDisabled()) {
-      if (!updatedLimelightPos && !getCameraHealth().equals(CameraHealth.OFFLINE)) {
+      if (!updatedLimelightPos && getCameraHealth() != CameraHealth.OFFLINE) {
         LimelightHelpers.setCameraPose_RobotSpace(
             limelightTableName,
             config.forward(),
@@ -285,7 +285,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    if (!config.model().equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
     seedImuTimer.reset();
@@ -294,7 +294,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void teleopInit() {
-    if (!config.model().equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
   }

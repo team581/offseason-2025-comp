@@ -1,5 +1,6 @@
 package frc.robot.robot_manager;
 
+import com.google.common.collect.ImmutableList;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -18,9 +19,9 @@ public class RobotCommands {
     this.robot = robot;
 
     var requirementsList =
-        List.of(groundManager.deploy, groundManager.intake, groundManager.singulator);
+        ImmutableList.of(groundManager.deploy, groundManager.intake, groundManager.singulator);
     gmRequirements = requirementsList.toArray(Subsystem[]::new);
-    requirementsList = List.of(robot.elevator, robot.arm, robot.claw, robot.climber);
+    requirementsList = ImmutableList.of(robot.elevator, robot.arm, robot.claw, robot.climber);
     rmRequirements = requirementsList.toArray(Subsystem[]::new);
     requirementsList =
         List.of(

@@ -1,5 +1,6 @@
 package com.team581.trailblazer.trackers;
 
+import com.google.common.collect.ImmutableList;
 import com.team581.trailblazer.AutoPoint;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -7,7 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import java.util.List;
 
 public class HeuristicPathTracker implements PathTracker {
-  private List<AutoPoint> points = List.of();
+  private List<AutoPoint> points = ImmutableList.of();
   private Pose2d currentPose = Pose2d.kZero;
   private static final double PROXIMITY_RADIUS = 0.5;
   private int currentPointIndex = 0;

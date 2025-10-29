@@ -1,10 +1,12 @@
 package com.team581.util.scheduling;
 
+import static java.util.Comparator.comparingInt;
+
+import com.google.common.collect.ImmutableSet;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
@@ -20,7 +22,7 @@ public final class SubsystemExecutionSequencer {
       return (Set<Command>) rawResult;
     } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
       DogLog.logFault("Failed to do reflection for scheduled commands");
-      return Set.of();
+      return ImmutableSet.of();
     }
   }
 
@@ -36,29 +38,29 @@ public final class SubsystemExecutionSequencer {
     }
   }
 
-  private static final Queue<PrioritySubsystem> subsystems =
+  private static final Queue<PrioritySubsystem> SUBSYSTEMS =
       new PriorityQueue<>(
-          Comparator.comparingInt(
-                  (PrioritySubsystem subsystem) -> subsystem.getPriority().getValue())
+          comparingInt((PrioritySubsystem subsystem) -> subsystem.getPriority().getValue())
               .reversed());
-  private static final CommandScheduler commandScheduler = CommandScheduler.getInstance();
-  private static final Set<Command> scheduledCommands = getScheduledCommands();
+  private static final CommandScheduler COMMAND_SCHEDULER = CommandScheduler.getInstance();
+  private static final ImmutableSet<Command> SCHEDULED_COMMANDS =
+      ImmutableSet.copyOf(getScheduledCommands());
 
   public static void ready() {
-    for (PrioritySubsystem subsystem : subsystems) {
-      commandScheduler.registerSubsystem(subsystem);
+    for (PrioritySubsystem subsystem : SUBSYSTEMS) {
+      COMMAND_SCHEDULER.registerSubsystem(subsystem);
     }
   }
 
   public static void log() {
     DogLog.log(
         "Scheduler/ScheduledCommands",
-        scheduledCommands.stream().map(command -> command.getName()).toArray(String[]::new));
+        SCHEDULED_COMMANDS.stream().map(command -> command.getName()).toArray(String[]::new));
   }
 
   public static void registerSubsystem(PrioritySubsystem subsystem) {
-    subsystems.add(subsystem);
-    commandScheduler.unregisterSubsystem(subsystem);
+    SUBSYSTEMS.add(subsystem);
+    COMMAND_SCHEDULER.unregisterSubsystem(subsystem);
   }
 
   private SubsystemExecutionSequencer() {}

@@ -53,7 +53,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
 
   public static final double MaxSpeed = 4.75;
-  private static final double maxAngularRate = Units.rotationsToRadians(4);
+  private static final double MAX_ANGULAR_RATE = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
@@ -86,7 +86,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
           .withRotationalDeadband(0.5)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
-          .withMaxAbsRotationalRate(maxAngularRate);
+          .withMaxAbsRotationalRate(MAX_ANGULAR_RATE);
 
   private double lastSimTime;
   private Notifier simNotifier = null;
@@ -226,7 +226,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     robotRelativeSpeeds = drivetrainState.Speeds;
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
-    if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
+    if (getState() == SwerveState.DRIVE_TO_POSE) {
       driveToPoseSpeeds =
           getDriveToPoseSpeeds(
               lastDriveToPoseTarget,

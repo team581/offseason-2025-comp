@@ -19,13 +19,13 @@ public final class MechanismVisualizer {
           ((ArmSubsystem.ARM_LENGTH_METERS + Units.inchesToMeters(2)) * 2.0),
           Units.inchesToMeters(RobotConfig.get().elevator().maxHeight() + 2)
               + ArmSubsystem.ARM_LENGTH_METERS);
-  private static final Mechanism2d mechanism =
+  private static final Mechanism2d MECHANISM =
       new Mechanism2d(
           MECHANISM_AREA.getX(), MECHANISM_AREA.getY(), new Color8Bit(new Color("#121212")));
-  private static final MechanismRoot2d root =
-      mechanism.getRoot("superstructure", MECHANISM_AREA.getX() / 2.0, Units.inchesToMeters(2));
-  private static final MechanismLigament2d elevator =
-      root.append(
+  private static final MechanismRoot2d ROOT =
+      MECHANISM.getRoot("superstructure", MECHANISM_AREA.getX() / 2.0, Units.inchesToMeters(2));
+  private static final MechanismLigament2d ELEVATOR =
+      ROOT.append(
           new MechanismLigament2d(
               "elevator",
               Units.inchesToMeters(RobotConfig.get().elevator().minHeight())
@@ -33,8 +33,8 @@ public final class MechanismVisualizer {
               90,
               20,
               new Color8Bit(Color.kFirstBlue)));
-  private static final MechanismLigament2d arm =
-      elevator.append(
+  private static final MechanismLigament2d ARM =
+      ELEVATOR.append(
           new MechanismLigament2d(
               "arm", ArmSubsystem.ARM_LENGTH_METERS, 90, 10, new Color8Bit(Color.kFirstRed)));
 
@@ -43,15 +43,15 @@ public final class MechanismVisualizer {
       return;
     }
 
-    SmartDashboard.putData("SuperstructureVisualization", mechanism);
+    SmartDashboard.putData("SuperstructureVisualization", MECHANISM);
 
     var armAngle = currentArmAngle - 90;
     var elevatorHeight =
         Units.inchesToMeters(currentElevatorHeight)
             + ElevatorSubsystem.CARRIAGE_HEIGHT_FROM_FLOOR_METERS;
 
-    elevator.setLength(elevatorHeight);
-    arm.setAngle(armAngle);
+    ELEVATOR.setLength(elevatorHeight);
+    ARM.setAngle(armAngle);
   }
 
   private MechanismVisualizer() {}

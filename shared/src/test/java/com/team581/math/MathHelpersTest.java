@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import org.junit.jupiter.api.Test;
 
-public class MathHelpersTest {
+final class MathHelpersTest {
   @Test
   void roundToTest() {
     var result = MathHelpers.roundTo(123.45, 1);

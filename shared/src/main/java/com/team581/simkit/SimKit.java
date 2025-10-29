@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 /** Entry point for creating simple mechanism simulations. */
 public final class SimKit {
-  private static final Map<String, PositionMechanism> mechanisms = new HashMap<>();
+  private static final Map<String, PositionMechanism> MECHANISMS = new HashMap<>();
 
   public static PositionMechanism positionMechanism(
       String name, Function<PositionMechanismBuilder, PositionMechanismBuilder> factory) {
     if (RobotBase.isSimulation()) {
-      return mechanisms.computeIfAbsent(
+      return MECHANISMS.computeIfAbsent(
           name, k -> factory.apply(new PositionMechanismBuilder()).build());
     }
 

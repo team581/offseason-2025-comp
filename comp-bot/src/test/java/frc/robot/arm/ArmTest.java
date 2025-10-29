@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class ArmTest {
+final class ArmTest {
   @Test
   void getRawAngleFromNormalAngleTest() {
     var goalAngle = -90;

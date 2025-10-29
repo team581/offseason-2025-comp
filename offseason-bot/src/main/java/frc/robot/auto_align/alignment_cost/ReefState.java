@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.auto_align.poses.ReefSide;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -15,7 +16,7 @@ public class ReefState {
   private final EnumSet<ReefPipe> scoredL3Pipes = EnumSet.noneOf(ReefPipe.class);
   private final EnumSet<ReefPipe> scoredL4Pipes = EnumSet.noneOf(ReefPipe.class);
   private final EnumSet<ReefSide> removedAlgae = EnumSet.noneOf(ReefSide.class);
-  private final HashMap<ReefPipe, Integer> scoredL1Pipes = new HashMap<>();
+  private final HashMap<ReefPipe, Integer> scoredL1Pipes = new EnumMap<>(ReefPipe.class);
 
   public ReefState() {
     if (GlobalConfig.IS_DEVELOPMENT) {

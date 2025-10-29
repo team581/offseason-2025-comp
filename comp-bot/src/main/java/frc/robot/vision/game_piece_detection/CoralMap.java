@@ -1,5 +1,8 @@
 package frc.robot.vision.game_piece_detection;
 
+import static java.util.Comparator.comparingDouble;
+
+import com.google.common.collect.ImmutableList;
 import com.team581.math.MathHelpers;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -68,7 +71,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   private Optional<Pose2d> nextExpectedTranslation = Optional.empty();
 
   private final Comparator<Pose2d> bestCoralComparator =
-      Comparator.comparingDouble(
+      comparingDouble(
           target ->
               AlignmentCostUtil.getCoralAlignCost(
                   target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
@@ -113,7 +116,9 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
 
     var outsideExpectedLocation =
         nextExpectedTranslation.isPresent()
-            && newPose.getTranslation().getDistance(nextExpectedTranslation.get().getTranslation())
+            && newPose
+                    .getTranslation()
+                    .getDistance(nextExpectedTranslation.orElseThrow().getTranslation())
                 > 1.0;
 
     if (!outsideExpectedLocation
@@ -148,7 +153,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
 
   private List<Translation2d> getRawCoralPoses() {
     if (limelight.getState() != LimelightState.CORAL) {
-      return List.of();
+      return ImmutableList.of();
     }
 
     List<Translation2d> coralTranslations = new ArrayList<>();
@@ -161,7 +166,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
     if (staleCoralCorners) {
       DogLog.timestamp("CoralMap/SkipStaleCorners");
 
-      return List.of();
+      return ImmutableList.of();
     }
 
     double latency =
@@ -203,8 +208,9 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
             .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
             .min(bestCoralComparator);
     if (bestCoral.isPresent()) {
-      var rotation = MathHelpers.getDriveDirection(bestCoral.get(), localization.getPose());
-      var coralPoseWithIntakeRotation = new Pose2d(bestCoral.get().getTranslation(), rotation);
+      var rotation = MathHelpers.getDriveDirection(bestCoral.orElseThrow(), localization.getPose());
+      var coralPoseWithIntakeRotation =
+          new Pose2d(bestCoral.orElseThrow().getTranslation(), rotation);
       DogLog.log("CoralMap/BestCoralPose", coralPoseWithIntakeRotation);
       return Optional.of(coralPoseWithIntakeRotation);
     }
@@ -240,7 +246,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
 
   private List<Translation2d> getFilteredCoralPoses() {
     if (!safeToTrack()) {
-      return List.of();
+      return ImmutableList.of();
     }
 
     var rawCoralPoses = getRawCoralPoses();
@@ -248,13 +254,12 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
       return rawCoralPoses;
     }
     List<Translation2d> safeCoralPoses = new ArrayList<>();
-    rawCoralPoses.stream()
-        .forEach(
-            element -> {
-              if (isCoralInSafeSpotForAuto(element)) {
-                safeCoralPoses.add(element);
-              }
-            });
+    rawCoralPoses.forEach(
+        element -> {
+          if (isCoralInSafeSpotForAuto(element)) {
+            safeCoralPoses.add(element);
+          }
+        });
 
     return safeCoralPoses;
   }
@@ -315,7 +320,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   public void robotPeriodic() {
     super.robotPeriodic();
     if (filteredLollipopPose.isPresent()) {
-      DogLog.log("CoralMap/Lollipop/FilteredPose", filteredLollipopPose.get());
+      DogLog.log("CoralMap/Lollipop/FilteredPose", filteredLollipopPose.orElseThrow());
     } else {
       DogLog.log("CoralMap/Lollipop/FilteredPose", Pose2d.kZero);
     }

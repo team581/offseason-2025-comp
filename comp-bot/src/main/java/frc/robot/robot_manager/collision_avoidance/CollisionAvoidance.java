@@ -1,5 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.ImmutableValueGraph;
@@ -12,26 +14,25 @@ import frc.robot.arm.ArmState;
 import frc.robot.robot_manager.SuperstructurePosition;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class CollisionAvoidance {
   private static final double ELEVATOR_TOLERANCE = 15.0;
   private static final double ARM_TOLERANCE = 40.0;
   private static final double CLIMBER_UNSAFE_ANGLE = 225.0;
 
-  private static final ImmutableValueGraph<Waypoint, WaypointEdge> graph = createGraph();
+  private static final ImmutableValueGraph<Waypoint, WaypointEdge> GRAPH = createGraph();
 
-  private static final Map<CollisionAvoidanceQuery, Optional<ImmutableList<Waypoint>>> aStarCache =
-      new HashMap<>();
+  private static final Map<CollisionAvoidanceQuery, Optional<ImmutableList<Waypoint>>>
+      A_STAR_CACHE = new HashMap<>();
 
   private static CollisionAvoidanceQuery lastQuery =
       new CollisionAvoidanceQuery(Waypoint.LOW_STOW, Waypoint.LOW_STOW, ObstructionKind.NONE, true);
@@ -62,14 +63,14 @@ public class CollisionAvoidance {
       return Optional.empty();
     }
     DogLog.log("CollisionAvoidance/PreviousWaypoint", previousWaypoint);
-    Waypoint waypoint = maybeWaypoint.get();
+    Waypoint waypoint = maybeWaypoint.orElseThrow();
     if (maybePreviousWaypoint.isEmpty()) {
       previousWaypoint = Waypoint.getClosest(currentPosition);
     } else {
-      previousWaypoint = maybePreviousWaypoint.get();
+      previousWaypoint = maybePreviousWaypoint.orElseThrow();
     }
 
-    var maybeEdge = graph.edgeValue(previousWaypoint, waypoint);
+    var maybeEdge = GRAPH.edgeValue(previousWaypoint, waypoint);
 
     if (waypoint != lastWaypoint) {
       if (maybeEdge.isEmpty()) {
@@ -80,10 +81,10 @@ public class CollisionAvoidance {
       lastSolution =
           getCollisionAvoidanceAngleGoal(
               waypoint.position.armAngle(),
-              edge.get().hitsClimber(),
+              edge.orElseThrow().hitsClimber(),
               obstructionKind,
-              edge.get().leftSideStrategy(),
-              edge.get().rightSideStrategy(),
+              edge.orElseThrow().leftSideStrategy(),
+              edge.orElseThrow().rightSideStrategy(),
               rawArmAngle);
       lastWaypoint = waypoint;
     }
@@ -106,7 +107,7 @@ public class CollisionAvoidance {
     }
     DogLog.log("CollisionAvoidance/DesiredWaypoint", closestToDesired);
     // Check if the desired position is the same, then use the same path
-    if (!lastQuery.goalWaypoint().equals(closestToDesired) || DriverStation.isDisabled()) {
+    if (lastQuery.goalWaypoint() != closestToDesired || DriverStation.isDisabled()) {
       lastQuery =
           new CollisionAvoidanceQuery(
               closestToCurrent, closestToDesired, obstructionKind, DriverStation.isTeleop());
@@ -173,8 +174,8 @@ public class CollisionAvoidance {
     double solution2 = solution1 + 360;
     double solution3 = solution1 - 360;
 
-    var sorted = new ArrayList<Double>(List.of(solution1, solution2, solution3));
-    sorted.sort(Comparator.comparingDouble(solution -> Math.abs(solution - currentRawAngle)));
+    var sorted = new ArrayList<Double>(ImmutableList.of(solution1, solution2, solution3));
+    sorted.sort(comparingDouble(solution -> Math.abs(solution - currentRawAngle)));
     var closest = sorted.get(0);
     var secondClosest = sorted.get(1);
 
@@ -269,9 +270,9 @@ public class CollisionAvoidance {
   }
 
   private static Optional<ImmutableList<Waypoint>> cachedAStar(CollisionAvoidanceQuery query) {
-    DogLog.log("CollisionAvoidance/AStarCacheSize", aStarCache.size());
+    DogLog.log("CollisionAvoidance/AStarCacheSize", A_STAR_CACHE.size());
 
-    return aStarCache.computeIfAbsent(
+    return A_STAR_CACHE.computeIfAbsent(
         query,
         (k) ->
             aStar(
@@ -293,11 +294,11 @@ public class CollisionAvoidance {
 
     /* If your arm angle doesn't change, you can do whatever with elevator */
     var armStraightUpWaypoints =
-        Stream.of(Waypoint.values())
+        Arrays.stream(Waypoint.values())
             .filter(waypoint -> waypoint.position.armAngle() == ArmState.HOLDING_UPRIGHT.getAngle())
             .toList();
     var armStraightDownWaypoints =
-        Stream.of(Waypoint.values())
+        Arrays.stream(Waypoint.values())
             .filter(waypoint -> waypoint.position.armAngle() == ArmState.CORAL_HANDOFF.getAngle())
             .toList();
 
@@ -427,12 +428,12 @@ public class CollisionAvoidance {
 
     /* Switching coral level on the same side is okay if you won't hit the reef */
     var leftCoralScoreWaypoints =
-        List.of(
+        ImmutableList.of(
             Waypoint.CORAL_L2_LEFT_LINEUP,
             Waypoint.CORAL_L3_LEFT_LINEUP,
             Waypoint.CORAL_L4_LEFT_LINEUP);
     var rightCoralScoreWaypoints =
-        List.of(
+        ImmutableList.of(
             Waypoint.CORAL_L1_RIGHT_LINEUP,
             Waypoint.CORAL_L2_RIGHT_LINEUP,
             Waypoint.CORAL_L3_RIGHT_LINEUP,
@@ -493,7 +494,7 @@ public class CollisionAvoidance {
 
     // L1 movements
     var l1AreaWaypoints =
-        List.of(
+        ImmutableList.of(
             Waypoint.CORAL_L1_RIGHT_LINEUP,
             Waypoint.ALGAE_GROUND_INTAKE,
             Waypoint.ALGAE_PROCESSOR,
@@ -607,7 +608,7 @@ public class CollisionAvoidance {
 
     Map<Waypoint, Double> gscore = new EnumMap<Waypoint, Double>(Waypoint.class);
 
-    if (startWaypoint.equals(goalWaypoint)) {
+    if (startWaypoint == goalWaypoint) {
       DogLog.timestamp("CollisionAvoidance/StartAndEndSame");
       return Optional.empty();
     }
@@ -619,7 +620,7 @@ public class CollisionAvoidance {
       var maybeCurrent =
           openSet.stream()
               .min(
-                  Comparator.comparingDouble(
+                  Comparator.comparing(
                       waypoint -> gscore.getOrDefault(waypoint, Double.MAX_VALUE)));
       if (maybeCurrent.isPresent()) {
         current = maybeCurrent.orElseThrow();
@@ -632,10 +633,10 @@ public class CollisionAvoidance {
         return Optional.of(totalPath);
       }
       openSet.remove(current);
-      Set<Waypoint> options = graph.adjacentNodes(current);
+      Set<Waypoint> options = GRAPH.adjacentNodes(current);
 
       for (Waypoint neighbor : options) {
-        var edge = graph.edgeValue(current, neighbor);
+        var edge = GRAPH.edgeValue(current, neighbor);
         double tentativeGScore =
             gscore.getOrDefault(current, Double.MAX_VALUE)
                 + edge.orElseThrow().getCost(obstructionKind);
@@ -677,7 +678,7 @@ public class CollisionAvoidance {
 
   /** Don't use this. */
   static ImmutableValueGraph<Waypoint, WaypointEdge> getRawGraph() {
-    return graph;
+    return GRAPH;
   }
 
   public CollisionAvoidance() {}

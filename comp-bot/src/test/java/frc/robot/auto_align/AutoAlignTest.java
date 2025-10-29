@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.junit.jupiter.api.Test;
 
-public class AutoAlignTest {
+final class AutoAlignTest {
   @Test
   void scoreRightOrLeft() {
     var robotPose = new Pose2d(13, 0, Rotation2d.fromDegrees(180.0));

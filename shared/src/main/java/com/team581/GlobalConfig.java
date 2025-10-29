@@ -1,12 +1,12 @@
 package com.team581;
 
-import java.util.Optional;
+import static java.util.Objects.requireNonNullElse;
 
 public final class GlobalConfig {
   public static final boolean IS_DEVELOPMENT = true;
 
   public static final String SERIAL_NUMBER =
-      Optional.ofNullable(System.getenv("serialnum")).orElse("unknown");
+      requireNonNullElse(System.getenv("serialnum"), "unknown");
 
   private GlobalConfig() {}
 }

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class ControllerHelpersTest {
+final class ControllerHelpersTest {
   @Test
   void joystickMagnitudeAllZeroTest() {
     var actual = ControllerHelpers.getJoystickMagnitude(0, 0, 2);

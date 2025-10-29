@@ -1,6 +1,7 @@
 package frc.robot.autos.trackers.pure_pursuit;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitUtils;
@@ -8,10 +9,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PurePursuitUtilsTest {
+final class PurePursuitUtilsTest {
   @Test
   void getPerpindicularWaypoint() {
     var startPoint = new Pose2d(-1, -4, Rotation2d.kZero);
@@ -20,7 +20,7 @@ public class PurePursuitUtilsTest {
     var result = PurePursuitUtils.getPerpendicularPoint(startPoint, endPoint, robotPose);
 
     var expected = new Pose2d(-2.5, -5.5, Rotation2d.kZero);
-    Assertions.assertEquals(expected, result);
+    assertEquals(expected, result);
   }
 
   @Test
@@ -31,7 +31,7 @@ public class PurePursuitUtilsTest {
     var result = PurePursuitUtils.getLookaheadPoint(startPoint, endPoint, pointOnPath, 1.0);
 
     var expected = new Pose2d(3, 0, Rotation2d.kZero);
-    Assertions.assertEquals(expected, result);
+    assertEquals(expected, result);
   }
 
   @Test
@@ -42,7 +42,7 @@ public class PurePursuitUtilsTest {
 
     for (int i = 0; i < iterations; i++) {
       var random = PurePursuitUtils.randomBetween(min, max);
-      Assertions.assertTrue(random >= min && random <= max);
+      assertThat(random >= min && random <= max).isTrue();
     }
   }
 
@@ -51,8 +51,9 @@ public class PurePursuitUtilsTest {
     var iterations = 1000;
     for (int i = 0; i < iterations; i++) {
       var result = PurePursuitUtils.generateRandomPose();
-      Assertions.assertTrue(
-          result.getX() >= 0 && result.getX() <= 15 && result.getY() >= 0 && result.getY() <= 8);
+      assertThat(
+              result.getX() >= 0 && result.getX() <= 15 && result.getY() >= 0 && result.getY() <= 8)
+          .isTrue();
     }
   }
 
@@ -73,9 +74,10 @@ public class PurePursuitUtilsTest {
       var targetPose =
           PurePursuitUtils.getTargetPose(
               currentRobotPose, points, currentIndex, lookaheadDistance, startingRobotPose);
-      assertTrue(
-          PurePursuitUtils.isBetweenAndCollinearWithAnyPoints(
-              startingRobotPose, points, targetPose));
+      assertThat(
+              PurePursuitUtils.isBetweenAndCollinearWithAnyPoints(
+                  startingRobotPose, points, targetPose))
+          .isTrue();
     }
   }
 
@@ -87,7 +89,7 @@ public class PurePursuitUtilsTest {
       var endPose = PurePursuitUtils.generateRandomPose();
       var robotPose = PurePursuitUtils.generateRandomPose();
       var result = PurePursuitUtils.getPerpendicularPoint(startPose, endPose, robotPose);
-      assertTrue(PurePursuitUtils.isCollinear(startPose, endPose, result));
+      assertThat(PurePursuitUtils.isCollinear(startPose, endPose, result)).isTrue();
     }
   }
 
@@ -98,7 +100,7 @@ public class PurePursuitUtilsTest {
       var startPose = PurePursuitUtils.generateRandomPose();
       var endPose = PurePursuitUtils.generateRandomPose();
       var between = startPose;
-      assertTrue(PurePursuitUtils.isBetween(startPose, endPose, between));
+      assertThat(PurePursuitUtils.isBetween(startPose, endPose, between)).isTrue();
     }
   }
 
@@ -112,7 +114,7 @@ public class PurePursuitUtilsTest {
       var perpendicularPoint =
           PurePursuitUtils.getPerpendicularPoint(startPose, endPose, robotPose);
       var result = PurePursuitUtils.getLookaheadPoint(startPose, endPose, perpendicularPoint, 1.0);
-      assertTrue(PurePursuitUtils.isCollinear(startPose, endPose, result));
+      assertThat(PurePursuitUtils.isCollinear(startPose, endPose, result)).isTrue();
     }
   }
 
@@ -125,6 +127,6 @@ public class PurePursuitUtilsTest {
         PurePursuitUtils.getPointToPointInterpolatedRotation(startPose, endPose, pointOnPath)
             .getDegrees();
     var expected = endPose.getRotation().getDegrees();
-    assertTrue(expected == result);
+    assertThat(expected == result).isTrue();
   }
 }

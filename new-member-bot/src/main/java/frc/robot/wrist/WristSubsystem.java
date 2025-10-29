@@ -31,7 +31,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double motorCurrent;
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
-  private static final StaticBrake brakeNeutralRequest = new StaticBrake();
+  private static final StaticBrake BRAKE_NEUTRAL_REQUEST = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final ElevatorSubsystem elevator;
   private boolean elevatorIsGoingDown = false;
@@ -144,7 +144,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
-            motor.setControl(brakeNeutralRequest);
+            motor.setControl(BRAKE_NEUTRAL_REQUEST);
           }
         } else {
           motor.setControl(coastNeutralRequest);

@@ -1,20 +1,20 @@
 package frc.robot.auto_align;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class ReefStateTest {
+final class ReefStateTest {
   private static final List<ReefPipeLevel> TRACKED_LEVELS =
-      List.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
+      ImmutableList.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
 
   @Test
-  public void markScoredTest() {
+  void markScoredTest() {
     var state = new ReefState();
 
-    assertFalse(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4));
+    assertThat(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4)).isFalse();
 
     state.markCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4);
 
@@ -22,27 +22,27 @@ public class ReefStateTest {
       for (var level : TRACKED_LEVELS) {
         var result = state.isCoralScored(pipe, level);
         if (pipe == ReefPipe.PIPE_A && level == ReefPipeLevel.L4) {
-          assertTrue(result);
+          assertThat(result).isTrue();
         } else {
-          assertFalse(result);
+          assertThat(result).isFalse();
         }
       }
     }
   }
 
   @Test
-  public void initialStateTest() {
+  void initialStateTest() {
     var state = new ReefState();
 
     for (var pipe : ReefPipe.values()) {
       for (var level : TRACKED_LEVELS) {
-        assertFalse(state.isCoralScored(pipe, level));
+        assertThat(state.isCoralScored(pipe, level)).isFalse();
       }
     }
   }
 
   @Test
-  public void clearTest() {
+  void clearTest() {
     var state = new ReefState();
 
     state.markCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4);
@@ -52,20 +52,20 @@ public class ReefStateTest {
 
     for (var pipe : ReefPipe.values()) {
       for (var level : TRACKED_LEVELS) {
-        assertFalse(state.isCoralScored(pipe, level));
+        assertThat(state.isCoralScored(pipe, level)).isFalse();
       }
     }
   }
 
   @Test
-  public void doubleScoreTest() {
+  void doubleScoreTest() {
     var state = new ReefState();
 
     state.markCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4);
-    assertTrue(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4));
+    assertThat(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4)).isTrue();
 
     // Shouldn't change state
     state.markCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4);
-    assertTrue(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4));
+    assertThat(state.isCoralScored(ReefPipe.PIPE_A, ReefPipeLevel.L4)).isTrue();
   }
 }

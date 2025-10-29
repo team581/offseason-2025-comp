@@ -95,7 +95,7 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
-                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(approachPose.orElseThrow()),
                         new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L1))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
@@ -120,8 +120,10 @@ public class AutoBlocks {
                     BASE_CONSTRAINTS,
                     new AutoPoint(
                         () ->
-                            backupPoint.orElse(
-                                pipe.getPose(ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
+                            backupPoint.orElseGet(
+                                () ->
+                                    pipe.getPose(
+                                        ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
                 false)
             .onlyIf(() -> robotManager.claw.getHasGP()));
   }

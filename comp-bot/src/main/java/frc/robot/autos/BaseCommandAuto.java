@@ -1,5 +1,7 @@
 package frc.robot.autos;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.team581.GlobalConfig;
 import com.team581.autos.AbstractCommandAuto;
 import com.team581.trailblazer.Trailblazer;
@@ -47,10 +49,9 @@ public abstract class BaseCommandAuto extends AbstractCommandAuto {
               if (interrupted && DriverStation.isAutonomousEnabled()) {
                 DogLog.logFault("Auto command interrupted outside teleop");
 
-                if (GlobalConfig.IS_DEVELOPMENT) {
-                  throw new IllegalStateException(
-                      "The auto command was interrupted while still in auto mode, is there a command requirements conflict?");
-                }
+                checkState(
+                    !GlobalConfig.IS_DEVELOPMENT,
+                    "The auto command was interrupted while still in auto mode, is there a command requirements conflict?");
               }
             })
         .withName(name() + "Command");

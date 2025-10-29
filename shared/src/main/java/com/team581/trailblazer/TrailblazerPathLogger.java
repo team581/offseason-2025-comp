@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TrailblazerPathLogger {
-  private static final Map<String, List<Pose2d>> autoNameToPath = new HashMap<>();
+  private static final Map<String, List<Pose2d>> AUTO_NAME_TO_PATH = new HashMap<>();
   private static String currentAuto = "(none)";
 
   public static void markAuto(BaseAuto auto) {
@@ -22,7 +22,7 @@ public class TrailblazerPathLogger {
       return;
     }
 
-    var currentPath = autoNameToPath.computeIfAbsent(currentAuto, k -> new ArrayList<>());
+    var currentPath = AUTO_NAME_TO_PATH.computeIfAbsent(currentAuto, k -> new ArrayList<>());
 
     currentPath.addAll(segment.points.stream().map(point -> point.poseSupplier.get()).toList());
 

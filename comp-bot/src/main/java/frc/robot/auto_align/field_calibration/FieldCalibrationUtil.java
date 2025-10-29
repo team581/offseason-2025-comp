@@ -1,5 +1,6 @@
 package frc.robot.auto_align.field_calibration;
 
+import com.google.common.collect.ImmutableList;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,9 +15,9 @@ import frc.robot.lights.LightsState;
 import frc.robot.lights.LightsSubsystem;
 import frc.robot.localization.LocalizationSubsystem;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Logs useful diagnostics to validate scoring setpoints during field calibration. Enabled with the
@@ -37,7 +38,7 @@ public class FieldCalibrationUtil {
   private static final double HEADING_TOLERANCE = 1;
 
   private static final List<ReefPipeLevel> LEVELS =
-      List.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
+      ImmutableList.of(ReefPipeLevel.L2, ReefPipeLevel.L3, ReefPipeLevel.L4);
 
   private static Summary createSummary(
       ElevatorState wantedElevator,
@@ -141,7 +142,7 @@ public class FieldCalibrationUtil {
     var anyOk = false;
 
     for (var level : LEVELS) {
-      var prefix = "FieldCalibration/Best/" + level.toString();
+      var prefix = "FieldCalibration/Best/" + level;
       var bestScoringPosition = getBestScoringPosition(level);
       DogLog.log(prefix + "/Alliance", bestScoringPosition.isRedAlliance() ? "Red" : "Blue");
       DogLog.log(prefix + "/Pipe", bestScoringPosition.pipe());
@@ -166,14 +167,7 @@ public class FieldCalibrationUtil {
     for (var pipe : ReefPipe.values()) {
       for (var level : LEVELS) {
         DogLog.log(
-            "FieldCalibration/"
-                + allianceLabel
-                + "/"
-                + sideLabel
-                + "/"
-                + pipe.toString()
-                + "/"
-                + level.toString(),
+            "FieldCalibration/" + allianceLabel + "/" + sideLabel + "/" + pipe + "/" + level,
             pipe.getPose(level, isRedAlliance, side));
       }
     }
@@ -188,38 +182,34 @@ public class FieldCalibrationUtil {
     var robotPose = localization.getPose();
 
     var bestPipe =
-        Stream.of(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight)
-            .min(
-                Comparator.comparingDouble(
-                        (ScoringPosition scoringPosition) ->
-                            scoringPosition
-                                .getPose(level)
-                                .getTranslation()
-                                .getDistance(robotPose.getTranslation()))
-                    .thenComparingDouble(
-                        (ScoringPosition scoringPosition) ->
-                            Math.abs(
-                                robotPose
-                                    .getRotation()
-                                    .minus(scoringPosition.getPose(level).getRotation())
-                                    .getRadians())))
-            .orElseThrow();
-
-    return bestPipe;
+        Collections.min(
+            Arrays.asList(bestRedLeft, bestRedRight, bestBlueLeft, bestBlueRight),
+            Comparator.comparingDouble(
+                    (ScoringPosition scoringPosition) ->
+                        scoringPosition
+                            .getPose(level)
+                            .getTranslation()
+                            .getDistance(robotPose.getTranslation()))
+                .thenComparingDouble(
+                    (ScoringPosition scoringPosition) ->
+                        Math.abs(
+                            robotPose
+                                .getRotation()
+                                .minus(scoringPosition.getPose(level).getRotation())
+                                .getRadians())));
   }
 
   private ScoringPosition getBestScoringPipe(boolean isRedAlliance, RobotScoringSide side) {
     var robotTranslation = localization.getPose().getTranslation();
 
     var bestPipe =
-        Arrays.stream(ReefPipe.values())
-            .min(
-                Comparator.comparingDouble(
-                    pipe ->
-                        pipe.getPose(ReefPipeLevel.L4, isRedAlliance, side)
-                            .getTranslation()
-                            .getDistance(robotTranslation)))
-            .orElseThrow();
+        Collections.min(
+            Arrays.asList(ReefPipe.values()),
+            Comparator.comparingDouble(
+                pipe ->
+                    pipe.getPose(ReefPipeLevel.L4, isRedAlliance, side)
+                        .getTranslation()
+                        .getDistance(robotTranslation)));
 
     return new ScoringPosition(bestPipe, side, isRedAlliance);
   }

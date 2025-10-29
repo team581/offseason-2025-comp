@@ -169,8 +169,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           elevator.atGoal()
                   && arm.atGoal()
                   && ((groundManager.deploy.atGoal()
-                          && (groundManager.getState().equals(GroundState.HANDOFF_WAIT)
-                              || groundManager.getState().equals(GroundState.HANDOFF_RELEASE))
+                          && (groundManager.getState() == GroundState.HANDOFF_WAIT
+                              || groundManager.getState() == GroundState.HANDOFF_RELEASE)
                           && groundManager.intake.getHasGP())
                       || claw.getHasGP())
               ? currentState.getHandoffPrepareToReleaseState()
@@ -1112,7 +1112,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_EMPTY -> {
         if (groundManager.getState() == GroundState.L1_WAIT
-            || groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
+            || groundManager.getState() == GroundState.L1_HARD_WAIT) {
           lights.setState(LightsState.SCORING_CORAL);
           swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
@@ -1124,7 +1124,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
                             new Pose2d(
                                 AutoAlign.getAllianceCenterOfReef(robotPose), Rotation2d.kZero))
                         .getDegrees()
-                    + (robotScoringSide.equals(RobotScoringSide.LEFT) ? 90 : -90));
+                    + (robotScoringSide == RobotScoringSide.LEFT ? 90 : -90));
 
           } else {
             swerve.normalDriveRequest();
@@ -1133,7 +1133,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case LOW_STOW, CLAW_ALGAE, STARTING_POSITION -> {
         if (groundManager.getState() == GroundState.L1_WAIT
-            || groundManager.getState().equals(GroundState.L1_HARD_WAIT)) {
+            || groundManager.getState() == GroundState.L1_HARD_WAIT) {
           lights.setState(LightsState.SCORING_CORAL);
           swerve.snapsDriveRequest(SnapUtil.getNearestReefAngle(robotPose));
         } else {
@@ -1149,7 +1149,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
                           new Pose2d(
                               AutoAlign.getAllianceCenterOfReef(robotPose), Rotation2d.kZero))
                       .getDegrees()
-                  + (robotScoringSide.equals(RobotScoringSide.LEFT) ? 90 : -90));
+                  + (robotScoringSide == RobotScoringSide.LEFT ? 90 : -90));
         } else {
           swerve.normalDriveRequest();
         }
@@ -1264,10 +1264,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(0.5);
     }
 
-    var isFarEnoughFromReefSide =
-        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
-
-    return isFarEnoughFromReefSide;
+    return !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
   }
 
   public boolean cameraOnlineAndFarEnoughFromReefForAuto() {
@@ -1300,7 +1297,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void intakeRequest() {
     switch (getState()) {
       case LOW_STOW -> {
-        if (groundManager.getState().equals(GroundState.L1_WAIT)) {
+        if (groundManager.getState() == GroundState.L1_WAIT) {
           groundManager.hardL1Request();
         } else {
           groundManager.intakeRequest();
@@ -1744,7 +1741,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void forcedL1Request() {
-    if (groundManager.getState().equals(GroundState.L1_WAIT)) {
+    if (groundManager.getState() == GroundState.L1_WAIT) {
       groundManager.forcedHardScoreRequest();
       return;
     }

@@ -7,7 +7,7 @@ import frc.robot.auto_align.AutoAlign;
 import frc.robot.vision.game_piece_detection.CoralMap;
 import org.junit.jupiter.api.Test;
 
-public class CoralMapTest {
+final class CoralMapTest {
   @Test
   void isCoralSafeForAuto() {
     var centerOfReef = AutoAlign.getAllianceCenterOfReef();

@@ -28,7 +28,7 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
     return name;
   }
 
-  private static final StateMachineSubsystemInputManager manager =
+  private static final StateMachineSubsystemInputManager MANAGER =
       new StateMachineSubsystemInputManager();
 
   private final SubsystemPriorityBase priority;
@@ -56,7 +56,7 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
     subsystemName = getSubsystemName(getClass());
     loggerName = "Scheduler/Subsystems/" + subsystemName + ".periodic()";
 
-    manager.register(this);
+    MANAGER.register(this);
   }
 
   @Override

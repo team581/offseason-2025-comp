@@ -226,8 +226,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       case CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE -> {
         if (drivingAwayFromReef()
-            || ((autoAlign.isAlgaeRemoved()
-                    || groundManager.getState().equals(GroundState.INTAKING))
+            || ((autoAlign.isAlgaeRemoved() || groundManager.getState() == GroundState.INTAKING)
                 && farEnoughFromReef())) {
           yield RobotState.CLAW_EMPTY;
         }
@@ -848,9 +847,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(0.5);
     }
 
-    var isFarEnoughFromReefSide = !autoAlign.isCloseToReefSide(0.8);
-
-    return isFarEnoughFromReefSide;
+    return !autoAlign.isCloseToReefSide(0.8);
   }
 
   private boolean drivingAwayFromReef() {
@@ -908,7 +905,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void intakeFloorAlgaeRequest() {
     if (!getState().climbingOrRehoming && !RobotState.isHandoffReleaseState(getState())) {
-      if (groundManager.getState().equals(GroundState.INTAKING)) {
+      if (groundManager.getState() == GroundState.INTAKING) {
         groundManager.stowRequest();
       } else {
         setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
@@ -917,7 +914,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void stopOuttakeRequest() {
-    if (groundManager.getState().equals(GroundState.OUTTAKING)) {
+    if (groundManager.getState() == GroundState.OUTTAKING) {
       groundManager.intakeRequest();
     }
   }

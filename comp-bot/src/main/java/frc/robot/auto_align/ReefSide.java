@@ -122,7 +122,7 @@ public enum ReefSide {
   public Pose2d getPose(ReefSideOffset offset, RobotScoringSide scoringSide, Pose2d robotPose) {
     return getPose(robotPose)
         .transformBy(
-            (scoringSide.equals(RobotScoringSide.LEFT) ? offset.leftOffset : offset.rightOffset));
+            (scoringSide == RobotScoringSide.LEFT ? offset.leftOffset : offset.rightOffset));
   }
 
   public int getTagID() {

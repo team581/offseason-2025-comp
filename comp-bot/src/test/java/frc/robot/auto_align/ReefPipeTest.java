@@ -1,13 +1,13 @@
 package frc.robot.auto_align;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import org.junit.jupiter.api.Test;
 
-public class ReefPipeTest {
+final class ReefPipeTest {
   private static final Translation2d BLUE_REEF_CENTER =
       new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501));
   private static final Translation2d RED_REEF_CENTER =
@@ -26,7 +26,7 @@ public class ReefPipeTest {
           pipe.getPose(ReefPipeLevel.BASE, false, RobotScoringSide.RIGHT)
               .getTranslation()
               .getDistance(BLUE_REEF_CENTER);
-      assertTrue(MathUtil.isNear(wantedDistance, distance, 2));
+      assertThat(MathUtil.isNear(wantedDistance, distance, 2)).isTrue();
     }
   }
 
@@ -44,7 +44,7 @@ public class ReefPipeTest {
               .getTranslation()
               .getDistance(RED_REEF_CENTER);
       // TODO: Figure out why a wider tolerance is needed here
-      assertTrue(MathUtil.isNear(wantedDistance, distance, 0.02));
+      assertThat(MathUtil.isNear(wantedDistance, distance, 0.02)).isTrue();
     }
   }
 }

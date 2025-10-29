@@ -1,11 +1,12 @@
 package frc.robot.swerve;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.ReefSide;
 import frc.robot.auto_align.RobotScoringSide;
-import java.util.Comparator;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 public class SnapUtil {
   public static double getProcessorAngle() {
@@ -26,9 +27,9 @@ public class SnapUtil {
     double halfFieldLength = 17.55 / 2.0;
 
     if (robotX < halfFieldLength) {
-      return scoringSide.equals(RobotScoringSide.RIGHT) ? 90 : -90;
+      return scoringSide == RobotScoringSide.RIGHT ? 90 : -90;
     }
-    return scoringSide.equals(RobotScoringSide.RIGHT) ? -90 : 90;
+    return scoringSide == RobotScoringSide.RIGHT ? -90 : 90;
   }
 
   public static double getCoralStationAngle(Pose2d robotPose) {
@@ -51,9 +52,9 @@ public class SnapUtil {
   }
 
   public static double getNearestReefAngle(Pose2d robotPose) {
-    return Stream.of(ReefSide.values())
+    return Arrays.stream(ReefSide.values())
         .min(
-            Comparator.comparingDouble(
+            comparingDouble(
                 side ->
                     side.getPose(robotPose)
                         .getTranslation()

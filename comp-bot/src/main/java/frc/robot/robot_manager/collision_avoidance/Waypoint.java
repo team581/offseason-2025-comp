@@ -1,5 +1,6 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.graph.MutableValueGraph;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -7,9 +8,10 @@ import frc.robot.arm.ArmState;
 import frc.robot.config.FeatureFlags;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * These represent "waypoints" for collision avoidance to route through. These are NOT setpoints
@@ -129,7 +131,8 @@ public enum Waypoint {
       new SuperstructurePosition(
           ElevatorState.LOLLIPOP_CORAL_INTAKE_PUSH, ArmState.LOLLIPOP_CORAL_INTAKE_PUSH));
 
-  private static final List<Waypoint> ALL_WAYPOINTS = List.of(values());
+  private static final ImmutableList<Waypoint> ALL_WAYPOINTS =
+      ImmutableList.copyOf(List.of(values()));
 
   public final SuperstructurePosition position;
 
@@ -147,12 +150,11 @@ public enum Waypoint {
 
   public static void log() {
     for (var waypoint : values()) {
-      DogLog.log(
-          "CollisionAvoidance/Waypoints/" + waypoint.toString(), waypoint.position.translation());
+      DogLog.log("CollisionAvoidance/Waypoints/" + waypoint, waypoint.position.translation());
     }
     DogLog.log(
         "CollisionAvoidance/Waypoints/All",
-        Stream.of(values())
+        Arrays.stream(values())
             .map(waypoint -> waypoint.position.translation())
             .toArray(Translation2d[]::new));
   }
@@ -166,16 +168,14 @@ public enum Waypoint {
     if (FeatureFlags.USE_ALTERNATE_WAYPOINT_CHOOSER.getAsBoolean()) {
       var positionTranslation = position.translation();
 
-      return ALL_WAYPOINTS.stream()
-          .min(
-              Comparator.comparingDouble(
-                  waypoint -> positionTranslation.getDistance(waypoint.position.translation())))
-          .orElseThrow();
+      return Collections.min(
+          ALL_WAYPOINTS,
+          Comparator.comparingDouble(
+              waypoint -> positionTranslation.getDistance(waypoint.position.translation())));
     }
 
-    return ALL_WAYPOINTS.stream()
-        .min(Comparator.comparingDouble(waypoint -> position.costFor(waypoint.position)))
-        .orElseThrow();
+    return Collections.min(
+        ALL_WAYPOINTS, Comparator.comparingDouble(waypoint -> position.costFor(waypoint.position)));
   }
 
   public void alwaysSafe(MutableValueGraph<Waypoint, WaypointEdge> graph, Waypoint... others) {

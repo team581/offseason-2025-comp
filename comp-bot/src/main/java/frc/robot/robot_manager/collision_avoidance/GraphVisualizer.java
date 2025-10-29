@@ -1,5 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import static java.util.stream.Collectors.joining;
+
 import com.google.common.graph.ValueGraph;
 import com.team581.math.MathHelpers;
 import dev.doglog.DogLog;
@@ -8,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.stream.Collectors;
 
 public class GraphVisualizer {
   private static final boolean HIDE_INFINITE_COSTS = false;
@@ -96,11 +97,11 @@ public class GraphVisualizer {
         penalizedLinkIndexes.add(linkIndex);
       }
 
-      sb.append(pair.nodeU().toString());
+      sb.append(pair.nodeU());
       sb.append(" <-- ");
       sb.append(MathHelpers.roundTo(cost, 3));
       sb.append(" --> ");
-      sb.append(pair.nodeV().toString());
+      sb.append(pair.nodeV());
       sb.append('\n');
 
       linkIndex++;
@@ -108,15 +109,13 @@ public class GraphVisualizer {
 
     if (!impossibleLinkIndexes.isEmpty()) {
       sb.append("\nlinkStyle ");
-      sb.append(
-          impossibleLinkIndexes.stream().map(String::valueOf).collect(Collectors.joining(",")));
+      sb.append(impossibleLinkIndexes.stream().map(String::valueOf).collect(joining(",")));
       sb.append(" stroke:red;\n");
     }
 
     if (!penalizedLinkIndexes.isEmpty()) {
       sb.append("\nlinkStyle ");
-      sb.append(
-          penalizedLinkIndexes.stream().map(String::valueOf).collect(Collectors.joining(",")));
+      sb.append(penalizedLinkIndexes.stream().map(String::valueOf).collect(joining(",")));
       sb.append(" stroke:yellow;\n");
     }
 
