@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.config.DSOptions;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.util.scheduling.SubsystemPriority;
 
@@ -48,10 +49,10 @@ public class Autos extends StateMachineSubsystem<AutosState> {
     if (DriverStation.isDisabled()) {
       updateSelection();
 
-      if (!hasEnabledAuto
+      if (!DSOptions.PRACTICE_MODE.get()&&(!hasEnabledAuto
           && (RobotBase.isSimulation()
               || DriverStation.isAutonomous()
-              || DriverStation.isFMSAttached())) {
+              || DriverStation.isFMSAttached()))) {
         // Continuously reset pose
         resetPoseForAuto();
       }
