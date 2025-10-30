@@ -72,19 +72,19 @@ public class AutoBlocks {
   }
 
   public Command scoreL1Coral(ReefPipe pipe) {
-    return scoreL1(Optional.empty(), pipe, Optional.empty());
+    return scoreL1Coral(Optional.empty(), pipe, Optional.empty());
   }
 
   public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.empty());
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.empty());
   }
 
   public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.of(backupPoint));
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.of(backupPoint));
   }
 
   public Command scoreL1Coral(ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.empty(), pipe, Optional.of(backupPoint));
+    return scoreL1Coral(Optional.empty(), pipe, Optional.of(backupPoint));
   }
 
   public Command scoreL1Coral(
