@@ -93,6 +93,6 @@ public record RobotConfig(
   public static final boolean IS_PRACTICE_BOT = false;
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return CompConfig.COMPETITION_BOT;
   }
 }
