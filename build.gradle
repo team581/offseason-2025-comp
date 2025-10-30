@@ -73,7 +73,7 @@ spotless {
 
 	java {
 		target 'shared/**/*.java', 'comp-bot/**/*.java', 'offseason-bot/**/*.java', 'new-member-bot/**/*.java'
-		googleJavaFormat('1.26.0')
+		googleJavaFormat()
 		licenseHeader ''
 
 		targetExclude('**/generated/**')
