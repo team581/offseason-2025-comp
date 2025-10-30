@@ -49,10 +49,11 @@ public class Autos extends StateMachineSubsystem<AutosState> {
     if (DriverStation.isDisabled()) {
       updateSelection();
 
-      if (!DSOptions.PRACTICE_MODE.get()&&(!hasEnabledAuto
-          && (RobotBase.isSimulation()
-              || DriverStation.isAutonomous()
-              || DriverStation.isFMSAttached()))) {
+      if (!DSOptions.PRACTICE_MODE.get()
+          && (!hasEnabledAuto
+              && (RobotBase.isSimulation()
+                  || DriverStation.isAutonomous()
+                  || DriverStation.isFMSAttached()))) {
         // Continuously reset pose
         resetPoseForAuto();
       }
