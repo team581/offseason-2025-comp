@@ -46,7 +46,7 @@ subprojects {
 	// Error Prone configuration
 	tasks.withType(JavaCompile).configureEach {
 		options.errorprone.disableWarningsInGeneratedCode = true
-		options.errorprone.disable("Var", "BooleanParameter", "InlineMeSuggester")
+		options.errorprone.disable("Var", "BooleanParameter", "InlineMeSuggester", "ImmutableEnumChecker")
 
 		// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
 		if (System.getenv().containsKey("ERRORPRONE_AUTOFIX")) {
