@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 25
           cache: "gradle"
       - name: Assemble
         run: ./gradlew assemble
@@ -46,7 +46,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 25
           cache: "gradle"
       - name: Run tests
         run: ./gradlew test
@@ -74,7 +74,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 25
           cache: "gradle"
       - name: Check formatting
         run: ./gradlew spotlessCheck
