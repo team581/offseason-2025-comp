@@ -37,8 +37,8 @@ subprojects {
 		testImplementation "org.assertj:assertj-core:3.27.3"
 	}
 
-	// Configure string concat to always inline compile
 	tasks.withType(JavaCompile) {
+		// Configure string concat to always inline compile
 		options.compilerArgs.add '-XDstringConcat=inline'
 		options.release = 17
 	}
