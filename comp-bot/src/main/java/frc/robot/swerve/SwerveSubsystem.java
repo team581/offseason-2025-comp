@@ -34,6 +34,7 @@ import frc.robot.generated.PracticeBotTunerConstants;
 import frc.robot.generated.PracticeBotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
@@ -97,7 +98,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
           .withMaxAbsRotationalRate(MAX_ANGULAR_RATE);
 
   private double lastSimTime;
-  private Notifier simNotifier = null;
+  private @Nullable Notifier simNotifier = null;
 
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();

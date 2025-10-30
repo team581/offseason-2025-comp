@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 
 /** Entry point for creating simple mechanism simulations. */
 public final class SimKit {
   private static final Map<String, PositionMechanism> MECHANISMS = new HashMap<>();
 
-  public static PositionMechanism positionMechanism(
+  public static @Nullable PositionMechanism positionMechanism(
       String name, Function<PositionMechanismBuilder, PositionMechanismBuilder> factory) {
     if (RobotBase.isSimulation()) {
       return MECHANISMS.computeIfAbsent(

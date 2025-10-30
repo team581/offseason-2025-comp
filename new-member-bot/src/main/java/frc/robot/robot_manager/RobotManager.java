@@ -41,7 +41,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       WristSubsystem wrist,
       ClimberSubsystem climber,
       LocalizationSubsystem localization,
-      AutoAlign autoalign,
+      AutoAlign autoAlign,
       VisionSubsystem vision,
       SwerveSubsystem swerve,
       ImuSubsystem imu) {
@@ -52,7 +52,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     this.wrist = wrist;
     this.climber = climber;
     this.localization = localization;
-    this.autoAlign = autoalign;
+    this.autoAlign = autoAlign;
     this.vision = vision;
     this.swerve = swerve;
     this.imu = imu;

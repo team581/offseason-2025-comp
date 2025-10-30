@@ -5,7 +5,7 @@ enum MechanismState {
   TOO_HIGH("too high"),
   OK("ok");
 
-  public String label;
+  public final String label;
 
   MechanismState(String label) {
     this.label = label;

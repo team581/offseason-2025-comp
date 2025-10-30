@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jspecify.annotations.Nullable;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision
@@ -683,7 +684,7 @@ public final class LimelightHelpers {
     return inData[position];
   }
 
-  private static PoseEstimate getBotPoseEstimate(
+  private static @Nullable PoseEstimate getBotPoseEstimate(
       String limelightName, String entryName, boolean isMegaTag2) {
     DoubleArrayEntry poseEntry =
         LimelightHelpers.getLimelightDoubleArrayEntry(limelightName, entryName);
@@ -906,7 +907,7 @@ public final class LimelightHelpers {
     return getLimelightNTTableEntry(tableName, entryName).getStringArray(new String[0]);
   }
 
-  public static URL getLimelightURLString(String tableName, String request) {
+  public static @Nullable URL getLimelightURLString(String tableName, String request) {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
 
     try {
