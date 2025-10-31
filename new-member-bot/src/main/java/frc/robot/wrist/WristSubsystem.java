@@ -108,7 +108,12 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   @Override
   protected void collectInputs() {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+    // TODO: remove if statemnet maybe
+    if (getState() == WristState.PRE_MATCH_HOMING) {
+      motorAngle = RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+    } else {
+      motorAngle = MathHelpers.angleModulus(rawMotorAngle);
+    }
 
     if (DriverStation.isDisabled()) {
       elevatorIsGoingDown = elevator.getHeight() < previousElevatorHeight;
@@ -183,7 +188,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       DogLog.clearFault("Wrist/WRIST NOT HOMED");
       var actualWristAngle =
           RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
-      motor.setPosition(Units.degreesToRotations(actualWristAngle));
+      motor.setPosition(Units.degreesToRotations(motorAngle));
       collectInputs();
     }
   }
