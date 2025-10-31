@@ -1,5 +1,6 @@
 package frc.robot.elevator;
 
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
@@ -17,13 +18,13 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   public static final double CARRIAGE_HEIGHT_FROM_FLOOR_METERS = Units.inchesToMeters(22.1);
 
-  private static final double TOLERANCE = 5.0;
+  private static final double TOLERANCE = 1.0;
   private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
 
-  private final PositionVoltage positionRequest =
-      new PositionVoltage(ElevatorState.STOWED.defaultHeight);
+  private final MotionMagicVoltage positionRequest =
+      new MotionMagicVoltage(ElevatorState.STOWED.defaultHeight);
 
   private double height = 0.0;
   private double lowestSeenHeight = Double.POSITIVE_INFINITY;
