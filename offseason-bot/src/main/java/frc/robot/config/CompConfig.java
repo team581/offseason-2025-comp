@@ -176,7 +176,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // TODO: BRINGUP: TUNE
-                          .withKP(0.0)
+                          .withKP(5.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
@@ -184,8 +184,8 @@ class CompConfig {
                   // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(200.0)
+                          .withMotionMagicCruiseVelocity(200.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -201,10 +201,9 @@ class CompConfig {
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
                           .withInverted(InvertedValue.Clockwise_Positive))
-                  // TODO: BRINGUP: TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(200.0)
                           .withKV(0.0)
                           .withKD(0.0)
                           .withKG(0.0)
@@ -212,8 +211,8 @@ class CompConfig {
                   // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(999999.0)
-                          .withMotionMagicCruiseVelocity(999999.0))
+                          .withMotionMagicAcceleration(7.0)
+                          .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
