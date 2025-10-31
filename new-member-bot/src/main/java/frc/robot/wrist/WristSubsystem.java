@@ -140,7 +140,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       DogLog.logFault("WRIST NOT HOMED", AlertType.kWarning);
     }
 
-
     switch (getState()) {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
@@ -156,8 +155,9 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       }
     }
   }
-@Override
-  public void robotPeriodic(){
+
+  @Override
+  public void robotPeriodic() {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Wrist/MotorAngle", motorAngle);
