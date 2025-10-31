@@ -493,7 +493,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_L2_RELEASE -> {
-        claw.setState(ClawState.IDLE_W_CORAL);
+        claw.setState(ClawState.SCORE_CORAL);
         moveSuperstructure(ElevatorState.L2_SCORE_RELEASE, ArmState.CORAL_SCORE_RELEASE_L2);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING_CORAL);
