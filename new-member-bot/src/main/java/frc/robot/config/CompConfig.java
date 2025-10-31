@@ -31,7 +31,7 @@ import frc.robot.config.RobotConfig.WristConfig;
 import frc.robot.generated.RobotTunerConstants;
 
 class CompConfig {
-  private static final String CANIVORE_NAME = RobotTunerConstants.kCANBus.getName();
+  private static final String CANIVORE_NAME = RobotTunerConstants.kCANBus;
   private static final String RIO_CAN_NAME = "rio";
 
   public static final RobotConfig COMPETITION_BOT =
@@ -53,7 +53,7 @@ class CompConfig {
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
-              CANIVORE_NAME,
+              RIO_CAN_NAME,
               19,
               20,
               21,
@@ -77,7 +77,7 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.44921875)
+                          .withMagnetOffset(0.42529296875)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.5)),
               // Grab motor
@@ -96,7 +96,7 @@ class CompConfig {
                           .withMinSignalStrengthForValidMeasurement(7000))),
           // TODO: add radius
           new ElevatorConfig(
-              CANIVORE_NAME,
+            RIO_CAN_NAME,
               15,
               0.0,
               0.0,
