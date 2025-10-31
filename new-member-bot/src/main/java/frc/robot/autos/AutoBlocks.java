@@ -41,7 +41,7 @@ public class AutoBlocks {
     this.autoCommands = autoCommands;
   }
 
-  public Command scorePreloadL1(Pose2d startingPose, ReefPipe pipe) {
+  public Command scorePreloadL1Coral(Pose2d startingPose, ReefPipe pipe) {
     return Commands.sequence(
         trailblazer.followSegment(
             new AutoSegment(
@@ -71,23 +71,23 @@ public class AutoBlocks {
                 new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L1)))));
   }
 
-  public Command scoreL1(ReefPipe pipe) {
-    return scoreL1(Optional.empty(), pipe, Optional.empty());
+  public Command scoreL1Coral(ReefPipe pipe) {
+    return scoreL1Coral(Optional.empty(), pipe, Optional.empty());
   }
 
-  public Command scoreL1(Pose2d approachPose, ReefPipe pipe) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.empty());
+  public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe) {
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.empty());
   }
 
-  public Command scoreL1(Pose2d approachPose, ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.of(backupPoint));
+  public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe, Pose2d backupPoint) {
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.of(backupPoint));
   }
 
-  public Command scoreL1(ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.empty(), pipe, Optional.of(backupPoint));
+  public Command scoreL1Coral(ReefPipe pipe, Pose2d backupPoint) {
+    return scoreL1Coral(Optional.empty(), pipe, Optional.of(backupPoint));
   }
 
-  public Command scoreL1(
+  public Command scoreL1Coral(
       Optional<Pose2d> approachPose, ReefPipe pipe, Optional<Pose2d> backupPoint) {
     var firstCommand =
         approachPose.isPresent()
