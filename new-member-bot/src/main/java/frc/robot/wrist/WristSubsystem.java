@@ -186,8 +186,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
         && DriverStation.isEnabled()
         && Robot.isReal()) {
       DogLog.clearFault("Wrist/WRIST NOT HOMED");
-      var actualWristAngle =
-          RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
+
       motor.setPosition(Units.degreesToRotations(motorAngle));
       collectInputs();
     }
