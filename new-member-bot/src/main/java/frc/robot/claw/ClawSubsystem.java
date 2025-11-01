@@ -4,44 +4,36 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.team581.mechanisms.VelocityDetector;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private final TalonFX motor;
-  private final Timer timeout = new Timer();
-  private final Debouncer debouncer;
-  private boolean hasSeenMinVelocity = false;
-  private boolean velocityDetectsGp = false;
+  private double motorVelocity;
+  private boolean coralDetectsGp = false;
+  private boolean algaeDetectsGp = false;
 
-  private final DoubleSubscriber tunableMaxVelocity =
-      DogLog.tunable("Claw/MaxVeloctiy", RobotConfig.get().claw().gpMaxVelocity());
-
-  private final DoubleSubscriber tunableMinVelocity =
-      DogLog.tunable("Claw/MinVelocity", RobotConfig.get().claw().gpMinVelocity());
+  private final VelocityDetector coralDetector = RobotConfig.get().claw().coralDetector();;
+  private final VelocityDetector algaeDetector = RobotConfig.get().claw().algaeDetector();;
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
 
     motor.getConfigurator().apply(RobotConfig.get().claw().motorConfig());
     this.motor = motor;
-
-    this.debouncer = RobotConfig.get().claw().debouncer();
-    this.timeout.start();
   }
 
   @Override
-  protected void collectInputs() {}
-
-  public void reset() {
-    hasSeenMinVelocity = false;
-    timeout.reset();
+  protected void collectInputs() {
+    motorVelocity = motor.getVelocity().getValueAsDouble();
+    coralDetectsGp = coralDetector.hasGamePiece(
+        motorVelocity, RobotConfig.get().claw().coralMaxVelocity());
+    algaeDetectsGp = algaeDetector.hasGamePiece(
+        motorVelocity, RobotConfig.get().claw().algaeMaxVelocity());
   }
 
   public boolean getHasGP() {
@@ -52,17 +44,11 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
           case IDLE_NO_GP, UNTUNED -> false;
           case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
         }
-        : velocityDetectsGp;
-  }
-
-  private boolean getHasGp(double motorVelocity, boolean isCoral) {
-    hasSeenMinVelocity =
-        hasSeenMinVelocity
-            || timeout.hasElapsed(RobotConfig.get().claw().minVelocityTimeout())
-            || Math.abs(motorVelocity) >= tunableMinVelocity.get();
-
-    return hasSeenMinVelocity
-        && debouncer.calculate(Math.abs(motorVelocity) <= tunableMaxVelocity.get());
+        : switch (getState()) {
+          case INTAKING_ALGAE, IDLE_W_ALGAE, SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING_ALGAE -> algaeDetectsGp;
+          case INTAKING_CORAL, IDLE_W_CORAL, SCORE_CORAL, OUTTAKING_CORAL -> coralDetectsGp;
+          case IDLE_NO_GP, UNTUNED -> false;
+        };
   }
 
   public void setState(ClawState newState) {
@@ -72,7 +58,10 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   @Override
   protected void afterTransition(ClawState newState) {
     switch (newState) {
-      case IDLE_NO_GP, INTAKING_CORAL, INTAKING_ALGAE -> reset();
+      case IDLE_NO_GP, INTAKING_CORAL, INTAKING_ALGAE -> {
+        coralDetector.reset();
+        algaeDetector.reset();
+      }
       default -> {}
     }
     if (newState.volts == 0.0) {
@@ -84,7 +73,6 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   public void whileInState(ClawState currentState) {
-    velocityDetectsGp = getHasGp(motor.getVelocity().getValueAsDouble());
     DogLog.log("Claw/HasGP", getHasGP());
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble(), Amps);

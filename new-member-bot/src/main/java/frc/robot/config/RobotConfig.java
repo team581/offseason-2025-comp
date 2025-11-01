@@ -5,8 +5,11 @@ import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.config.CameraConfig;
+import com.team581.mechanisms.VelocityDetector;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.units.measure.Velocity;
 
 public record RobotConfig(
     ClawConfig claw,
@@ -18,10 +21,10 @@ public record RobotConfig(
   public record ClawConfig(
       String canBusName,
       int motorId,
-      double gpMaxVelocity,
-      double gpMinVelocity,
-      double minVelocityTimeout,
-      Debouncer debouncer,
+      double coralMaxVelocity,
+      VelocityDetector coralDetector,
+      double algaeMaxVelocity,
+      VelocityDetector algaeDetector,
       TalonFXConfiguration motorConfig) {}
 
   public record ClimberConfig(

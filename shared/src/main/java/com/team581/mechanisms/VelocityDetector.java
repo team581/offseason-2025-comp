@@ -32,7 +32,7 @@ public class VelocityDetector {
     hasSeenMinVelocity =
         hasSeenMinVelocity
             || timeout.hasElapsed(minVelocityTimeout)
-            || motorVelocity >= minVelocity;
+            || Math.abs(motorVelocity) >= minVelocity;
 
     return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
   }
