@@ -85,5 +85,8 @@ public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
   public void whileInState(IntakeState currentState) {
     DogLog.log("Intake/RawSensor", sensorRaw);
     DogLog.log("Intake/SensorHasGP", sensorDebounced);
+    DogLog.log("Intake/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Intake/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+
   }
 }
