@@ -87,6 +87,5 @@ public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
     DogLog.log("Intake/SensorHasGP", sensorDebounced);
     DogLog.log("Intake/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
     DogLog.log("Intake/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-
   }
 }

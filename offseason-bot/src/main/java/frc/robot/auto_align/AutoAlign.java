@@ -748,8 +748,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
     DogLog.log("AutoAlign/BestPipe", bestPipe);
-    if (DriverStation.isAutonomous() &&autoPipeOverride.isPresent()) {
-      bestPipe = autoPipeOverride.get();
+    if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
+      bestPipe = autoPipeOverride.orElseThrow();
     }
   }
 

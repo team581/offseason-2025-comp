@@ -25,8 +25,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
 
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
-          ImmutableList.of(
-              ReefPipe.PIPE_I, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_J));
+          ImmutableList.of(ReefPipe.PIPE_I, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_J));
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -76,7 +75,13 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case SCORE ->
-          DriverStation.isEnabled()&&((!robotManager.claw.getHasGP() && robotManager.getState() == RobotState.CORAL_L4_RELEASE)||(timeout(3)&&!robotManager.claw.getHasGP()&&!robotManager.groundManager.getTopHasGP()&&!robotManager.groundManager.getBottomHasGP()))
+          DriverStation.isEnabled()
+                  && ((!robotManager.claw.getHasGP()
+                          && robotManager.getState() == RobotState.CORAL_L4_RELEASE)
+                      || (timeout(3)
+                          && !robotManager.claw.getHasGP()
+                          && !robotManager.groundManager.getTopHasGP()
+                          && !robotManager.groundManager.getBottomHasGP()))
               ? AutoState.INTAKING
               : currentState;
 
