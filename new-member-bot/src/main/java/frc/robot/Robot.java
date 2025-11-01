@@ -101,18 +101,18 @@ public class Robot extends Base581Robot {
             .ignoringDisable(true)
             .withName("DefaultSwerveCommand"));
 
-    hardware.driverController.leftTrigger().onTrue(actions.algaeGroundIntakeCommand());
+    hardware.driverController.leftBumper().onTrue(actions.algaeGroundIntakeCommand());
+    hardware.driverController.rightBumper().onTrue(actions.stowCommand());
+
+    hardware.driverController.leftTrigger().onTrue(actions.intakeCoralCommand());
     hardware.driverController.rightTrigger().onTrue(actions.confirmScoreCommand());
 
     hardware
         .driverController
-        .leftBumper()
+        .x()
         .onTrue(actions.algaeReefIntakeCommand())
         .onFalse(actions.scoringAlignOffCommand());
-    hardware.driverController.rightBumper().onTrue(actions.intakeCoralCommand());
-
     hardware.driverController.y().onTrue(actions.netWaitCommand());
-    hardware.driverController.x().onTrue(actions.stowCommand());
     hardware.driverController.a().onTrue(actions.lowLineupCommand());
 
     hardware.driverController.povUp().onTrue(actions.climberSequenceForwardCommand());
