@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
+import frc.robot.auto_align.ReefSide;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.Optional;
@@ -126,5 +127,11 @@ public class AutoBlocks {
                                         ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
                 false)
             .onlyIf(() -> robotManager.claw.getHasGP()));
+  }
+
+  public Command intakeAlgaeL2(Pose2d defaultIntaking, ReefSide reefSide ){
+    return Commands.sequence(
+
+    );
   }
 }
