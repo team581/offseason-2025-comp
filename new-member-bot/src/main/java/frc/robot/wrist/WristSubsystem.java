@@ -106,7 +106,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
-  public void customPeriodic() {
+  @Override
+  protected void whileInState(WristState state) {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Wrist/MotorAngle", motorAngle);
@@ -120,7 +121,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       DogLog.logFault("WRIST NOT HOMED", AlertType.kWarning);
     }
 
-    switch (getState()) {
+    switch (state) {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
@@ -134,16 +135,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
         positionVoltageRequest(Units.degreesToRotations(getState().getAngle()));
       }
     }
-  }
-
-  @Override
-  public void robotPeriodic() {
-    DogLog.log("Wrist/StatorCurrent", motorCurrent);
-    DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Wrist/MotorAngle", motorAngle);
-    DogLog.log("Wrist/RawMotorAngle", rawMotorAngle);
-
-    DogLog.log("Wrist/AtGoal", atGoal());
   }
 
   public boolean rangeOfMotionGood() {

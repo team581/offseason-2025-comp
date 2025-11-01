@@ -73,7 +73,8 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     motor.setControl(positionRequest.withPosition(clampHeight(newState.getHeight())));
   }
 
-  public void customPeriodic() {
+  @Override
+  protected void whileInState(ElevatorState state) {
     DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Elevator/Height", height);
     DogLog.log("Elevator/AtGoal", atGoal());
