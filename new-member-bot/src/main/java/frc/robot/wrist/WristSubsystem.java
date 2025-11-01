@@ -94,15 +94,14 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     // TODO: remove if statemnet maybe
     if (getState() == WristState.PRE_MATCH_HOMING) {
-      motorAngle = RobotConfig.get().wrist().homingPosition() -
-           (rawMotorAngle + highestSeenAngle);
+      motorAngle = RobotConfig.get().wrist().homingPosition() - (rawMotorAngle + highestSeenAngle);
     }
 
-      lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
-      highestSeenAngle = Math.max(highestSeenAngle, rawMotorAngle);
+    lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
+    highestSeenAngle = Math.max(highestSeenAngle, rawMotorAngle);
 
-      motorCurrent = motor.getStatorCurrent().getValueAsDouble();
-}
+    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
+  }
 
   public void customPeriodic() {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
