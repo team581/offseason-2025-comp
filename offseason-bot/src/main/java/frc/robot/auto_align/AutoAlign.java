@@ -374,6 +374,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
    * used.
    */
   public void setAutoPipeOverride(ReefPipe pipeOverride, ReefPipeLevel levelOverride) {
+    DogLog.timestamp("AutoAlign/AutoPipeOverride");
     autoPipeOverride = Optional.of(pipeOverride);
     autoLevelOverride = Optional.of(levelOverride);
     bestPipe = pipeOverride;
@@ -604,8 +605,13 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   /** Finds the best pipe to score on based on alignment cost and reef state. */
   private ReefPipe getBestPipeForScoring(ReefPipeLevel level) {
     if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
+      DogLog.timestamp("AutoAlign/UseAutoOverride");
+
       return autoPipeOverride.orElseThrow();
     }
+
+    DogLog.timestamp("AutoAlign/UsePipeComparator");
+
     return Collections.min(
         ALL_REEF_PIPES, alignmentCostUtil.getReefPipeComparator(level, closestReefSide));
   }
@@ -741,6 +747,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   public void whileInState(AutoAlignState currentState) {
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
+    DogLog.log("AutoAlign/BestPipe", bestPipe);
   }
 
   /** Sets the current scoring level and side for alignment calculations. */
