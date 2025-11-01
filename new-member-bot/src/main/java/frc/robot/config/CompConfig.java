@@ -113,15 +113,15 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(5.0)
                           .withKD(0.0)
                           .withKV(0.0)
                           .withKG(0.0)
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(0.0)
-                          .withMotionMagicCruiseVelocity(0.0))
+                          .withMotionMagicAcceleration(75.0)
+                          .withMotionMagicCruiseVelocity(75.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((7.886/10.0)*(16.0 / 36.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
@@ -136,7 +136,7 @@ class CompConfig {
                           .withInverted(InvertedValue.CounterClockwise_Positive))
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(100.0)
                           .withKV(0.0)
                           .withKD(0.0)
                           .withKG(0.0)
