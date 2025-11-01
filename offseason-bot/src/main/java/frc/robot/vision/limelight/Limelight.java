@@ -9,6 +9,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -245,8 +246,15 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
             config.roll(),
             config.pitch(),
             config.yaw());
-        updatedLimelightPos = true;
-      }
+
+            updatedLimelightPos = true;
+          }
+          if (config.model()==LimelightModel.FOUR) {
+            LimelightHelpers.setLimelightNTDouble(limelightTableName, "throttle_set", 5);
+          }
+    } else {
+      LimelightHelpers.setLimelightNTDouble(limelightTableName, "throttle_set", 0);
+
     }
     DogLog.log("Vision/" + name + "/State", getState());
 
