@@ -66,9 +66,9 @@ public class RobotCommands {
         .withName("ClimberSequenceForwardCommand");
   }
 
-  public Command climberSequenceStopCommand() {
-    return Commands.runOnce(robot::climberSequenceStop, requirements)
-        .withName("ClimberSequenceStopCommand");
+  public Command climberSequenceBackwardCommand() {
+    return Commands.runOnce(robot::climberSequenceBackward, requirements)
+        .withName("ClimberSequenceBackwardCommand");
   }
 
   public Command outtakeCoral() {
