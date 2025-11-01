@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
 import frc.robot.config.RobotConfig;
-import frc.robot.elevator.ElevatorSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class WristSubsystem extends StateMachineSubsystem<WristState> {
@@ -29,17 +28,15 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private static final StaticBrake BRAKE_NEUTRAL_REQUEST = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-  private final ElevatorSubsystem elevator;
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
 
-  public WristSubsystem(TalonFX motor, ElevatorSubsystem elevator) {
+  public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().wrist().motorConfig());
 
     this.motor = motor;
-    this.elevator = elevator;
 
     TunablePid.of("Wrist", motor, RobotConfig.get().wrist().motorConfig());
   }

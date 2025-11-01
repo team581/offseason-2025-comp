@@ -25,7 +25,7 @@ public class Robot extends Base581Robot {
   private final Hardware hardware = new Hardware();
 
   private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor, elevator);
+  private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
   private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(
