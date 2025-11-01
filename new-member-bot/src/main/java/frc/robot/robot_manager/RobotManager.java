@@ -279,7 +279,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_OUTTAKE -> {
-        claw.setState(ClawState.OUTTAKING);
+        claw.setState(ClawState.OUTTAKING_ALGAE);
         elevator.setState(ElevatorState.ALGAE_OUTTAKE);
         wrist.setState(WristState.ALGAE_OUTTAKE);
         swerve.normalDriveRequest();
@@ -295,7 +295,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case CORAL_OUTTAKE -> {
-        claw.setState(ClawState.OUTTAKING);
+        claw.setState(ClawState.OUTTAKING_CORAL);
         elevator.setState(ElevatorState.ALGAE_OUTTAKE);
         wrist.setState(WristState.ALGAE_OUTTAKE);
         swerve.normalDriveRequest();
@@ -327,7 +327,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       case UNJAM -> {
-        claw.setState(ClawState.OUTTAKING);
+        claw.setState(ClawState.OUTTAKING_ALGAE);
         elevator.setState(ElevatorState.UNJAM);
         wrist.setState(WristState.UNJAM);
         swerve.normalDriveRequest();
