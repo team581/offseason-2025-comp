@@ -74,33 +74,36 @@ public class CustomOdometry extends SwerveDriveOdometry {
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = new Pose2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
       fieldRelativeModulePosesOfPreviousPose[i] =
-        previousRobotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[i], Rotation2d.kZero));
+          previousRobotPose.transformBy(
+              new Transform2d(robotRelativeModuleOffsets[i], Rotation2d.kZero));
     }
 
     // Also get the module displacements from the previous wheel positions to the current wheel
     // positions
     Translation2d[] moduleDisplacements = new Translation2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
-      moduleDisplacements[i] = getModuleDisplacement(
-        previousWheelPositions[i].angle.getRadians(),
-        previousWheelPositions[i].distanceMeters,
-        currentWheelPositions[i].angle.getRadians(),
-        currentWheelPositions[i].distanceMeters);
+      moduleDisplacements[i] =
+          getModuleDisplacement(
+              previousWheelPositions[i].angle.getRadians(),
+              previousWheelPositions[i].distanceMeters,
+              currentWheelPositions[i].angle.getRadians(),
+              currentWheelPositions[i].distanceMeters);
     }
 
     // Next, add the module displacements to the field relative module poses
     Translation2d[] fieldRelativeModuleDisplacements = new Translation2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
       fieldRelativeModuleDisplacements[i] =
-        fieldRelativeModulePosesOfPreviousPose[i]
-        .transformBy(new Transform2d(moduleDisplacements[i], Rotation2d.kZero))
-        .getTranslation();
+          fieldRelativeModulePosesOfPreviousPose[i]
+              .transformBy(new Transform2d(moduleDisplacements[i], Rotation2d.kZero))
+              .getTranslation();
     }
 
     // Finally, average the module displacements and return the new pose
     Translation2d sumOfFieldRelativeModuleDisplacements = new Translation2d();
     for (int i = 0; i < numberOfModules; i++) {
-      sumOfFieldRelativeModuleDisplacements = sumOfFieldRelativeModuleDisplacements.plus(fieldRelativeModuleDisplacements[i]);
+      sumOfFieldRelativeModuleDisplacements =
+          sumOfFieldRelativeModuleDisplacements.plus(fieldRelativeModuleDisplacements[i]);
     }
     double updatedPoseX = sumOfFieldRelativeModuleDisplacements.getX() / numberOfModules;
     double updatedPoseY = sumOfFieldRelativeModuleDisplacements.getY() / numberOfModules;
@@ -113,24 +116,16 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
     DogLog.log(
         "Odometry/FieldRelativeModuleDisplacements/FrontLeft",
-        new Pose2d(
-            fieldRelativeModuleDisplacements[0],
-            currentWheelPositions[0].angle));
+        new Pose2d(fieldRelativeModuleDisplacements[0], currentWheelPositions[0].angle));
     DogLog.log(
         "Odometry/FieldRelativeModuleDisplacements/FrontRight",
-        new Pose2d(
-            fieldRelativeModuleDisplacements[1],
-            currentWheelPositions[1].angle));
+        new Pose2d(fieldRelativeModuleDisplacements[1], currentWheelPositions[1].angle));
     DogLog.log(
         "Odometry/FieldRelativeModuleDisplacements/BackLeft",
-        new Pose2d(
-            fieldRelativeModuleDisplacements[2],
-            currentWheelPositions[2].angle));
+        new Pose2d(fieldRelativeModuleDisplacements[2], currentWheelPositions[2].angle));
     DogLog.log(
         "Odometry/FieldRelativeModuleDisplacements/BackRight",
-        new Pose2d(
-            fieldRelativeModuleDisplacements[3],
-            currentWheelPositions[3].angle));
+        new Pose2d(fieldRelativeModuleDisplacements[3], currentWheelPositions[3].angle));
 
     // After calculations, but before the next loop, update the previous pose & wheel positions to
     // the
