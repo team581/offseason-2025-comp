@@ -108,22 +108,14 @@ public class CustomOdometry extends SwerveDriveOdometry {
     DogLog.log("Odometry/PreviousWheelPositions", previousWheelPositions);
     DogLog.log("Odometry/CurrentWheelPositions", currentWheelPositions);
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
-    DogLog.log(
-        "Odometry/FieldRelativeModuleDisplacements/FrontLeft",
-        new Pose2d(fieldRelativeModuleDisplacements[0], currentWheelPositions[0].angle));
-    DogLog.log(
-        "Odometry/FieldRelativeModuleDisplacements/FrontRight",
-        new Pose2d(fieldRelativeModuleDisplacements[1], currentWheelPositions[1].angle));
-    DogLog.log(
-        "Odometry/FieldRelativeModuleDisplacements/BackLeft",
-        new Pose2d(fieldRelativeModuleDisplacements[2], currentWheelPositions[2].angle));
-    DogLog.log(
-        "Odometry/FieldRelativeModuleDisplacements/BackRight",
-        new Pose2d(fieldRelativeModuleDisplacements[3], currentWheelPositions[3].angle));
+    for (int i = 0; i < numberOfModules; i++) {
+      DogLog.log(
+          "Odometry/FieldRelativeModuleDisplacements/" + i,
+          new Pose2d(fieldRelativeModuleDisplacements[i], currentWheelPositions[i].angle));
+    }
 
     // After calculations, but before the next loop, update the previous pose & wheel positions to
-    // the
-    // current ones
+    // the current ones
     previousRobotPose = updatedPose;
     updatePreviousWheelPositions(currentWheelPositions);
 
