@@ -93,7 +93,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   @Override
   protected void collectInputs() {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    
+
     if (getState() == WristState.PRE_MATCH_HOMING) {
       motorAngle = RobotConfig.get().wrist().homingPosition() - (rawMotorAngle + highestSeenAngle);
     } else {
