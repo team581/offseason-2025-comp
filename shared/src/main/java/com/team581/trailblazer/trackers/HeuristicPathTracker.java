@@ -1,5 +1,7 @@
 package com.team581.trailblazer.trackers;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.google.common.collect.ImmutableList;
 import com.team581.trailblazer.AutoPoint;
 import dev.doglog.DogLog;
@@ -42,7 +44,7 @@ public class HeuristicPathTracker implements PathTracker {
     var targetPose = points.get(currentPointIndex).poseSupplier.get();
 
     DogLog.log("Autos/Trailblazer/TargetPose", targetPose);
-    DogLog.log("Autos/Trailblazer/DistanceToTarget", distanceToTarget);
+    DogLog.log("Autos/Trailblazer/DistanceToTarget", distanceToTarget, Meters);
 
     return targetPose;
   }

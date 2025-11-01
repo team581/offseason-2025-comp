@@ -1,5 +1,8 @@
 package frc.robot.elevator;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -70,7 +73,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   public void setCollisionAvoidanceGoal(double height) {
     collisionAvoidanceGoal = height;
-    DogLog.log("Elevator/CollisionAvoidanceGoalHeight", collisionAvoidanceGoal);
+    DogLog.log("Elevator/CollisionAvoidanceGoalHeight", collisionAvoidanceGoal, Inches);
   }
 
   @Override
@@ -102,12 +105,14 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   }
 
   public void customPeriodic() {
-    DogLog.log("Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log(
+        "Elevator/Left/AppliedVoltage", leftMotor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log(
+        "Elevator/Right/AppliedVoltage", rightMotor.getMotorVoltage().getValueAsDouble(), Volts);
 
-    DogLog.log("Elevator/Left/Height", leftHeight);
-    DogLog.log("Elevator/Right/Height", rightHeight);
-    DogLog.log("Elevator/Height", averageMeasuredHeight);
+    DogLog.log("Elevator/Left/Height", leftHeight, Inches);
+    DogLog.log("Elevator/Right/Height", rightHeight, Inches);
+    DogLog.log("Elevator/Height", averageMeasuredHeight, Inches);
     DogLog.log("Elevator/AtGoal", atGoal());
 
     switch (getState()) {

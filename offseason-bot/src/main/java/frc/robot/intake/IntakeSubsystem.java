@@ -1,5 +1,7 @@
 package frc.robot.intake;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
@@ -45,7 +47,7 @@ public class IntakeSubsystem extends StateMachineSubsystem<IntakeState> {
 
   @Override
   public void whileInState(IntakeState currentState) {
-    DogLog.log("Intake/Motor/FilteredCurrent", filteredCurrent);
+    DogLog.log("Intake/Motor/FilteredCurrent", filteredCurrent, Amps);
   }
 
   public void setState(IntakeState newState) {

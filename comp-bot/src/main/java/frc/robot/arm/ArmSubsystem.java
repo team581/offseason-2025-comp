@@ -1,5 +1,7 @@
 package frc.robot.arm;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -171,7 +173,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   public void setCollisionAvoidanceGoal(double angle) {
     collisionAvoidanceGoal = angle;
-    DogLog.log("Arm/CollisionAvoidance/GoalAngle", collisionAvoidanceGoal);
+    DogLog.log("Arm/CollisionAvoidance/GoalAngle", collisionAvoidanceGoal, Degrees);
   }
 
   public boolean atGoal() {
@@ -232,14 +234,14 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
       NetworkTableInstance.getDefault().getDoubleTopic("Arm/AngleLive").publish();
 
   public void customPeriodic() {
-    DogLog.log("Arm/Angle", motorAngle);
-    DogLog.log("Arm/RawAngle", rawMotorAngle);
+    DogLog.log("Arm/Angle", motorAngle, Degrees);
+    DogLog.log("Arm/RawAngle", rawMotorAngle, Degrees);
     DogLog.log("Arm/AtGoal", atGoal());
 
     if (DriverStation.isDisabled()) {
       armAngleLive.set(motorAngle);
-      DogLog.log("Arm/Homing/LowestAngle", lowestSeenAngle);
-      DogLog.log("Arm/Homing/HighestAngle", highestSeenAngle);
+      DogLog.log("Arm/Homing/LowestAngle", lowestSeenAngle, Degrees);
+      DogLog.log("Arm/Homing/HighestAngle", highestSeenAngle, Degrees);
       DogLog.log("Arm/Homing/ElevatorIsGoingDown", elevatorIsGoingDown);
       DogLog.log("Arm/Homing/ElevatorIsGoingDownDebounced", elevatorIsGoingDownDebounced);
       DogLog.log("Arm/Homing/ArmIsHomed", armIsHomed);

@@ -1,5 +1,8 @@
 package frc.robot.swerve;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -378,7 +381,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   @Override
   public void whileInState(SwerveState currentState) {
-    DogLog.log("Swerve/SnapAngle", goalSnapAngle);
+    DogLog.log("Swerve/SnapAngle", goalSnapAngle, Degrees);
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
@@ -455,8 +458,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       var bisectedAngle =
           MathHelpers.angleModulus(wantedDirection - currentSpeedDirection) / 2
               + currentSpeedDirection;
-      DogLog.log("Swerve/DriveToPose/WantedDirection", wantedDirection);
-      DogLog.log("Swerve/DriveToPose/CurrentDirection", currentSpeedDirection);
+      DogLog.log("Swerve/DriveToPose/WantedDirection", wantedDirection, Degrees);
+      DogLog.log("Swerve/DriveToPose/CurrentDirection", currentSpeedDirection, Degrees);
       driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
     }
 
@@ -469,7 +472,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
     var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
     DogLog.log("Swerve/DriveToPose/TargetPose", targetPose);
-    DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters);
+    DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters, Meters);
     DogLog.log("Swerve/DriveToPose/Speeds", speeds);
 
     return speeds;

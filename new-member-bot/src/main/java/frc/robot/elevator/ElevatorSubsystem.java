@@ -1,5 +1,8 @@
 package frc.robot.elevator;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -75,8 +78,8 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   @Override
   protected void whileInState(ElevatorState state) {
-    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Elevator/Height", height);
+    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log("Elevator/Height", height, Inches);
     DogLog.log("Elevator/AtGoal", atGoal());
 
     if (DriverStation.isDisabled() && FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {

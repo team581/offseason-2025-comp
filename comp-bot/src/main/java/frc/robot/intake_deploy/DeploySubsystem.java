@@ -1,5 +1,8 @@
 package frc.robot.intake_deploy;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -77,8 +80,8 @@ public class DeploySubsystem extends StateMachineSubsystem<DeployState> {
   @Override
   public void whileInState(DeployState currentState) {
     DogLog.log("Deploy/AtGoal", atGoal());
-    DogLog.log("Deploy/Angle", currentAngle);
-    DogLog.log("Deploy/FilteredStatorCurrent", filteredCurrent);
+    DogLog.log("Deploy/Angle", currentAngle, Degrees);
+    DogLog.log("Deploy/FilteredStatorCurrent", filteredCurrent, Amps);
   }
 
   @Override
