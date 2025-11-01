@@ -4,14 +4,11 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.team581.math.MathHelpers;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,10 +30,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private static final StaticBrake BRAKE_NEUTRAL_REQUEST = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
   private final ElevatorSubsystem elevator;
-  private boolean elevatorIsGoingDown = false;
-  private boolean elevatorIsGoingDownDebounced = false;
-  private double previousElevatorHeight = Double.POSITIVE_INFINITY;
-  private final Debouncer debouncer = new Debouncer(0, DebounceType.kBoth);
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
@@ -107,21 +100,11 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       motorAngle = RobotConfig.get().wrist().homingPosition() + (rawMotorAngle - lowestSeenAngle);
     }
 
-    if (DriverStation.isDisabled()) {
-      elevatorIsGoingDown = elevator.getHeight() < previousElevatorHeight;
-      elevatorIsGoingDownDebounced = debouncer.calculate(elevatorIsGoingDown);
-
-      if (elevatorIsGoingDownDebounced) {
-        lowestSeenAngle = Double.POSITIVE_INFINITY;
-      }
-
       lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
       highestSeenAngle = Math.max(highestSeenAngle, rawMotorAngle);
 
-      previousElevatorHeight = elevator.getHeight();
-    }
-    motorCurrent = motor.getStatorCurrent().getValueAsDouble();
-  }
+      motorCurrent = motor.getStatorCurrent().getValueAsDouble();
+}
 
   public void customPeriodic() {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
