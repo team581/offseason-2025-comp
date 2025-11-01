@@ -31,7 +31,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   protected void collectInputs() {
-    motorVelocity = motor.getVelocity().getValueAsDouble();
+    motorVelocity = Math.abs(motor.getVelocity().getValueAsDouble());
     coralDetectsGp =
         coralDetector.hasGamePiece(motorVelocity, RobotConfig.get().claw().coralMaxVelocity());
     algaeDetectsGp =
@@ -89,5 +89,6 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
     DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
     DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble(), Amps);
     DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble(), Amps);
+    DogLog.log("Claw/Motor/Velocity", motorVelocity);
   }
 }
