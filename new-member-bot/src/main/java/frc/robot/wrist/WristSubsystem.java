@@ -1,7 +1,6 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -29,9 +28,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
   private static final StaticBrake BRAKE_NEUTRAL_REQUEST = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
-
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
 
