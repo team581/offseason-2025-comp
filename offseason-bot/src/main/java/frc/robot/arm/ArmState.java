@@ -40,7 +40,7 @@ public enum ArmState {
   ALGAE_INTAKE_L2(0.0),
   ALGAE_INTAKE_L3(0.0),
 
-  ALGAE_NET(50),
+  ALGAE_NET(60),
 
   ALGAE_PROCESSOR(-20.0),
 
