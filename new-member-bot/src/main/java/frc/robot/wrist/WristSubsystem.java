@@ -1,7 +1,6 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -41,8 +40,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
-  private final MotionMagicExpoVoltage autoMotionMagicExpoRequest =
-      new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor, ElevatorSubsystem elevator) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -77,9 +74,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     if (DriverStation.isTeleop()) {
       motor.setControl(motionMagicRequest.withPosition(wristRotations));
       DogLog.log("Wrist/MotionMagicStrategy", "Teleop");
-    } else {
-      motor.setControl(autoMotionMagicExpoRequest.withPosition(wristRotations));
-      DogLog.log("Wrist/MotionMagicStrategy", "Expo");
     }
   }
 
