@@ -67,6 +67,7 @@ public class Robot extends Base581Robot {
           swerve,
           swerve.drivetrain.getKinematics(),
           new CustomOdometry(
+              swerve.drivetrain.getModules().length,
               swerve.drivetrain.getKinematics(),
               swerve.drivetrain.getState().RawHeading,
               swerve.drivetrain.getState().ModulePositions));
