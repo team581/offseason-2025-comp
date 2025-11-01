@@ -60,9 +60,11 @@ public class Autos extends StateMachineSubsystem<AutoSelection> {
       hasEnabledAuto = true;
     }
 
-    var auto = FmsUtil.isRedAlliance() ? selectedRedAuto : selectedBlueAuto;
-    auto.beforePeriodic();
-    auto.periodic();
+    if (DriverStation.isAutonomous()) {
+      var auto = FmsUtil.isRedAlliance() ? selectedRedAuto : selectedBlueAuto;
+      auto.beforePeriodic();
+      auto.periodic();
+    }
   }
 
   private void resetPoseForAuto() {
