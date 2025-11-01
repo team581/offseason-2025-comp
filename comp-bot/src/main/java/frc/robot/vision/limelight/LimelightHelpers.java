@@ -1,7 +1,8 @@
 package frc.robot.vision.limelight;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.NUMBER;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jspecify.annotations.Nullable;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision
@@ -35,7 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Networks, and standard color/retroreflective tracking.
  */
 public final class LimelightHelpers {
-  private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
+  private static final Map<String, DoubleArrayEntry> DOUBLE_ARRAY_ENTRIES =
+      new ConcurrentHashMap<>();
 
   /** Represents a Color/Retroreflective Target Result extracted from JSON Output */
   public static class LimelightTarget_Retro {
@@ -349,8 +352,8 @@ public final class LimelightHelpers {
     @JsonProperty("ts_rio")
     public double timestamp_RIOFPGA_capture;
 
+    @JsonFormat(shape = NUMBER)
     @JsonProperty("v")
-    @JsonFormat(shape = Shape.NUMBER)
     public boolean valid;
 
     @JsonProperty("botpose")
@@ -673,7 +676,7 @@ public final class LimelightHelpers {
     return inData[position];
   }
 
-  private static PoseEstimate getBotPoseEstimate(
+  private static @Nullable PoseEstimate getBotPoseEstimate(
       String limelightName, String entryName, boolean isMegaTag2) {
     DoubleArrayEntry poseEntry =
         LimelightHelpers.getLimelightDoubleArrayEntry(limelightName, entryName);
@@ -864,7 +867,7 @@ public final class LimelightHelpers {
 
   public static DoubleArrayEntry getLimelightDoubleArrayEntry(String tableName, String entryName) {
     String key = tableName + "/" + entryName;
-    return doubleArrayEntries.computeIfAbsent(
+    return DOUBLE_ARRAY_ENTRIES.computeIfAbsent(
         key,
         k -> {
           NetworkTable table = getLimelightNTTable(tableName);
@@ -896,12 +899,12 @@ public final class LimelightHelpers {
     return getLimelightNTTableEntry(tableName, entryName).getStringArray(new String[0]);
   }
 
-  public static URL getLimelightURLString(String tableName, String request) {
+  public static @Nullable URL getLimelightURLString(String tableName, String request) {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
-    URL url;
+
     try {
-      url = new URL(urlString);
-      return url;
+      return new URL(urlString);
+
     } catch (MalformedURLException e) {
       System.err.println("bad LL URL");
     }

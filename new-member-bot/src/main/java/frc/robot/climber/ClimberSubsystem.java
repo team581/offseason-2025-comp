@@ -45,17 +45,17 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
 
   @Override
   protected ClimberState getNextState(ClimberState currentState) {
-      return switch (currentState) {
-        case LINEUP_FORWARD -> {
-          if (currentAngle < PASS_ANGLE_CHECK) {
-            DogLog.timestamp("Climber/LineupForwardStartedFlip");
-            yield ClimberState.LINEUP_BACKWARD;
-          }
-          yield currentState;
+    return switch (currentState) {
+      case LINEUP_FORWARD -> {
+        if (currentAngle < PASS_ANGLE_CHECK) {
+          DogLog.timestamp("Climber/LineupForwardStartedFlip");
+          yield ClimberState.LINEUP_BACKWARD;
         }
-        case LINEUP_BACKWARD -> holdingCage ? ClimberState.HANGING : currentState;
-        default -> currentState;
-      };
+        yield currentState;
+      }
+      case LINEUP_BACKWARD -> holdingCage ? ClimberState.HANGING : currentState;
+      default -> currentState;
+    };
   }
 
   @Override

@@ -17,7 +17,7 @@ import frc.robot.util.scheduling.SubsystemPriority;
 public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   public static final double CARRIAGE_HEIGHT_FROM_FLOOR_METERS = Units.inchesToMeters(22.1);
 
-  private static final double TOLERANCE = 5.0;
+  private static final double TOLERANCE = 1.0;
   private static final double NEAR_TOLERANCE = 20.0;
 
   private final TalonFX motor;
@@ -73,12 +73,15 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     DogLog.log("Elevator/AtGoal", atGoal());
     DogLog.log("Elevator/NearGoal", nearGoal());
     DogLog.log("Elevator/Goal", currentState.getHeight());
+    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+    DogLog.log("Elevator/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
 
     if (DriverStation.isDisabled()) {
       var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();
       var estimatedHeight = homingEndHeight + (height - lowestSeenHeight);
       if (!MathUtil.isNear(estimatedHeight, homingEndHeight, 2.0)) {
-        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kWarning);
+        DogLog.logFault("ELEVATOR NOT IN AUTO POSITION", AlertType.kError);
       } else {
         DogLog.clearFault("ELEVATOR NOT IN AUTO POSITION");
       }

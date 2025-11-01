@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.ReefPipe;
 import frc.robot.auto_align.ReefPipeLevel;
+import frc.robot.auto_align.ReefSide;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class AutoBlocks {
     this.autoCommands = autoCommands;
   }
 
-  public Command scorePreloadL1(Pose2d startingPose, ReefPipe pipe) {
+  public Command scorePreloadL1Coral(Pose2d startingPose, ReefPipe pipe) {
     return Commands.sequence(
         trailblazer.followSegment(
             new AutoSegment(
@@ -71,23 +72,23 @@ public class AutoBlocks {
                 new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L1)))));
   }
 
-  public Command scoreL1(ReefPipe pipe) {
-    return scoreL1(Optional.empty(), pipe, Optional.empty());
+  public Command scoreL1Coral(ReefPipe pipe) {
+    return scoreL1Coral(Optional.empty(), pipe, Optional.empty());
   }
 
-  public Command scoreL1(Pose2d approachPose, ReefPipe pipe) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.empty());
+  public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe) {
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.empty());
   }
 
-  public Command scoreL1(Pose2d approachPose, ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.of(approachPose), pipe, Optional.of(backupPoint));
+  public Command scoreL1Coral(Pose2d approachPose, ReefPipe pipe, Pose2d backupPoint) {
+    return scoreL1Coral(Optional.of(approachPose), pipe, Optional.of(backupPoint));
   }
 
-  public Command scoreL1(ReefPipe pipe, Pose2d backupPoint) {
-    return scoreL1(Optional.empty(), pipe, Optional.of(backupPoint));
+  public Command scoreL1Coral(ReefPipe pipe, Pose2d backupPoint) {
+    return scoreL1Coral(Optional.empty(), pipe, Optional.of(backupPoint));
   }
 
-  public Command scoreL1(
+  public Command scoreL1Coral(
       Optional<Pose2d> approachPose, ReefPipe pipe, Optional<Pose2d> backupPoint) {
     var firstCommand =
         approachPose.isPresent()
@@ -95,7 +96,7 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
-                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(approachPose.orElseThrow()),
                         new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L1))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
@@ -120,9 +121,15 @@ public class AutoBlocks {
                     BASE_CONSTRAINTS,
                     new AutoPoint(
                         () ->
-                            backupPoint.orElse(
-                                pipe.getPose(ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
+                            backupPoint.orElseGet(
+                                () ->
+                                    pipe.getPose(
+                                        ReefPipeLevel.BACK_AWAY, FmsUtil.isRedAlliance())))),
                 false)
             .onlyIf(() -> robotManager.claw.getHasGP()));
+  }
+
+  public Command intakeAlgaeL2(Pose2d defaultIntaking, ReefSide reefSide) {
+    return Commands.sequence();
   }
 }

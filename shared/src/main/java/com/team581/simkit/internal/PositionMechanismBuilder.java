@@ -1,5 +1,7 @@
 package com.team581.simkit.internal;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -37,9 +39,7 @@ public final class PositionMechanismBuilder {
   }
 
   public PositionMechanism build() {
-    if (motors.isEmpty()) {
-      throw new IllegalStateException("At least one motor is required");
-    }
+    checkState(!motors.isEmpty(), "At least one motor is required");
 
     return new PositionMechanism(motors, minPosition, maxPosition);
   }

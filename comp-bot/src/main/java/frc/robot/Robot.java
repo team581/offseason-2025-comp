@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.team581.Base581Robot;
 import com.team581.GlobalConfig;
+import com.team581.config.LimelightModel;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
 import dev.doglog.DogLog;
@@ -32,7 +33,6 @@ import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.vision.limelight.Limelight;
-import frc.robot.vision.limelight.LimelightModel;
 import frc.robot.vision.limelight.LimelightState;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;

@@ -15,6 +15,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.team581.config.CameraConfig;
+import com.team581.config.LimelightModel;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.config.RobotConfig.ArmConfig;
@@ -28,13 +30,12 @@ import frc.robot.config.RobotConfig.SingulatorConfig;
 import frc.robot.config.RobotConfig.SwerveConfig;
 import frc.robot.config.RobotConfig.VisionConfig;
 import frc.robot.generated.RobotTunerConstants;
-import frc.robot.vision.limelight.LimelightModel;
 
 class CompConfig {
   private static final String CANIVORE_NAME = RobotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
-  public static final RobotConfig competitionBot =
+  public static final RobotConfig COMPETITION_BOT =
       new RobotConfig(
           new IntakeConfig(
               CANIVORE_NAME,
@@ -91,7 +92,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Coast))
+                          .withNeutralMode(NeutralModeValue.Brake))
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(100.0)
@@ -100,8 +101,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Arm_Cosine))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(999999.0)
-                          .withMotionMagicCruiseVelocity(999999.0))),
+                          .withMotionMagicAcceleration(8.0)
+                          .withMotionMagicCruiseVelocity(1.5))),
           new ClimberConfig(
               CANIVORE_NAME,
               21,
@@ -175,7 +176,7 @@ class CompConfig {
                   .withSlot0(
                       new Slot0Configs()
                           // TODO: BRINGUP: TUNE
-                          .withKP(0.0)
+                          .withKP(5.0)
                           .withKD(0.0)
                           .withKV(0)
                           .withKG(0.0)
@@ -183,8 +184,8 @@ class CompConfig {
                   // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(9999999.0)
-                          .withMotionMagicCruiseVelocity(9999999.0))
+                          .withMotionMagicAcceleration(200.0)
+                          .withMotionMagicCruiseVelocity(200.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -200,10 +201,9 @@ class CompConfig {
                       new MotorOutputConfigs()
                           .withNeutralMode(NeutralModeValue.Brake)
                           .withInverted(InvertedValue.Clockwise_Positive))
-                  // TODO: BRINGUP: TUNE
                   .withSlot0(
                       new Slot0Configs()
-                          .withKP(0.0)
+                          .withKP(200.0)
                           .withKV(0.0)
                           .withKD(0.0)
                           .withKG(0.0)
@@ -211,8 +211,8 @@ class CompConfig {
                   // TODO: BRINGUP: TUNE
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(999999.0)
-                          .withMotionMagicCruiseVelocity(999999.0))
+                          .withMotionMagicAcceleration(7.0)
+                          .withMotionMagicCruiseVelocity(10.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -230,14 +230,14 @@ class CompConfig {
               // Rotation: Positive X = Roll Right, Positive Y = Pitch Down, Positive Z = Yaw Left
               // Left Camera Config
               new CameraConfig(
-                  LimelightModel.THREEG,
+                  LimelightModel.FOUR,
                   true,
                   0.1045038296,
                   -0.2494524094,
                   0.5819300782,
                   -20.0,
                   -60.0,
-                  90.0),
+                  -90.0),
               // Right Camera Config
               new CameraConfig(
                   LimelightModel.THREEG,
@@ -247,7 +247,7 @@ class CompConfig {
                   0.5819625648,
                   -20.0,
                   60.0,
-                  -90.0)),
+                  90.0)),
           new LightsConfig(CANIVORE_NAME, 17),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 

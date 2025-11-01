@@ -38,7 +38,7 @@ class CompConfig {
   private static final String CANIVORE_NAME = CompBotTunerConstants.kCANBus.getName();
   private static final String RIO_CAN_NAME = "rio";
 
-  public static final RobotConfig competitionBot =
+  public static final RobotConfig COMPETITION_BOT =
       new RobotConfig(
           new ElevatorConfig(
               CANIVORE_NAME,

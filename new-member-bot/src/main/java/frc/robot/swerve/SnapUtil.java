@@ -1,14 +1,16 @@
 package frc.robot.swerve;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.team581.util.FmsUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.auto_align.ReefSide;
-import java.util.Comparator;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SnapUtil {
   public static double getProcessorAngle() {
-    return FmsUtil.isRedAlliance() ? 190 : 370;
+    return FmsUtil.isRedAlliance() ? 100 : -80;
   }
 
   public static double getCageAngle(boolean isRedAlliance) {
@@ -25,9 +27,9 @@ public class SnapUtil {
     double halfFieldLength = 17.55 / 2.0;
 
     if (robotX < halfFieldLength) {
-      return 90.0;
+      return 0;
     } else {
-      return 270.0;
+      return 100;
     }
   }
 
@@ -51,14 +53,13 @@ public class SnapUtil {
   }
 
   public static double getNearestReefAngle(Pose2d robotPose) {
-    return Stream.of(ReefSide.values())
-        .min(
-            Comparator.comparingDouble(
+    return Collections.min(
+            Arrays.asList(ReefSide.values()),
+            comparingDouble(
                 side ->
                     side.getPose(robotPose)
                         .getTranslation()
                         .getDistance(robotPose.getTranslation())))
-        .orElseThrow()
         .getPose(robotPose)
         .getRotation()
         .getDegrees();

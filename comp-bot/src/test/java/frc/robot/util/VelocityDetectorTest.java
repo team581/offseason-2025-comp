@@ -1,24 +1,23 @@
 package frc.robot.util;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.team581.mechanisms.VelocityDetector;
 import org.junit.jupiter.api.Test;
 
-public class VelocityDetectorTest {
+final class VelocityDetectorTest {
   @Test
-  void testDetectionSequence() {
+  void detectionSequence() {
     var detector = new VelocityDetector(10, Double.MAX_VALUE, 0.0);
 
     // Velocity is below the min threshold
-    assertFalse(detector.hasGamePiece(0, 5));
+    assertThat(detector.hasGamePiece(0, 5)).isFalse();
     // Velocity is above the min threshold
-    assertFalse(detector.hasGamePiece(15, 5));
+    assertThat(detector.hasGamePiece(15, 5)).isFalse();
     // Velocity has reached the min, and now is below max
-    assertTrue(detector.hasGamePiece(3, 5));
+    assertThat(detector.hasGamePiece(3, 5)).isTrue();
     detector.reset();
     // Velocity is below max, but detector was reset
-    assertFalse(detector.hasGamePiece(3, 5));
+    assertThat(detector.hasGamePiece(3, 5)).isFalse();
   }
 }

@@ -1,10 +1,8 @@
-package frc.robot.config;
-
-import frc.robot.vision.limelight.LimelightModel;
+package com.team581.config;
 
 public record CameraConfig(
     LimelightModel model,
-    boolean useMtp1,
+    boolean useMegatag1RotationWhenClose,
     double forward,
     double right,
     double up,

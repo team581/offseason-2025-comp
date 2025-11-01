@@ -56,8 +56,8 @@ public enum Points {
   A_L4_POSE(ReefPipe.PIPE_A.getPose(ReefPipeLevel.L4)),
   B_L4_POSE(ReefPipe.PIPE_B.getPose(ReefPipeLevel.L4));
 
-  public Pose2d redPose;
-  public Pose2d bluePose;
+  public final Pose2d redPose;
+  public final Pose2d bluePose;
 
   Points(Pose2d redPose, Pose2d bluePose) {
     this.redPose = redPose;

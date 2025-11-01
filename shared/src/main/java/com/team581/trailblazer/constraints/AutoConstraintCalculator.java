@@ -174,8 +174,7 @@ public class AutoConstraintCalculator {
       return oldVelocityConstraint;
     }
     var velocityConstraint = acceleration * timeToTraverse;
-    var clampedConstraint = MathUtil.clamp(Math.abs(velocityConstraint), 0.5, 5.0);
-    return clampedConstraint;
+    return MathUtil.clamp(Math.abs(velocityConstraint), 0.5, 5.0);
   }
 
   private static ChassisSpeeds constrainRotationalAcceleration(

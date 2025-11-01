@@ -1,9 +1,10 @@
 package com.team581.util.state_machines;
 
+import static java.util.Comparator.comparingInt;
+
 import com.team581.util.scheduling.PrioritySubsystem;
 import com.team581.util.scheduling.SubsystemPriorityBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -11,8 +12,7 @@ import java.util.Queue;
 public class StateMachineSubsystemInputManager extends SubsystemBase implements PrioritySubsystem {
   // Sort by lowest priority first
   private final Queue<StateMachineSubsystem<?>> stateMachineSubsystems =
-      new PriorityQueue<>(
-          Comparator.comparingInt(stateMachine -> stateMachine.getPriority().getValue()));
+      new PriorityQueue<>(comparingInt(stateMachine -> stateMachine.getPriority().getValue()));
 
   @Override
   public SubsystemPriorityBase getPriority() {

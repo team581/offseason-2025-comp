@@ -143,7 +143,7 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         SCORING_CONSTRAINTS,
-                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(approachPose.orElseThrow()),
                         new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L4, scoringSide))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
@@ -170,11 +170,12 @@ public class AutoBlocks {
                         BASE_CONSTRAINTS,
                         new AutoPoint(
                             () ->
-                                backupPoint.orElse(
-                                    pipe.getPose(
-                                        ReefPipeLevel.BACK_AWAY_AUTO,
-                                        FmsUtil.isRedAlliance(),
-                                        scoringSide)))),
+                                backupPoint.orElseGet(
+                                    () ->
+                                        pipe.getPose(
+                                            ReefPipeLevel.BACK_AWAY_AUTO,
+                                            FmsUtil.isRedAlliance(),
+                                            scoringSide)))),
                     false)
                 .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());
@@ -311,7 +312,7 @@ public class AutoBlocks {
                 .followSegment(
                     new AutoSegment(
                         L2_SCORING_CONSTRAINTS,
-                        new AutoPoint(approachPose.get()),
+                        new AutoPoint(approachPose.orElseThrow()),
                         new AutoPoint(() -> pipe.getPose(ReefPipeLevel.L2, scoringSide))),
                     false)
                 .withDeadline(autoCommands.waitForReleaseCommand().withTimeout(3))
@@ -338,11 +339,12 @@ public class AutoBlocks {
                         BASE_CONSTRAINTS,
                         new AutoPoint(
                             () ->
-                                backupPoint.orElse(
-                                    pipe.getPose(
-                                        ReefPipeLevel.BACK_AWAY_AUTO,
-                                        FmsUtil.isRedAlliance(),
-                                        scoringSide)))),
+                                backupPoint.orElseGet(
+                                    () ->
+                                        pipe.getPose(
+                                            ReefPipeLevel.BACK_AWAY_AUTO,
+                                            FmsUtil.isRedAlliance(),
+                                            scoringSide)))),
                     false)
                 .until(() -> robotManager.cameraOnlineAndFarEnoughFromReefForAuto()))
         .onlyIf(() -> robotManager.claw.getHasGP() || robotManager.groundManager.hasCoral());

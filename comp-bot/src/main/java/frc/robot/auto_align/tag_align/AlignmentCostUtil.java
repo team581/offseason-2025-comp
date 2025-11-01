@@ -1,5 +1,7 @@
 package frc.robot.auto_align.tag_align;
 
+import static java.util.Comparator.comparingDouble;
+
 import com.team581.math.MathHelpers;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -133,14 +135,14 @@ public class AlignmentCostUtil {
   private Comparator<ReefPipe> createReefPipeComparator(ReefPipeLevel level) {
     return switch (level) {
       case L1 -> {
-        yield Comparator.comparingDouble(
+        yield comparingDouble(
             pipe -> {
               var allPipes =
                   AutoAlign.ALL_REEF_PIPES; // Assuming reefState has a method to get all pipes
               return allPipes.stream()
                   .filter(p -> p.getPose(level, side, localization.getPose()) != null)
                   .min(
-                      Comparator.comparingDouble(
+                      comparingDouble(
                           p ->
                               p.getPose(level, side, localization.getPose())
                                       .getTranslation()
@@ -156,7 +158,7 @@ public class AlignmentCostUtil {
             });
       }
       default -> {
-        yield Comparator.comparingDouble(
+        yield comparingDouble(
             pipe -> {
               var lookaheadPose = localization.getLookaheadPose(0.3);
               var closestReefSide = AutoAlign.getClosestReefSide(lookaheadPose, side);
@@ -177,7 +179,7 @@ public class AlignmentCostUtil {
   }
 
   private Comparator<ReefSide> createAlgaeComparator() {
-    return Comparator.comparingDouble(
+    return comparingDouble(
         side ->
             getAlignCost(
                     side.getPose(localization.getPose()),

@@ -91,11 +91,9 @@ public final class GamePieceDetectionUtil {
     double sidewaysOffset = forwardOffset * Math.tan(newThetaX);
 
     var cameraRelativeTranslation = new Translation2d(forwardOffset, sidewaysOffset);
-    var robotRelativeTranslation =
-        cameraRelativeTranslation
-            .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))
-            .plus(limelightToRobotOffset.getTranslation().toTranslation2d());
-    return robotRelativeTranslation;
+    return cameraRelativeTranslation
+        .rotateBy(new Rotation2d(limelightToRobotOffset.getRotation().getZ()))
+        .plus(limelightToRobotOffset.getTranslation().toTranslation2d());
   }
 
   public static Translation2d robotRelativeToFieldRelativeGamePiecePose(

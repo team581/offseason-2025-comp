@@ -1,5 +1,6 @@
 package com.team581.trailblazer.trackers.pure_pursuit;
 
+import com.google.common.collect.ImmutableList;
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.trackers.PathTracker;
 import edu.wpi.first.math.MathUtil;
@@ -19,7 +20,7 @@ public class PurePursuitPathTracker implements PathTracker {
   private double transitionStartTime = 0.0;
   private double lastStartTime = 0.0;
 
-  private List<AutoPoint> points = List.of();
+  private List<AutoPoint> points = ImmutableList.of();
   private Pose2d currentRobotPose = Pose2d.kZero;
   private Pose2d startingRobotPose = Pose2d.kZero;
   private boolean startingRobotPoseUpdated = false;

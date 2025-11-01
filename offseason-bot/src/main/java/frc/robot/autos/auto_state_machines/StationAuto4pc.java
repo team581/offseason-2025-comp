@@ -1,5 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
+import com.google.common.collect.ImmutableList;
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
@@ -13,7 +14,6 @@ import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
-import java.util.List;
 
 public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
@@ -22,7 +22,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
 
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
-          List.of(
+          ImmutableList.of(
               ReefPipe.PIPE_I, ReefPipe.PIPE_J, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A));
 
   public void createPath(Pose2d goalPose) {
@@ -73,8 +73,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case SCORE ->
-          !robotManager.claw.getHasGP()
-                  && robotManager.getState().equals(RobotState.CORAL_L4_RELEASE)
+          !robotManager.claw.getHasGP() && robotManager.getState() == RobotState.CORAL_L4_RELEASE
               ? AutoState.INTAKING
               : currentState;
 

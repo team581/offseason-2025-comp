@@ -1,5 +1,7 @@
 package frc.robot.vision.limelight;
 
+import com.team581.config.CameraConfig;
+import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -11,11 +13,11 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.config.CameraConfig;
 import frc.robot.config.FeatureFlags;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.results.OptionalGamePieceResult;
 import frc.robot.vision.results.OptionalTagResult;
+import java.util.Locale;
 import java.util.OptionalDouble;
 
 public class Limelight extends StateMachineSubsystem<LimelightState> {
@@ -123,7 +125,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-    if (config.useMtp1() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (config.useMegatag1RotationWhenClose() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var distance = mT2Estimate.avgTagDist;
       DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
@@ -234,7 +236,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     super.robotPeriodic();
 
     if (DriverStation.isDisabled()) {
-      if (!updatedLimelightPos && !getCameraHealth().equals(CameraHealth.OFFLINE)) {
+      if (!updatedLimelightPos && getCameraHealth() != CameraHealth.OFFLINE) {
         LimelightHelpers.setCameraPose_RobotSpace(
             limelightTableName,
             config.forward(),
@@ -285,7 +287,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    if (!config.model().equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
     seedImuTimer.reset();
@@ -294,7 +296,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void teleopInit() {
-    if (!config.model().equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
   }
@@ -309,10 +311,10 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
     if (limelightTimer.hasElapsed(IS_OFFLINE_TIMEOUT) && RobotBase.isReal()) {
       cameraHealth = CameraHealth.OFFLINE;
-      DogLog.logFault(limelightTableName + " is offline", AlertType.kError);
+      DogLog.logFault(name.toUpperCase(Locale.US) + "LIMELIGHT IS OFFLINE", AlertType.kError);
       return;
     } else {
-      DogLog.clearFault(limelightTableName + " is offline");
+      DogLog.clearFault(name.toUpperCase(Locale.US) + "LIMELIGHT IS OFFLINE");
     }
 
     if (result.isPresent()) {

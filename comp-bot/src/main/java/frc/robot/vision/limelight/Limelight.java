@@ -1,5 +1,6 @@
 package frc.robot.vision.limelight;
 
+import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -277,7 +278,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)) {
+    if (limelightModel != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
     seedImuTimer.reset();
@@ -286,7 +287,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void teleopInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)) {
+    if (limelightModel != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
   }

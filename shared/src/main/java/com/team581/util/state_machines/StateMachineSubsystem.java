@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A state machine that is also a subsystem. Extends {@link StateMachine} and implements {@link
@@ -28,7 +29,7 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
     return name;
   }
 
-  private static final StateMachineSubsystemInputManager manager =
+  private static final StateMachineSubsystemInputManager MANAGER =
       new StateMachineSubsystemInputManager();
 
   private final SubsystemPriorityBase priority;
@@ -37,7 +38,7 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
 
   protected final String subsystemName;
 
-  private RobotMatchState previousStage = null;
+  private @Nullable RobotMatchState previousStage = null;
 
   /**
    * Creates a new state machine subsystem.
@@ -56,7 +57,7 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
     subsystemName = getSubsystemName(getClass());
     loggerName = "Scheduler/Subsystems/" + subsystemName + ".periodic()";
 
-    manager.register(this);
+    MANAGER.register(this);
   }
 
   @Override

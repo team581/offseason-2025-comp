@@ -1,5 +1,6 @@
 plugins {
 	id 'com.diffplug.spotless' version '8.0.0'
+	id 'net.ltgt.errorprone' version '4.3.0'
 }
 
 repositories {
@@ -13,6 +14,7 @@ allprojects {
 
 subprojects {
 	apply plugin: 'java'
+	apply plugin: 'net.ltgt.errorprone'
 
 	java {
 		toolchain {
@@ -24,10 +26,33 @@ subprojects {
 		mavenCentral()
 	}
 
-	// Configure string concat to always inline compile
+	// Error Prone dependencies
+	dependencies {
+		compileOnly "com.google.errorprone:error_prone_annotations:2.43.0"
+		errorprone "com.google.errorprone:error_prone_core:2.42.0"
+		errorprone "tech.picnic.error-prone-support:error-prone-contrib:0.26.0"
+		errorprone "tech.picnic.error-prone-support:refaster-runner:0.26.0"
+
+		testImplementation "org.assertj:assertj-core:3.27.3"
+	}
+
 	tasks.withType(JavaCompile) {
+		// Configure string concat to always inline compile
 		options.compilerArgs.add '-XDstringConcat=inline'
 		options.release = 17
+	}
+
+	// Error Prone configuration
+	tasks.withType(JavaCompile).configureEach {
+		options.errorprone.disableWarningsInGeneratedCode = true
+		options.errorprone.disable("Var", "BooleanParameter", "InlineMeSuggester", "ImmutableEnumChecker")
+
+		// Set the ERRORPRONE_AUTOFIX environment variable to fix files in place
+		if (System.getenv().containsKey("ERRORPRONE_AUTOFIX")) {
+			options.errorprone.errorproneArgs.add "-XepPatchLocation:IN_PLACE"
+		}
+
+		options.errorprone.excludedPaths = "LimelightHelpers.java"
 	}
 
 	// Common test configuration
@@ -47,7 +72,7 @@ spotless {
 
 	java {
 		target 'shared/**/*.java', 'comp-bot/**/*.java', 'offseason-bot/**/*.java', 'new-member-bot/**/*.java'
-		googleJavaFormat('1.26.0')
+		googleJavaFormat()
 		licenseHeader ''
 
 		targetExclude('**/generated/**')

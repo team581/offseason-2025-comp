@@ -1,9 +1,9 @@
 package frc.robot.robot_manager;
 
+import com.google.common.collect.ImmutableList;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.List;
 
 public class RobotCommands {
   private final RobotManager robot;
@@ -13,12 +13,12 @@ public class RobotCommands {
 
   public RobotCommands(RobotManager robot) {
     this.robot = robot;
-    var requirementsList = List.of(robot.elevator, robot.arm, robot.claw, robot.climber);
+    var requirementsList = ImmutableList.of(robot.elevator, robot.arm, robot.claw, robot.climber);
     rmRequirements = requirementsList.toArray(Subsystem[]::new);
-    requirementsList = List.of(robot.groundManager.deploy, robot.groundManager.intake);
+    requirementsList = ImmutableList.of(robot.groundManager.deploy, robot.groundManager.intake);
     gmRequirements = requirementsList.toArray(Subsystem[]::new);
     requirementsList =
-        List.of(
+        ImmutableList.of(
             robot.elevator,
             robot.arm,
             robot.claw,

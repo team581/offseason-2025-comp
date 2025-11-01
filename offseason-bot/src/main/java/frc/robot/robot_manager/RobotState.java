@@ -100,7 +100,7 @@ public enum RobotState {
     this.climbingOrRehoming = climbingOrRehoming;
   }
 
-  private static final ImmutableMap<RobotState, RobotState> scoreSequence =
+  private static final ImmutableMap<RobotState, RobotState> SCORE_SEQUENCE =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_APPROACH, CORAL_L1_LINEUP),
           Map.entry(CORAL_L2_APPROACH, CORAL_L2_LINEUP),
@@ -115,7 +115,7 @@ public enum RobotState {
           Map.entry(CORAL_L3_PLACE, CORAL_L3_RELEASE),
           Map.entry(CORAL_L4_PLACE, CORAL_L4_RELEASE));
 
-  private static final ImmutableMap<RobotState, RobotState> handoffSequence =
+  private static final ImmutableMap<RobotState, RobotState> HANDOFF_SEQUENCE =
       ImmutableMap.ofEntries(
           Map.entry(CORAL_L1_PREPARE_HANDOFF, CORAL_L1_RELEASE_HANDOFF),
           Map.entry(CORAL_L2_PREPARE_HANDOFF, CORAL_L2_RELEASE_HANDOFF),
@@ -130,12 +130,16 @@ public enum RobotState {
           Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
           Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_APPROACH));
 
-  private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
-      ImmutableMap.ofEntries(
-          Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
-          Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
-          Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
-          Map.entry(ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING));
+  private static final ImmutableMap<RobotState, RobotState> ALGAE_INTAKE_SEQUENCE =
+      ImmutableMap.of(
+          ALGAE_INTAKE_L2_APPROACH,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L3_APPROACH,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L2_HOLDING,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L3_HOLDING);
 
   public static boolean isLineupOrApproachState(RobotState state) {
     return switch (state) {
@@ -164,7 +168,7 @@ public enum RobotState {
   }
 
   public static boolean missingGP(RobotState state, boolean hasGp) {
-    return (!state.clawGp.equals(ClawGamePiece.EMPTY) && !hasGp);
+    return (state.clawGp != ClawGamePiece.EMPTY && !hasGp);
   }
 
   public static boolean isReleaseState(RobotState state) {
@@ -175,14 +179,14 @@ public enum RobotState {
   }
 
   public RobotState getNextScoreState() {
-    return scoreSequence.getOrDefault(this, this);
+    return SCORE_SEQUENCE.getOrDefault(this, this);
   }
 
   public RobotState getNextAlgaeIntakeState() {
-    return algaeIntakeSequence.getOrDefault(this, this);
+    return ALGAE_INTAKE_SEQUENCE.getOrDefault(this, this);
   }
 
   public RobotState getNextHandoffState() {
-    return handoffSequence.getOrDefault(this, this);
+    return HANDOFF_SEQUENCE.getOrDefault(this, this);
   }
 }

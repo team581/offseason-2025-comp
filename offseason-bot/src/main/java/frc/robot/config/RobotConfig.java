@@ -3,6 +3,7 @@ package frc.robot.config;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.team581.config.CameraConfig;
 import edu.wpi.first.math.filter.Debouncer;
 
 public record RobotConfig(
@@ -90,6 +91,6 @@ public record RobotConfig(
       boolean invertY) {}
 
   public static RobotConfig get() {
-    return CompConfig.competitionBot;
+    return CompConfig.COMPETITION_BOT;
   }
 }

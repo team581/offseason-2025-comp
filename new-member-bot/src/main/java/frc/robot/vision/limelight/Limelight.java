@@ -1,5 +1,7 @@
 package frc.robot.vision.limelight;
 
+import com.team581.config.CameraConfig;
+import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -10,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.config.FeatureFlags;
@@ -27,8 +30,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
   private static final double USE_MT1_DISTANCE_THRESHOLD = Units.inchesToMeters(40.0);
   private final String limelightTableName;
   private final String name;
-  private final LimelightModel limelightModel;
-  private final boolean mt1Compatible;
+  private final CameraConfig config;
 
   private final Timer limelightTimer = new Timer();
   private final Timer seedImuTimer = new Timer();
@@ -45,19 +47,16 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   private double angularVelocity = 0.0;
 
-  public Limelight(
-      String name,
-      LimelightState initialState,
-      LimelightModel limelightModel,
-      boolean mt1Compatible) {
+  private boolean updatedLimelightPos = false;
+
+  public Limelight(String name, LimelightState initialState, CameraConfig config) {
     // TODO(jonahsnider): Make Limelight state logging work with multiple instances, not just
     // singleton
     super(SubsystemPriority.VISION, initialState);
     limelightTableName = "limelight-" + name;
     this.name = name;
     limelightTimer.start();
-    this.limelightModel = limelightModel;
-    this.mt1Compatible = mt1Compatible;
+    this.config = config;
   }
 
   public void sendImuData(
@@ -129,7 +128,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return tagResult.empty();
     }
     var devs = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
-    if (mt1Compatible && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
+    if (config.useMegatag1RotationWhenClose() && FeatureFlags.MT_VISION_METHOD.getAsBoolean()) {
       var distance = mT2Estimate.avgTagDist;
       DogLog.log("Vision/" + name + "/Tags/DistanceFromTag", Units.metersToInches(distance));
 
@@ -240,6 +239,20 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     super.robotPeriodic();
     DogLog.log("Vision/" + name + "/State", getState());
 
+    if (DriverStation.isDisabled()) {
+      if (!updatedLimelightPos && getCameraHealth() != CameraHealth.OFFLINE) {
+        LimelightHelpers.setCameraPose_RobotSpace(
+            limelightTableName,
+            config.forward(),
+            config.right(),
+            config.up(),
+            config.roll(),
+            config.pitch(),
+            config.yaw());
+        updatedLimelightPos = true;
+      }
+    }
+
     var lastTagTimestamp =
         lastGoodTagResult.isPresent()
             ? lastGoodTagResult.orElseThrow().timestamp()
@@ -277,7 +290,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void autonomousInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
     seedImuTimer.reset();
@@ -286,7 +299,7 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
 
   @Override
   public void teleopInit() {
-    if (!limelightModel.equals(LimelightModel.THREE)) {
+    if (config.model() != LimelightModel.THREE) {
       LimelightHelpers.SetFiducialIDFiltersOverride(limelightTableName, VALID_APRILTAGS);
     }
   }

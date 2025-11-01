@@ -33,6 +33,7 @@ import frc.robot.generated.RobotTunerConstants;
 import frc.robot.generated.RobotTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.scheduling.SubsystemPriority;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
@@ -52,8 +53,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
       DogLog.tunable("Swerve/DriveToPose/MaxRotationVelRot", 2.5);
 
-  public static final double MaxSpeed = 4.75;
-  private static final double maxAngularRate = Units.rotationsToRadians(4);
+  public static final double MAX_SPEED = 4.75;
+  private static final double MAX_ANGULAR_RATE = Units.rotationsToRadians(4);
   private static final Rotation2d TELEOP_MAX_ANGULAR_RATE = Rotation2d.fromRotations(2);
 
   private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
@@ -86,10 +87,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
           .withRotationalDeadband(0.5)
           .withHeadingPID(
               ORIGINAL_HEADING_PID.getP(), ORIGINAL_HEADING_PID.getI(), ORIGINAL_HEADING_PID.getD())
-          .withMaxAbsRotationalRate(maxAngularRate);
+          .withMaxAbsRotationalRate(MAX_ANGULAR_RATE);
 
   private double lastSimTime;
-  private Notifier simNotifier = null;
+  private @Nullable Notifier simNotifier = null;
 
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private ChassisSpeeds robotRelativeSpeeds = new ChassisSpeeds();
@@ -213,8 +214,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
     teleopSpeeds =
         new ChassisSpeeds(
-            -1.0 * leftY * MaxSpeed * teleopSlowModePercent,
-            leftX * MaxSpeed * teleopSlowModePercent,
+            -1.0 * leftY * MAX_SPEED * teleopSlowModePercent,
+            leftX * MAX_SPEED * teleopSlowModePercent,
             rightX * TELEOP_MAX_ANGULAR_RATE.getRadians() * teleopSlowModePercent);
 
     sendSwerveRequest();
@@ -226,7 +227,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     robotRelativeSpeeds = drivetrainState.Speeds;
     fieldRelativeSpeeds = calculateFieldRelativeSpeeds();
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
-    if (getState().equals(SwerveState.DRIVE_TO_POSE)) {
+    if (getState() == SwerveState.DRIVE_TO_POSE) {
       driveToPoseSpeeds =
           getDriveToPoseSpeeds(
               lastDriveToPoseTarget,

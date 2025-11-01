@@ -1,7 +1,6 @@
 package frc.robot.robot_manager;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 
 public enum RobotState {
   STARTING_POSITION(false, ClawGamePiece.NONE),
@@ -60,14 +59,18 @@ public enum RobotState {
     this.heldGamePiece = heldGamePiece;
   }
 
-  private static final ImmutableMap<RobotState, RobotState> algaeIntakeSequence =
-      ImmutableMap.ofEntries(
-          Map.entry(ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L2),
-          Map.entry(ALGAE_INTAKE_L3_APPROACH, ALGAE_INTAKE_L3),
-          Map.entry(ALGAE_INTAKE_L2, ALGAE_INTAKE_L2_HOLDING),
-          Map.entry(ALGAE_INTAKE_L3, ALGAE_INTAKE_L3_HOLDING));
+  private static final ImmutableMap<RobotState, RobotState> ALGAE_INTAKE_SEQUENCE =
+      ImmutableMap.of(
+          ALGAE_INTAKE_L2_APPROACH,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L3_APPROACH,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L2_HOLDING,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L3_HOLDING);
 
   public RobotState getNextAlgaeIntakeState() {
-    return algaeIntakeSequence.getOrDefault(this, this);
+    return ALGAE_INTAKE_SEQUENCE.getOrDefault(this, this);
   }
 }

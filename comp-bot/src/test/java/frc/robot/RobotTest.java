@@ -2,7 +2,7 @@ package frc.robot;
 
 import org.junit.jupiter.api.Test;
 
-public class RobotTest {
+final class RobotTest {
   @Test
   void instantiateRobotTest() {
     var robot = new Robot();

@@ -23,8 +23,8 @@ public enum Points {
 
   GROUND_INTAKE_LEFT_STATION(new Pose2d(16.124, 1.148, Rotation2d.fromDegrees(0)));
 
-  public Pose2d redPose;
-  public Pose2d bluePose;
+  public final Pose2d redPose;
+  public final Pose2d bluePose;
 
   Points(Pose2d redPose, Pose2d bluePose) {
     this.redPose = redPose;

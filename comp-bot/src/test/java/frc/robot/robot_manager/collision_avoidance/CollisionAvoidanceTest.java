@@ -2,15 +2,15 @@ package frc.robot.robot_manager.collision_avoidance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.google.common.collect.ImmutableList;
 import frc.robot.arm.ArmState;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.robot_manager.SuperstructurePosition;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class CollisionAvoidanceTest {
+final class CollisionAvoidanceTest {
   @Test
-  public void test() {
+  void test() {
     var currentPosition =
         new SuperstructurePosition(
             ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
@@ -19,12 +19,13 @@ public class CollisionAvoidanceTest {
     var result =
         CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.LEFT_OBSTRUCTED);
     var expected =
-        List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
-    assertEquals(expected, result.get());
+        ImmutableList.of(
+            Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
+    assertEquals(expected, result.orElseThrow());
   }
 
   @Test
-  public void test1() {
+  void test1() {
     var currentPosition =
         new SuperstructurePosition(
             ElevatorState.CORAL_SCORE_RELEASE_L3, ArmState.CORAL_SCORE_LEFT_RELEASE_L3);
@@ -32,82 +33,83 @@ public class CollisionAvoidanceTest {
         new SuperstructurePosition(ElevatorState.CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
     var result = CollisionAvoidance.aStar(currentPosition, desiredPosition, ObstructionKind.NONE);
     var expected =
-        List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
-    assertEquals(expected, result.get());
+        ImmutableList.of(
+            Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.CORAL_L3_LEFT_ARM_ONLY, Waypoint.HANDOFF);
+    assertEquals(expected, result.orElseThrow());
   }
 
   @Test
-  public void hectorTest() {
+  void hectorTest() {
     var currentRawAngle = 720;
     var normalizedGoalAngle = 90;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(810.0, 450.0);
+    var expected = ImmutableList.of(810.0, 450.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void hectorTest1() {
+  void hectorTest1() {
     var currentRawAngle = -720;
     var normalizedGoalAngle = 90;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(-630.0, -990.0);
+    var expected = ImmutableList.of(-630.0, -990.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void hectorTest4() {
+  void hectorTest4() {
     var normalizedGoalAngle = -90;
     var currentRawAngle = -179;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(-90.0, -450.0);
+    var expected = ImmutableList.of(-90.0, -450.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void hectorTest5() {
+  void hectorTest5() {
     var normalizedGoalAngle = -90;
     var currentRawAngle = 147.7;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(270.0, -90.0);
+    var expected = ImmutableList.of(270.0, -90.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void hectorTest6() {
+  void hectorTest6() {
     var normalizedGoalAngle = -90;
     var currentRawAngle = -147.7;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(-90.0, -450.0);
+    var expected = ImmutableList.of(-90.0, -450.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalTest() {
+  void armSetCollisionAvoidanceGoalTest() {
     double goalAngle = -90.0;
     boolean climberRisky = false;
     double currentAngle = -211.0;
@@ -125,21 +127,21 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void solutionsTest() {
+  void solutionsTest() {
     var normalizedGoalAngle = 160;
     var currentRawAngle = 269.0;
     var result =
-        List.of(
+        ImmutableList.of(
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 0],
             CollisionAvoidance.getCollisionAvoidanceSolutions(currentRawAngle, normalizedGoalAngle)[
                 1]);
-    var expected = List.of(160.0, 520.0);
+    var expected = ImmutableList.of(160.0, 520.0);
     assertEquals(expected, result);
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalTestL3Lineup() {
+  void armSetCollisionAvoidanceGoalTestL3Lineup() {
     double goalAngle = 160.0;
     boolean climberRisky = false;
     double currentAngle = 269.0;
@@ -157,7 +159,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void positivearmSetCollisionAvoidanceGoalTest() {
+  void positivearmSetCollisionAvoidanceGoalTest() {
     double goalAngle = -90.0;
     boolean climberRisky = false;
     double currentAngle = 140.0;
@@ -175,7 +177,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void swingsaroundtwicewhenstowing() { // TODO: make this pass
+  void swingsaroundtwicewhenstowing() { // TODO: make this pass
     double goalAngle = -90.0;
     boolean climberRisky = false;
     double currentAngle = -147.7;
@@ -193,7 +195,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void swingsaroundtwicewhenstowin324g() { // TODO: make this pass
+  void swingsaroundtwicewhenstowin324g() { // TODO: make this pass
     double goalAngle = -90.0;
     boolean climberRisky = false;
     double currentAngle = 147.7;
@@ -211,7 +213,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalTest3() {
+  void armSetCollisionAvoidanceGoalTest3() {
     double goalAngle = 180.0;
     boolean climberRisky = false;
     double currentAngle = -90.0;
@@ -229,7 +231,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalBackwardTest() {
+  void armSetCollisionAvoidanceGoalBackwardTest() {
     double goalAngle = -25.0;
     boolean climberRisky = true;
     double currentAngle = 0.0;
@@ -247,7 +249,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalGoLongWayTest() {
+  void armSetCollisionAvoidanceGoalGoLongWayTest() {
     double goalAngle = 200.0;
     boolean climberRisky = true;
     double currentAngle = 360.0;
@@ -265,7 +267,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalGoLongWayNegativeTest() {
+  void armSetCollisionAvoidanceGoalGoLongWayNegativeTest() {
     double goalAngle = -200.0;
     boolean climberRisky = true;
     double currentAngle = -360.0;
@@ -283,7 +285,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalNegativeTest() {
+  void armSetCollisionAvoidanceGoalNegativeTest() {
     double goalAngle = 180.0;
     boolean climberRisky = true;
     double currentAngle = -360.0;
@@ -301,7 +303,7 @@ public class CollisionAvoidanceTest {
   }
 
   @Test
-  public void armSetCollisionAvoidanceGoalPositiveTest() {
+  void armSetCollisionAvoidanceGoalPositiveTest() {
     double goalAngle = 180.0;
     boolean climberRisky = true;
     double currentAngle = 360.0;
@@ -335,7 +337,7 @@ public class CollisionAvoidanceTest {
   // }
 
   @Test
-  public void rightObstructedAstarTest() {
+  void rightObstructedAstarTest() {
     var result =
         CollisionAvoidance.aStar(
             new SuperstructurePosition(ElevatorState.STOWED, ArmState.HOLDING_UPRIGHT),
@@ -344,13 +346,14 @@ public class CollisionAvoidanceTest {
             ObstructionKind.RIGHT_OBSTRUCTED);
     // Moves elevator first, only extends arm at the end
     var expected =
-        List.of(Waypoint.LOW_STOW, Waypoint.CORAL_L4_UPRIGHT, Waypoint.CORAL_L4_RIGHT_LINEUP);
+        ImmutableList.of(
+            Waypoint.LOW_STOW, Waypoint.CORAL_L4_UPRIGHT, Waypoint.CORAL_L4_RIGHT_LINEUP);
 
-    assertEquals(expected, result.get());
+    assertEquals(expected, result.orElseThrow());
   }
 
   @Test
-  public void getClosestNodeStowedTest() {
+  void getClosestNodeStowedTest() {
     var result = Waypoint.getClosest(new SuperstructurePosition(43, -90));
     Waypoint expected = Waypoint.HANDOFF;
 
@@ -365,7 +368,8 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF),
             ObstructionKind.NONE);
     var expected =
-        List.of(Waypoint.ALGAE_NET_RIGHT, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.HANDOFF);
+        ImmutableList.of(
+            Waypoint.ALGAE_NET_RIGHT, Waypoint.HANDOFF_CLEARS_CLIMBER, Waypoint.HANDOFF);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -378,7 +382,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
             new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_LEFT),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.ALGAE_GROUND_INTAKE, Waypoint.ALGAE_NET_LEFT);
+    var expected = ImmutableList.of(Waypoint.ALGAE_GROUND_INTAKE, Waypoint.ALGAE_NET_LEFT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -391,7 +395,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR),
             new SuperstructurePosition(ElevatorState.ALGAE_NET, ArmState.ALGAE_NET_RIGHT),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.ALGAE_GROUND_INTAKE, Waypoint.ALGAE_NET_RIGHT);
+    var expected = ImmutableList.of(Waypoint.ALGAE_GROUND_INTAKE, Waypoint.ALGAE_NET_RIGHT);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -405,7 +409,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.NONE);
     var expected =
-        List.of(
+        ImmutableList.of(
             Waypoint.HANDOFF,
             Waypoint.ALGAE_INTAKE_L3_RIGHT_ARM_ONLY,
             Waypoint.ALGAE_INTAKE_L3_RIGHT,
@@ -422,7 +426,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.LEFT_OBSTRUCTED);
-    var expected = List.of(Waypoint.CORAL_L4_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
+    var expected = ImmutableList.of(Waypoint.CORAL_L4_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -435,7 +439,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.CORAL_SCORE_LINEUP_L4, ArmState.CORAL_SCORE_LEFT_LINEUP_L4),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L4_LEFT_LINEUP);
+    var expected = ImmutableList.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L4_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -449,7 +453,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.LEFT_OBSTRUCTED);
-    var expected = List.of(Waypoint.CORAL_L2_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
+    var expected = ImmutableList.of(Waypoint.CORAL_L2_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
     System.out.println(result.orElseThrow());
     assertEquals(expected, result.orElseThrow());
   }
@@ -462,7 +466,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L2_LEFT_LINEUP);
+    var expected = ImmutableList.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L2_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -476,7 +480,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.LOLLIPOP_CORAL_INTAKE_INTAKE, ArmState.LOLLIPOP_CORAL_INTAKE_INTAKE),
             ObstructionKind.LEFT_OBSTRUCTED);
-    var expected = List.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
+    var expected = ImmutableList.of(Waypoint.CORAL_L3_LEFT_PLACE, Waypoint.LOLLIPOP_INTAKE);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -489,7 +493,7 @@ public class CollisionAvoidanceTest {
             new SuperstructurePosition(
                 ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3),
             ObstructionKind.NONE);
-    var expected = List.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L3_LEFT_LINEUP);
+    var expected = ImmutableList.of(Waypoint.LOLLIPOP_INTAKE_PUSH, Waypoint.CORAL_L3_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -504,7 +508,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L3, ArmState.CORAL_SCORE_LEFT_LINEUP_L3),
             ObstructionKind.LEFT_OBSTRUCTED);
     var expected =
-        List.of(
+        ImmutableList.of(
             Waypoint.CORAL_L2_LEFT_LINEUP,
             Waypoint.CORAL_L2_UPRIGHT,
             Waypoint.CORAL_L3_UPRIGHT,
@@ -523,7 +527,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_RELEASE_L2, ArmState.CORAL_SCORE_LEFT_RELEASE_L2),
             ObstructionKind.LEFT_OBSTRUCTED);
 
-    var expected = List.of(Waypoint.CORAL_L2_LEFT_LINEUP, Waypoint.CORAL_L2_LEFT_PLACE);
+    var expected = ImmutableList.of(Waypoint.CORAL_L2_LEFT_LINEUP, Waypoint.CORAL_L2_LEFT_PLACE);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -538,7 +542,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
             ObstructionKind.LEFT_OBSTRUCTED);
 
-    var expected = List.of(Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L2_LEFT_LINEUP);
+    var expected = ImmutableList.of(Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L2_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -553,7 +557,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
             ObstructionKind.NONE);
 
-    var expected = List.of(Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L2_LEFT_LINEUP);
+    var expected = ImmutableList.of(Waypoint.CORAL_L2_UPRIGHT, Waypoint.CORAL_L2_LEFT_LINEUP);
 
     assertEquals(expected, result.orElseThrow());
   }
@@ -568,7 +572,7 @@ public class CollisionAvoidanceTest {
                 ElevatorState.CORAL_SCORE_LINEUP_L2, ArmState.CORAL_SCORE_LEFT_LINEUP_L2),
             ObstructionKind.LEFT_OBSTRUCTED);
     var expected =
-        List.of(
+        ImmutableList.of(
             Waypoint.CORAL_L4_LEFT_LINEUP,
             Waypoint.CORAL_L4_UPRIGHT,
             Waypoint.CORAL_L2_UPRIGHT,
