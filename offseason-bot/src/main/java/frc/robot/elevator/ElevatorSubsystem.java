@@ -1,5 +1,9 @@
 package frc.robot.elevator;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
@@ -69,13 +73,13 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   @Override
   public void whileInState(ElevatorState currentState) {
-    DogLog.log("Elevator/Height", height);
+    DogLog.log("Elevator/Height", height, Inches);
     DogLog.log("Elevator/AtGoal", atGoal());
     DogLog.log("Elevator/NearGoal", nearGoal());
     DogLog.log("Elevator/Goal", currentState.getHeight());
-    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Elevator/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Elevator/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble(), Amps);
+    DogLog.log("Elevator/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble(), Amps);
 
     if (DriverStation.isDisabled()) {
       var homingEndHeight = RobotConfig.get().elevator().homingEndHeight();

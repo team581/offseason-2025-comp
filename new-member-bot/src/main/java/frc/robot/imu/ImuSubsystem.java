@@ -1,5 +1,7 @@
 package frc.robot.imu;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.team581.mechanisms.imu.BaseImuSubsystem;
 import dev.doglog.DogLog;
@@ -36,7 +38,7 @@ public class ImuSubsystem extends BaseImuSubsystem {
   public void robotPeriodic() {
     super.robotPeriodic();
 
-    DogLog.log("Imu/Roll", roll);
-    DogLog.log("Imu/Pitch", pitch);
+    DogLog.log("Imu/Roll", roll, Degrees);
+    DogLog.log("Imu/Pitch", pitch, Degrees);
   }
 }

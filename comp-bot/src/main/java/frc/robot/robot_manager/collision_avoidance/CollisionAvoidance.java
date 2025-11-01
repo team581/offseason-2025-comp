@@ -1,5 +1,7 @@
 package frc.robot.robot_manager.collision_avoidance;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingDouble;
 
@@ -88,7 +90,7 @@ public class CollisionAvoidance {
               rawArmAngle);
       lastWaypoint = waypoint;
     }
-    DogLog.log("CollisionAvoidance/ArmSolution", lastSolution);
+    DogLog.log("CollisionAvoidance/ArmSolution", lastSolution, Degrees);
     return Optional.of(
         new SuperstructurePosition(waypoint.position.elevatorHeight(), lastSolution));
   }
@@ -127,15 +129,21 @@ public class CollisionAvoidance {
     var currentWaypoint = lastPath.getFirst();
     DogLog.log(
         "CollisionAvoidance/CurrentWaypoint/ElevatorHeight",
-        currentWaypoint.position.elevatorHeight());
-    DogLog.log("CollisionAvoidance/CurrentWaypoint/ArmAngle", currentWaypoint.position.armAngle());
+        currentWaypoint.position.elevatorHeight(),
+        Inches);
+    DogLog.log(
+        "CollisionAvoidance/CurrentWaypoint/ArmAngle",
+        currentWaypoint.position.armAngle(),
+        Degrees);
     DogLog.log("CollisionAvoidance/CurrentWaypoint", currentWaypoint);
     DogLog.log("CollisionAvoidance/ClosestWaypoint", closestToCurrent);
     DogLog.log("CollisionAvoidance/AstarPath", lastPath.toArray(Waypoint[]::new));
 
     DogLog.log(
-        "CollisionAvoidance/CurrentPosition/ElevatorHeight", currentPosition.elevatorHeight());
-    DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle());
+        "CollisionAvoidance/CurrentPosition/ElevatorHeight",
+        currentPosition.elevatorHeight(),
+        Inches);
+    DogLog.log("CollisionAvoidance/CurrentPosition/ArmAngle", currentPosition.armAngle(), Degrees);
     DogLog.log("CollisionAvoidance/Obstruction", obstructionKind);
 
     boolean near =

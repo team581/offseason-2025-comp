@@ -1,5 +1,7 @@
 package frc.robot.singulator;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
@@ -65,8 +67,8 @@ public class SingulatorSubsystem extends StateMachineSubsystem<SingulatorState> 
 
   @Override
   public void whileInState(SingulatorState currentState) {
-    DogLog.log("Singulator/Left/Current", filteredLeftCurrent);
-    DogLog.log("Singulator/Right/Current", filteredRightCurrent);
+    DogLog.log("Singulator/Left/Current", filteredLeftCurrent, Amps);
+    DogLog.log("Singulator/Right/Current", filteredRightCurrent, Amps);
   }
 
   public boolean isLeftJammed() {

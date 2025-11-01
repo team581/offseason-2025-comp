@@ -1,5 +1,8 @@
 package com.team581.mechanisms.imu;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team581.util.scheduling.SubsystemPriorityBase;
@@ -41,7 +44,7 @@ public class BaseImuSubsystem extends StateMachineSubsystem<ImuState> {
 
   @Override
   public void whileInState(ImuState currentState) {
-    DogLog.log("Imu/RobotHeading", robotHeading);
-    DogLog.log("Imu/AngularVelocity", robotAngularVelocity);
+    DogLog.log("Imu/RobotHeading", robotHeading, Degrees);
+    DogLog.log("Imu/AngularVelocity", robotAngularVelocity, DegreesPerSecond);
   }
 }

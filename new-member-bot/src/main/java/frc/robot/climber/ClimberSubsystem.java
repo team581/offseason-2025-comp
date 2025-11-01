@@ -1,5 +1,7 @@
 package frc.robot.climber;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANrange;
@@ -125,8 +127,8 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     holdingCage = canRangeDebouncer.calculate(canRange.getIsDetected().getValue());
 
-    DogLog.log("Climber/Cancoder/Angle", currentAngle);
-    DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
+    DogLog.log("Climber/Cancoder/Angle", currentAngle, Degrees);
+    DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle, Degrees);
     DogLog.log("Climber/HoldingCage", holdingCage);
   }
 

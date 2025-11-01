@@ -1,5 +1,9 @@
 package frc.robot.climber;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -98,13 +102,13 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     climberMotorAngle = Units.rotationsToDegrees(climbMotor.getPosition().getValueAsDouble());
     cancoderVelocity = cancoderVelocityFilter.calculate(encoder.getVelocity().getValueAsDouble());
 
-    DogLog.log("Climber/CANCoderVelocity", cancoderVelocity);
+    DogLog.log("Climber/CANCoderVelocity", cancoderVelocity, RotationsPerSecond);
 
-    DogLog.log("Climber/Cancoder/Angle", currentAngle);
+    DogLog.log("Climber/Cancoder/Angle", currentAngle, Degrees);
 
-    DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle);
+    DogLog.log("Climber/ClimbMotor/Angle", climberMotorAngle, Degrees);
 
-    DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble());
+    DogLog.log("Climber/AppliedVoltage", climbMotor.getMotorVoltage().getValueAsDouble(), Volts);
   }
 
   public boolean atGoal() {

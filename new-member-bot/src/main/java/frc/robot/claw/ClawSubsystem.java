@@ -1,5 +1,8 @@
 package frc.robot.claw;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
@@ -83,8 +86,8 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   public void whileInState(ClawState currentState) {
     velocityDetectsGp = getHasGp(motor.getVelocity().getValueAsDouble());
     DogLog.log("Claw/HasGP", getHasGP());
-    DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-    DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+    DogLog.log("Claw/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log("Claw/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble(), Amps);
+    DogLog.log("Claw/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble(), Amps);
   }
 }

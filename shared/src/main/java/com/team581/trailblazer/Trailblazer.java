@@ -1,5 +1,8 @@
 package com.team581.trailblazer;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+
 import com.team581.math.TimestampedChassisSpeeds;
 import com.team581.trailblazer.constraints.AutoConstraintCalculator;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
@@ -146,10 +149,12 @@ public class Trailblazer {
 
     DogLog.log(
         "Autos/Trailblazer/Constraints/VelocityCalculation/CalculatedLinearVelocity",
-        usedConstraints.maxLinearVelocity());
+        usedConstraints.maxLinearVelocity(),
+        MetersPerSecond);
     DogLog.log(
         "Autos/Trailblazer/Constraints/Acceleration/CalulatedLinearAcceleration",
-        usedConstraints.maxLinearAcceleration());
+        usedConstraints.maxLinearAcceleration(),
+        MetersPerSecondPerSecond);
     DogLog.log("Autos/Trailblazer/Tracker/RawOutput", originalTargetPose);
 
     DogLog.log("Autos/Trailblazer/Follower/RawOutput", originalVelocityGoal);

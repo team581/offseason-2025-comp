@@ -1,5 +1,9 @@
 package frc.robot.wrist;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -104,10 +108,10 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   @Override
   protected void whileInState(WristState state) {
-    DogLog.log("Wrist/StatorCurrent", motorCurrent);
-    DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Wrist/MotorAngle", motorAngle);
-    DogLog.log("Wrist/RawMotorAngle", rawMotorAngle);
+    DogLog.log("Wrist/StatorCurrent", motorCurrent, Amps);
+    DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log("Wrist/MotorAngle", motorAngle, Degrees);
+    DogLog.log("Wrist/RawMotorAngle", rawMotorAngle, Degrees);
 
     DogLog.log("Wrist/AtGoal", atGoal());
 

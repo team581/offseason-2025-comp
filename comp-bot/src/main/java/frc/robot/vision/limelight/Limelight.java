@@ -1,5 +1,7 @@
 package frc.robot.vision.limelight;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.team581.config.LimelightModel;
 import com.team581.mechanisms.vision.CameraHealth;
 import com.team581.util.ReusableOptional;
@@ -168,8 +170,8 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return coralResult.empty();
     }
 
-    DogLog.log("Vision/" + name + "/Coral/tx", coralTx);
-    DogLog.log("Vision/" + name + "/Coral/ty", coralTy);
+    DogLog.log("Vision/" + name + "/Coral/tx", coralTx, Degrees);
+    DogLog.log("Vision/" + name + "/Coral/ty", coralTy, Degrees);
 
     var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
@@ -216,8 +218,8 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
       return algaeResult.empty();
     }
 
-    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx);
-    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy);
+    DogLog.log("Vision/" + name + "/Algae/tx", algaeTx, Degrees);
+    DogLog.log("Vision/" + name + "/Algae/ty", algaeTy, Degrees);
 
     var latency = t2d[2] + t2d[3];
     var latencySeconds = latency / 1000.0;
@@ -338,13 +340,16 @@ public class Limelight extends StateMachineSubsystem<LimelightState> {
     DogLog.log("CameraPositionCalibration/" + name + "/LL Forward", cameraRobotRelativePose.getZ());
     DogLog.log(
         "CameraPositionCalibration/" + name + "/LL Roll",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getX()));
+        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getX()),
+        Degrees);
     DogLog.log(
         "CameraPositionCalibration/" + name + "/LL Pitch",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getY()));
+        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getY()),
+        Degrees);
     DogLog.log(
         "CameraPositionCalibration/" + name + "/LL Yaw",
-        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getZ()));
+        Units.radiansToDegrees(cameraRobotRelativePose.getRotation().getZ()),
+        Degrees);
   }
 
   public boolean isOnlineForTags() {

@@ -1,5 +1,9 @@
 package frc.robot.arm;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -132,16 +136,16 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   protected void whileInState(ArmState state) {
-    DogLog.log("Arm/StatorCurrent", motorCurrent);
-    DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Arm/Angle", motorAngle);
-    DogLog.log("Arm/RawAngle", rawMotorAngle);
+    DogLog.log("Arm/StatorCurrent", motorCurrent, Amps);
+    DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
+    DogLog.log("Arm/Angle", motorAngle, Degrees);
+    DogLog.log("Arm/RawAngle", rawMotorAngle, Degrees);
 
     DogLog.log("Arm/AtGoal", atGoal());
 
     if (DriverStation.isDisabled()) {
-      DogLog.log("Arm/LowestAngle", lowestSeenAngle);
-      DogLog.log("Arm/HighestAngle", highestSeenAngle);
+      DogLog.log("Arm/LowestAngle", lowestSeenAngle, Degrees);
+      DogLog.log("Arm/HighestAngle", highestSeenAngle, Degrees);
       if (!MathUtil.isNear(ArmState.CORAL_HANDOFF.getAngle(), motorAngle, 8.0, -180, 180)) {
         DogLog.logFault("ARM NOT IN AUTO POSITION");
       } else {
