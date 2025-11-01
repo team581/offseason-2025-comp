@@ -124,12 +124,11 @@ class CompConfig {
                           .withMotionMagicCruiseVelocity(0.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio(
-                              (36.0 / 16.0) * (44.0 / 20.0) * (Math.PI * 1.881)))),
+                          .withSensorToMechanismRatio((7.886/10.0)*(16.0 / 36.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
           new WristConfig(
               RIO_CAN_NAME,
-              18,
-              146.0, // TODO: 151 actually, 146 to be safe. Change after bringup
+              17,
+              151.0, // TODO: 151 actually, 146 to be safe. Change after bringup
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -152,8 +151,11 @@ class CompConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
-                          .withStatorCurrentLimit(60.0)),
-              0.0),
+                          .withStatorCurrentLimit(60.0))
+                  .withMotorOutput(
+                      new MotorOutputConfigs()
+                          .withInverted(InvertedValue.Clockwise_Positive)),
+              150.295),
           new VisionConfig(
               0.005,
               0.8,

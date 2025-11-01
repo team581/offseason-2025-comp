@@ -94,6 +94,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     // TODO: remove if statemnet maybe
     if (getState() == WristState.PRE_MATCH_HOMING) {
       motorAngle = RobotConfig.get().wrist().homingPosition() - (highestSeenAngle - rawMotorAngle);
+    } else {
+      motorAngle = rawMotorAngle;
     }
 
     lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
