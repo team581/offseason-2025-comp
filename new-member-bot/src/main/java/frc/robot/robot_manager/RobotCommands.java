@@ -75,7 +75,9 @@ public class RobotCommands {
     return Commands.runOnce(robot::outtakeCoralRequest, requirements)
         .withName("OuttakeCoralCommand");
   }
-  public Command outtakeAlgae(){
-    return Commands.runOnce(robot::outtakeAlgaeRequest, requirements).withName("OuttakeAlgaeCommand");
+
+  public Command outtakeAlgae() {
+    return Commands.runOnce(robot::outtakeAlgaeRequest, requirements)
+        .withName("OuttakeAlgaeCommand");
   }
 }

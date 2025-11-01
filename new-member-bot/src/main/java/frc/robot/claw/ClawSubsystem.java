@@ -48,7 +48,12 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
     return Robot.isSimulation()
         ? switch (getState()) {
           case INTAKING_ALGAE, INTAKING_CORAL -> timeout(1.0);
-          case SCORE_CORAL, SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING_ALGAE, OUTTAKING_CORAL -> !timeout(1.0);
+          case SCORE_CORAL,
+              SCORE_ALGAE_NET,
+              SCORE_ALGAE_PROCESSOR,
+              OUTTAKING_ALGAE,
+              OUTTAKING_CORAL ->
+              !timeout(1.0);
           case IDLE_NO_GP, UNTUNED -> false;
           case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
         }
