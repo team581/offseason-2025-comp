@@ -53,10 +53,10 @@ class CompConfig {
                           .withNeutralMode(NeutralModeValue.Coast))),
           new ClimberConfig(
               RIO_CAN_NAME,
+              18,
               19,
               20,
               21,
-              22,
               -55.0,
               100.0,
               // Climb motor
