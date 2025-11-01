@@ -127,7 +127,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
-            motor.setControl(BRAKE_NEUTRAL_REQUEST);
+            motor.setControl(coastNeutralRequest);
           }
         } else {
           motor.setControl(coastNeutralRequest);
