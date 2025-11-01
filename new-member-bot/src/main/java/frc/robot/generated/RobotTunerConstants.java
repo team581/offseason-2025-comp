@@ -120,7 +120,7 @@ public final class RobotTunerConstants {
             .withPigeon2Id(K_PIGEON_ID)
             .withPigeon2Configs(PIGEON_CONFIGS);
 
-    private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constantCreator =
+    private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> CONSTANT_CREATOR =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
             .withDriveMotorGearRatio(K_DRIVE_GEAR_RATIO)
             .withSteerMotorGearRatio(K_STEER_GEAR_RATIO)
@@ -190,22 +190,22 @@ public final class RobotTunerConstants {
 
 
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft =
-        constantCreator.createModuleConstants(
+        CONSTANT_CREATOR.createModuleConstants(
             K_FRONT_LEFT_STEER_MOTOR_ID, K_FRONT_LEFT_DRIVE_MOTOR_ID, K_FRONT_LEFT_ENCODER_ID, K_FRONT_LEFT_ENCODER_OFFSET,
             K_FRONT_LEFT_XPOS, K_FRONT_LEFT_YPOS, K_INVERT_LEFT_SIDE, K_FRONT_LEFT_STEER_MOTOR_INVERTED, K_FRONT_LEFT_ENCODER_INVERTED
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRight =
-        constantCreator.createModuleConstants(
+        CONSTANT_CREATOR.createModuleConstants(
             K_FRONT_RIGHT_STEER_MOTOR_ID, K_FRONT_RIGHT_DRIVE_MOTOR_ID, K_FRONT_RIGHT_ENCODER_ID, K_FRONT_RIGHT_ENCODER_OFFSET,
             K_FRONT_RIGHT_XPOS, K_FRONT_RIGHT_YPOS, K_INVERT_RIGHT_SIDE, K_FRONT_RIGHT_STEER_MOTOR_INVERTED, K_FRONT_RIGHT_ENCODER_INVERTED
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackLeft =
-        constantCreator.createModuleConstants(
+        CONSTANT_CREATOR.createModuleConstants(
             K_BACK_LEFT_STEER_MOTOR_ID, K_BACK_LEFT_DRIVE_MOTOR_ID, K_BACK_LEFT_ENCODER_ID, K_BACK_LEFT_ENCODER_OFFSET,
             K_BACK_LEFT_XPOS, K_BACK_LEFT_YPOS, K_INVERT_LEFT_SIDE, K_BACK_LEFT_STEER_MOTOR_INVERTED, K_BACK_LEFT_ENCODER_INVERTED
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackRight =
-        constantCreator.createModuleConstants(
+        CONSTANT_CREATOR.createModuleConstants(
             K_BACK_RIGHT_STEER_MOTOR_ID, K_BACK_RIGHT_DRIVE_MOTOR_ID, K_BACK_RIGHT_ENCODER_ID, K_BACK_RIGHT_ENCODER_OFFSET,
             K_BACK_RIGHT_XPOS, K_BACK_RIGHT_YPOS, K_INVERT_RIGHT_SIDE, K_BACK_RIGHT_STEER_MOTOR_INVERTED, K_BACK_RIGHT_ENCODER_INVERTED
         );
@@ -221,7 +221,7 @@ public final class RobotTunerConstants {
          * the devices themselves. If they need the devices, they can access them through
          * getters in the classes.
          *
-         * @param drivetrainConstants   Drivetrain-wide constants for the swerve drive
+         * @param DrivetrainConstants   Drivetrain-wide constants for the swerve drive
          * @param modules               Constants for each specific module
          */
         public TunerSwerveDrivetrain(
@@ -241,7 +241,7 @@ public final class RobotTunerConstants {
          * the devices themselves. If they need the devices, they can access them through
          * getters in the classes.
          *
-         * @param drivetrainConstants     Drivetrain-wide constants for the swerve drive
+         * @param DrivetrainConstants     Drivetrain-wide constants for the swerve drive
          * @param odometryUpdateFrequency The frequency to run the odometry loop. If
          *                                unspecified or set to 0 Hz, this is 250 Hz on
          *                                CAN FD, and 100 Hz on CAN 2.0.
@@ -265,7 +265,7 @@ public final class RobotTunerConstants {
          * the devices themselves. If they need the devices, they can access them through
          * getters in the classes.
          *
-         * @param drivetrainConstants       Drivetrain-wide constants for the swerve drive
+         * @param DrivetrainConstants       Drivetrain-wide constants for the swerve drive
          * @param odometryUpdateFrequency   The frequency to run the odometry loop. If
          *                                  unspecified or set to 0 Hz, this is 250 Hz on
          *                                  CAN FD, and 100 Hz on CAN 2.0.
