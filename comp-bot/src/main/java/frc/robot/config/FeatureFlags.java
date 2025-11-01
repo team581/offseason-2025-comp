@@ -50,6 +50,8 @@ public class FeatureFlags {
   public static final BooleanSupplier AUTO_ALIGN_REEF_STATE_COST =
       FeatureFlag.of("AutoAlign/Costs/ReefState", true);
 
+  public static final BooleanSupplier CUSTOM_ODOMETRY = FeatureFlag.of("CustomOdometry", false);
+
   public static final BooleanSupplier SPIN_TO_WIN = FeatureFlag.of("Yapping/SpinToWin", false);
 
   public static final BooleanSupplier USE_ANY_REEF_TAG =

@@ -4,6 +4,7 @@ import com.team581.Base581Robot;
 import com.team581.GlobalConfig;
 import com.team581.config.LimelightModel;
 import com.team581.controller.RumbleControllerSubsystem;
+import com.team581.odometry.CustomOdometry;
 import com.team581.trailblazer.Trailblazer;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,7 +59,13 @@ public class Robot extends Base581Robot {
   private final VisionSubsystem vision =
       new VisionSubsystem(
           imu, leftBackLimelight, leftFrontLimelight, rightLimelight, gamePieceDetectionLimelight);
-  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, vision, swerve);
+  // private final CustomOdometry customOdometry = new CustomOdometry(imu, swerve);
+  private final LocalizationSubsystem localization =
+      new LocalizationSubsystem(
+          imu,
+          vision,
+          swerve,
+          swerve.drivetrain.getKinematics());
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
