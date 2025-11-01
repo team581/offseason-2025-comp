@@ -119,7 +119,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
       case CLIMB -> {
         intake.setState(IntakeState.STOPPED);
-        deploy.setState(DeployState.STOWED);
+        deploy.setState(DeployState.FLOOR_INTAKE);
         singulator.setState(SingulatorState.STOPPED);
       }
 
