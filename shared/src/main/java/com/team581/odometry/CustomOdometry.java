@@ -23,28 +23,24 @@ public class CustomOdometry extends SwerveDriveOdometry {
       SwerveModulePosition[] modulePositions) {
     super(kinematics, gyroAngle, modulePositions);
     this.numberOfModules = numberOfModules;
-    robotRelativeModuleOffsets = new Translation2d[numberOfModules];
-    previousWheelPositions = new SwerveModulePosition[numberOfModules];
+    robotRelativeModuleOffsets = kinematics.getModules();
 
+    previousWheelPositions = new SwerveModulePosition[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
-      robotRelativeModuleOffsets[i] =
-          new Translation2d(kinematics.getModules()[i].getX(), kinematics.getModules()[i].getY());
       previousWheelPositions[i] = new SwerveModulePosition();
     }
   }
 
   private static Translation2d getModuleDisplacement(
-      double previousAngleRadians,
-      double previousDistanceMeters,
-      double currentAngleRadians,
-      double currentDistanceMeters) {
+      SwerveModulePosition previousWheelPosition,
+      SwerveModulePosition currentWheelPosition) {
     // First, calculate difference between previous and current angles and distances
-    double angleDifferenceRadians = currentAngleRadians - previousAngleRadians;
-    double arcLength = currentDistanceMeters - previousDistanceMeters;
+    double angleDifferenceRadians = currentWheelPosition.angle.getRadians() - previousWheelPosition.angle.getRadians();
+    double arcLength = currentWheelPosition.distanceMeters - previousWheelPosition.distanceMeters;
 
     // *If angle difference is 0 then we can just use a straight line instead of an arc
     if (angleDifferenceRadians == 0) {
-      return new Translation2d(arcLength, new Rotation2d(currentAngleRadians));
+      return new Translation2d(arcLength, currentWheelPosition.angle);
     }
 
     // Next, calculate radius. Positive = left turn, negative = right turn
@@ -56,13 +52,13 @@ public class CustomOdometry extends SwerveDriveOdometry {
     // the displacement. It is also always perpendicular to the preivous angle, with
     // positive/negative radius indicating which side of the module that the circle center will be
     // on
-    double circleCenterX = -radius * Math.sin(previousAngleRadians);
-    double circleCenterY = radius * Math.cos(previousAngleRadians);
+    double circleCenterX = -radius * previousWheelPosition.angle.getSin();
+    double circleCenterY = radius * previousWheelPosition.angle.getCos();
 
     // Finally, calculate the current module translation on the arc and return it as module
     // displacement
-    double displacementX = circleCenterX + radius * Math.sin(currentAngleRadians);
-    double displacementY = circleCenterY - radius * Math.cos(currentAngleRadians);
+    double displacementX = circleCenterX + radius * currentWheelPosition.angle.getSin();
+    double displacementY = circleCenterY - radius * currentWheelPosition.angle.getCos();
 
     return new Translation2d(displacementX, displacementY);
   }
@@ -84,10 +80,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
     for (int i = 0; i < numberOfModules; i++) {
       moduleDisplacements[i] =
           getModuleDisplacement(
-              previousWheelPositions[i].angle.getRadians(),
-              previousWheelPositions[i].distanceMeters,
-              currentWheelPositions[i].angle.getRadians(),
-              currentWheelPositions[i].distanceMeters);
+              previousWheelPositions[i],
+              currentWheelPositions[i]);
     }
 
     // Next, add the module displacements to the field relative module poses
