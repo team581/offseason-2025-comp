@@ -39,9 +39,9 @@ class CompConfig {
               RIO_CAN_NAME,
               16,
               30.0,
-              new VelocityDetector(5.0, 3.0, 0.0),
+              new VelocityDetector(5.0, 3.0, 0.2),
               30.0,
-              new VelocityDetector(5.0, 3.0, 0.0),
+              new VelocityDetector(5.0, 3.0, 0.2),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
@@ -100,7 +100,7 @@ class CompConfig {
               0.0,
               0.0,
               0.0,
-              99.75,
+              80.0,
               0.0,
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -110,7 +110,7 @@ class CompConfig {
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
-                          .withNeutralMode(NeutralModeValue.Brake))
+                          .withNeutralMode(NeutralModeValue.Coast))
                   .withSlot0(
                       new Slot0Configs()
                           .withKP(5.0)
@@ -120,8 +120,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(75.0)
-                          .withMotionMagicCruiseVelocity(75.0))
+                          .withMotionMagicAcceleration(100.0)
+                          .withMotionMagicCruiseVelocity(100.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
