@@ -65,11 +65,7 @@ public class Robot extends Base581Robot {
           imu,
           vision,
           swerve,
-          swerve.drivetrain.getKinematics(),
-          new CustomOdometry(
-              swerve.drivetrain.getKinematics(),
-              swerve.drivetrain.getState().RawHeading,
-              swerve.drivetrain.getState().ModulePositions));
+          swerve.drivetrain.getKinematics());
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
   private final Trailblazer trailblazer = new Trailblazer(swerve, localization);

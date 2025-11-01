@@ -33,6 +33,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
   private final ImuSubsystem imu;
   private final VisionSubsystem vision;
   private final SwerveSubsystem swerve;
+  private final CustomOdometry customOdometry;
 
   private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
   private Pose2d robotPose = Pose2d.kZero;
@@ -47,12 +48,15 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
       ImuSubsystem imu,
       VisionSubsystem vision,
       SwerveSubsystem swerve,
-      SwerveDriveKinematics kinematics,
-      CustomOdometry customOdometry) {
+      SwerveDriveKinematics kinematics) {
     super(SubsystemPriority.LOCALIZATION, LocalizationState.DEFAULT_STATE);
     this.swerve = swerve;
     this.imu = imu;
     this.vision = vision;
+    this.customOdometry = new CustomOdometry(
+      kinematics,
+      swerve.drivetrain.getState().RawHeading,
+      swerve.drivetrain.getState().ModulePositions);
 
     this.poseEstimator =
         new PoseEstimator<>(
