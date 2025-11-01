@@ -2,6 +2,7 @@ package frc.robot.localization;
 
 import com.ctre.phoenix6.Utils;
 import com.team581.math.MathHelpers;
+import com.team581.odometry.CustomOdometry;
 import com.team581.trailblazer.LocalizationBase;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -22,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.config.FeatureFlags;
 import frc.robot.imu.ImuSubsystem;
-import frc.robot.odometry.CustomOdometry;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
