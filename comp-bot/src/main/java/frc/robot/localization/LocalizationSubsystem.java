@@ -40,7 +40,8 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
       DogLog.tunable("Localization/VisionLatencyConstantMS", 20.0);
   // Currently using default std devs for odometry
   private static final Vector<N3> ODOMETRY_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-  private static final Vector<N3> ODOMETRY_VISION_MEASURMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+  private static final Vector<N3> ODOMETRY_VISION_MEASURMENT_STD_DEVS =
+      VecBuilder.fill(0.1, 0.1, 0.1);
 
   public LocalizationSubsystem(
       ImuSubsystem imu,
@@ -55,7 +56,10 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
 
     this.poseEstimator =
         new PoseEstimator<>(
-            kinematics, customOdometry, ODOMETRY_STATE_STD_DEVS, ODOMETRY_VISION_MEASURMENT_STD_DEVS);
+            kinematics,
+            customOdometry,
+            ODOMETRY_STATE_STD_DEVS,
+            ODOMETRY_VISION_MEASURMENT_STD_DEVS);
 
     if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
       SmartDashboard.putData(
@@ -129,9 +133,9 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
       poseEstimator.addVisionMeasurement(visionPose, result.timestamp(), result.standardDevs());
     } else {
       swerve.drivetrain.addVisionMeasurement(
-        visionPose,
-        Utils.fpgaToCurrentTime(result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000)),
-        result.standardDevs());
+          visionPose,
+          Utils.fpgaToCurrentTime(result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000)),
+          result.standardDevs());
     }
     DogLog.log("Localization/VisionPose", visionPose);
   }
