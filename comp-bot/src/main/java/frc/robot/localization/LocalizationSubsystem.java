@@ -53,10 +53,11 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     this.swerve = swerve;
     this.imu = imu;
     this.vision = vision;
-    this.customOdometry = new CustomOdometry(
-      kinematics,
-      swerve.drivetrain.getState().RawHeading,
-      swerve.drivetrain.getState().ModulePositions);
+    this.customOdometry =
+        new CustomOdometry(
+            kinematics,
+            swerve.drivetrain.getState().RawHeading,
+            swerve.drivetrain.getState().ModulePositions);
 
     this.poseEstimator =
         new PoseEstimator<>(
