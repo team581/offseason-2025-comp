@@ -1,17 +1,20 @@
 package frc.robot.climber;
 
 public enum ClimberState {
-  STOPPED(98.0, 0.0),
-
-  LINEUP_FORWARD(0, 4.0),
-  LINEUP_BACKWARD(0, 2.0),
-  HANGING(99.0, 12.0);
+  STOWED(98.0, 0.0, 0.0, 0.0),
+  LINEUP(0, 6.0, 0.0, -6.0),
+  HANGING(99.0, 12.0, -1.0, -12.0);
 
   public final double angle;
   public final double forwardsVoltage;
+  public final double backwardsVoltage;
+  public final double holdingVoltage;
 
-  private ClimberState(double angle, double forwardVoltage) {
+  private ClimberState(
+      double angle, double forwardsVoltage, double holdingVoltage, double backwardsVoltage) {
     this.angle = angle;
-    this.forwardsVoltage = forwardVoltage;
+    this.forwardsVoltage = forwardsVoltage;
+    this.holdingVoltage = holdingVoltage;
+    this.backwardsVoltage = backwardsVoltage;
   }
 }

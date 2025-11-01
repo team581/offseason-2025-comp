@@ -44,7 +44,6 @@ public enum RobotState {
   // Climbing states
   CLIMBING_1_LINEUP(true, ClawGamePiece.NONE),
   CLIMBING_2_HANGING(true, ClawGamePiece.NONE),
-  CLIMBER_STOP(true, ClawGamePiece.NONE),
 
   // Misc states
   REHOME_ELEVATOR(true, ClawGamePiece.NONE),

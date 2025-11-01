@@ -116,7 +116,7 @@ public class Robot extends Base581Robot {
     hardware.driverController.a().onTrue(actions.lowLineupCommand());
 
     hardware.driverController.povUp().onTrue(actions.climberSequenceForwardCommand());
-    hardware.driverController.povDown().onTrue(actions.climberSequenceStopCommand());
+    hardware.driverController.povDown().onTrue(actions.climberSequenceBackwardCommand());
 
     hardware.driverController.start().onTrue(actions.outtakeAlgae());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
