@@ -141,7 +141,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   public boolean rangeOfMotionGood() {
     return Math.abs(highestSeenAngle - lowestSeenAngle)
-        >= RobotConfig.get().wrist().rangeOfMotionDeg()/2.0;
+        >= RobotConfig.get().wrist().rangeOfMotionDeg() / 2.0;
   }
 
   @Override

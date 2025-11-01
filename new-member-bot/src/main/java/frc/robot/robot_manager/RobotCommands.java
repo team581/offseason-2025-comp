@@ -71,8 +71,9 @@ public class RobotCommands {
         .withName("ClimberSequenceStopCommand");
   }
 
-  public Command outtakeCoral(){
-    return Commands.runOnce(robot::outtakeCoralRequest, requirements).withName("OuttakeCoralCommand");
+  public Command outtakeCoral() {
+    return Commands.runOnce(robot::outtakeCoralRequest, requirements)
+        .withName("OuttakeCoralCommand");
   }
   public Command outtakeAlgae(){
     return Commands.runOnce(robot::outtakeAlgaeRequest, requirements).withName("OuttakeAlgaeCommand");

@@ -124,7 +124,8 @@ class CompConfig {
                           .withMotionMagicCruiseVelocity(75.0))
                   .withFeedback(
                       new FeedbackConfigs()
-                          .withSensorToMechanismRatio((7.886/10.0)*(16.0 / 36.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
+                          .withSensorToMechanismRatio(
+                              (7.886 / 10.0) * (16.0 / 36.0) * (20.0 / 44.0) * (Math.PI * 1.881)))),
           new WristConfig(
               RIO_CAN_NAME,
               17,
@@ -153,8 +154,7 @@ class CompConfig {
                           .withSupplyCurrentLimit(60.0)
                           .withStatorCurrentLimit(60.0))
                   .withMotorOutput(
-                      new MotorOutputConfigs()
-                          .withInverted(InvertedValue.Clockwise_Positive)),
+                      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               150.295),
           new VisionConfig(
               0.005,
