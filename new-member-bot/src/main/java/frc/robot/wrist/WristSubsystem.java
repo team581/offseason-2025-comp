@@ -63,13 +63,6 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     return rawMotorAngle;
   }
 
-  private void makeGetMotionMagicRequest(double wristRotations) {
-    if (DriverStation.isTeleop()) {
-      motor.setControl(motionMagicRequest.withPosition(wristRotations));
-      DogLog.log("Wrist/MotionMagicStrategy", "Teleop");
-    }
-  }
-
   private void positionVoltageRequest(double wristRotations) {
     if (DriverStation.isTeleop()) {
       motor.setControl(positionRequest.withPosition(wristRotations));

@@ -129,9 +129,7 @@ public class AutoBlocks {
             .onlyIf(() -> robotManager.claw.getHasGP()));
   }
 
-  public Command intakeAlgaeL2(Pose2d defaultIntaking, ReefSide reefSide ){
-    return Commands.sequence(
-
-    );
+  public Command intakeAlgaeL2(Pose2d defaultIntaking, ReefSide reefSide) {
+    return Commands.sequence();
   }
 }
