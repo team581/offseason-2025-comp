@@ -748,6 +748,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     DogLog.log("AutoAlign/IsAligned", isAligned);
     DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
     DogLog.log("AutoAlign/BestPipe", bestPipe);
+    if (DriverStation.isAutonomous() &&autoPipeOverride.isPresent()) {
+      bestPipe = autoPipeOverride.get();
+    }
   }
 
   /** Sets the current scoring level and side for alignment calculations. */
