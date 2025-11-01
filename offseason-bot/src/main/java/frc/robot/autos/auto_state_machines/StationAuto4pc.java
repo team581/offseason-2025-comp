@@ -7,6 +7,7 @@ import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
@@ -16,14 +17,16 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 
 public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(4, 57, 3, 45);
 
   private AutoSegment path = new AutoSegment();
+
+  private boolean isFirstScore = true;
 
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           ImmutableList.of(
-              ReefPipe.PIPE_I, ReefPipe.PIPE_J, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_A));
+              ReefPipe.PIPE_I, ReefPipe.PIPE_K, ReefPipe.PIPE_L, ReefPipe.PIPE_J));
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -73,7 +76,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case SCORE ->
-          !robotManager.claw.getHasGP() && robotManager.getState() == RobotState.CORAL_L4_RELEASE
+          DriverStation.isEnabled()&&((!robotManager.claw.getHasGP() && robotManager.getState() == RobotState.CORAL_L4_RELEASE)||(timeout(3)&&!robotManager.claw.getHasGP()&&!robotManager.groundManager.getTopHasGP()&&!robotManager.groundManager.getBottomHasGP()))
               ? AutoState.INTAKING
               : currentState;
 
@@ -92,6 +95,10 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   protected void afterTransition(AutoState newState) {
     switch (newState) {
       case SCORE -> {
+        if (isFirstScore) {
+          robotManager.groundManager.rehomeRequest();
+          isFirstScore = false;
+        }
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
       }
