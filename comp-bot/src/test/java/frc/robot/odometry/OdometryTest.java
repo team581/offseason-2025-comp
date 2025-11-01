@@ -30,7 +30,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(0.0)),
@@ -71,7 +70,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(0.0)),
@@ -124,7 +122,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
@@ -165,7 +162,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -206,7 +202,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(0.0)),
@@ -247,7 +242,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d((3.0 * Math.PI) / 2.0)),
@@ -288,7 +282,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(Math.PI)),
@@ -332,7 +325,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
@@ -373,7 +365,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(2.0 * Math.PI)),
@@ -417,7 +408,6 @@ public class OdometryTest {
             });
 
     // TEST VALUES BELOW
-    customOdometry.setPreviousRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     customOdometry.unitTestUpdatePreviousWheelPositions(
         new SwerveModulePosition[] {
           new SwerveModulePosition(0.0, new Rotation2d(Math.PI / 2.0)),
