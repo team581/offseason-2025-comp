@@ -375,9 +375,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       default -> {}
     }
-
-    wrist.customPeriodic();
-    elevator.customPeriodic();
   }
 
   private boolean cameraOnlineAndFarEnoughFromReef() {

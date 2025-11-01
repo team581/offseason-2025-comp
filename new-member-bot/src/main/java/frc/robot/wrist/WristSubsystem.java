@@ -1,7 +1,7 @@
 package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.simkit.SimKit;
@@ -29,8 +29,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private static final StaticBrake BRAKE_NEUTRAL_REQUEST = new StaticBrake();
   private final CoastOut coastNeutralRequest = new CoastOut();
 
-  private final MotionMagicVoltage motionMagicRequest =
-      new MotionMagicVoltage(0.0).withEnableFOC(false);
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -60,10 +59,10 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     return rawMotorAngle;
   }
 
-  private void makeGetMotionMagicRequest(double wristRotations) {
+  private void positionVoltageRequest(double wristRotations) {
     if (DriverStation.isTeleop()) {
-      motor.setControl(motionMagicRequest.withPosition(wristRotations));
-      DogLog.log("Wrist/MotionMagicStrategy", "Teleop");
+      motor.setControl(positionRequest.withPosition(wristRotations));
+      DogLog.log("Wrist/PostionVoltage", "Teleop");
     }
   }
 
@@ -94,7 +93,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     // TODO: remove if statemnet maybe
     if (getState() == WristState.PRE_MATCH_HOMING) {
-      motorAngle = RobotConfig.get().wrist().homingPosition() - (rawMotorAngle + highestSeenAngle);
+      motorAngle = RobotConfig.get().wrist().homingPosition() - (highestSeenAngle - rawMotorAngle);
     }
 
     lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
@@ -103,7 +102,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
   }
 
-  public void customPeriodic() {
+  @Override
+  protected void whileInState(WristState state) {
     DogLog.log("Wrist/StatorCurrent", motorCurrent);
     DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
     DogLog.log("Wrist/MotorAngle", motorAngle);
@@ -117,7 +117,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       DogLog.logFault("WRIST NOT HOMED", AlertType.kWarning);
     }
 
-    switch (getState()) {
+    switch (state) {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
@@ -128,19 +128,9 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
         }
       }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getState().getAngle()));
+        positionVoltageRequest(Units.degreesToRotations(getState().getAngle()));
       }
     }
-  }
-
-  @Override
-  public void robotPeriodic() {
-    DogLog.log("Wrist/StatorCurrent", motorCurrent);
-    DogLog.log("Wrist/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
-    DogLog.log("Wrist/MotorAngle", motorAngle);
-    DogLog.log("Wrist/RawMotorAngle", rawMotorAngle);
-
-    DogLog.log("Wrist/AtGoal", atGoal());
   }
 
   public boolean rangeOfMotionGood() {
