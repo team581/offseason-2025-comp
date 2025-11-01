@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.team581.math.MathHelpers;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import com.team581.util.tuning.TunablePid;
@@ -92,9 +93,11 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   @Override
   protected void collectInputs() {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
-    // TODO: remove if statemnet maybe
+    
     if (getState() == WristState.PRE_MATCH_HOMING) {
       motorAngle = RobotConfig.get().wrist().homingPosition() - (rawMotorAngle + highestSeenAngle);
+    } else {
+      motorAngle = MathHelpers.angleModulus(rawMotorAngle);
     }
 
     lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
