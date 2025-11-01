@@ -13,12 +13,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.config.RobotConfig;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
-  private static final double ANGLE_TOLERANCE = 2.0; // degrees
+  private static final double TOLERANCE = 1.5;
   private final TalonFX climbMotor;
   private final CANcoder encoder;
   private final TalonFX grabMotor;
@@ -46,9 +47,23 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
   }
 
   @Override
+  protected void afterTransition(ClimberState newState) {
+    if (newState == ClimberState.STOWED && !atGoal()) {
+      DogLog.logFault("Climber stowed and not at goal", AlertType.kWarning);
+    } else {
+      DogLog.clearFault("Climber stowed and not at goal");
+    }
+  }
+
+  @Override
   public void whileInState(ClimberState currentState) {
-    if (currentState == ClimberState.STOWED && DriverStation.isDisabled()) {
-      climbMotor.setControl(coastNeutralRequest);
+    if (DriverStation.isDisabled()) {
+      if (currentState == ClimberState.STOWED) {
+        climbMotor.setControl(coastNeutralRequest);
+      } else {
+        climbMotor.disable();
+      }
+      grabMotor.disable();
       return;
     }
 
@@ -57,12 +72,12 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     if (atGoal()) {
       climbMotor.disable();
     } else if (currentAngle < clampedSetpoint) {
-      climbMotor.setVoltage(currentState.voltage);
+      climbMotor.setVoltage(currentState.forwardsVoltage);
     } else {
-      climbMotor.setVoltage(-currentState.voltage);
+      climbMotor.setVoltage(currentState.backwardsVoltage);
     }
 
-    if (currentState == ClimberState.LINEUP) {
+    if (currentState == ClimberState.LINEUP && !holdingCage) {
       grabMotor.setVoltage(12.0);
     } else {
       grabMotor.disable();
@@ -100,7 +115,13 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
 
   public boolean atGoal() {
     var goal = clamp(getState().angle);
-    return Math.abs(currentAngle - goal) <= ANGLE_TOLERANCE;
+    if (currentAngle < goal) {
+      return false;
+    }
+    if (currentAngle > goal + TOLERANCE) {
+      return false;
+    }
+    return true;
   }
 
   private static double clamp(double angle) {
