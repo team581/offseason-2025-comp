@@ -85,15 +85,7 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
   }
 
   public void setState(ClimberState newState) {
-    switch (newState) {
-      case LINEUP_FORWARD, STOPPED -> setStateFromRequest(newState);
-      case HANGING -> {
-        if (getState() == ClimberState.LINEUP_BACKWARD && atGoal()) {
-          setStateFromRequest(newState);
-        }
-      }
-      default -> {}
-    }
+    setStateFromRequest(newState);
   }
 
   @Override

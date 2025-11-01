@@ -107,22 +107,22 @@ class CompConfig {
               CANIVORE_NAME,
               21,
               22,
-              0.0,
-              0.0,
+              -20.0,
+              160.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withNeutralMode(NeutralModeValue.Brake)
-                          .withInverted(InvertedValue.CounterClockwise_Positive)
+                          .withNeutralMode(NeutralModeValue.Coast)
+                          .withInverted(InvertedValue.Clockwise_Positive)
                           .withPeakReverseDutyCycle(0))
                   .withVoltage(new VoltageConfigs().withPeakReverseVoltage(0))
                   // TODO: WAITING FOR CORRECT RATIO
                   .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1.0))
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(100)
-                          .withSupplyCurrentLimit(100)),
+                          .withStatorCurrentLimit(150)
+                          .withSupplyCurrentLimit(150)),
               // Cancoder
               new CANcoderConfiguration()
                   .withMagnetSensor(
