@@ -399,8 +399,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     setStateFailsafe(RobotState.REHOME_ELEVATOR);
   }
 
-  public void unjamRequest() {
-    setStateFailsafe(RobotState.UNJAM);
+  public void outtakeAlgaeRequest() {
+    setStateFailsafe(RobotState.ALGAE_OUTTAKE);
+  }
+
+  public void outtakeCoralRequest() {
+    setStateFailsafe(RobotState.CORAL_OUTTAKE);
   }
 
   public void preloadCoralRequest() {

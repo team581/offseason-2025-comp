@@ -25,10 +25,6 @@ public class RobotCommands {
         .withName("RehomeElevatorCommand");
   }
 
-  public Command unjamCommand() {
-    return Commands.runOnce(robot::unjamRequest, requirements).withName("UnjamCommand");
-  }
-
   public Command intakeCoralCommand() {
     return Commands.runOnce(robot::intakeCoralRequest, requirements).withName("IntakeCoralCommand");
   }
@@ -73,5 +69,12 @@ public class RobotCommands {
   public Command climberSequenceStopCommand() {
     return Commands.runOnce(robot::climberSequenceStop, requirements)
         .withName("ClimberSequenceStopCommand");
+  }
+
+  public Command outtakeCoral(){
+    return Commands.runOnce(robot::outtakeCoralRequest, requirements).withName("OuttakeCoralCommand");
+  }
+  public Command outtakeAlgae(){
+    return Commands.runOnce(robot::outtakeAlgaeRequest, requirements).withName("OuttakeCoralCommand");
   }
 }
