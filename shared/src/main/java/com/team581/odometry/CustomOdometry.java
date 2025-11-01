@@ -32,10 +32,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
   }
 
   private static Translation2d getModuleDisplacement(
-      SwerveModulePosition previousWheelPosition,
-      SwerveModulePosition currentWheelPosition) {
+      SwerveModulePosition previousWheelPosition, SwerveModulePosition currentWheelPosition) {
     // First, calculate difference between previous and current angles and distances
-    double angleDifferenceRadians = currentWheelPosition.angle.getRadians() - previousWheelPosition.angle.getRadians();
+    double angleDifferenceRadians =
+        currentWheelPosition.angle.getRadians() - previousWheelPosition.angle.getRadians();
     double arcLength = currentWheelPosition.distanceMeters - previousWheelPosition.distanceMeters;
 
     // *If angle difference is 0 then we can just use a straight line instead of an arc
@@ -79,9 +79,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     Translation2d[] moduleDisplacements = new Translation2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
       moduleDisplacements[i] =
-          getModuleDisplacement(
-              previousWheelPositions[i],
-              currentWheelPositions[i]);
+          getModuleDisplacement(previousWheelPositions[i], currentWheelPositions[i]);
     }
 
     // Next, add the module displacements to the field relative module poses
