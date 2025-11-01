@@ -17,12 +17,11 @@ public class CustomOdometry extends SwerveDriveOdometry {
   private final SwerveModulePosition[] previousWheelPositions;
 
   public CustomOdometry(
-      int numberOfModules,
       SwerveDriveKinematics kinematics,
       Rotation2d gyroAngle,
       SwerveModulePosition[] modulePositions) {
     super(kinematics, gyroAngle, modulePositions);
-    this.numberOfModules = numberOfModules;
+    numberOfModules = kinematics.getModules().length;
     robotRelativeModuleOffsets = kinematics.getModules();
 
     previousWheelPositions = new SwerveModulePosition[numberOfModules];
