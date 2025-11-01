@@ -171,7 +171,7 @@ class CompConfig {
 
               // Limelight position relative to robot bellypan center (meters)
               // Limelight class takes this in to set position from code
-              new CameraConfig(LimelightModel.THREE, true, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)),
+              new CameraConfig(LimelightModel.THREE, true, 0.261747, 0.0, 0.235966, 22.0, 0.0, 0.0)),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, false, false));
 
   private CompConfig() {}
