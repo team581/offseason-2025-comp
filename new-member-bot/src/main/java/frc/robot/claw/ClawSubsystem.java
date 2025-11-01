@@ -17,8 +17,10 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   private boolean coralDetectsGp = false;
   private boolean algaeDetectsGp = false;
 
-  private final VelocityDetector coralDetector = RobotConfig.get().claw().coralDetector();;
-  private final VelocityDetector algaeDetector = RobotConfig.get().claw().algaeDetector();;
+  private final VelocityDetector coralDetector = RobotConfig.get().claw().coralDetector();
+  ;
+  private final VelocityDetector algaeDetector = RobotConfig.get().claw().algaeDetector();
+  ;
 
   public ClawSubsystem(TalonFX motor) {
     super(SubsystemPriority.CLAW, ClawState.IDLE_NO_GP);
@@ -30,10 +32,10 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
   @Override
   protected void collectInputs() {
     motorVelocity = motor.getVelocity().getValueAsDouble();
-    coralDetectsGp = coralDetector.hasGamePiece(
-        motorVelocity, RobotConfig.get().claw().coralMaxVelocity());
-    algaeDetectsGp = algaeDetector.hasGamePiece(
-        motorVelocity, RobotConfig.get().claw().algaeMaxVelocity());
+    coralDetectsGp =
+        coralDetector.hasGamePiece(motorVelocity, RobotConfig.get().claw().coralMaxVelocity());
+    algaeDetectsGp =
+        algaeDetector.hasGamePiece(motorVelocity, RobotConfig.get().claw().algaeMaxVelocity());
   }
 
   public boolean getHasGP() {
@@ -50,7 +52,12 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
           case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
         }
         : switch (getState()) {
-          case INTAKING_ALGAE, IDLE_W_ALGAE, SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING_ALGAE -> algaeDetectsGp;
+          case INTAKING_ALGAE,
+              IDLE_W_ALGAE,
+              SCORE_ALGAE_NET,
+              SCORE_ALGAE_PROCESSOR,
+              OUTTAKING_ALGAE ->
+              algaeDetectsGp;
           case INTAKING_CORAL, IDLE_W_CORAL, SCORE_CORAL, OUTTAKING_CORAL -> coralDetectsGp;
           case IDLE_NO_GP, UNTUNED -> false;
         };

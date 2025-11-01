@@ -19,8 +19,6 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.team581.config.CameraConfig;
 import com.team581.config.LimelightModel;
 import com.team581.mechanisms.VelocityDetector;
-
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -41,9 +39,9 @@ class CompConfig {
               RIO_CAN_NAME,
               16,
               30.0,
-              new VelocityDetector(5.0,3.0, 0.0),
+              new VelocityDetector(5.0, 3.0, 0.0),
               30.0,
-              new VelocityDetector(5.0,3.0, 0.0),
+              new VelocityDetector(5.0, 3.0, 0.0),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
