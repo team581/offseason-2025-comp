@@ -44,8 +44,8 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
+                          .withStatorCurrentLimit(100)
+                          .withSupplyCurrentLimit(100))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -83,8 +83,8 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
+                          .withStatorCurrentLimit(80)
+                          .withSupplyCurrentLimit(80))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -141,8 +141,8 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
+                          .withStatorCurrentLimit(30)
+                          .withSupplyCurrentLimit(30))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.CounterClockwise_Positive)
@@ -150,8 +150,8 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(150)
-                          .withSupplyCurrentLimit(150))
+                          .withStatorCurrentLimit(30)
+                          .withSupplyCurrentLimit(30))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
@@ -162,7 +162,7 @@ class CompConfig {
               0.0,
               0.0,
               0.0,
-              49.5,
+              51.5,
               0.0,
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -236,7 +236,7 @@ class CompConfig {
                   -0.2494524094,
                   0.5819300782,
                   -20.0,
-                  -60.0,
+                  -30.0,
                   -90.0),
               // Right Camera Config
               new CameraConfig(
@@ -246,7 +246,7 @@ class CompConfig {
                   0.2345115452,
                   0.5819625648,
                   -20.0,
-                  60.0,
+                  30.0,
                   90.0)),
           new LightsConfig(CANIVORE_NAME, 17),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
