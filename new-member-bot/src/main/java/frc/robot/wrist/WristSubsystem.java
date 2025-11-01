@@ -2,6 +2,7 @@ package frc.robot.wrist;
 
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.simkit.SimKit;
@@ -31,6 +32,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
+
+  private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
@@ -67,6 +70,13 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     }
   }
 
+  private void positionVoltageRequest(double wristRotations) {
+    if (DriverStation.isTeleop()) {
+      motor.setControl(positionRequest.withPosition(wristRotations));
+      DogLog.log("Wrist/PostionVoltage", "Teleop");
+    }
+  }
+
   public boolean atGoal(WristState state) {
     return switch (state) {
       default -> MathUtil.isNear(state.getAngle(), motorAngle, TOLERANCE);
@@ -94,7 +104,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     rawMotorAngle = Units.rotationsToDegrees(motor.getPosition().getValueAsDouble());
     // TODO: remove if statemnet maybe
     if (getState() == WristState.PRE_MATCH_HOMING) {
-      motorAngle = RobotConfig.get().wrist().homingPosition() - (rawMotorAngle + highestSeenAngle);
+      motorAngle = RobotConfig.get().wrist().homingPosition() - (highestSeenAngle - rawMotorAngle);
     }
 
     lowestSeenAngle = Math.min(lowestSeenAngle, rawMotorAngle);
@@ -128,7 +138,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
         }
       }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getState().getAngle()));
+        positionVoltageRequest(Units.degreesToRotations(getState().getAngle()));
       }
     }
   }
