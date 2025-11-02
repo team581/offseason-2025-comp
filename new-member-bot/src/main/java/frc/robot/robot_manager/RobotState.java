@@ -9,6 +9,7 @@ public enum RobotState {
   CLAW_EMPTY(false, ClawGamePiece.NONE),
   CLAW_CORAL(false, ClawGamePiece.CORAL),
   CLAW_ALGAE(false, ClawGamePiece.ALGAE),
+  CLAW_ALGAE_AFTER_GROUND(false, ClawGamePiece.ALGAE),
 
   // Coral intake
   CORAL_INTAKE_GROUND(false, ClawGamePiece.NONE),

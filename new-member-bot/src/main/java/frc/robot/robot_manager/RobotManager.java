@@ -84,7 +84,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CLIMBING_2_HANGING,
           UNJAM,
           ALGAE_NET_RELEASE,
-          ALGAE_PROCESSOR_RELEASE ->
+          ALGAE_PROCESSOR_RELEASE,
+          CLAW_ALGAE_AFTER_GROUND->
           currentState;
 
       case REHOME_WRIST ->
@@ -97,7 +98,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_EMPTY : currentState;
 
       case CORAL_INTAKE_GROUND -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
-      case ALGAE_INTAKE_FLOOR -> claw.getHasGP() ? RobotState.CLAW_ALGAE : currentState;
+      case ALGAE_INTAKE_FLOOR -> claw.getHasGP() ? RobotState.CLAW_ALGAE_AFTER_GROUND : currentState;
 
       case ALGAE_OUTTAKE, CORAL_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_EMPTY;
 
@@ -129,6 +130,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.STOWED);
         wrist.setState(WristState.STOWED);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        climber.setState(ClimberState.STOWED);
+      }
+      case CLAW_ALGAE_AFTER_GROUND -> {
+        claw.setState(ClawState.IDLE_W_ALGAE);
+        elevator.setState(ElevatorState.STOWED);
+        wrist.setState(WristState.HOLDING_ALGAE_STOWED);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
@@ -339,6 +348,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   @Override
   protected void collectInputs() {
     robotPose = localization.getPose();
+    vision.setEstimatedPoseAngle(robotPose.getRotation().getDegrees());
     tagCameraOnline = vision.isCameraOnlineForTags();
     nearestReefSide = AutoAlign.getClosestReefSide(robotPose);
     awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
@@ -497,6 +507,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_NET_RELEASE,
           ALGAE_OUTTAKE,
           ALGAE_PROCESSOR_RELEASE,
+          CLAW_ALGAE_AFTER_GROUND,
           CLIMBING_1_LINEUP,
           CLIMBING_2_HANGING,
           CORAL_INTAKE_GROUND,
