@@ -85,7 +85,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           UNJAM,
           ALGAE_NET_RELEASE,
           ALGAE_PROCESSOR_RELEASE,
-          CLAW_ALGAE_AFTER_GROUND->
+          CLAW_ALGAE_AFTER_GROUND ->
           currentState;
 
       case REHOME_WRIST ->
@@ -98,7 +98,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_EMPTY : currentState;
 
       case CORAL_INTAKE_GROUND -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
-      case ALGAE_INTAKE_FLOOR -> claw.getHasGP() ? RobotState.CLAW_ALGAE_AFTER_GROUND : currentState;
+      case ALGAE_INTAKE_FLOOR ->
+          claw.getHasGP() ? RobotState.CLAW_ALGAE_AFTER_GROUND : currentState;
 
       case ALGAE_OUTTAKE, CORAL_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_EMPTY;
 
