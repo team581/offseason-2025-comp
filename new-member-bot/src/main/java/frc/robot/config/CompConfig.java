@@ -120,8 +120,8 @@ class CompConfig {
                           .withGravityType(GravityTypeValue.Elevator_Static))
                   .withMotionMagic(
                       new MotionMagicConfigs()
-                          .withMotionMagicAcceleration(100.0)
-                          .withMotionMagicCruiseVelocity(100.0))
+                          .withMotionMagicAcceleration(150.0)
+                          .withMotionMagicCruiseVelocity(150.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio(
@@ -173,7 +173,7 @@ class CompConfig {
               // Limelight class takes this in to set position from code
               new CameraConfig(
                   LimelightModel.THREE, true, 0.261747, 0.0, 0.235966, 22.0, 0.0, 0.0)),
-          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, false, false));
+          new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 
   private CompConfig() {}
 }

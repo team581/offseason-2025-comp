@@ -199,7 +199,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
             rightJoystickMagnitude, theta == 0 ? Rotation2d.kZero : new Rotation2d(theta, 0));
 
     var leftX = translation.getX();
-    var leftY = -1 * translation.getY();
+    var leftY = -1.0 * translation.getY();
     var rightX = rotation.getX();
 
     if (RobotConfig.get().swerve().invertRotation()) {
