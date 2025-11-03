@@ -40,7 +40,7 @@ import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
-  private static final double RIGHT_JOYSTICK_EXPONENT = 2;
+  private static final double RIGHT_JOYSTICK_EXPONENT = 4;
 
   private static final PIDController DRIVE_TO_POSE_TRANSLATION_CONTROLLER =
       new PIDController(3.5, 0.0, 0.0);
@@ -111,7 +111,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private boolean lastUseAngleBisector = true;
   private final double lastUsedMaxVelocity = MAX_TRANSLATION_VELOCITY_LIMIT.get();
 
-  private final Timer timeSinceAutoSpeeds = new Timer();
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
@@ -148,13 +147,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     driveToAngle.HeadingController.setTolerance(0.01);
     DRIVE_TO_POSE_ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
     drivetrain.setStateStdDevs(new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002)));
-    timeSinceAutoSpeeds.start();
   }
 
   @Override
   public void setFieldRelativeAutoSpeeds(ChassisSpeeds speeds) {
     autoSpeeds = speeds;
-    timeSinceAutoSpeeds.reset();
     trailblazerDriveRequest();
     sendSwerveRequest();
   }
@@ -345,10 +342,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   public void snapsDriveRequest(double snapAngle) {
     setSnapToAngle(snapAngle);
 
-    if (DriverStation.isAutonomous()) {
-      setStateFromRequest(SwerveState.TRAILBLAZER);
-    } else {
+    if (DriverStation.isTeleop()) {
       setStateFromRequest(SwerveState.TELEOP_SNAPS);
+      sendSwerveRequest();
     }
   }
 
@@ -385,12 +381,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     DogLog.log("Swerve/ModuleStates", drivetrainState.ModuleStates);
     DogLog.log("Swerve/ModuleTargets", drivetrainState.ModuleTargets);
     DogLog.log("Swerve/RobotRelativeSpeeds", drivetrainState.Speeds);
-
-    if (timeSinceAutoSpeeds.hasElapsed(0.25) && DriverStation.isAutonomous()) {
-      DogLog.logFault("Timeout since auto speeds last set");
-    } else {
-      DogLog.clearFault("Timeout since auto speeds last set");
-    }
   }
 
   private void startSimThread() {

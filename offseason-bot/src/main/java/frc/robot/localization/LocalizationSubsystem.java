@@ -55,8 +55,10 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
 
   @Override
   protected void collectInputs() {
-    vision.getLefTagResult().ifPresent(this::ingestTagResult);
-    vision.getRightTagResult().ifPresent(this::ingestTagResult);
+    vision
+        .getLefTagResult()
+        .or(vision::getRightTagResult)
+        .ifPresent(this::ingestTagResult);
     robotPose = swerve.drivetrain.getState().Pose;
   }
 

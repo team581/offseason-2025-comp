@@ -119,6 +119,9 @@ public class VisionSubsystem extends StateMachineSubsystem<VisionState> {
   }
 
   public boolean isAnyCameraOnlineForTags() {
+    if (RobotBase.isSimulation()) {
+      return true;
+    }
     return leftLimelight.isOnlineForTags() || rightLimelight.isOnlineForTags();
   }
 }

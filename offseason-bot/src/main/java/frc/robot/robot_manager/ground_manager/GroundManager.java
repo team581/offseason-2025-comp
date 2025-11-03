@@ -4,6 +4,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.config.DSOptions;
 import frc.robot.config.RobotConfig;
@@ -97,8 +98,13 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         singulator.setState(SingulatorState.IDLE);
       }
       case IDLE_NO_GP, IDLE_GP -> {
+        if(DriverStation.isAutonomous()) {
+          deploy.setState(DeployState.FLOOR_INTAKE);
+        } else {
+          deploy.setState(DeployState.STOWED);
+
+        }
         intake.setState(IntakeState.IDLE);
-        deploy.setState(DeployState.STOWED);
         singulator.setState(SingulatorState.IDLE);
       }
       case INTAKING -> {
@@ -186,7 +192,9 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
   }
 
   public void intakeRequest() {
-    setState(GroundState.INTAKING);
+    if (getState()!=GroundState.DEPLOY_HOMING){
+      setState(GroundState.INTAKING);
+    }
   }
 
   public void outtakeRequest() {

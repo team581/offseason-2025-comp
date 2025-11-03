@@ -6,13 +6,13 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 public enum DeployState {
   UNTUNED(0.0),
   UNHOMED(UNTUNED),
-  OUTTAKE(-5),
+  OUTTAKE(0),
 
   REHOME(UNTUNED),
 
   STOWED(120),
   HANDOFF(120),
-  FLOOR_INTAKE(-5),
+  FLOOR_INTAKE(0),
   L1_SCORE(UNTUNED);
 
   private final double defaultAngle;

@@ -100,10 +100,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   protected RobotState getNextState(RobotState currentState) {
     if (RobotState.missingGP(currentState, claw.getHasGP())) {
       lights.blinkError();
-      if (DriverStation.isEnabled()) {
-        DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
+      DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
+      if (claw.getHasGP()) {
+        DogLog.clearFault("MISSING_GAME_PIECE");
       }
-      return RobotState.CLAW_EMPTY;
+      if (DriverStation.isEnabled()) {
+        return RobotState.CLAW_EMPTY;
+      }
     }
 
     return switch (currentState) {
@@ -580,7 +583,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         groundManager.climbRequest();
         moveSuperstructure(ElevatorState.CLIMBING, ArmState.CLIMBING);
-        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CLIMB_HANG);
         climber.setState(ClimberState.HANGING);
@@ -627,6 +629,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal);
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
+    DogLog.log("Debug/RightYValue", rawRightControllerYValue);
+    DogLog.log("Debug/ReachedCenterSinceLastBump", reachedCenterSinceLastBumpRequest);
     MechanismVisualizer.log(elevator.getHeight(), arm.getAngle(), groundManager.deploy.getAngle());
 
     switch (getState()) {
@@ -682,10 +686,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
 
         if (reachedCenterSinceLastBumpRequest) {
-          if (rawRightControllerYValue > 0.5) {
+          if (rawRightControllerYValue < -0.5) {
+            DogLog.timestamp("Debug/BumpUpRequest");
             reachedCenterSinceLastBumpRequest = false;
             bumpUpLevelRequest();
-          } else if (rawRightControllerYValue < -0.5) {
+          } else if (rawRightControllerYValue > 0.5) {
+            DogLog.timestamp("Debug/BumpUpRequest");
             reachedCenterSinceLastBumpRequest = false;
             bumpDownLevelRequest();
           }
