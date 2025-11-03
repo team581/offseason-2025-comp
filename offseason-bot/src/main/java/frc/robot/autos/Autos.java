@@ -18,14 +18,14 @@ public class Autos extends StateMachineSubsystem<AutoSelection> {
   private BaseImperativeAuto<?> selectedBlueAuto;
 
   public Autos(RobotManager robotManager, Trailblazer trailblazer) {
-    super(SubsystemPriority.AUTOS, AutoSelection.CROSS_LINE);
+    super(SubsystemPriority.AUTOS, AutoSelection.DO_NOTHING);
 
-    autoChooser = new AutoChooser<>(AutoSelection.values(), AutoSelection.CROSS_LINE);
+    autoChooser = new AutoChooser<>(AutoSelection.values(), AutoSelection.DO_NOTHING);
     this.robotManager = robotManager;
     this.trailblazer = trailblazer;
 
-    selectedRedAuto = AutoSelection.CROSS_LINE.redAuto.apply(robotManager, trailblazer);
-    selectedBlueAuto = AutoSelection.CROSS_LINE.blueAuto.apply(robotManager, trailblazer);
+    selectedRedAuto = AutoSelection.DO_NOTHING.redAuto.apply(robotManager, trailblazer);
+    selectedBlueAuto = AutoSelection.DO_NOTHING.blueAuto.apply(robotManager, trailblazer);
   }
 
   @Override
