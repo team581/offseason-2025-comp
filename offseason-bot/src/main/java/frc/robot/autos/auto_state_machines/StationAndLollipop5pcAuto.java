@@ -106,7 +106,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
               : currentState;
 
       case LOLLIPOP_2 ->
-          (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+          ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                       || robotManager.claw.getHasGP())
                   && !nextScoringPositions.isEmpty()
               ? AutoState.SCORE
