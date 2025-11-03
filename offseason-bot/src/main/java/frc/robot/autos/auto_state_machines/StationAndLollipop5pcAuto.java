@@ -7,6 +7,7 @@ import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
@@ -16,9 +17,12 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 
 public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(2, 57, 4, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(4, 57, 3, 45);
 
   private AutoSegment path = new AutoSegment();
+
+  private boolean isFirstScore = true;
+
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
           ImmutableList.of(
@@ -44,6 +48,7 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
             new AutoPoint(goalPose));
     DogLog.timestamp("StateMachineAuto/newPathGenerated");
     DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
+    DogLog.log("StateMachineAuto/IntermediaryPose", intermediaryPose);
   }
 
   public StationAndLollipop5pcAuto(RobotManager robot, Trailblazer trailblazer) {
@@ -59,7 +64,13 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-  private static AutoState getNextIntakeState() {
+  private static AutoState getNextIntakeState(ReefPipe scorePosition) {
+    if (scorePosition == ReefPipe.PIPE_B) {
+      DogLog.log("StateMachineAuto/nextIntakeState", AutoState.LOLLIPOP_2);
+
+      return AutoState.LOLLIPOP_2;
+    }
+    DogLog.log("StateMachineAuto/nextIntakeState", AutoState.INTAKING);
 
     return AutoState.INTAKING;
   }
@@ -77,8 +88,14 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
         trailblazer.followSegmentIsFinished(path));
     return switch (currentState) {
       case SCORE ->
-          !robotManager.claw.getHasGP() && robotManager.getState() == RobotState.CORAL_L4_RELEASE
-              ? getNextIntakeState()
+          DriverStation.isEnabled()
+                  && ((!robotManager.claw.getHasGP()
+                          && robotManager.getState() == RobotState.CORAL_L4_RELEASE)
+                      || (timeout(3)
+                          && !robotManager.claw.getHasGP()
+                          && !robotManager.groundManager.getTopHasGP()
+                          && !robotManager.groundManager.getBottomHasGP()))
+              ? getNextIntakeState(nextScoringPositions.peek())
               : currentState;
 
       case INTAKING ->
@@ -89,7 +106,9 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
               : currentState;
 
       case LOLLIPOP_2 ->
-          superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+          (superstructureAtGoal() && trailblazer.followSegmentIsFinished(path)
+                      || robotManager.claw.getHasGP())
+                  && !nextScoringPositions.isEmpty()
               ? AutoState.SCORE
               : currentState;
     };
@@ -99,6 +118,10 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
   protected void afterTransition(AutoState newState) {
     switch (newState) {
       case SCORE -> {
+        if (isFirstScore) {
+          robotManager.groundManager.rehomeRequest();
+          isFirstScore = false;
+        }
         robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
       }
