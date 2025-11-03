@@ -98,11 +98,10 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
         singulator.setState(SingulatorState.IDLE);
       }
       case IDLE_NO_GP, IDLE_GP -> {
-        if(DriverStation.isAutonomous()) {
+        if (DriverStation.isAutonomous()) {
           deploy.setState(DeployState.FLOOR_INTAKE);
         } else {
           deploy.setState(DeployState.STOWED);
-
         }
         intake.setState(IntakeState.IDLE);
         singulator.setState(SingulatorState.IDLE);
@@ -192,7 +191,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
   }
 
   public void intakeRequest() {
-    if (getState()!=GroundState.DEPLOY_HOMING){
+    if (getState() != GroundState.DEPLOY_HOMING) {
       setState(GroundState.INTAKING);
     }
   }
