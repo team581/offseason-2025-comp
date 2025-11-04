@@ -1,6 +1,5 @@
 package frc.robot.robot_manager;
 
-import com.team581.config.DSOption;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -100,7 +99,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (RobotState.missingGP(currentState, claw.getHasGP()) && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
+    if (RobotState.missingGP(currentState, claw.getHasGP())
+        && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       lights.blinkError();
       DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
       if (claw.getHasGP()) {
@@ -284,7 +284,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case ALGAE_INTAKE_GROUND -> {
         var swerveSpeeds = swerve.getFieldRelativeSpeeds();
-        var vMetersPerSecond = Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
+        var vMetersPerSecond =
+            Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
         if (claw.getHasGP() && vMetersPerSecond > 0.2) {
           rumbleController.rumbleRequest();
           yield RobotState.CLAW_ALGAE;
@@ -917,7 +918,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
         }
       }
-      case STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND_TO_STOW -> setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
+      case STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND_TO_STOW ->
+          setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
       default -> {
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
@@ -1042,7 +1044,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
     switch (getState()) {
-      case CLAW_ALGAE, STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
+      case CLAW_ALGAE,
+          STOW_TO_ALGAE_INTAKE_GROUND,
+          ALGAE_INTAKE_GROUND,
+          ALGAE_INTAKE_L2_HOLDING,
+          ALGAE_INTAKE_L3_HOLDING -> {
         if (AutoAlign.shouldScoreInNet(robotPose)) {
           setStateFromRequest(RobotState.ALGAE_NET_WAITING);
 
