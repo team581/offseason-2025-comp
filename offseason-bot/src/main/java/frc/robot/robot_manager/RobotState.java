@@ -17,7 +17,10 @@ public enum RobotState {
   // Intake states
   // In theory we could have intake upright while holding algae but nobody is going to use that
 
-  ALGAE_INTAKE_FLOOR(ClawGamePiece.EMPTY, false),
+  STOW_TO_ALGAE_INTAKE_GROUND(ClawGamePiece.EMPTY, false),
+  ALGAE_INTAKE_GROUND(ClawGamePiece.EMPTY, false),
+  ALGAE_INTAKE_GROUND_TO_STOW(ClawGamePiece.EMPTY, false),
+
   ALGAE_INTAKE_L2_APPROACH(ClawGamePiece.EMPTY, false),
   ALGAE_INTAKE_L3_APPROACH(ClawGamePiece.EMPTY, false),
 

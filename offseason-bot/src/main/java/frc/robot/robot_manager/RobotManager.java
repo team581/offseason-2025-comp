@@ -1,5 +1,6 @@
 package frc.robot.robot_manager;
 
+import com.team581.config.DSOption;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -19,6 +20,7 @@ import frc.robot.claw.ClawState;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberState;
 import frc.robot.climber.ClimberSubsystem;
+import frc.robot.config.DSOptions;
 import frc.robot.config.FeatureFlags;
 import frc.robot.elevator.ElevatorState;
 import frc.robot.elevator.ElevatorSubsystem;
@@ -274,10 +276,24 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
         yield currentState;
       }
-      case ALGAE_INTAKE_FLOOR -> {
-        if (claw.getHasGP() && swerve.getFieldRelativeSpeeds().vxMetersPerSecond > 0.1) {
+      case STOW_TO_ALGAE_INTAKE_GROUND -> {
+        if (elevator.atGoal() && arm.atGoal()) {
+          yield RobotState.ALGAE_INTAKE_GROUND;
+        }
+        yield currentState;
+      }
+      case ALGAE_INTAKE_GROUND -> {
+        var swerveSpeeds = swerve.getFieldRelativeSpeeds();
+        var vMetersPerSecond = Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
+        if (claw.getHasGP() && vMetersPerSecond > 0.2) {
           rumbleController.rumbleRequest();
           yield RobotState.CLAW_ALGAE;
+        }
+        yield currentState;
+      }
+      case ALGAE_INTAKE_GROUND_TO_STOW -> {
+        if (elevator.atGoal() && arm.atGoal()) {
+          yield RobotState.CLAW_EMPTY;
         }
         yield currentState;
       }
@@ -319,7 +335,15 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         lights.setState(LightsState.OTHER);
         climber.setState(ClimberState.STOPPED);
       }
-      case ALGAE_INTAKE_FLOOR -> {
+      case STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND_TO_STOW -> {
+        claw.setState(ClawState.INTAKING_ALGAE);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.ALGAE_INTAKE_FLOOR);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.INTAKING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
+      }
+      case ALGAE_INTAKE_GROUND -> {
         claw.setState(ClawState.INTAKING_ALGAE);
         moveSuperstructure(ElevatorState.ALGAE_INTAKE_GROUND, ArmState.ALGAE_INTAKE_FLOOR);
         swerve.normalDriveRequest();
@@ -768,7 +792,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
 
     switch (getState()) {
-      case ALGAE_INTAKE_FLOOR -> {
+      case ALGAE_INTAKE_GROUND -> {
         if (claw.getHasGP()) {
           rumbleController.rumbleRequest();
         }
@@ -886,6 +910,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     groundManager.stowRequest();
     switch (getState()) {
       case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> setStateFromRequest(RobotState.CLAW_EMPTY);
+      case ALGAE_INTAKE_GROUND -> {
+        if (DSOptions.SENSOR_BROKEN.getAsBoolean()) {
+          setStateFromRequest(RobotState.CLAW_ALGAE);
+        } else {
+          setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
+        }
+      }
+      case STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND_TO_STOW -> setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
       default -> {
         if (claw.getHasGP()) {
           // Claw is maybe algae or coral
@@ -914,7 +946,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       if (groundManager.getState() == GroundState.INTAKING) {
         groundManager.stowRequest();
       } else {
-        setStateFromRequest(RobotState.ALGAE_INTAKE_FLOOR);
+        setStateFromRequest(RobotState.STOW_TO_ALGAE_INTAKE_GROUND);
       }
     }
   }
@@ -1010,7 +1042,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return;
     }
     switch (getState()) {
-      case CLAW_ALGAE, ALGAE_INTAKE_FLOOR, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
+      case CLAW_ALGAE, STOW_TO_ALGAE_INTAKE_GROUND, ALGAE_INTAKE_GROUND, ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> {
         if (AutoAlign.shouldScoreInNet(robotPose)) {
           setStateFromRequest(RobotState.ALGAE_NET_WAITING);
 
@@ -1023,6 +1055,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
       case ALGAE_NET_RELEASE -> {}
+      case ALGAE_INTAKE_GROUND_TO_STOW -> {}
 
       default -> {
         scoringAlignActive = true;
