@@ -16,7 +16,7 @@ public enum ArmState {
 
   // Idle positions
   STOWED(-83.0),
-  STOWED_ALGAE(55),
+  STOWED_ALGAE(60),
 
   // coral positions
   CORAL_SCORE_LINEUP_L2(24.0),
