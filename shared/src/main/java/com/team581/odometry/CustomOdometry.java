@@ -108,7 +108,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     for (int i = 0; i < numberOfModules; i++) {
       DogLog.log(
           "Odometry/FieldRelativeModuleDisplacements/" + i,
-          new Pose2d(fieldRelativeModuleDisplacements[i], currentWheelPositions[i].angle));
+          new Pose2d(fieldRelativeModuleDisplacements[i], currentGyroAngle.plus(currentWheelPositions[i].angle)));
     }
 
     // After calculations, but before the next loop, update the previous pose & wheel positions to
