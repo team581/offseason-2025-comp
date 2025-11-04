@@ -48,11 +48,10 @@ public enum ArmState {
 
   CLIMBING(80);
 
-  private final double defaultAngle;
   private final DoubleSubscriber tunableAngle;
 
   ArmState(double angle) {
-    this.defaultAngle = angle;
+
     this.tunableAngle = DogLog.tunable("Arm/State/" + name(), angle);
   }
 
