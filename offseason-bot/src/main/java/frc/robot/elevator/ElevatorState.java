@@ -23,7 +23,7 @@ public enum ElevatorState {
   HANDOFF(3.0),
 
   L1_SCORE_LINEUP(11),
-  L1_SCORE_RELEASE(11),
+  L1_SCORE_RELEASE(9),
 
   L2_SCORE_LINEUP(8.5),
   L2_SCORE_RELEASE(8.5),
