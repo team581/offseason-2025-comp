@@ -79,7 +79,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
       case IDLE_GP -> !getTopHasGP() ? GroundState.IDLE_NO_GP : currentState;
       case IDLE_NO_GP -> getTopHasGP() ? GroundState.IDLE_GP : currentState;
       case AUTO_UNJAM_LEFT, AUTO_UNJAM_RIGHT, AUTO_UNJAM ->
-          timeout(0.25) ? GroundState.INTAKING : currentState;
+          timeout(0.1) ? GroundState.INTAKING : currentState;
       default -> currentState;
     };
   }
