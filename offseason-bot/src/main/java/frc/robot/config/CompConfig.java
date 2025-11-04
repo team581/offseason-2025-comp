@@ -195,7 +195,7 @@ class CompConfig {
               RIO_CAN_NAME,
               18,
               -83.435,
-              58,
+              80,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()

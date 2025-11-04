@@ -168,6 +168,11 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
           motor.setControl(coastNeutralRequest);
         }
       }
+      case CLIMBING -> {
+        if (DriverStation.isDisabled()) {
+          motor.setControl(brakeNeutralRequest);
+        }
+      }
       default -> {}
     }
   }

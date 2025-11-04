@@ -46,7 +46,7 @@ public enum ArmState {
 
   ALGAE_OUTTAKE(55),
 
-  CLIMBING(UNTUNED);
+  CLIMBING(80);
 
   private final double defaultAngle;
   private final DoubleSubscriber tunableAngle;

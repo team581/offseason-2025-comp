@@ -298,7 +298,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
         yield currentState;
       }
-    };
+      case STOW_TO_CLIMBING_1_LINEUP -> {
+        if (elevator.atGoal() && arm.nearGoal()) {
+          yield RobotState.CLIMBING_1_LINEUP;
+        }
+        yield currentState;
+    }
+  };
   }
 
   @Override
@@ -595,6 +601,15 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         climber.setState(ClimberState.STOPPED);
       }
       // Climb
+      case STOW_TO_CLIMBING_1_LINEUP -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        groundManager.climbRequest();
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CLIMBING);
+        swerve.climbRequest(SnapUtil.getCageAngle(robotPose));
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.CLIMB_LINEUP);
+        climber.setState(ClimberState.LINEUP_FORWARD);
+      }
       case CLIMBING_1_LINEUP -> {
         claw.setState(ClawState.IDLE_NO_GP);
         groundManager.climbRequest();
@@ -1158,7 +1173,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CLIMBER_STOP -> setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
       case CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
         if (arm.atGoal() && elevator.atGoal()) {
-          setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
+          setStateFromRequest(RobotState.STOW_TO_CLIMBING_1_LINEUP);
         }
       }
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
@@ -1171,7 +1186,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void stopClimbStateRequest() {
     switch (getState()) {
-      case CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
+      case STOW_TO_CLIMBING_1_LINEUP, CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
       default -> {}
     }
   }

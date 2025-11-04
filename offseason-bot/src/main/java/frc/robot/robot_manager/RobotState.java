@@ -85,6 +85,7 @@ public enum RobotState {
   ALGAE_PROCESSOR_RELEASE(ClawGamePiece.EMPTY, false),
 
   // Climbing states
+  STOW_TO_CLIMBING_1_LINEUP(ClawGamePiece.EMPTY, true),
   CLIMBING_1_LINEUP(ClawGamePiece.EMPTY, true),
   CLIMBING_2_HANGING(ClawGamePiece.EMPTY, true),
   CLIMBER_STOP(ClawGamePiece.EMPTY, true),

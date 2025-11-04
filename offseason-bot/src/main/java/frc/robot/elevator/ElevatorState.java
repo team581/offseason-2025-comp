@@ -34,7 +34,7 @@ public enum ElevatorState {
   L4_SCORE_LINEUP(46.5),
   L4_SCORE_RELEASE(46.5),
 
-  CLIMBING(UNTUNED);
+  CLIMBING(0.0);
 
   public final double defaultHeight;
   private final DoubleSubscriber tunableHeight;
