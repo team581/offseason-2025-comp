@@ -31,8 +31,6 @@ public final class SubsystemExecutionSequencer {
       return RobotMatchState.TELEOP;
     } else if (DriverStation.isAutonomousEnabled()) {
       return RobotMatchState.AUTONOMOUS;
-    } else if (DriverStation.isTestEnabled()) {
-      return RobotMatchState.TEST;
     } else {
       return RobotMatchState.DISABLED;
     }

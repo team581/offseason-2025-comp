@@ -120,25 +120,12 @@ public class StateMachineSubsystem<S extends Enum<S>> extends StateMachine<S>
 
         autonomousPeriodic();
       }
-      case TEST -> {
-        if (isInit) {
-          testInit();
-        }
-
-        testPeriodic();
-      }
     }
 
     DogLog.timeEnd(loggerName);
 
     previousStage = stage;
   }
-
-  /** {@link IterativeRobotBase#testInit()} */
-  public void testInit() {}
-
-  /** {@link IterativeRobotBase#testPeriodic()} */
-  public void testPeriodic() {}
 
   /**
    * Creates a command that waits until this state machine is in the given state.
