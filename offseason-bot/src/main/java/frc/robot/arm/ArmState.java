@@ -56,10 +56,6 @@ public enum ArmState {
     this.tunableAngle = DogLog.tunable("Arm/State/" + name(), angle);
   }
 
-  ArmState(ArmState other) {
-    this(other.defaultAngle);
-  }
-
   public double getAngle() {
     return tunableAngle.get();
   }

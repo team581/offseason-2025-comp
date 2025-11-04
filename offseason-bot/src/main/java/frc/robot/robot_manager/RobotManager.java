@@ -303,8 +303,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           yield RobotState.CLIMBING_1_LINEUP;
         }
         yield currentState;
-    }
-  };
+      }
+    };
   }
 
   @Override
@@ -1186,7 +1186,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void stopClimbStateRequest() {
     switch (getState()) {
-      case STOW_TO_CLIMBING_1_LINEUP, CLIMBING_1_LINEUP, CLIMBING_2_HANGING -> setStateFromRequest(RobotState.CLIMBER_STOP);
+      case STOW_TO_CLIMBING_1_LINEUP, CLIMBING_1_LINEUP, CLIMBING_2_HANGING ->
+          setStateFromRequest(RobotState.CLIMBER_STOP);
       default -> {}
     }
   }
