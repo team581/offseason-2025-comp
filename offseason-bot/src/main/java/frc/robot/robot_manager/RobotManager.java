@@ -98,7 +98,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (RobotState.missingGP(currentState, claw.getHasGP())) {
+    if (RobotState.missingGP(currentState, claw.getHasGP()) && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       lights.blinkError();
       DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
       if (claw.getHasGP()) {
