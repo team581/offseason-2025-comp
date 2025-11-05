@@ -1,6 +1,5 @@
 package frc.robot.robot_manager;
 
-import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -259,7 +258,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.setSnapToAngle(SnapUtil.getCageAngle(FmsUtil.isRedAlliance()));
+        swerve.setSnapToAngle(SnapUtil.getCageAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.LINEUP);
       }
@@ -267,7 +266,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.setSnapToAngle(SnapUtil.getCageAngle(FmsUtil.isRedAlliance()));
+        swerve.setSnapToAngle(SnapUtil.getCageAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.HANGING);
       }
