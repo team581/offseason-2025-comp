@@ -116,14 +116,10 @@ public class CustomOdometry extends SwerveDriveOdometry {
     // After calculations, but before the next loop, update the previous pose & wheel positions to
     // the current ones
     previousRobotPose = updatedPose;
-    updatePreviousWheelPositions(currentWheelPositions);
-
-    return updatedPose;
-  }
-
-  void updatePreviousWheelPositions(SwerveModulePosition[] currentWheelPositions) {
     for (int i = 0; i < numberOfModules; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];
     }
+
+    return updatedPose;
   }
 }
