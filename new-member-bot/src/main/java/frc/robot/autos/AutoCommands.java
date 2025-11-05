@@ -98,8 +98,7 @@ public class AutoCommands {
   public Command l1ReleaseCommand(ReefPipe pipe) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L1));
-              robotManager.l1ReleaseRequest();
+              pipe.getPose(ReefPipeLevel.L1);
             })
         .withName("L1ReleaseCommand");
   }
