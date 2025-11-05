@@ -4,6 +4,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
@@ -433,6 +434,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void rehomeWristRequest() {
+    if (RobotBase.isSimulation()){
+      return;
+    }
     setStateFailsafe(RobotState.REHOME_WRIST);
   }
 
