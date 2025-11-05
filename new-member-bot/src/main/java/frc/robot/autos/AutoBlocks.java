@@ -129,18 +129,10 @@ public class AutoBlocks {
             .onlyIf(() -> robotManager.claw.getHasGP()));
   }
 
-
-
- public Command intakeAlgaeL2(Pose2d approachPose, Pose2d intakingPose, ReefSide reefSide) {
+  public Command intakeAlgaeL2(Pose2d approachPose, Pose2d intakingPose, ReefSide reefSide) {
     return Commands.sequence(
-         trailblazer.followSegment(
-           new AutoSegment(
-             BASE_CONSTRAINTS,
-             new AutoPoint(approachPose))),
-         autoCommands.intakeAlgaeL2Command(),
-         trailblazer.followSegment(
-         new AutoSegment(
-           new AutoPoint(intakingPose))));
+        trailblazer.followSegment(new AutoSegment(BASE_CONSTRAINTS, new AutoPoint(approachPose))),
+        autoCommands.intakeAlgaeL2Command(),
+        trailblazer.followSegment(new AutoSegment(new AutoPoint(intakingPose))));
   }
-
 }

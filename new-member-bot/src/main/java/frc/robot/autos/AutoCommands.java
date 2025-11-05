@@ -25,8 +25,7 @@ public class AutoCommands {
   }
 
   public Command stowCommand() {
-    return Commands.runOnce(robotManager::stowRequest)
-    .withName("StowRequestCommand");
+    return Commands.runOnce(robotManager::stowRequest).withName("StowRequestCommand");
   }
 
   public Command preloadCoralCommand() {
@@ -46,12 +45,14 @@ public class AutoCommands {
 
   public Command intakeAlgaeL2Command() {
     return Commands.runOnce(robotManager::intakeL2AlgaeRequest)
-    .andThen(robotManager::stowRequest).withName("IntakeAlgaeL2Command");
+        .andThen(robotManager::stowRequest)
+        .withName("IntakeAlgaeL2Command");
   }
 
   public Command intakeAlgaeL3Command() {
     return Commands.runOnce(robotManager::intakeL3AlgaeRequest)
-    .andThen(robotManager::stowRequest).withName("IntakeAlgaeL2Command");
+        .andThen(robotManager::stowRequest)
+        .withName("IntakeAlgaeL2Command");
   }
 
   public Command waitForAlignedForScore() {
