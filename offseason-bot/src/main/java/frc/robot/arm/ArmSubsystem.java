@@ -42,6 +42,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
 
+  /** Whether the arm should force itself in the down position. */
+  private boolean forceClawDown = false;
+
   public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
     motor.getConfigurator().apply(RobotConfig.get().arm().motorConfig());
@@ -83,13 +86,17 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING -> false;
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
+      default ->
+          !forceClawDown
+              && MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
     };
   }
 
   public boolean nearGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
+      default ->
+          !forceClawDown
+              && MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -123,15 +130,21 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   @Override
   protected void afterTransition(ArmState newState) {
     switch (newState) {
-      default ->
-          motor.setControl(
-              motionMagicRequest.withPosition(
-                  Units.degreesToRotations(clamp(newState.getAngle()))));
+      default -> {
+        var usedSetpoint =
+            forceClawDown ? ArmState.CORAL_HANDOFF.getAngle() : clamp(newState.getAngle());
+
+        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(usedSetpoint)));
+      }
     }
   }
 
   public boolean rangeOfMotionGood() {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+  }
+
+  public void setClawInCradle(boolean isHandoffIsh) {
+    this.forceClawDown = isHandoffIsh;
   }
 
   @Override
