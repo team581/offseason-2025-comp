@@ -125,7 +125,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
   @Override
   public void resetPosition(
       Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
-    robotPose = poseMeters;
+    robotPose = new Pose2d(poseMeters.getTranslation(), gyroAngle);
   }
 
   @Override
