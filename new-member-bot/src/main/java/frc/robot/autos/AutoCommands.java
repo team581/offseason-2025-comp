@@ -80,7 +80,7 @@ public class AutoCommands {
   public Command l1ApproachCommand(ReefPipe pipe) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L1));
+              pipe.getPose(ReefPipeLevel.L1);
               robotManager.l1ApproachRequest();
             })
         .withName("L1ApproachCommand");
@@ -89,7 +89,7 @@ public class AutoCommands {
   public Command l1LineupCommand(ReefPipe pipe) {
     return Commands.runOnce(
             () -> {
-              robotManager.autoAlign.setAutoTargetPoseOverride(pipe.getPose(ReefPipeLevel.L1));
+              pipe.getPose(ReefPipeLevel.L1);
               robotManager.l1lineupRequest();
             })
         .withName("L1LineupCommand");
@@ -99,6 +99,7 @@ public class AutoCommands {
     return Commands.runOnce(
             () -> {
               pipe.getPose(ReefPipeLevel.L1);
+              robotManager.l1ReleaseRequest();
             })
         .withName("L1ReleaseCommand");
   }
