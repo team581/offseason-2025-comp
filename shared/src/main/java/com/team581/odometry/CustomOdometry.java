@@ -13,7 +13,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
   private final int numberOfModules;
   private final Translation2d[] robotRelativeModuleOffsets;
 
-  private Pose2d previousRobotPose = new Pose2d();
+  private Pose2d robotPose = Pose2d.kZero;
   private final SwerveModulePosition[] previousWheelPositions;
 
   public CustomOdometry(
@@ -69,7 +69,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = new Pose2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
       fieldRelativeModulePosesOfPreviousPose[i] =
-          previousRobotPose.transformBy(
+          robotPose.transformBy(
               new Transform2d(robotRelativeModuleOffsets[i], Rotation2d.kZero));
     }
 
@@ -101,7 +101,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     var updatedPose = new Pose2d(updatedPoseX, updatedPoseY, currentGyroAngle);
 
     // Logging
-    DogLog.log("Odometry/PreviousPose", previousRobotPose);
+    DogLog.log("Odometry/PreviousPose", robotPose);
     DogLog.log("Odometry/PreviousWheelPositions", previousWheelPositions);
     DogLog.log("Odometry/CurrentWheelPositions", currentWheelPositions);
     DogLog.log("Odometry/ModuleDisplacements", moduleDisplacements);
@@ -115,11 +115,36 @@ public class CustomOdometry extends SwerveDriveOdometry {
 
     // After calculations, but before the next loop, update the previous pose & wheel positions to
     // the current ones
-    previousRobotPose = updatedPose;
+    robotPose = updatedPose;
     for (int i = 0; i < numberOfModules; i++) {
       previousWheelPositions[i] = currentWheelPositions[i];
     }
 
     return updatedPose;
+  }
+
+  @Override
+  public void resetPosition(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
+    robotPose = poseMeters;
+  }
+
+  @Override
+  public void resetPose(Pose2d poseMeters) {
+    robotPose = poseMeters;
+  }
+
+  @Override
+  public void resetTranslation(Translation2d translation) {
+    robotPose = new Pose2d(translation, robotPose.getRotation());
+  }
+
+  @Override
+  public void resetRotation(Rotation2d rotation) {
+    robotPose = new Pose2d(robotPose.getTranslation(), rotation);
+  }
+
+  @Override
+  public Pose2d getPoseMeters() {
+    return robotPose;
   }
 }
