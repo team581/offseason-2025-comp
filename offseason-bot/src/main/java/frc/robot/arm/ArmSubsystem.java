@@ -143,8 +143,8 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
   }
 
-  public void setClawInCradle(boolean isHandoffIsh) {
-    this.forceClawDown = isHandoffIsh;
+  public void setClawInCradle(boolean forceClawDown) {
+    this.forceClawDown = forceClawDown;
   }
 
   @Override

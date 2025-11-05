@@ -328,6 +328,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case FORCED_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        arm.setClawInCradle(true);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -437,6 +438,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L4_PREPARE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
+        arm.setClawInCradle(true);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -447,6 +449,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L4_RELEASE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
         moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
+        arm.setClawInCradle(true);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -650,7 +653,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal);
 
     var currentElevatorHeight = elevator.getHeight();
-    arm.setClawInCradle(currentElevatorHeight < ElevatorState.PRE_CORAL_HANDOFF.getHeight());
+    // Set claw in cradle to false when elevator is above handoff threshold
+    if (currentElevatorHeight >= ElevatorState.PRE_CORAL_HANDOFF.getHeight()) {
+      arm.setClawInCradle(false);
+    }
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     DogLog.log("Debug/RightYValue", rawRightControllerYValue);
