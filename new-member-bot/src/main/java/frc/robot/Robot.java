@@ -114,6 +114,7 @@ public class Robot extends Base581Robot {
         .onFalse(actions.scoringAlignOffCommand());
     hardware.driverController.y().onTrue(actions.netWaitCommand());
     hardware.driverController.a().onTrue(actions.lowLineupCommand());
+    hardware.driverController.b().onTrue(actions.fullStowCommand());
 
     hardware.driverController.povUp().onTrue(actions.climberSequenceForwardCommand());
     hardware.driverController.povDown().onTrue(actions.climberSequenceBackwardCommand());

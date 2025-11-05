@@ -51,6 +51,10 @@ public class RobotCommands {
     return Commands.runOnce(robot::stowRequest, requirements).withName("StowCommand");
   }
 
+  public Command fullStowCommand() {
+    return Commands.runOnce(robot::fullStowRequest, requirements).withName("FullStowCommand");
+  }
+
   public Command confirmScoreCommand() {
     return Commands.runOnce(robot::confirmScoreRequest, requirements)
         .withName("ConfirmScoreRequest");

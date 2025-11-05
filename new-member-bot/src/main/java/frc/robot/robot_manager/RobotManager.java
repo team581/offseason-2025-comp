@@ -1,5 +1,7 @@
 package frc.robot.robot_manager;
 
+import java.util.Optional;
+
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -67,9 +69,18 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private boolean scoringAlignActive = false;
   private boolean awayFromReef = false;
   private ReefSide nearestReefSide = ReefSide.SIDE_AB;
+  private Optional<RobotState> andThenState = Optional.empty();
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
+    if (andThenState.isPresent()) {
+      if (wrist.atGoal() && elevator.atGoal()) {
+        var state = andThenState.get();
+        andThenState = Optional.empty();
+        return state;
+      }
+      return currentState;
+    }
     return switch (currentState) {
       case CLAW_EMPTY,
           CLAW_ALGAE,
@@ -84,7 +95,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           UNJAM,
           ALGAE_NET_RELEASE,
           ALGAE_PROCESSOR_RELEASE,
-          CLAW_ALGAE_AFTER_GROUND ->
+          CLAW_ALGAE_AFTER_GROUND,
+          FULL_STOW ->
           currentState;
 
       case REHOME_WRIST ->
@@ -118,6 +130,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   @Override
   protected void afterTransition(RobotState newState) {
     switch (newState) {
+      case FULL_STOW -> {
+        claw.setState(ClawState.IDLE_NO_GP);
+        elevator.setState(ElevatorState.STOWED);
+        wrist.setState(WristState.FULL_STOWED);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        climber.setState(ClimberState.STOWED);
+      }
       case CLAW_EMPTY -> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
@@ -386,10 +406,31 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   private void setStateFailsafe(RobotState newState) {
-    if (getState().climbingOrRehoming) {
+    if (getState().climbingOrRehoming || andThenState.isPresent()) {
       return;
     }
-    setStateFromRequest(newState);
+    switch (getState()) {
+      case FULL_STOW -> {
+        if (newState == RobotState.FULL_STOW) {
+          andThenState = Optional.empty();
+        } else {
+          andThenState = Optional.of(newState);
+          setStateFromRequest(getStowState(getState(), claw.getHasGP()));
+        }
+      }
+      case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> {
+        andThenState = Optional.empty();
+        setStateFromRequest(newState);
+      }
+      default -> {
+        if (newState == RobotState.FULL_STOW) {
+          andThenState = Optional.of(newState);
+          setStateFromRequest(getStowState(getState(), claw.getHasGP()));
+        } else {
+          setStateFromRequest(newState);
+        }
+      }
+    }
   }
 
   public void rehomeWristRequest() {
@@ -486,6 +527,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void stowRequest() {
     scoringAlignActive = false;
+    andThenState = Optional.empty();
     setStateFailsafe(getStowState(getState(), claw.getHasGP()));
   }
 
@@ -496,6 +538,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void confirmScoreRequest() {
+    andThenState = Optional.empty();
     switch (getState()) {
       case ALGAE_INTAKE_FLOOR,
           ALGAE_INTAKE_L2,
@@ -520,7 +563,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           STARTING_POSITION_CORAL,
           UNJAM -> {}
 
-      case CLAW_EMPTY -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
+      case CLAW_EMPTY, FULL_STOW -> setStateFailsafe(RobotState.ALGAE_OUTTAKE);
       case CLAW_ALGAE -> {
         if (shouldScoreInNet(robotPose)) {
           netWaitRequest();
@@ -538,7 +581,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void climberSequenceForward() {
     switch (getState()) {
-      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE -> {
+      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE, FULL_STOW -> {
         if (wrist.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
@@ -555,5 +598,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CLIMBING_1_LINEUP -> stowRequest();
       default -> {}
     }
+  }
+
+  public void fullStowRequest() {
+    if (getState() == RobotState.FULL_STOW) {
+      andThenState = Optional.empty();
+      return;
+    }
+    setStateFailsafe(RobotState.FULL_STOW);
   }
 }
