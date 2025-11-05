@@ -524,7 +524,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     }
     return switch (state) {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> state;
-      case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> RobotState.CLAW_ALGAE;
+      case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING, CLAW_ALGAE_AFTER_GROUND -> RobotState.CLAW_ALGAE;
       case CORAL_L1_APPROACH, CORAL_L1_LINEUP, CORAL_INTAKE_GROUND -> RobotState.CLAW_CORAL;
       default -> RobotState.CLAW_EMPTY;
     };
