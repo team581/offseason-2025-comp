@@ -1,7 +1,5 @@
 package frc.robot.robot_manager;
 
-import java.util.Optional;
-
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,6 +22,7 @@ import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
 import frc.robot.wrist.WristState;
 import frc.robot.wrist.WristSubsystem;
+import java.util.Optional;
 
 public class RobotManager extends StateMachineSubsystem<RobotState> {
   public final ClawSubsystem claw;
@@ -75,7 +74,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   protected RobotState getNextState(RobotState currentState) {
     if (andThenState.isPresent()) {
       if (wrist.atGoal() && elevator.atGoal()) {
-        var state = andThenState.get();
+        var state = andThenState.orElseThrow();
         andThenState = Optional.empty();
         return state;
       }

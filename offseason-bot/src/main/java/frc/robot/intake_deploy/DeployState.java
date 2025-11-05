@@ -12,6 +12,7 @@ public enum DeployState {
 
   STOWED(120),
   HANDOFF(120),
+  CLIMING(10),
   FLOOR_INTAKE(0),
   L1_SCORE(UNTUNED);
 

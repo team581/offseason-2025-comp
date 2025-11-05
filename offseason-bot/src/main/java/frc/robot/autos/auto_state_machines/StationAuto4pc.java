@@ -17,7 +17,7 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 
 public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(4, 57, 3, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(5, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
 

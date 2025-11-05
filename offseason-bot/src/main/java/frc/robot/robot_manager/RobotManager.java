@@ -103,11 +103,12 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       lights.blinkError();
       DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
-      if (claw.getHasGP()) {
-        DogLog.clearFault("MISSING_GAME_PIECE");
-      }
       if (DriverStation.isEnabled()) {
         return RobotState.CLAW_EMPTY;
+      }
+    } else {
+      if (claw.getHasGP()) {
+        DogLog.clearFault("MISSING_GAME_PIECE");
       }
     }
 
@@ -286,7 +287,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         var swerveSpeeds = swerve.getFieldRelativeSpeeds();
         var vMetersPerSecond =
             Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
-        if (claw.getHasGP() && vMetersPerSecond > 0.2) {
+        if (claw.getHasGP() && vMetersPerSecond > 0.4) {
           rumbleController.rumbleRequest();
           yield RobotState.CLAW_ALGAE;
         }

@@ -57,7 +57,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
       case DEPLOY_HOMING ->
           deploy.getState() == DeployState.STOWED ? GroundState.IDLE_NO_GP : currentState;
       case INTAKING -> {
-        if ((getBottomHasGP() || getTopHasGP()) && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
+        if (getTopHasGP() && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
           yield GroundState.IDLE_GP;
         }
 
@@ -124,7 +124,7 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
       case CLIMB -> {
         intake.setState(IntakeState.STOPPED);
-        deploy.setState(DeployState.FLOOR_INTAKE);
+        deploy.setState(DeployState.CLIMING);
         singulator.setState(SingulatorState.STOPPED);
       }
 
