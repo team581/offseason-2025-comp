@@ -7,7 +7,7 @@ public enum SingulatorState {
   UNJAM_LEFT_ONLY(-6.0, 6.0),
 
   STOPPED(0.0),
-  IDLE(0.0),
+  IDLE(0.7),
   INTAKING(6.0),
   OUTTAKING(-6.0),
   HANDOFF(0.0);
