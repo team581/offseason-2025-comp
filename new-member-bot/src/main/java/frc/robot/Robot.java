@@ -1,10 +1,13 @@
 package frc.robot;
 
 import com.team581.Base581Robot;
+import com.team581.trailblazer.Trailblazer;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto_align.AutoAlign;
+import frc.robot.autos.Autos;
 import frc.robot.claw.ClawSubsystem;
 import frc.robot.climber.ClimberSubsystem;
 import frc.robot.config.RobotConfig;
@@ -21,61 +24,65 @@ import frc.robot.vision.limelight.LimelightState;
 import frc.robot.wrist.WristSubsystem;
 
 public class Robot extends Base581Robot {
-  private final Command autonomousCommand = Commands.none();
-  private final Hardware hardware = new Hardware();
+  private Command autonomousCommand = Commands.none();
+    private final Hardware hardware = new Hardware();
 
-  private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
-  private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
-  private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor);
-  private final ClimberSubsystem climber =
-      new ClimberSubsystem(
-          hardware.climberClimbMotor,
-          hardware.climberCANcoder,
-          hardware.climberGrabMotor,
-          hardware.climberCANrange);
+    private final ElevatorSubsystem elevator = new ElevatorSubsystem(hardware.elevatorMotor);
+    private final WristSubsystem wrist = new WristSubsystem(hardware.wristMotor);
+    private final ClawSubsystem claw = new ClawSubsystem(hardware.clawMotor);
+    private final ClimberSubsystem climber =
+        new ClimberSubsystem(
+            hardware.climberClimbMotor,
+            hardware.climberCANcoder,
+            hardware.climberGrabMotor,
+            hardware.climberCANrange);
 
-  private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
+    private final SwerveSubsystem swerve = new SwerveSubsystem();
+    private final ImuSubsystem imu = new ImuSubsystem(swerve.drivetrain);
 
-  private final Limelight limelight =
-      new Limelight("main", LimelightState.TAGS, RobotConfig.get().vision().mainLimelightConfig());
+    private final Limelight limelight =
+        new Limelight("main", LimelightState.TAGS, RobotConfig.get().vision().mainLimelightConfig());
 
-  private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
-  private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
-  private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
+    private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
+    private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
+    private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
+      private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
 
-  private final RobotManager robotManager =
-      new RobotManager(
-          claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
-  private final RobotCommands actions = new RobotCommands(robotManager);
+    private final RobotManager robotManager =
+        new RobotManager(
+            claw, elevator, wrist, climber, localization, autoAlign, vision, swerve, imu);
+    private final RobotCommands actions = new RobotCommands(robotManager);
+    private final Autos autos = new Autos(robotManager, trailblazer);
 
-  public Robot() {
-    logMetadata(
-        BuildConstants.MAVEN_NAME,
-        BuildConstants.BUILD_DATE,
-        BuildConstants.GIT_SHA,
-        BuildConstants.GIT_DATE,
-        BuildConstants.GIT_BRANCH,
-        BuildConstants.DIRTY);
+    public Robot() {
+      logMetadata(
+          BuildConstants.MAVEN_NAME,
+          BuildConstants.BUILD_DATE,
+          BuildConstants.GIT_SHA,
+          BuildConstants.GIT_DATE,
+          BuildConstants.GIT_BRANCH,
+          BuildConstants.DIRTY);
 
-    finalizeInit();
-  }
+      finalizeInit();
+    }
 
-  @Override
-  public void robotPeriodic() {
-    super.robotPeriodic();
+    @Override
+    public void robotPeriodic() {
+      super.robotPeriodic();
 
-    // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
-    //   fieldCalibrationUtil.log();
-    // }
-  }
+      // if (FeatureFlags.FIELD_CALIBRATION.getAsBoolean()) {
+      //   fieldCalibrationUtil.log();
+      // }
+    }
 
-  @Override
-  public void autonomousInit() {
-    super.autonomousInit();
+    @Override
+    public void autonomousInit() {
+      super.autonomousInit();
 
-    // autonomousCommand = autos.getAutoCommand();
-    // autonomousCommand.schedule();
+      autonomousCommand = autos.getAutoCommand();
+    autonomousCommand.schedule();
+
+    autoAlign.clearReefState();
   }
 
   @Override
