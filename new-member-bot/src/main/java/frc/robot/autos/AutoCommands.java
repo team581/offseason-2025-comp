@@ -44,15 +44,11 @@ public class AutoCommands {
   }
 
   public Command intakeAlgaeL2Command() {
-    return Commands.runOnce(robotManager::intakeL2AlgaeRequest)
-        .andThen(robotManager::stowRequest)
-        .withName("IntakeAlgaeL2Command");
+    return Commands.runOnce(robotManager::intakeL2AlgaeRequest).withName("IntakeAlgaeL2Command");
   }
 
   public Command intakeAlgaeL3Command() {
-    return Commands.runOnce(robotManager::intakeL3AlgaeRequest)
-        .andThen(robotManager::stowRequest)
-        .withName("IntakeAlgaeL2Command");
+    return Commands.runOnce(robotManager::intakeL3AlgaeRequest).withName("IntakeAlgaeL3Command");
   }
 
   public Command waitForAlignedForScore() {
