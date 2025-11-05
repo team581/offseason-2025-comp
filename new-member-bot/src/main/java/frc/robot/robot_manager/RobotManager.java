@@ -106,7 +106,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L1_APPROACH ->
           wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
       case CORAL_L1_RELEASE ->
-          cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_EMPTY : currentState;
+          cameraOnlineAndFarEnoughFromReef() && !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
 
       case CORAL_INTAKE_GROUND -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
       case ALGAE_INTAKE_FLOOR ->
@@ -174,7 +174,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -182,7 +182,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -190,7 +190,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_RELEASE_L1);
         wrist.setState(WristState.CORAL_SCORE_RELEASE_L1);
-        swerve.setSnapToAngle(reefSnapAngle);
+        swerve.snapsDriveRequest(reefSnapAngle);
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -246,7 +246,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.PROCESSOR);
         wrist.setState(WristState.ALGAE_PROCESSOR);
-        swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
+        swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -254,7 +254,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.SCORE_ALGAE_PROCESSOR);
         elevator.setState(ElevatorState.PROCESSOR);
         wrist.setState(WristState.ALGAE_PROCESSOR);
-        swerve.setSnapToAngle(SnapUtil.getProcessorAngle());
+        swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -262,7 +262,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_ALGAE);
         elevator.setState(ElevatorState.ALGAE_NET);
         wrist.setState(WristState.ALGAE_NET);
-        swerve.setSnapToAngle(SnapUtil.getNetScoringAngle(robotPose));
+        swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -270,7 +270,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
         elevator.setState(ElevatorState.ALGAE_NET);
         wrist.setState(WristState.ALGAE_NET);
-        swerve.setSnapToAngle(SnapUtil.getNetScoringAngle(robotPose));
+        swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -278,7 +278,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.setSnapToAngle(SnapUtil.getCageAngle(robotPose));
+        swerve.snapsDriveRequest(SnapUtil.getCageAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.LINEUP);
       }
@@ -286,7 +286,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.setSnapToAngle(SnapUtil.getCageAngle(robotPose));
+        swerve.snapsDriveRequest(SnapUtil.getCageAngle(robotPose));
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.HANGING);
       }
@@ -520,7 +520,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     return switch (state) {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> state;
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING -> RobotState.CLAW_ALGAE;
-      case CORAL_L1_APPROACH, CORAL_L1_LINEUP -> RobotState.CLAW_CORAL;
+      case CORAL_L1_APPROACH, CORAL_L1_LINEUP, CORAL_INTAKE_GROUND -> RobotState.CLAW_CORAL;
       default -> RobotState.CLAW_EMPTY;
     };
   }
@@ -571,7 +571,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           processorWaitRequest();
         }
       }
-      case CLAW_CORAL -> l1ApproachRequest();
+      // case CLAW_CORAL -> l1ApproachRequest();
+      case CLAW_CORAL -> setStateFailsafe(RobotState.CORAL_L1_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
       case ALGAE_PROCESSOR_WAITING -> setStateFailsafe(RobotState.ALGAE_PROCESSOR_RELEASE);

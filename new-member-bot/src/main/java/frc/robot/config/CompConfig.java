@@ -39,9 +39,9 @@ class CompConfig {
               RIO_CAN_NAME,
               16,
               30.0,
-              new VelocityDetector(5.0, 3.0, 0.2),
+              new VelocityDetector(50.0, 3.0, 0.2),
               30.0,
-              new VelocityDetector(5.0, 3.0, 0.2),
+              new VelocityDetector(40.0, 3.0, 0.2),
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
