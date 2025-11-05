@@ -70,7 +70,11 @@ public class ClimberSubsystem extends StateMachineSubsystem<ClimberState> {
     var clampedSetpoint = clamp(currentState.angle);
 
     if (atGoal()) {
-      climbMotor.setVoltage(currentState.holdingVoltage);
+      if (currentState.holdingVoltage == 0.0) {
+        climbMotor.disable();
+      } else {
+        climbMotor.setVoltage(currentState.holdingVoltage);
+      }
     } else if (currentAngle < clampedSetpoint) {
       climbMotor.setVoltage(currentState.forwardsVoltage);
     } else {

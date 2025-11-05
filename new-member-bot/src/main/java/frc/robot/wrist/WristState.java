@@ -21,7 +21,7 @@ public enum WristState {
   CORAL_INTAKE(3.0),
   CORAL_SCORE_LINEUP_L1(77.0),
   CORAL_SCORE_RELEASE_L1(77.0),
-  CLIMBING(0.0);
+  CLIMBING(150.0);
 
   private final double defaultAngle;
   private final DoubleSubscriber tunableAngle;
