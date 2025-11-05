@@ -653,9 +653,25 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     moveSuperstructure(latestElevatorGoal, latestArmGoal);
 
     var currentElevatorHeight = elevator.getHeight();
-    // Set claw in cradle to false when elevator is above handoff threshold
-    if (currentElevatorHeight >= ElevatorState.PRE_CORAL_HANDOFF.getHeight()) {
-      arm.setClawInCradle(false);
+    // Set claw in cradle to false when elevator is above handoff threshold, but only when we're not
+    // in a handoff state
+    switch (currentState) {
+      case CORAL_L1_PREPARE_HANDOFF,
+          CORAL_L2_PREPARE_HANDOFF,
+          CORAL_L3_PREPARE_HANDOFF,
+          CORAL_L4_PREPARE_HANDOFF,
+          CORAL_L1_RELEASE_HANDOFF,
+          CORAL_L2_RELEASE_HANDOFF,
+          CORAL_L3_RELEASE_HANDOFF,
+          CORAL_L4_RELEASE_HANDOFF,
+          FORCED_HANDOFF -> {
+        arm.setClawInCradle(true);
+      }
+      default -> {
+        if (currentElevatorHeight >= ElevatorState.PRE_CORAL_HANDOFF.getHeight()) {
+          arm.setClawInCradle(false);
+        }
+      }
     }
 
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));

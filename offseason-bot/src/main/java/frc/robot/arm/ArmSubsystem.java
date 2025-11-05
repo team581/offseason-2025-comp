@@ -39,6 +39,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
+  private double usedSetpoint = getState().getAngle();
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
 
@@ -86,17 +87,13 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING -> false;
-      default ->
-          !forceClawDown
-              && MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(usedSetpoint, rawMotorAngle, TOLERANCE, -180, 180);
     };
   }
 
   public boolean nearGoal() {
     return switch (getState()) {
-      default ->
-          !forceClawDown
-              && MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(usedSetpoint, rawMotorAngle, NEAR_TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -125,14 +122,14 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
+    usedSetpoint = calculateUsedSetpoint();
   }
 
   @Override
   protected void afterTransition(ArmState newState) {
     switch (newState) {
       default -> {
-        var usedSetpoint =
-            forceClawDown ? ArmState.CORAL_HANDOFF.getAngle() : clamp(newState.getAngle());
+        DogLog.log("Arm/RequestedAngle", newState.getAngle(), Degrees);
 
         motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(usedSetpoint)));
       }
@@ -144,7 +141,13 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   public void setClawInCradle(boolean forceClawDown) {
-    this.forceClawDown = forceClawDown;
+    if (this.forceClawDown != forceClawDown && getState() != ArmState.PRE_MATCH_HOMING) {
+      this.forceClawDown = forceClawDown;
+
+      usedSetpoint = calculateUsedSetpoint();
+
+      afterTransition(getState());
+    }
   }
 
   @Override
@@ -153,8 +156,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
     DogLog.log("Arm/Angle", motorAngle, Degrees);
     DogLog.log("Arm/RawAngle", rawMotorAngle, Degrees);
-
+    DogLog.log("Arm/UsedSetpoint", usedSetpoint, Degrees);
     DogLog.log("Arm/AtGoal", atGoal());
+    DogLog.log("Arm/ForceClawDown", forceClawDown);
 
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle, Degrees);
@@ -226,5 +230,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private static double clamp(double armAngle) {
     return MathUtil.clamp(
         armAngle, RobotConfig.get().arm().minAngle(), RobotConfig.get().arm().maxAngle());
+  }
+
+  private double calculateUsedSetpoint() {
+    return forceClawDown ? ArmState.CORAL_HANDOFF.getAngle() : clamp(getState().getAngle());
   }
 }
