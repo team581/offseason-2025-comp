@@ -26,47 +26,54 @@ public class RedMiddle2AlgaeAuto extends BaseCommandAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        autoCommands.rehomeWrist(),
-        autoCommands.preloadCoralCommand(),
-        // Score preload coral
-        trailblazer.followSegment(
-            new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
-                // add approach point
-                new AutoPoint(
-                    new Pose2d(12.256, 2.668, Rotation2d.fromDegrees(55.0)),
-                    autoCommands.l1ReleaseCommand(ReefPipe.PIPE_I)))),
-        // Intake first algae
-        trailblazer.followSegment(
-            new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
-                // add backaway (after scoring L1))
-                new AutoPoint(
-                    new Pose2d(12.215, 2.668, Rotation2d.fromDegrees(55.0)),
-                    autoCommands.intakeAlgaeL3Command()))),
-        // Score first algae
-        trailblazer.followSegment(
-            new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
-                // add backaway, add approach, adjust lineup to score
-                new AutoPoint(
-                    new Pose2d(10.780, 2.558, Rotation2d.fromDegrees(-180.0)),
-                    autoCommands.netReleaseCommand()))),
-        // Intake second algae
-        trailblazer.followSegment(
-            new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
-                // backaway from last point, add approach point to intake
-                new AutoPoint(
-                    new Pose2d(11.424, 3.896, Rotation2d.fromDegrees(0.0)),
-                    autoCommands.intakeAlgaeL2Command()))),
-        // Score second algae
-        trailblazer.followSegment(
-            new AutoSegment(
-                AutoBlocks.BASE_CONSTRAINTS,
-                // backaway from reef, approach net, lineup to net
-                new AutoPoint(
-                    new Pose2d(10.78, 3.229, Rotation2d.fromDegrees(-180.0)),
-                    autoCommands.netReleaseCommand()))));
+      autoCommands.rehomeWrist(),
+      autoCommands.preloadCoralCommand(),
+      // Score preload coral
+      trailblazer.followSegment(
+        new AutoSegment(
+          AutoBlocks.BASE_CONSTRAINTS,
+          AutoBlocks.APPROACH_REEF_TOLERANCE,
+          //add approach point
+          new AutoPoint(new Pose2d(11.464, 2.834, Rotation2d.fromDegrees(0.0))),
+          new AutoPoint(new Pose2d(12.256, 2.668, Rotation2d.fromDegrees(55.0)),
+          autoCommands.l1ReleaseCommand(ReefPipe.PIPE_I))))
+          .andThen(autoCommands.stowCommand()),
+    // Intake first algae
+      trailblazer.followSegment(
+        new AutoSegment(
+          AutoBlocks.BASE_CONSTRAINTS,
+          AutoBlocks.APPROACH_REEF_TOLERANCE,
+          new AutoPoint(new Pose2d(12.35, 2.873, Rotation2d.fromDegrees(55.0)),
+          autoCommands.intakeAlgaeL3Command()),
+          new AutoPoint(new Pose2d(12.298, 2.627, Rotation2d.fromDegrees(55.0)))))
+          .andThen(autoCommands.stowCommand()),
+    // Score first algae
+      trailblazer.followSegment(
+        new AutoSegment(
+          AutoBlocks.BASE_CONSTRAINTS,
+          new AutoPoint(new Pose2d(11.809, 2.053, Rotation2d.fromDegrees(150.0))),
+          new AutoPoint(new Pose2d(11.172, 1.819, Rotation2d.fromDegrees(180))),
+          new AutoPoint(new Pose2d(10.542, 1.819, Rotation2d.fromDegrees(180.0)), autoCommands.netReleaseCommand()),
+          new AutoPoint(new Pose2d(10.98, 1.819, Rotation2d.fromDegrees(180.0)))))
+          .andThen(autoCommands.stowCommand()),
+      // Intake second algae
+      trailblazer.followSegment(
+        new AutoSegment(
+          AutoBlocks.BASE_CONSTRAINTS,
+          AutoBlocks.APPROACH_REEF_TOLERANCE,
+          new AutoPoint(new Pose2d(11.521, 1.819, Rotation2d.fromDegrees(150.0))),
+          new AutoPoint(new Pose2d(11.521, 2.834, Rotation2d.fromDegrees(90.0))),
+          new AutoPoint(new Pose2d(11.714, 4.026, Rotation2d.fromDegrees(0.0)), autoCommands.intakeAlgaeL2Command()),
+          new AutoPoint(new Pose2d(11.714, 4.026, Rotation2d.fromDegrees(0.0)))))
+          .andThen(autoCommands.stowCommand()),
+      // Score second algae
+      trailblazer.followSegment(
+        new AutoSegment(
+          AutoBlocks.BASE_CONSTRAINTS,
+          new AutoPoint(new Pose2d(11.521, 2.8934, Rotation2d.fromDegrees(90.0))),
+          new AutoPoint(new Pose2d(11.521, 1.819, Rotation2d.fromDegrees(180.0))),
+          new AutoPoint(new Pose2d(10.567, 1.819, Rotation2d.fromDegrees(180.0)), autoCommands.netReleaseCommand()),
+          new AutoPoint(new Pose2d(10.878, 1.819, Rotation2d.fromDegrees(180.0)))))
+          .andThen(autoCommands.stowCommand()));
   }
 }
