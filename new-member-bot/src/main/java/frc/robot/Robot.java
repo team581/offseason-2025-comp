@@ -2,6 +2,9 @@ package frc.robot;
 
 import com.team581.Base581Robot;
 import com.team581.trailblazer.Trailblazer;
+import com.team581.trailblazer.followers.PidPathFollower;
+import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,7 +48,15 @@ public class Robot extends Base581Robot {
   private final VisionSubsystem vision = new VisionSubsystem(imu, limelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
-  private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+  private final Trailblazer trailblazer =
+      new Trailblazer(
+          swerve,
+          localization,
+          new PurePursuitPathTracker(false, true),
+          new PidPathFollower(
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.0, 0, 0)));
 
   private final RobotManager robotManager =
       new RobotManager(

@@ -5,7 +5,10 @@ import com.team581.GlobalConfig;
 import com.team581.config.LimelightModel;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
+import com.team581.trailblazer.followers.PidPathFollower;
+import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -63,7 +66,15 @@ public class Robot extends Base581Robot {
       new LocalizationSubsystem(imu, vision, swerve, swerve.drivetrain.getKinematics());
   private final ElevatorSubsystem elevator =
       new ElevatorSubsystem(hardware.elevatorLeftMotor, hardware.elevatorRightMotor);
-  private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+  private final Trailblazer trailblazer =
+      new Trailblazer(
+          swerve,
+          localization,
+          new PurePursuitPathTracker(false, true),
+          new PidPathFollower(
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.0, 0, 0)));
   private final RumbleControllerSubsystem rumbleController =
       new RumbleControllerSubsystem(
           hardware.driverController, true, SubsystemPriority.RUMBLE_CONTROLLER);

@@ -3,6 +3,9 @@ package frc.robot;
 import com.team581.Base581Robot;
 import com.team581.controller.RumbleControllerSubsystem;
 import com.team581.trailblazer.Trailblazer;
+import com.team581.trailblazer.followers.PidPathFollower;
+import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.arm.ArmSubsystem;
 import frc.robot.auto_align.AutoAlign;
@@ -76,7 +79,15 @@ public class Robot extends Base581Robot {
           rumble);
 
   private final RobotCommands actions = new RobotCommands(robotManager);
-  private final Trailblazer trailblazer = new Trailblazer(swerve, localization);
+  private final Trailblazer trailblazer =
+      new Trailblazer(
+          swerve,
+          localization,
+          new PurePursuitPathTracker(false, true),
+          new PidPathFollower(
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.7, 0, 0),
+              new PIDController(3.0, 0, 0)));
 
   @SuppressWarnings("unused") // Registers itself as a subsystem
   private final Autos autos = new Autos(robotManager, trailblazer);

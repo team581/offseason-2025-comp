@@ -7,11 +7,8 @@ import com.team581.math.TimestampedChassisSpeeds;
 import com.team581.trailblazer.constraints.AutoConstraintCalculator;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import com.team581.trailblazer.followers.PathFollower;
-import com.team581.trailblazer.followers.PidPathFollower;
 import com.team581.trailblazer.trackers.PathTracker;
-import com.team581.trailblazer.trackers.pure_pursuit.PurePursuitPathTracker;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
@@ -48,16 +45,20 @@ public class Trailblazer {
   private final SwerveBase swerve;
   private final LocalizationBase localization;
 
-  private final PathTracker pathTracker = new PurePursuitPathTracker(false, true);
-  private final PathFollower pathFollower =
-      new PidPathFollower(
-          new PIDController(3.7, 0, 0), new PIDController(3.7, 0, 0), new PIDController(3.0, 0, 0));
+  private final PathTracker pathTracker;
+  private final PathFollower pathFollower;
   private int previousAutoPointIndex = -1;
   private TimestampedChassisSpeeds previousSpeeds = new TimestampedChassisSpeeds(0);
 
-  public Trailblazer(SwerveBase swerve, LocalizationBase localization) {
+  public Trailblazer(
+      SwerveBase swerve,
+      LocalizationBase localization,
+      PathTracker pathTracker,
+      PathFollower pathFollower) {
     this.swerve = swerve;
     this.localization = localization;
+    this.pathTracker = pathTracker;
+    this.pathFollower = pathFollower;
   }
 
   public Command followSegment(AutoSegment segment) {
