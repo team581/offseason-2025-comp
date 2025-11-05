@@ -68,8 +68,7 @@ public class AutoCommands {
   }
 
   public Command netReleaseCommand() {
-    return Commands.runOnce(robotManager::netReleaseRequest)
-    .andThen(robotManager::stowRequest).withName("NetReleaseCommand");
+    return Commands.runOnce(robotManager::netReleaseRequest).withName("NetReleaseCommand");
   }
 
   public Command waitForReleaseCommand() {
