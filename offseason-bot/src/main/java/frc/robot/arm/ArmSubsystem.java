@@ -39,7 +39,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
-  private double usedSetpoint = getState().getAngle();
+  private double usedSetpoint = ArmState.STOWED.getAngle();
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
 
@@ -127,13 +127,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   protected void afterTransition(ArmState newState) {
-    switch (newState) {
-      default -> {
-        DogLog.log("Arm/RequestedAngle", newState.getAngle(), Degrees);
+    usedSetpoint = calculateUsedSetpoint();
 
-        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(usedSetpoint)));
-      }
-    }
+    motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(usedSetpoint)));
   }
 
   public boolean rangeOfMotionGood() {
@@ -141,11 +137,10 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   public void setClawInCradle(boolean forceClawDown) {
-    if (this.forceClawDown != forceClawDown && getState() != ArmState.PRE_MATCH_HOMING) {
+    if (this.forceClawDown != forceClawDown) {
       this.forceClawDown = forceClawDown;
 
-      usedSetpoint = calculateUsedSetpoint();
-
+      // Rerun state actions, since the used setpoint may have changed
       afterTransition(getState());
     }
   }
