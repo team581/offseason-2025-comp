@@ -108,7 +108,7 @@ class CompConfig {
               21,
               22,
               -20.0,
-              160.0,
+              170.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
@@ -195,7 +195,7 @@ class CompConfig {
               RIO_CAN_NAME,
               18,
               -83.435,
-              80,
+              90,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
