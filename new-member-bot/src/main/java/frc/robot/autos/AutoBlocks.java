@@ -25,7 +25,7 @@ public class AutoBlocks {
 
   public static final AutoConstraintOptions MAX_CONSTRAINTS =
       new AutoConstraintOptions(4.75, 57, 4.0, 30);
-  public static final AutoConstraintOptions LOLLIPOP_RACE_CONSTRAINTS =
+  public static final AutoConstraintOptions INTAKING_RACE_CONSTRAINTS =
       MAX_CONSTRAINTS.withMaxLinearVelocity(5.5).withMaxLinearAcceleration(4.5);
   public static final AutoConstraintOptions BASE_CONSTRAINTS =
       new AutoConstraintOptions(4.0, 30, 2.5, 25);
@@ -129,7 +129,18 @@ public class AutoBlocks {
             .onlyIf(() -> robotManager.claw.getHasGP()));
   }
 
-  public Command intakeAlgaeL2(Pose2d defaultIntaking, ReefSide reefSide) {
-    return Commands.sequence();
+
+
+ public Command intakeAlgaeL2(Pose2d approachPose, Pose2d intakingPose, ReefSide reefSide) {
+    return Commands.sequence(
+         trailblazer.followSegment(
+           new AutoSegment(
+             BASE_CONSTRAINTS,
+             new AutoPoint(approachPose))),
+         autoCommands.intakeAlgaeL2Command(),
+         trailblazer.followSegment(
+         new AutoSegment(
+           new AutoPoint(intakingPose))));
   }
+
 }
