@@ -59,8 +59,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() > 17.55 / 2 ? CENTER_OF_REEF_RED : CENTER_OF_REEF_BLUE;
   }
 
-  public static final double DEFAULT_VELOCITY_LIMIT = 2.0;
-  public static final double AUTO_CENTER_VELOCITY_LIMIT = 4.0;
+  public static final double DEFAULT_VELOCITY_LIMIT = 2.5;
+  public static final double AUTO_CENTER_VELOCITY_LIMIT = 5.0;
 
   public boolean isCloseToReefSide(double thresholdMeters) {
     return isCloseToReefSide(currentPose, closestReefSide, thresholdMeters);
@@ -100,11 +100,9 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private final SwerveSubsystem swerve;
   private final AlignmentCostUtil alignmentCostUtil;
   private final boolean explicitSelection;
-  private final Debouncer isAlignedDebouncer = new Debouncer(0.1, DebounceType.kRising);
   private final ReefState reefState = new ReefState();
 
   private boolean isAligned = false;
-  private boolean isAlignedDebounced = false;
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
   private ReefSide bestAlgaeSide = ReefSide.SIDE_AB;
@@ -277,7 +275,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     closestReefSide = getClosestReefSide();
     currentTargetPose = findTargetPose();
     isAligned = isRobotPoseAlignedWithTargetPose();
-    isAlignedDebounced = isAlignedDebouncer.calculate(isAligned);
 
     DogLog.log("AutoAlign/CurrentLevel", currentReefPipeLevel);
     DogLog.log("AutoAlign/PoleSelectioin/JoystickReachedCenter", driverJoystickReachedCenter);
@@ -517,6 +514,8 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       return false;
     }
 
+    var poseInOneLoop = localization.getLookaheadPose(0.1);
+
     var correctTargetPose =
         DriverStation.isTeleop()
             ? currentTargetPose
@@ -525,12 +524,12 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
                 : autoTargetPoseOverride;
 
     var translationGood =
-        (currentPose.getTranslation().getDistance(correctTargetPose.getTranslation())
+        (poseInOneLoop.getTranslation().getDistance(correctTargetPose.getTranslation())
             <= TRANSLATION_GOOD_THRESHOLD.get());
     var rotationGood =
         MathUtil.isNear(
             correctTargetPose.getRotation().getDegrees(),
-            currentPose.getRotation().getDegrees(),
+            poseInOneLoop.getRotation().getDegrees(),
             ROTATION_GOOD_THRESHOLD.get(),
             -180.0,
             180.0);
@@ -746,7 +745,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   @Override
   public void whileInState(AutoAlignState currentState) {
     DogLog.log("AutoAlign/IsAligned", isAligned);
-    DogLog.log("AutoAlign/IsAlignedDebounced", isAlignedDebounced);
     DogLog.log("AutoAlign/BestPipe", bestPipe);
     if (DriverStation.isAutonomous() && autoPipeOverride.isPresent()) {
       bestPipe = autoPipeOverride.orElseThrow();
@@ -760,7 +758,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   /** Returns true if the robot is aligned with the target pose, debounced over 0.1 seconds. */
   public boolean isAligned() {
-    return isAlignedDebounced;
+    return isAligned;
   }
 
   public TagAlignState getTagAlignState() {
