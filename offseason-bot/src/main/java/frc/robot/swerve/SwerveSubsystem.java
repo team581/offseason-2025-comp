@@ -350,7 +350,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void driveToPoseRequest(Pose2d pose) {
-    driveToPoseRequest(pose, true,false, DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    driveToPoseRequest(pose, true, false, DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get());
   }
 
   public void driveToPoseRequest(Pose2d pose, double maxVelocity) {
@@ -361,14 +361,19 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     driveToPoseRequest(pose, useAngleBisector, false, DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get());
   }
 
-  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, boolean continuousMove, double maxVelocity) {
+  public void driveToPoseRequest(
+      Pose2d pose, boolean useAngleBisector, boolean continuousMove, double maxVelocity) {
     lastDriveToPoseTarget = pose;
     lastUseAngleBisector = useAngleBisector;
     lastUseContinuousMove = continuousMove;
     lastUsedMaxVelocity = maxVelocity;
     driveToPoseSpeeds =
         getDriveToPoseSpeeds(
-            lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, lastUseContinuousMove, lastUsedMaxVelocity);
+            lastDriveToPoseTarget,
+            drivetrainState.Pose,
+            lastUseAngleBisector,
+            lastUseContinuousMove,
+            lastUsedMaxVelocity);
     setStateFromRequest(SwerveState.DRIVE_TO_POSE);
     sendSwerveRequest();
   }
@@ -408,7 +413,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   private PolarChassisSpeeds getDriveToPoseSpeeds(
-      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector, boolean continuousMove, double maxVelocity) {
+      Pose2d targetPose,
+      Pose2d currentPose,
+      boolean useAngleBisector,
+      boolean continuousMove,
+      double maxVelocity) {
     // Calculate x and y velocities
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -458,11 +467,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
     driveVelocityMagnitude = MathUtil.clamp(driveVelocityMagnitude, -maxVelocity, maxVelocity);
     if (continuousMove) {
-      if (driveVelocityMagnitude<0.0) {
-        driveVelocityMagnitude = Math.min(driveVelocityMagnitude, -maxVelocity/2);
+      if (driveVelocityMagnitude < 0.0) {
+        driveVelocityMagnitude = Math.min(driveVelocityMagnitude, -maxVelocity / 2);
       } else {
-        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, -maxVelocity/2);
-
+        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, -maxVelocity / 2);
       }
     }
     rotationSpeed =
@@ -476,7 +484,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters, Meters);
     DogLog.log("Swerve/DriveToPose/Speeds", speeds);
     DogLog.log("Swerve/DriveToPose/ContinuousMove", useAngleBisector);
-
 
     return speeds;
   }

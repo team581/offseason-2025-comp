@@ -682,7 +682,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_L2_HOLDING,
           ALGAE_INTAKE_L3_HOLDING -> {
         if (scoringAlignActive && vision.isAnyCameraOnlineForTags()) {
-          swerve.driveToPoseRequest(autoAlign.getCurrentTargetPose(), autoAlign.useAngleBisector(), autoAlign.isContinuousMove(), autoAlign.getVelocityLimit());
+          swerve.driveToPoseRequest(
+              autoAlign.getCurrentTargetPose(),
+              autoAlign.useAngleBisector(),
+              autoAlign.isContinuousMove(),
+              autoAlign.getVelocityLimit());
         } else {
           swerve.normalDriveRequest();
         }
