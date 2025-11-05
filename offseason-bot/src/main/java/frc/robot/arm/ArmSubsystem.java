@@ -191,7 +191,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
-
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
@@ -228,6 +227,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   }
 
   private double calculateUsedSetpoint() {
-    return forceClawDown ? ArmState.CORAL_HANDOFF.getAngle() : clamp(getState().getAngle());
+    return clamp((forceClawDown ? ArmState.CORAL_HANDOFF : getState()).getAngle());
   }
 }
