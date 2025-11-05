@@ -39,7 +39,7 @@ import org.jspecify.annotations.Nullable;
 
 public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implements SwerveBase {
   private static final double LEFT_JOYSTICK_EXPONENT = 2;
-  private static final double RIGHT_JOYSTICK_EXPONENT = 4;
+  private static final double RIGHT_JOYSTICK_EXPONENT = 5;
 
   private static final PIDController DRIVE_TO_POSE_TRANSLATION_CONTROLLER =
       new PIDController(3.5, 0.0, 0.0);
