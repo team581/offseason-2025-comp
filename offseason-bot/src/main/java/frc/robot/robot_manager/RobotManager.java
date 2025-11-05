@@ -327,8 +327,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case FORCED_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         arm.setClawInCradle(true);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.OTHER);
@@ -437,8 +437,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         arm.setClawInCradle(true);
+        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -448,8 +448,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
-        moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
         arm.setClawInCradle(true);
+        moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
