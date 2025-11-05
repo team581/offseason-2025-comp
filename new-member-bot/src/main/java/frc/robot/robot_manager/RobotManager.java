@@ -106,7 +106,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CORAL_L1_APPROACH ->
           wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
       case CORAL_L1_RELEASE ->
-          cameraOnlineAndFarEnoughFromReef() && !claw.getHasGP() ? RobotState.CLAW_EMPTY : currentState;
+          cameraOnlineAndFarEnoughFromReef() && !claw.getHasGP()
+              ? RobotState.CLAW_EMPTY
+              : currentState;
 
       case CORAL_INTAKE_GROUND -> claw.getHasGP() ? RobotState.CLAW_CORAL : currentState;
       case ALGAE_INTAKE_FLOOR ->
@@ -434,7 +436,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public void rehomeWristRequest() {
-    if (RobotBase.isSimulation()){
+    if (RobotBase.isSimulation()) {
       return;
     }
     setStateFailsafe(RobotState.REHOME_WRIST);
