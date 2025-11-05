@@ -113,6 +113,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
   private Pose2d currentTargetPose = Pose2d.kZero;
   private final Pose2d autoTargetPoseOverride = new Pose2d();
   private boolean useAngleBisector = true;
+  private boolean isContinuousMove = false;
   private double velocityLimit = DEFAULT_VELOCITY_LIMIT;
   private boolean driverJoystickReachedCenter = false;
 
@@ -300,15 +301,18 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
           L1_BACKUP,
           ALGAE_INTAKE -> {
         useAngleBisector = false;
+        isContinuousMove = false;
         velocityLimit = DEFAULT_VELOCITY_LIMIT;
       }
-      case BEST_PIPE_CENTER -> {
+      case BEST_PIPE_CENTER, ALGAE_CENTER, BEST_L1_CENTER -> {
         useAngleBisector = true;
+        isContinuousMove = true;
         velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
       }
 
       default -> {
         useAngleBisector = true;
+        isContinuousMove = false;
         velocityLimit = DEFAULT_VELOCITY_LIMIT;
       }
     }
@@ -316,6 +320,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   public double getVelocityLimit() {
     return velocityLimit;
+  }
+
+  public boolean isContinuousMove() {
+    return isContinuousMove;
   }
 
   public ReefPipeLevel getBestLevel() {

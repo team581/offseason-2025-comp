@@ -49,7 +49,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       DogLog.tunable("Swerve/DriveToPose/TranslationFF", 0.0);
   private static final DoubleSubscriber DRIVE_TO_POSE_ROTATION_FF =
       DogLog.tunable("Swerve/DriveToPose/RotationFF", 0.0);
-  private static final DoubleSubscriber MAX_TRANSLATION_VELOCITY_LIMIT =
+  private static final DoubleSubscriber DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT =
       DogLog.tunable("Swerve/DriveToPose/MaxTranslationVelMet", 2.5);
 
   private static final DoubleSubscriber MAX_ROTATION_VELOCITY_LIMIT_ROT =
@@ -108,7 +108,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private Pose2d lastDriveToPoseTarget = new Pose2d();
   private boolean lastUseAngleBisector = true;
-  private final double lastUsedMaxVelocity = MAX_TRANSLATION_VELOCITY_LIMIT.get();
+  private boolean lastUseContinuousMove = false;
+  private double lastUsedMaxVelocity = DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get();
 
   private double teleopSlowModePercent = 0.0;
   private double rawControllerXValue = 0.0;
@@ -232,6 +233,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
               lastDriveToPoseTarget,
               drivetrainState.Pose,
               lastUseAngleBisector,
+              lastUseContinuousMove,
               lastUsedMaxVelocity);
     }
   }
@@ -348,23 +350,25 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   public void driveToPoseRequest(Pose2d pose) {
-    driveToPoseRequest(pose, true, MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    driveToPoseRequest(pose, true,false, DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get());
   }
 
   public void driveToPoseRequest(Pose2d pose, double maxVelocity) {
-    driveToPoseRequest(pose, true, maxVelocity);
+    driveToPoseRequest(pose, true, false, maxVelocity);
   }
 
   public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector) {
-    driveToPoseRequest(pose, useAngleBisector, MAX_TRANSLATION_VELOCITY_LIMIT.get());
+    driveToPoseRequest(pose, useAngleBisector, false, DEFAULT_MAX_TRANSLATION_VELOCITY_LIMIT.get());
   }
 
-  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, double maxVelocity) {
+  public void driveToPoseRequest(Pose2d pose, boolean useAngleBisector, boolean continuousMove, double maxVelocity) {
     lastDriveToPoseTarget = pose;
     lastUseAngleBisector = useAngleBisector;
+    lastUseContinuousMove = continuousMove;
+    lastUsedMaxVelocity = maxVelocity;
     driveToPoseSpeeds =
         getDriveToPoseSpeeds(
-            lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, maxVelocity);
+            lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector, lastUseContinuousMove, lastUsedMaxVelocity);
     setStateFromRequest(SwerveState.DRIVE_TO_POSE);
     sendSwerveRequest();
   }
@@ -404,7 +408,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   }
 
   private PolarChassisSpeeds getDriveToPoseSpeeds(
-      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector, double maxVelocity) {
+      Pose2d targetPose, Pose2d currentPose, boolean useAngleBisector, boolean continuousMove, double maxVelocity) {
     // Calculate x and y velocities
     double distanceToGoalMeters =
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -453,6 +457,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     }
 
     driveVelocityMagnitude = MathUtil.clamp(driveVelocityMagnitude, -maxVelocity, maxVelocity);
+    if (continuousMove) {
+      if (driveVelocityMagnitude<0.0) {
+        driveVelocityMagnitude = Math.min(driveVelocityMagnitude, -maxVelocity/2);
+      } else {
+        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, -maxVelocity/2);
+
+      }
+    }
     rotationSpeed =
         MathUtil.clamp(
             rotationSpeed,
@@ -463,6 +475,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     DogLog.log("Swerve/DriveToPose/TargetPose", targetPose);
     DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters, Meters);
     DogLog.log("Swerve/DriveToPose/Speeds", speeds);
+    DogLog.log("Swerve/DriveToPose/ContinuousMove", useAngleBisector);
+
 
     return speeds;
   }

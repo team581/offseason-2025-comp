@@ -83,7 +83,7 @@ public class Robot extends Base581Robot {
       new Trailblazer(
           swerve,
           localization,
-          new PurePursuitPathTracker(false, true),
+          new PurePursuitPathTracker(true, true),
           new PidPathFollower(
               new PIDController(3.7, 0, 0),
               new PIDController(3.7, 0, 0),
