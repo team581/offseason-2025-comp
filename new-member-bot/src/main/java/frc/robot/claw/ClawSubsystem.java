@@ -69,17 +69,21 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
 
   @Override
   protected void afterTransition(ClawState newState) {
+    if (newState.volts == 0.0) {
+      motor.disable();
+    } else {
+      motor.setVoltage(newState.volts);
+    }
+  }
+
+  @Override
+  protected void beforeTransition(ClawState oldState, ClawState newState) {
     switch (newState) {
       case IDLE_NO_GP, INTAKING_CORAL, INTAKING_ALGAE -> {
         coralDetector.reset();
         algaeDetector.reset();
       }
       default -> {}
-    }
-    if (newState.volts == 0.0) {
-      motor.disable();
-    } else {
-      motor.setVoltage(newState.volts);
     }
   }
 
