@@ -69,8 +69,7 @@ public class CustomOdometry extends SwerveDriveOdometry {
     Pose2d[] fieldRelativeModulePosesOfPreviousPose = new Pose2d[numberOfModules];
     for (int i = 0; i < numberOfModules; i++) {
       fieldRelativeModulePosesOfPreviousPose[i] =
-          robotPose.transformBy(
-              new Transform2d(robotRelativeModuleOffsets[i], Rotation2d.kZero));
+          robotPose.transformBy(new Transform2d(robotRelativeModuleOffsets[i], Rotation2d.kZero));
     }
 
     // Also get the module displacements from the previous wheel positions to the current wheel
@@ -124,7 +123,8 @@ public class CustomOdometry extends SwerveDriveOdometry {
   }
 
   @Override
-  public void resetPosition(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
+  public void resetPosition(
+      Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
     robotPose = poseMeters;
   }
 
