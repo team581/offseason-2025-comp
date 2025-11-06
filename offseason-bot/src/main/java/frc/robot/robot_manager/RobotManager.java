@@ -6,6 +6,7 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -246,6 +247,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
 
       case ALGAE_NET_RELEASE -> {
+        yield timeout(0.5) ? RobotState.AFTER_ALGAE_NET_RELEASE : currentState;
+      }
+      case AFTER_ALGAE_NET_RELEASE -> {
         yield backedAwayFromNetEnough() ? RobotState.CLAW_EMPTY : currentState;
       }
 
@@ -284,13 +288,21 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         yield currentState;
       }
       case ALGAE_INTAKE_GROUND -> {
-        var swerveSpeeds = swerve.getFieldRelativeSpeeds();
-        var vMetersPerSecond =
-            Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
-        if (claw.getHasGP() && vMetersPerSecond > 0.8) {
+        if(claw.getHasGP()) {
           rumbleController.rumbleRequest();
-          yield RobotState.CLAW_ALGAE;
+          var swerveSpeeds = swerve.getFieldRelativeSpeeds();
+          var vMetersPerSecond =
+              Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
+              if(vMetersPerSecond>1.5){
+                var driveDirection = new Rotation2d(swerveSpeeds.vxMetersPerSecond,swerveSpeeds.vyMetersPerSecond).getDegrees();
+                var currentRotation = robotPose.getRotation().getDegrees();
+                var drivingOppositeClaw = !MathUtil.isNear(currentRotation, driveDirection, 100.0, -180.0,180.0);
+                if (drivingOppositeClaw) {
+                  yield RobotState.CLAW_ALGAE;
+                }
+              }
         }
+
         yield currentState;
       }
       case ALGAE_INTAKE_GROUND_TO_STOW -> {
@@ -423,6 +435,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         lights.setState(LightsState.SCORING_ALGAE);
         climber.setState(ClimberState.STOPPED);
         lastNetReleasePose = robotPose;
+      }
+      case AFTER_ALGAE_NET_RELEASE -> {
+        claw.setState(ClawState.SCORE_ALGAE_NET);
+        moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.AFTER_ALGAE_RELEASE_NET);
+        swerve.normalDriveRequest();
+        vision.setState(VisionState.TAGS);
+        lights.setState(LightsState.SCORING_ALGAE);
+        climber.setState(ClimberState.STOPPED);
       }
       case ALGAE_PROCESSOR_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -933,7 +953,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     switch (getState()) {
       case ALGAE_INTAKE_L2, ALGAE_INTAKE_L3 -> setStateFromRequest(RobotState.CLAW_EMPTY);
       case ALGAE_INTAKE_GROUND -> {
-        if (DSOptions.SENSOR_BROKEN.getAsBoolean()) {
+        if (claw.getHasGP() || DSOptions.SENSOR_BROKEN.getAsBoolean()) {
           setStateFromRequest(RobotState.CLAW_ALGAE);
         } else {
           setStateFromRequest(RobotState.ALGAE_INTAKE_GROUND_TO_STOW);
@@ -1081,7 +1101,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case ALGAE_PROCESSOR_WAITING -> setStateFromRequest(RobotState.ALGAE_PROCESSOR_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFromRequest(RobotState.ALGAE_NET_RELEASE);
-      case ALGAE_NET_RELEASE -> {}
+      case ALGAE_NET_RELEASE,AFTER_ALGAE_NET_RELEASE -> {}
       case ALGAE_INTAKE_GROUND_TO_STOW -> {}
 
       default -> {

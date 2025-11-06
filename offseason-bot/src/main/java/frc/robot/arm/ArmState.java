@@ -41,6 +41,7 @@ public enum ArmState {
   ALGAE_INTAKE_L3(0.0),
 
   ALGAE_NET(62),
+  AFTER_ALGAE_RELEASE_NET(75),
 
   ALGAE_PROCESSOR(-20.0),
 
