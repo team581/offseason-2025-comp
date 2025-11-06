@@ -487,9 +487,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   }
 
   public RobotState getStowState(RobotState state, boolean clawHasGP) {
-    if (!clawHasGP) {
-      return RobotState.CLAW_EMPTY;
-    }
     return switch (state) {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> state;
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING, CLAW_ALGAE_AFTER_GROUND ->

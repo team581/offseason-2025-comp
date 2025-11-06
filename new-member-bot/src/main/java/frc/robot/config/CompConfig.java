@@ -38,8 +38,8 @@ class CompConfig {
           new ClawConfig(
               RIO_CAN_NAME,
               16,
-              30.0,
-              new VelocityDetector(50.0, 3.0, 0.2),
+              65.0,
+              new VelocityDetector(75.0, 3.0).withDebounceRising(0.2),
               30.0,
               new VelocityDetector(40.0, 3.0, 0.2),
               new TalonFXConfiguration()
@@ -130,7 +130,7 @@ class CompConfig {
           new WristConfig(
               RIO_CAN_NAME,
               17,
-              151.0, // TODO: 151 actually, 146 to be safe. Change after bringup
+              151.0,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
@@ -153,7 +153,7 @@ class CompConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withSupplyCurrentLimit(60.0)
-                          .withStatorCurrentLimit(60.0))
+                          .withStatorCurrentLimit(120.0))
                   .withMotorOutput(
                       new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)),
               150.295),
