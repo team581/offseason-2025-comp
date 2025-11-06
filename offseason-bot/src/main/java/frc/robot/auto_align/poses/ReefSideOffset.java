@@ -10,7 +10,7 @@ public enum ReefSideOffset {
   ALGAE_INTAKING(
       new Transform2d(
           // Half of drivebase + bumper side width + reef side to bumper distance
-          -Units.inchesToMeters(14.5 + 4.0 + 5.0), 0.0, Rotation2d.kZero));
+          -Units.inchesToMeters(14.5 + 4.0 + 3.0), 0.0, Rotation2d.kZero));
 
   public final Transform2d offset;
 

@@ -5,5 +5,6 @@ public enum SwerveState {
   TELEOP_SNAPS,
   TRAILBLAZER,
   CLIMBING,
+  BACK_AWAY_FROM_NET,
   DRIVE_TO_POSE;
 }

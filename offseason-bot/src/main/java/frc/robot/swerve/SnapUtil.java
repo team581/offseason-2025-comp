@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SnapUtil {
+  private static final double BACK_AWAY_FROM_NET_VELOCITY = 1.0;
   public static double getProcessorAngle() {
     return FmsUtil.isRedAlliance() ? 100 : -80;
   }
@@ -30,6 +31,18 @@ public class SnapUtil {
       return 0;
     } else {
       return 180.0;
+    }
+  }
+
+  public static double getNetBackAwayVelocity(Pose2d robotPose) {
+    double robotX = robotPose.getX();
+    // entire field length is 17.55m
+    double halfFieldLength = 17.55 / 2.0;
+
+    if (robotX < halfFieldLength) {
+      return -BACK_AWAY_FROM_NET_VELOCITY;
+    } else {
+      return BACK_AWAY_FROM_NET_VELOCITY;
     }
   }
 

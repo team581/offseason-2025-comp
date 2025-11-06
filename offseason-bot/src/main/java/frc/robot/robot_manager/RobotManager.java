@@ -31,6 +31,7 @@ import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.robot_manager.ground_manager.GroundManager;
 import frc.robot.robot_manager.ground_manager.GroundState;
 import frc.robot.swerve.SnapUtil;
+import frc.robot.swerve.SwerveState;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionState;
@@ -442,10 +443,10 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case AFTER_ALGAE_NET_RELEASE -> {
         claw.setState(ClawState.SCORE_ALGAE_NET);
         moveSuperstructure(ElevatorState.ALGAE_NET, ArmState.AFTER_ALGAE_RELEASE_NET);
-        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.SCORING_ALGAE);
         climber.setState(ClimberState.STOPPED);
+        swerve.backAwayFromNetRequest();
       }
       case ALGAE_PROCESSOR_WAITING -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
@@ -906,13 +907,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     var redSide = MathUtil.isNear(180, rotation, 10, -180, 180);
     var farEnoughFromReleasePose =
         redSide
-            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(10.0)
-            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(10.0);
+            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(15.0)
+            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(15.0);
 
-    var xMetersPerSecond = swerve.getTeleopSpeeds().vxMetersPerSecond;
+    var xMetersPerSecond = swerve.getFieldRelativeSpeeds().vxMetersPerSecond;
     var swerveMovingFastEnough = redSide ? xMetersPerSecond > 0.1 : xMetersPerSecond < -0.1;
 
-    return farEnoughFromReleasePose && swerveMovingFastEnough;
+    return farEnoughFromReleasePose && (swerveMovingFastEnough || swerve.getState() == SwerveState.BACK_AWAY_FROM_NET);
   }
 
   private boolean farEnoughFromReef() {
