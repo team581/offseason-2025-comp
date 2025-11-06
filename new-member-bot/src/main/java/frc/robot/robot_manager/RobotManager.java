@@ -67,6 +67,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private double reefSnapAngle = 0.0;
   private boolean scoringAlignActive = false;
   private boolean awayFromReef = false;
+  private boolean awayFromReefAlgaeBackOut = false;
   private ReefSide nearestReefSide = ReefSide.SIDE_AB;
   private Optional<RobotState> andThenState = Optional.empty();
 
@@ -120,7 +121,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           claw.getHasGP() ? currentState.getNextAlgaeIntakeState() : currentState;
 
       case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING ->
-          cameraOnlineAndFarEnoughFromReef() ? RobotState.CLAW_ALGAE : currentState;
+          cameraOnlineAndFarEnoughFromReefAlgae() ? RobotState.CLAW_ALGAE : currentState;
     };
   }
 
@@ -352,7 +353,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     vision.setEstimatedPoseAngle(robotPose.getRotation().getDegrees());
     tagCameraOnline = vision.isCameraOnlineForTags();
     nearestReefSide = AutoAlign.getClosestReefSide(robotPose);
-    awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
+    awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
+    awayFromReefAlgaeBackOut = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
 
     reefSnapAngle = autoAlign.getClosestReefSide().getPose(robotPose).getRotation().getDegrees();
   }
@@ -384,6 +386,13 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       return timeout(0.5);
     }
     return awayFromReef;
+  }
+
+  private boolean cameraOnlineAndFarEnoughFromReefAlgae() {
+    if (!tagCameraOnline) {
+      return timeout(0.5);
+    }
+    return awayFromReefAlgaeBackOut;
   }
 
   private void setStateFailsafe(RobotState newState) {

@@ -36,6 +36,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
 
   public WristSubsystem(TalonFX motor) {
     super(SubsystemPriority.WRIST, WristState.PRE_MATCH_HOMING);
+
     motor.getConfigurator().apply(RobotConfig.get().wrist().motorConfig());
 
     this.motor = motor;
@@ -67,8 +68,9 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   public boolean atGoal(WristState state) {
+    var angle = Robot.isReal() ? motorAngle : -motorAngle;
     return switch (state) {
-      default -> MathUtil.isNear(state.getAngle(), motorAngle, TOLERANCE);
+      default -> MathUtil.isNear(state.getAngle(), angle, TOLERANCE);
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -78,8 +80,9 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   public boolean nearGoal(WristState state) {
+    var angle = Robot.isReal() ? motorAngle : -motorAngle;
     return switch (state) {
-      default -> MathUtil.isNear(state.getAngle(), motorAngle, NEAR_TOLERANCE);
+      default -> MathUtil.isNear(state.getAngle(), angle, NEAR_TOLERANCE);
       case PRE_MATCH_HOMING -> false;
     };
   }
