@@ -108,7 +108,7 @@ class CompConfig {
               21,
               22,
               -20.0,
-              170.0,
+              185.0,
               // Climb motor
               new TalonFXConfiguration()
                   .withMotorOutput(
@@ -129,7 +129,7 @@ class CompConfig {
                       new MagnetSensorConfigs()
                           .withMagnetOffset(-0.1064453125)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                          .withAbsoluteSensorDiscontinuityPoint(0.5))),
+                          .withAbsoluteSensorDiscontinuityPoint(1.0))),
           new SingulatorConfig(
               CANIVORE_NAME,
               28,
