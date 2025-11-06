@@ -137,7 +137,7 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
     if (FeatureFlags.CUSTOM_ODOMETRY.getAsBoolean()) {
       poseEstimator.addVisionMeasurement(
           visionPose,
-          Utils.fpgaToCurrentTime(result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000)),
+          result.timestamp() - (LATENCY_CONSTANT.getAsDouble() / 1000),
           result.standardDevs());
     } else {
       swerve.drivetrain.addVisionMeasurement(

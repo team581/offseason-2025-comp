@@ -63,7 +63,9 @@ public class AlignmentCostUtil {
         FeatureFlags.AUTO_ALIGN_DRIVE_DIRECTION_COST.getAsBoolean()
             ? DRIVE_DIRECTION_SCALAR
                 * Math.abs(
-                    targetDirection.minus(MathHelpers.vectorDirection(robotVelocity)).getRadians())
+                    targetDirection
+                        .minus(MathHelpers.getDriveDirection(robotVelocity))
+                        .getRadians())
             : 0.0;
     return distanceCost + angleErrorCost + driveAngleCost;
   }
@@ -86,7 +88,7 @@ public class AlignmentCostUtil {
     var driveAngleCost =
         DRIVE_DIRECTION_SCALAR_CORAL
             * Math.abs(
-                targetDirection.minus(MathHelpers.vectorDirection(robotVelocity)).getRadians());
+                targetDirection.minus(MathHelpers.getDriveDirection(robotVelocity)).getRadians());
     return distanceCost + driveAngleCost;
   }
 

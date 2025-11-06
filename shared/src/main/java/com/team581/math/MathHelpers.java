@@ -75,20 +75,20 @@ public class MathHelpers {
     return input.rotateAround(FIELD_CENTER, Rotation2d.k180deg);
   }
 
-  public static Rotation2d vectorDirection(ChassisSpeeds vector) {
+  public static Rotation2d getDriveDirection(ChassisSpeeds vector) {
     return new Translation2d(vector.vxMetersPerSecond, vector.vyMetersPerSecond).getAngle();
   }
 
   public static Rotation2d getDriveDirection(Pose2d start, Pose2d end) {
-    return new Rotation2d(start.getX() - end.getX(), start.getY() - end.getY());
+    return getDriveDirection(start.getTranslation(), end.getTranslation());
   }
 
   public static Rotation2d getDriveDirection(Translation2d start, Pose2d end) {
-    return new Rotation2d(start.getX() - end.getX(), start.getY() - end.getY());
+    return getDriveDirection(start, end.getTranslation());
   }
 
   public static Rotation2d getDriveDirection(Pose2d start, Translation2d end) {
-    return new Rotation2d(start.getX() - end.getX(), start.getY() - end.getY());
+    return getDriveDirection(start.getTranslation(), end);
   }
 
   public static Rotation2d getDriveDirection(Translation2d start, Translation2d end) {
@@ -109,6 +109,10 @@ public class MathHelpers {
    */
   public static double farthest(double value, double a, double b) {
     return Math.abs(value - a) >= Math.abs(value - b) ? a : b;
+  }
+
+  public static double getLinearVelocity(ChassisSpeeds speeds) {
+    return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
   }
 
   private MathHelpers() {}
