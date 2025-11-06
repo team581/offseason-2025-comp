@@ -127,7 +127,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     return fieldRelativeSpeeds;
   }
 
-  public void setSnapToAngle(double angle) {
+  private void setSnapToAngle(double angle) {
     goalSnapAngle = angle;
 
     // We don't necessarily set auto swerve speeds every loop, so this ensures we are always snapped
