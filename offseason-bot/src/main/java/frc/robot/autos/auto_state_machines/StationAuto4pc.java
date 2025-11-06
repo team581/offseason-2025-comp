@@ -1,5 +1,6 @@
 package frc.robot.autos.auto_state_machines;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
@@ -37,7 +38,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
     DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
   }
 
-  public void createPath(Pose2d goalPose, Pose2d intermediaryPose) {
+  public void createPath(Supplier<Pose2d> goalPose, Pose2d intermediaryPose) {
 
     path =
         new AutoSegment(
@@ -46,7 +47,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
             new AutoPoint(intermediaryPose),
             new AutoPoint(goalPose));
     DogLog.timestamp("StateMachineAuto/newPathGenerated");
-    DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
+    DogLog.log("StateMachineAuto/newPathGoalPose", goalPose.get());
     DogLog.log("StateMachineAuto/IntermediaryPose", intermediaryPose);
   }
 
@@ -108,7 +109,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
-        createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
+        createPath(()-> robotManager.coralMap.getBestCoralPose().orElse(newState.getPose()), (Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose()));
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();
