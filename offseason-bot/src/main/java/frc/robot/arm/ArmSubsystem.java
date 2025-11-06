@@ -39,7 +39,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
-  private double usedSetpoint = ArmState.STOWED.getAngle();
+  private double usedSetpoint = ArmState.CORAL_HANDOFF.getAngle();
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
 
