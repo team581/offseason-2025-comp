@@ -200,7 +200,7 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
     if (getState() == ArmState.PRE_MATCH_HOMING) {
       motor.setPosition(0);
-      setStateFromRequest(ArmState.STOWED);
+      setStateFromRequest(ArmState.CORAL_HANDOFF);
     }
 
     armSimulation.update();

@@ -16,14 +16,6 @@ public class AutoCommands {
     this.robotManager = robotManager;
   }
 
-  public Command rehomeWrist() {
-    return Commands.runOnce(robotManager::rehomeWristRequest).withName("RehomeWristCommand");
-  }
-
-  public Command rehomeElevatorCommand() {
-    return Commands.runOnce(robotManager::rehomeElevatorRequest).withName("RehomeElevatorCommand");
-  }
-
   public Command stowCommand() {
     return Commands.runOnce(robotManager::stowRequest).withName("StowRequestCommand");
   }

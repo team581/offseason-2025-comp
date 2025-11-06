@@ -72,7 +72,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   public boolean atGoal(WristState state) {
     return switch (state) {
       default -> MathUtil.isNear(state.getAngle(), motorAngle, TOLERANCE);
-      case PRE_MATCH_HOMING, MID_MATCH_HOMING -> false;
+      case PRE_MATCH_HOMING -> false;
     };
   }
 
@@ -83,7 +83,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   public boolean nearGoal(WristState state) {
     return switch (state) {
       default -> MathUtil.isNear(state.getAngle(), motorAngle, NEAR_TOLERANCE);
-      case PRE_MATCH_HOMING, MID_MATCH_HOMING -> false;
+      case PRE_MATCH_HOMING -> false;
     };
   }
 
@@ -164,7 +164,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
     var wristSimulation =
         SimKit.positionMechanism("wrist", (mechanism) -> mechanism.addMotor(motor));
 
-    if (getState() == WristState.PRE_MATCH_HOMING || getState() == WristState.MID_MATCH_HOMING) {
+    if (getState() == WristState.PRE_MATCH_HOMING) {
       motor.setPosition(0);
       setStateFromRequest(WristState.STOWED);
     }

@@ -4,7 +4,6 @@ import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.ReefPipeLevel;
 import frc.robot.auto_align.ReefSide;
@@ -99,10 +98,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           FULL_STOW ->
           currentState;
 
-      case REHOME_WRIST ->
-          wrist.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
-      case REHOME_ELEVATOR ->
-          elevator.atGoal() ? getStowState(currentState, claw.getHasGP()) : currentState;
       case CORAL_L1_APPROACH ->
           wrist.atGoal() && elevator.atGoal() ? RobotState.CORAL_L1_LINEUP : currentState;
       case CORAL_L1_RELEASE ->
@@ -324,22 +319,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
-      case REHOME_WRIST -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        elevator.setState(ElevatorState.STOWED);
-        wrist.setState(WristState.MID_MATCH_HOMING);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        climber.setState(ClimberState.STOWED);
-      }
-      case REHOME_ELEVATOR -> {
-        claw.setState(ClawState.IDLE_NO_GP);
-        elevator.setState(ElevatorState.MID_MATCH_HOMING);
-        wrist.setState(WristState.STOWED);
-        swerve.normalDriveRequest();
-        vision.setState(VisionState.TAGS);
-        climber.setState(ClimberState.STOWED);
-      }
       case STARTING_POSITION -> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.STOWED);
@@ -433,17 +412,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
       }
     }
-  }
-
-  public void rehomeWristRequest() {
-    if (RobotBase.isSimulation()) {
-      return;
-    }
-    setStateFailsafe(RobotState.REHOME_WRIST);
-  }
-
-  public void rehomeElevatorRequest() {
-    setStateFailsafe(RobotState.REHOME_ELEVATOR);
   }
 
   public void outtakeAlgaeRequest() {
@@ -563,8 +531,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L1_APPROACH,
           CORAL_L1_RELEASE,
           CORAL_OUTTAKE,
-          REHOME_WRIST,
-          REHOME_ELEVATOR,
           STARTING_POSITION,
           STARTING_POSITION_CORAL,
           UNJAM -> {}

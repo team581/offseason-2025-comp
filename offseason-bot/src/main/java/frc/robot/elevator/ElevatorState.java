@@ -17,7 +17,7 @@ public enum ElevatorState {
   PROCESSOR(5.0),
   ALGAE_OUTTAKE(15.0),
 
-  STOWED(7.5),
+  STOWED_CORAL(8.5),
   STOWED_ALGAE(7.5),
   PRE_CORAL_HANDOFF(6.0),
   HANDOFF(3.0),

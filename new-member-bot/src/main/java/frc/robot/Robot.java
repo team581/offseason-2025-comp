@@ -138,8 +138,5 @@ public class Robot extends Base581Robot {
 
     hardware.driverController.start().onTrue(actions.outtakeAlgae());
     hardware.driverController.back().onTrue(localization.getZeroCommand());
-
-    hardware.operatorController.a().onTrue(actions.rehomeElevatorCommand());
-    hardware.operatorController.y().onTrue(actions.rehomeWristCommand());
   }
 }

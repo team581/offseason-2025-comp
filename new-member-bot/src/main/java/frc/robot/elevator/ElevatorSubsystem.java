@@ -108,7 +108,6 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
 
   public boolean atGoal(ElevatorState state) {
     return switch (state) {
-      case MID_MATCH_HOMING -> false;
       case PRE_MATCH_HOMING, UNJAM -> true;
       default ->
           MathUtil.isNear(
