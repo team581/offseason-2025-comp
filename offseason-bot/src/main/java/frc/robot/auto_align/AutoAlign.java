@@ -87,10 +87,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return robotPose.getX() < halfFieldLength ? robotPose.getY() > 3.5 : robotPose.getY() < 8 - 3.5;
   }
 
-
   public static boolean isCloseToNet(Pose2d robotPose) {
     return isCloseToNet(robotPose, 3.5);
   }
+
   public static boolean isCloseToNet(Pose2d robotPose, double toleranceMeters) {
     // entire field length is 17.55m
     double halfFieldLength = 17.55 / 2.0;

@@ -288,11 +288,13 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       }
       case BACK_AWAY_FROM_NET -> {
         drivetrain.setControl(
-          drive
-              .withVelocityX(teleopSpeeds.vxMetersPerSecond+SnapUtil.getNetBackAwayVelocity(drivetrainState.Pose))
-              .withVelocityY(teleopSpeeds.vyMetersPerSecond)
-              .withRotationalRate(0.0)
-              .withDriveRequestType(DriveRequestType.Velocity));
+            drive
+                .withVelocityX(
+                    teleopSpeeds.vxMetersPerSecond
+                        + SnapUtil.getNetBackAwayVelocity(drivetrainState.Pose))
+                .withVelocityY(teleopSpeeds.vyMetersPerSecond)
+                .withRotationalRate(0.0)
+                .withDriveRequestType(DriveRequestType.Velocity));
       }
       case TRAILBLAZER -> {
         drivetrain.setControl(
