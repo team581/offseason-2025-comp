@@ -94,8 +94,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   private double rawRightControllerYValue = 0.0;
   private boolean reachedCenterSinceLastBumpRequest = false;
 
-  private ArmState latestArmGoal = ArmState.STOWED;
-  private ElevatorState latestElevatorGoal = ElevatorState.STOWED;
+  private ArmState latestArmGoal = ArmState.CORAL_HANDOFF;
+  private ElevatorState latestElevatorGoal = ElevatorState.PRE_CORAL_HANDOFF;
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
@@ -656,7 +656,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CLAW_ALGAE_STOW_INWARD -> {
         claw.setState(ClawState.IDLE_W_ALGAE);
-        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED);
+        moveSuperstructure(ElevatorState.STOWED_ALGAE, ArmState.STOWED_CORAL);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.HOLDING_ALGAE);

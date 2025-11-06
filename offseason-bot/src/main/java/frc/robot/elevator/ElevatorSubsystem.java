@@ -27,7 +27,7 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
   private final TalonFX motor;
 
   private final MotionMagicVoltage positionRequest =
-      new MotionMagicVoltage(ElevatorState.STOWED.defaultHeight);
+      new MotionMagicVoltage(ElevatorState.HANDOFF.defaultHeight);
 
   private double height = 0.0;
   private double lowestSeenHeight = Double.POSITIVE_INFINITY;
