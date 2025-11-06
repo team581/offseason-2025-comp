@@ -354,7 +354,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     tagCameraOnline = vision.isCameraOnlineForTags();
     nearestReefSide = AutoAlign.getClosestReefSide(robotPose);
     awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
-    awayFromReefAlgaeBackOut = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
+    awayFromReefAlgaeBackOut =
+        !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
 
     reefSnapAngle = autoAlign.getClosestReefSide().getPose(robotPose).getRotation().getDegrees();
   }
