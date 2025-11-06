@@ -27,7 +27,8 @@ public enum Points {
           16.1,
           1.0,
           Rotation2d.fromDegrees(
-              126.0))), // ,new Pose2d(1.4, 7.0, Rotation2d.fromDegrees(150))),  // -Pose by station,
+              126.0))), // ,new Pose2d(1.4, 7.0, Rotation2d.fromDegrees(150))),  // -Pose by
+  // station,
   // robot state intaking
   PRE_GROUND_INTAKE_LEFT_STATION(
       new Pose2d(
