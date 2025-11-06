@@ -291,6 +291,9 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case ALGAE_INTAKE_GROUND -> {
         if (claw.getHasGP()) {
           rumbleController.rumbleRequest();
+          if (AutoAlign.isCloseToNet(robotPose, 2.0)) {
+            yield currentState;
+          }
           var swerveSpeeds = swerve.getFieldRelativeSpeeds();
           var vMetersPerSecond =
               Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
