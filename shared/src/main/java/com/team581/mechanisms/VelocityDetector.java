@@ -17,6 +17,30 @@ public class VelocityDetector {
     this.debouncer = new Debouncer(debounceTime, DebounceType.kRising);
     timeout.start();
   }
+  public VelocityDetector(double minVelocity, double minVelocityTimeout) {
+    this.minVelocity = minVelocity;
+    this.minVelocityTimeout = minVelocityTimeout;
+    this.debouncer = new Debouncer(0.0, DebounceType.kRising);
+    timeout.start();
+  }
+
+  public VelocityDetector withDebounceRising(double time) {
+    this.debouncer.setDebounceTime(time);
+    this.debouncer.setDebounceType(DebounceType.kRising);
+    return this;
+  }
+
+  public VelocityDetector withDebounceFalling(double time) {
+    this.debouncer.setDebounceTime(time);
+    this.debouncer.setDebounceType(DebounceType.kFalling);
+    return this;
+  }
+
+  public VelocityDetector withDebounceBoth(double time) {
+    this.debouncer.setDebounceTime(time);
+    this.debouncer.setDebounceType(DebounceType.kBoth);
+    return this;
+  }
 
   public void reset() {
     hasSeenMinVelocity = false;
@@ -34,6 +58,6 @@ public class VelocityDetector {
             || timeout.hasElapsed(minVelocityTimeout)
             || Math.abs(motorVelocity) >= minVelocity;
 
-    return hasSeenMinVelocity && debouncer.calculate(motorVelocity <= maxVelocity);
+    return hasSeenMinVelocity && debouncer.calculate(Math.abs(motorVelocity) <= maxVelocity);
   }
 }
