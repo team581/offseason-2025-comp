@@ -19,6 +19,7 @@ import com.team581.config.CameraConfig;
 import com.team581.config.LimelightModel;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.config.RobotConfig.ArmConfig;
 import frc.robot.config.RobotConfig.ClawConfig;
 import frc.robot.config.RobotConfig.ClimberConfig;
@@ -247,7 +248,10 @@ class CompConfig {
                   0.5819625648,
                   -20.0,
                   30.0,
-                  90.0)),
+                  90.0),
+              // Right Camera Config
+              new CameraConfig(LimelightModel.THREE, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+              new Pose3d()),
           new LightsConfig(CANIVORE_NAME, 17),
           new SwerveConfig(new PhoenixPIDController(5.75, 0, 0), true, true, true));
 

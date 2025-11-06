@@ -34,6 +34,7 @@ import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionState;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.game_piece_detection.CoralMap;
 
 public class RobotManager extends StateMachineSubsystem<RobotState> {
   public final LocalizationSubsystem localization;
@@ -54,6 +55,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public final AutoAlign autoAlign;
 
+  public final CoralMap coralMap;
+
   public RobotManager(
       GroundManager groundManager,
       ClawSubsystem claw,
@@ -65,6 +68,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       LocalizationSubsystem localization,
       LightsSubsystem lights,
       AutoAlign autoAlign,
+      CoralMap coralMap,
       ClimberSubsystem climber,
       RumbleControllerSubsystem rumbleController) {
     super(SubsystemPriority.ROBOT_MANAGER, RobotState.CLAW_EMPTY);
@@ -79,6 +83,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     this.lights = lights;
     this.climber = climber;
     this.autoAlign = autoAlign;
+    this.coralMap = coralMap;
     this.rumbleController = rumbleController;
 
     var stateCount = RobotState.values().length;

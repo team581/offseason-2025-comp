@@ -27,6 +27,7 @@ import frc.robot.singulator.SingulatorSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
 import frc.robot.vision.VisionSubsystem;
+import frc.robot.vision.game_piece_detection.CoralMap;
 import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightState;
 
@@ -57,12 +58,16 @@ public class Robot extends Base581Robot {
       new Limelight(
           "right", LimelightState.TAGS, RobotConfig.get().vision().rightLimelightConfig());
 
+  private final Limelight gpLimelight =
+      new Limelight("gp", LimelightState.CORAL, RobotConfig.get().vision().gpCameraConfig());
+
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
   private final LightsSubsystem lights = new LightsSubsystem(hardware.candle);
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
+  private final CoralMap coralMap = new CoralMap(localization, swerve, gpLimelight);
   private final RobotManager robotManager =
       new RobotManager(
           groundManager,
@@ -75,6 +80,7 @@ public class Robot extends Base581Robot {
           localization,
           lights,
           autoAlign,
+          coralMap,
           climber,
           rumble);
 

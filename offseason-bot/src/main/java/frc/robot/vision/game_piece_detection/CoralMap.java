@@ -1,0 +1,266 @@
+package frc.robot.vision.game_piece_detection;
+
+import static java.util.Comparator.comparingDouble;
+
+import com.google.common.collect.ImmutableList;
+import com.team581.math.MathHelpers;
+import com.team581.util.FmsUtil;
+import com.team581.util.state_machines.StateMachineSubsystem;
+import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.auto_align.AutoAlign;
+import frc.robot.auto_align.alignment_cost.AlignmentCostUtil;
+import frc.robot.config.FeatureFlags;
+import frc.robot.localization.LocalizationSubsystem;
+import frc.robot.swerve.SwerveSubsystem;
+import frc.robot.util.scheduling.SubsystemPriority;
+import frc.robot.vision.limelight.Limelight;
+import frc.robot.vision.limelight.LimelightHelpers;
+import frc.robot.vision.limelight.LimelightState;
+import frc.robot.vision.results.GamePieceResult;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+public class CoralMap extends StateMachineSubsystem<CoralMapState> {
+  private static final double SWERVE_MAX_LINEAR_SPEED_TRACKING = 4.0;
+  private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 4.0;
+
+  private static final double CORAL_LIFETIME_SECONDS = 1.3;
+
+  // TODO: UPDATE THESE TO REAL NUMBERS
+  private static final double CAMERA_IMAGE_HEIGHT = 480.0;
+  private static final double CAMERA_IMAGE_WIDTH = 640.0;
+  private static final double FOV_VERTICAL = 48.9;
+  private static final double FOV_HORIZONTAL = 62.5;
+  private static final double HORIZONTAL_LEFT_VIEW = 62.5 / 2;
+  private static final double VERTICAL_TOP_VIEW = 48.9 / 2;
+  private static final Transform2d INTAKE_TRANSFORM = new Transform2d(0.25, 0.0, Rotation2d.kZero);
+
+  private final Limelight limelight;
+  private static final String LIMELIGHT_NAME = "limelight-gp";
+  private static final NetworkTableEntry LL_TCORNXY =
+      NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME).getEntry("tcornxy");
+
+  private final ArrayList<CoralMapElement> coralMap = new ArrayList<>();
+  private double[] previousCornersArray = new double[0];
+  private boolean staleCoralCorners = false;
+  private ChassisSpeeds swerveSpeeds = new ChassisSpeeds();
+  private LocalizationSubsystem localization;
+  private SwerveSubsystem swerve;
+
+  private final Comparator<Pose2d> bestCoralComparator =
+      comparingDouble(
+          target ->
+              AlignmentCostUtil.getCoralAlignCost(
+                  target, localization.getPose(), swerve.getFieldRelativeSpeeds()));
+
+  private final GamePieceResult gamePieceResult = new GamePieceResult();
+
+  public CoralMap(LocalizationSubsystem localization, SwerveSubsystem swerve, Limelight limelight) {
+    super(SubsystemPriority.VISION, CoralMapState.DEFAULT_STATE);
+    this.localization = localization;
+    this.swerve = swerve;
+    this.limelight = limelight;
+  }
+
+  private ImmutableList<Translation2d> getRawCoralPoses() {
+    if (limelight.getState() != LimelightState.CORAL) {
+      return ImmutableList.of();
+    }
+    if (RobotBase.isSimulation()) {
+      return ImmutableList.of(new Translation2d(15, 1.0));
+    }
+
+    List<Translation2d> coralTranslations = new ArrayList<>();
+    double[] corners = LL_TCORNXY.getDoubleArray(new double[0]);
+
+    // Check if the result array has changed
+    staleCoralCorners = Arrays.equals(previousCornersArray, corners);
+    previousCornersArray = corners;
+
+    if (staleCoralCorners) {
+      DogLog.timestamp("CoralMap/SkipStaleCorners");
+
+      return ImmutableList.of();
+    }
+
+    double latency =
+        (LimelightHelpers.getLatency_Capture(LIMELIGHT_NAME)
+                + LimelightHelpers.getLatency_Pipeline(LIMELIGHT_NAME))
+            / 1000.0;
+    double timestamp = Timer.getFPGATimestamp() - latency;
+    var robotPoseAtCapture = localization.getPose(timestamp);
+
+    // Loop through 4 points
+    // Delete 3 point data
+    if (corners.length >= 8 && corners[0] != 0.0 && corners.length % 8 == 0) {
+      for (int i = 0; i < corners.length; i = i + 8) {
+        var centerX = (corners[i] + corners[i + 2]) / 2.0;
+        var centerY = (corners[i + 1] + corners[i + 5]) / 2.0;
+
+        double angleX = (((centerX / CAMERA_IMAGE_WIDTH) * FOV_HORIZONTAL) - HORIZONTAL_LEFT_VIEW);
+        double angleY =
+            -1.0 * (((centerY / CAMERA_IMAGE_HEIGHT) * FOV_VERTICAL) - VERTICAL_TOP_VIEW);
+        gamePieceResult.update(angleX, angleY, 0);
+        var maybeCoralPose =
+            GamePieceDetectionUtil.calculateFieldRelativeCoralTranslationFromCamera(
+                robotPoseAtCapture, gamePieceResult);
+
+        coralTranslations.add(maybeCoralPose);
+      }
+    }
+
+    return ImmutableList.copyOf(coralTranslations);
+  }
+
+  public Optional<Pose2d> getBestCoralPose() {
+    if (coralMap.isEmpty() && !RobotBase.isSimulation()) {
+      return Optional.empty();
+    }
+
+    var bestCoral =
+        coralMap.stream()
+            .map(coral -> new Pose2d(coral.coralTranslation(), Rotation2d.kZero))
+            .min(bestCoralComparator);
+
+    if (bestCoral.isPresent()) {
+      var rotation =
+          180
+              + MathHelpers.getDriveDirection(bestCoral.orElseThrow(), localization.getPose())
+                  .getDegrees();
+      var coralPoseWithIntakeRotation =
+          new Pose2d(bestCoral.orElseThrow().getTranslation(), Rotation2d.fromDegrees(rotation))
+              .transformBy(INTAKE_TRANSFORM);
+      DogLog.log("CoralMap/BestCoralPose", coralPoseWithIntakeRotation);
+      return Optional.of(coralPoseWithIntakeRotation);
+    }
+    return Optional.empty();
+  }
+
+  public static boolean isCoralInSafeSpotForAuto(Translation2d coralPose) {
+    var centerOfReef = AutoAlign.getAllianceCenterOfReef();
+    if (coralPose.getDistance(centerOfReef) < Units.inchesToMeters(37.2)) {
+      return false;
+    }
+
+    if ((FmsUtil.isRedAlliance() && coralPose.getX() > Units.inchesToMeters(630))
+        || (!FmsUtil.isRedAlliance() && coralPose.getX() < Units.inchesToMeters(55))) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public boolean isLollipopInSafeSpotForAuto(Translation2d coralPose) {
+    if ((FmsUtil.isRedAlliance()
+            && (coralPose.getX() < Units.inchesToMeters(603) || coralPose.getX() > 16.5))
+        || ((!FmsUtil.isRedAlliance()
+                && (coralPose.getX() > Units.inchesToMeters(72) || coralPose.getX() < 1.0))
+            || coralPose.getY() > 6.5
+            || coralPose.getY() < 1.5)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private ImmutableList<Translation2d> getFilteredCoralPoses() {
+    if (!safeToTrack()) {
+      return ImmutableList.of();
+    }
+
+    var rawCoralPoses = getRawCoralPoses();
+    if (DriverStation.isTeleop()) {
+      return rawCoralPoses;
+    }
+    List<Translation2d> safeCoralPoses = new ArrayList<>();
+    rawCoralPoses.forEach(
+        element -> {
+          if (isCoralInSafeSpotForAuto(element)) {
+            safeCoralPoses.add(element);
+          }
+        });
+
+    return ImmutableList.copyOf(safeCoralPoses);
+  }
+
+  private boolean safeToTrack() {
+    return swerveSpeeds.vxMetersPerSecond < SWERVE_MAX_LINEAR_SPEED_TRACKING
+        && swerveSpeeds.vyMetersPerSecond < SWERVE_MAX_LINEAR_SPEED_TRACKING
+        && swerveSpeeds.omegaRadiansPerSecond
+            < Units.degreesToRadians(SWERVE_MAX_ANGULAR_SPEED_TRACKING);
+  }
+
+  private void updateMap() {
+    ImmutableList<Translation2d> filteredCoralPoses = getFilteredCoralPoses();
+
+    coralMap.removeIf(
+        element -> {
+          return (element.expiresAt() < Timer.getFPGATimestamp());
+        });
+
+    if (staleCoralCorners) {
+      return;
+    }
+
+    double newCoralExpiry = Timer.getFPGATimestamp() + CORAL_LIFETIME_SECONDS;
+
+    for (var visionCoral : filteredCoralPoses) {
+      Optional<CoralMapElement> match =
+          coralMap.stream()
+              .filter(
+                  rememberedCoral -> {
+                    return rememberedCoral.expiresAt() != newCoralExpiry
+                        && (rememberedCoral.coralTranslation().getDistance(visionCoral) < 0.8);
+                  })
+              .min(
+                  (a, b) ->
+                      Double.compare(
+                          a.coralTranslation().getDistance(visionCoral),
+                          b.coralTranslation().getDistance(visionCoral)));
+
+      if (match.isPresent()) {
+        coralMap.remove(match.orElseThrow());
+      }
+
+      coralMap.add(new CoralMapElement(newCoralExpiry, visionCoral));
+    }
+  }
+
+  @Override
+  protected void collectInputs() {
+    if (!FeatureFlags.CORAL_DETECTION.getAsBoolean()) {
+      return;
+    }
+    swerveSpeeds = swerve.getRobotRelativeSpeeds();
+    updateMap();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    try {
+      DogLog.log(
+          "CoralMap/Coral",
+          coralMap.stream()
+              .map(element -> new Pose2d(element.coralTranslation(), Rotation2d.kZero))
+              .toArray(Pose2d[]::new));
+    } catch (RuntimeException error) {
+      DogLog.logFault("CoralMapLoggingError");
+      System.err.println(error);
+    }
+  }
+}
