@@ -26,7 +26,6 @@ public class RedMiddle2AlgaeAuto extends BaseCommandAuto {
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
-        autoCommands.rehomeWrist(),
         autoCommands.preloadCoralCommand(),
         // Score preload coral
         trailblazer
