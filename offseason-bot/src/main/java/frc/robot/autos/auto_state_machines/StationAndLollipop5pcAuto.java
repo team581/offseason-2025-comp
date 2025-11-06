@@ -127,14 +127,14 @@ public class StationAndLollipop5pcAuto extends BaseImperativeAuto<AutoState> {
       }
 
       case INTAKING -> {
-        createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
+        createPath(newState.getPose(), Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();
       }
 
       case LOLLIPOP_2 -> {
-        createPath(newState.pose);
+        createPath(newState.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();

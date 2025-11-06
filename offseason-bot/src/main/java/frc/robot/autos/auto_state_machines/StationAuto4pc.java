@@ -38,7 +38,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   }
 
   public void createPath(Pose2d goalPose, Pose2d intermediaryPose) {
-
     path =
         new AutoSegment(
             CONSTRAINTS,
@@ -46,7 +45,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
             new AutoPoint(intermediaryPose),
             new AutoPoint(goalPose));
     DogLog.timestamp("StateMachineAuto/newPathGenerated");
-    DogLog.log("StateMachineAuto/newPathGoalPose", goalPose);
+    DogLog.log("StateMachineAuto/intermediate newPathGoalPose", goalPose);
     DogLog.log("StateMachineAuto/IntermediaryPose", intermediaryPose);
   }
 
@@ -56,7 +55,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R2_AND_B2.getPose();
+    return Points.START_ANGLED.getPose();
   }
 
   private boolean superstructureAtGoal() {
@@ -108,7 +107,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
-        createPath(newState.pose, Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
+        createPath(newState.getPose(), Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();
