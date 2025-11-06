@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 public final class IntakeAssistUtil {
 
   private static final double ASSIST_KP = 3.7;
@@ -23,7 +24,6 @@ public final class IntakeAssistUtil {
 
     return assistSpeeds.plus(teleopSpeeds);
   }
-
 
   private IntakeAssistUtil() {}
 }

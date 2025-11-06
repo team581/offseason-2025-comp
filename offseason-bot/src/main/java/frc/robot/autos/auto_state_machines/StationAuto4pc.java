@@ -109,7 +109,9 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
-        createPath(()-> robotManager.coralMap.getBestCoralPose().orElse(newState.getPose()), (Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose()));
+        createPath(
+            () -> robotManager.coralMap.getBestCoralPose().orElseGet(newState::getPose),
+            Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();

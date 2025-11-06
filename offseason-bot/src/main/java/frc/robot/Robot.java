@@ -58,8 +58,8 @@ public class Robot extends Base581Robot {
       new Limelight(
           "right", LimelightState.TAGS, RobotConfig.get().vision().rightLimelightConfig());
 
-          private final Limelight gpLimelight =
-          new Limelight("gp", LimelightState.CORAL, RobotConfig.get().vision().gpCameraConfig());
+  private final Limelight gpLimelight =
+      new Limelight("gp", LimelightState.CORAL, RobotConfig.get().vision().gpCameraConfig());
 
   private final VisionSubsystem vision = new VisionSubsystem(imu, leftLimelight, rightlLimelight);
   private final LocalizationSubsystem localization = new LocalizationSubsystem(imu, swerve, vision);
@@ -67,7 +67,7 @@ public class Robot extends Base581Robot {
   private final AutoAlign autoAlign = new AutoAlign(vision, localization, swerve, false);
   private final ClimberSubsystem climber =
       new ClimberSubsystem(hardware.climberMotor, hardware.climberCANcoder);
-      private final CoralMap coralMap = new CoralMap(localization, swerve, gpLimelight);
+  private final CoralMap coralMap = new CoralMap(localization, swerve, gpLimelight);
   private final RobotManager robotManager =
       new RobotManager(
           groundManager,
@@ -83,7 +83,6 @@ public class Robot extends Base581Robot {
           coralMap,
           climber,
           rumble);
-
 
   private final RobotCommands actions = new RobotCommands(robotManager);
   private final Trailblazer trailblazer =

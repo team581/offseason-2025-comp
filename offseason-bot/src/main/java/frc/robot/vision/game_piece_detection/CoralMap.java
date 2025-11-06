@@ -7,8 +7,6 @@ import com.team581.math.MathHelpers;
 import com.team581.util.FmsUtil;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -23,7 +21,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.auto_align.AutoAlign;
 import frc.robot.auto_align.alignment_cost.AlignmentCostUtil;
 import frc.robot.config.FeatureFlags;
-import frc.robot.intake_assist.IntakeAssistUtil;
 import frc.robot.localization.LocalizationSubsystem;
 import frc.robot.swerve.SwerveSubsystem;
 import frc.robot.util.scheduling.SubsystemPriority;
@@ -31,7 +28,6 @@ import frc.robot.vision.limelight.Limelight;
 import frc.robot.vision.limelight.LimelightHelpers;
 import frc.robot.vision.limelight.LimelightState;
 import frc.robot.vision.results.GamePieceResult;
-import frc.robot.vision.results.OptionalGamePieceResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -43,8 +39,6 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   private static final double SWERVE_MAX_ANGULAR_SPEED_TRACKING = 4.0;
 
   private static final double CORAL_LIFETIME_SECONDS = 1.3;
-
-  private static final double LOLLIPOP_LIFTEIME_SECONDS = 2.0;
 
   // TODO: UPDATE THESE TO REAL NUMBERS
   private static final double CAMERA_IMAGE_HEIGHT = 480.0;
@@ -82,13 +76,12 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
     this.limelight = limelight;
   }
 
-
   private ImmutableList<Translation2d> getRawCoralPoses() {
     if (limelight.getState() != LimelightState.CORAL) {
       return ImmutableList.of();
     }
     if (RobotBase.isSimulation()) {
-      return ImmutableList.of(new Translation2d(15,1.0));
+      return ImmutableList.of(new Translation2d(15, 1.0));
     }
 
     List<Translation2d> coralTranslations = new ArrayList<>();
@@ -134,7 +127,7 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
   }
 
   public Optional<Pose2d> getBestCoralPose() {
-    if (coralMap.isEmpty()&&!RobotBase.isSimulation()) {
+    if (coralMap.isEmpty() && !RobotBase.isSimulation()) {
       return Optional.empty();
     }
 
@@ -144,9 +137,13 @@ public class CoralMap extends StateMachineSubsystem<CoralMapState> {
             .min(bestCoralComparator);
 
     if (bestCoral.isPresent()) {
-      var rotation = 180+ MathHelpers.getDriveDirection(bestCoral.orElseThrow(), localization.getPose()).getDegrees();
+      var rotation =
+          180
+              + MathHelpers.getDriveDirection(bestCoral.orElseThrow(), localization.getPose())
+                  .getDegrees();
       var coralPoseWithIntakeRotation =
-          new Pose2d(bestCoral.orElseThrow().getTranslation(), Rotation2d.fromDegrees(rotation)).transformBy(INTAKE_TRANSFORM);
+          new Pose2d(bestCoral.orElseThrow().getTranslation(), Rotation2d.fromDegrees(rotation))
+              .transformBy(INTAKE_TRANSFORM);
       DogLog.log("CoralMap/BestCoralPose", coralPoseWithIntakeRotation);
       return Optional.of(coralPoseWithIntakeRotation);
     }

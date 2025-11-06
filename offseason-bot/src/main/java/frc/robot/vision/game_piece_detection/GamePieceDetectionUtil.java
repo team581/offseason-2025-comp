@@ -18,10 +18,7 @@ public final class GamePieceDetectionUtil {
       new Transform3d(0, 0, Units.inchesToMeters(-CORAL_RADIUS), Rotation3d.kZero);
 
   private static final Pose3d LIMELIGHT_POSE_TO_ROBOT_WITH_CORAL_OFFSET =
-      RobotConfig.get()
-          .vision()
-          .gamePieceToRobotPose()
-          .transformBy(HORIZONTAL_CORAL_OFFSET);
+      RobotConfig.get().vision().gamePieceToRobotPose().transformBy(HORIZONTAL_CORAL_OFFSET);
 
   public static Translation2d calculateFieldRelativeCoralTranslationFromCamera(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
@@ -31,14 +28,12 @@ public final class GamePieceDetectionUtil {
     return robotRelativeToFieldRelativeGamePiecePose(robotPoseAtCapture, robotRelative);
   }
 
-
   public static double getFieldRelativeAngleToCoral(
       Pose2d robotPoseAtCapture, GamePieceResult visionResult) {
     var gamePiecePose =
         calculateFieldRelativeCoralTranslationFromCamera(robotPoseAtCapture, visionResult);
     return MathHelpers.getDriveDirection(gamePiecePose, robotPoseAtCapture).getDegrees();
   }
-
 
   public static Translation2d calculateRobotRelativeTranslationFromCamera(
       GamePieceResult visionResult, Pose3d limelightToRobotOffset) {
