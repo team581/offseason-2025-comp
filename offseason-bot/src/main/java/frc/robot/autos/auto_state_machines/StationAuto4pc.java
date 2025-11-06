@@ -90,8 +90,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
                   && !nextScoringPositions.isEmpty()
               ? AutoState.SCORE
               : currentState;
-      case LOLLIPOP_2 ->
-          throw new UnsupportedOperationException("Unimplemented case: " + currentState);
     };
   }
 
@@ -112,7 +110,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();
       }
-      case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + newState);
     }
   }
 
@@ -124,7 +121,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
       case INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
       }
-      case LOLLIPOP_2 -> throw new UnsupportedOperationException("Unimplemented case: " + state);
     }
   }
 }

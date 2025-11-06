@@ -5,7 +5,6 @@ import frc.robot.autos.Points;
 
 public enum AutoState {
   INTAKING(Points.GROUND_INTAKE_LEFT_STATION),
-  LOLLIPOP_2(Points.LOLLIPOP_2),
   SCORE(Points.GROUND_INTAKE_LEFT_STATION);
 
   public final Points point;
