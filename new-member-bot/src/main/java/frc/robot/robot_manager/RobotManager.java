@@ -352,7 +352,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     vision.setEstimatedPoseAngle(robotPose.getRotation().getDegrees());
     tagCameraOnline = vision.isCameraOnlineForTags();
     nearestReefSide = AutoAlign.getClosestReefSide(robotPose);
-    awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
+    awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
 
     reefSnapAngle = autoAlign.getClosestReefSide().getPose(robotPose).getRotation().getDegrees();
   }
@@ -540,8 +540,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           processorWaitRequest();
         }
       }
-      // case CLAW_CORAL -> l1ApproachRequest();
-      case CLAW_CORAL -> setStateFailsafe(RobotState.CORAL_L1_RELEASE);
+      case CLAW_CORAL -> l1ApproachRequest();
+      // case CLAW_CORAL -> setStateFailsafe(RobotState.CORAL_L1_RELEASE);
 
       case ALGAE_NET_WAITING -> setStateFailsafe(RobotState.ALGAE_NET_RELEASE);
       case ALGAE_PROCESSOR_WAITING -> setStateFailsafe(RobotState.ALGAE_PROCESSOR_RELEASE);
