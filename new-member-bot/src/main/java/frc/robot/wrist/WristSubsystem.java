@@ -63,8 +63,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   private void positionVoltageRequest(double wristRotations) {
-      motor.setControl(positionRequest.withPosition(wristRotations));
-    }
+    motor.setControl(positionRequest.withPosition(wristRotations));
+  }
 
   public boolean atGoal(WristState state) {
     return switch (state) {
