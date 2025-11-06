@@ -423,15 +423,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
         currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
     var driveVelocityMagnitude =
-        DRIVE_TO_POSE_TRANSLATION_CONTROLLER.calculate(distanceToGoalMeters, 0);
+        Math.abs(DRIVE_TO_POSE_TRANSLATION_CONTROLLER.calculate(distanceToGoalMeters, 0));
 
     var rotationSpeed =
         DRIVE_TO_POSE_ROTATION_CONTROLLER.calculate(
             currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
     if (Math.abs(distanceToGoalMeters) > Units.inchesToMeters(1.0)) {
-      driveVelocityMagnitude +=
-          Math.copySign(DRIVE_TO_POSE_TRANSLATION_FF.get(), driveVelocityMagnitude);
+      driveVelocityMagnitude += DRIVE_TO_POSE_TRANSLATION_FF.get();
     }
 
     if (!MathUtil.isNear(
@@ -465,13 +464,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       driveDirection = Rotation2d.fromDegrees(bisectedAngle + 180);
     }
 
-    driveVelocityMagnitude = MathUtil.clamp(driveVelocityMagnitude, -maxVelocity, maxVelocity);
+    driveVelocityMagnitude = Math.min(driveVelocityMagnitude, maxVelocity);
     if (continuousMove) {
-      if (driveVelocityMagnitude < 0.0) {
-        driveVelocityMagnitude = Math.min(driveVelocityMagnitude, -maxVelocity / 2);
-      } else {
-        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, maxVelocity / 2);
-      }
+      driveVelocityMagnitude = Math.min(driveVelocityMagnitude, maxVelocity / 2);
     }
     rotationSpeed =
         MathUtil.clamp(
@@ -479,7 +474,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
             Units.rotationsToRadians(-MAX_ROTATION_VELOCITY_LIMIT_ROT.get()),
             Units.rotationsToRadians(MAX_ROTATION_VELOCITY_LIMIT_ROT.get()));
 
-    var speeds = new PolarChassisSpeeds(driveVelocityMagnitude, driveDirection, rotationSpeed);
+    var speeds =
+        new PolarChassisSpeeds(
+            driveVelocityMagnitude, driveDirection.plus(Rotation2d.k180deg), rotationSpeed);
     DogLog.log("Swerve/DriveToPose/TargetPose", targetPose);
     DogLog.log("Swerve/DriveToPose/DistanceToTarget", distanceToGoalMeters, Meters);
     DogLog.log("Swerve/DriveToPose/Speeds", speeds);
