@@ -63,11 +63,8 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   }
 
   private void positionVoltageRequest(double wristRotations) {
-    if (DriverStation.isTeleop()) {
       motor.setControl(positionRequest.withPosition(wristRotations));
-      DogLog.log("Wrist/PostionVoltage", "Teleop");
     }
-  }
 
   public boolean atGoal(WristState state) {
     return switch (state) {
