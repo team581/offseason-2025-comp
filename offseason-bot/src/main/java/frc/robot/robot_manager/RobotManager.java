@@ -287,7 +287,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         var swerveSpeeds = swerve.getFieldRelativeSpeeds();
         var vMetersPerSecond =
             Math.hypot(swerveSpeeds.vxMetersPerSecond, swerveSpeeds.vyMetersPerSecond);
-        if (claw.getHasGP() && vMetersPerSecond > 0.4) {
+        if (claw.getHasGP() && vMetersPerSecond > 0.8) {
           rumbleController.rumbleRequest();
           yield RobotState.CLAW_ALGAE;
         }
@@ -883,8 +883,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     var redSide = MathUtil.isNear(180, rotation, 10, -180, 180);
     var farEnoughFromReleasePose =
         redSide
-            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(5.0)
-            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(5.0);
+            ? robotPose.getX() >= lastNetReleasePose.getX() + Units.inchesToMeters(10.0)
+            : robotPose.getX() < lastNetReleasePose.getX() - Units.inchesToMeters(10.0);
 
     var xMetersPerSecond = swerve.getTeleopSpeeds().vxMetersPerSecond;
     var swerveMovingFastEnough = redSide ? xMetersPerSecond > 0.1 : xMetersPerSecond < -0.1;
