@@ -1,5 +1,6 @@
 package com.team581.mechanisms;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,6 +18,7 @@ public class VelocityDetector {
     this.debouncer = new Debouncer(debounceTime, DebounceType.kRising);
     timeout.start();
   }
+
   public VelocityDetector(double minVelocity, double minVelocityTimeout) {
     this.minVelocity = minVelocity;
     this.minVelocityTimeout = minVelocityTimeout;
@@ -24,18 +26,21 @@ public class VelocityDetector {
     timeout.start();
   }
 
+  @CanIgnoreReturnValue
   public VelocityDetector withDebounceRising(double time) {
     this.debouncer.setDebounceTime(time);
     this.debouncer.setDebounceType(DebounceType.kRising);
     return this;
   }
 
+  @CanIgnoreReturnValue
   public VelocityDetector withDebounceFalling(double time) {
     this.debouncer.setDebounceTime(time);
     this.debouncer.setDebounceType(DebounceType.kFalling);
     return this;
   }
 
+  @CanIgnoreReturnValue
   public VelocityDetector withDebounceBoth(double time) {
     this.debouncer.setDebounceTime(time);
     this.debouncer.setDebounceType(DebounceType.kBoth);
