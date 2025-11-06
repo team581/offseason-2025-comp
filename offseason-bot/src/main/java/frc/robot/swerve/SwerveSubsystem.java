@@ -470,8 +470,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       if (driveVelocityMagnitude < 0.0) {
         driveVelocityMagnitude = Math.min(driveVelocityMagnitude, -maxVelocity / 2);
       } else {
-        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, maxVelocity/2);
-
+        driveVelocityMagnitude = Math.max(driveVelocityMagnitude, maxVelocity / 2);
       }
     }
     rotationSpeed =
