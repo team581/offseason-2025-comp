@@ -80,6 +80,7 @@ public enum RobotState {
   // Algae scoring states
   ALGAE_NET_WAITING(ClawGamePiece.ALGAE, false),
   ALGAE_NET_RELEASE(ClawGamePiece.EMPTY, false),
+  AFTER_ALGAE_NET_RELEASE(ClawGamePiece.EMPTY, false),
 
   ALGAE_PROCESSOR_WAITING(ClawGamePiece.ALGAE, false),
   ALGAE_PROCESSOR_RELEASE(ClawGamePiece.EMPTY, false),

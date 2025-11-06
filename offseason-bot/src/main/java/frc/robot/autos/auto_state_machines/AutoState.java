@@ -4,17 +4,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autos.Points;
 
 public enum AutoState {
-  INTAKING(Points.GROUND_INTAKE_LEFT_STATION.getPose()),
-  LOLLIPOP_2(Points.LOLLIPOP_2.getPose()),
-  SCORE(new Pose2d());
+  INTAKING(Points.GROUND_INTAKE_LEFT_STATION),
+  SCORE(Points.GROUND_INTAKE_LEFT_STATION);
 
-  public final Pose2d pose;
+  public final Points point;
 
   public Pose2d getPose() {
-    return this.pose;
+    return this.point.getPose();
   }
 
-  private AutoState(Pose2d pose) {
-    this.pose = pose;
+  private AutoState(Points point) {
+    this.point = point;
   }
 }

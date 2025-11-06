@@ -44,7 +44,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
             case CORAL_HANDOFF -> timeout(0.5);
             case IDLE_NO_GP -> false;
             case IDLE_W_ALGAE, IDLE_W_CORAL -> true;
-            case INTAKING_ALGAE -> timeout(1.5);
+            case INTAKING_ALGAE -> timeout(2.0);
             case SCORE_CORAL -> !timeout(0.2);
             case SCORE_CORAL_L1 -> !timeout(0.4);
             case SCORE_ALGAE_NET, SCORE_ALGAE_PROCESSOR, OUTTAKING -> !timeout(0.25);
@@ -72,7 +72,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
         motor.setVoltage(12.0);
       }
       case IDLE_W_CORAL -> {
-        motor.setVoltage(0.8);
+        motor.setVoltage(1.2);
       }
       case INTAKING_ALGAE -> {
         motor.setVoltage(12.0);
@@ -81,7 +81,7 @@ public class ClawSubsystem extends StateMachineSubsystem<ClawState> {
         motor.setVoltage(12.0);
       }
       case SCORE_ALGAE_NET -> {
-        motor.setVoltage(-8);
+        motor.setVoltage(-12);
       }
       case SCORE_ALGAE_PROCESSOR -> {
         motor.setVoltage(-5);
