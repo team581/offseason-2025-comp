@@ -10,6 +10,7 @@ import java.util.Collections;
 
 public class SnapUtil {
   private static final double BACK_AWAY_FROM_NET_VELOCITY = 1.0;
+
   public static double getProcessorAngle() {
     return FmsUtil.isRedAlliance() ? 100 : -80;
   }

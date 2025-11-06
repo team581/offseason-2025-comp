@@ -168,7 +168,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       case TRAILBLAZER, TELEOP ->
           DriverStation.isAutonomous() ? SwerveState.TRAILBLAZER : SwerveState.TELEOP;
 
-      case BACK_AWAY_FROM_NET -> timeout(2.0)? SwerveState.TELEOP: currentState;
+      case BACK_AWAY_FROM_NET -> timeout(2.0) ? SwerveState.TELEOP : currentState;
       default -> currentState;
     };
   }
@@ -288,11 +288,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       }
       case BACK_AWAY_FROM_NET -> {
         drivetrain.setControl(
-          drive
-              .withVelocityX(SnapUtil.getNetBackAwayVelocity(drivetrainState.Pose))
-              .withVelocityY(0.0)
-              .withRotationalRate(0.0)
-              .withDriveRequestType(DriveRequestType.Velocity));
+            drive
+                .withVelocityX(SnapUtil.getNetBackAwayVelocity(drivetrainState.Pose))
+                .withVelocityY(0.0)
+                .withRotationalRate(0.0)
+                .withDriveRequestType(DriveRequestType.Velocity));
       }
       case TRAILBLAZER -> {
         drivetrain.setControl(

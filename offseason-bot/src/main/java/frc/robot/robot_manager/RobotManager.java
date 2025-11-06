@@ -913,7 +913,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     var xMetersPerSecond = swerve.getFieldRelativeSpeeds().vxMetersPerSecond;
     var swerveMovingFastEnough = redSide ? xMetersPerSecond > 0.1 : xMetersPerSecond < -0.1;
 
-    return farEnoughFromReleasePose && (swerveMovingFastEnough || swerve.getState() == SwerveState.BACK_AWAY_FROM_NET);
+    return farEnoughFromReleasePose
+        && (swerveMovingFastEnough || swerve.getState() == SwerveState.BACK_AWAY_FROM_NET);
   }
 
   private boolean farEnoughFromReef() {
