@@ -368,7 +368,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       case ALGAE_CENTER -> getCenterSidePoseFromRobotDistance(bestAlgaeSide);
       case ALGAE_WAITING -> bestAlgaeSide.getPose(ReefSideOffset.SAFE, currentPose);
       case ALGAE_INTAKE -> bestAlgaeSide.getPose(ReefSideOffset.ALGAE_INTAKING, currentPose);
-      case ALGAE_BACKUP -> closestReefSide.getPose(ReefSideOffset.SAFE, currentPose);
+      case ALGAE_BACKUP -> closestReefSide.getPose(ReefSideOffset.ALGAE_BACK_UP, currentPose);
     };
   }
 
