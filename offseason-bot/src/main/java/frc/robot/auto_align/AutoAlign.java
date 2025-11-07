@@ -310,7 +310,12 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
       }
       case BEST_PIPE_CENTER, ALGAE_CENTER, BEST_L1_CENTER -> {
         useAngleBisector = true;
-        isContinuousMove = true;
+
+        if (isNearRotationGoal(25.0)) {
+          isContinuousMove = true;
+        } else{
+          isContinuousMove = false;
+        }
         velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
       }
 
@@ -549,13 +554,19 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
   /** Returns true if the robot's rotation is within 10 degrees of the target pose's rotation. */
   public boolean isNearRotationGoal() {
+    return isNearRotationGoal(10.0);
+  }
+
+   /** Returns true if the robot's rotation is within specified degrees of the target pose's rotation. */
+   public boolean isNearRotationGoal(double toleranceDegrees) {
     return MathUtil.isNear(
         currentTargetPose.getRotation().getDegrees(),
         currentPose.getRotation().getDegrees(),
-        10.0,
+        toleranceDegrees,
         -180.0,
         180.0);
   }
+
 
   /**
    * Checks if algae has been removed from the specified reef side.
