@@ -313,7 +313,7 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
 
         if (isNearRotationGoal(25.0)) {
           isContinuousMove = true;
-        } else{
+        } else {
           isContinuousMove = false;
         }
         velocityLimit = AUTO_CENTER_VELOCITY_LIMIT;
@@ -557,8 +557,10 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
     return isNearRotationGoal(10.0);
   }
 
-   /** Returns true if the robot's rotation is within specified degrees of the target pose's rotation. */
-   public boolean isNearRotationGoal(double toleranceDegrees) {
+  /**
+   * Returns true if the robot's rotation is within specified degrees of the target pose's rotation.
+   */
+  public boolean isNearRotationGoal(double toleranceDegrees) {
     return MathUtil.isNear(
         currentTargetPose.getRotation().getDegrees(),
         currentPose.getRotation().getDegrees(),
@@ -566,7 +568,6 @@ public class AutoAlign extends StateMachineSubsystem<AutoAlignState> {
         -180.0,
         180.0);
   }
-
 
   /**
    * Checks if algae has been removed from the specified reef side.
