@@ -8,6 +8,7 @@ import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.auto_align.field_calibration.ScoringPosition;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
@@ -22,6 +23,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   private AutoSegment path = new AutoSegment();
 
   private boolean isFirstScore = true;
+  private boolean justFinishedScore = true;
 
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
@@ -62,10 +64,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-  // private StationAndLollipop5pcAutoState getNextReefPosition() {
-  //   StationAndLollipop5pcAutoState nextScoringPosition = nextScoringPositions.pop();
-  //   return nextScoringPosition;
-  // }
 
   @Override
   protected AutoState getNextState(AutoState currentState) {
@@ -77,7 +75,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
           DriverStation.isEnabled()
                   && ((!robotManager.claw.getHasGP()
                           && robotManager.getState() == RobotState.CORAL_L4_RELEASE)
-                      || (timeout(3)
+                      || (timeout(1.5)
                           && !robotManager.claw.getHasGP()
                           && !robotManager.groundManager.getTopHasGP()
                           && !robotManager.groundManager.getBottomHasGP()))
@@ -101,7 +99,8 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
           robotManager.groundManager.rehomeRequest();
           isFirstScore = false;
         }
-        robotManager.scoreRequest(nextScoringPositions.pop(), ReefPipeLevel.L4);
+        justFinishedScore=true;
+        robotManager.scoreRequest(nextScoringPositions.peek(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
@@ -116,7 +115,17 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   @Override
   protected void whileInState(AutoState state) {
     switch (state) {
-      case SCORE -> {}
+      case SCORE -> {
+        if(!nextScoringPositions.isEmpty()){
+          DogLog.log("StateMachineAuto/NextScoringPosition", nextScoringPositions.getFirst());
+
+        }
+
+        if(robotManager.getState()==RobotState.CORAL_L4_RELEASE&&justFinishedScore){
+          nextScoringPositions.remove();
+          justFinishedScore=false;
+        }
+      }
 
       case INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
