@@ -6,11 +6,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum Points {
-  START_ANGLED(
-      new Pose2d(10.546, 1.782, Rotation2d.fromDegrees(60)),
-      new Pose2d(7.042, 5.976, Rotation2d.fromDegrees(240))),
+  NON_PROCESSOR_SIDE_START_ANGLED(
+      new Pose2d(10.546, 1.782, Rotation2d.fromDegrees(60.0)),
+      new Pose2d(7.042, 5.976, Rotation2d.fromDegrees(240.0))),
 
-  START_R1_AND_B1(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(90))),
+  PROCESSOR_SIDE_START_ANGLED(
+      new Pose2d(10.546, 6.218, Rotation2d.fromDegrees(300.0)),
+      new Pose2d(7.042, 2.024, Rotation2d.fromDegrees(120.0))),
+
+  START_R1_AND_B1(new Pose2d(10.289, 0.47, Rotation2d.fromDegrees(90.0))),
   START_R1_AND_B1_FORWARD(new Pose2d(10.289, 0.758, Rotation2d.kZero)),
 
   START_R2_AND_B2(new Pose2d(10.289, 1.903, Rotation2d.kZero)),
@@ -20,26 +24,18 @@ public enum Points {
   START_R4_AND_B4(new Pose2d(10.289, 5.069, Rotation2d.kZero)),
   START_R5_AND_B5(new Pose2d(10.289, 6.127, Rotation2d.kZero)),
   START_R6_AND_B6_FORWARD(new Pose2d(10.289, 7.292, Rotation2d.kZero)),
-  START_R6_AND_B6(new Pose2d(10.289, 7.58, Rotation2d.fromDegrees(90))),
+  START_R6_AND_B6(new Pose2d(10.289, 7.58, Rotation2d.fromDegrees(90.0))),
 
-  GROUND_INTAKE_LEFT_STATION(
-      new Pose2d(
-          16.1,
-          1.0,
-          Rotation2d.fromDegrees(
-              126.0))), // ,new Pose2d(1.4, 7.0, Rotation2d.fromDegrees(150))),  // -Pose by
-  // station,
-  // robot state intaking
-  PRE_GROUND_INTAKE_LEFT_STATION(
-      new Pose2d(
-          14.9,
-          1.7,
-          Rotation2d.fromDegrees(126.0))), // ,new Pose2d(, 1.0, Rotation2d.fromDegrees(150))),
-  // -Pose before getting to station, robot state idle
+  GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION(new Pose2d(16.1, 1.0, Rotation2d.fromDegrees(126.0))),
+  PRE_GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION(
+      new Pose2d(14.9, 1.7, Rotation2d.fromDegrees(126.0))),
 
-  LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180))),
+  GROUND_INTAKE_PROCESSOR_SIDE_STATION(new Pose2d(16.1, 7.0, Rotation2d.fromDegrees(234.0))),
+  PRE_GROUND_INTAKE_PROCESSOR_SIDE_STATION(new Pose2d(14.9, 6.3, Rotation2d.fromDegrees(234.0))),
+
+  LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180.0))),
   // -LP 2 pose, intaking state
-  PRE_LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180)));
+  PRE_LOLLIPOP_2(new Pose2d(16.0, 3.964, Rotation2d.fromDegrees(180.0)));
   // -away from LP 2 pose, idle state
 
   public final Pose2d redPose;

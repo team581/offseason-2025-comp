@@ -12,11 +12,13 @@ import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
 import frc.robot.autos.Points;
+import frc.robot.autos.auto_state_machines.auto_states.NonProcessorSideStationAutoState;
 import frc.robot.robot_manager.RobotManager;
 import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 
-public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
+public class NonProcessorSideStationAuto4pc
+    extends BaseImperativeAuto<NonProcessorSideStationAutoState> {
   private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(5, 57, 4, 45);
 
   private AutoSegment path = new AutoSegment();
@@ -50,13 +52,13 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
     DogLog.log("StateMachineAuto/IntermediaryPose", intermediaryPose);
   }
 
-  public StationAuto4pc(RobotManager robot, Trailblazer trailblazer) {
-    super(AutoState.SCORE, robot, trailblazer);
+  public NonProcessorSideStationAuto4pc(RobotManager robot, Trailblazer trailblazer) {
+    super(NonProcessorSideStationAutoState.SCORE, robot, trailblazer);
   }
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_ANGLED.getPose();
+    return Points.NON_PROCESSOR_SIDE_START_ANGLED.getPose();
   }
 
   private boolean superstructureAtGoal() {
@@ -64,7 +66,8 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   }
 
   @Override
-  protected AutoState getNextState(AutoState currentState) {
+  protected NonProcessorSideStationAutoState getNextState(
+      NonProcessorSideStationAutoState currentState) {
     DogLog.log(
         "StateMachineAuto/trailblazerFollowSegmentIsFinished",
         trailblazer.followSegmentIsFinished(path));
@@ -77,20 +80,20 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
                           && !robotManager.claw.getHasGP()
                           && !robotManager.groundManager.getTopHasGP()
                           && !robotManager.groundManager.getBottomHasGP()))
-              ? AutoState.INTAKING
+              ? NonProcessorSideStationAutoState.INTAKING
               : currentState;
 
       case INTAKING ->
           ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
                       || robotManager.claw.getHasGP())
                   && !nextScoringPositions.isEmpty()
-              ? AutoState.SCORE
+              ? NonProcessorSideStationAutoState.SCORE
               : currentState;
     };
   }
 
   @Override
-  protected void afterTransition(AutoState newState) {
+  protected void afterTransition(NonProcessorSideStationAutoState newState) {
     switch (newState) {
       case SCORE -> {
         if (isFirstScore) {
@@ -102,7 +105,8 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
         robotManager.groundManager.intakeRequest();
       }
       case INTAKING -> {
-        createPath(newState.getPose(), Points.PRE_GROUND_INTAKE_LEFT_STATION.getPose());
+        createPath(
+            newState.getPose(), Points.PRE_GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION.getPose());
         trailblazer.followSegmentInit(path);
         robotManager.stowRequest();
         robotManager.groundManager.intakeRequest();
@@ -111,7 +115,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   }
 
   @Override
-  protected void whileInState(AutoState state) {
+  protected void whileInState(NonProcessorSideStationAutoState state) {
     switch (state) {
       case SCORE -> {
         if (!nextScoringPositions.isEmpty()) {
