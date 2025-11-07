@@ -112,7 +112,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
       case ALGAE_OUTTAKE, CORAL_OUTTAKE -> claw.getHasGP() ? currentState : RobotState.CLAW_EMPTY;
 
-      case ALGAE_NET_RAISE_ELEVATOR -> elevator.clearsBumpers() ? RobotState.ALGAE_NET_WAITING : currentState;
+      case ALGAE_NET_RAISE_ELEVATOR ->
+          elevator.clearsBumpers() ? RobotState.ALGAE_NET_WAITING : currentState;
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
           wrist.atGoal() && elevator.atGoal()
@@ -513,7 +514,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public RobotState getStowState(RobotState state, boolean clawHasGP) {
     return switch (state) {
       case CLAW_ALGAE, CLAW_CORAL, CLAW_EMPTY -> state;
-      case ALGAE_INTAKE_L2_HOLDING, ALGAE_INTAKE_L3_HOLDING, CLAW_ALGAE_AFTER_GROUND, ALGAE_NET_RAISE_ELEVATOR, ALGAE_NET_WAITING ->
+      case ALGAE_INTAKE_L2_HOLDING,
+          ALGAE_INTAKE_L3_HOLDING,
+          CLAW_ALGAE_AFTER_GROUND,
+          ALGAE_NET_RAISE_ELEVATOR,
+          ALGAE_NET_WAITING ->
           RobotState.CLAW_ALGAE;
       case CORAL_L1_APPROACH, CORAL_L1_LINEUP, CORAL_INTAKE_GROUND -> RobotState.CLAW_CORAL;
       default -> RobotState.CLAW_EMPTY;
