@@ -5,7 +5,6 @@ import com.team581.trailblazer.AutoSegment;
 import com.team581.trailblazer.Trailblazer;
 import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.BaseCommandAuto;
@@ -30,7 +29,6 @@ public class RedDoNothingAuto extends BaseCommandAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(Points.START_R1_AND_B1.redPose),
-                new AutoPoint(new Pose2d(10.626, 0.758, Rotation2d.kZero)))));
+                new AutoPoint(Points.START_MIDDLE_BARGE.redPose))));
   }
 }
