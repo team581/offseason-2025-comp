@@ -113,7 +113,7 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
-                          .withNeutralMode(NeutralModeValue.Coast)
+                          .withNeutralMode(NeutralModeValue.Brake)
                           .withInverted(InvertedValue.Clockwise_Positive)
                           .withPeakReverseDutyCycle(0))
                   .withVoltage(new VoltageConfigs().withPeakReverseVoltage(0))

@@ -171,6 +171,8 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
       case CLIMBING -> {
         if (DriverStation.isDisabled()) {
           motor.setControl(brakeNeutralRequest);
+        } else {
+          afterTransition(state);
         }
       }
       default -> {}
