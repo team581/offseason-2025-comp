@@ -1,5 +1,6 @@
 package com.team581;
 
+import edu.wpi.first.wpilibj.RobotController;
 import java.util.Optional;
 
 public enum RobotKind {
@@ -12,7 +13,7 @@ public enum RobotKind {
    * can't be matched, returns empty.
    */
   public static Optional<RobotKind> fromSerialNumber() {
-    return switch (GlobalConfig.SERIAL_NUMBER) {
+    return switch (RobotController.getSerialNumber()) {
       case "placeholder" -> Optional.of(NEW_MEMBER_BOT);
       case "placeholder2" -> Optional.of(OFFSEASON_BOT);
       case "placeholder3" -> Optional.of(COMP_BOT);

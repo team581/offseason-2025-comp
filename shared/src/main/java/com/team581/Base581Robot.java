@@ -33,7 +33,7 @@ public abstract class Base581Robot extends TimedRobot {
     DogLog.log(
         "Metadata/RobotName",
         RobotKind.fromSerialNumber().map(RobotKind::toString).orElse("Unknown"));
-    DogLog.log("Metadata/RoborioSerialNumber", GlobalConfig.SERIAL_NUMBER);
+    DogLog.log("Metadata/RoborioSerialNumber", RobotController.getSerialNumber());
 
     ElasticLayoutUtil.onBoot();
   }
