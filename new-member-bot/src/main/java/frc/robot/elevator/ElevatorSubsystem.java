@@ -119,6 +119,10 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     return atGoal(getState());
   }
 
+  public boolean clearsBumpers() {
+    return height > 18.0;
+  }
+
   public boolean nearGoal(ElevatorState state) {
     return switch (state) {
       case PRE_MATCH_HOMING, UNJAM -> true;

@@ -38,6 +38,7 @@ public enum RobotState {
   ALGAE_OUTTAKE(false, ClawGamePiece.ALGAE),
 
   // Algae scoring states
+  ALGAE_NET_RAISE_ELEVATOR(false, ClawGamePiece.ALGAE),
   ALGAE_NET_WAITING(false, ClawGamePiece.ALGAE),
   ALGAE_NET_RELEASE(false, ClawGamePiece.ALGAE),
 

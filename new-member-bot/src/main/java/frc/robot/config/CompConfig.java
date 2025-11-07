@@ -101,7 +101,7 @@ class CompConfig {
               0.0,
               0.0,
               0.0,
-              80.0,
+              100.0,
               0.0,
               new TalonFXConfiguration()
                   .withCurrentLimits(
@@ -130,7 +130,7 @@ class CompConfig {
           new WristConfig(
               RIO_CAN_NAME,
               17,
-              151.0,
+              180.0,
               new TalonFXConfiguration()
                   .withMotorOutput(
                       new MotorOutputConfigs()
