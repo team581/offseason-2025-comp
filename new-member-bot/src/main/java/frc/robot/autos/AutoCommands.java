@@ -53,7 +53,7 @@ public class AutoCommands {
   }
 
   public Command netWaitCommand() {
-    return Commands.runOnce(robotManager::netWaitRequest).withName("NetWaitCommand");
+    return Commands.runOnce(robotManager::netRaiseRequest).withName("NetWaitCommand");
   }
 
   public Command netReleaseCommand() {

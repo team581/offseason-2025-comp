@@ -31,7 +31,7 @@ public class RobotCommands {
   }
 
   public Command netWaitCommand() {
-    return Commands.runOnce(robot::netWaitRequest, requirements).withName("NetWaitCommand");
+    return Commands.runOnce(robot::netRaiseRequest, requirements).withName("NetWaitCommand");
   }
 
   public Command lowLineupCommand() {

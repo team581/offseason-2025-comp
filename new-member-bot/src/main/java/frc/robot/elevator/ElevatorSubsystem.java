@@ -115,6 +115,10 @@ public class ElevatorSubsystem extends StateMachineSubsystem<ElevatorState> {
     };
   }
 
+  public boolean clearsBumpers() {
+    return height > 18.0;
+  }
+
   public boolean atGoal() {
     return atGoal(getState());
   }
