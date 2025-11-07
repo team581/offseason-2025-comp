@@ -21,7 +21,7 @@ public class RedDoNothingAuto extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.redPose;
+    return Points.START_MIDDLE_BARGE.redPose;
   }
 
   @Override
