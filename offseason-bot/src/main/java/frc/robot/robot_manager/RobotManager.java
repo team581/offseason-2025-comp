@@ -248,7 +248,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
 
       case ALGAE_NET_RELEASE -> {
-        yield timeout(0.5) ? RobotState.AFTER_ALGAE_NET_RELEASE : currentState;
+        yield timeout(0.25) ? RobotState.AFTER_ALGAE_NET_RELEASE : currentState;
       }
       case AFTER_ALGAE_NET_RELEASE -> {
         yield backedAwayFromNetEnough() ? RobotState.CLAW_EMPTY : currentState;
