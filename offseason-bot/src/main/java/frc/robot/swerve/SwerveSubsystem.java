@@ -484,8 +484,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
     driveVelocityMagnitude = Math.min(driveVelocityMagnitude, maxVelocity);
     if (continuousMove) {
-      driveVelocityMagnitude = Math.min(driveVelocityMagnitude, maxVelocity / 2);
+      driveVelocityMagnitude = Math.max(driveVelocityMagnitude, maxVelocity / 2);
     }
+    DogLog.log("DriveToPose/DriveVel", driveVelocityMagnitude);
     rotationSpeed =
         MathUtil.clamp(
             rotationSpeed,
