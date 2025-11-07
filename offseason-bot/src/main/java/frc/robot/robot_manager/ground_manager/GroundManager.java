@@ -63,14 +63,14 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
 
         // Prevent from going in an unjamming loop
         if (timeout(0.5)) {
-          if (intake.isJammed()) {
-            yield GroundState.AUTO_UNJAM;
-          }
           if (singulator.isLeftJammed()) {
             yield GroundState.AUTO_UNJAM_LEFT;
           }
           if (singulator.isRightJammed()) {
             yield GroundState.AUTO_UNJAM_RIGHT;
+          }
+          if (intake.isJammed()) {
+            yield GroundState.AUTO_UNJAM;
           }
         }
 
