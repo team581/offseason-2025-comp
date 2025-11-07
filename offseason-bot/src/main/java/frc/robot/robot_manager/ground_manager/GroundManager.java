@@ -69,9 +69,9 @@ public class GroundManager extends StateMachineSubsystem<GroundState> {
           if (singulator.isRightJammed()) {
             yield GroundState.AUTO_UNJAM_RIGHT;
           }
-          // if (intake.isJammed()) {
-          //   yield GroundState.AUTO_UNJAM;
-          // }
+          if (intake.isJammed() && DriverStation.isTeleop()) {
+            yield GroundState.AUTO_UNJAM;
+          }
         }
 
         yield currentState;
