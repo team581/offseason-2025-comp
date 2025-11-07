@@ -8,7 +8,6 @@ import com.team581.trailblazer.constraints.AutoConstraintOptions;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.auto_align.field_calibration.ScoringPosition;
 import frc.robot.auto_align.poses.ReefPipe;
 import frc.robot.auto_align.poses.ReefPipeLevel;
 import frc.robot.autos.BaseImperativeAuto;
@@ -64,7 +63,6 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
     return robotManager.arm.atGoal() && robotManager.elevator.atGoal();
   }
 
-
   @Override
   protected AutoState getNextState(AutoState currentState) {
     DogLog.log(
@@ -99,7 +97,7 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
           robotManager.groundManager.rehomeRequest();
           isFirstScore = false;
         }
-        justFinishedScore=true;
+        justFinishedScore = true;
         robotManager.scoreRequest(nextScoringPositions.peek(), ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
       }
@@ -116,14 +114,13 @@ public class StationAuto4pc extends BaseImperativeAuto<AutoState> {
   protected void whileInState(AutoState state) {
     switch (state) {
       case SCORE -> {
-        if(!nextScoringPositions.isEmpty()){
+        if (!nextScoringPositions.isEmpty()) {
           DogLog.log("StateMachineAuto/NextScoringPosition", nextScoringPositions.getFirst());
-
         }
 
-        if(robotManager.getState()==RobotState.CORAL_L4_RELEASE&&justFinishedScore){
+        if (robotManager.getState() == RobotState.CORAL_L4_RELEASE && justFinishedScore) {
           nextScoringPositions.remove();
-          justFinishedScore=false;
+          justFinishedScore = false;
         }
       }
 
