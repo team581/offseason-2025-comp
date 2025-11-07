@@ -27,8 +27,6 @@ public class RedDoNothingAuto extends BaseCommandAuto {
   protected Command createAutoCommand() {
     return Commands.sequence(
         trailblazer.followSegment(
-            new AutoSegment(
-                CONSTRAINTS,
-                new AutoPoint(Points.START_MIDDLE_BARGE.redPose))));
+            new AutoSegment(CONSTRAINTS, new AutoPoint(Points.START_MIDDLE_BARGE.redPose))));
   }
 }
