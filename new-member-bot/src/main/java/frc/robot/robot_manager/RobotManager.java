@@ -64,7 +64,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private Pose2d robotPose = new Pose2d();
   private boolean tagCameraOnline = false;
-  private double reefSnapAngle = 0.0;
+
   private boolean scoringAlignActive = false;
   private boolean awayFromReef = false;
   private boolean awayFromReefAlgaeBackOut = false;
@@ -367,8 +367,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
     awayFromReefAlgaeBackOut =
         !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
-
-    reefSnapAngle = autoAlign.getClosestReefSide().getPose(robotPose).getRotation().getDegrees();
   }
 
   @Override
