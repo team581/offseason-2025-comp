@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team581.simkit.SimKit;
 import com.team581.util.state_machines.StateMachineSubsystem;
@@ -31,6 +32,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
 
   private final CoastOut coastNeutralRequest = new CoastOut();
+  private final StaticBrake brakeNeutralRequest = new StaticBrake();
 
   private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(false);
 
@@ -126,7 +128,7 @@ public class WristSubsystem extends StateMachineSubsystem<WristState> {
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
           if (DriverStation.isDisabled()) {
-            motor.setControl(coastNeutralRequest);
+            motor.setControl(brakeNeutralRequest);
           }
         } else {
           motor.setControl(coastNeutralRequest);
