@@ -579,12 +579,19 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void climberSequenceForward() {
     switch (getState()) {
-      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE, FULL_STOW, CORAL_INTAKE_GROUND,
-      CORAL_L1_APPROACH, CORAL_L1_RELEASE,ALGAE_INTAKE_FLOOR,
-      ALGAE_INTAKE_L2,
-      ALGAE_INTAKE_L2_APPROACH,
-      ALGAE_INTAKE_L3,
-      ALGAE_INTAKE_L3_APPROACH-> {
+      case STARTING_POSITION,
+          CLAW_EMPTY,
+          CLAW_CORAL,
+          CLAW_ALGAE,
+          FULL_STOW,
+          CORAL_INTAKE_GROUND,
+          CORAL_L1_APPROACH,
+          CORAL_L1_RELEASE,
+          ALGAE_INTAKE_FLOOR,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L2_APPROACH,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L3_APPROACH -> {
         if (wrist.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
