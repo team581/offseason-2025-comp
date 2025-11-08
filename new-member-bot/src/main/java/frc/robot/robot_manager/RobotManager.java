@@ -175,7 +175,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -183,7 +183,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -191,7 +191,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_RELEASE_L1);
         wrist.setState(WristState.CORAL_SCORE_RELEASE_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
