@@ -206,8 +206,8 @@ class CompConfig {
                       new MotionMagicConfigs()
                           .withMotionMagicAcceleration(5.0)
                           .withMotionMagicCruiseVelocity(6.0)
-                          .withMotionMagicExpo_kA(6.0)
-                          .withMotionMagicExpo_kV(3.0))
+                          .withMotionMagicExpo_kA(1.0)
+                          .withMotionMagicExpo_kV(1.0))
                   .withFeedback(
                       new FeedbackConfigs()
                           .withSensorToMechanismRatio((64.0 / 8.0) * (90.0 / 10.0)))

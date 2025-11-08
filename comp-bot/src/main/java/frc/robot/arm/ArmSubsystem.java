@@ -3,6 +3,7 @@ package frc.robot.arm;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -74,6 +75,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0.0).withEnableFOC(false);
 
+  private final MotionMagicExpoVoltage motionMagicExpoRequest =
+      new MotionMagicExpoVoltage(0.0).withEnableFOC(false);
+
   // TODO: tune velocity
   private final PositionVoltage algaeFling =
       new PositionVoltage(Units.degreesToRotations(ArmState.ALGAE_FLING_SWING.getAngle()))
@@ -138,11 +142,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   public double getRawAngle() {
     return rawMotorAngle;
-  }
-
-  private void makeGetMotionMagicRequest(double armRotations) {
-    motor.setControl(motionMagicRequest.withPosition(armRotations));
-    DogLog.log("Arm/MotionMagicStrategy", "Teleop");
   }
 
   private double getSetpoint(double angle) {
@@ -254,7 +253,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(collisionAvoidanceGoal));
+        motor.setControl(motionMagicRequest.withPosition(
+
+        Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
@@ -274,10 +275,14 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         motor.setControl(algaeFling);
       }
       case CORAL_HANDOFF -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(usedHandoffAngle)));
+        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
       }
+      case CORAL_SCORE_LEFT_RELEASE_L2, CORAL_SCORE_LEFT_RELEASE_L3, CORAL_SCORE_LEFT_RELEASE_L4,
+        CORAL_SCORE_RIGHT_RELEASE_L2, CORAL_SCORE_RIGHT_RELEASE_L3, CORAL_SCORE_RIGHT_RELEASE_L4 -> {
+          motor.setControl(motionMagicExpoRequest.withPosition(Units.degreesToRotations(getSetpoint(getState().getAngle()))));
+        }
       default -> {
-        makeGetMotionMagicRequest(Units.degreesToRotations(getSetpoint(getState().getAngle())));
+        motor.setControl(motionMagicRequest.withPosition((Units.degreesToRotations(getSetpoint(getState().getAngle())))));
       }
     }
   }
