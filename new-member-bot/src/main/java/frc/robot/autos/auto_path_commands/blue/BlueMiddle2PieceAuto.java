@@ -45,13 +45,13 @@ public class BlueMiddle2PieceAuto extends BaseCommandAuto {
         Commands.waitSeconds(0.5),
         trailblazer.followSegment(
             new AutoSegment(
-            AutoBlocks.BASE_CONSTRAINTS,
-            new AutoPoint(new Pose2d(5.897, 4.077, Rotation2d.fromDegrees(180))))),
+                AutoBlocks.BASE_CONSTRAINTS,
+                new AutoPoint(new Pose2d(5.897, 4.077, Rotation2d.fromDegrees(180))))),
         Commands.waitSeconds(0.6),
         trailblazer.followSegment(
             new AutoSegment(
-              AutoBlocks.BASE_CONSTRAINTS,
-              new AutoPoint(new Pose2d(6.432, 4.05, Rotation2d.fromDegrees(180))))),
+                AutoBlocks.BASE_CONSTRAINTS,
+                new AutoPoint(new Pose2d(6.432, 4.05, Rotation2d.fromDegrees(180))))),
         // Score first algae
         trailblazer.followSegment(
             new AutoSegment(
@@ -63,20 +63,20 @@ public class BlueMiddle2PieceAuto extends BaseCommandAuto {
         Commands.waitSeconds(1.5),
         trailblazer.followSegment(
             new AutoSegment(
-              AutoBlocks.BASE_CONSTRAINTS,
-              new AutoPoint(new Pose2d(7.25, 6.1, Rotation2d.fromDegrees(0))))),
+                AutoBlocks.BASE_CONSTRAINTS,
+                new AutoPoint(new Pose2d(7.25, 6.1, Rotation2d.fromDegrees(0))))),
         Commands.waitSeconds(1),
         trailblazer.followSegment(
             new AutoSegment(
-              AutoBlocks.BASE_CONSTRAINTS,
-              new AutoPoint(new Pose2d(7.05, 6.1, Rotation2d.fromDegrees(0))))),
+                AutoBlocks.BASE_CONSTRAINTS,
+                new AutoPoint(new Pose2d(7.05, 6.1, Rotation2d.fromDegrees(0))))),
         Commands.waitSeconds(0.5),
         autoCommands.stowCommand(),
         trailblazer.followSegment(
-          new AutoSegment(
-              AutoBlocks.BASE_CONSTRAINTS,
-              new AutoPoint(new Pose2d(7.15, 4.95, Rotation2d.fromDegrees(120))),
-              new AutoPoint(new Pose2d(6.95, 3.15, Rotation2d.fromDegrees(120))),
-              new AutoPoint(new Pose2d(6.08, 1.8, Rotation2d.fromDegrees(120))))));
+            new AutoSegment(
+                AutoBlocks.BASE_CONSTRAINTS,
+                new AutoPoint(new Pose2d(7.15, 4.95, Rotation2d.fromDegrees(120))),
+                new AutoPoint(new Pose2d(6.95, 3.15, Rotation2d.fromDegrees(120))),
+                new AutoPoint(new Pose2d(6.08, 1.8, Rotation2d.fromDegrees(120))))));
   }
 }
