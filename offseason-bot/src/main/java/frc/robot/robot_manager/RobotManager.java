@@ -786,8 +786,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       case CLAW_ALGAE -> {
         if (AutoAlign.shouldScoreInNet(robotPose) && AutoAlign.isCloseToNet(robotPose)) {
           swerve.snapsDriveRequest(SnapUtil.getNetScoringAngle(robotPose));
-        } else if (!AutoAlign.shouldScoreInNet(robotPose)) {
-          swerve.snapsDriveRequest(SnapUtil.getProcessorAngle());
         } else {
           swerve.normalDriveRequest();
         }
