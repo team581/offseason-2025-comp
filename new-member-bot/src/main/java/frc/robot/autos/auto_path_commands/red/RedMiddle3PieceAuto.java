@@ -1,4 +1,4 @@
-package frc.robot.autos.auto_path_commands.blue;
+package frc.robot.autos.auto_path_commands.red;
 
 import com.team581.trailblazer.AutoPoint;
 import com.team581.trailblazer.AutoSegment;
@@ -13,14 +13,14 @@ import frc.robot.autos.BaseCommandAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 
-public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
-  public BlueMiddle2AlgaeAuto(RobotManager robotManager, Trailblazer trailblazer) {
+public class RedMiddle3PieceAuto extends BaseCommandAuto {
+  public RedMiddle3PieceAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_MIDDLE_BARGE.bluePose;
+    return Points.START_MIDDLE_BARGE.redPose;
   }
 
   @Override
@@ -32,36 +32,36 @@ public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
                 // add approach point
-                new AutoPoint(new Pose2d(6.7, 4.077, Rotation2d.fromDegrees(180))),
-                new AutoPoint(new Pose2d(6.05, 4.077, Rotation2d.fromDegrees(180))))),
+                new AutoPoint(new Pose2d(10.85, 3.973, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(11.5, 3.973, Rotation2d.fromDegrees(0.0))))),
         autoCommands.l1ReleaseCommand(ReefPipe.PIPE_G),
         Commands.waitSeconds(0.3),
         // Intake first algae
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(6.197, 4.077, Rotation2d.fromDegrees(180))))),
+                new AutoPoint(new Pose2d(11.353, 3.973, Rotation2d.fromDegrees(0.0))))),
         autoCommands.intakeAlgaeL2Command(),
         Commands.waitSeconds(0.5),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(5.897, 4.077, Rotation2d.fromDegrees(180))))),
+            new AutoSegment(new AutoPoint(new Pose2d(11.653, 3.973, Rotation2d.fromDegrees(0.0))))),
         Commands.waitSeconds(0.6),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(6.432, 4.05, Rotation2d.fromDegrees(180))))),
+            new AutoSegment(new AutoPoint(new Pose2d(11.118, 4.0, Rotation2d.fromDegrees(0.0))))),
         // Score first algae
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(6.35, 4.05, Rotation2d.fromDegrees(-90))),
-                new AutoPoint(new Pose2d(6.35, 4.95, Rotation2d.fromDegrees(0))),
-                new AutoPoint(new Pose2d(6.15, 6.1, Rotation2d.fromDegrees(0))))),
-        autoCommands.netWaitCommand(),
+                new AutoPoint(new Pose2d(11.2, 4.0, Rotation2d.fromDegrees(90.0))),
+                new AutoPoint(new Pose2d(11.2, 3.1, Rotation2d.fromDegrees(180))),
+                new AutoPoint(new Pose2d(11.4, 1.95, Rotation2d.fromDegrees(180.0))))),
+        autoCommands.netReleaseCommand(),
         Commands.waitSeconds(1.5),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(7.37, 6.1, Rotation2d.fromDegrees(0))))),
+            new AutoSegment(new AutoPoint(new Pose2d(10.18, 1.95, Rotation2d.fromDegrees(180.0))))),
         Commands.waitSeconds(1),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(7.05, 6.1, Rotation2d.fromDegrees(0))))),
+            new AutoSegment(new AutoPoint(new Pose2d(10.5, 1.95, Rotation2d.fromDegrees(180.0))))),
         Commands.waitSeconds(0.5),
         autoCommands.stowCommand(),
         // Intake second
@@ -69,31 +69,31 @@ public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(7.15, 4.95, Rotation2d.fromDegrees(120))),
-                new AutoPoint(new Pose2d(6.95, 3.15, Rotation2d.fromDegrees(120))),
-                new AutoPoint(new Pose2d(6.08, 1.8, Rotation2d.fromDegrees(120))))),
+                new AutoPoint(new Pose2d(10.4, 3.1, Rotation2d.fromDegrees(-60.0))),
+                new AutoPoint(new Pose2d(10.6, 4.9, Rotation2d.fromDegrees(-60.0))),
+                new AutoPoint(new Pose2d(11.47, 6.25, Rotation2d.fromDegrees(-60.0))))),
         autoCommands.intakeAlgaeL3Command(),
         Commands.waitSeconds(0.5),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(5.15, 2.75, Rotation2d.fromDegrees(120))))),
+            new AutoSegment(new AutoPoint(new Pose2d(12.4, 5.3, Rotation2d.fromDegrees(-60.0))))),
         Commands.waitSeconds(0.6),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(6.08, 1.8, Rotation2d.fromDegrees(120))))),
+            new AutoSegment(new AutoPoint(new Pose2d(11.47, 6.25, Rotation2d.fromDegrees(-60.0))))),
         autoCommands.stowCommand(),
         // Score second algae
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(6.89, 3.08, Rotation2d.fromDegrees(120))),
-                new AutoPoint(new Pose2d(7.15, 4.95, Rotation2d.fromDegrees(180))),
-                new AutoPoint(new Pose2d(6.85, 6.1, Rotation2d.fromDegrees(0))))),
-        autoCommands.netWaitCommand(),
+                new AutoPoint(new Pose2d(10.66, 4.97, Rotation2d.fromDegrees(-60.0))),
+                new AutoPoint(new Pose2d(10.4, 3.1, Rotation2d.fromDegrees(0.0))),
+                new AutoPoint(new Pose2d(10.7, 1.95, Rotation2d.fromDegrees(180.0))))),
+        autoCommands.netReleaseCommand(),
         Commands.waitSeconds(1.5),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(7.05, 6.1, Rotation2d.fromDegrees(0))))),
+            new AutoSegment(new AutoPoint(new Pose2d(10.5, 1.95, Rotation2d.fromDegrees(180.0))))),
         Commands.waitSeconds(1),
         trailblazer.followSegment(
-            new AutoSegment(new AutoPoint(new Pose2d(6.45, 6.1, Rotation2d.fromDegrees(0))))),
+            new AutoSegment(new AutoPoint(new Pose2d(11.1, 1.95, Rotation2d.fromDegrees(180.0))))),
         Commands.waitSeconds(0.5),
         autoCommands.stowCommand());
   }
