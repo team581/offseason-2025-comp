@@ -11,7 +11,7 @@ import java.util.function.BiFunction;
 
 public enum AutoSelection implements AutoSelectionBase {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
-  R3_ONE_CORAL_TWO_ALGAE(RedMiddle2AlgaeAuto::new, BlueMiddle2AlgaeAuto::new);
+  MIDDLE_CORAL_ALGAE_AUTO(RedMiddle2AlgaeAuto::new, BlueMiddle2AlgaeAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> blueAuto;
