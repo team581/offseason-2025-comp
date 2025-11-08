@@ -120,8 +120,8 @@ class CompConfig {
               new TalonFXConfiguration()
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
-                          .withStatorCurrentLimit(90.0)
-                          .withSupplyCurrentLimit(65.0))
+                          .withStatorCurrentLimit(110.0)
+                          .withSupplyCurrentLimit(80.0))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
