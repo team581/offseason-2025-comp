@@ -40,13 +40,13 @@ public class RedMiddle2PieceAuto extends BaseCommandAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.353, 3.973, Rotation2d.fromDegrees(0.0))))),
+                new AutoPoint(new Pose2d(11.4, 3.973, Rotation2d.fromDegrees(0.0))))),
         autoCommands.intakeAlgaeL2Command(),
         Commands.waitSeconds(0.5),
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
-                new AutoPoint(new Pose2d(11.653, 3.973, Rotation2d.fromDegrees(0.0))))),
+                new AutoPoint(new Pose2d(11.7, 3.973, Rotation2d.fromDegrees(0.0))))),
         Commands.waitSeconds(1.0),
         trailblazer.followSegment(
             new AutoSegment(
