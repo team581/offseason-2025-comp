@@ -7,7 +7,7 @@ public enum ElevatorState {
   UNTUNED(0.0),
 
   PRE_MATCH_HOMING(10.0),
-  UNJAM(UNTUNED),
+  UNJAM(20.0),
 
   ALGAE_INTAKE_GROUND(2.0),
   ALGAE_INTAKE_L2(14.5),
