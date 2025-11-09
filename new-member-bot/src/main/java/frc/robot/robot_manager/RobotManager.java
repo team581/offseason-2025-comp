@@ -64,7 +64,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private Pose2d robotPose = new Pose2d();
   private boolean tagCameraOnline = false;
-  private double reefSnapAngle = 0.0;
+
   private boolean scoringAlignActive = false;
   private boolean awayFromReef = false;
   private boolean awayFromReefAlgaeBackOut = false;
@@ -175,7 +175,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -183,7 +183,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_W_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_LINEUP_L1);
         wrist.setState(WristState.CORAL_SCORE_LINEUP_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -191,7 +191,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.SCORE_CORAL);
         elevator.setState(ElevatorState.CORAL_SCORE_RELEASE_L1);
         wrist.setState(WristState.CORAL_SCORE_RELEASE_L1);
-        swerve.snapsDriveRequest(reefSnapAngle);
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.STOWED);
       }
@@ -367,8 +367,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     awayFromReef = !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 1.0);
     awayFromReefAlgaeBackOut =
         !AutoAlign.isCloseToReefSide(robotPose, nearestReefSide.getPose(robotPose), 0.9);
-
-    reefSnapAngle = autoAlign.getClosestReefSide().getPose(robotPose).getRotation().getDegrees();
   }
 
   @Override
@@ -581,7 +579,19 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   public void climberSequenceForward() {
     switch (getState()) {
-      case STARTING_POSITION, CLAW_EMPTY, CLAW_CORAL, CLAW_ALGAE, FULL_STOW -> {
+      case STARTING_POSITION,
+          CLAW_EMPTY,
+          CLAW_CORAL,
+          CLAW_ALGAE,
+          FULL_STOW,
+          CORAL_INTAKE_GROUND,
+          CORAL_L1_APPROACH,
+          CORAL_L1_RELEASE,
+          ALGAE_INTAKE_FLOOR,
+          ALGAE_INTAKE_L2,
+          ALGAE_INTAKE_L2_APPROACH,
+          ALGAE_INTAKE_L3,
+          ALGAE_INTAKE_L3_APPROACH -> {
         if (wrist.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }

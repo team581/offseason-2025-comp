@@ -13,8 +13,8 @@ import frc.robot.autos.BaseCommandAuto;
 import frc.robot.autos.Points;
 import frc.robot.robot_manager.RobotManager;
 
-public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
-  public BlueMiddle2AlgaeAuto(RobotManager robotManager, Trailblazer trailblazer) {
+public class BlueMiddle3PieceAuto extends BaseCommandAuto {
+  public BlueMiddle3PieceAuto(RobotManager robotManager, Trailblazer trailblazer) {
     super(robotManager, trailblazer);
   }
 
@@ -55,7 +55,7 @@ public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
                 new AutoPoint(new Pose2d(6.35, 4.05, Rotation2d.fromDegrees(-90))),
                 new AutoPoint(new Pose2d(6.35, 4.95, Rotation2d.fromDegrees(0))),
                 new AutoPoint(new Pose2d(6.15, 6.1, Rotation2d.fromDegrees(0))))),
-        autoCommands.netWaitCommand(),
+        autoCommands.netReleaseCommand(),
         Commands.waitSeconds(1.5),
         trailblazer.followSegment(
             new AutoSegment(new AutoPoint(new Pose2d(7.37, 6.1, Rotation2d.fromDegrees(0))))),
@@ -87,7 +87,7 @@ public class BlueMiddle2AlgaeAuto extends BaseCommandAuto {
                 new AutoPoint(new Pose2d(6.89, 3.08, Rotation2d.fromDegrees(120))),
                 new AutoPoint(new Pose2d(7.15, 4.95, Rotation2d.fromDegrees(180))),
                 new AutoPoint(new Pose2d(6.85, 6.1, Rotation2d.fromDegrees(0))))),
-        autoCommands.netWaitCommand(),
+        autoCommands.netReleaseCommand(),
         Commands.waitSeconds(1.5),
         trailblazer.followSegment(
             new AutoSegment(new AutoPoint(new Pose2d(7.05, 6.1, Rotation2d.fromDegrees(0))))),

@@ -46,7 +46,7 @@ class CompConfig {
                   .withCurrentLimits(
                       new CurrentLimitsConfigs()
                           .withStatorCurrentLimit(90.0)
-                          .withSupplyCurrentLimit(65.0))
+                          .withSupplyCurrentLimit(90.0))
                   .withMotorOutput(
                       new MotorOutputConfigs()
                           .withInverted(InvertedValue.Clockwise_Positive)
