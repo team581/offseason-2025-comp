@@ -47,7 +47,7 @@ public class BlueMiddle2PieceAuto extends BaseCommandAuto {
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
                 new AutoPoint(new Pose2d(5.897, 4.077, Rotation2d.fromDegrees(180.0))))),
-        Commands.waitSeconds(0.7),
+        Commands.waitSeconds(1.0),
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
@@ -66,7 +66,7 @@ public class BlueMiddle2PieceAuto extends BaseCommandAuto {
                 AutoBlocks.BASE_CONSTRAINTS,
                 new AutoPoint(new Pose2d(7.15, 6.1, Rotation2d.fromDegrees(0.0))))),
         autoCommands.netReleaseCommand(),
-        Commands.waitSeconds(0.7),
+        Commands.waitSeconds(0.8),
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,

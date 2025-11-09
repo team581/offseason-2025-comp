@@ -47,7 +47,7 @@ public class RedMiddle2PieceAuto extends BaseCommandAuto {
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
                 new AutoPoint(new Pose2d(11.653, 3.973, Rotation2d.fromDegrees(0.0))))),
-        Commands.waitSeconds(0.7),
+        Commands.waitSeconds(1.0),
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
@@ -66,7 +66,7 @@ public class RedMiddle2PieceAuto extends BaseCommandAuto {
                 AutoBlocks.BASE_CONSTRAINTS,
                 new AutoPoint(new Pose2d(10.4, 1.95, Rotation2d.fromDegrees(180.0))))),
         autoCommands.netReleaseCommand(),
-        Commands.waitSeconds(0.7),
+        Commands.waitSeconds(0.8),
         trailblazer.followSegment(
             new AutoSegment(
                 AutoBlocks.BASE_CONSTRAINTS,
