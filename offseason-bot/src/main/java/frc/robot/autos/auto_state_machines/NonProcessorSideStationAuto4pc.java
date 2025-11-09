@@ -19,7 +19,7 @@ import java.util.ArrayDeque;
 
 public class NonProcessorSideStationAuto4pc
     extends BaseImperativeAuto<NonProcessorSideStationAutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(5, 57, 4, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(6, 57, 6, 45);
 
   private AutoSegment path = new AutoSegment();
 

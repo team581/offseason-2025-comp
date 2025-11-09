@@ -18,7 +18,7 @@ import frc.robot.robot_manager.RobotState;
 import java.util.ArrayDeque;
 
 public class ProcessorSideStationAuto5pc extends BaseImperativeAuto<ProcessorSideStationAutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(5, 57, 4, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(6, 57, 6, 45);
 
   private AutoSegment path = new AutoSegment();
 

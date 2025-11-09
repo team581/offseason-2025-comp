@@ -19,7 +19,7 @@ import java.util.ArrayDeque;
 
 public class NonProcessorSideStationLollipop5pc
     extends BaseImperativeAuto<NonProcessorSideStationLollipopAutoState> {
-  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(4, 57, 3, 45);
+  private static final AutoConstraintOptions CONSTRAINTS = new AutoConstraintOptions(6, 57, 6, 45);
 
   private AutoSegment path = new AutoSegment();
 
