@@ -119,14 +119,14 @@ public class NonProcessorSideStationLollipop5pc
       NonProcessorSideStationLollipopAutoState oldState,
       NonProcessorSideStationLollipopAutoState newState) {
     if (oldState == NonProcessorSideStationLollipopAutoState.SCORE
-        && (robotManager.getState() == RobotState.CORAL_L4_RELEASE)) {
+        && (robotManager.getState() == RobotState.CORAL_L4_RELEASE
+            || robotManager.getState() == RobotState.CLAW_EMPTY)) {
 
       if (!nextScoringPositions.isEmpty()) {
         DogLog.log("StateMachineAuto/NextScoringPosition", nextScoringPositions.getFirst());
         currentPipe = nextScoringPositions.pop();
       }
     }
-    super.beforeTransition(oldState, newState);
   }
 
   @Override

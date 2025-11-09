@@ -24,12 +24,12 @@ public class ProcessorSideStationLollipop5pc
   private AutoSegment path = new AutoSegment();
 
   private boolean isFirstScore = true;
-  private boolean justFinishedScore = true;
+
+  private ReefPipe currentPipe = ReefPipe.PIPE_F;
 
   private final ArrayDeque<ReefPipe> nextScoringPositions =
       new ArrayDeque<ReefPipe>(
-          ImmutableList.of(
-              ReefPipe.PIPE_F, ReefPipe.PIPE_D, ReefPipe.PIPE_C, ReefPipe.PIPE_B, ReefPipe.PIPE_A));
+          ImmutableList.of(ReefPipe.PIPE_D, ReefPipe.PIPE_C, ReefPipe.PIPE_B, ReefPipe.PIPE_A));
 
   public void createPath(Pose2d goalPose) {
     path =
@@ -68,7 +68,7 @@ public class ProcessorSideStationLollipop5pc
   }
 
   private static ProcessorSideStationLollipopAutoState getNextIntakeState(ReefPipe scorePosition) {
-    if (scorePosition == ReefPipe.PIPE_A) {
+    if (scorePosition == ReefPipe.PIPE_B) {
       DogLog.log(
           "StateMachineAuto/nextIntakeState", ProcessorSideStationLollipopAutoState.LOLLIPOP_2);
 
@@ -95,7 +95,7 @@ public class ProcessorSideStationLollipop5pc
                           && !robotManager.claw.getHasGP()
                           && !robotManager.groundManager.getTopHasGP()
                           && !robotManager.groundManager.getBottomHasGP()))
-              ? getNextIntakeState(nextScoringPositions.peek())
+              ? getNextIntakeState(currentPipe)
               : currentState;
 
       case INTAKING ->
@@ -107,11 +107,25 @@ public class ProcessorSideStationLollipop5pc
 
       case LOLLIPOP_2 ->
           ((superstructureAtGoal() && trailblazer.followSegmentIsFinished(path))
-                      || robotManager.claw.getHasGP())
-                  && !nextScoringPositions.isEmpty()
+                  || robotManager.claw.getHasGP())
               ? ProcessorSideStationLollipopAutoState.SCORE
               : currentState;
     };
+  }
+
+  @Override
+  protected void beforeTransition(
+      ProcessorSideStationLollipopAutoState oldState,
+      ProcessorSideStationLollipopAutoState newState) {
+    if (oldState == ProcessorSideStationLollipopAutoState.SCORE
+        && (robotManager.getState() == RobotState.CORAL_L4_RELEASE
+            || robotManager.getState() == RobotState.CLAW_EMPTY)) {
+
+      if (!nextScoringPositions.isEmpty()) {
+        DogLog.log("StateMachineAuto/NextScoringPosition", nextScoringPositions.getFirst());
+        currentPipe = nextScoringPositions.pop();
+      }
+    }
   }
 
   @Override
@@ -122,8 +136,7 @@ public class ProcessorSideStationLollipop5pc
           robotManager.groundManager.rehomeRequest();
           isFirstScore = false;
         }
-        justFinishedScore = true;
-        robotManager.scoreRequest(nextScoringPositions.peek(), ReefPipeLevel.L4);
+        robotManager.scoreRequest(currentPipe, ReefPipeLevel.L4);
         robotManager.groundManager.intakeRequest();
       }
 
@@ -146,16 +159,7 @@ public class ProcessorSideStationLollipop5pc
   @Override
   protected void whileInState(ProcessorSideStationLollipopAutoState state) {
     switch (state) {
-      case SCORE -> {
-        if (!nextScoringPositions.isEmpty()) {
-          DogLog.log("StateMachineAuto/NextScoringPosition", nextScoringPositions.getFirst());
-        }
-
-        if (robotManager.getState() == RobotState.CORAL_L4_RELEASE && justFinishedScore) {
-          nextScoringPositions.remove();
-          justFinishedScore = false;
-        }
-      }
+      case SCORE -> {}
 
       case INTAKING -> {
         trailblazer.followSegmentPeriodic(path);
