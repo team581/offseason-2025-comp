@@ -47,8 +47,4 @@ public enum ElevatorState {
     this.defaultHeight = height;
     this.tunableHeight = DogLog.tunable("Elevator/State/" + name(), height);
   }
-
-  private ElevatorState(ElevatorState other) {
-    this(other.defaultHeight);
-  }
 }
