@@ -26,7 +26,8 @@ public enum Points {
   START_R6_AND_B6_FORWARD(new Pose2d(10.289, 7.292, Rotation2d.kZero)),
   START_R6_AND_B6(new Pose2d(10.289, 7.58, Rotation2d.fromDegrees(90.0))),
 
-  GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION(new Pose2d(16.117, 0.922, Rotation2d.fromDegrees(126.0))),
+  GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION(
+      new Pose2d(16.117, 0.922, Rotation2d.fromDegrees(126.0))),
   PRE_GROUND_INTAKE_NON_PROCESSOR_SIDE_STATION(
       new Pose2d(14.9, 1.7, Rotation2d.fromDegrees(126.0))),
 

@@ -757,7 +757,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           swerve.normalDriveRequest();
         }
 
-        if (reachedCenterSinceLastBumpRequest&&!RobotState.isPlaceOrReleaseState(currentState)) {
+        if (reachedCenterSinceLastBumpRequest && !RobotState.isPlaceOrReleaseState(currentState)) {
           if (rawRightControllerYValue < -0.5) {
             DogLog.timestamp("Debug/BumpUpRequest");
             reachedCenterSinceLastBumpRequest = false;

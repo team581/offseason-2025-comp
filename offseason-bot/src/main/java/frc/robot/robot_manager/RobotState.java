@@ -185,7 +185,15 @@ public enum RobotState {
 
   public static boolean isPlaceOrReleaseState(RobotState state) {
     return switch (state) {
-      case CORAL_L1_RELEASE,CORAL_L1_BACKAWAY, CORAL_L2_RELEASE, CORAL_L2_PLACE, CORAL_L3_RELEASE, CORAL_L3_PLACE, CORAL_L4_RELEASE, CORAL_L4_PLACE -> true;
+      case CORAL_L1_RELEASE,
+          CORAL_L1_BACKAWAY,
+          CORAL_L2_RELEASE,
+          CORAL_L2_PLACE,
+          CORAL_L3_RELEASE,
+          CORAL_L3_PLACE,
+          CORAL_L4_RELEASE,
+          CORAL_L4_PLACE ->
+          true;
       default -> false;
     };
   }
