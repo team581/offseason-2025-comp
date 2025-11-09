@@ -719,7 +719,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         }
         lights.setState(getLightStateFoAlgaeIntaking());
       }
-
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L1_RELEASE_HANDOFF,
           CORAL_L1_AFTER_RELEASE_HANDOFF,
@@ -758,18 +757,17 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           swerve.normalDriveRequest();
         }
 
-        if (reachedCenterSinceLastBumpRequest) {
+        if (reachedCenterSinceLastBumpRequest&&!RobotState.isPlaceOrReleaseState(currentState)) {
           if (rawRightControllerYValue < -0.5) {
             DogLog.timestamp("Debug/BumpUpRequest");
             reachedCenterSinceLastBumpRequest = false;
             bumpUpLevelRequest();
-          } else if (rawRightControllerYValue > 0.5) {
+          } else if (rawRightControllerYValue > 0.7) {
             DogLog.timestamp("Debug/BumpUpRequest");
             reachedCenterSinceLastBumpRequest = false;
             bumpDownLevelRequest();
           }
         }
-
         lights.setState(getLightStateForScoring());
       }
       case CLAW_EMPTY -> {
