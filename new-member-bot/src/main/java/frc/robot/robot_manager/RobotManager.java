@@ -295,7 +295,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.snapsDriveRequest(SnapUtil.getCageAngle(robotPose));
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.HANGING);
       }
