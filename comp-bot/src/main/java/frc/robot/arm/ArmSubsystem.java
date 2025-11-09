@@ -277,8 +277,8 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
       case CORAL_HANDOFF -> {
         motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
       }
-      case CORAL_SCORE_LEFT_RELEASE_L2, CORAL_SCORE_LEFT_RELEASE_L3, CORAL_SCORE_LEFT_RELEASE_L4,
-        CORAL_SCORE_RIGHT_RELEASE_L2, CORAL_SCORE_RIGHT_RELEASE_L3, CORAL_SCORE_RIGHT_RELEASE_L4 -> {
+      case CORAL_SCORE_LEFT_RELEASE_L2, CORAL_SCORE_LEFT_RELEASE_L3, CORAL_SCORE_RIGHT_RELEASE_L2,
+            CORAL_SCORE_RIGHT_RELEASE_L3 -> {
           motor.setControl(motionMagicExpoRequest.withPosition(Units.degreesToRotations(getSetpoint(getState().getAngle()))));
         }
       default -> {
