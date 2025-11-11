@@ -34,7 +34,7 @@ public enum Points {
   GROUND_INTAKE_PROCESSOR_SIDE_STATION(new Pose2d(16.117, 7.078, Rotation2d.fromDegrees(234.0))),
   PRE_GROUND_INTAKE_PROCESSOR_SIDE_STATION(new Pose2d(14.9, 6.3, Rotation2d.fromDegrees(234.0))),
 
-  LOLLIPOP_2(new Pose2d(16.125, 4.0, Rotation2d.fromDegrees(180.0)));
+  LOLLIPOP_2(new Pose2d(16.8, 4.0, Rotation2d.fromDegrees(180.0)));
   // -LP 2 pose, intaking state
 
   public final Pose2d redPose;
