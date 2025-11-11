@@ -100,11 +100,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private ArmState latestArmGoal = ArmState.CORAL_HANDOFF;
   private ElevatorState latestElevatorGoal = ElevatorState.PRE_CORAL_HANDOFF;
-  private final Debouncer missingGPDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+  private final Debouncer missingGpDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (RobotState.missingGP(currentState, missingGPDebouncer.calculate(claw.getHasGP()))
+    if (RobotState.missingGP(currentState, missingGpDebouncer.calculate(claw.getHasGP()))
         && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       lights.blinkError();
       DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
