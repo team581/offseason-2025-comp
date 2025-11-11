@@ -5,6 +5,8 @@ import com.team581.math.MathHelpers;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -98,10 +100,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
   private ArmState latestArmGoal = ArmState.CORAL_HANDOFF;
   private ElevatorState latestElevatorGoal = ElevatorState.PRE_CORAL_HANDOFF;
+  private final Debouncer missingGPDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
   @Override
   protected RobotState getNextState(RobotState currentState) {
-    if (RobotState.missingGP(currentState, claw.getHasGP())
+    if (RobotState.missingGP(currentState, missingGPDebouncer.calculate(claw.getHasGP()))
         && !DSOptions.SENSOR_BROKEN.getAsBoolean()) {
       lights.blinkError();
       DogLog.logFault("MISSING_GAME_PIECE", AlertType.kError);
@@ -259,7 +262,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       // Intaking
 
       case ALGAE_INTAKE_L2_APPROACH, ALGAE_INTAKE_L3_APPROACH ->
-          arm.nearGoal() && elevator.nearGoal() && autoAlign.isCentered()
+          arm.atGoal() && elevator.atGoal() && autoAlign.isCentered()
               ? currentState.getNextAlgaeIntakeState()
               : currentState;
 
@@ -1145,17 +1148,17 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
     switch (scoringLevel) {
       case L4 -> {
-        autoAlign.markLevelScored(scoringLevel);
+        // autoAlign.markLevelScored(scoringLevel);
         autoAlign.bumpRequest(ReefPipeLevel.L3);
         l3CoralApproachRequest();
       }
       case L3 -> {
-        autoAlign.markLevelScored(scoringLevel);
+        // autoAlign.markLevelScored(scoringLevel);
         autoAlign.bumpRequest(ReefPipeLevel.L2);
         l2CoralApproachRequest();
       }
       case L2 -> {
-        autoAlign.markLevelScored(scoringLevel);
+        // autoAlign.markLevelScored(scoringLevel);
         autoAlign.bumpRequest(ReefPipeLevel.L1);
         l1CoralApproachRequest();
       }
@@ -1208,7 +1211,11 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           setStateFromRequest(RobotState.STOW_TO_CLIMBING_1_LINEUP);
         }
       }
-      case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
+      case CLIMBING_1_LINEUP -> {
+        if (timeout(1)) {
+          setStateFromRequest(RobotState.CLIMBING_2_HANGING);
+        }
+      }
       case CLIMBING_2_HANGING -> {}
       default -> {
         // Do nothing
