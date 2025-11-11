@@ -295,7 +295,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         claw.setState(ClawState.IDLE_NO_GP);
         elevator.setState(ElevatorState.CLIMBING);
         wrist.setState(WristState.CLIMBING);
-        swerve.snapsDriveRequest(SnapUtil.getCageAngle(robotPose));
+        swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
         climber.setState(ClimberState.HANGING);
       }
@@ -581,8 +581,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
     switch (getState()) {
       case STARTING_POSITION,
           CLAW_EMPTY,
-          CLAW_CORAL,
-          CLAW_ALGAE,
           FULL_STOW,
           CORAL_INTAKE_GROUND,
           CORAL_L1_APPROACH,
@@ -591,11 +589,14 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           ALGAE_INTAKE_L2,
           ALGAE_INTAKE_L2_APPROACH,
           ALGAE_INTAKE_L3,
-          ALGAE_INTAKE_L3_APPROACH -> {
+          ALGAE_INTAKE_L3_APPROACH,
+          ALGAE_OUTTAKE -> {
         if (wrist.atGoal() && elevator.atGoal()) {
           setStateFromRequest(RobotState.CLIMBING_1_LINEUP);
         }
       }
+      case CLAW_CORAL -> setStateFromRequest(RobotState.CORAL_L1_RELEASE);
+      case CLAW_ALGAE, CLAW_ALGAE_AFTER_GROUND -> setStateFromRequest(RobotState.ALGAE_OUTTAKE);
       case CLIMBING_1_LINEUP -> setStateFromRequest(RobotState.CLIMBING_2_HANGING);
       case CLIMBING_2_HANGING -> {}
       default -> {}
