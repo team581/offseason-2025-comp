@@ -175,16 +175,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF ->
           claw.getHasGP() ? currentState.getNextHandoffState() : currentState;
-      case CORAL_L1_AFTER_RELEASE_HANDOFF,
-          CORAL_L2_AFTER_RELEASE_HANDOFF,
-          CORAL_L3_AFTER_RELEASE_HANDOFF,
-          CORAL_L4_AFTER_RELEASE_HANDOFF ->
-          elevator.atGoal()
-                  && arm.atGoal()
-                  && (DriverStation.isTeleop()
-                      || nearestReefSide == ReefSide.fromPipe(autoAlign.getBestPipe()))
-              ? currentState.getNextHandoffState()
-              : currentState;
 
       // Approach
       case CORAL_L1_APPROACH ->
@@ -359,6 +349,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case FORCED_HANDOFF -> {
         claw.setState(ClawState.IDLE_NO_GP);
+        arm.setClawInCradle(true);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         swerve.normalDriveRequest();
         vision.setState(VisionState.TAGS);
@@ -476,6 +467,7 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
+        arm.setClawInCradle(true);
         moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
@@ -486,17 +478,8 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
           CORAL_L3_RELEASE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF -> {
         claw.setState(ClawState.CORAL_HANDOFF);
+        arm.setClawInCradle(true);
         moveSuperstructure(ElevatorState.HANDOFF, ArmState.CORAL_HANDOFF);
-        vision.setState(VisionState.TAGS);
-        lights.setState(LightsState.CORAL_HANDOFF);
-        climber.setState(ClimberState.STOPPED);
-      }
-      case CORAL_L1_AFTER_RELEASE_HANDOFF,
-          CORAL_L2_AFTER_RELEASE_HANDOFF,
-          CORAL_L3_AFTER_RELEASE_HANDOFF,
-          CORAL_L4_AFTER_RELEASE_HANDOFF -> {
-        claw.setState(ClawState.CORAL_HANDOFF);
-        moveSuperstructure(ElevatorState.PRE_CORAL_HANDOFF, ArmState.CORAL_HANDOFF);
         vision.setState(VisionState.TAGS);
         lights.setState(LightsState.CORAL_HANDOFF);
         climber.setState(ClimberState.STOPPED);
@@ -699,6 +682,28 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
   public void whileInState(RobotState currentState) {
     moveSuperstructure(latestElevatorGoal, latestArmGoal);
 
+    var currentElevatorHeight = elevator.getHeight();
+    // Set claw in cradle to false when elevator is above handoff threshold, but only when we're not
+    // in a handoff state
+    switch (currentState) {
+      case CORAL_L1_PREPARE_HANDOFF,
+          CORAL_L2_PREPARE_HANDOFF,
+          CORAL_L3_PREPARE_HANDOFF,
+          CORAL_L4_PREPARE_HANDOFF,
+          CORAL_L1_RELEASE_HANDOFF,
+          CORAL_L2_RELEASE_HANDOFF,
+          CORAL_L3_RELEASE_HANDOFF,
+          CORAL_L4_RELEASE_HANDOFF,
+          FORCED_HANDOFF -> {
+        arm.setClawInCradle(true);
+      }
+      default -> {
+        if (currentElevatorHeight >= ElevatorState.PRE_CORAL_HANDOFF.getHeight()) {
+          arm.setClawInCradle(false);
+        }
+      }
+    }
+
     DogLog.log("RobotManager/NearestReefSidePose", nearestReefSide.getPose(robotPose));
     DogLog.log("Debug/RightYValue", rawRightControllerYValue);
     DogLog.log("Debug/ReachedCenterSinceLastBump", reachedCenterSinceLastBumpRequest);
@@ -724,20 +729,16 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
       }
       case CORAL_L1_PREPARE_HANDOFF,
           CORAL_L1_RELEASE_HANDOFF,
-          CORAL_L1_AFTER_RELEASE_HANDOFF,
           CORAL_L1_APPROACH,
           CORAL_L1_LINEUP,
           CORAL_L1_RELEASE,
           CORAL_L1_BACKAWAY,
           CORAL_L2_PREPARE_HANDOFF,
           CORAL_L2_RELEASE_HANDOFF,
-          CORAL_L2_AFTER_RELEASE_HANDOFF,
           CORAL_L3_PREPARE_HANDOFF,
           CORAL_L3_RELEASE_HANDOFF,
-          CORAL_L3_AFTER_RELEASE_HANDOFF,
           CORAL_L4_PREPARE_HANDOFF,
           CORAL_L4_RELEASE_HANDOFF,
-          CORAL_L4_AFTER_RELEASE_HANDOFF,
           CORAL_L2_APPROACH,
           CORAL_L3_APPROACH,
           CORAL_L4_APPROACH,
@@ -868,7 +869,6 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
         switch (getState()) {
           case CORAL_L1_PREPARE_HANDOFF,
               CORAL_L1_RELEASE_HANDOFF,
-              CORAL_L1_AFTER_RELEASE_HANDOFF,
               CORAL_L1_APPROACH,
               CORAL_L1_LINEUP,
               CORAL_L1_RELEASE ->
@@ -876,21 +876,18 @@ public class RobotManager extends StateMachineSubsystem<RobotState> {
 
           case CORAL_L2_PREPARE_HANDOFF,
               CORAL_L2_RELEASE_HANDOFF,
-              CORAL_L2_AFTER_RELEASE_HANDOFF,
               CORAL_L2_APPROACH,
               CORAL_L2_RELEASE ->
               ReefPipeLevel.L2;
 
           case CORAL_L3_PREPARE_HANDOFF,
               CORAL_L3_RELEASE_HANDOFF,
-              CORAL_L3_AFTER_RELEASE_HANDOFF,
               CORAL_L3_APPROACH,
               CORAL_L3_RELEASE ->
               ReefPipeLevel.L3;
 
           case CORAL_L4_PREPARE_HANDOFF,
               CORAL_L4_RELEASE_HANDOFF,
-              CORAL_L4_AFTER_RELEASE_HANDOFF,
               CORAL_L4_APPROACH,
               CORAL_L4_RELEASE ->
               ReefPipeLevel.L4;

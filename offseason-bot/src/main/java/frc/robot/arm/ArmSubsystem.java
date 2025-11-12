@@ -39,8 +39,12 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private double rawMotorAngle = 0.0;
   private double motorAngle = 0.0;
   private double motorCurrent = 0.0;
+  private double usedSetpoint = ArmState.CORAL_HANDOFF.getAngle();
   private double lowestSeenAngle = Double.POSITIVE_INFINITY;
   private double highestSeenAngle = Double.NEGATIVE_INFINITY;
+
+  /** Whether the arm should force itself in the down position. */
+  private boolean forceClawDown = false;
 
   public ArmSubsystem(TalonFX motor) {
     super(SubsystemPriority.ARM, ArmState.PRE_MATCH_HOMING);
@@ -83,13 +87,13 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   public boolean atGoal() {
     return switch (getState()) {
       case PRE_MATCH_HOMING -> false;
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(usedSetpoint, rawMotorAngle, TOLERANCE, -180, 180);
     };
   }
 
   public boolean nearGoal() {
     return switch (getState()) {
-      default -> MathUtil.isNear(getState().getAngle(), rawMotorAngle, NEAR_TOLERANCE, -180, 180);
+      default -> MathUtil.isNear(usedSetpoint, rawMotorAngle, NEAR_TOLERANCE, -180, 180);
       case PRE_MATCH_HOMING -> false;
     };
   }
@@ -118,20 +122,27 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     }
 
     motorCurrent = motor.getStatorCurrent().getValueAsDouble();
+    usedSetpoint = calculateUsedSetpoint();
   }
 
   @Override
   protected void afterTransition(ArmState newState) {
-    switch (newState) {
-      default ->
-          motor.setControl(
-              motionMagicRequest.withPosition(
-                  Units.degreesToRotations(clamp(newState.getAngle()))));
-    }
+    usedSetpoint = calculateUsedSetpoint();
+
+    motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(usedSetpoint)));
   }
 
   public boolean rangeOfMotionGood() {
     return Math.abs(highestSeenAngle - lowestSeenAngle) > MINIMUM_EXPECTED_HOMING_ANGLE_CHANGE;
+  }
+
+  public void setClawInCradle(boolean forceClawDown) {
+    if (this.forceClawDown != forceClawDown) {
+      this.forceClawDown = forceClawDown;
+
+      // Rerun state actions, since the used setpoint may have changed
+      afterTransition(getState());
+    }
   }
 
   @Override
@@ -140,8 +151,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
     DogLog.log("Arm/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble(), Volts);
     DogLog.log("Arm/Angle", motorAngle, Degrees);
     DogLog.log("Arm/RawAngle", rawMotorAngle, Degrees);
-
+    DogLog.log("Arm/UsedSetpoint", usedSetpoint, Degrees);
     DogLog.log("Arm/AtGoal", atGoal());
+    DogLog.log("Arm/ForceClawDown", forceClawDown);
 
     if (DriverStation.isDisabled()) {
       DogLog.log("Arm/LowestAngle", lowestSeenAngle, Degrees);
@@ -181,7 +193,6 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
   @Override
   protected void beforeTransition(ArmState oldState, ArmState newState) {
-
     if (oldState == ArmState.PRE_MATCH_HOMING
         && newState != ArmState.PRE_MATCH_HOMING
         && DriverStation.isEnabled()) {
@@ -215,5 +226,9 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
   private static double clamp(double armAngle) {
     return MathUtil.clamp(
         armAngle, RobotConfig.get().arm().minAngle(), RobotConfig.get().arm().maxAngle());
+  }
+
+  private double calculateUsedSetpoint() {
+    return clamp((forceClawDown ? ArmState.CORAL_HANDOFF : getState()).getAngle());
   }
 }
