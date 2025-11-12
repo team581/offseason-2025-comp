@@ -21,7 +21,7 @@ public class BlueLollipop4PieceR1AB extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.bluePose;
+    return Points.START_R1_AND_B1.point.bluePose();
   }
 
   @Override

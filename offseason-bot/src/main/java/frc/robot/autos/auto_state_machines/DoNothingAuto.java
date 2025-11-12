@@ -16,8 +16,8 @@ public class DoNothingAuto extends BaseImperativeAuto<DoNothingAutoState> {
   @Override
   public Pose2d getStartingPose() {
     return FmsUtil.isRedAlliance()
-        ? Points.START_R2_AND_B2.redPose
-        : Points.START_R5_AND_B5.bluePose;
+        ? Points.START_R2_AND_B2.point.redPose()
+        : Points.START_R5_AND_B5.point.bluePose();
   }
 
   @Override

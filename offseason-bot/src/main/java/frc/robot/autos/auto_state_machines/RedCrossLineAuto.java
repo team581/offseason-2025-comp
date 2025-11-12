@@ -26,7 +26,7 @@ public class RedCrossLineAuto extends BaseImperativeAuto<CrossLineAutoState> {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.redPose;
+    return Points.START_R1_AND_B1.point.redPose();
   }
 
   @Override

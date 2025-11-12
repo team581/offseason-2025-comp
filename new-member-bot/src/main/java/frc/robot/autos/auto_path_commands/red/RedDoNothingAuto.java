@@ -20,13 +20,14 @@ public class RedDoNothingAuto extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_MIDDLE_BARGE.redPose;
+    return Points.START_MIDDLE_BARGE.point.redPose();
   }
 
   @Override
   protected Command createAutoCommand() {
     return Commands.sequence(
         trailblazer.followSegment(
-            new AutoSegment(CONSTRAINTS, new AutoPoint(Points.START_MIDDLE_BARGE.redPose))));
+            new AutoSegment(
+                CONSTRAINTS, new AutoPoint(Points.START_MIDDLE_BARGE.point.redPose()))));
   }
 }

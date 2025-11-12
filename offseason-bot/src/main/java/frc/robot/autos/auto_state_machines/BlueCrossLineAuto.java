@@ -26,7 +26,7 @@ public class BlueCrossLineAuto extends BaseImperativeAuto<CrossLineAutoState> {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.bluePose;
+    return Points.START_R1_AND_B1.point.bluePose();
   }
 
   @Override

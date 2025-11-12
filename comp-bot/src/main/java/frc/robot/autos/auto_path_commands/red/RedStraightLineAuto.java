@@ -22,7 +22,7 @@ public class RedStraightLineAuto extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1_FORWARD.redPose;
+    return Points.START_R1_AND_B1_FORWARD.point.redPose();
   }
 
   @Override
@@ -31,7 +31,7 @@ public class RedStraightLineAuto extends BaseCommandAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(Points.START_R1_AND_B1_FORWARD.redPose),
+                new AutoPoint(Points.START_R1_AND_B1_FORWARD.point.redPose()),
                 new AutoPoint(new Pose2d(11.924, 0.758, Rotation2d.kZero)),
                 new AutoPoint(new Pose2d(15.0, 0.758, Rotation2d.kZero)))));
   }

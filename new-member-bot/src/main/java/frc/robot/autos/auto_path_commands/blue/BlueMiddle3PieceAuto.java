@@ -20,7 +20,7 @@ public class BlueMiddle3PieceAuto extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_MIDDLE_BARGE.bluePose;
+    return Points.START_MIDDLE_BARGE.point.bluePose();
   }
 
   @Override
