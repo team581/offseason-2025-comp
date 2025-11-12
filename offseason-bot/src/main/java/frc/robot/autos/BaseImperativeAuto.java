@@ -1,7 +1,7 @@
 package frc.robot.autos;
 
 import com.team581.autos.BaseAuto;
-import com.team581.trailblazer.Trailblazer;
+import com.team581.trailblazer.v2.Trailblazer;
 import com.team581.util.state_machines.StateMachine;
 import frc.robot.robot_manager.RobotManager;
 
