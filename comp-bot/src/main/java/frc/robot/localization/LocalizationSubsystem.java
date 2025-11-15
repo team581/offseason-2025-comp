@@ -90,6 +90,8 @@ public class LocalizationSubsystem extends StateMachineSubsystem<LocalizationSta
         .ifPresent(this::ingestTagResult);
     vision.getRightTagResult().ifPresent(this::ingestTagResult);
     vision.getGamePieceTagResult().ifPresent(this::ingestTagResult);
+    
+    swerve.setLocalizationPose(robotPose);
 
     if (FeatureFlags.CUSTOM_ODOMETRY.getAsBoolean()) {
       robotPose = poseEstimator.getEstimatedPosition();
