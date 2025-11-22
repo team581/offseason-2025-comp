@@ -77,6 +77,6 @@ public enum LightsState {
   }
 
   public ControlRequest getControlRequest() {
-    return blinks() ? stateBlinkRequest.get() : stateColorRequest.get();
+    return blinks() ? stateBlinkRequest.orElseThrow() : stateColorRequest.orElseThrow();
   }
 }
