@@ -1,5 +1,5 @@
 plugins {
-	id 'com.diffplug.spotless' version '8.0.0'
+	id 'com.diffplug.spotless' version '8.1.0'
 	id 'net.ltgt.errorprone' version '4.3.0'
 }
 
@@ -18,7 +18,8 @@ subprojects {
 
 	java {
 		toolchain {
-			languageVersion = JavaLanguageVersion.of(17)
+			languageVersion = JavaLanguageVersion.of(25)
+			vendor = JvmVendorSpec.ADOPTIUM
 		}
 	}
 
@@ -28,8 +29,8 @@ subprojects {
 
 	// Error Prone dependencies
 	dependencies {
-		compileOnly "com.google.errorprone:error_prone_annotations:2.43.0"
-		errorprone "com.google.errorprone:error_prone_core:2.42.0"
+		compileOnly "com.google.errorprone:error_prone_annotations:2.44.0"
+		errorprone "com.google.errorprone:error_prone_core:2.44.0"
 		errorprone "tech.picnic.error-prone-support:error-prone-contrib:0.26.0"
 		errorprone "tech.picnic.error-prone-support:refaster-runner:0.26.0"
 

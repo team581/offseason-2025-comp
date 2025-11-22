@@ -125,6 +125,12 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
   private double rawControllerXValue = 0.0;
   private double rawControllerYValue = 0.0;
 
+  private Pose2d localizationPose = Pose2d.kZero;
+
+  public void setLocalizationPose(Pose2d newLocalizationPose) {
+    localizationPose = newLocalizationPose;
+  }
+
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return robotRelativeSpeeds;
   }
@@ -169,7 +175,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   public void setRobotRelativeAutoSpeeds(ChassisSpeeds speeds) {
     setFieldRelativeAutoSpeeds(
-        ChassisSpeeds.fromRobotRelativeSpeeds(speeds, drivetrainState.Pose.getRotation()));
+        ChassisSpeeds.fromRobotRelativeSpeeds(speeds, localizationPose.getRotation()));
   }
 
   public void setFieldRelativeCoralAssistSpeeds(ChassisSpeeds speeds) {
@@ -248,7 +254,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
     teleopSlowModePercent = ELEVATOR_HEIGHT_TO_SLOW_MODE.get(elevatorHeight);
     if (getState() == SwerveState.DRIVE_TO_POSE) {
       driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, localizationPose, lastUseAngleBisector);
     }
   }
 
@@ -258,7 +264,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
 
   private ChassisSpeeds calculateFieldRelativeSpeeds() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(
-        robotRelativeSpeeds, drivetrainState.Pose.getRotation());
+        robotRelativeSpeeds, localizationPose.getRotation());
   }
 
   private void sendSwerveRequest() {
@@ -390,7 +396,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<SwerveState> implemen
       lastDriveToPoseTarget = pose;
       lastUseAngleBisector = useAngleBisector;
       driveToPoseSpeeds =
-          getDriveToPoseSpeeds(lastDriveToPoseTarget, drivetrainState.Pose, lastUseAngleBisector);
+          getDriveToPoseSpeeds(lastDriveToPoseTarget, localizationPose, lastUseAngleBisector);
       setStateFromRequest(SwerveState.DRIVE_TO_POSE);
       sendSwerveRequest();
     }

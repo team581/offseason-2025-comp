@@ -15,7 +15,7 @@ public enum ArmState {
   UNJAM(-45),
 
   // Idle positions
-  STOWED_CORAL(-70.0),
+  STOWED_CORAL(-60.0),
   STOWED_ALGAE(60),
 
   // coral positions
@@ -47,7 +47,7 @@ public enum ArmState {
 
   ALGAE_OUTTAKE(55),
 
-  CLIMBING(89);
+  CLIMBING(-83);
 
   private final DoubleSubscriber tunableAngle;
 

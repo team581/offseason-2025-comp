@@ -3,14 +3,18 @@ package frc.robot.autos;
 import com.team581.autos.AutoSelectionBase;
 import com.team581.trailblazer.Trailblazer;
 import frc.robot.autos.auto_path_commands.blue.BlueDoNothingAuto;
+import frc.robot.autos.auto_path_commands.blue.BlueMiddle2PieceAuto;
+import frc.robot.autos.auto_path_commands.blue.BlueMiddle3PieceAuto;
 import frc.robot.autos.auto_path_commands.red.RedDoNothingAuto;
-import frc.robot.autos.auto_path_commands.red.RedMiddle2AlgaeAuto;
+import frc.robot.autos.auto_path_commands.red.RedMiddle2PieceAuto;
+import frc.robot.autos.auto_path_commands.red.RedMiddle3PieceAuto;
 import frc.robot.robot_manager.RobotManager;
 import java.util.function.BiFunction;
 
 public enum AutoSelection implements AutoSelectionBase {
   DO_NOTHING(RedDoNothingAuto::new, BlueDoNothingAuto::new),
-  R3_ONE_CORAL_TWO_ALGAE(RedMiddle2AlgaeAuto::new, RedMiddle2AlgaeAuto::new);
+  THREE_PIECE_AUTO(RedMiddle3PieceAuto::new, BlueMiddle3PieceAuto::new),
+  TWO_PIECE_AUTO(RedMiddle2PieceAuto::new, BlueMiddle2PieceAuto::new);
 
   public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> redAuto;
   public final BiFunction<RobotManager, Trailblazer, BaseCommandAuto> blueAuto;

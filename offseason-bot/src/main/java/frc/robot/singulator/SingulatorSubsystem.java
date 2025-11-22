@@ -23,7 +23,7 @@ public class SingulatorSubsystem extends StateMachineSubsystem<SingulatorState> 
   private double filteredLeftCurrent = 0.0;
 
   private static final DoubleSubscriber JAM_CURRENT_THRESHOLD =
-      DogLog.tunable("Singulator/JamCurrentThreshold", 20.0);
+      DogLog.tunable("Singulator/JamCurrentThreshold", 27.0);
 
   public SingulatorSubsystem(TalonFX leftMotor, TalonFX rightMotor) {
     super(SubsystemPriority.SINGULATOR, SingulatorState.IDLE);

@@ -127,7 +127,7 @@ class CompConfig {
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withMagnetOffset(-0.1064453125)
+                          .withMagnetOffset(-0.10302734375)
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                           .withAbsoluteSensorDiscontinuityPoint(0.75))),
           new SingulatorConfig(

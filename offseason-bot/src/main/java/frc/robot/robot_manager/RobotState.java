@@ -33,7 +33,6 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L1_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L1_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
-  CORAL_L1_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L1. */
   CORAL_L1_APPROACH(ClawGamePiece.CORAL, false),
@@ -45,7 +44,6 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L2_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L2_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
-  CORAL_L2_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L2. */
   CORAL_L2_APPROACH(ClawGamePiece.CORAL, false),
@@ -57,7 +55,6 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L3_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L3_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
-  CORAL_L3_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L3. */
   CORAL_L3_APPROACH(ClawGamePiece.CORAL, false),
@@ -69,7 +66,6 @@ public enum RobotState {
   /** Coral is in the ground intake, need to pass it to the claw. */
   CORAL_L4_PREPARE_HANDOFF(ClawGamePiece.EMPTY, false),
   CORAL_L4_RELEASE_HANDOFF(ClawGamePiece.EMPTY, false),
-  CORAL_L4_AFTER_RELEASE_HANDOFF(ClawGamePiece.CORAL, false),
 
   /** Coral is in the claw, let's get ready to score L4. */
   CORAL_L4_APPROACH(ClawGamePiece.CORAL, false),
@@ -126,14 +122,10 @@ public enum RobotState {
           Map.entry(CORAL_L2_PREPARE_HANDOFF, CORAL_L2_RELEASE_HANDOFF),
           Map.entry(CORAL_L3_PREPARE_HANDOFF, CORAL_L3_RELEASE_HANDOFF),
           Map.entry(CORAL_L4_PREPARE_HANDOFF, CORAL_L4_RELEASE_HANDOFF),
-          Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_AFTER_RELEASE_HANDOFF),
-          Map.entry(CORAL_L1_AFTER_RELEASE_HANDOFF, CORAL_L1_APPROACH),
-          Map.entry(CORAL_L2_AFTER_RELEASE_HANDOFF, CORAL_L2_APPROACH),
-          Map.entry(CORAL_L3_AFTER_RELEASE_HANDOFF, CORAL_L3_APPROACH),
-          Map.entry(CORAL_L4_AFTER_RELEASE_HANDOFF, CORAL_L4_APPROACH));
+          Map.entry(CORAL_L1_RELEASE_HANDOFF, CORAL_L1_APPROACH),
+          Map.entry(CORAL_L2_RELEASE_HANDOFF, CORAL_L2_APPROACH),
+          Map.entry(CORAL_L3_RELEASE_HANDOFF, CORAL_L3_APPROACH),
+          Map.entry(CORAL_L4_RELEASE_HANDOFF, CORAL_L4_APPROACH));
 
   private static final ImmutableMap<RobotState, RobotState> ALGAE_INTAKE_SEQUENCE =
       ImmutableMap.of(
@@ -179,6 +171,21 @@ public enum RobotState {
   public static boolean isReleaseState(RobotState state) {
     return switch (state) {
       case CORAL_L1_RELEASE, CORAL_L2_RELEASE, CORAL_L3_RELEASE, CORAL_L4_RELEASE -> true;
+      default -> false;
+    };
+  }
+
+  public static boolean isPlaceOrReleaseState(RobotState state) {
+    return switch (state) {
+      case CORAL_L1_RELEASE,
+          CORAL_L1_BACKAWAY,
+          CORAL_L2_RELEASE,
+          CORAL_L2_PLACE,
+          CORAL_L3_RELEASE,
+          CORAL_L3_PLACE,
+          CORAL_L4_RELEASE,
+          CORAL_L4_PLACE ->
+          true;
       default -> false;
     };
   }

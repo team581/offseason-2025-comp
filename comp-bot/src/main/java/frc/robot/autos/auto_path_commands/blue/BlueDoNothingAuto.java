@@ -21,7 +21,7 @@ public class BlueDoNothingAuto extends BaseCommandAuto {
 
   @Override
   public Pose2d getStartingPose() {
-    return Points.START_R1_AND_B1.bluePose;
+    return Points.START_R1_AND_B1.point.bluePose();
   }
 
   @Override
@@ -30,7 +30,7 @@ public class BlueDoNothingAuto extends BaseCommandAuto {
         trailblazer.followSegment(
             new AutoSegment(
                 CONSTRAINTS,
-                new AutoPoint(Points.START_R1_AND_B1.bluePose),
+                new AutoPoint(Points.START_R1_AND_B1.point.bluePose()),
                 new AutoPoint(new Pose2d(6.924, 7.292, Rotation2d.kZero)))));
   }
 }

@@ -15,13 +15,13 @@ public enum WristState {
   ALGAE_OUTTAKE(UNTUNED),
   ALGAE_INTAKE_L2(19.2),
   ALGAE_INTAKE_L3(19.2),
-  ALGAE_NET(-29.0),
+  ALGAE_NET(55.0),
   ALGAE_PROCESSOR(17.3),
 
   CORAL_INTAKE(3.0),
   CORAL_SCORE_LINEUP_L1(77.0),
   CORAL_SCORE_RELEASE_L1(77.0),
-  CLIMBING(150.0);
+  CLIMBING(113.0);
 
   private final double defaultAngle;
   private final DoubleSubscriber tunableAngle;
