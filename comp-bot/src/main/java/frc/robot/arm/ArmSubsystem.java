@@ -253,9 +253,8 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
 
     switch (getState()) {
       case COLLISION_AVOIDANCE -> {
-        motor.setControl(motionMagicRequest.withPosition(
-
-        Units.degreesToRotations(collisionAvoidanceGoal)));
+        motor.setControl(
+            motionMagicRequest.withPosition(Units.degreesToRotations(collisionAvoidanceGoal)));
       }
       case PRE_MATCH_HOMING -> {
         if (rangeOfMotionGood()) {
@@ -275,14 +274,22 @@ public class ArmSubsystem extends StateMachineSubsystem<ArmState> {
         motor.setControl(algaeFling);
       }
       case CORAL_HANDOFF -> {
-        motor.setControl(motionMagicRequest.withPosition(Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(getSetpoint(usedHandoffAngle))));
       }
-      case CORAL_SCORE_LEFT_RELEASE_L2, CORAL_SCORE_LEFT_RELEASE_L3, CORAL_SCORE_RIGHT_RELEASE_L2,
-            CORAL_SCORE_RIGHT_RELEASE_L3 -> {
-          motor.setControl(motionMagicExpoRequest.withPosition(Units.degreesToRotations(getSetpoint(getState().getAngle()))));
-        }
+      case CORAL_SCORE_LEFT_RELEASE_L2,
+          CORAL_SCORE_LEFT_RELEASE_L3,
+          CORAL_SCORE_RIGHT_RELEASE_L2,
+          CORAL_SCORE_RIGHT_RELEASE_L3 -> {
+        motor.setControl(
+            motionMagicExpoRequest.withPosition(
+                Units.degreesToRotations(getSetpoint(getState().getAngle()))));
+      }
       default -> {
-        motor.setControl(motionMagicRequest.withPosition((Units.degreesToRotations(getSetpoint(getState().getAngle())))));
+        motor.setControl(
+            motionMagicRequest.withPosition(
+                Units.degreesToRotations(getSetpoint(getState().getAngle()))));
       }
     }
   }
