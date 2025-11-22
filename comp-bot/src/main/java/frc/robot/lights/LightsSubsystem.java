@@ -1,24 +1,25 @@
 package frc.robot.lights;
 
-import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix6.controls.SolidColor;
+import com.ctre.phoenix6.controls.StrobeAnimation;
+import com.ctre.phoenix6.hardware.CANdle;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.team581.util.state_machines.StateMachineSubsystem;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.scheduling.SubsystemPriority;
 
 public class LightsSubsystem extends StateMachineSubsystem<LightsState> {
   private final CANdle candle;
+  private final SolidColor color = new SolidColor(0, 399).withUpdateFreqHz(50.0);
+  private final StrobeAnimation blink = new StrobeAnimation(0, 399).withUpdateFreqHz(50.0);
 
-  private final Timer blinkTimer = new Timer();
   private LightsState storedState = LightsState.IDLE_EMPTY;
   private LightsState disabledState = LightsState.HOMED_SEES_TAGS;
 
   public LightsSubsystem(CANdle candle) {
     super(SubsystemPriority.LIGHTS, LightsState.IDLE_EMPTY);
     this.candle = candle;
-    blinkTimer.start();
   }
 
   public void setState(LightsState newState) {
@@ -44,29 +45,12 @@ public class LightsSubsystem extends StateMachineSubsystem<LightsState> {
 
   @Override
   public void whileInState(LightsState currentState) {
-    var usedState = DriverStation.isDisabled() ? disabledState : getState();
-    var color8Bit = new Color8Bit(usedState.color);
+    var usedState = DriverStation.isDisabled() ? disabledState : currentState;
+    var RGBWColor = new RGBWColor(usedState.color);
     if (usedState.pattern == BlinkPattern.SOLID) {
-      candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
+      candle.setControl(color.withColor(RGBWColor));
     } else {
-      double time = blinkTimer.get();
-      double onDuration = 0;
-      double offDuration = 0;
-
-      if (usedState.pattern == BlinkPattern.BLINK_FAST) {
-        onDuration = BlinkPattern.BLINK_FAST.duration;
-        offDuration = BlinkPattern.BLINK_FAST.duration * 2;
-      } else if (usedState.pattern == BlinkPattern.BLINK_SLOW) {
-        onDuration = BlinkPattern.BLINK_SLOW.duration;
-        offDuration = BlinkPattern.BLINK_SLOW.duration * 2;
-      }
-
-      if (time >= offDuration) {
-        blinkTimer.reset();
-        candle.setLEDs(0, 0, 0);
-      } else if (time >= onDuration) {
-        candle.setLEDs(color8Bit.red, color8Bit.green, color8Bit.blue);
-      }
+      candle.setControl(blink.withColor(RGBWColor).withFrameRate(1 / usedState.pattern.duration));
     }
 
     DogLog.log("Lights/Color", usedState.color.toString());
